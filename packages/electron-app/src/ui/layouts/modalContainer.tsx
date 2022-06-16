@@ -98,7 +98,7 @@ function StatusMessageBar({isLoadingScreen}) {
                 <div css={statusMessageBarLeftStyle}>
                     <CliIcon css={statusCliIconStyle}/>
                     <span css={statusTextStyle}>Last test: &nbsp;<span>{capitalize(testStatus || (testType === "local" ? "Completed" : "Queued"))}</span></span>
-                    {["RUNNING", null].includes(testStatus) ? (<LoadingIconV2 css={css`    display: block;
+                    {testType!=="local" && ["RUNNING", null].includes(testStatus) ? (<LoadingIconV2 css={css`    display: block;
     margin-left: -10rem;
     position: relative;
     top: -1rem;width: 18rem;`} />) : ""}

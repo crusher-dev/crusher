@@ -117,6 +117,10 @@ export class AppWindow {
 		this.window = new BrowserWindow(windowOptions);
 		this.window.setFullScreenable(false);
 		this.window.setResizable(false);
+
+		const cleanExit = () => { if (this.proxyManager) { this.proxyManager.disableProxy() } };
+		process.on('SIGINT', cleanExit);
+		process.on('SIGTERM', cleanExit);
 	}
 
 	public load() {

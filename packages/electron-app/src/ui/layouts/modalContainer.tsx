@@ -1,6 +1,6 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { CrossIcon, CrusherHammerColorIcon, MiniCrossIcon } from "../icons";
+import { CrossIcon, CrusherHammerColorIcon, LoadingIconV2, MiniCrossIcon } from "../icons";
 import { shell } from "electron";
 import { DropdownIconSVG } from "@dyson/assets/icons";
 import { useNavigate } from "react-router-dom";
@@ -32,7 +32,10 @@ const linkStyle = css`
 `;
 
 export { Link };
-
+function capitalize(s)
+{
+    return s[0].toUpperCase() + s.slice(1).toLowerCase();
+}
 function StatusMessageBar({isLoadingScreen}) {
     const [shouldShow, setShouldShow] = React.useState(false);
     const [testStatus, setTestStatus] = React.useState(null);
@@ -52,16 +55,16 @@ function StatusMessageBar({isLoadingScreen}) {
         return () => {
             window["messageBarCallback"] = null;
         }
-    });
+    }, []);
 
     React.useEffect(() => {
         if(shouldShow) {
             const buildId = window["triggeredTest"].id;
-            if(!isLoadingScreen) {
-                window["triggeredTest"] = null;
-                setBuildId(buildId);
-                return;
-            }
+            // if(!isLoadingScreen) {
+            //     window["triggeredTest"] = null;
+            //     setBuildId(buildId);
+            //     return;
+            // }
             setBuildId(buildId);
             const interval = setInterval(() => {
                 getBuildReport(buildId).then(res => {
@@ -70,7 +73,7 @@ function StatusMessageBar({isLoadingScreen}) {
                         clearInterval(interval);
                     }
                 });
-            }, 1000);
+            }, 5000);
             return () => {
                 clearInterval(interval);
             }
@@ -94,7 +97,11 @@ function StatusMessageBar({isLoadingScreen}) {
             <div css={statusMessageBarInnerContainerStyle}>
                 <div css={statusMessageBarLeftStyle}>
                     <CliIcon css={statusCliIconStyle}/>
-                    <span css={statusTextStyle}>Last test: {testStatus || (testType === "local" ? "Completed" : "Queued")}</span>
+                    <span css={statusTextStyle}>Last test: &nbsp;<span>{capitalize(testStatus || (testType === "local" ? "Completed" : "Queued"))}</span></span>
+                    {["RUNNING", null].includes(testStatus) ? (<LoadingIconV2 css={css`    display: block;
+    margin-left: -10rem;
+    position: relative;
+    top: -1rem;width: 18rem;`} />) : ""}
                 </div>
                 <div css={statusMessageBarRightStyle}>
                     {/* <Link css={statusLinkStyle}>Logs</Link> */}
@@ -151,7 +158,6 @@ font-size: 13px;
 letter-spacing: 0.03em;
 margin-top: 2px;
 color: #FFFFFF;
-text-transform: capitalize;
 `;
 
 function ActionButtonDropdown({ setShowActionMenu, isRecorder, ...props }) {
@@ -290,7 +296,7 @@ function ModelContainerLayout({children, title, footer, className, isLoadingScre
             {footer ? (     <div css={footerStyle}>
                 {footer}
             </div>) : ""}
-       
+
            <StatusMessageBar isLoadingScreen={isLoadingScreen} />
         </div>
     )

@@ -331,15 +331,17 @@ function ActionButtonDropdown({ setShowActionMenu, projectId, ...props }) {
 		);
 	};
 
-    const handleRunTestsCloud = () => {
-            performRunTests(projectId, null).then((buildRes) => {
+    const handleRunTestsCloud = React.useCallback(() => {
+        window["messageBarCallback"](-1);
+
+        performRunTests(projectId, null).then((buildRes) => {
                 window["messageBarCallback"](buildRes.buildId);
                 // sendSnackBarEvent({ type: "success", message: "Test started successfully!" });
             });
 
 
 		setShowActionMenu(false);
-	};
+	},[]);
 	return (
 		<div
 			className={"flex flex-col justify-between h-full"}
@@ -477,7 +479,7 @@ function DashboardScreen() {
             turnOnProxy(projectConfigFileJson[selectedProject]);
         }
     };
-    
+
 
     React.useEffect(()=> {
         document.querySelector("html").style.fontSize = "1px";
@@ -537,7 +539,7 @@ function DashboardScreen() {
             getCloudUserInfo().then((userInfo) => {
                 setUserInfo(userInfo);
 
-  
+
             });
 
 
@@ -570,7 +572,7 @@ function DashboardScreen() {
     }, [userTests]);
 
     // React.useEffect(() => {
-    //     if(isUnauthorized) 
+    //     if(isUnauthorized)
     //     window.localStorage.removeItem("projectId");
     // }, [isUnauthorized]);
 
@@ -585,7 +587,7 @@ function DashboardScreen() {
 
 
     const TitleComponent = React.useMemo(() => {
-        
+
         return (
             <div css={titleStyle}>
                 <span>

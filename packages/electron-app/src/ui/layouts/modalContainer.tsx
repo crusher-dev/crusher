@@ -162,6 +162,18 @@ color: #FFFFFF;
 
 function ActionButtonDropdown({ setShowActionMenu, isRecorder, ...props }) {
     const navigate = useNavigate();
+    const [projectConfigFile, setProjectConfigFile] = React.useState(null);
+
+    React.useEffect(() => {
+        try {
+            const projectId = window.localStorage.getItem("projectId");
+            const projectConfigFile = window.localStorage.getItem("projectConfigFile");
+            const projectConfigFileJson = JSON.parse(projectConfigFile);
+            if (projectConfigFileJson[projectId]) {
+                setProjectConfigFile(projectConfigFileJson[projectId]);
+            }
+        } catch (ex) { }
+    }, []);
 
 	const MenuItem = ({ label, onClick, ...props }) => {
 		return (
@@ -185,8 +197,9 @@ font-size: 13rem;
 		);
 	};
 
-	const handleViewDetails = () => {
-		setShowActionMenu(false);
+    const handleOpenConfigFile = () => {
+        setShowActionMenu(false);
+        shell.openPath("/home/utkarsh/Desktop/crusher/crusher/.crusher/config.json");
     };
 
     const handleSettings = () => {
@@ -228,6 +241,7 @@ font-size: 13rem;
 		>
             <div>
                 {isRecorder ? (<MenuItem onClick={handleGoBackToDashboard} label={<span>Go Back</span>} className={"close-on-click"} />) : (<MenuItem onClick={handleSelectProject} label={<span>Back to projects</span>} className={"close-on-click"} />)}
+                {projectConfigFile ? <MenuItem onClick={handleOpenConfigFile} label={<span>Edit Project config</span>} className={"close-on-click"} /> : ""}
                 <MenuItem onClick={handleHelpAccount} label={<span>Help & account</span>} className={"close-on-click"} />
                 <MenuItem onClick={handleExit} label={<span>Exit</span>} className={"close-on-click"} />
 			</div>

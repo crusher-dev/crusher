@@ -92,7 +92,6 @@ export const evaluatorQuerySelectorAll = (selector: string, root?: Node): Array<
 	return evaluator.querySelectorAll(selector, root || document);
 };
 
-
 export const isSelectorMatch = (
 	selector: string,
 	target: HTMLElement,
@@ -121,7 +120,7 @@ export const isSelectorMatch = (
 			}
 		}
 
-		return null;	
+		return null;
 	} catch (err) {
 		console.error(err);
 		return null;

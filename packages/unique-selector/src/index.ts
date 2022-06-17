@@ -22,7 +22,7 @@ try {
 export enum SelectorsModeEnum {
 	NORMAL = "NORMAL",
 	SHADOW_DOM_EXPERIMENTAL = "SHADOW_DOM_EXPERIMENTAL",
-};
+}
 
 /**
  * Entry File.
@@ -51,11 +51,14 @@ class UniqueSelector {
 		}
 
 		// This element is inside a shadow DOM, switch to shadow DOM mode
-		const selectorMode = !!element.getRootNode() && element.getRootNode().nodeType !== element.DOCUMENT_NODE ? SelectorsModeEnum.SHADOW_DOM_EXPERIMENTAL : SelectorsModeEnum.NORMAL;
+		const selectorMode =
+			!!element.getRootNode() && element.getRootNode().nodeType !== element.DOCUMENT_NODE
+				? SelectorsModeEnum.SHADOW_DOM_EXPERIMENTAL
+				: SelectorsModeEnum.NORMAL;
 
 		let selectors: any[] = [];
 
-		if(selectorMode === SelectorsModeEnum.NORMAL) {
+		if (selectorMode === SelectorsModeEnum.NORMAL) {
 			const idSelector = getIDSelectors(element, this._configuration.root);
 			const getDataAttributesSelector = getDataAttribute(element, this._configuration.root);
 			const geAttributesSelector = getAttribute(element, this._configuration.root);

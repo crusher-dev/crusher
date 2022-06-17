@@ -21,7 +21,7 @@ export enum BuildTriggerEnum {
 export interface IBuildConfig {
 	browser?: BrowserEnum;
 	shouldRecordVideo: boolean;
-	proxyUrlsMap?: { [key: string]: {tunnel: string; intercept: string | { regex: string } } };
+	proxyUrlsMap?: { [key: string]: { tunnel: string; intercept: string | { regex: string } } };
 	testIds: Array<number>;
 }
 

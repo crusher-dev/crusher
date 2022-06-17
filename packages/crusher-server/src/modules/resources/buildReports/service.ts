@@ -103,14 +103,18 @@ export class BuildReportService {
 					}
 				}
 
-				if(actionResult.status === ActionStatusEnum.FAILED) {
-					if(actionResult.meta && actionResult.meta.screenshotDuringError) {
+				if (actionResult.status === ActionStatusEnum.FAILED) {
+					if (actionResult.meta && actionResult.meta.screenshotDuringError) {
 						actionResult.meta.screenshotDuringError = JSON.parse(actionResult.meta.screenshotDuringError || {});
-						if(actionResult.meta.screenshotDuringError.startingScreenshot) {
-							actionResult.meta.screenshotDuringError.startingScreenshot = await this.getPublicUrl(actionResult.meta.screenshotDuringError.startingScreenshot);
+						if (actionResult.meta.screenshotDuringError.startingScreenshot) {
+							actionResult.meta.screenshotDuringError.startingScreenshot = await this.getPublicUrl(
+								actionResult.meta.screenshotDuringError.startingScreenshot,
+							);
 						}
-						if(actionResult.meta.screenshotDuringError.endingScreenshot) {
-							actionResult.meta.screenshotDuringError.endingScreenshot = await this.getPublicUrl(actionResult.meta.screenshotDuringError.endingScreenshot);
+						if (actionResult.meta.screenshotDuringError.endingScreenshot) {
+							actionResult.meta.screenshotDuringError.endingScreenshot = await this.getPublicUrl(
+								actionResult.meta.screenshotDuringError.endingScreenshot,
+							);
 						}
 					}
 				}
@@ -267,12 +271,9 @@ export class BuildReportService {
 	}
 
 	async incrementBuildReportTotalCount(incrementOffset: number, reportId: number) {
-		return this.dbManager.update(
-			"UPDATE public.job_reports SET total_test_count = total_test_count + ? WHERE id = ?",
-			[incrementOffset, reportId],
-		);
+		return this.dbManager.update("UPDATE public.job_reports SET total_test_count = total_test_count + ? WHERE id = ?", [incrementOffset, reportId]);
 	}
-	
+
 	async createBuildReport(totalTestCount: number, buildId: number, referenceBuildId: number, projectId: number): Promise<{ insertId: number }> {
 		return this.dbManager.insert(`INSERT INTO public.job_reports (job_id, reference_job_id, total_test_count, project_id, status) VALUES (?, ?, ?, ?, ?)`, [
 			buildId,

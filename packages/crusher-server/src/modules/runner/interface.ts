@@ -17,7 +17,13 @@ export interface IBuildTaskPayload extends ICreateBuildRequestPayload {
 }
 
 export type ITestDependencyArray = Array<
-	KeysToCamelCase<ITestTable> & { isFirstLevelTest: boolean; postTestList: ITestDependencyArray; parentTestId: number | null; groupId?: string; context?: any; }
+	KeysToCamelCase<ITestTable> & {
+		isFirstLevelTest: boolean;
+		postTestList: ITestDependencyArray;
+		parentTestId: number | null;
+		groupId?: string;
+		context?: any;
+	}
 >;
 
 export type ITestInstanceDependencyArray = Array<

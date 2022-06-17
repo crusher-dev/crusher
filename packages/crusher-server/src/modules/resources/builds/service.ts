@@ -111,9 +111,12 @@ class BuildsService {
 
 	@CamelizeResponse()
 	async getBuildFromReportId(reportId: number): Promise<KeysToCamelCase<IBuildTable>> {
-		return this.dbManager.fetchSingleRow(`SELECT jobs.* FROM public.jobs, public.job_reports WHERE job_reports.id = ? AND jobs.latest_report_id = job_reports.id`, [reportId]);
+		return this.dbManager.fetchSingleRow(
+			`SELECT jobs.* FROM public.jobs, public.job_reports WHERE job_reports.id = ? AND jobs.latest_report_id = job_reports.id`,
+			[reportId],
+		);
 	}
-	
+
 	@CamelizeResponse()
 	async getBuild(buildId: number): Promise<KeysToCamelCase<IBuildTable> | null> {
 		return this.dbManager.fetchSingleRow("SELECT * FROM public.jobs WHERE id = ?", [buildId]);
@@ -148,7 +151,10 @@ class BuildsService {
 		return this.dbManager.update("UPDATE public.jobs SET status = ? WHERE id = ?", [status, buildId]);
 	}
 
-	async initGithubCheckFlow(githubMeta: { repoName: string; commitId: string }, buildId: number): Promise<{ installationId: any; repoName: string; commitId: string; checkRunId: any; }> {
+	async initGithubCheckFlow(
+		githubMeta: { repoName: string; commitId: string },
+		buildId: number,
+	): Promise<{ installationId: any; repoName: string; commitId: string; checkRunId: any }> {
 		const githubService = new GithubService();
 		const buildRecord = await this.getBuild(buildId);
 
@@ -195,15 +201,15 @@ class BuildsService {
 		const buildRecord = await this.getBuild(buildId);
 		const meta = JSON.parse(buildRecord.meta);
 
-			if (meta.github) {
-				const { githubCheckRunId, repoName: fullReponame, installationId } = meta;
-				const { repoName, ownerName } = githubService.extractRepoAndOwnerName(fullReponame);
+		if (meta.github) {
+			const { githubCheckRunId, repoName: fullReponame, installationId } = meta;
+			const { repoName, ownerName } = githubService.extractRepoAndOwnerName(fullReponame);
 
-				await githubService.authenticateAsApp(installationId);
+			await githubService.authenticateAsApp(installationId);
 
-				const githubCheckConclusion = this.getGithubConclusionFromReportStatus(buildStatus);
-				await githubService.updateRunCheckStatus({ repo: repoName, owner: ownerName, checkRunId: githubCheckRunId }, githubCheckConclusion);
-			}
+			const githubCheckConclusion = this.getGithubConclusionFromReportStatus(buildStatus);
+			await githubService.updateRunCheckStatus({ repo: repoName, owner: ownerName, checkRunId: githubCheckRunId }, githubCheckConclusion);
+		}
 	}
 }
 

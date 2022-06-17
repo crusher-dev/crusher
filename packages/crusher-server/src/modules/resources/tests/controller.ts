@@ -164,7 +164,7 @@ export class TestController {
 	async runProjectTests(
 		@CurrentUser({ required: true }) user,
 		@Body()
-			body: {
+		body: {
 			proxyUrlsMap?: { [key: string]: { intercept: string | { regex: string }; tunnel: string } };
 			githubRepoName?: string;
 			githubCommitId?: string;

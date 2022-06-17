@@ -201,9 +201,10 @@ class UsersService {
 
 	@CamelizeResponse()
 	async getUsersInProject(projectId: number): Promise<Array<KeysToCamelCase<IUserTable>>> {
-		return this.dbManager.fetchAllRows("SELECT users.* FROM public.users, public.user_project_roles WHERE project_id = ? AND users.id = user_project_roles.user_id", [
-			projectId,
-		]);
+		return this.dbManager.fetchAllRows(
+			"SELECT users.* FROM public.users, public.user_project_roles WHERE project_id = ? AND users.id = user_project_roles.user_id",
+			[projectId],
+		);
 	}
 
 	async setGithubUserId(githubUserId: string, userId: number) {

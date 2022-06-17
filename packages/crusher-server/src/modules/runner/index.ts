@@ -42,11 +42,15 @@ class TestsRunner {
 		});
 
 		await this.queueManager.redisManager.redisClient.hset(parent.queue + ":" + flowTree.job.id, "parentKey", parent.queue + ":" + parent.id);
-		await this.queueManager.redisManager.redisClient.hset(parent.queue + ":" + flowTree.job.id, "parent", JSON.stringify({ id: parent.id, queueKey: parent.queue }));
+		await this.queueManager.redisManager.redisClient.hset(
+			parent.queue + ":" + flowTree.job.id,
+			"parent",
+			JSON.stringify({ id: parent.id, queueKey: parent.queue }),
+		);
 
 		const opts = await this.queueManager.redisManager.redisClient.hget(parent.queue + ":" + flowTree.job.id, "opts");
-		let optsObject: any = (opts && opts.length ? JSON.parse(opts) : null) || {} as any;
-		optsObject.parent = {id: parent.id, queue: parent.queue};
+		let optsObject: any = (opts && opts.length ? JSON.parse(opts) : null) || ({} as any);
+		optsObject.parent = { id: parent.id, queue: parent.queue };
 
 		await this.queueManager.redisManager.redisClient.hset(parent.queue + ":" + flowTree.job.id, "opts", JSON.stringify(optsObject));
 		await this.queueManager.redisManager.redisClient.sadd(parent.queue + ":" + parent.id + ":dependencies", parent.queue + ":" + flowTree.job.id);
@@ -112,23 +116,26 @@ class TestsRunner {
 		const addTestInstancePromiseArr = testInstances.map((testInstance) => {
 			if (!testInstance.parentTestInstanceId) {
 				flowChildrens.push(
-					this.createExecutionTaskFlow({
-						actions: JSON.parse(testInstance.testInfo.events),
-						nextTestDependencies: this._getNextTestInstancesDependencyArr(testInstance, testInstances),
-						config: {
-							browser: testInstance.browser as any,
-							shouldRecordVideo: buildTaskInfo.config.shouldRecordVideo,
-							proxyUrlsMap: buildTaskInfo.config.proxyUrlsMap,
+					this.createExecutionTaskFlow(
+						{
+							actions: JSON.parse(testInstance.testInfo.events),
+							nextTestDependencies: this._getNextTestInstancesDependencyArr(testInstance, testInstances),
+							config: {
+								browser: testInstance.browser as any,
+								shouldRecordVideo: buildTaskInfo.config.shouldRecordVideo,
+								proxyUrlsMap: buildTaskInfo.config.proxyUrlsMap,
+							},
+							buildId: buildTaskInfo.buildId,
+							testInstanceId: testInstance.id,
+							testName: testInstance.testInfo.name,
+							buildTestCount: testInstances.length,
+							startingStorageState: null,
+							startingPersistentContext: null,
+							// Crusher-context tree
+							context: testInstance.context ? testInstance.context : buildTaskInfo.context,
 						},
-						buildId: buildTaskInfo.buildId,
-						testInstanceId: testInstance.id,
-						testName: testInstance.testInfo.name,
-						buildTestCount: testInstances.length,
-						startingStorageState: null,
-						startingPersistentContext: null,
-						// Crusher-context tree
-						context: testInstance.context ? testInstance.context : buildTaskInfo.context,
-					}, buildTaskInfo.host),
+						buildTaskInfo.host,
+					),
 				);
 			}
 		});
@@ -187,21 +194,24 @@ class TestsRunner {
 			parentTestInstance: typeof testInstancesArr[0] | null = null,
 		) => {
 			const insertRecordPromiseArr = browserArr.map(async (browser) => {
-				const buildInstanceInsertRecord = await this.buildTestInstanceService.createBuildTestInstance({
-					jobId: buildId,
-					testId: test.id,
-					// @TODO: Need a proper host here
-					host: buildPayload.host,
-					browser: browser,
-					groupId: test.groupId,
-					meta: {
+				const buildInstanceInsertRecord = await this.buildTestInstanceService.createBuildTestInstance(
+					{
+						jobId: buildId,
+						testId: test.id,
+						// @TODO: Need a proper host here
+						host: buildPayload.host,
+						browser: browser,
 						groupId: test.groupId,
-						isSpawned: buildPayload.isSpawned ? buildPayload.isSpawned : false,
-						parentTestInstanceId: parentTestInstance ? parentTestInstance.id : null,
-						isFirstLevel: test.isFirstLevelTest,
-						context: test.context ? test.context : null,
+						meta: {
+							groupId: test.groupId,
+							isSpawned: buildPayload.isSpawned ? buildPayload.isSpawned : false,
+							parentTestInstanceId: parentTestInstance ? parentTestInstance.id : null,
+							isFirstLevel: test.isFirstLevelTest,
+							context: test.context ? test.context : null,
+						},
 					},
-				}, test.context);
+					test.context,
+				);
 
 				return this.buildTestInstanceService.getInstance(buildInstanceInsertRecord.insertId);
 			});
@@ -238,14 +248,16 @@ class TestsRunner {
 	}
 
 	private async _getTestMapFromArr(testIdArr: Array<number>): Promise<{ [id: number]: KeysToCamelCase<ITestTable> }> {
-		const filtered =  testIdArr.reduce((prev, testId) => {
+		const filtered = testIdArr.reduce((prev, testId) => {
 			return { ...prev, [testId]: testId };
 		}, {});
 
-		const testsArr = await Promise.all(Object.values(filtered).map((testId: number) => {
-			// @TODO: This is just a workaround for reflect-metadata cyclic dependecny. Clean it
-			return this.getTest(testId);
-		}));
+		const testsArr = await Promise.all(
+			Object.values(filtered).map((testId: number) => {
+				// @TODO: This is just a workaround for reflect-metadata cyclic dependecny. Clean it
+				return this.getTest(testId);
+			}),
+		);
 
 		return testsArr.reduce((prev, test) => {
 			return { ...prev, [test.id]: test };
@@ -257,64 +269,75 @@ class TestsRunner {
 		return this.dbManager.fetchSingleRow("SELECT * FROM public.tests WHERE id = ?", [testId]);
 	}
 
-	async spawnTestInstances(tests: Array<{ testId: number; groupId: string; context: any; }>, browser: BrowserEnum, buildReportId: number) {
+	async spawnTestInstances(tests: Array<{ testId: number; groupId: string; context: any }>, browser: BrowserEnum, buildReportId: number) {
 		try {
-		console.log("Tests are", tests);
-		const build = await this.buildsService.getBuildFromReportId(buildReportId);
-		console.log("Buid is", build);
-		const buildMeta = JSON.parse(build.meta);
-		console.log("Build meta is", buildMeta);
+			console.log("Tests are", tests);
+			const build = await this.buildsService.getBuildFromReportId(buildReportId);
+			console.log("Buid is", build);
+			const buildMeta = JSON.parse(build.meta);
+			console.log("Build meta is", buildMeta);
 
-		const buildReport = await this.buildReportService.getBuildReportRecord(buildReportId);
-		const testsMap = await this._getTestMapFromArr(tests.map((test) => test.testId));
+			const buildReport = await this.buildReportService.getBuildReportRecord(buildReportId);
+			const testsMap = await this._getTestMapFromArr(tests.map((test) => test.testId));
 
-		console.log("Tests map is", testsMap);
+			console.log("Tests map is", testsMap);
 
-		const testsArr = tests.map((test) => {
-			return {
-				...testsMap[test.testId],
-				isFirstLevelTest: true,
-				postTestList: [],
-				parentTestId: null,
-				groupId: test.groupId,
-				context: test.context,
-			}
-		});
-
-		let testInstances = [];
-		testInstances = await this.createTestInstances(testsArr, {
-			host: buildMeta && buildMeta.host ? buildMeta.host : undefined,
-			browser: [browser],
-			isSpawned: true,
-		}, build.id);
-
-		// Update build report count
-		await this.buildReportService.incrementBuildReportTotalCount(tests.length, buildReport.id);
-		const testsResultsSetsInsertPromiseArr = testInstances.map(async (testInstance) => {
-			const referenceInstance = await this.buildTestInstanceService.getReferenceInstance(testInstance.id);
-			return this.buildTestInstanceService.createBuildTestInstanceResultSet({
-				reportId: buildReport.id,
-				instanceId: testInstance.id,
-				targetInstanceId: testInstance && testInstance.disableBaseLineComparisions ? testInstance.id : (referenceInstance ? referenceInstance.id : testInstance.id),
+			const testsArr = tests.map((test) => {
+				return {
+					...testsMap[test.testId],
+					isFirstLevelTest: true,
+					postTestList: [],
+					parentTestId: null,
+					groupId: test.groupId,
+					context: test.context,
+				};
 			});
-		});
 
-		await Promise.all(testsResultsSetsInsertPromiseArr);
-		const buildInfo: any = {
-			buildId: build.id, tests: [], host: "", isVideoOn: true, isInitialTest: false, projectId: build.projectId, testInstances: testInstances,
-			buildTrigger: build.buildTrigger,
-			userId: build.userId,
-			browser: [browser],
-			config: {
-				shouldRecordVideo: true,
-			},
-		};
+			let testInstances = [];
+			testInstances = await this.createTestInstances(
+				testsArr,
+				{
+					host: buildMeta && buildMeta.host ? buildMeta.host : undefined,
+					browser: [browser],
+					isSpawned: true,
+				},
+				build.id,
+			);
 
-		return { testInstances: testInstances, buildInfo: buildInfo };
-	} catch (err) {
-		console.error("Error is", err);
-		throw err;
-	}
+			// Update build report count
+			await this.buildReportService.incrementBuildReportTotalCount(tests.length, buildReport.id);
+			const testsResultsSetsInsertPromiseArr = testInstances.map(async (testInstance) => {
+				const referenceInstance = await this.buildTestInstanceService.getReferenceInstance(testInstance.id);
+				return this.buildTestInstanceService.createBuildTestInstanceResultSet({
+					reportId: buildReport.id,
+					instanceId: testInstance.id,
+					targetInstanceId:
+						testInstance && testInstance.disableBaseLineComparisions ? testInstance.id : referenceInstance ? referenceInstance.id : testInstance.id,
+				});
+			});
+
+			await Promise.all(testsResultsSetsInsertPromiseArr);
+			const buildInfo: any = {
+				buildId: build.id,
+				tests: [],
+				host: "",
+				isVideoOn: true,
+				isInitialTest: false,
+				projectId: build.projectId,
+				testInstances: testInstances,
+				buildTrigger: build.buildTrigger,
+				userId: build.userId,
+				browser: [browser],
+				config: {
+					shouldRecordVideo: true,
+				},
+			};
+
+			return { testInstances: testInstances, buildInfo: buildInfo };
+		} catch (err) {
+			console.error("Error is", err);
+			throw err;
+		}
 	}
 
 	async runTests(tests: Array<KeysToCamelCase<ITestTable>>, buildPayload: ICreateBuildRequestPayload, baselineBuildId: number = null) {
@@ -360,11 +383,15 @@ class TestsRunner {
 		// @TODO: Add implementation to queue the job
 		await this.startBuildTask({ ...buildInfo, testInstances: testInstancesArr });
 
-		if(githubMeta && githubMeta.installationId) {
+		if (githubMeta && githubMeta.installationId) {
 			const githubService = new GithubService();
 			await githubService.authenticateAsApp(githubMeta.installationId);
 
-			await githubService.createOrUpdateIssueComment({fullRepoName: githubMeta.repoName, commit: githubMeta.commitId}, build.insertId, buildPayload.projectId);
+			await githubService.createOrUpdateIssueComment(
+				{ fullRepoName: githubMeta.repoName, commit: githubMeta.commitId },
+				build.insertId,
+				buildPayload.projectId,
+			);
 		}
 
 		return { buildId: build.insertId, buildInfo: buildInfo };

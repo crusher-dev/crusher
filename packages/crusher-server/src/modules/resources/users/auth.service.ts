@@ -130,7 +130,7 @@ class UserAuthService {
 
 		// Login the user
 		await this.setUserAuthCookies(user.id, user.team_id, req, res);
-		return { userId: user.id, teamId: user.team_id};
+		return { userId: user.id, teamId: user.team_id };
 	}
 
 	async authOpenSourceUser(req: any, res: Response): Promise<{ userId: number; teamId: number }> {

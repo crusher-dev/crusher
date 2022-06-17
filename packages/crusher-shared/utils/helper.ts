@@ -18,5 +18,4 @@ function deleteTmpAssetsDirectoriesIfThere(identifer: string): void {
 	shell.rm("-rf", path.join("/tmp/crusher", identifer));
 }
 
-
 export { generateUid, isOpenSource, createTmpAssetsDirectoriesIfNotThere, deleteTmpAssetsDirectoriesIfThere };

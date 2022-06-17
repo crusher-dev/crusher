@@ -19,7 +19,7 @@ export interface ITestCompleteQueuePayload {
 	exports: Array<[string, any]>;
 	context?: { [k: string]: any } | null;
 	nextTestDependencies: Array<INextTestInstancesDependencies>;
-	parameterizedTests: Array<{testId: number; groupId: string; context: any}>;
+	parameterizedTests: Array<{ testId: number; groupId: string; context: any }>;
 	buildExecutionPayload: ITestExecutionQueuePayload;
 	actionResults: Array<IActionResultItem>;
 	buildId: number;
@@ -27,7 +27,7 @@ export interface ITestCompleteQueuePayload {
 	buildTestCount: number;
 	storageState: { cookies: Array<any>; origins: Array<any> } | null;
 	hasPassed: boolean;
-	failedReason?: Error & { isStalled: boolean; };
+	failedReason?: Error & { isStalled: boolean };
 	isStalled?: boolean;
 	persistenContextZipURL: string | null;
 }

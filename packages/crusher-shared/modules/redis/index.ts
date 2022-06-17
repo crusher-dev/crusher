@@ -4,7 +4,7 @@ class RedisManager {
 	redisClient: IORedis.Redis;
 
 	constructor(connectionObject: IORedis.RedisOptions) {
-		this.redisClient = new IORedis({...connectionObject, maxRetriesPerRequest: null, enableReadyCheck: false});
+		this.redisClient = new IORedis({ ...connectionObject, maxRetriesPerRequest: null, enableReadyCheck: false });
 	}
 
 	private getRedisExpiryModeType(highLevelType): "ex" | "px" {

@@ -22,7 +22,7 @@ export const OnOutsideClick = ({ onOutsideClick, blackListClassNames = [], child
 					return blackListClassNames.some((className) => element.classList?.contains(className));
 				});
 
-				if(!isBlackListed) return onOutsideClick();
+				if (!isBlackListed) return onOutsideClick();
 			}
 		};
 		window.addEventListener("mousedown", handleMouseDown, { capture: true });
@@ -32,5 +32,9 @@ export const OnOutsideClick = ({ onOutsideClick, blackListClassNames = [], child
 		};
 	}, []);
 
-	return <div className={className ? `${className} outsideDiv` : "outsideDiv"} ref={ref}>{children}</div>;
+	return (
+		<div className={className ? `${className} outsideDiv` : "outsideDiv"} ref={ref}>
+			{children}
+		</div>
+	);
 };

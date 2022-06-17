@@ -21,7 +21,7 @@ export const PaginationButton = ({ isPreviousActive = true, isNextActive = true,
 				Previous
 			</div>
 			<div
-				css={[button,rightButton, !isNextActive && disabled]}
+				css={[button, rightButton, !isNextActive && disabled]}
 				onClick={() => {
 					if (!isNextActive) return;
 					onNextClick();
@@ -72,4 +72,4 @@ const disabled = css`
 
 const rightButton = css`
 	border-left-width: 0 !important;
-`
+`;

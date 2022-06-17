@@ -21,7 +21,20 @@ export default {
 			control: { type: "radio" },
 		},
 		placement: {
-			options: ["top-start", "top-end", "right-start", "right-end", "bottom-start", "bottom-end", "left-start", "left-end", "left", "right", "top", "bottom"],
+			options: [
+				"top-start",
+				"top-end",
+				"right-start",
+				"right-end",
+				"bottom-start",
+				"bottom-end",
+				"left-start",
+				"left-end",
+				"left",
+				"right",
+				"top",
+				"bottom",
+			],
 			control: { type: "select" },
 		},
 		padding: {

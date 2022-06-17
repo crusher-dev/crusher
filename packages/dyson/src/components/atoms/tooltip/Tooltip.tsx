@@ -5,7 +5,19 @@ import React, { ReactElement, useState, useEffect, useMemo, useRef, SyntheticEve
 
 export type TooltipWrapperProps = {
 	type?: "click" | "hover";
-	placement: "top-start" | "top-end" | "right-start" | "right-end" | "bottom-start" | "bottom-end" | "left-start" | "left-end" | "left" | "bottom" | "top" | "right";
+	placement:
+		| "top-start"
+		| "top-end"
+		| "right-start"
+		| "right-end"
+		| "bottom-start"
+		| "bottom-end"
+		| "left-start"
+		| "left-end"
+		| "left"
+		| "bottom"
+		| "top"
+		| "right";
 	autoHide?: boolean;
 	callback?: Function;
 	content: ReactElement;
@@ -36,7 +48,7 @@ export const TooltipBox = ({ children, className = "tooltip-box", el = "div" }) 
 /**
  * Unified tolltip component for Dyson UI system
  */
-export const Tooltip: React.FC<TooltipWrapperProps> = ({ children, autoHide = "true",timer=0, placement, type, content, padding = 0, ...props }) => {
+export const Tooltip: React.FC<TooltipWrapperProps> = ({ children, autoHide = "true", timer = 0, placement, type, content, padding = 0, ...props }) => {
 	const [show, setShow] = useState(false);
 	const [computedStyle] = useState(null);
 	const { offset: offsetWrapper = 5 } = props;
@@ -94,7 +106,7 @@ export const Tooltip: React.FC<TooltipWrapperProps> = ({ children, autoHide = "t
 		};
 	}, [show]);
 
-	console.log(props)
+	console.log(props);
 	return (
 		<React.Fragment>
 			<ClonedElement />
@@ -111,7 +123,9 @@ export const Tooltip: React.FC<TooltipWrapperProps> = ({ children, autoHide = "t
 						onMouseOver={eventListener().onMouseOver}
 						onMouseLeave={eventListener().onMouseLeave}
 					>
-						<div css={[tooltipBox, props.css]} className={props.className}>{content}</div>
+						<div css={[tooltipBox, props.css]} className={props.className}>
+							{content}
+						</div>
 					</div>
 				</TooltipBox>
 			)}

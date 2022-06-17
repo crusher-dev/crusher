@@ -16,36 +16,35 @@ const TextDefaultProps = {
 	color: "#fff",
 };
 
-const getLetterSpacing = (fontSize)=>{
-
+const getLetterSpacing = (fontSize) => {
 	console.log(fontSize);
 
-	if(fontSize < 12){
-		return {letterSpacing: `.4px`}
+	if (fontSize < 12) {
+		return { letterSpacing: `.4px` };
 	}
 
-	if(fontSize < 13){
-		return {letterSpacing: `.4px`}
+	if (fontSize < 13) {
+		return { letterSpacing: `.4px` };
 	}
 
-	if(fontSize < 14){
-		return {letterSpacing: `.25px`}
+	if (fontSize < 14) {
+		return { letterSpacing: `.25px` };
 	}
-	if(fontSize <= 15){
-		return {letterSpacing: `.2px`}
-	}
-
-	if(fontSize <= 16){
-		return {letterSpacing: `.2px`}
+	if (fontSize <= 15) {
+		return { letterSpacing: `.2px` };
 	}
 
-	return {letterSpacing: `0`}
-}
+	if (fontSize <= 16) {
+		return { letterSpacing: `.2px` };
+	}
+
+	return { letterSpacing: `0` };
+};
 /**
  * Crusher Text component.
  */
 export const TextBlock: React.FC<TextBlockProps> = (props: TextBlockProps) => {
-	const { children, fontSize, weight, color, className,letterSpacing = true, showLineHeight, ...otherProps } = props;
+	const { children, fontSize, weight, color, className, letterSpacing = true, showLineHeight, ...otherProps } = props;
 	return (
 		<div
 			className={`font-gilroy font-${weight} ${className}`}
@@ -53,7 +52,7 @@ export const TextBlock: React.FC<TextBlockProps> = (props: TextBlockProps) => {
 				font-size: ${fontSize}rem;
 				color: ${color};
 				${showLineHeight === false ? "line-height: 1;" : "line-height: 1.6;"}
-				letter-spacing: ${!!letterSpacing ? getLetterSpacing(fontSize || 13).letterSpacing : '0'}
+				letter-spacing: ${!!letterSpacing ? getLetterSpacing(fontSize || 13).letterSpacing : "0"}
 			`}
 			{...otherProps}
 		>

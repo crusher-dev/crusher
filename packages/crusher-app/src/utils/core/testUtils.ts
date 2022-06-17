@@ -11,7 +11,7 @@ const runTests = (projectId: number, folder: string | null = null) => {
 		method: RequestMethod.POST,
 		payload: {
 			folder,
-		}
+		},
 	});
 };
 

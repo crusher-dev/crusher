@@ -35,14 +35,11 @@ a {
 	}
 }
 
-
 @media only screen and (max-width: 1400px) {
 	html {
 		font-size: 0.8px;
 	}
 }
-
-
 
 img {
 	display: unset;

@@ -49,7 +49,6 @@ export const InvitePeople = ({ onClose }) => {
 		setProcessing(true);
 	}, [emailList]);
 
-
 	return (
 		<Modal onOutsideClick={onClose} onClose={onClose}>
 			<div className={"font-cera text-16 font-600 leading-none"}>Invite your teammates</div>

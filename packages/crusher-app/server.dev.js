@@ -20,7 +20,6 @@ app.prepare().then(() => {
 	// (Default Storage Method in OSS)
 	server.use("/output", proxy("localhost:3001"));
 
-
 	// // This is currently used for
 	server.use("/assets", express.static(".next/public/assets"));
 	server.use("/js", express.static(".next/public/js"));

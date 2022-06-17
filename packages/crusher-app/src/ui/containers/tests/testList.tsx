@@ -26,7 +26,7 @@ import { useRouter } from "next/router";
 import { testFiltersAtom } from "@store/atoms/pages/testPage";
 import { tempTestTypeAtom } from "@store/atoms/global/temp/tempTestType";
 import { tempTestUpdateIdAtom } from "@store/atoms/global/temp/tempTestUpdateId";
-import { EditIcon, Folder, TestIcon } from '@svg/tests';
+import { EditIcon, Folder, TestIcon } from "@svg/tests";
 import { PlaySVG } from "@svg/dashboard";
 
 import { ClickableText } from "dyson/src/components/atoms/clickacbleLink/Text";
@@ -94,67 +94,67 @@ function TestCard(props: IBuildItemCardProps) {
 
 	return (
 		<a href={`crusher://replay-test?testId=${id}`}>
-		<div
-			css={css`
-				margin-top: -1rem;border-top: 1px solid #171b20;
-			`}
-		>
-			<Conditional showIf={showEditBox}>
-				<EditTest
-					id={id}
-					name={testName}
-					folderId={testData.folderId}
-					tags={tags}
-					onClose={() => {
-						setShowEditBox(false);
-					}}
-				/>
-			</Conditional>
-			<div css={[folderStyle, testItem]} className={`flex ${!isRoot && "pl-32"}`}>
-				<div css={[containerWidth, testItemWidth(isRoot)]} className={"flex"}>
-					<div className={"flex w-full justify-between"}>
-						<div className={"flex"}>
-							<TestIcon height={18} className={`mr-16 ${isRoot && "invisible"}`} />
-							<div>
-								<div className={"font-cera text-14 font-500 mb-8 leading-none"}>{testName}</div>
-								<div
-									className={"font-cera text-13 leading-none font-500"}
-									css={css`
-										color: #4a494b;
-									`}
-								>
-									e2e test
+			<div
+				css={css`
+					margin-top: -1rem;
+					border-top: 1px solid #171b20;
+				`}
+			>
+				<Conditional showIf={showEditBox}>
+					<EditTest
+						id={id}
+						name={testName}
+						folderId={testData.folderId}
+						tags={tags}
+						onClose={() => {
+							setShowEditBox(false);
+						}}
+					/>
+				</Conditional>
+				<div css={[folderStyle, testItem]} className={`flex ${!isRoot && "pl-32"}`}>
+					<div css={[containerWidth, testItemWidth(isRoot)]} className={"flex"}>
+						<div className={"flex w-full justify-between"}>
+							<div className={"flex"}>
+								<TestIcon height={18} className={`mr-16 ${isRoot && "invisible"}`} />
+								<div>
+									<div className={"font-cera text-14 font-500 mb-8 leading-none"}>{testName}</div>
+									<div
+										className={"font-cera text-13 leading-none font-500"}
+										css={css`
+											color: #4a494b;
+										`}
+									>
+										e2e test
+									</div>
 								</div>
 							</div>
-						</div>
 
-						<div>
-							<div
-								className={"edit flex justify-end"}
-								onClick={(e) => {
-									e.preventDefault();e.stopPropagation()
-									!showEditBox && setShowEditBox(true);
-								}}
-							>
-										<span className={"flex items-center"} css={editBlockCSS}>
-								<EditIcon className={"mr-6"}/> <span className={"mt-4"}>Edit</span>
-							</span>
+							<div>
+								<div
+									className={"edit flex justify-end"}
+									onClick={(e) => {
+										e.preventDefault();
+										e.stopPropagation();
+										!showEditBox && setShowEditBox(true);
+									}}
+								>
+									<span className={"flex items-center"} css={editBlockCSS}>
+										<EditIcon className={"mr-6"} /> <span className={"mt-4"}>Edit</span>
+									</span>
+								</div>
+								<div className={"flex justify-end mt-8 items-center"}>
+									<Conditional showIf={firstRunCompleted}>
+										<Link href={`/app/build/${draftBuildId}?view_draft=true`}>
+											<span className={"view-build leading-none mt-1"}>View build </span>
+										</Link>
+									</Conditional>
+									<span className={"ml-16"}>{statusIcon}</span>
+								</div>
 							</div>
-							<div className={"flex justify-end mt-8 items-center"}>
-								<Conditional showIf={firstRunCompleted}>
-									<Link href={`/app/build/${draftBuildId}?view_draft=true`}>
-										<span className={"view-build leading-none mt-1"}>View build </span>
-									</Link>
-								</Conditional>
-								<span className={"ml-16"}>{statusIcon}</span>
-							</div>
-
-
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
 		</a>
 	);
 	return (
@@ -203,8 +203,8 @@ function TestCard(props: IBuildItemCardProps) {
 								!showEditBox && setShowEditBox(true);
 							}}
 						>
-								<span className={"flex items-center"} css={editBlockCSS}>
-								<EditIcon className={"mr-6"}/> <span className={"mt-4"}>Edit</span>
+							<span className={"flex items-center"} css={editBlockCSS}>
+								<EditIcon className={"mr-6"} /> <span className={"mt-4"}>Edit</span>
 							</span>
 						</span>
 						<Conditional showIf={testRunInThisHour}>
@@ -249,7 +249,7 @@ const itemContainerStyle = css`
 
 	:hover {
 		.showOnHover {
-      visibility: visible !important;
+			visibility: visible !important;
 			:hover {
 				text-decoration: underline;
 			}
@@ -297,10 +297,9 @@ function FolderItem(props: { folder: any; id: number }) {
 		return data.list.filter(({ folderId }) => props.id === folderId);
 	}, [data.list]);
 
-
 	const runTestsForThisFolder = useCallback(() => {
 		(async () => {
-			await handleTestRun(selectedProjectId, BuildTriggerEnum.MANUAL, { folder: props.folder.name}, router, updateMetaData);
+			await handleTestRun(selectedProjectId, BuildTriggerEnum.MANUAL, { folder: props.folder.name }, router, updateMetaData);
 
 			updateMetaData({
 				type: "user",
@@ -336,38 +335,52 @@ function FolderItem(props: { folder: any; id: number }) {
 								<div className={"font-cera text-14 font-500 mb-12 leading-none"}>{props.folder.name}</div>
 								<div className={"flex items-center"}>
 									<span>{testList.length} tests</span>
-									<Conditional showIf={testList.length>0}>
-										<span className={"ml-16 text-12 open-folder hidden"}>Click to {isOpen? "close":"open"}</span>
+									<Conditional showIf={testList.length > 0}>
+										<span className={"ml-16 text-12 open-folder hidden"}>Click to {isOpen ? "close" : "open"}</span>
 									</Conditional>
 								</div>
 							</div>
 						</div>
 
-						<div className={"showOnHover"} css={css`display: flex;`}>
-							<div
-									onClick={(e) => {
-										e.stopPropagation();
-										runTestsForThisFolder(props.id);
-									}}
-							>
-								<span css={[editBlockCSS, css`display: flex; align-items: center; margin-top: -3rem;`]}>
-							<PlaySVG className={"mr-6"} height={10} width={10} />
-								<span className={"flex items-center"}>
-									Run tests
-									</span>
-									</span>
-							</div>
 						<div
+							className={"showOnHover"}
+							css={css`
+								display: flex;
+							`}
+						>
+							<div
+								onClick={(e) => {
+									e.stopPropagation();
+									runTestsForThisFolder(props.id);
+								}}
+							>
+								<span
+									css={[
+										editBlockCSS,
+										css`
+											display: flex;
+											align-items: center;
+											margin-top: -3rem;
+										`,
+									]}
+								>
+									<PlaySVG className={"mr-6"} height={10} width={10} />
+									<span className={"flex items-center"}>Run tests</span>
+								</span>
+							</div>
+							<div
 								onClick={(e) => {
 									e.stopPropagation();
 									setShowEditBox(true);
 								}}
 								className={" edit"}
-								css={ css`margin-left: 24rem`}
-						>
-							<span className={"flex items-center"} css={editBlockCSS}>
-								<EditIcon className={"mr-6"}/> <span className={"mt-4"}>Edit</span>
-							</span>
+								css={css`
+									margin-left: 24rem;
+								`}
+							>
+								<span className={"flex items-center"} css={editBlockCSS}>
+									<EditIcon className={"mr-6"} /> <span className={"mt-4"}>Edit</span>
+								</span>
 							</div>
 						</div>
 					</div>
@@ -385,28 +398,27 @@ function FolderItem(props: { folder: any; id: number }) {
 }
 
 const editBlockCSS = css`
-  margin-top: -6rem;
+	margin-top: -6rem;
 
-  :hover {
-    path {
-      fill: #6953be;
-    }
+	:hover {
+		path {
+			fill: #6953be;
+		}
 
-    color: #6953be;
-  }
-`
+		color: #6953be;
+	}
+`;
 
 const folderBlock = css`
-  .showOnHover {
-    visibility: hidden;
-  }
-
+	.showOnHover {
+		visibility: hidden;
+	}
 
 	:hover {
 		.showOnHover {
-      visibility: visible;
+			visibility: visible;
 		}
-		.open-folder{
+		.open-folder {
 			display: block;
 		}
 	}
@@ -423,7 +435,12 @@ function FolderList() {
 	const { folders } = data;
 
 	return (
-		<div className={"mt-24"} css={css`border-top: 1px solid #171b20;`}>
+		<div
+			className={"mt-24"}
+			css={css`
+				border-top: 1px solid #171b20;
+			`}
+		>
 			{folders.map((folder) => {
 				return <FolderItem id={folder.id} key={folder.id} folder={folder} />;
 			})}
@@ -505,33 +522,32 @@ function TestTopBar(props: { totalTests: any; onClick: () => Promise<void> }) {
 	);
 }
 
-const wrapperCSS=css`
+const wrapperCSS = css`
+	animation: fadeIn 1300ms;
 
-  animation: fadeIn 1300ms;
-
-  @-webkit-keyframes fadeIn {
-    0% {
-      opacity: 0;
-    }
-    55% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
-  }
-  @keyframes fadeIn {
-    0% {
-      opacity: 0;
-    }
-   55% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
-  }
-`
+	@-webkit-keyframes fadeIn {
+		0% {
+			opacity: 0;
+		}
+		55% {
+			opacity: 0;
+		}
+		100% {
+			opacity: 1;
+		}
+	}
+	@keyframes fadeIn {
+		0% {
+			opacity: 0;
+		}
+		55% {
+			opacity: 0;
+		}
+		100% {
+			opacity: 1;
+		}
+	}
+`;
 
 function TestSearchableList() {
 	const [project] = useAtom(currentProject);
@@ -550,7 +566,6 @@ function TestSearchableList() {
 		refreshInterval: newTestCreated ? 4000 : 200000,
 	});
 
-
 	const rootTest = useMemo(() => {
 		return data.list
 			.filter(({ folderId }) => !folderId)
@@ -560,7 +575,6 @@ function TestSearchableList() {
 				return <TestCard testData={test} key={id} id={id} isRoot={true} />;
 			});
 	}, [data.list]);
-
 
 	useEffect(() => {
 		if (!tempTestId || tempTestId === "null") return;
@@ -621,23 +635,22 @@ const folderStyle = css`
 `;
 
 const testItem = css`
-  padding: 20px 0;
+	padding: 20px 0;
 
-  .view-build {
+	.view-build {
+		margin-left: 12rem;
+		:hover {
+			color: #96a7ff;
+			text-decoration: underline;
+		}
+	}
 
-
-    margin-left: 12rem;
-    :hover {    color: #96a7ff;
-      text-decoration: underline;
-    }
-  }
-
-  .showOnHover {
-    visibility: hidden;
-  }
+	.showOnHover {
+		visibility: hidden;
+	}
 	:hover {
 		.showOnHover {
-      visibility: visible;
+			visibility: visible;
 		}
 	}
 `;

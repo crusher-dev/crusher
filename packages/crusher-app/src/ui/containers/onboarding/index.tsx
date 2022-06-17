@@ -47,11 +47,11 @@ const CrusherOnboarding = () => {
 			router.push("/app/dashboard");
 		} else {
 			let finalOnboardingStep = null;
-			if(getBoolean(user?.meta.SURVEY)) {
-					finalOnboardingStep = OnboardingStepEnum.URL_ONBOARDING;
+			if (getBoolean(user?.meta.SURVEY)) {
+				finalOnboardingStep = OnboardingStepEnum.URL_ONBOARDING;
 			}
-			if(getBoolean(user?.meta.URL_ONBOARDING)) {
-					finalOnboardingStep = OnboardingStepEnum.SUPPORT_CRUSHER;
+			if (getBoolean(user?.meta.URL_ONBOARDING)) {
+				finalOnboardingStep = OnboardingStepEnum.SUPPORT_CRUSHER;
 			}
 			if (getBoolean(user?.meta.SUPPORT_CRUSHER)) {
 				finalOnboardingStep = null;

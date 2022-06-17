@@ -1,22 +1,20 @@
-
 import { useCallback, useState } from "react";
 import { validateEmail } from "@utils/common/validationUtils";
- import { RequestMethod } from "@types/RequestOptions";
- import { backendRequest } from "@utils/common/backendRequest";
+import { RequestMethod } from "@types/RequestOptions";
+import { backendRequest } from "@utils/common/backendRequest";
 
- import { css } from "@emotion/react";
- import { Heading } from "dyson/src/components/atoms/heading/Heading";
- import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
- import { Text } from "dyson/src/components/atoms/text/Text";
- import { Button } from "dyson/src/components/atoms";
- import { useRouter } from "next/router";
- import { LoginNavBar } from "@ui/containers/common/login/navbar";
- import React from "react";
- import { Conditional } from "dyson/src/components/layouts/Conditional/Conditional";
- import {Input} from "dyson/src/components/atoms/input/Input";
- import { LoadingSVG } from "@svg/dashboard";
+import { css } from "@emotion/react";
+import { Heading } from "dyson/src/components/atoms/heading/Heading";
+import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
+import { Text } from "dyson/src/components/atoms/text/Text";
+import { Button } from "dyson/src/components/atoms";
+import { useRouter } from "next/router";
+import { LoginNavBar } from "@ui/containers/common/login/navbar";
+import React from "react";
+import { Conditional } from "dyson/src/components/layouts/Conditional/Conditional";
+import { Input } from "dyson/src/components/atoms/input/Input";
+import { LoadingSVG } from "@svg/dashboard";
 import Link from "next/link";
-
 
 const forgotPassword = (email: string) => {
 	return backendRequest("/users/actions/forgot_password", {
@@ -24,8 +22,6 @@ const forgotPassword = (email: string) => {
 		payload: { email },
 	});
 };
-
-
 
 export const GithubSVG = function (props) {
 	return (
@@ -84,81 +80,107 @@ export default function ForgotPassword() {
 		}
 	}, [email.value]);
 
-
 	return (
-		<div
-			css={containerCSS}
-		>
+		<div css={containerCSS}>
 			<div className="pt-28">
-			<LoginNavBar/>
+				<LoginNavBar />
 			</div>
 			<div className={"flex justify-center"}>
-				<div className={"flex flex-col items-center"} css={css`margin-top:160rem;`}>
+				<div
+					className={"flex flex-col items-center"}
+					css={css`
+						margin-top: 160rem;
+					`}
+				>
 					<Heading type={1} fontSize={22} weight={900}>
-					Use superpower to <span css={css`color: #D4EB79;`}>ship fast</span> and <span css={css`color: #8C67F5; margin-right: 12px;`}>better</span>🚀
+						Use superpower to{" "}
+						<span
+							css={css`
+								color: #d4eb79;
+							`}
+						>
+							ship fast
+						</span>{" "}
+						and{" "}
+						<span
+							css={css`
+								color: #8c67f5;
+								margin-right: 12px;
+							`}
+						>
+							better
+						</span>
+						🚀
 					</Heading>
-					<TextBlock fontSize={14.2} color={"#606060"} className={"mt-16"} css={css`letter-spacing: .2px;`} leading={false}>
-					Devs use crusher to test & ship fast with confidence. Get started in seconds
+					<TextBlock
+						fontSize={14.2}
+						color={"#606060"}
+						className={"mt-16"}
+						css={css`
+							letter-spacing: 0.2px;
+						`}
+						leading={false}
+					>
+						Devs use crusher to test & ship fast with confidence. Get started in seconds
 					</TextBlock>
 
 					<div css={overlayContainer} className={"mt-32"}>
-
 						<div className={" mb-42"}>
-				<Conditional showIf={data && !loading}>
-					<div className="text-32 font-extrabold my-50">Please Check your email</div>;
-					</Conditional>
-			<Conditional showIf={!data}>
-					<div css={overlayContainer} className={"mt-32"}>
- 							<TextBlock fontSize={14} color={"#E7E7E7"} className={"mb-24"}>
-								Reset your password
-							</TextBlock>
+							<Conditional showIf={data && !loading}>
+								<div className="text-32 font-extrabold my-50">Please Check your email</div>;
+							</Conditional>
+							<Conditional showIf={!data}>
+								<div css={overlayContainer} className={"mt-32"}>
+									<TextBlock fontSize={14} color={"#E7E7E7"} className={"mb-24"}>
+										Reset your password
+									</TextBlock>
 
-							<div className={" mb-72"}>
-							<div className="mt-20">
-									<Input
-										className="md-20 bg"
-										autoComplete={"email"}
-										value={email.value}
-										onChange={(emailChange)}
-										placeholder={"Enter email"}
-										isError={email.error}
-										onBlur={verifyInfo.bind(this, false)}
-										onKeyUp={onEnter}
-									/>
-									<Conditional showIf={email.error}>
-										<div className={"mt-8 text-12"} css={errorState}>
-											{email.error}
+									<div className={" mb-72"}>
+										<div className="mt-20">
+											<Input
+												className="md-20 bg"
+												autoComplete={"email"}
+												value={email.value}
+												onChange={emailChange}
+												placeholder={"Enter email"}
+												isError={email.error}
+												onBlur={verifyInfo.bind(this, false)}
+												onKeyUp={onEnter}
+											/>
+											<Conditional showIf={email.error}>
+												<div className={"mt-8 text-12"} css={errorState}>
+													{email.error}
+												</div>
+											</Conditional>
 										</div>
-									</Conditional>
-								</div>
-								<Button
-									className={"flex items-center justify-center mt-30"}
-									css={css(`
+										<Button
+											className={"flex items-center justify-center mt-30"}
+											css={css(`
 									width: 100%;
 									height: 38px;
 									font-weight: 400;
                                     background:#905CFF;
 								`)}
-									onClick={onSubmit}
-								>
-									<div className={"flex justify-center items-center"}>
-										<Conditional showIf={!loading}>
-											<Text fontSize={14} weight={600}>
-												Send reset link
-											</Text>
-										</Conditional>
-										<Conditional showIf={loading}>
-											<span>
-												{" "}
-												<LoadingSVG color={"#fff"} height={"16rem"} width={"16rem"} />
-											</span>
-											<span className={"mt-2 ml-8"}>Processing</span>
-										</Conditional>
+											onClick={onSubmit}
+										>
+											<div className={"flex justify-center items-center"}>
+												<Conditional showIf={!loading}>
+													<Text fontSize={14} weight={600}>
+														Send reset link
+													</Text>
+												</Conditional>
+												<Conditional showIf={loading}>
+													<span>
+														{" "}
+														<LoadingSVG color={"#fff"} height={"16rem"} width={"16rem"} />
+													</span>
+													<span className={"mt-2 ml-8"}>Processing</span>
+												</Conditional>
+											</div>
+										</Button>
 									</div>
-								</Button>
-							</div>
-						</div>
-			</Conditional>
+								</div>
+							</Conditional>
 						</div>
 					</div>
 					<div onClick={() => router.push("/login")} className="flex w-full justify-center mt-40">
@@ -166,14 +188,21 @@ export default function ForgotPassword() {
 							color={"#565657"}
 							fontSize={14}
 							css={css`
-							font-size: 14.5rem;
+								font-size: 14.5rem;
 								:hover {
-								
 									text-decoration: underline;
 								}
 							`}
 						>
-							Or go back to <span css={css`color: #855AFF; margin-left: 3px;`}>Login</span>
+							Or go back to{" "}
+							<span
+								css={css`
+									color: #855aff;
+									margin-left: 3px;
+								`}
+							>
+								Login
+							</span>
 						</Text>
 					</div>
 				</div>
@@ -183,13 +212,13 @@ export default function ForgotPassword() {
 }
 
 const helpCSS = css`
-color: #565657;
-`
+	color: #565657;
+`;
 const containerCSS = css(`
 height: 100vh;
 background: #0D0E11;
 width: 100vw;
-`)
+`);
 
 const overlayContainer = css(`
 	width: 372rem;
@@ -205,4 +234,3 @@ const errorState = css`
 	height: 12rem;
 	width: 100%;
 `;
-

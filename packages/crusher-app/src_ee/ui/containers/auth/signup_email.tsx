@@ -20,9 +20,8 @@ const registerUser = (name: string, email: string, password: string, inviteType:
 	});
 };
 
-
 export default function Signup_email({ goBackHandler }) {
-		const [data, setData] = useState(null);
+	const [data, setData] = useState(null);
 	const router = useRouter();
 	const { query } = router;
 
@@ -76,7 +75,7 @@ export default function Signup_email({ goBackHandler }) {
 			const data = await registerUser(name.value, email.value, password.value, query?.inviteType?.toString(), query?.inviteCode?.toString());
 			setData(data.systemInfo);
 		} catch (e: any) {
-			console.error(e)
+			console.error(e);
 			alert(e.message === "USER_EMAIL_NOT_AVAILABLE" ? "User already registered" : "Some error occurred while registering");
 		}
 		setLoading(false);
@@ -90,56 +89,81 @@ export default function Signup_email({ goBackHandler }) {
 
 	loadUserDataAndRedirect({ fetchData: false, userAndSystemData: data });
 	return (
-		<div
-			css={containerCSS}
-		>
+		<div css={containerCSS}>
 			<div className="pt-28">
-			<LoginNavBar/>
+				<LoginNavBar />
 			</div>
 			<div className={"flex justify-center"}>
-				
-				<div className={"flex flex-col items-center"} css={css`margin-top:160rem;`}>
+				<div
+					className={"flex flex-col items-center"}
+					css={css`
+						margin-top: 160rem;
+					`}
+				>
 					<Heading type={1} fontSize={22} weight={900}>
-					Get superpowers to <span css={css`color: #D4EB79;`}>ship fast</span> and <span css={css`color: #8C67F5; margin-right: 12px;`}>better</span>🚀
+						Get superpowers to{" "}
+						<span
+							css={css`
+								color: #d4eb79;
+							`}
+						>
+							ship fast
+						</span>{" "}
+						and{" "}
+						<span
+							css={css`
+								color: #8c67f5;
+								margin-right: 12px;
+							`}
+						>
+							better
+						</span>
+						🚀
 					</Heading>
-					<TextBlock fontSize={14.2} color={"#606060"} className={"mt-16"} css={css`letter-spacing: .2px;`} leading={false}>
-					Devs use crusher to test & ship fast with confidence. Get started in seconds
+					<TextBlock
+						fontSize={14.2}
+						color={"#606060"}
+						className={"mt-16"}
+						css={css`
+							letter-spacing: 0.2px;
+						`}
+						leading={false}
+					>
+						Devs use crusher to test & ship fast with confidence. Get started in seconds
 					</TextBlock>
 
 					<div css={overlayContainer} className={"mt-48 pb-60"}>
-
 						<div className={" mb-72"}>
- 					
-						<div className={" mb-20"}>
- 							<FormInput
-								onReturn={signupUser.bind(this)}
-								data={name}
-								onChange={nameChange}
-								autoComplete={"name"}
-								placeholder={"Enter name"}
-								onBlur={verifyInfo.bind(this, false)}
-							/>
-							<FormInput
-								onReturn={signupUser.bind(this)}
-								data={email}
-								onChange={emailChange}
-								autoComplete={"email"}
-								placeholder={"Enter email"}
-								onBlur={verifyInfo.bind(this, false)}
-							/>
-							<FormInput
-								type={"password"}
-								data={password}
-								onReturn={signupUser.bind(this)}
-								onChange={passwordChange}
-								onEnter={signupOnEnter}
-								autoComplete={"new-password"}
-								placeholder={"Enter password"}
-								onBlur={verifyInfo.bind(this, false)}
-							/>
-						</div>
+							<div className={" mb-20"}>
+								<FormInput
+									onReturn={signupUser.bind(this)}
+									data={name}
+									onChange={nameChange}
+									autoComplete={"name"}
+									placeholder={"Enter name"}
+									onBlur={verifyInfo.bind(this, false)}
+								/>
+								<FormInput
+									onReturn={signupUser.bind(this)}
+									data={email}
+									onChange={emailChange}
+									autoComplete={"email"}
+									placeholder={"Enter email"}
+									onBlur={verifyInfo.bind(this, false)}
+								/>
+								<FormInput
+									type={"password"}
+									data={password}
+									onReturn={signupUser.bind(this)}
+									onChange={passwordChange}
+									onEnter={signupOnEnter}
+									autoComplete={"new-password"}
+									placeholder={"Enter password"}
+									onBlur={verifyInfo.bind(this, false)}
+								/>
+							</div>
 
-						<SubmitButton text="Create an account" onSubmit={signupUser} loading={loading} />
+							<SubmitButton text="Create an account" onSubmit={signupUser} loading={loading} />
 						</div>
 						<div className="flex items-center justify-between">
 							<Text onClick={goBackHandler} css={underLineonHover} fontSize={12}>
@@ -149,21 +173,26 @@ export default function Signup_email({ goBackHandler }) {
 								Forgot Password
 							</Text>
 						</div>
-
 					</div>
 					<div onClick={() => router.push("/signup")} className="flex w-full justify-center mt-40">
 						<Text
 							color={"#565657"}
 							fontSize={14}
 							css={css`
-							font-size: 14.5rem;
+								font-size: 14.5rem;
 								:hover {
-								
 									text-decoration: underline;
 								}
 							`}
 						>
-							Already registered? <span css={css`color: #855AFF;`}>Login</span>
+							Already registered?{" "}
+							<span
+								css={css`
+									color: #855aff;
+								`}
+							>
+								Login
+							</span>
 						</Text>
 					</div>
 				</div>
@@ -173,13 +202,13 @@ export default function Signup_email({ goBackHandler }) {
 }
 
 const helpCSS = css`
-color: #565657;
-`
+	color: #565657;
+`;
 const containerCSS = css(`
 height: 100vh;
 background: #0D0E11;
 width: 100vw;
-`)
+`);
 
 const overlayContainer = css(`
 	width: 372rem;

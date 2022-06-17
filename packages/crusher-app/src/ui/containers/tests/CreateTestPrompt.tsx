@@ -1,8 +1,8 @@
 import { css } from "@emotion/react";
 import React, { useMemo } from "react";
 import { Input } from "dyson/src/components/atoms/input/Input";
-import { Button, Text } from 'dyson/src/components/atoms';
-import { TextBlock } from 'dyson/src/components/atoms/textBlock/TextBlock';
+import { Button, Text } from "dyson/src/components/atoms";
+import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import Link from "next/link";
 import { LINUX_INFO, OS, OS_INFO } from "@constants/app";
 import useSWR from "swr";
@@ -27,7 +27,7 @@ export function RenderDownloadLink(props) {
 	const { data } = useSWR(RELEASE_API);
 
 	React.useEffect(() => {
-		if(!osType) return;
+		if (!osType) return;
 
 		if (osType === OS.MAC) {
 			const dmgLink = OS_INFO.MAC.downloadLink || data?.assets?.filter(({ name }: any) => name.includes("darwin"))[0]?.browser_download_url;
@@ -38,20 +38,20 @@ export function RenderDownloadLink(props) {
 		}
 	}, [osType]);
 
-
-	if(dmgLink) {
-		return (
-			<Link href={dmgLink}>
-				{props.children}
-			</Link>
-		)
+	if (dmgLink) {
+		return <Link href={dmgLink}>{props.children}</Link>;
 	}
 
 	return null;
 }
 
-export const CreateTestPrompt = ({ className }: {className?: any}) => (
-	<div css={ css`margin-top: 40rem;`} className={className}>
+export const CreateTestPrompt = ({ className }: { className?: any }) => (
+	<div
+		css={css`
+			margin-top: 40rem;
+		`}
+		className={className}
+	>
 		<div css={boxCSS}>
 			<div className={"text-18 font-800 mb-12 leading-none"}>
 				Record your tests <span className={"text-13 ml-12 font-400 leading-none"}>(1/3)</span>
@@ -64,8 +64,8 @@ export const CreateTestPrompt = ({ className }: {className?: any}) => (
 				<div
 					className={"flex items-center"}
 					css={css`
-					color: #c8c8c8;
-				`}
+						color: #c8c8c8;
+					`}
 				>
 					<Terminal /> <span className={"ml-12 text-16 font-500"}>In your project, run</span>
 				</div>
@@ -73,10 +73,10 @@ export const CreateTestPrompt = ({ className }: {className?: any}) => (
 				<div>
 					<Input
 						css={css`
-						input {
-							width: 305rem;
-						}
-					`}
+							input {
+								width: 305rem;
+							}
+						`}
 						size={"medium"}
 						initialValue={"npx crusher-cli test:create"}
 					/>
@@ -86,19 +86,17 @@ export const CreateTestPrompt = ({ className }: {className?: any}) => (
 				<div
 					className={"flex text-12 justify-end mt-12 underline"}
 					css={css`
-					color: #c8c8c8;
-				`}
+						color: #c8c8c8;
+					`}
 				>
 					Or download recorder
 				</div>
-				
 			</RenderDownloadLink>
 		</div>
 	</div>
 );
 
-const ViewDemoSection = ()=>{
-
+const ViewDemoSection = () => {
 	return (
 		<div className={"flex mt-40 justify-between"} css={demoCSS}>
 			<div>
@@ -106,24 +104,21 @@ const ViewDemoSection = ()=>{
 					Or view demo project to see crusher in action
 				</TextBlock>
 				<TextBlock color={"#E3E3E3"} fontSize={13} className={"mt-16"}>
-					-&nbsp;&nbsp;Create test &nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;Break something&nbsp;&nbsp;&nbsp;  -&nbsp;&nbsp;Run test
+					-&nbsp;&nbsp;Create test &nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;Break something&nbsp;&nbsp;&nbsp; -&nbsp;&nbsp;Run test
 				</TextBlock>
 			</div>
 
-			<Button bgColor={"tertiary-white"}>
-				View demo
-			</Button>
-
+			<Button bgColor={"tertiary-white"}>View demo</Button>
 		</div>
-	)
-}
+	);
+};
 
 const demoCSS = css`
 	margin: 0 auto;
 	margin-top: 40px;
-  width: 784rem;
-  transform: translateX(-20px);
-`
+	width: 784rem;
+	transform: translateX(-20px);
+`;
 
 const boxCSS = css`
 	background: #101215;

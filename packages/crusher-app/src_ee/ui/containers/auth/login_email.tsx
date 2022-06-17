@@ -75,26 +75,52 @@ export default function EmailLogin({ goBackHandler }) {
 	loadUserDataAndRedirect({ fetchData: false, userAndSystemData: data });
 
 	return (
-		<div
-			css={containerCSS}
-		>
+		<div css={containerCSS}>
 			<div className="pt-28">
-			<LoginNavBar/>
+				<LoginNavBar />
 			</div>
 			<div className={"flex justify-center"}>
-				
-				<div className={"flex flex-col items-center"} css={css`margin-top:160rem;`}>
+				<div
+					className={"flex flex-col items-center"}
+					css={css`
+						margin-top: 160rem;
+					`}
+				>
 					<Heading type={1} fontSize={22} weight={900}>
-					Get superpowers to <span css={css`color: #D4EB79;`}>ship fast</span> and <span css={css`color: #8C67F5; margin-right: 12px;`}>better</span>🚀
+						Get superpowers to{" "}
+						<span
+							css={css`
+								color: #d4eb79;
+							`}
+						>
+							ship fast
+						</span>{" "}
+						and{" "}
+						<span
+							css={css`
+								color: #8c67f5;
+								margin-right: 12px;
+							`}
+						>
+							better
+						</span>
+						🚀
 					</Heading>
-					<TextBlock fontSize={14.2} color={"#606060"} className={"mt-16"} css={css`letter-spacing: .2px;`} leading={false}>
-					Devs use crusher to test & ship fast with confidence. Get started in seconds
+					<TextBlock
+						fontSize={14.2}
+						color={"#606060"}
+						className={"mt-16"}
+						css={css`
+							letter-spacing: 0.2px;
+						`}
+						leading={false}
+					>
+						Devs use crusher to test & ship fast with confidence. Get started in seconds
 					</TextBlock>
 
 					<div css={overlayContainer} className={"mt-48 pb-60"}>
-
 						<div className={" mb-72"}>
- 							<div>
+							<div>
 								<Input
 									className="bg"
 									autoComplete={"email"}
@@ -164,21 +190,26 @@ export default function EmailLogin({ goBackHandler }) {
 								Forgot Password
 							</Text>
 						</div>
-
 					</div>
 					<div onClick={() => router.push("/signup")} className="flex w-full justify-center mt-40">
 						<Text
 							color={"#565657"}
 							fontSize={14}
 							css={css`
-							font-size: 14.5rem;
+								font-size: 14.5rem;
 								:hover {
-								
 									text-decoration: underline;
 								}
 							`}
 						>
-							New user? <span css={css`color: #855AFF;`}>Signup</span>
+							New user?{" "}
+							<span
+								css={css`
+									color: #855aff;
+								`}
+							>
+								Signup
+							</span>
 						</Text>
 					</div>
 				</div>
@@ -191,7 +222,7 @@ const containerCSS = css(`
 height: 100vh;
 background: #0D0E11;
 width: 100vw;
-`)
+`);
 
 const overlayContainer = css(`
 	width: 372rem;

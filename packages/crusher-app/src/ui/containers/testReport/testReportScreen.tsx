@@ -322,45 +322,45 @@ export const TestReportScreen = () => {
 	return (
 		<div className={"mt-56"}>
 			<div className="px-16" css={containerWidth}>
-			<NameNStatusSection />
-			<div className={"flex items-center leading-none mt-16 text-13"}>
-				<CalendarSVG className={"mr-16"} />
-				Ran {timeSince(new Date(data.startedAt))}
-			</div>
-			<Conditional showIf={selectedTabIndex !== 1}>
-				<div className={"flex items-center leading-none mt-56 mb-57 text-13"}>
-					<ThunderSVG className={"mr-16"} />
-					Wohoo! You ran {testsCount} tests
+				<NameNStatusSection />
+				<div className={"flex items-center leading-none mt-16 text-13"}>
+					<CalendarSVG className={"mr-16"} />
+					Ran {timeSince(new Date(data.startedAt))}
 				</div>
-			</Conditional>
-			<Conditional showIf={selectedTabIndex === 1}>
-				<div className={"flex leading-none mt-56 mb-52  items-center invisible"}>
-					<div
-						className={"text-13"}
-						css={css`
-							width: 100px;
-							line-height: 19rem;
-						`}
-					>
-						Last build
+				<Conditional showIf={selectedTabIndex !== 1}>
+					<div className={"flex items-center leading-none mt-56 mb-57 text-13"}>
+						<ThunderSVG className={"mr-16"} />
+						Wohoo! You ran {testsCount} tests
 					</div>
-					<div css={timeLine} className={"ml-40 relative"}>
-						<div className={"absolute flex flex-col items-center"} css={currentSelected}>
-							<div className={"mb-8 text-12"}>12Jun</div>
-							<div>
-								<PassedSVG />
-							</div>
+				</Conditional>
+				<Conditional showIf={selectedTabIndex === 1}>
+					<div className={"flex leading-none mt-56 mb-52  items-center invisible"}>
+						<div
+							className={"text-13"}
+							css={css`
+								width: 100px;
+								line-height: 19rem;
+							`}
+						>
+							Last build
 						</div>
+						<div css={timeLine} className={"ml-40 relative"}>
+							<div className={"absolute flex flex-col items-center"} css={currentSelected}>
+								<div className={"mb-8 text-12"}>12Jun</div>
+								<div>
+									<PassedSVG />
+								</div>
+							</div>
 
-						<div className={"absolute flex flex-col items-center"} css={timelineItem}>
-							<div>
-								<PassedSVG />
+							<div className={"absolute flex flex-col items-center"} css={timelineItem}>
+								<div>
+									<PassedSVG />
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-			</Conditional>
-			<TabBar />
+				</Conditional>
+				<TabBar />
 			</div>
 			<Conditional showIf={selectedTabIndex === 0}>
 				<ReportSection />
@@ -370,10 +370,10 @@ export const TestReportScreen = () => {
 };
 
 const containerWidth = css`
-width: 1468rem;
-max-width: calc(100vw - 352rem);
-margin: 0 auto;
-padding: 0 0;
+	width: 1468rem;
+	max-width: calc(100vw - 352rem);
+	margin: 0 auto;
+	padding: 0 0;
 `;
 const timeLine = css`
 	height: 2px;
@@ -424,8 +424,7 @@ const waiting = css`
 	border: 1px solid #545e6b;
 `;
 
-const Tab = css`
-`;
+const Tab = css``;
 
 const TabItem = css`
 	top: 1px;
@@ -442,9 +441,8 @@ const TabItem = css`
 `;
 
 const selected = css`
-
-    border-radius: 6px;
-    color: #fff;
-    font-weight: 600;
-    background: #17181b;
+	border-radius: 6px;
+	color: #fff;
+	font-weight: 600;
+	background: #17181b;
 `;

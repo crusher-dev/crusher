@@ -407,32 +407,39 @@ function CISection() {
 
 	return (
 		<div>
-				<Heading type={1} fontSize={"16"} className={"mb-12 mt-16"}>
-					CI/CD
-				</Heading>
-				<TextBlock fontSize={12.4} className={""} color={"#c1c1c1"}>
-					Easily integrate and trigger tests from your CI/CD workflow
-				</TextBlock>
+			<Heading type={1} fontSize={"16"} className={"mb-12 mt-16"}>
+				CI/CD
+			</Heading>
+			<TextBlock fontSize={12.4} className={""} color={"#c1c1c1"}>
+				Easily integrate and trigger tests from your CI/CD workflow
+			</TextBlock>
 
-				<Input
+			<Input
 				size={"medium"}
 				forwardRef={inputRef}
-				rightIcon={<CopyIconSVG onClick={copyCommand} css={css`position: relative;
-				top: -2rem;
-				right: -1rem;`}/>}
-					css={css`
-						width: 400rem;
-						height: 40rem !important;
-						margin-top: 20rem;
-						input{
-							padding-right: 36rem;
-						}
-					`}
-					value={data ?? "Loading.."}
-					onFocus={copyCommand}
-				/>
+				rightIcon={
+					<CopyIconSVG
+						onClick={copyCommand}
+						css={css`
+							position: relative;
+							top: -2rem;
+							right: -1rem;
+						`}
+					/>
+				}
+				css={css`
+					width: 400rem;
+					height: 40rem !important;
+					margin-top: 20rem;
+					input {
+						padding-right: 36rem;
+					}
+				`}
+				value={data ?? "Loading.."}
+				onFocus={copyCommand}
+			/>
 		</div>
-	)
+	);
 }
 
 function GitIntegration() {
@@ -807,7 +814,7 @@ export const Integrations = () => {
 				{/* <hr css={basicHR} /> */}
 				<GitIntegration />
 				<hr css={basicHR} className={"mt-40"} />
-				<CISection/>
+				<CISection />
 				{/* <CiIntegration /> */}
 			</div>
 		</SettingsLayout>

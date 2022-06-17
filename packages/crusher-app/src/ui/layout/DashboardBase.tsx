@@ -26,8 +26,8 @@ import { buildFiltersAtom } from "../../store/atoms/pages/buildPage";
 import { updateMeta } from "../../store/mutators/metaData";
 import { PROJECT_META_KEYS, USER_META_KEYS } from "@constants/USER";
 import { handleTestRun } from "@utils/core/testUtils";
-import { Tooltip } from 'dyson/src/components/atoms/tooltip/Tooltip';
-import { TextBlock } from 'dyson/src/components/atoms/textBlock/TextBlock';
+import { Tooltip } from "dyson/src/components/atoms/tooltip/Tooltip";
+import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 
 const Download = dynamic(() => import("@ui/containers/dashboard/Download"));
 const AddProject = dynamic(() => import("@ui/containers/dashboard/AddProject"));
@@ -113,63 +113,109 @@ function BottomSection({ name, description, ...props }) {
 }
 
 function HelpContent() {
-	return <div>
+	return (
+		<div>
 			<div className={"px-24 py-20 pt-14"}>
-				<TextBlock fontSize={16} weight={600} color={"#CFCFD0"} css={css`font-family: 'Cera Pro'`}>Need help with your project?</TextBlock>
-				<TextBlock fontSize={12.8} color={"#8F8F8F"} className={"mt-10"}>For issues with crusher, other enquiries.</TextBlock>
+				<TextBlock
+					fontSize={16}
+					weight={600}
+					color={"#CFCFD0"}
+					css={css`
+						font-family: "Cera Pro";
+					`}
+				>
+					Need help with your project?
+				</TextBlock>
+				<TextBlock fontSize={12.8} color={"#8F8F8F"} className={"mt-10"}>
+					For issues with crusher, other enquiries.
+				</TextBlock>
 				<div className={"flex mt-20 mb-12"}>
 					<a href={"https://docs.crusher.dev"} target={"_blank"}>
-					<Button size={"x-small"} css={css`width: 148rem;`} bgColor={"blue"}>Setup call</Button>
+						<Button
+							size={"x-small"}
+							css={css`
+								width: 148rem;
+							`}
+							bgColor={"blue"}
+						>
+							Setup call
+						</Button>
 					</a>
-						<a href={"https://docs.crusher.dev"} target={"_blank"}>
-							<Button size={"x-small"} className={"ml-12"} css={css`width: 120rem;`} bgColor={"tertiary-white-outline"}>Read docs</Button>
-						</a>
+					<a href={"https://docs.crusher.dev"} target={"_blank"}>
+						<Button
+							size={"x-small"}
+							className={"ml-12"}
+							css={css`
+								width: 120rem;
+							`}
+							bgColor={"tertiary-white-outline"}
+						>
+							Read docs
+						</Button>
+					</a>
 				</div>
-				<TextBlock className={"mt-24"} fontSize={13} color={"#8F8F8F"} showLineHeight={true} >		A dev will pair to help you adopt crusher.</TextBlock>
-
+				<TextBlock className={"mt-24"} fontSize={13} color={"#8F8F8F"} showLineHeight={true}>
+					{" "}
+					A dev will pair to help you adopt crusher.
+				</TextBlock>
 			</div>
-		<hr css={css`height: 1px; background: #1C1F22;  border: none;`} className={"mt-0 mb-8"}/>
+			<hr
+				css={css`
+					height: 1px;
+					background: #1c1f22;
+					border: none;
+				`}
+				className={"mt-0 mb-8"}
+			/>
 
-		<div className={"px-20 py-16"}>
-			<TextBlock fontSize={16} weight={600}  color={"#CFCFD0"} css={css`font-family: 'Cera Pro'`}>Discuss with community</TextBlock>
-			<TextBlock className={"mt-10 mb-16 "} fontSize={12.8} color={"#8F8F8F"}>For feature request, question or discussion</TextBlock>
+			<div className={"px-20 py-16"}>
+				<TextBlock
+					fontSize={16}
+					weight={600}
+					color={"#CFCFD0"}
+					css={css`
+						font-family: "Cera Pro";
+					`}
+				>
+					Discuss with community
+				</TextBlock>
+				<TextBlock className={"mt-10 mb-16 "} fontSize={12.8} color={"#8F8F8F"}>
+					For feature request, question or discussion
+				</TextBlock>
 
-			<a href={"https://github.com/crusherdev/crusher"} target={"_blank"}>
-			<img src={"/github_support.png"} className={"mb-16 "} css={banner}/>
-			</a>
-			{/*<img src={"/github_support.png"} css={banner}/>*/}
+				<a href={"https://github.com/crusherdev/crusher"} target={"_blank"}>
+					<img src={"/github_support.png"} className={"mb-16 "} css={banner} />
+				</a>
+				{/*<img src={"/github_support.png"} css={banner}/>*/}
+			</div>
 		</div>
-	</div>;
+	);
 }
 
-const banner=css`
-	:hover{
-    filter: sepia(100%) hue-rotate(
-            203deg
-    ) saturate(1500%);
+const banner = css`
+	:hover {
+		filter: sepia(100%) hue-rotate(203deg) saturate(1500%);
 	}
-`
+`;
 
 const helpDropdownCSS = css`
-    box-shadow: 0 0px 6px rgb(0 0 0 / 33%) !important;
-							    bottom: -20rem;
-							    top: unset !important;
-							left: 4rem !important;
-							height: fit-content;
-							border-radius: 10rem !important;
-      width: 372px;
-
-						`
+	box-shadow: 0 0px 6px rgb(0 0 0 / 33%) !important;
+	bottom: -20rem;
+	top: unset !important;
+	left: 4rem !important;
+	height: fit-content;
+	border-radius: 10rem !important;
+	width: 372px;
+`;
 
 function HelpNSupport() {
-	return <Dropdown
-		component={<HelpContent/>}
-		dropdownCSS={helpDropdownCSS}
-	>
-		<div css={navLink} className={'flex items-center pr text-12.5 mt-4'}>
-			<NewTabSVG className={'mr-14 mb-2'} /> Help & Support
-		</div>
-	</Dropdown>;
+	return (
+		<Dropdown component={<HelpContent />} dropdownCSS={helpDropdownCSS}>
+			<div css={navLink} className={"flex items-center pr text-12.5 mt-4"}>
+				<NewTabSVG className={"mr-14 mb-2"} /> Help & Support
+			</div>
+		</Dropdown>
+	);
 }
 
 function LeftSection() {
@@ -220,13 +266,12 @@ function LeftSection() {
 					</Conditional>
 
 					<Conditional showIf={getEdition() !== EditionTypeEnum.OPEN_SOURCE}>
-						<div css={navLink} className={"flex items-center text-12.5 mt-4"}
-								 onClick={setInviteTeamMates.bind(this, true)}>
+						<div css={navLink} className={"flex items-center text-12.5 mt-4"} onClick={setInviteTeamMates.bind(this, true)}>
 							<AddSVG className={"mr-18 mb-2"} /> Invite teammates
 						</div>
 					</Conditional>
 
-					<HelpNSupport/>
+					<HelpNSupport />
 					<div
 						css={navLink}
 						className={"flex items-center text-12.5 mt-4"}
@@ -280,21 +325,21 @@ function DropdownContent() {
 					selected={true}
 					label={"Request a feature"}
 					onClick={() => {
-						window.open("https://github.com/crusherdev/crusher/issues","_blank").focus();
+						window.open("https://github.com/crusherdev/crusher/issues", "_blank").focus();
 					}}
 				></MenuItem>
 
 				<MenuItem
 					label={"Report Issue"}
 					onClick={() => {
-						window.open("https://github.com/crusherdev/crusher/issues","_blank").focus();
+						window.open("https://github.com/crusherdev/crusher/issues", "_blank").focus();
 					}}
 				></MenuItem>
 
 				<MenuItem
 					label={"View docs"}
 					onClick={() => {
-						window.open("https://docs.crusher.dev","_blank").focus();
+						window.open("https://docs.crusher.dev", "_blank").focus();
 					}}
 				></MenuItem>
 			</div>
@@ -426,7 +471,17 @@ export const SidebarTopBarLayout = ({ children, noContainerWidth = false, hideSi
 
 			<div className={"w-full"}>
 				<TopNavbar />
-				<div css={[scrollContainer, noContainerWidth ? css`overflow-y: overlay` : undefined]} className={"custom-scroll relative"}>
+				<div
+					css={[
+						scrollContainer,
+						noContainerWidth
+							? css`
+									overflow-y: overlay;
+							  `
+							: undefined,
+					]}
+					className={"custom-scroll relative"}
+				>
 					<div css={[!noContainerWidth ? setContainerWidth && containerWidth : null]}>{children}</div>
 				</div>
 			</div>
@@ -513,7 +568,7 @@ const navLink = css`
 	height: 31rem;
 	color: rgba(189, 189, 189, 0.8);
 	font-weight: 500;
-  letter-spacing: .3px;
+	letter-spacing: 0.3px;
 
 	margin-left: 6px;
 	margin-right: 6px;

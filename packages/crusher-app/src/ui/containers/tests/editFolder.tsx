@@ -148,12 +148,7 @@ export const EditFolderModal = ({ name, id, onClose }) => {
 				>
 					Or take action
 				</div>
-				<Button
-					bgColor={"danger"}
-					impactLevel={"low"}
-					size={"x-small"}
-					onClick={deleteFolder}
-				>
+				<Button bgColor={"danger"} impactLevel={"low"} size={"x-small"} onClick={deleteFolder}>
 					<div className={"flex justify-center items-center pt-2"}>
 						<Conditional showIf={processingDelete}>
 							<LoadingSVG

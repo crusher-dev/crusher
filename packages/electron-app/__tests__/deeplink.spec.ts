@@ -17,6 +17,7 @@ describeFun("Recorder boot", () => {
 	async function init() {
 		electronApp = await playwright["_electron"].launch(getLaunchOptions());
 		appWindow = await electronApp.firstWindow();
+		await appWindow.waitForURL((url) => { if (!url.toString().includes("splash.html")) return true; });
 
 		const onboarding = await appWindow.$("#onboarding-overlay");
 		if (onboarding) {

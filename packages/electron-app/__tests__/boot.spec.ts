@@ -14,6 +14,7 @@ describe("Recorder boot", () => {
 	async function init() {
 		electronApp = await playwright["_electron"].launch(getLaunchOptions());
 		appWindow = await electronApp.firstWindow();
+		await appWindow.waitForURL((url) => { if (!url.toString().includes("splash.html")) return true; });
 
 		const onboarding = await appWindow.$("#onboarding-overlay");
 		if (onboarding) {
@@ -139,12 +140,11 @@ describe("Recorder boot", () => {
 			const webView = await appWindow.$("webview");
 			const webViewContainerSize = await webView.evaluate((element) => {
 				return {
-					width: element.parentElement.style.width,
-					height: element.parentElement.style.height,
+					aspectRatio: element.parentElement.style.aspectRatio,
 				};
 			});
 
-			expect(webViewContainerSize).toMatchObject({ width: devices[2].width + "rem", height: devices[2].height + "rem" });
+			expect(webViewContainerSize).toMatchObject({ aspectRatio: `${(devices[2].width + " / " + devices[2].height)}` });
 		});
 
 		// test("changing device between recording session", async () => {

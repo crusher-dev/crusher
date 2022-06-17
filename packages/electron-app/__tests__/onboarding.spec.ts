@@ -13,6 +13,8 @@ describe("Onboarding", () => {
 		electronApp = await playwright["_electron"].launch(getLaunchOptions());
 
 		appWindow = await electronApp.firstWindow();
+		await appWindow.waitForURL((url) => { if (!url.toString().includes("splash.html")) return true; });
+
 		await appWindow.waitForLoadState();
 		await new Promise((resolve) => setTimeout(resolve, 100));
 	}

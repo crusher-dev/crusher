@@ -44,13 +44,12 @@ const PageActions = ({ className, ...props }: { className?: any }) => {
 	const store = useStore();
 
 	const handleActionSelected = (id: TTopLevelActionsEnum) => {
-
 		const recorderState = getRecorderState(store.getState());
 		if (recorderState.type !== TRecorderState.RECORDING_ACTIONS) {
 			sendSnackBarEvent({ type: "error", message: "A action is in progress. Wait and retry again" });
 			return;
 		}
-		
+
 		switch (id) {
 			case TTopLevelActionsEnum.VIEWPORT_SCREENSHOT:
 				performTakePageScreenshot();

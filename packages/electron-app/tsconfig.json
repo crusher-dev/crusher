@@ -3,7 +3,7 @@
 	"basePath": "../",
 	"compilerOptions": {
 		"baseUrl": "../",
-		
+
 		"rootDir": "../../",
 		"module": "commonjs",
 		"removeComments": true,
@@ -25,8 +25,8 @@
 		"paths": {
 			"@shared/*": ["crusher-shared/*"],
 			"@crusher-shared/*": ["crusher-shared/*"],
-			"@dyson/*": ["dyson/src/*"],
-		},
+			"@dyson/*": ["dyson/src/*"]
+		}
 	},
 	"typeRoots": ["node_modules/@types"],
 	"types": ["@emotion/react/types/css-prop"],

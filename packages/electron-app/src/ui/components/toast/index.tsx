@@ -16,23 +16,38 @@ export const sendSnackBarEvent = (event: SnackbarEvent) => {
 	snackBarEmitter.emit("snackbar-notify", event);
 };
 
-const TestReportToast = ({meta}) => {
+const TestReportToast = ({ meta }) => {
 	return (
 		<div css={reportToastContainerStyle}>
 			<div css={reportToastSectionContainerStyle}>
-				<div css={css`font-weight: bold;`}>Tests passed</div>
+				<div
+					css={css`
+						font-weight: bold;
+					`}
+				>
+					Tests passed
+				</div>
 				<div>{meta.totalCount} test</div>
 			</div>
-			<div css={[reportToastSectionContainerStyle, css`border-top-color:  rgba(255, 255, 255, 0.03); border-top-width: 1px; border-top-style: solid`]}>
+			<div
+				css={[
+					reportToastSectionContainerStyle,
+					css`
+						border-top-color: rgba(255, 255, 255, 0.03);
+						border-top-width: 1px;
+						border-top-style: solid;
+					`,
+				]}
+			>
 				<div>View report</div>
 			</div>
 		</div>
-	)
-}
+	);
+};
 
 const reportToastContainerStyle = css`
 	color: #fff;
-	font-size: 13px; 
+	font-size: 13px;
 	position: fixed;
 	left: 50%;
 	top: 41px;
@@ -63,9 +78,8 @@ export const ToastSnackbar = () => {
 		});
 	}, []);
 
-
-	if(event === null) return null;
-	if(event.type === "test_report") return (<TestReportToast meta={event.meta}/>);
+	if (event === null) return null;
+	if (event.type === "test_report") return <TestReportToast meta={event.meta} />;
 
 	return (
 		<Toast type={event.type} onClose={setEvent.bind(this, null)}>

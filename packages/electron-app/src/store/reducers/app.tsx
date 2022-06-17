@@ -2,7 +2,15 @@ import { AnyAction } from "redux";
 import {} from "../actions/recorder";
 import { iSelectorInfo } from "@shared/types/selectorInfo";
 import { iAction } from "@shared/types/action";
-import { RESET_APP_SESSION, SET_PROXY_INITIALIZING, SET_PROXY_STATE, SET_SESSION_META, SET_SETTINGS, SET_SHOW_SHOULD_ONBOARDING_OVERLAY, SET_USER_ACCOUNT_INFO } from "../actions/app";
+import {
+	RESET_APP_SESSION,
+	SET_PROXY_INITIALIZING,
+	SET_PROXY_STATE,
+	SET_SESSION_META,
+	SET_SETTINGS,
+	SET_SHOW_SHOULD_ONBOARDING_OVERLAY,
+	SET_USER_ACCOUNT_INFO,
+} from "../actions/app";
 
 export interface iSettings {
 	backendEndPoint: string;
@@ -17,11 +25,11 @@ export interface ISessionMeta {
 }
 
 export interface IProxyState {
-	[name : string]: {
+	[name: string]: {
 		tunnel: string;
 		intercept: string;
-	}
-};
+	};
+}
 
 interface IAppReducer {
 	settings: iSettings;
@@ -68,11 +76,11 @@ const appReducer = (state: IAppReducer = initialState, action: AnyAction): IAppR
 			return {
 				...state,
 				proxy: action.payload.proxyState,
-			}
+			};
 		case SET_PROXY_INITIALIZING:
 			return {
 				...state,
-				proxyIsInitializing: action.payload.isInitializing
+				proxyIsInitializing: action.payload.isInitializing,
 			};
 		default:
 			return state;

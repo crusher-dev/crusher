@@ -115,7 +115,9 @@ const FieldSelectorPicker = React.forwardRef((props: IFieldSelectorPickerProps, 
 				{props.label}
 			</span>
 			<div css={selectorPickerContainerStyle}>
-				<textarea ref={ref} {...selectorsInputProps} css={[textAreaStyle, scrollBarStyle]}>{props.initialValue}</textarea>
+				<textarea ref={ref} {...selectorsInputProps} css={[textAreaStyle, scrollBarStyle]}>
+					{props.initialValue}
+				</textarea>
 				<InspectElementIcon onClick={handleElementSelectorClick} css={inspectElementIconStyle} />
 			</div>
 		</div>

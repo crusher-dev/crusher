@@ -173,11 +173,11 @@ const performVerifyTest = async (shouldAlsoSave = true) => {
 
 const performRunTests = async (projectId, testIds) => {
 	return ipcRenderer.invoke("run-tests", { projectId, testIds });
-}
+};
 
 const performResetAppSession = async () => {
 	ipcRenderer.invoke("reset-app-session");
-}
+};
 
 const performReplayTest = async (testId) => {
 	return ipcRenderer.invoke("replay-test", { testId });
@@ -185,7 +185,7 @@ const performReplayTest = async (testId) => {
 
 const performClearRemainingStpes = () => {
 	return ipcRenderer.invoke("clear-remaining-steps");
-}
+};
 
 const performReplayTestUrlAction = async (testId, redirectAfterSuccess = false) => {
 	return ipcRenderer.invoke("replay-test-url-action", { testId, redirectAfterSuccess });
@@ -197,7 +197,7 @@ const turnOnInspectMode = () => {
 
 const turnOnElementSelectorInspectMode = () => {
 	return ipcRenderer.invoke("turn-on-element-selector-inspect-mode");
-}
+};
 
 const turnOffInspectMode = () => {
 	ipcRenderer.invoke("turn-off-recorder-inspect-mode");
@@ -205,20 +205,19 @@ const turnOffInspectMode = () => {
 
 const enableJavascriptInDebugger = () => {
 	return ipcRenderer.invoke("enable-javascript-in-debugger");
-}
+};
 
 const disableJavascriptInDebugger = () => {
 	return ipcRenderer.invoke("disable-javascript-in-debugger");
-}
+};
 
 const turnOffElementSelectorInspectMode = () => {
 	return ipcRenderer.invoke("turn-off-element-selector-inspect-mode");
-}
+};
 
-
-const updateTestName =(testId, testName) => {
-	return ipcRenderer.invoke("update-cloud-test-name", {testId, testName});
-}
+const updateTestName = (testId, testName) => {
+	return ipcRenderer.invoke("update-cloud-test-name", { testId, testName });
+};
 
 const saveTest = () => {
 	return ipcRenderer.invoke("save-test");
@@ -253,8 +252,8 @@ const resetTest = (device: iDevice) => {
 };
 
 const performDeleteTest = (testId: string) => {
-	return ipcRenderer.invoke('delete-test', { testId });
-}
+	return ipcRenderer.invoke("delete-test", { testId });
+};
 
 const focusOnWindow = () => {
 	ipcRenderer.invoke("focus-window");
@@ -270,25 +269,25 @@ const getUserTests = (projectId) => {
 
 const getBuildReport = (buildId) => {
 	return ipcRenderer.invoke("get-build-report", { buildId });
-}
+};
 
 const getCloudUserInfo = () => {
 	return ipcRenderer.invoke("get-cloud-user-info");
-}
+};
 
 const performJumpTo = (stepIndex) => {
-	return ipcRenderer.invoke("jump-to-step", {stepIndex});
-}
+	return ipcRenderer.invoke("jump-to-step", { stepIndex });
+};
 
 const goFullScreen = (fullScreen: boolean = true) => {
 	return ipcRenderer.invoke("go-full-screen", { fullScreen });
-}
+};
 
 const performQuitAndRestore = (store) => {
 	const savedSteps = getSavedSteps(store.getState());
 	window.localStorage.setItem("saved-steps", JSON.stringify(savedSteps));
 	return ipcRenderer.invoke("quit-and-restore");
-}
+};
 
 const performSteps = (steps) => {
 	return ipcRenderer.invoke("perform-steps", { steps });
@@ -311,15 +310,15 @@ const deleteCodeTemplate = (id) => {
 
 const performExit = () => {
 	return ipcRenderer.invoke("exit-app");
-}
+};
 
 const performUndockCode = () => {
 	return ipcRenderer.invoke("undock-code");
-}
+};
 
 const turnOnProxy = (configFilePath) => {
 	return ipcRenderer.invoke("turn-on-proxy", { configFilePath });
-}
+};
 
 export {
 	recordHoverDependencies,
@@ -370,5 +369,5 @@ export {
 	performDeleteTest,
 	performExit,
 	performUndockCode,
-	turnOnProxy
+	turnOnProxy,
 };

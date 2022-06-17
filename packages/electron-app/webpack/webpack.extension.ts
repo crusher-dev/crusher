@@ -75,11 +75,7 @@ let finalConfig: any = {
 				exclude: /node_modules/,
 				loader: "babel-loader",
 				options: {
-					presets: [
-						"@babel/preset-env",
-						"@emotion/babel-preset-css-prop",
-						"@babel/preset-react"
-					],
+					presets: ["@babel/preset-env", "@emotion/babel-preset-css-prop", "@babel/preset-react"],
 					plugins: [["@babel/plugin-transform-react-jsx", { pragma: "h" }], "@emotion/babel-plugin"],
 				},
 			},
@@ -100,10 +96,7 @@ if (process.env.NODE_ENV === "development") {
 
 	finalConfig = {
 		...finalConfig,
-		plugins: [
-			...finalConfig.plugins,
-			new RunElectronOnFirstCompile(),
-		],
+		plugins: [...finalConfig.plugins, new RunElectronOnFirstCompile()],
 		mode: "development",
 		watch: true,
 	};

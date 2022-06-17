@@ -14,303 +14,368 @@ import { ModelContainerLayout } from "../layouts/modalContainer";
 import { CommonFooter } from "../layouts/commonFooter";
 
 const GithubButton = (props) => {
-	return (<Button
-						id={"verify-save-test"}
-						onClick={(e) => {
-							e.preventDefault();
-						}}
-						bgColor="tertiary-outline"
-						css={githubButtonStyle}
-                        {...props}
-					>
-                        <GithubIcon css={css`width: 18rem; margin-left: 2rem;`}/>
-                        <span css={buttonTextStyle}>Github</span>
-	</Button>);
+	return (
+		<Button
+			id={"verify-save-test"}
+			onClick={(e) => {
+				e.preventDefault();
+			}}
+			bgColor="tertiary-outline"
+			css={githubButtonStyle}
+			{...props}
+		>
+			<GithubIcon
+				css={css`
+					width: 18rem;
+					margin-left: 2rem;
+				`}
+			/>
+			<span css={buttonTextStyle}>Github</span>
+		</Button>
+	);
 };
 
 const GitlabButton = (props) => {
-	return (<Button
-						id={"verify-save-test"}
-						onClick={(e) => {
-							e.preventDefault();
-						}}
-						bgColor="tertiary-outline"
-						css={gitlabButtonStyle}
-                        {...props}
-					>
-                        <GithubIcon css={css`width: 18rem;`}/>
-                        <span css={buttonTextStyle}>Gitlab</span>
-	</Button>);
+	return (
+		<Button
+			id={"verify-save-test"}
+			onClick={(e) => {
+				e.preventDefault();
+			}}
+			bgColor="tertiary-outline"
+			css={gitlabButtonStyle}
+			{...props}
+		>
+			<GithubIcon
+				css={css`
+					width: 18rem;
+				`}
+			/>
+			<span css={buttonTextStyle}>Gitlab</span>
+		</Button>
+	);
 };
 
-const LinkBox = ({value, ...props}) => {
-    const ref = React.useRef(null);
+const LinkBox = ({ value, ...props }) => {
+	const ref = React.useRef(null);
 
-    const handleOnClick = () => {
-        ref.current.select();
-        document.execCommand('copy');
-        sendSnackBarEvent({ type: "success", message: `Copied to clipbaord!` });
-    };
-    return (
-        <div css={linkContainerStyle} onClick={handleOnClick} {...props}>
-            <input ref={ref} css={css`background: transparent; border: none; outline: none; width: 100%;`} type={"text"} value={value}/>
-        </div>
-    )
+	const handleOnClick = () => {
+		ref.current.select();
+		document.execCommand("copy");
+		sendSnackBarEvent({ type: "success", message: `Copied to clipbaord!` });
+	};
+	return (
+		<div css={linkContainerStyle} onClick={handleOnClick} {...props}>
+			<input
+				ref={ref}
+				css={css`
+					background: transparent;
+					border: none;
+					outline: none;
+					width: 100%;
+				`}
+				type={"text"}
+				value={value}
+			/>
+		</div>
+	);
 };
 
 const linkContainerStyle = css`
-background: rgba(0, 0, 0, 0.2);
-border: 1px solid rgba(255, 255, 255, 0.13);
-border-radius: 6px;
-padding: 12rem 18rem;
+	background: rgba(0, 0, 0, 0.2);
+	border: 1px solid rgba(255, 255, 255, 0.13);
+	border-radius: 6px;
+	padding: 12rem 18rem;
 
-font-family: 'Gilroy';
-font-style: normal;
-font-weight: 400;
-font-size: 11rem;
+	font-family: "Gilroy";
+	font-style: normal;
+	font-weight: 400;
+	font-size: 11rem;
 
-
-color: #888888;
+	color: #888888;
 `;
 
 const buttonTextStyle = css`
-font-family: 'Gilroy';
-font-style: normal;
-font-weight: 700;
-font-size: 14rem;
-text-align: center;
-letter-spacing: -0.0032em;
+	font-family: "Gilroy";
+	font-style: normal;
+	font-weight: 700;
+	font-size: 14rem;
+	text-align: center;
+	letter-spacing: -0.0032em;
 
-color: #FFFFFF;
-margin-left: auto;
-    margin-right: 12rem;
+	color: #ffffff;
+	margin-left: auto;
+	margin-right: 12rem;
 `;
 const githubButtonStyle = css`
-box-sizing: content-box;
+	box-sizing: content-box;
 
-height: 38rem;
-width: 112rem;
-display: flex;
-align-items: center;
-background: linear-gradient(133.85deg, #905CFF 25.39%, #6D55FF 74.5%, #6951FF 74.5%);border-radius: 6rem;
-font-family: Gilroy;
-font-style: normal;
-font-weight: normal;
-font-size: 14rem;
-line-height: 17rem;
-color: #ffffff;
-border: none;
-:hover {
-    background: linear-gradient(133.85deg, #905CFF 25.39%, #6D55FF 74.5%, #6951FF 74.5%);
-    opacity: 0.8;
-    border: none;
-
-}
+	height: 38rem;
+	width: 112rem;
+	display: flex;
+	align-items: center;
+	background: linear-gradient(133.85deg, #905cff 25.39%, #6d55ff 74.5%, #6951ff 74.5%);
+	border-radius: 6rem;
+	font-family: Gilroy;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 14rem;
+	line-height: 17rem;
+	color: #ffffff;
+	border: none;
+	:hover {
+		background: linear-gradient(133.85deg, #905cff 25.39%, #6d55ff 74.5%, #6951ff 74.5%);
+		opacity: 0.8;
+		border: none;
+	}
 `;
 const gitlabButtonStyle = css`
-box-sizing: content-box;
-height: 40rem;
-width: 112rem;
-display: flex;
-align-items: center;
-background: linear-gradient(0deg, #0B0B0D, #0B0B0D), linear-gradient(133.85deg, #905CFF 25.39%, #6D55FF 74.5%, #6951FF 74.5%);
-border: 0.5rem solid rgba(70, 76, 87, 0.45);
-border-radius: 6rem;
-font-family: Gilroy;
-font-style: normal;
-font-weight: normal;
-font-size: 14rem;
-line-height: 17rem;
-color: #ffffff;
-:hover {
-    background: linear-gradient(0deg, #0B0B0D, #0B0B0D), linear-gradient(133.85deg, #905CFF 25.39%, #6D55FF 74.5%, #6951FF 74.5%);
-    border: 0.5px solid rgba(70, 76, 87, 0.45);
-    opacity: 0.8;
-}
+	box-sizing: content-box;
+	height: 40rem;
+	width: 112rem;
+	display: flex;
+	align-items: center;
+	background: linear-gradient(0deg, #0b0b0d, #0b0b0d), linear-gradient(133.85deg, #905cff 25.39%, #6d55ff 74.5%, #6951ff 74.5%);
+	border: 0.5rem solid rgba(70, 76, 87, 0.45);
+	border-radius: 6rem;
+	font-family: Gilroy;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 14rem;
+	line-height: 17rem;
+	color: #ffffff;
+	:hover {
+		background: linear-gradient(0deg, #0b0b0d, #0b0b0d), linear-gradient(133.85deg, #905cff 25.39%, #6d55ff 74.5%, #6951ff 74.5%);
+		border: 0.5px solid rgba(70, 76, 87, 0.45);
+		opacity: 0.8;
+	}
 `;
 function LoginScreen() {
-    let navigate = useNavigate();
-    const appSettings = useSelector(getAppSettings);
+	let navigate = useNavigate();
+	const appSettings = useSelector(getAppSettings);
 	const [backendEndPoint, setBackendEndPoint] = React.useState(appSettings.backendEndPoint || "");
 	const [frontendEndPoint, setFrontendEndPoint] = React.useState(appSettings.frontendEndPoint || "");
-    const [interval, setInterval] = React.useState(null);
-    const [loginText, setLoginText] = React.useState("");
+	const [interval, setInterval] = React.useState(null);
+	const [loginText, setLoginText] = React.useState("");
 
-    const handlePostLogin = () => { 
-        navigate("/");
-    };
+	const handlePostLogin = () => {
+		navigate("/");
+	};
 
-    
-    React.useEffect(() => {
-        document.querySelector("html").style.fontSize = "1px";
-    }, []);
-    React.useEffect(() => {
-        waitForUserLogin((loginToken: string) => {
-            setInterval(null);
+	React.useEffect(() => {
+		document.querySelector("html").style.fontSize = "1px";
+	}, []);
+	React.useEffect(() => {
+		waitForUserLogin((loginToken: string) => {
+			setInterval(null);
 			saveAndGetUserInfo(loginToken).then((info) => {
 				focusOnWindow();
 				sendSnackBarEvent({ type: "success", message: `Login successful! Welcome, ${info.name}` });
-                handlePostLogin();
+				handlePostLogin();
 			});
-		}, backendEndPoint).then(async ( { loginKey, interval : intervalMain }) => {
-            setInterval(interval);
-            setLoginText(resolveToFrontEndPath("?lK=" + loginKey, frontendEndPoint));
-        });
-    }, []);
+		}, backendEndPoint).then(async ({ loginKey, interval: intervalMain }) => {
+			setInterval(interval);
+			setLoginText(resolveToFrontEndPath("?lK=" + loginKey, frontendEndPoint));
+		});
+	}, []);
 
-    const handleLoginWithGithub = React.useCallback(async () => {
-        if(interval) {
-            clearInterval(interval);
-            setInterval(null);
-        }
-        const { loginKey, interval: intervalMain } = await waitForUserLogin((loginToken: string) => {
-            setInterval(null);
+	const handleLoginWithGithub = React.useCallback(async () => {
+		if (interval) {
+			clearInterval(interval);
+			setInterval(null);
+		}
+		const { loginKey, interval: intervalMain } = await waitForUserLogin((loginToken: string) => {
+			setInterval(null);
 
 			saveAndGetUserInfo(loginToken).then((info) => {
 				focusOnWindow();
 				sendSnackBarEvent({ type: "success", message: `Login successful! Welcome, ${info.name}` });
-                handlePostLogin();
-			});
-		}, backendEndPoint);
-        setInterval(intervalMain);
-        setLoginText(resolveToFrontEndPath("?lK=" + loginKey, frontendEndPoint));
-		await shell.openExternal(resolveToFrontEndPath("?lK=" + loginKey, frontendEndPoint));
-    }, [interval]);
-
-    const handleLoginWithGitlab = React.useCallback(async () => {
-        if(interval) {
-            clearInterval(interval);
-            setInterval(null);
-        }
-        const { loginKey, interval : intervalMain } = await waitForUserLogin((loginToken: string) => {
-            setInterval(null);
-			saveAndGetUserInfo(loginToken).then((info) => {
-				focusOnWindow();
-				sendSnackBarEvent({ type: "success", message: `Login successful! Welcome, ${info.name}` });
-                handlePostLogin();
+				handlePostLogin();
 			});
 		}, backendEndPoint);
-        setInterval(intervalMain);
-        setLoginText(resolveToFrontEndPath("?lK=" + loginKey, frontendEndPoint));
+		setInterval(intervalMain);
+		setLoginText(resolveToFrontEndPath("?lK=" + loginKey, frontendEndPoint));
 		await shell.openExternal(resolveToFrontEndPath("?lK=" + loginKey, frontendEndPoint));
-    }, [interval]);
+	}, [interval]);
 
-    return (
-        <ModelContainerLayout css={css`padding-top: 0rem;`} header={null} title={null} footer={<CommonFooter/>}>
-            <div css={mainContentStyle}>
-                    <div css={css`text-align: center;`}>
-                        <div css={headingStyle}>Login to continue</div>
-                        <div css={descriptionStyle}>This to save report, run test.</div>
-                    </div>
-                    <div css={css`display: flex; gap: 22rem; margin-top: 46rem;`}>
-                        <GithubButton onClick={handleLoginWithGithub}/>
-                        <GitlabButton onClick={handleLoginWithGitlab}/>
-                    </div>
-                    {interval && (
-                        <div css={css`margin-top: 34rem; display: flex; align-items: center; gap: 14rem;`}>
-                            <span css={css`font-size: 14rem; color: #565657;`}>Waiting for you to finish</span>
-                            <LoadingIconV2 css={css`width: 20rem; height: 20rem;`} />
-                        </div>
-                    )}
-                
-                    <div css={css`margin-top: 68rem; display: flex; align-items: center; gap: 22rem;`}>
-                        <span css={openThisLinkStyle}>or open this link</span>
-                        <LinkBox value={loginText} css={css`width: 220rem;`}>
-                           
-                        </LinkBox>
-                    </div>
-                </div>
-        </ModelContainerLayout>
-    )
+	const handleLoginWithGitlab = React.useCallback(async () => {
+		if (interval) {
+			clearInterval(interval);
+			setInterval(null);
+		}
+		const { loginKey, interval: intervalMain } = await waitForUserLogin((loginToken: string) => {
+			setInterval(null);
+			saveAndGetUserInfo(loginToken).then((info) => {
+				focusOnWindow();
+				sendSnackBarEvent({ type: "success", message: `Login successful! Welcome, ${info.name}` });
+				handlePostLogin();
+			});
+		}, backendEndPoint);
+		setInterval(intervalMain);
+		setLoginText(resolveToFrontEndPath("?lK=" + loginKey, frontendEndPoint));
+		await shell.openExternal(resolveToFrontEndPath("?lK=" + loginKey, frontendEndPoint));
+	}, [interval]);
 
+	return (
+		<ModelContainerLayout
+			css={css`
+				padding-top: 0rem;
+			`}
+			header={null}
+			title={null}
+			footer={<CommonFooter />}
+		>
+			<div css={mainContentStyle}>
+				<div
+					css={css`
+						text-align: center;
+					`}
+				>
+					<div css={headingStyle}>Login to continue</div>
+					<div css={descriptionStyle}>This to save report, run test.</div>
+				</div>
+				<div
+					css={css`
+						display: flex;
+						gap: 22rem;
+						margin-top: 46rem;
+					`}
+				>
+					<GithubButton onClick={handleLoginWithGithub} />
+					<GitlabButton onClick={handleLoginWithGitlab} />
+				</div>
+				{interval && (
+					<div
+						css={css`
+							margin-top: 34rem;
+							display: flex;
+							align-items: center;
+							gap: 14rem;
+						`}
+					>
+						<span
+							css={css`
+								font-size: 14rem;
+								color: #565657;
+							`}
+						>
+							Waiting for you to finish
+						</span>
+						<LoadingIconV2
+							css={css`
+								width: 20rem;
+								height: 20rem;
+							`}
+						/>
+					</div>
+				)}
+
+				<div
+					css={css`
+						margin-top: 68rem;
+						display: flex;
+						align-items: center;
+						gap: 22rem;
+					`}
+				>
+					<span css={openThisLinkStyle}>or open this link</span>
+					<LinkBox
+						value={loginText}
+						css={css`
+							width: 220rem;
+						`}
+					></LinkBox>
+				</div>
+			</div>
+		</ModelContainerLayout>
+	);
 }
 
 const openThisLinkStyle = css`
-font-family: 'Gilroy';
-font-style: normal;
-font-weight: 400;
-font-size: 12px;
-letter-spacing: -0.0032em;
+	font-family: "Gilroy";
+	font-style: normal;
+	font-weight: 400;
+	font-size: 12px;
+	letter-spacing: -0.0032em;
 
-color: #9C9C9C;
+	color: #9c9c9c;
 `;
 
 const headingStyle = css`
-font-family: Cera Pro;
-font-style: normal;
-font-weight: 700;
-font-size: 16rem;
+	font-family: Cera Pro;
+	font-style: normal;
+	font-weight: 700;
+	font-size: 16rem;
 
-color: #FFFFFF;
+	color: #ffffff;
 `;
 const descriptionStyle = css`
-font-family: Gilroy;
-font-style: normal;
-font-weight: 400;
-font-size: 12rem;
-text-align: center;
-letter-spacing: -0.0032em;
+	font-family: Gilroy;
+	font-style: normal;
+	font-weight: 400;
+	font-size: 12rem;
+	text-align: center;
+	letter-spacing: -0.0032em;
 
-color: #565657;
-margin-top: 8rem;
-
+	color: #565657;
+	margin-top: 8rem;
 `;
 const mainContentStyle = css`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    flex: 1;
-    height: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	flex: 1;
+	height: 100%;
 `;
 const contentStyle = css`
-    flex: 1;
-    padding: 38rem 44rem;
-    display: flex;
-    flex-direction: column;
+	flex: 1;
+	padding: 38rem 44rem;
+	display: flex;
+	flex-direction: column;
 `;
 const navBarStyle = css`
-display: flex;
-font-family: 'Gilroy';
-font-style: normal;
-font-weight: 400;
-font-size: 16rem;
+	display: flex;
+	font-family: "Gilroy";
+	font-style: normal;
+	font-weight: 400;
+	font-size: 16rem;
 
-color: #FFFFFF;
-.navItem {
-    :hover {
-        opacity: 0.8;
-    }
-}
+	color: #ffffff;
+	.navItem {
+		:hover {
+			opacity: 0.8;
+		}
+	}
 `;
 
 const footerStyle = css`
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 20rem 28rem;
+	border-top: 1px solid rgba(255, 255, 255, 0.08);
+	padding: 20rem 28rem;
 `;
 
 const containerStyle = css`
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translateX(-50%) translateY(-50%);
-    width: 100%;
-    height: 100%;
-    background: #161617;
-    border-radius: 16rem;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translateX(-50%) translateY(-50%);
+	width: 100%;
+	height: 100%;
+	background: #161617;
+	border-radius: 16rem;
+	border: 1px solid rgba(255, 255, 255, 0.08);
 
-    display: flex;
-    flex-direction: column;
+	display: flex;
+	flex-direction: column;
 `;
 
 const statusTextStyle = css`
-    margin-top: 24rem;
-    font-family: 'Gilroy';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 16rem;
-    color: #FFFFFF;
+	margin-top: 24rem;
+	font-family: "Gilroy";
+	font-style: normal;
+	font-weight: 400;
+	font-size: 16rem;
+	color: #ffffff;
 `;
 
 export { LoginScreen };

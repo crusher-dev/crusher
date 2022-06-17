@@ -27,7 +27,7 @@ const ActionsPanel = ({ className, ...props }: { className?: any }) => {
 
 	const turnOffInspectElementSelectorMode = () => {
 		turnOffElementSelectorInspectMode();
-	}
+	};
 
 	React.useEffect(() => {
 		if (selectedElement && isOpen) {

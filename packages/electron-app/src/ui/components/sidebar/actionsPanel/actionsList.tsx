@@ -4,21 +4,33 @@ import { css } from "@emotion/react";
 import { Conditional } from "@dyson/components/layouts";
 
 interface IActionsListProps {
-    children?: any;
-    className?: string;
-    title?: string;
-};
+	children?: any;
+	className?: string;
+	title?: string;
+}
 
-const ActionsList = ({ children, title, className, ...props }: { title?: string; children: React.ReactChild | React.ReactChild[]; className?: any }): JSX.Element => {
-    return (
+const ActionsList = ({
+	children,
+	title,
+	className,
+	...props
+}: {
+	title?: string;
+	children: React.ReactChild | React.ReactChild[];
+	className?: any;
+}): JSX.Element => {
+	return (
 		<div css={containerStyle} className={`${className}`} {...props}>
 			<Conditional showIf={!!title}>
 				<Text css={titleStyle}>{title}</Text>
 			</Conditional>
 			<div css={actionItemContainer}>
-				{
-					children && React.Children.map(children, ((child: any, index) => React.cloneElement(child, {style: {...child.props.style, borderBottom: index < (children as any).length - 1 ? "1rem solid #323636" : "none"}})))
-				}
+				{children &&
+					React.Children.map(children, (child: any, index) =>
+						React.cloneElement(child, {
+							style: { ...child.props.style, borderBottom: index < (children as any).length - 1 ? "1rem solid #323636" : "none" },
+						}),
+					)}
 			</div>
 		</div>
 	);
@@ -61,7 +73,7 @@ const actionItem = css`
 	padding: 10rem 14rem 9rem 16rem;
 	font-family: Gilroy;
 	font-size: 13rem;
-	
+
 	cursor: default;
 	:hover {
 		background-color: #32363678;

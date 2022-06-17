@@ -1,0 +1,5 @@
+__tests__/
+bin/
+node_modules
+static
+output.css

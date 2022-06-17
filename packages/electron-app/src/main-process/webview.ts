@@ -94,7 +94,7 @@ export class WebView {
 	public async resumeExecution() {
 		try {
 			await this.webContents.debugger.sendCommand("Debugger.resume");
-		} catch(ex){
+		} catch (ex) {
 			console.info("Error resuming execution", ex);
 		}
 	}
@@ -102,7 +102,7 @@ export class WebView {
 	public async disableExecution() {
 		try {
 			await this.webContents.debugger.sendCommand("Debugger.pause");
-		} catch(ex) {
+		} catch (ex) {
 			console.info("Error pausing execution", ex);
 		}
 	}
@@ -144,7 +144,6 @@ export class WebView {
 	}
 }
 
-
 class WebViewListener {
 	constructor(private webContents: WebContents, private appWindow) {
 		webContents.session.webRequest.onBeforeSendHeaders(this.handleBeforeSendHeaders);
@@ -163,12 +162,12 @@ class WebViewListener {
 
 	private handleCrashed(event, any) {
 		console.log("Webview crashed", any);
-		this.appWindow.updateRecorderCrashState({type: TRecorderCrashState.CRASHED });
+		this.appWindow.updateRecorderCrashState({ type: TRecorderCrashState.CRASHED });
 	}
 
 	private handleDidFailLoad(event, errorCode, errorDescription, validatedURL, isMainFrame) {
-		if(isMainFrame) {
-			this.appWindow.updateRecorderCrashState({type: TRecorderCrashState.PAGE_LOAD_FAILED});
+		if (isMainFrame) {
+			this.appWindow.updateRecorderCrashState({ type: TRecorderCrashState.PAGE_LOAD_FAILED });
 		}
 	}
 
@@ -177,7 +176,12 @@ class WebViewListener {
 	}
 
 	private handleFrameDidNavigate(event, url, httpResponseCode, httpStatusText, isMainFrame) {
-		if (isMainFrame && ![TRecorderState.PERFORMING_ACTIONS, TRecorderState.PERFORMING_RECORDER_ACTIONS, TRecorderState.CUSTOM_CODE_ON].includes(this.appWindow.getRecorderState().type)) {
+		if (
+			isMainFrame &&
+			![TRecorderState.PERFORMING_ACTIONS, TRecorderState.PERFORMING_RECORDER_ACTIONS, TRecorderState.CUSTOM_CODE_ON].includes(
+				this.appWindow.getRecorderState().type,
+			)
+		) {
 			console.log("Recorder state is", this.appWindow.getRecorderState().type);
 
 			this.appWindow.handleSaveStep(null, {
@@ -189,14 +193,19 @@ class WebViewListener {
 						},
 					},
 				},
-			});			}
+			});
+		}
 	}
 
 	private handleAddNewContents(webContents, event, url) {
 		event.preventDefault();
 
 		webContents.loadURL(url);
-		if (![TRecorderState.PERFORMING_ACTIONS, TRecorderState.PERFORMING_RECORDER_ACTIONS, TRecorderState.CUSTOM_CODE_ON].includes(this.appWindow.getRecorderState().type)) {
+		if (
+			![TRecorderState.PERFORMING_ACTIONS, TRecorderState.PERFORMING_RECORDER_ACTIONS, TRecorderState.CUSTOM_CODE_ON].includes(
+				this.appWindow.getRecorderState().type,
+			)
+		) {
 			this.appWindow.handleSaveStep(null, {
 				action: {
 					type: ActionsInTestEnum.WAIT_FOR_NAVIGATION as ActionsInTestEnum,

@@ -8,7 +8,7 @@ shell.exec(`cd ${path.resolve("../../output/crusher-electron-app/playwright")} &
 
 const getIsArm = () => {
 	try {
-		const isCurrentlyTranslated = execSync('sysctl sysctl.proc_translated', { stdio: 'pipe' });
+		const isCurrentlyTranslated = execSync("sysctl sysctl.proc_translated", { stdio: "pipe" });
 
 		return true;
 	} catch (e) {

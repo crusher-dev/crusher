@@ -65,12 +65,15 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 	React.useEffect(() => {
 		if (isOpen && !props.stepAction) {
 			setValidationRows([]);
-			ipcRenderer.invoke("get-element-assert-info", selectedElement).then((res) => {
-				console.log("Element info is", res);
-				setElementInfo(res);
-			}).catch((err) => {
-				console.error("Error is", err);
-			});
+			ipcRenderer
+				.invoke("get-element-assert-info", selectedElement)
+				.then((res) => {
+					console.log("Element info is", res);
+					setElementInfo(res);
+				})
+				.catch((err) => {
+					console.error("Error is", err);
+				});
 		}
 		if (isOpen && props.stepAction) {
 			const elementInfoFromActions = (props.stepAction.payload.meta.validations as iAssertionRow[]).reduce(

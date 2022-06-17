@@ -1,11 +1,25 @@
 import React, { memo } from "react";
 import { css } from "@emotion/react";
-import { getIsStatusBarVisible, getRecorderCrashState, getRecorderInfo, getRecorderState, getSelectedElement, isInspectElementSelectorModeOn, isInspectModeOn } from "electron-app/src/store/selectors/recorder";
+import {
+	getIsStatusBarVisible,
+	getRecorderCrashState,
+	getRecorderInfo,
+	getRecorderState,
+	getSelectedElement,
+	isInspectElementSelectorModeOn,
+	isInspectModeOn,
+} from "electron-app/src/store/selectors/recorder";
 import { useDispatch, useSelector, useStore } from "react-redux";
 import { Conditional } from "@dyson/components/layouts";
 import * as url from "url";
 import { IpcMessageEvent } from "electron";
-import { disableJavascriptInDebugger, performQuitAndRestore, turnOffElementSelectorInspectMode, turnOffInspectMode, turnOnInspectMode } from "../../commands/perform";
+import {
+	disableJavascriptInDebugger,
+	performQuitAndRestore,
+	turnOffElementSelectorInspectMode,
+	turnOffInspectMode,
+	turnOnInspectMode,
+} from "../../commands/perform";
 import { recordStep, setSelectedElement, updateRecorderCrashState } from "electron-app/src/store/actions/recorder";
 import { saveAutoAction } from "../../commands/saveActions";
 import { TRecorderMessagesType } from "../../../lib/recorder/host-proxy";
@@ -21,7 +35,7 @@ const CrashScreen = (props: any) => {
 
 	return (
 		<div
-		css={css`
+			css={css`
 			width: 100%;
 			height: 100%;
 			background: transparent;
@@ -36,20 +50,58 @@ const CrashScreen = (props: any) => {
 			color: rgba(255, 255, 255, 0.57)
 			font-family: Gilroy;
 		`}
-	>
-		<div css={css`display: flex; flex-direction: column; justify-content: center; padding: 0rem 54rem;`}>
-			<StopIcon css={css`width: 24rem; height: 24rem;`}/>
-			<div className={"mt-18"} css={css`font-family: Cera Pro; color: rgba(255, 255, 255, 0.83); font-size: 18rem; font-weight: bold;`}>Aw, Snap!</div>
-			<div className="mt-10">Something went wrong while displaying this page</div>
-			<div className="mt-16">ERROR_CODE: RESPONSE_504_ERROR</div>
+		>
+			<div
+				css={css`
+					display: flex;
+					flex-direction: column;
+					justify-content: center;
+					padding: 0rem 54rem;
+				`}
+			>
+				<StopIcon
+					css={css`
+						width: 24rem;
+						height: 24rem;
+					`}
+				/>
+				<div
+					className={"mt-18"}
+					css={css`
+						font-family: Cera Pro;
+						color: rgba(255, 255, 255, 0.83);
+						font-size: 18rem;
+						font-weight: bold;
+					`}
+				>
+					Aw, Snap!
+				</div>
+				<div className="mt-10">Something went wrong while displaying this page</div>
+				<div className="mt-16">ERROR_CODE: RESPONSE_504_ERROR</div>
 
-			<div className="mt-44" css={css`display: flex; align-items: center;`}>
-				<Button onClick={ performQuitAndRestore.bind(this, store)} bgColor="tertiary-outline" css={[buttonStyle, css`width: 190rem; height: 32rem`]}>
-					Quit & Restore Session
-				</Button>
+				<div
+					className="mt-44"
+					css={css`
+						display: flex;
+						align-items: center;
+					`}
+				>
+					<Button
+						onClick={performQuitAndRestore.bind(this, store)}
+						bgColor="tertiary-outline"
+						css={[
+							buttonStyle,
+							css`
+								width: 190rem;
+								height: 32rem;
+							`,
+						]}
+					>
+						Quit & Restore Session
+					</Button>
+				</div>
 			</div>
 		</div>
-	</div>
 	);
 };
 
@@ -61,7 +113,7 @@ const PageLoadFailedScreen = (props: any) => {
 
 	return (
 		<div
-		css={css`
+			css={css`
 			width: 100%;
 			height: 100%;
 			background: transparent;
@@ -76,23 +128,70 @@ const PageLoadFailedScreen = (props: any) => {
 			color: rgba(255, 255, 255, 0.57)
 			font-family: Gilroy;
 		`}
-	>
-		<div css={css`display: flex; flex-direction: column; justify-content: center; padding: 0rem 54rem;`}>
-			<StopIcon css={css`width: 24rem; height: 24rem; margin-left:0;`}/>
-			<div className={"mt-18"} css={css`font-family: Cera Pro; color: rgba(255, 255, 255, 0.83); font-size: 18rem; font-weight: bold;`}>P</div>
-			<div className="mt-10">Something went wrong while loading the url</div>
-			<div className="mt-16">ERROR_CODE: URL_NOT_REACHABLE</div>
+		>
+			<div
+				css={css`
+					display: flex;
+					flex-direction: column;
+					justify-content: center;
+					padding: 0rem 54rem;
+				`}
+			>
+				<StopIcon
+					css={css`
+						width: 24rem;
+						height: 24rem;
+						margin-left: 0;
+					`}
+				/>
+				<div
+					className={"mt-18"}
+					css={css`
+						font-family: Cera Pro;
+						color: rgba(255, 255, 255, 0.83);
+						font-size: 18rem;
+						font-weight: bold;
+					`}
+				>
+					P
+				</div>
+				<div className="mt-10">Something went wrong while loading the url</div>
+				<div className="mt-16">ERROR_CODE: URL_NOT_REACHABLE</div>
 
-			<div className="mt-44" css={css`display: flex; align-items: center;`}>
-				<Button onClick={ performQuitAndRestore.bind(this, store)} bgColor="tertiary-outline" css={[buttonStyle, css`width: 190rem; height: 32rem;`]}>
-					Quit & Restore Session
-				</Button>
-				<div onClick={ handleCloseDialog } css={css`:hover { opacity: 0.7; }`} className="ml-18">
-					Close
+				<div
+					className="mt-44"
+					css={css`
+						display: flex;
+						align-items: center;
+					`}
+				>
+					<Button
+						onClick={performQuitAndRestore.bind(this, store)}
+						bgColor="tertiary-outline"
+						css={[
+							buttonStyle,
+							css`
+								width: 190rem;
+								height: 32rem;
+							`,
+						]}
+					>
+						Quit & Restore Session
+					</Button>
+					<div
+						onClick={handleCloseDialog}
+						css={css`
+							:hover {
+								opacity: 0.7;
+							}
+						`}
+						className="ml-18"
+					>
+						Close
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
 	);
 };
 
@@ -159,36 +258,43 @@ const DeviceFrame = (props: any) => {
 		<div css={[topContainerStyle]}>
 			<div css={containerStyle}>
 				{recorderInfo.device && (
-	<div style={{ aspectRatio: `${recorderInfo.device?.width} / ${recorderInfo.device?.height}`, maxWidth: `${recorderInfo.device?.width}rem`, width: "95%", maxHeight: "100%", position: "relative" }}>
-	<webview
-		ref={ref}
-		css={webviewStyle}
-		id="device_browser"
-		preload={getPreloadScriptPath()}
-		title={"crusher-webview"}
-		src={"about:blank"}
-		partition={"crusherwebview"}
-		webpreferences="nativeWindowOpen=yes"
-		allowpopups
-		nodeintegration={true}
-	/>
+					<div
+						style={{
+							aspectRatio: `${recorderInfo.device?.width} / ${recorderInfo.device?.height}`,
+							maxWidth: `${recorderInfo.device?.width}rem`,
+							width: "95%",
+							maxHeight: "100%",
+							position: "relative",
+						}}
+					>
+						<webview
+							ref={ref}
+							css={webviewStyle}
+							id="device_browser"
+							preload={getPreloadScriptPath()}
+							title={"crusher-webview"}
+							src={"about:blank"}
+							partition={"crusherwebview"}
+							webpreferences="nativeWindowOpen=yes"
+							allowpopups
+							nodeintegration={true}
+						/>
 
-	<Conditional showIf={recorderCrashState && recorderCrashState.type === TRecorderCrashState.CRASHED}>
-		<CrashScreen />
-	</Conditional>
-	<Conditional showIf={recorderCrashState && recorderCrashState.type === TRecorderCrashState.PAGE_LOAD_FAILED}>
-		<PageLoadFailedScreen />
-	</Conditional>
-	<Conditional showIf={[TRecorderState.PERFORMING_ACTIONS, TRecorderState.PERFORMING_RECORDER_ACTIONS].includes(recorderState.type)}>
-		<div css={deviceOverlayStyle}></div>
-	</Conditional>
-</div>
+						<Conditional showIf={recorderCrashState && recorderCrashState.type === TRecorderCrashState.CRASHED}>
+							<CrashScreen />
+						</Conditional>
+						<Conditional showIf={recorderCrashState && recorderCrashState.type === TRecorderCrashState.PAGE_LOAD_FAILED}>
+							<PageLoadFailedScreen />
+						</Conditional>
+						<Conditional showIf={[TRecorderState.PERFORMING_ACTIONS, TRecorderState.PERFORMING_RECORDER_ACTIONS].includes(recorderState.type)}>
+							<div css={deviceOverlayStyle}></div>
+						</Conditional>
+					</div>
 				)}
 			</div>
 		</div>
 	);
 };
-
 
 const buttonStyle = css`
 	font-size: 14rem;
@@ -231,10 +337,14 @@ const webviewStyle = css`
 	height: 100%;
 	background: #fff;
 `;
-const topContainerStyle = css`position: relative; overflow: hidden; flex: 1;`;
+const topContainerStyle = css`
+	position: relative;
+	overflow: hidden;
+	flex: 1;
+`;
 const containerStyle = css`
 	width: 100%;
-    height: calc(100% - 30rem);
+	height: calc(100% - 30rem);
 	display: flex;
 	align-items: center;
 	justify-content: center;

@@ -209,7 +209,6 @@ export default class EventRecording {
 		}
 	}
 
-
 	handleScroll(event: any) {
 		if (!event.isFromUser) return;
 		const minScrollTime = 100;
@@ -307,14 +306,17 @@ export default class EventRecording {
 		// const capturedElementScreenshot = await html2canvas(element).then((canvas: any) => canvas.toDataURL());
 
 		let dependentHovers = [];
-		if(!shouldUseAdvancedSelector) {
-			const hoverDependedNodes = this.eventsController.getRelevantHoverRecordsFromSavedEvents(await this.getHoverDependentNodes(element), element) as HTMLElement[];
+		if (!shouldUseAdvancedSelector) {
+			const hoverDependedNodes = this.eventsController.getRelevantHoverRecordsFromSavedEvents(
+				await this.getHoverDependentNodes(element),
+				element,
+			) as HTMLElement[];
 
 			dependentHovers = hoverDependedNodes.map((node) => {
 				return {
 					uniqueElementId: ElementsIdMap.getUniqueId(node),
 					selectors: this.eventsController.getSelectors(selectedElement),
-				}
+				};
 			});
 		}
 
@@ -362,7 +364,6 @@ export default class EventRecording {
 
 	// eslint-disable-next-line consistent-return
 	async handleWindowClick(event: any) {
-
 		const originalTimestamp = event.timeStamp;
 		event.timestamp = Date.now();
 		if (event.which === 3) {
@@ -393,7 +394,7 @@ export default class EventRecording {
 			await this.trackAndSaveRelevantHover(target, event.timeStamp);
 
 			let rect = target.getBoundingClientRect();
-			const mousePos = {x: (event.clientX - rect.left)/rect.width, y: (event.clientY - rect.top)/rect.height};
+			const mousePos = { x: (event.clientX - rect.left) / rect.width, y: (event.clientY - rect.top) / rect.height };
 			await this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.CLICK, target, {
 				inputInfo: tagName === "label" ? inputNodeInfo : null,
 				mousePos: mousePos,
@@ -592,8 +593,7 @@ export default class EventRecording {
 		setInterval(this.pollInterval, 300);
 	}
 
-	removeNodeListeners() {
-	}
+	removeNodeListeners() {}
 
 	boot(isFirstTime = false) {
 		console.log("Starting...");

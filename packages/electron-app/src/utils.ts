@@ -64,7 +64,7 @@ function isValidHttpUrl(str: string) {
 	return !!pattern.test(str);
 }
 
-const waitForUserLogin = async (callback?, customBackendPath: string | undefined = undefined): Promise<{ loginKey: string, interval }> => {
+const waitForUserLogin = async (callback?, customBackendPath: string | undefined = undefined): Promise<{ loginKey: string; interval }> => {
 	const axios = require("axios").default;
 	const loginKey = await axios.get(resolveToBackendPath("/cli/get.key", customBackendPath)).then((res) => {
 		return res.data.loginKey;
@@ -131,4 +131,16 @@ const getUserAccountProjects = async (token: string, customBackendPath: string |
 	return infoResponse.data;
 };
 
-export { isProduction, getAppIconPath, encodePathAsUrl, addHttpToURLIfNotThere, parseDeepLinkUrlAction, sleep, isValidHttpUrl, waitForUserLogin, getUserInfoFromToken, getUserAccountTests, getUserAccountProjects };
+export {
+	isProduction,
+	getAppIconPath,
+	encodePathAsUrl,
+	addHttpToURLIfNotThere,
+	parseDeepLinkUrlAction,
+	sleep,
+	isValidHttpUrl,
+	waitForUserLogin,
+	getUserInfoFromToken,
+	getUserAccountTests,
+	getUserAccountProjects,
+};

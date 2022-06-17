@@ -2,31 +2,33 @@ import React from "react";
 import { css } from "@emotion/react";
 import { CreateIcon, PlayV2Icon } from "../../icons";
 import { Link } from "../../layouts/modalContainer";
-import {Button} from "@dyson/components/atoms/button/Button";
+import { Button } from "@dyson/components/atoms/button/Button";
 import { shell } from "electron";
 import { useNavigate } from "react-router-dom";
 import { goFullScreen } from "../../commands/perform";
 
-const CreateButton = ({title, className, onClick}) => {
-    return ( <Button
-        id={"verify-save-test"}
-        onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            onClick(e);
-        }}
-        className={`${className}`}
-        bgColor="tertiary-outline"
-        css={saveButtonStyle}
-    >
-        <span>{title}</span>
-    </Button>);
+const CreateButton = ({ title, className, onClick }) => {
+	return (
+		<Button
+			id={"verify-save-test"}
+			onClick={(e) => {
+				e.preventDefault();
+				e.stopPropagation();
+				onClick(e);
+			}}
+			className={`${className}`}
+			bgColor="tertiary-outline"
+			css={saveButtonStyle}
+		>
+			<span>{title}</span>
+		</Button>
+	);
 };
 
 const saveButtonStyle = css`
 	width: 92rem;
 	height: 30rem;
-	background: #A966FF;;
+	background: #a966ff;
 	border-radius: 6rem;
 	font-family: Gilroy;
 	font-style: normal;
@@ -40,103 +42,105 @@ const saveButtonStyle = css`
 	}
 `;
 
-export const DocsGoBackActionBar = ({buttonTitle, buttonCallback}) => {
-    const openDocs = React.useCallback( () => {
-        shell.openExternal("https://docs.crusher.dev");
-    }, []);
+export const DocsGoBackActionBar = ({ buttonTitle, buttonCallback }) => {
+	const openDocs = React.useCallback(() => {
+		shell.openExternal("https://docs.crusher.dev");
+	}, []);
 
-    return (
-        <div css={actionsContainerStyle}>
-            <Link onClick={openDocs}>Docs</Link>
-            <CreateButton title={buttonTitle} onClick={buttonCallback} css={createButtonStyle}/>
-        </div>
-    )
-}
+	return (
+		<div css={actionsContainerStyle}>
+			<Link onClick={openDocs}>Docs</Link>
+			<CreateButton title={buttonTitle} onClick={buttonCallback} css={createButtonStyle} />
+		</div>
+	);
+};
 
 export const CreateFirstTest = ({}) => {
-    const navigate = useNavigate();
+	const navigate = useNavigate();
 
-    const handleCreateTest = React.useCallback(()=> {
-        navigate("/recorder");
-        goFullScreen();
-    }, []);
-    return (
-        <div css={containerStyle}>
-            <div css={contentContainerStyle}>
-                <CreateIcon css={createIconStyle}/>
-                <div css={contentHeadingStyle}>Create your first test</div>
-                <div css={contentDescriptionStyle}>Start with low-code browser to create a test</div>
-            </div>
-            <DocsGoBackActionBar buttonTitle={"Create"} buttonCallback={handleCreateTest} />
+	const handleCreateTest = React.useCallback(() => {
+		navigate("/recorder");
+		goFullScreen();
+	}, []);
+	return (
+		<div css={containerStyle}>
+			<div css={contentContainerStyle}>
+				<CreateIcon css={createIconStyle} />
+				<div css={contentHeadingStyle}>Create your first test</div>
+				<div css={contentDescriptionStyle}>Start with low-code browser to create a test</div>
+			</div>
+			<DocsGoBackActionBar buttonTitle={"Create"} buttonCallback={handleCreateTest} />
 
-            <div css={watch}>
-               <PlayV2Icon/> Watch video
-            </div>
-        </div>
-    );
-}
+			<div css={watch}>
+				<PlayV2Icon /> Watch video
+			</div>
+		</div>
+	);
+};
 
 const watch = css`
-font-size: 14rem;
-display: flex;
-align-items: center;
+	font-size: 14rem;
+	display: flex;
+	align-items: center;
 
-column-gap: 8rem;
-align-self: center !important;
-justify-self: end;
+	column-gap: 8rem;
+	align-self: center !important;
+	justify-self: end;
 
-margin-top: 100rem;
+	margin-top: 100rem;
 
-:hover{
-    color: #a966ff;
-text-decoration: underline;
-cursor: pointer;
-}
-`
+	:hover {
+		color: #a966ff;
+		text-decoration: underline;
+		cursor: pointer;
+	}
+`;
 
 const createButtonStyle = css`
-    margin-left: 12rem;
+	margin-left: 12rem;
 `;
 
 const containerStyle = css`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    height: 100%;
-    margin-top: -2rem;
-
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	height: 100%;
+	margin-top: -2rem;
 `;
 const actionsContainerStyle = css`
-    display: flex;
-    margin-top:  20rem;
-    justify-content: center;
-    align-items:center;
+	display: flex;
+	margin-top: 20rem;
+	justify-content: center;
+	align-items: center;
 `;
 
 const contentContainerStyle = css`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 `;
-const createIconStyle = css`width: 28rem; height: 28rem;`;
+const createIconStyle = css`
+	width: 28rem;
+	height: 28rem;
+`;
 const contentHeadingStyle = css`
-    margin-top: 28rem;
-    font-family: Cera Pro;
-    font-style: normal;
-    font-weight: 900;
-    font-size: 18rem;
-    text-align: center;
-    letter-spacing: .1px;
-    color: #FFFFFF;
+	margin-top: 28rem;
+	font-family: Cera Pro;
+	font-style: normal;
+	font-weight: 900;
+	font-size: 18rem;
+	text-align: center;
+	letter-spacing: 0.1px;
+	color: #ffffff;
 `;
 const contentDescriptionStyle = css`
-    margin-top: 10rem;
+	margin-top: 10rem;
 
-    font-family: Gilroy;
-    font-style: normal;
-    font-weight: 400;
-    font-size: 14rem;
-    text-align: center;
-    letter-spacing: .2px;
-    color: rgba(255, 255, 255, 0.64);
+	font-family: Gilroy;
+	font-style: normal;
+	font-weight: 400;
+	font-size: 14rem;
+	text-align: center;
+	letter-spacing: 0.2px;
+	color: rgba(255, 255, 255, 0.64);
 `;

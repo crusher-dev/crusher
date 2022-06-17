@@ -10,39 +10,39 @@ export const SET_PROXY_STATE = "SET_PROXY_STATE";
 export const SET_PROXY_INITIALIZING = "SET_PROXY_INITIALIZING";
 
 export const setProxyState = (proxyState: IProxyState) => ({
-    type: SET_PROXY_STATE,
-    payload: { proxyState },
+	type: SET_PROXY_STATE,
+	payload: { proxyState },
 });
 
 export const setShowShouldOnboardingOverlay = (shouldShow: boolean) => ({
-    type: SET_SHOW_SHOULD_ONBOARDING_OVERLAY,
-    payload: { shouldShow },
+	type: SET_SHOW_SHOULD_ONBOARDING_OVERLAY,
+	payload: { shouldShow },
 });
 
 export const setSessionInfoMeta = (sessionMeta: ISessionMeta) => ({
-    type: SET_SESSION_META,
-    payload: { sessionMeta },
+	type: SET_SESSION_META,
+	payload: { sessionMeta },
 });
 
 export const setSettngs = (settings: iReduxState["app"]["settings"]) => ({
-    type: SET_SETTINGS,
-    payload: { settings },
+	type: SET_SETTINGS,
+	payload: { settings },
 });
 
 export const setUserAccountInfo = (info) => {
-    return {
-        type: SET_USER_ACCOUNT_INFO,
-        payload: { info },
-    };
+	return {
+		type: SET_USER_ACCOUNT_INFO,
+		payload: { info },
+	};
 };
 
 export const resetAppSession = () => {
-    return {
-        type: RESET_APP_SESSION,
-    }
+	return {
+		type: RESET_APP_SESSION,
+	};
 };
 
 export const setProxyInitializing = (isInitializing: boolean) => ({
-    type: SET_PROXY_INITIALIZING,
-    payload: { isInitializing },
+	type: SET_PROXY_INITIALIZING,
+	payload: { isInitializing },
 });

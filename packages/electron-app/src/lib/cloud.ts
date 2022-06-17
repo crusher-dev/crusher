@@ -38,33 +38,51 @@ class CloudCrusher {
 	}
 
 	public static async updateTestName(testId: string, testName: string, userToken: string, customBackendPath: string | undefined = undefined) {
-		return axios.post(resolveToBackendPath(`/tests/${testId}/actions/edit`, customBackendPath), {
-			name: testName,
-		}, {
-			headers: {
-				Cookie: `isLoggedIn=true; token=${userToken}`,
-			},
-		}).then((res) => res.data);
+		return axios
+			.post(
+				resolveToBackendPath(`/tests/${testId}/actions/edit`, customBackendPath),
+				{
+					name: testName,
+				},
+				{
+					headers: {
+						Cookie: `isLoggedIn=true; token=${userToken}`,
+					},
+				},
+			)
+			.then((res) => res.data);
 	}
 
-	public static async runTests(testIds: Array<string> | null, projectId: string, 	proxyUrlsMap: any | null,		userToken: string, customBackendPath: string | undefined = undefined) {
+	public static async runTests(
+		testIds: Array<string> | null,
+		projectId: string,
+		proxyUrlsMap: any | null,
+		userToken: string,
+		customBackendPath: string | undefined = undefined,
+	) {
 		console.log("proxy url is", proxyUrlsMap);
 		const proxyUrlsMapsRaw = proxyUrlsMap && Object.keys(proxyUrlsMap).length ? proxyUrlsMap : undefined;
 		let proxyUrlsMapa = undefined;
-		if(proxyUrlsMapsRaw) {
-			proxyUrlsMapa={};
+		if (proxyUrlsMapsRaw) {
+			proxyUrlsMapa = {};
 			Object.keys(proxyUrlsMap).forEach((key) => {
-				proxyUrlsMapa[key] = {...proxyUrlsMap[key], tunnel: proxyUrlsMap[key].tunnel.replace("https://", "http://")};
+				proxyUrlsMapa[key] = { ...proxyUrlsMap[key], tunnel: proxyUrlsMap[key].tunnel.replace("https://", "http://") };
 			});
 		}
-		return axios.post(resolveToBackendPath(`/projects/${projectId}/tests/actions/run`, customBackendPath), {
-			testIds: Array.isArray(testIds) ? testIds.join(",") : null,
-			proxyUrlsMap: proxyUrlsMapa ? proxyUrlsMapa : undefined,
-		}, {
-			headers: {
-				Cookie: `isLoggedIn=true; token=${userToken}`,
-			},
-		}).then((res) => res.data);
+		return axios
+			.post(
+				resolveToBackendPath(`/projects/${projectId}/tests/actions/run`, customBackendPath),
+				{
+					testIds: Array.isArray(testIds) ? testIds.join(",") : null,
+					proxyUrlsMap: proxyUrlsMapa ? proxyUrlsMapa : undefined,
+				},
+				{
+					headers: {
+						Cookie: `isLoggedIn=true; token=${userToken}`,
+					},
+				},
+			)
+			.then((res) => res.data);
 	}
 	public static async saveTestDirectly(
 		events: Array<iAction>,
@@ -72,7 +90,7 @@ class CloudCrusher {
 		userToken: string,
 		customBackendPath: string | undefined = undefined,
 		customFrontEndPath: string | undefined = undefined,
-		testName: string | null = null
+		testName: string | null = null,
 	) {
 		return axios
 			.post(
@@ -83,18 +101,20 @@ class CloudCrusher {
 				},
 			)
 			.then(async (result) => {
-				return axios.post(
-					resolveToBackendPath(`/projects/${projectId}/tests/actions/create`, customBackendPath),
-					{
-						tempTestId: result.data.insertId,
-						name: testName ? testName : new Date().toDateString().substr(4, 6) + " " + new Date().toLocaleTimeString().substr(0, 10),
-					},
-					{
-						headers: {
-							Cookie: `isLoggedIn=true; token=${userToken}`,
+				return axios
+					.post(
+						resolveToBackendPath(`/projects/${projectId}/tests/actions/create`, customBackendPath),
+						{
+							tempTestId: result.data.insertId,
+							name: testName ? testName : new Date().toDateString().substr(4, 6) + " " + new Date().toLocaleTimeString().substr(0, 10),
 						},
-					},
-				).then((res) => res.data);
+						{
+							headers: {
+								Cookie: `isLoggedIn=true; token=${userToken}`,
+							},
+						},
+					)
+					.then((res) => res.data);
 			});
 	}
 
@@ -104,26 +124,38 @@ class CloudCrusher {
 		customBackendPath: string | undefined = undefined,
 		customFrontEndPath: string | undefined = undefined,
 	): Promise<any> {
-		return axios.get(resolveToBackendPath(`/builds/${buildId}/report`, customBackendPath), {
-			headers: {
-				Cookie: `isLoggedIn=true; token=${userToken}`,
-			},
-		}).then((res) => res.data);
+		return axios
+			.get(resolveToBackendPath(`/builds/${buildId}/report`, customBackendPath), {
+				headers: {
+					Cookie: `isLoggedIn=true; token=${userToken}`,
+				},
+			})
+			.then((res) => res.data);
 	}
 
-	public static async deleteTest(testId, userToken: string,	customBackendPath: string | undefined = undefined,
-		customFrontEndPath: string | undefined = undefined) {
-		return axios.post(resolveToBackendPath(`/tests/${testId}/actions/delete`, customBackendPath), {}, {
-			headers: {
-				Cookie: `isLoggedIn=true; token=${userToken}`,
-			},
-		}).then((result) => result.data);
+	public static async deleteTest(
+		testId,
+		userToken: string,
+		customBackendPath: string | undefined = undefined,
+		customFrontEndPath: string | undefined = undefined,
+	) {
+		return axios
+			.post(
+				resolveToBackendPath(`/tests/${testId}/actions/delete`, customBackendPath),
+				{},
+				{
+					headers: {
+						Cookie: `isLoggedIn=true; token=${userToken}`,
+					},
+				},
+			)
+			.then((result) => result.data);
 	}
 	public static async saveTest(
 		events: Array<iAction>,
 		customBackendPath: string | undefined = undefined,
 		customFrontEndPath: string | undefined = undefined,
-		testName: string | null = null
+		testName: string | null = null,
 	) {
 		return axios
 			.post(
@@ -137,7 +169,7 @@ class CloudCrusher {
 			)
 			.then(async (result) => {
 				const url = new URL(resolveToFrontEndPath(`/?temp_test_id=${result.data.insertId}&temp_test_type=save`, customFrontEndPath));
-				if(testName) {
+				if (testName) {
 					url.searchParams.set("temp_test_name", testName);
 				}
 				await shell.openExternal(url.toString());
@@ -152,7 +184,7 @@ class CloudCrusher {
 		testId: string,
 		userToken: string,
 		customBackendPath: string | undefined = undefined,
-		customFrontEndPath: string | undefined = undefined
+		customFrontEndPath: string | undefined = undefined,
 	) {
 		return axios
 			.post(

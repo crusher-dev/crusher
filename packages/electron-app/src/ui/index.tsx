@@ -1,4 +1,4 @@
-import './wdyr';
+import "./wdyr";
 import { setupLogger } from "@crusher-shared/modules/logger";
 import React from "react";
 import { css, Global } from "@emotion/react";
@@ -13,7 +13,16 @@ import { getInitialStateRenderer } from "electron-redux";
 import { ipcRenderer } from "electron";
 import { resetRecorder, setDevice, setIsWebViewInitialized, updateRecorderState } from "../store/actions/recorder";
 import { getIsStatusBarVisible, getRecorderInfo, getRecorderState, getSavedSteps, isWebViewInitialized } from "../store/selectors/recorder";
-import { goFullScreen, performNavigation, performReplayTest, performReplayTestUrlAction, performSetDevice, performSteps, resetStorage, saveSetDeviceIfNotThere } from "./commands/perform";
+import {
+	goFullScreen,
+	performNavigation,
+	performReplayTest,
+	performReplayTestUrlAction,
+	performSetDevice,
+	performSteps,
+	resetStorage,
+	saveSetDeviceIfNotThere,
+} from "./commands/perform";
 import { devices } from "../devices";
 import { iReduxState } from "../store/reducers/index";
 import { IDeepLinkAction } from "../types";
@@ -27,15 +36,15 @@ import { TourProvider, useTour } from "@reactour/tour";
 import { getGlobalAppConfig } from "../lib/global-config";
 import { iAction } from "@shared/types/action";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
-import { HashRouter as Router, Route, NavLink, HashRouter, Routes, useNavigate } from 'react-router-dom';
-import { DashboardScreen } from './screens/dashboard';
-import { LoginScreen } from './screens/login';
-import { LoadingScreen } from './screens/loading';
-import { CreateTestScreen } from './screens/createTest';
-import { SelectProjectScreen } from './screens/selectProject';
-import { StatusBar } from './components/status-bar';
-import { UnDockCodeScreen } from './screens/undockCode';
-import { InfoOverLay } from './components/overlays/infoOverlay';
+import { HashRouter as Router, Route, NavLink, HashRouter, Routes, useNavigate } from "react-router-dom";
+import { DashboardScreen } from "./screens/dashboard";
+import { LoginScreen } from "./screens/login";
+import { LoadingScreen } from "./screens/loading";
+import { CreateTestScreen } from "./screens/createTest";
+import { SelectProjectScreen } from "./screens/selectProject";
+import { StatusBar } from "./components/status-bar";
+import { UnDockCodeScreen } from "./screens/undockCode";
+import { InfoOverLay } from "./components/overlays/infoOverlay";
 import InsufficientPermissionScreen from "./screens/insufficientPermission";
 
 webFrame.setVisualZoomLevelLimits(1, 3);
@@ -91,31 +100,43 @@ const App = () => {
 						window["triggeredTest"] = { id: -1, type: "local" };
 
 						// navigate("/");
-						if(testsCompleted) {
+						if (testsCompleted) {
 							navigate("/");
 							goFullScreen(false);
-							sendSnackBarEvent({type: "test_report", message: null, meta: { totalCount }});
+							sendSnackBarEvent({ type: "test_report", message: null, meta: { totalCount } });
 						}
-						if(!testsCompleted) {
-													// goFullScreen(false);
+						if (!testsCompleted) {
+							// goFullScreen(false);
 
-													navigate("/recorder");
-													goFullScreen();
-													performReplayTestUrlAction(window["testsToRun"].list[0], true);
+							navigate("/recorder");
+							goFullScreen();
+							performReplayTestUrlAction(window["testsToRun"].list[0], true);
 						}
 					}
-				}
+				};
 				if (isWebViewPresent) {
-					performReplayTest(action.args.testId).then((res) => {
-						handleCompletion();
-					}).catch((err) => { if (window["testsToRun"]) { handleCompletion(); } } );
+					performReplayTest(action.args.testId)
+						.then((res) => {
+							handleCompletion();
+						})
+						.catch((err) => {
+							if (window["testsToRun"]) {
+								handleCompletion();
+							}
+						});
 				} else {
-					performReplayTest(action.args.testId).then((res) => {
-						handleCompletion();
-					}).catch((err) => { if (window["testsToRun"]) { handleCompletion() } });
+					performReplayTest(action.args.testId)
+						.then((res) => {
+							handleCompletion();
+						})
+						.catch((err) => {
+							if (window["testsToRun"]) {
+								handleCompletion();
+							}
+						});
 				}
-			} else if(action.commandName === "restore") {
-				if(window.localStorage.getItem("saved-steps")){
+			} else if (action.commandName === "restore") {
+				if (window.localStorage.getItem("saved-steps")) {
 					const savedSteps = JSON.parse(window.localStorage.getItem("saved-steps") || "[]");
 					console.log("Saved steps are", savedSteps);
 					window.localStorage.removeItem("saved-steps");
@@ -136,22 +157,29 @@ const App = () => {
 				...sessionInfoMeta,
 				remainingSteps: [],
 			}),
-			resetStorage();
-		}
+				resetStorage();
+		};
 	}, []);
 
 	return (
 		<>
 			<div
-				css={[css`
-		height: 32px;
-		width: 100%;
-		background: #111213;
-		border-bottom: 1px solid #2c2c2c;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	`, process.platform !== "darwin" ? css`display: none;` : undefined]}
+				css={[
+					css`
+						height: 32px;
+						width: 100%;
+						background: #111213;
+						border-bottom: 1px solid #2c2c2c;
+						display: flex;
+						justify-content: center;
+						align-items: center;
+					`,
+					process.platform !== "darwin"
+						? css`
+								display: none;
+						  `
+						: undefined,
+				]}
 				className={"drag"}
 			>
 				<div
@@ -163,8 +191,7 @@ const App = () => {
 						flex: 1;
 						justify-content: center;
 					`}
-				>
-				</div>
+				></div>
 				<div
 					css={css`
 						margin-left: auto;
@@ -180,24 +207,38 @@ const App = () => {
 								opacity: 0.5;
 							}
 						`}
-					>
-					</div>
+					></div>
 				</div>
 			</div>
-			<div css={[containerStyle, process.platform !== "darwin" ? css`height: 100vh` : undefined]}>
+			<div
+				css={[
+					containerStyle,
+					process.platform !== "darwin"
+						? css`
+								height: 100vh;
+						  `
+						: undefined,
+				]}
+			>
 				<Global styles={globalStyles} />
-				{!!recorderInfo.device ? (<Sidebar css={sidebarStyle} />) : ""}
+				{!!recorderInfo.device ? <Sidebar css={sidebarStyle} /> : ""}
 				<div css={bodyStyle}>
-					<Toolbar css={[toolbarStyle, isStatusBarVisible && recorderState.type === TRecorderState.CUSTOM_CODE_ON ? css`z-index: -1;` : undefined]} />
+					<Toolbar
+						css={[
+							toolbarStyle,
+							isStatusBarVisible && recorderState.type === TRecorderState.CUSTOM_CODE_ON
+								? css`
+										z-index: -1;
+								  `
+								: undefined,
+						]}
+					/>
 					<DeviceFrame css={deviceFrameContainerStyle} />
 
-					{isStatusBarVisible ? (
-						<StatusBar />
-					) : ""}
+					{isStatusBarVisible ? <StatusBar /> : ""}
 				</div>
 			</div>
 			<InfoOverLay />
-
 		</>
 	);
 };
@@ -412,10 +453,9 @@ function doArrow(position, verticalAlign, horizontalAlign) {
 	};
 }
 
-
 render(
 	<Provider store={store}>
-			<HashRouter>
+		<HashRouter>
 			<ToastSnackbar />
 			<style>
 				{`
@@ -427,36 +467,42 @@ render(
 				}
 			`}
 			</style>
-				<Routes>
-					<Route path="/login" element={<LoginScreen/>}/>
-					<Route path="/" element={<DashboardScreen/>}/>
-					<Route path="/select-project" element={<SelectProjectScreen/>}/>
-					<Route path="/create-test" element={<CreateTestScreen/>}/>
-					<Route path="/code-editor" element={<UnDockCodeScreen/>}/>
-					<Route path="/recorder" element={		<TourProvider
-			onClickMask={() => {}}
-			disableDotsNavigation={true}
-			disableKeyboardNavigation={true}
-			showPrevNextButtons={false}
-			disableFocusLock={true}
-			showBadge={false}
-			styles={{
-				popover: (base, state) => ({
-					...base,
-					background: "linear-gradient(0deg, #111213, #111213), rgba(10, 11, 14, 0.4)",
-					border: "0.5px solid rgba(255, 255, 255, 0.1)",
-					borderRadius: "8rem",
-					color: "#fff",
-					fontSize: "14rem",
-					minWidth: "400rem",
-					...doArrow(state.position, state.verticalAlign, state.horizontalAlign),
-				}),
-			}}
-			steps={steps}
-		><App/></TourProvider>} />
-				</Routes>
-
-			</HashRouter>
+			<Routes>
+				<Route path="/login" element={<LoginScreen />} />
+				<Route path="/" element={<DashboardScreen />} />
+				<Route path="/select-project" element={<SelectProjectScreen />} />
+				<Route path="/create-test" element={<CreateTestScreen />} />
+				<Route path="/code-editor" element={<UnDockCodeScreen />} />
+				<Route
+					path="/recorder"
+					element={
+						<TourProvider
+							onClickMask={() => {}}
+							disableDotsNavigation={true}
+							disableKeyboardNavigation={true}
+							showPrevNextButtons={false}
+							disableFocusLock={true}
+							showBadge={false}
+							styles={{
+								popover: (base, state) => ({
+									...base,
+									background: "linear-gradient(0deg, #111213, #111213), rgba(10, 11, 14, 0.4)",
+									border: "0.5px solid rgba(255, 255, 255, 0.1)",
+									borderRadius: "8rem",
+									color: "#fff",
+									fontSize: "14rem",
+									minWidth: "400rem",
+									...doArrow(state.position, state.verticalAlign, state.horizontalAlign),
+								}),
+							}}
+							steps={steps}
+						>
+							<App />
+						</TourProvider>
+					}
+				/>
+			</Routes>
+		</HashRouter>
 	</Provider>,
 	document.querySelector("#app-container"),
 );

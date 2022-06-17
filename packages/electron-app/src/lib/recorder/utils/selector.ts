@@ -32,7 +32,7 @@ export function getSelectors(elementNode: HTMLElement, useAdvancedSelector: bool
 	if (xPathSelector) {
 		out.push({
 			type: "xpath",
-			value: "//" + getXpathTo(elementNode) as string,
+			value: ("//" + getXpathTo(elementNode)) as string,
 			uniquenessScore: 1,
 		});
 	}

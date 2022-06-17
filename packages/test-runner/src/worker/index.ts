@@ -1,4 +1,4 @@
-import {setupLogger} from "@crusher-shared/modules/logger";
+import { setupLogger } from "@crusher-shared/modules/logger";
 setupLogger("test-runner");
 
 import { CodeRunnerService } from "./runner.service";
@@ -44,7 +44,7 @@ module.exports = async function (bullJob: iTestRunnerJob): Promise<any> {
 
 		const parameterizedTests = [];
 
-		communcationChannel.addListener("run-parameterized-tests", (data: Array<{testId: number, groupId: string, context: any}>) => {
+		communcationChannel.addListener("run-parameterized-tests", (data: Array<{ testId: number; groupId: string; context: any }>) => {
 			parameterizedTests.push(...data);
 			// @TODO: Add impl here
 		});

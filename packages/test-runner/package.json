@@ -14,7 +14,6 @@
 		"ioredis": "^4.19.4",
 		"js-beautify": "^1.14.0",
 		"logdna": "^3.5.0",
-		"mongodb-client-encryption": "^1.2.5",
 		"mongoose": "^5.11.14",
 		"playwright": "^1.14.0",
 		"playwright-chromium": "^1.14.0",

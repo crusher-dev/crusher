@@ -1,12 +1,12 @@
 import { iAction } from "@crusher-shared/types/action";
-import * as fs from 'fs';
-import * as path from 'path';
+import * as fs from "fs";
+import * as path from "path";
 import { isWebpack } from "../utils/helper";
 
 class ActionDescriptor {
-    actionsMap = {};
+	actionsMap = {};
 
-    initActionHandlers() {
+	initActionHandlers() {
 		if (isWebpack()) {
 			const actionsRequireContext = require.context("../actions/", true, /\.ts$/);
 
@@ -22,24 +22,24 @@ class ActionDescriptor {
 			}
 		}
 	}
-    
-    constructor() {
-        // this.initActionHandlers();
-    }
 
-    registerStepHandler(name, description, handler, actionDescriber) {
-        this.actionsMap[name] = {
-            name,
+	constructor() {
+		// this.initActionHandlers();
+	}
 
-            description,
-            actionDescriber,
-            handler,
-        };
-    }
+	registerStepHandler(name, description, handler, actionDescriber) {
+		this.actionsMap[name] = {
+			name,
 
-    describeAction(action: iAction) {
-        return this.actionsMap[action.type].actionDescriber(action);
-    }
+			description,
+			actionDescriber,
+			handler,
+		};
+	}
+
+	describeAction(action: iAction) {
+		return this.actionsMap[action.type].actionDescriber(action);
+	}
 }
 
-export {ActionDescriptor};
+export { ActionDescriptor };

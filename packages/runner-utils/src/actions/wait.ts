@@ -7,13 +7,17 @@ import { ExportsManager } from "../functions/exports";
 import { CrusherSdk } from "../sdk/sdk";
 import { CommunicationChannel } from "../functions/communicationChannel";
 
-async function waitForSeconds(page: Page, action: iAction, globals: IGlobalManager,
+async function waitForSeconds(
+	page: Page,
+	action: iAction,
+	globals: IGlobalManager,
 	storageManager: StorageManager,
 	exportsManager: ExportsManager,
 	communicationChannel: CommunicationChannel,
 	sdk: CrusherSdk | null,
-	context: any) {
-	const timeout = template(action.payload.timeout, {ctx: context || {}});
+	context: any,
+) {
+	const timeout = template(action.payload.timeout, { ctx: context || {} });
 	if (!timeout) return;
 	await page.waitForTimeout(parseInt(timeout + "", 10) * 1000);
 	return;

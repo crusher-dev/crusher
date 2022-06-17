@@ -2,7 +2,7 @@
 const path = require("path");
 const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
-const tsTransformPaths = require('@zerollup/ts-transform-paths');
+const tsTransformPaths = require("@zerollup/ts-transform-paths");
 
 module.exports = {
 	mode: "production",
@@ -32,12 +32,12 @@ module.exports = {
 				options: {
 					getCustomTransformers: (program) => {
 						const transformer = tsTransformPaths(program);
-			 
+
 						return {
-						  before: [transformer.before], // for updating paths in generated code
-						  afterDeclarations: [transformer.afterDeclarations] // for updating paths in declaration files
+							before: [transformer.before], // for updating paths in generated code
+							afterDeclarations: [transformer.afterDeclarations], // for updating paths in declaration files
 						};
-					}
+					},
 				},
 			},
 		],

@@ -12,7 +12,7 @@ import { markTestFail } from "../utils/helper";
 async function assertSeoRows(
 	page: Page,
 	assertions: Array<iAssertionRow>,
-	context: any
+	context: any,
 ): Promise<{ hasPassed: boolean; logs: Array<{ status: "FAILED" | "DONE"; message: string; meta: any }> }> {
 	let hasPassed = true;
 	const logs = [];
@@ -21,7 +21,7 @@ async function assertSeoRows(
 
 	for (let i = 0; i < assertions.length; i++) {
 		let { validation, operation, field } = assertions[i];
-		validation = template(validation, { ctx: context || {} })
+		validation = template(validation, { ctx: context || {} });
 		const elementAttributeValue =
 			field.name === "title"
 				? pageTitle
@@ -104,12 +104,16 @@ async function assertSeoRows(
 	return { hasPassed, logs };
 }
 
-async function runSEOAssertionOnPage(page: Page, action: iAction,	globals: IGlobalManager,
+async function runSEOAssertionOnPage(
+	page: Page,
+	action: iAction,
+	globals: IGlobalManager,
 	storageManager: StorageManager,
 	exportsManager: ExportsManager,
 	communicationChannel: CommunicationChannel,
 	sdk: CrusherSdk | null,
-	context: any) {
+	context: any,
+) {
 	const validationRows = action.payload.meta.validations;
 	const actionResult = await assertSeoRows(page, validationRows, context);
 

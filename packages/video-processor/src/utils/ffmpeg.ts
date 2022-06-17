@@ -8,8 +8,7 @@ export const getFfmpegFromModule = (): string | null => {
 		if (ffmpeg.path) {
 			return ffmpeg.path;
 		}
-	} catch (e) {
-	} // eslint-disable-line no-empty
+	} catch (e) {} // eslint-disable-line no-empty
 
 	return null;
 };

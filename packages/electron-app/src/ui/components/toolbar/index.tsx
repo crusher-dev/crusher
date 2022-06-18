@@ -137,8 +137,10 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 
 		const hasProxyEnabled = proxyState && Object.keys(proxyState).length;
 		if (startUrl.hostname.toLowerCase() === "localhost" && !hasProxyEnabled) {
-			window["showProxyWarning"] = true;
+			return true;
 		}
+
+		return false;
 	}, []);
 
 	const verifyTest = () => {
@@ -149,12 +151,16 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 			setIsOpen(false);
 		}
 		if (recorderState.type === TRecorderState.RECORDING_ACTIONS) {
-			performVerifyTest().then((res) => {
+			const shouldNotRunTest = handleProxyWarning();
+
+			performVerifyTest(true, shouldNotRunTest).then((res) => {
 				if (res && res.draftJobId) {
 					window["triggeredTest"] = {
 						id: res.draftJobId,
 					};
-					handleProxyWarning();
+					if(shouldNotRunTest && res) {
+						window["showProxyWarning"] = { testId: res.id};
+					}
 					navigate("/");
 					goFullScreen(false);
 				}
@@ -173,11 +179,16 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 			clearInterval(intervalRef.current);
 		}
 		intervalRef.current = null;
-		saveTest()
+
+		const shouldNotRunTest = handleProxyWarning();
+
+		saveTest(shouldNotRunTest)
 			.then((res) => {
 				console.log("Naviagting to", res);
 				window["triggeredTest"] = { id: res.draftJobId };
-				handleProxyWarning();
+				if(shouldNotRunTest && res) {
+					window["showProxyWarning"] = { testId: res.id};
+				}
 				navigate("/");
 				goFullScreen(false);
 			})

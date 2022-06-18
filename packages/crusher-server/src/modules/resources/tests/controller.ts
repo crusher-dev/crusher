@@ -227,7 +227,7 @@ export class TestController {
 	async createTest(
 		@CurrentUser({ required: true }) user,
 		@Param("project_id") projectId: number,
-		@Body() body: Omit<ICreateTestPayload, "projectId" | "userId" | "events"> & { events?: Array<iAction>; tempTestId?: string },
+		@Body() body: Omit<ICreateTestPayload, "projectId" | "userId" | "events"> & { events?: Array<iAction>; shouldNotRunTests?: boolean; tempTestId?: string },
 	) {
 		const { user_id } = user;
 		const testInsertRecord = await this.testService.createAndRunTest(body, projectId, user_id);

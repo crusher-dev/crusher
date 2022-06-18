@@ -91,6 +91,7 @@ class CloudCrusher {
 		customBackendPath: string | undefined = undefined,
 		customFrontEndPath: string | undefined = undefined,
 		testName: string | null = null,
+		shouldNotRunTest: boolean = false,
 	) {
 		return axios
 			.post(
@@ -106,6 +107,7 @@ class CloudCrusher {
 						resolveToBackendPath(`/projects/${projectId}/tests/actions/create`, customBackendPath),
 						{
 							tempTestId: result.data.insertId,
+							shouldNotRunTest: shouldNotRunTest,
 							name: testName ? testName : new Date().toDateString().substr(4, 6) + " " + new Date().toLocaleTimeString().substr(0, 10),
 						},
 						{
@@ -156,6 +158,7 @@ class CloudCrusher {
 		customBackendPath: string | undefined = undefined,
 		customFrontEndPath: string | undefined = undefined,
 		testName: string | null = null,
+		shouldNotRunTest: boolean = false,
 	) {
 		return axios
 			.post(

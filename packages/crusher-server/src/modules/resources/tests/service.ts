@@ -83,7 +83,7 @@ class TestService {
 		);
 	}
 
-	async createAndRunTest(payload: { tempTestId?: any; name: string; events?: any }, projectId: number, userId: number) {
+	async createAndRunTest(payload: { tempTestId?: any; name: string; shouldNotRunTests?: boolean; events?: any }, projectId: number, userId: number) {
 		let events = payload.events || [];
 		if (payload.tempTestId) {
 			const tempTest = await this.getTempTest(payload.tempTestId);
@@ -100,6 +100,8 @@ class TestService {
 			userId: userId,
 		});
 
+
+		if(payload.shouldNotRunTests) { return testInsertRecord; }
 		const testRecord = await this.getTest(testInsertRecord.insertId);
 
 		const buildRunInfo = await this.testsRunner.runTests(await this.getCompleteTestsArray(await this.getFullTestArr([testRecord])), {

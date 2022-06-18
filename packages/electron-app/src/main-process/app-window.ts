@@ -215,7 +215,7 @@ export class AppWindow {
 		ipcMain.handle("replay-test", this.handleRemoteReplayTest.bind(this));
 		ipcMain.handle("replay-test-url-action", this.handleRemoteReplayTestUrlAction.bind(this));
 		ipcMain.handle("update-test", this.handleUpdateTest.bind(this));
-		ipcMain.handle("save-test", this.handleSaveTest.bind(this));
+		ipcMain.handle("save-test", this._handleSaveTestCall.bind(this));
 		ipcMain.handle("clear-remaining-steps", this.handleClearRemainingSteps.bind(this));
 		ipcMain.handle("save-step", this.handleSaveStep.bind(this));
 		ipcMain.handle("go-back-page", this.handleGoBackPage.bind(this));
@@ -811,7 +811,11 @@ export class AppWindow {
 		return true;
 	}
 
-	async handleSaveTest() {
+	async _handleSaveTestCall(event: Electron.IpcMainEvent, payload: { shouldNotRunTest: boolean }) {
+		return this.handleSaveTest(payload.shouldNotRunTest);
+	}
+
+	async handleSaveTest(shouldNotRunTest: boolean = false) {
 		const recordedSteps = getSavedSteps(this.store.getState() as any);
 		const appSettings = getAppSettings(this.store.getState() as any);
 		const testName = getTestName(this.store.getState() as any);
@@ -828,6 +832,7 @@ export class AppWindow {
 				appSettings.backendEndPoint,
 				appSettings.frontendEndPoint,
 				testName,
+				shouldNotRunTest,
 			);
 		} else {
 			const accountInfo = getUserAccountInfo(this.store.getState() as any);
@@ -840,6 +845,7 @@ export class AppWindow {
 					appSettings.backendEndPoint,
 					appSettings.frontendEndPoint,
 					testName,
+					shouldNotRunTest,
 				);
 			} else {
 				await CloudCrusher.saveTest(recordedSteps as any, appSettings.backendEndPoint, appSettings.frontendEndPoint, testName);
@@ -850,14 +856,14 @@ export class AppWindow {
 	}
 
 	async handleVerifyTest(event, payload) {
-		const { shouldAlsoSave } = payload;
+		const { shouldAlsoSave, shouldNotRunTest } = payload;
 		const recordedSteps = getSavedSteps(this.store.getState() as any);
 		await this.resetRecorder(TRecorderState.PERFORMING_ACTIONS);
 
 		await this.handleReplayTestSteps(recordedSteps as any);
 		this.store.dispatch(setIsTestVerified(true));
 		if (shouldAlsoSave) {
-			return this.handleSaveTest();
+			return this.handleSaveTest(!!payload.shouldNotRunTest);
 		}
 	}
 

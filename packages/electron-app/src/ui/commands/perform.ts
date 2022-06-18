@@ -167,8 +167,8 @@ export const performAssertElementVisibility = async (selectedElement: iElementIn
 	});
 };
 
-const performVerifyTest = async (shouldAlsoSave = true) => {
-	return ipcRenderer.invoke("verify-test", { shouldAlsoSave });
+const performVerifyTest = async (shouldAlsoSave = true, shouldNotRunTest = true) => {
+	return ipcRenderer.invoke("verify-test", { shouldAlsoSave, shouldNotRunTest });
 };
 
 const performRunTests = async (projectId, testIds) => {
@@ -219,8 +219,8 @@ const updateTestName = (testId, testName) => {
 	return ipcRenderer.invoke("update-cloud-test-name", { testId, testName });
 };
 
-const saveTest = () => {
-	return ipcRenderer.invoke("save-test");
+const saveTest = (shouldNotRunTest: boolean = false) => {
+	return ipcRenderer.invoke("save-test", {shouldNotRunTest});
 };
 
 const updateTest = () => {

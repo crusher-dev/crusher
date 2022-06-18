@@ -230,10 +230,10 @@ function ActionButtonDropdown({ setShowActionMenu, isRecorder, ...props }) {
 		);
 	};
 
-	const handleOpenConfigFile = () => {
+	const handleOpenConfigFile = React.useCallback(() => {
 		setShowActionMenu(false);
-		shell.openPath("/home/utkarsh/Desktop/crusher/crusher/.crusher/config.json");
-	};
+		shell.openPath(projectConfigFile);
+	}, [projectConfigFile]);
 
 	const handleSettings = () => {
 		setShowActionMenu(false);

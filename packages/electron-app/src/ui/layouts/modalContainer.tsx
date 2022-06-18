@@ -53,6 +53,8 @@ function StatusMessageBar({ isLoadingScreen }) {
 
 		window["messageBarCallback"] = (buildId) => {
 			setShouldShow(false);
+			setTestType(null);
+			setTestStatus(null);
 			window["triggeredTest"] = { id: buildId };
 			setShouldShow(true);
 		};
@@ -70,6 +72,8 @@ function StatusMessageBar({ isLoadingScreen }) {
 			//     setBuildId(buildId);
 			//     return;
 			// }
+			if(window["triggeredTest"]) window["triggeredTest"] = null;
+			if(buildId === -1) return;
 			setBuildId(buildId);
 			const interval = setInterval(() => {
 				getBuildReport(buildId).then((res) => {
@@ -362,7 +366,7 @@ function ModelContainerLayout({ children, title, footer, className, isLoadingScr
 			</div>
 			{footer ? <div css={footerStyle}>{footer}</div> : ""}
 
-			<StatusMessageBar isLoadingScreen={isLoadingScreen} />
+			{!isLoadingScreen ? (<StatusMessageBar isLoadingScreen={isLoadingScreen} />) : ""}
 		</div>
 	);
 }

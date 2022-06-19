@@ -7,7 +7,7 @@ import { shell } from "electron";
 import { useNavigate } from "react-router-dom";
 import { goFullScreen } from "../../commands/perform";
 
-const CreateButton = ({ title, className, onClick }) => {
+export const ActionButton = ({ title, className, onClick }) => {
 	return (
 		<Button
 			id={"verify-save-test"}
@@ -50,7 +50,7 @@ export const DocsGoBackActionBar = ({ buttonTitle, buttonCallback }) => {
 	return (
 		<div css={actionsContainerStyle}>
 			<Link onClick={openDocs}>Docs</Link>
-			<CreateButton title={buttonTitle} onClick={buttonCallback} css={createButtonStyle} />
+			<ActionButton title={buttonTitle} onClick={buttonCallback} css={createButtonStyle} />
 		</div>
 	);
 };

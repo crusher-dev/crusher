@@ -11,7 +11,7 @@ class ProxyManager {
 	_results: any | null;
 	_logs: Array<string> = [];
 
-	isDisabled: boolean = true;
+	isDisabled: boolean = false;
 
 	constructor(private store: Store<unknown, AnyAction>) {}
 

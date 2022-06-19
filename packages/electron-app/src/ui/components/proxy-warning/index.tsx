@@ -43,7 +43,7 @@ const saveButtonStyle = css`
 	}
 `;
 
-const ProxyWarningContainer = ({ onSkip }) => {
+const ProxyWarningContainer = ({ onSkip, testId }) => {
 	const [selectedProject, setSelectedProject] = React.useState(null);
 	const proxyState = useSelector(getProxyState);
 	const store = useStore();

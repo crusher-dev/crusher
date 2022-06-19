@@ -93,6 +93,8 @@ class CloudCrusher {
 		testName: string | null = null,
 		shouldNotRunTest: boolean = false,
 	) {
+		console.log("Should not run test " + shouldNotRunTest);
+		
 		return axios
 			.post(
 				resolveToBackendPath("tests/actions/save.temp", customBackendPath),
@@ -160,6 +162,8 @@ class CloudCrusher {
 		testName: string | null = null,
 		shouldNotRunTest: boolean = false,
 	) {
+		
+		console.log("Should not run test " + shouldNotRunTest);
 		return axios
 			.post(
 				resolveToBackendPath("tests/actions/save.temp", customBackendPath),
@@ -188,7 +192,9 @@ class CloudCrusher {
 		userToken: string,
 		customBackendPath: string | undefined = undefined,
 		customFrontEndPath: string | undefined = undefined,
+		shouldNotRunTest: boolean = false,
 	) {
+		
 		return axios
 			.post(
 				resolveToBackendPath("tests/actions/save.temp", customBackendPath),

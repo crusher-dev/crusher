@@ -578,7 +578,7 @@ function DashboardScreen() {
 	const [selectedProject, setSelectedProject] = React.useState(null);
 	const store = useStore();
 	const [userInfo, setUserInfo] = React.useState({});
-	const [showProxyWarning, setShowProxyWarning] = React.useState(false);
+	const [showProxyWarning, setShowProxyWarning] = React.useState({show: false, testId: null});
 	const proxyState = useSelector(getProxyState);
 	const userAccountInfo = useSelector(getUserAccountInfo);
 	const proxyIsInitializing = useSelector(getIsProxyInitializing);
@@ -617,8 +617,9 @@ function DashboardScreen() {
 		}
 
 		if (window["showProxyWarning"] && !Object.keys(proxyState).length) {
+			setShowProxyWarning({show: true, testId: window["showProxyWarning"].testId});
+
 			window["showProxyWarning"] = false;
-			setShowProxyWarning(true);
 		}
 
 		const userAccountInfo = getUserAccountInfo(store.getState());
@@ -754,7 +755,7 @@ function DashboardScreen() {
 			title={TitleComponent}
 			footer={userTests && <DashboardFooter projectId={selectedProject} userTests={userTests} />}
 		>
-			{showProxyWarning && !Object.keys(proxyState).length ? <ProxyWarningContainer onSkip={setShowProxyWarning.bind(this, false)} /> : mainContent}
+			{showProxyWarning.show && !Object.keys(proxyState).length ? <ProxyWarningContainer testId={showProxyWarning.testId} onSkip={setShowProxyWarning.bind(this, false)} /> : mainContent}
 		</ModelContainerLayout>
 	);
 }

@@ -111,12 +111,12 @@ const textBlock2 = css`
 `;
 
 const mainContainerStyle = css`
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	left: 0;
-	top: 0;
+position: fixed;
+width: 100%;
+left: 0px;
+bottom: 0px;
 	background: rgba(0, 0, 0, 0.92);
+	z-index: 99999919239;
 `;
 
 export { Overlay, InfoOverLay };

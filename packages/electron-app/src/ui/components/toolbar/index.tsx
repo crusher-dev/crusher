@@ -375,6 +375,7 @@ const Toolbar = (props: any) => {
 				return;
 			}
 			setUrlInputError({ value: false, message: "" });
+			setCurrentStep(1);
 			batch(() => {
 				if (!recorderInfo.url) {
 					console.log("Selected device is", selectedDevice[0]);

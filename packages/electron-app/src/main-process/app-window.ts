@@ -90,7 +90,7 @@ export class AppWindow {
 			minWidth: this.minWidth,
 			minHeight: this.minHeight,
 			autoHideMenuBar: true,
-			show: true,
+			show: false,
 			frame: process.platform === "darwin" ? false : true,
 			icon: getAppIconPath(),
 			// This fixes subpixel aliasing on Windows
@@ -115,6 +115,12 @@ export class AppWindow {
 		};
 
 		this.window = new BrowserWindow(windowOptions);
+
+		if(app.commandLine.hasSwitch("open-recorder")) {
+			this.window.maximize();
+		}
+
+		this.window.show();
 		this.window.setFullScreenable(false);
 		this.window.setResizable(false);
 
@@ -276,8 +282,10 @@ export class AppWindow {
 	}
 
 	async handle(projectId) {
-		await this.window.loadURL(encodePathAsUrl(__dirname, "static/splash.html"));
-
+		if (app.commandLine.hasSwitch("open-recorder")) {
+			this.window.maximize();
+			await this.window.loadURL(encodePathAsUrl(__dirname, "static/splash.html"));
+		}
 		if (projectId) {
 			await this.window.webContents.executeJavaScript(`window.localStorage.setItem("projectId", ${projectId});`);
 			process.argv = process.argv.filter((a) => a.includes("--project-id"));

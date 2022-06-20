@@ -137,10 +137,10 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 
 		const hasProxyEnabled = proxyState && Object.keys(proxyState).length;
 		if (startUrl.hostname.toLowerCase() === "localhost" && !hasProxyEnabled) {
-			return true;
+			return {shouldShow: true, startUrl};
 		}
 
-		return false;
+		return {shouldShow: false, startUrl};
 	}, []);
 
 	const verifyTest = () => {
@@ -151,15 +151,17 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 			setIsOpen(false);
 		}
 		if (recorderState.type === TRecorderState.RECORDING_ACTIONS) {
-			const shouldNotRunTest = handleProxyWarning();
+			const proxyWarning = handleProxyWarning();
 
-			performVerifyTest(true, shouldNotRunTest).then((res) => {
-				if (res && res.draftJobId) {
+			performVerifyTest(true, proxyWarning.shouldShow).then((res) => {
+				if (res) {
+					if(res.draftJobId) {
 					window["triggeredTest"] = {
 						id: res.draftJobId,
 					};
-					if(shouldNotRunTest && res) {
-						window["showProxyWarning"] = { testId: res.id};
+				}
+					if(proxyWarning.shouldShow && res) {
+						window["showProxyWarning"] = { testId: res.id, startUrl: proxyWarning.startUrl };
 					}
 					navigate("/");
 					goFullScreen(false);
@@ -180,14 +182,14 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 		}
 		intervalRef.current = null;
 
-		const shouldNotRunTest = handleProxyWarning();
+		const proxyWarning = handleProxyWarning();
 
-		saveTest(shouldNotRunTest)
+		saveTest(proxyWarning.shouldShow)
 			.then((res) => {
 				console.log("Naviagting to", res);
 				window["triggeredTest"] = { id: res.draftJobId };
-				if(shouldNotRunTest && res) {
-					window["showProxyWarning"] = { testId: res.id};
+				if(proxyWarning.shouldShow && res) {
+					window["showProxyWarning"] = { testId: res.id, startUrl: proxyWarning.startUrl };
 				}
 				navigate("/");
 				goFullScreen(false);

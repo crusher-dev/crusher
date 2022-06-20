@@ -84,6 +84,31 @@ class CloudCrusher {
 			)
 			.then((res) => res.data);
 	}
+
+	public static async runDraftTest(
+		testId,
+		projectId,
+		userToken: string,
+		customBackendPath: string | undefined = undefined,
+		customFrontEndPath: string | undefined = undefined,
+	) {
+		return axios
+			.post(
+				resolveToBackendPath(`/projects/${projectId}/tests/actions/runDraftTest`, customBackendPath),
+				{
+					testId: testId
+				},
+				{
+					headers: {
+						Cookie: `isLoggedIn=true; token=${userToken}`,
+					},
+				},
+			)
+			.then((res) => { console.log("Res data", res.data); return res.data;}).catch((err) => {
+				console.error("Error is", err);
+			});
+	}
+
 	public static async saveTestDirectly(
 		events: Array<iAction>,
 		projectId: string,
@@ -94,7 +119,7 @@ class CloudCrusher {
 		shouldNotRunTest: boolean = false,
 	) {
 		console.log("Should not run test " + shouldNotRunTest);
-		
+
 		return axios
 			.post(
 				resolveToBackendPath("tests/actions/save.temp", customBackendPath),
@@ -109,7 +134,7 @@ class CloudCrusher {
 						resolveToBackendPath(`/projects/${projectId}/tests/actions/create`, customBackendPath),
 						{
 							tempTestId: result.data.insertId,
-							shouldNotRunTest: shouldNotRunTest,
+							shouldNotRunTests: shouldNotRunTest,
 							name: testName ? testName : new Date().toDateString().substr(4, 6) + " " + new Date().toLocaleTimeString().substr(0, 10),
 						},
 						{
@@ -118,7 +143,7 @@ class CloudCrusher {
 							},
 						},
 					)
-					.then((res) => res.data);
+					.then((res) => { console.log("Saved test is", res.data); return res.data; });
 			});
 	}
 

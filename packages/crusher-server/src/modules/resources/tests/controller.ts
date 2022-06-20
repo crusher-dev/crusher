@@ -236,6 +236,17 @@ export class TestController {
 	}
 
 	@Authorized()
+	@Post("/projects/:project_id/tests/actions/runDraftTest")
+	async runDraftTest(
+		@CurrentUser({ required: true }) user,
+		@Param("project_id") projectId: number,
+		@Body() body: { testId: number; }
+	) {
+		const { user_id } = user;
+		return this.testService.runDraftTest(body, projectId, user_id);
+	}
+
+	@Authorized()
 	@Post("/projects/:project_id/folder/create")
 	async createFolder(@CurrentUser({ required: true }) user, @Param("project_id") projectId: number) {
 		const folderInsertRecord = await this.testService.createFolder(projectId, "New Folder");

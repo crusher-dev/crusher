@@ -216,6 +216,7 @@ export class AppWindow {
 		ipcMain.handle("replay-test-url-action", this.handleRemoteReplayTestUrlAction.bind(this));
 		ipcMain.handle("update-test", this.handleUpdateTest.bind(this));
 		ipcMain.handle("save-test", this._handleSaveTestCall.bind(this));
+		ipcMain.handle("run-draft-test", this.handleRunDraftTest.bind(this));
 		ipcMain.handle("clear-remaining-steps", this.handleClearRemainingSteps.bind(this));
 		ipcMain.handle("save-step", this.handleSaveStep.bind(this));
 		ipcMain.handle("go-back-page", this.handleGoBackPage.bind(this));
@@ -813,6 +814,19 @@ export class AppWindow {
 
 	async _handleSaveTestCall(event: Electron.IpcMainEvent, payload: { shouldNotRunTest: boolean }) {
 		return this.handleSaveTest(payload.shouldNotRunTest);
+	}
+
+	async handleRunDraftTest(event: Electron.IpcMainEvent, payload: { testId: number }) {
+		const projectId = await this.window.webContents.executeJavaScript("window.localStorage.getItem('projectId');");
+		const appSettings = getAppSettings(this.store.getState() as any);
+		const accountInfo = getUserAccountInfo(this.store.getState() as any);
+		return CloudCrusher.runDraftTest(
+			payload.testId,
+			projectId,
+			app.commandLine.getSwitchValue("token") || accountInfo.token,
+			appSettings.backendEndPoint,
+			appSettings.frontendEndPoint,
+		);
 	}
 
 	async handleSaveTest(shouldNotRunTest: boolean = false) {

@@ -1,10 +1,10 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { ConnectivityWarningIcon, PlayV2Icon } from "../../icons";
+import { ConnectivityWarningIcon, LoadingIconV2, PlayV2Icon } from "../../icons";
 import { Link } from "../../layouts/modalContainer";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { shell } from "electron";
-import { turnOnProxy } from "../../commands/perform";
+import { performRunDraftTest, performRunTests, turnOnProxy } from "../../commands/perform";
 import { getProxyState } from "electron-app/src/store/selectors/app";
 import { useSelector, useStore } from "react-redux";
 
@@ -43,8 +43,9 @@ const saveButtonStyle = css`
 	}
 `;
 
-const ProxyWarningContainer = ({ onSkip, testId }) => {
+const ProxyWarningContainer = ({ exitCallback, testId, startUrl }) => {
 	const [selectedProject, setSelectedProject] = React.useState(null);
+	const [isRetrying, setIsRetrying] = React.useState(false);
 	const proxyState = useSelector(getProxyState);
 	const store = useStore();
 
@@ -63,6 +64,19 @@ const ProxyWarningContainer = ({ onSkip, testId }) => {
 	};
 
 	React.useEffect(() => {
+		if (Object.keys(proxyState).length) {
+			// Run the test with this config now.
+			performRunDraftTest(testId).then((res) => {
+				console.log("Response is", res);
+				window["messageBarCallback"](res.draftJobId);
+			}).catch((err) => {
+				console.log("Err is", err);
+			});
+			exitCallback();
+		}
+	}, [proxyState]);
+
+	React.useEffect(() => {
 		setSelectedProject(window.localStorage.getItem("projectId"));
 		// turnOnProxyServers();
 	}, [selectedProject]);
@@ -73,6 +87,7 @@ const ProxyWarningContainer = ({ onSkip, testId }) => {
 
 	const handleRetry = React.useCallback(() => {
 		turnOnProxyServers();
+		setIsRetrying(true);
 	}, [selectedProject, proxyState]);
 
 	return (
@@ -83,17 +98,17 @@ const ProxyWarningContainer = ({ onSkip, testId }) => {
 					<span css={highlightStyle}>Warning:</span> Add proxy config to test fast
 				</div>
 				<div css={descriptionStyle}>
-					Test for endpoint <span css={highlightStyle}>http://localhost:3000 is not reachable</span>. To test in cloud, add proxy config.
+					Test for endpoint <span css={highlightStyle}>{startUrl.toString() || ""} is not reachable</span>. To test in cloud, add proxy config.
 				</div>
 			</div>
 			<div css={actionsBarContainerStyle}>
 				<ReadDocsButton title={"Read docs"} onClick={openDocs} />
-				<Link onClick={onSkip} css={skipLinkStyle}>
+				<Link onClick={exitCallback} css={skipLinkStyle}>
 					Skip
 				</Link>
 			</div>
 			<div css={waitingTextStyle}>
-				<Link onClick={handleRetry}>Retry</Link>
+				<Link onClick={isRetrying ? undefined : handleRetry}>{isRetrying ? (<span css={css`display: flex; align-items:center;`}>Retrying <LoadingIconV2 css={css`margin-left: 8rem; height: 18rem;`}/></span>) : "Retry"}</Link>
 			</div>
 			<div css={watch}>
 				<PlayV2Icon /> Watch video

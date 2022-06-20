@@ -320,6 +320,10 @@ const turnOnProxy = (configFilePath) => {
 	return ipcRenderer.invoke("turn-on-proxy", { configFilePath });
 };
 
+const performRunDraftTest = (testId) => {
+	return ipcRenderer.invoke("run-draft-test", {testId});
+}
+
 export {
 	recordHoverDependencies,
 	performAction,
@@ -370,4 +374,5 @@ export {
 	performExit,
 	performUndockCode,
 	turnOnProxy,
+	performRunDraftTest
 };

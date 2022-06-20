@@ -121,6 +121,26 @@ class TestService {
 		return testInsertRecord;
 	}
 
+	async runDraftTest(payload: {testId: any}, projectId: number, userId: number) {
+		const testRecord = await this.getTest(payload.testId);
+
+		const buildRunInfo = await this.testsRunner.runTests(await this.getCompleteTestsArray(await this.getFullTestArr([testRecord])), {
+			userId: userId,
+			projectId: projectId,
+			host: "null",
+			status: BuildStatusEnum.CREATED,
+			buildTrigger: BuildTriggerEnum.MANUAL,
+			browser: [BrowserEnum.CHROME],
+			isDraftJob: true,
+			config: { shouldRecordVideo: true, testIds: [testRecord.id] },
+			meta: { isDraftJob: true },
+		});
+
+		await this.linkToDraftBuild(buildRunInfo.buildId, testRecord.id);
+
+		return this.getTest(payload.testId);
+	}
+
 	async updateTestSteps(testId: number, steps: Array<iAction>) {
 		return this.dbManager.update(`UPDATE public.tests SET events = ? WHERE id = ?`, [JSON.stringify(steps), testId]);
 	}

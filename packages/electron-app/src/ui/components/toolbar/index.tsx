@@ -26,7 +26,7 @@ import {
 } from "../../commands/perform";
 import { addHttpToURLIfNotThere, isValidHttpUrl } from "../../../utils";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
-import { getAppEditingSessionMeta, getProxyState } from "electron-app/src/store/selectors/app";
+import { getAppEditingSessionMeta, getProxyState, shouldShowOnboardingOverlay } from "electron-app/src/store/selectors/app";
 import { SettingsModal } from "./settingsModal";
 import { TourContext, useTour } from "@reactour/tour";
 import { setShowShouldOnboardingOverlay } from "electron-app/src/store/actions/app";
@@ -366,6 +366,7 @@ const Toolbar = (props: any) => {
 		const setCurrentStep = tourCont.setCurrentStep;
 
 		const recorderInfo = getRecorderInfo(store.getState());
+		const isOnboardingOn = shouldShowOnboardingOverlay(store.getState());
 
 		if (urlInputRef.current?.value) {
 			const validUrl = addHttpToURLIfNotThere(urlInputRef.current?.value);
@@ -375,7 +376,7 @@ const Toolbar = (props: any) => {
 				return;
 			}
 			setUrlInputError({ value: false, message: "" });
-			setCurrentStep(1);
+			// setCurrentStep(1);
 			batch(() => {
 				if (!recorderInfo.url) {
 					console.log("Selected device is", selectedDevice[0]);
@@ -419,9 +420,10 @@ const Toolbar = (props: any) => {
 					performNavigation(validUrl, store);
 				}
 				// Just in case onboarding overlay info is still visible
+
 				dispatch(setShowShouldOnboardingOverlay(false));
 
-				if (isOpen && currentStep === 0) {
+				if (isOnboardingOn && tourCont.currentStep === 0) {
 					setTimeout(() => {
 						setCurrentStep(1);
 					}, 50);

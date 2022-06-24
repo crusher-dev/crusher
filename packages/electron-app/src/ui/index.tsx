@@ -32,7 +32,7 @@ import { getAppSessionMeta } from "../store/selectors/app";
 import { sendSnackBarEvent, ToastSnackbar } from "./components/toast";
 import { TRecorderState } from "../store/reducers/recorder";
 import { webFrame } from "electron";
-import { TourProvider, useTour } from "@reactour/tour";
+import { StepType, TourProvider, useTour } from "@reactour/tour";
 import { getGlobalAppConfig } from "../lib/global-config";
 import { iAction } from "@shared/types/action";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
@@ -390,7 +390,7 @@ const OnboardingItem = ({ title, description }) => {
 		</div>
 	);
 };
-const steps = [
+const steps: Array<StepType> = [
 	{
 		selector: "#target-site-input",
 		content: <OnboardingItem title={"Enter URL of website you want to test"} description={"You can open crusher-recorder from apps or CLI."} />,

@@ -30,6 +30,7 @@ import { monacoTheme } from "./monaco.theme";
 import { getRecorderState } from "electron-app/src/store/selectors/recorder";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 import { editor } from "monaco-editor";
+import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 
 function ensureFirstBackSlash(str) {
 	return str.length > 0 && str.charAt(0) !== "/" ? "/" + str : str;
@@ -130,9 +131,36 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 
 	const monacoRef: React.Ref<Monaco> = React.useRef(null);
 	const editorRef = React.useRef(null);
+	const editorMainRef = React.useRef(null);
 
 	const codeTextAreaRef = useRef(null as null | HTMLTextAreaElement);
 
+	React.useEffect(() => {
+		const handleListener = () => {
+			if(editorMainRef.current && editorMainRef.current) {
+				const topbar = document.querySelector("#top-bar");
+				const rect = topbar.parentElement.getBoundingClientRect();
+				const containerNode = (editorMainRef.current as monaco.editor.IStandaloneCodeEditor).getContainerDomNode();
+				const mainContainerNode = containerNode.parentNode.parentNode;
+
+				const childNodes = mainContainerNode.parentNode.childNodes;
+				let occupiedHeight = 0;
+				for(let childNode of Array.from(childNodes)) { 
+					if(childNode !== mainContainerNode) {
+						occupiedHeight += (childNode as HTMLElement).getBoundingClientRect().height;
+					}
+				}
+
+				(editorMainRef.current as monaco.editor.IStandaloneCodeEditor).layout({ width: rect.width, height: rect.height - occupiedHeight - 20 });
+			}
+		};
+
+		window.addEventListener("resize", handleListener.bind(this));
+
+		return () => {
+			window.removeEventListener("resize", handleListener.bind(this));
+		};
+	}, []);
 	React.useEffect(() => {
 		if (isOpen) {
 			setCodeTemplates([]);
@@ -229,6 +257,8 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 	};
 
 	const handleOnMount = (editor: any, monaco: Monaco) => {
+		editorMainRef.current = editor;
+
 		if (props.stepAction) {
 			editor.getModel(modalName).setValue(props.stepAction.payload.meta.script);
 
@@ -511,8 +541,8 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 						align-items: center;
 					`}
 				>
-					<div css={actionLinkStyle}>View log</div>
-					<div css={[actionLinkStyle, `display: flex; align-items: center; gap: 12rem;`]}>
+					{/* <div css={actionLinkStyle}>View log</div> */}
+					{/* <div css={[actionLinkStyle, `display: flex; align-items: center; gap: 12rem;`]}>
 						<PlayIconV2
 							css={css`
 								width: 16rem;
@@ -520,7 +550,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 							`}
 						/>
 						<span>Run with context</span>
-					</div>
+					</div> */}
 				</div>
 				<Dropdown
 					initialState={showActionMenu}

@@ -315,13 +315,10 @@ const bottomBarStyle = {
 	marginTop: "1.5rem",
 };
 const formButtonStyle = {
-	color: "#5B76F7",
 	marginRight: "auto",
 	fontFamily: "DM Sans",
 	fontSize: "0.9rem",
-	textDecorationLine: "underline",
 	fontWeight: 900,
-	cursor: "pointer",
 	display: "flex",
 };
 const advanceLinkContainerStyle = {

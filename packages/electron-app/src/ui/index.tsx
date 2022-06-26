@@ -111,6 +111,7 @@ const App = () => {
 
 							navigate("/recorder");
 							goFullScreen();
+							store.dispatch(setSessionInfoMeta({}));
 							performReplayTestUrlAction(window["testsToRun"].list[0], true);
 						}
 					}

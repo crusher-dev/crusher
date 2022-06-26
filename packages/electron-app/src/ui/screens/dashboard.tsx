@@ -641,7 +641,7 @@ function DashboardScreen() {
 
 			if (projectId && userAccountInfo) {
 				getUserTests(projectId).then((tests) => {
-					setUserTests(tests.list);
+					setUserTests(tests.list.filter((a) => { return !((window as any).deletedTest || []).includes(a.id) }));
 				});
 			}
 		}, 5000);
@@ -689,7 +689,10 @@ function DashboardScreen() {
 	const handleTestDelete = React.useCallback(
 		(id) => {
 			setUserTests(userTests.filter((a) => a.id != id));
-
+			if(!(window as any).deletedTest) {
+				(window as any).deletedTest = [];
+			}
+			(window as any).deletedTest.push(id);
 			performDeleteTest(id).catch((err) => {
 				sendSnackBarEvent({ message: "Error deleting test", type: "error" });
 			});

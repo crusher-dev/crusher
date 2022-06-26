@@ -318,7 +318,7 @@ export const MenuDropdown = ({ className, isRecorder, callback }) => {
 		</Dropdown>
 	);
 };
-function ModelContainerLayout({ children, title, footer, className, isLoadingScreen, headerStyle, ...props }) {
+function ModelContainerLayout({ children, title, titleContainerCss, footer, className, isLoadingScreen, headerStyle, ...props }) {
 	const navigate = useNavigate();
 
 	const handleOpenAppClick = React.useCallback(() => {
@@ -336,7 +336,7 @@ function ModelContainerLayout({ children, title, footer, className, isLoadingScr
 				<div css={leftNavBarStyle}>
 					<MenuDropdown css={[css`.crusher-hammer-icon{ margin-left: ${process.platform !== "darwin" ? "0" : "50"}rem`]} />
 				</div>
-				<div css={mainTitleContainerStyle}>{title}</div>
+				<div css={[mainTitleContainerStyle, titleContainerCss]}>{title}</div>
 				<div css={rightNavStyle}>
 					<Link
 						onClick={handleDocsClick}

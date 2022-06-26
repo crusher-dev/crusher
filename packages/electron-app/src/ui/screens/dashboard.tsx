@@ -756,6 +756,7 @@ function DashboardScreen() {
 		<ModelContainerLayout
 			headerStyle={haveZeroTests ? { borderBottom: "none" } : {}}
 			title={TitleComponent}
+			titleContainerCss={css`margin-left: 38rem;`}
 			footer={userTests && <DashboardFooter projectId={selectedProject} userTests={userTests} />}
 		>
 			{showProxyWarning.show ? <ProxyWarningContainer testId={showProxyWarning.testId} exitCallback={setShowProxyWarning.bind(this, false)} startUrl={showProxyWarning.startUrl} /> : mainContent}

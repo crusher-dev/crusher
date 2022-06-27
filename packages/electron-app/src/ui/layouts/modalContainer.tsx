@@ -237,7 +237,7 @@ function ActionButtonDropdown({ setShowActionMenu, isRecorder, ...props }) {
 
 	const handleSettings = () => {
 		setShowActionMenu(false);
-		alert("Settings not implemented yet");
+		navigate("/settings");
 	};
 
 	const handleOpenApp = () => {
@@ -279,6 +279,7 @@ function ActionButtonDropdown({ setShowActionMenu, isRecorder, ...props }) {
 					<MenuItem onClick={handleSelectProject} label={<span>Back to projects</span>} className={"close-on-click"} />
 				)}
 				{projectConfigFile ? <MenuItem onClick={handleOpenConfigFile} label={<span>Edit Project config</span>} className={"close-on-click"} /> : ""}
+				<MenuItem onClick={handleSettings} label={<span>Settings</span>} className={"close-on-click"} />
 				<MenuItem onClick={handleHelpAccount} label={<span>Help & account</span>} className={"close-on-click"} />
 				<MenuItem onClick={handleExit} label={<span>Exit</span>} className={"close-on-click"} />
 			</div>

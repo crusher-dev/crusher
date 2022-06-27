@@ -47,6 +47,7 @@ import { UnDockCodeScreen } from "./screens/undockCode";
 import { InfoOverLay } from "./components/overlays/infoOverlay";
 import InsufficientPermissionScreen from "./screens/insufficientPermission";
 import CreateProjectDirScreen from "./screens/createProjectDir";
+import SettingsScreen from "./screens/settings";
 
 webFrame.setVisualZoomLevelLimits(1, 3);
 
@@ -475,6 +476,8 @@ render(
 				<Route path="/select-project" element={<SelectProjectScreen />} />
 				<Route path="/create-test" element={<CreateTestScreen />} />
 				<Route path="/code-editor" element={<UnDockCodeScreen />} />
+				<Route path="/settings" element={<SettingsScreen />} />
+
 				<Route
 					path="/recorder"
 					element={

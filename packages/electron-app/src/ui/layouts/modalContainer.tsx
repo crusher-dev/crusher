@@ -1,6 +1,6 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { CrossIcon, CrusherHammerColorIcon, LoadingIconV2, MiniCrossIcon } from "../icons";
+import { BulbIcon, CrossIcon, CrusherHammerColorIcon, CrusherHammerIcon, InspectElementIcon, LoadingIconV2, MiniCrossIcon, SettingsIcon } from "../icons";
 import { shell } from "electron";
 import { DropdownIconSVG } from "@dyson/assets/icons";
 import { useNavigate } from "react-router-dom";
@@ -365,11 +365,36 @@ function ModelContainerLayout({ children, title, titleContainerCss, footer, clas
 				{children}
 			</div>
 			{footer ? <div css={footerStyle}>{footer}</div> : ""}
-
+			{/* <div css={css`position: relative;`}>
+				<div css={css`background: #0B0B0C; border: 1px solid #282829; border-radius: 8px 8px 0px 0px; padding: 12rem 8rem; display: inline-flex; position: absolute; left: 50%; transform: translateX(-50%); top: -38rem; flex-direction: row;}`}>
+					<div css={css`padding: 0rem 16rem; :hover { opacity: 0.8; svg { fill: #fff } }`}>
+						<HomeIcon css={css`width: 16rem;`}/>
+					</div>
+					<div css={css`padding: 0rem 16rem; :hover { opacity: 0.8; svg { fill: #fff } }`}>
+					<HomeIcon css={css`width: 16rem;`}/>
+					</div>
+					<div css={css`padding: 0rem 16rem; :hover { opacity: 0.8; svg { fill: #fff } }`}>
+					<HomeIcon css={css`width: 16rem;`}/>
+					</div>
+				</div>
+			</div> */}
 			{!isLoadingScreen ? (<StatusMessageBar isLoadingScreen={isLoadingScreen} />) : ""}
 		</div>
 	);
 }
+
+
+//   const HomeIcon = (props) => (
+// 	<svg
+// 	  xmlns="http://www.w3.org/2000/svg"
+// 	  viewBox="0 0 48 48"
+// 	  fill={"#343336"}
+// 	  {...props}
+// 	>
+// 	  <path d="M39.5 43h-9a2.5 2.5 0 0 1-2.5-2.5v-9a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v9a2.5 2.5 0 0 1-2.5 2.5h-9A2.5 2.5 0 0 1 6 40.5V21.413a7.502 7.502 0 0 1 2.859-5.893L23.071 4.321a1.503 1.503 0 0 1 1.857 0L39.142 15.52A7.499 7.499 0 0 1 42 21.411V40.5a2.5 2.5 0 0 1-2.5 2.5z" />
+// 	</svg>
+//   )
+  
 
 const topLinkStyle = css`
 	font-size: 12.8rem;

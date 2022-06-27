@@ -1061,7 +1061,7 @@ function RenderSteps({ steps, testInstanceData, testId, setIsShowingVideo }: { s
 						testId={testId}
 						setIsShowingVideo={setIsShowingVideo}
 						testInstanceData={testInstanceData}
-						steps={steps.slice(from, from === to ? to + 1 : to)}
+						steps={steps.slice(from, to + 1)}
 						count={count}
 						show={type === "show"}
 					/>

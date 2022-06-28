@@ -25,6 +25,7 @@ export const getBuildsList = (projectId: string, triggerType: BuildTriggerEnum, 
 };
 
 export const getRunTestApi = (projectId: number) => resolvePathToBackendURI(`/projects/${projectId}/tests/actions/run`);
+export const getLocalBuidlReportApi = (id: string) => resolvePathToBackendURI(`/projects/22/builds/actions/get.local?localBuildKey=${id}`);
 export const getBuildReportAPI = (buildId: string) => resolvePathToBackendURI(`/builds/${buildId}/report`);
 export const RELEASE_API = resolvePathToBackendURI("/release/info");
 

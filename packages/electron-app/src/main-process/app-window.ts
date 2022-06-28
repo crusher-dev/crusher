@@ -256,6 +256,8 @@ export class AppWindow {
 		ipcMain.handle("turn-on-proxy", this.handleTurnOnProxy.bind(this));
 		ipcMain.handle("reset-storage", this.handleResetStorage.bind(this));
 		ipcMain.handle("exit-app", this.handleExitApp.bind(this));
+		ipcMain.handle("get-recorder-test-logs", this.handleGetRecorderTestLogs.bind(this));
+		ipcMain.handle("save-local-build", this.handleSaveLocalBuild.bind(this));
 		ipcMain.on("get-var-context", this.handleGetVarContext.bind(this));
 		ipcMain.on("get-is-advanced-selector", this.handleGetVarContext.bind(this));
 
@@ -437,6 +439,27 @@ export class AppWindow {
 			.then((res) => {
 				return res.data;
 			});
+	}
+
+	private async handleGetRecorderTestLogs() {
+		if(this.webView && this.webView.playwrightInstance) {
+			return this.webView.playwrightInstance.getTestLogs();
+		}
+		return null;
+	}
+
+	private async handleSaveLocalBuild(event, payload: { tests: Array<any>}) {
+		const projectId = await this.window.webContents.executeJavaScript("window.localStorage.getItem('projectId');");
+		const appSettings = getAppSettings(this.store.getState() as any);
+		const accountInfo = getUserAccountInfo(this.store.getState() as any);
+
+		return CloudCrusher.saveLocalBuild(
+			payload.tests,
+			projectId,
+			app.commandLine.getSwitchValue("token") || accountInfo.token,
+			appSettings.backendEndPoint,
+			appSettings.frontendEndPoint,
+		);
 	}
 
 	private async handleGetCodeTemplates(event) {
@@ -1160,6 +1183,9 @@ export class AppWindow {
 		// 	this.webView.dispose();
 		// 	this.webView = undefined;
 		// }
+		if(this.webView && this.webView.playwrightInstance) {
+			this.webView.playwrightInstance.clear();
+		}
 		this.store.dispatch(resetRecorderState(state));
 		this.store.dispatch(clearLogs());
 		if (this.webView) {

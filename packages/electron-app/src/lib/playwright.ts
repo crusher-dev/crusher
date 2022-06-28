@@ -59,6 +59,12 @@ class PlaywrightInstance {
 		);
 
 		this._overrideSdkActions();
+
+			// console.log("Test result is", this._globalManager.get("TEST_RESULT"));
+	}
+
+	public getTestLogs() {
+		return this._globalManager.get("TEST_RESULT");
 	}
 
 	getContext() {
@@ -273,6 +279,24 @@ class PlaywrightInstance {
 		return this.browser.contexts()[0].addInitScript({
 			path: scriptPath,
 		});
+	}
+
+	public clear() {
+		this.elementsMap = new Map();
+		this._logManager = new LogManagerPolyfill();
+		this._storageManager = new StorageManagerPolyfill();
+		this._globalManager = new GlobalManagerPolyfill();
+		this._exportsManager = new ExportsManager();
+
+		this.runnerManager = new CrusherRunnerActions(
+			this._logManager as any,
+			this._storageManager as any,
+			"/tmp/crusher/somedir/",
+			this._globalManager,
+			this._exportsManager,
+			this.sdkManager,
+		);
+
 	}
 
 	public dispose() {

@@ -324,6 +324,14 @@ const performRunDraftTest = (testId) => {
 	return ipcRenderer.invoke("run-draft-test", {testId});
 }
 
+const performSaveLocalBuild = (tests) => {
+	return ipcRenderer.invoke("save-local-build", { tests });
+}
+
+const performGetRecorderTestLogs = () => {
+	return ipcRenderer.invoke("get-recorder-test-logs", {});
+}
+
 export {
 	recordHoverDependencies,
 	performAction,
@@ -374,5 +382,7 @@ export {
 	performExit,
 	performUndockCode,
 	turnOnProxy,
-	performRunDraftTest
+	performRunDraftTest,
+	performGetRecorderTestLogs,
+	performSaveLocalBuild
 };

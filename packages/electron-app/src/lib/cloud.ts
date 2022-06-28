@@ -85,6 +85,24 @@ class CloudCrusher {
 			.then((res) => res.data);
 	}
 
+	public static async saveLocalBuild(
+		tests: Array<{ steps: Array<any>; testId: number; testName: string; status: "PASSED" | "FAILED" }>,
+		projectId,
+		userToken: string,
+		customBackendPath: string | undefined = undefined,
+		customFrontEndPath: string | undefined = undefined,
+	) {
+		return axios.post(resolveToBackendPath(`/projects/${projectId}/builds/actions/create.local`, customBackendPath), {
+			tests: tests
+		}, {
+			headers: {
+				Cookie: `isLoggedIn=true; token=${userToken}`,
+			},
+		}).then((res) => {
+			return res.data.insertId;
+		});
+	}
+
 	public static async runDraftTest(
 		testId,
 		projectId,

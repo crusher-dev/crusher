@@ -15,9 +15,11 @@ import { resetRecorder, setDevice, setIsWebViewInitialized, updateRecorderState 
 import { getIsStatusBarVisible, getRecorderInfo, getRecorderState, getSavedSteps, isWebViewInitialized } from "../store/selectors/recorder";
 import {
 	goFullScreen,
+	performGetRecorderTestLogs,
 	performNavigation,
 	performReplayTest,
 	performReplayTestUrlAction,
+	performSaveLocalBuild,
 	performSetDevice,
 	performSteps,
 	resetStorage,
@@ -103,9 +105,24 @@ const App = () => {
 
 						// navigate("/");
 						if (testsCompleted) {
-							navigate("/");
-							goFullScreen(false);
-							sendSnackBarEvent({ type: "test_report", message: null, meta: { totalCount } });
+							performGetRecorderTestLogs().then((res) => {
+								performSaveLocalBuild([{
+									steps: res,
+									testId: action.args.testId,
+									testName: action.args.testName || "Some random name",
+									status: "PASSED",
+								}]).then((res) => {
+									console.log("Saved local build", res);
+									(window as any).localBuildReportId = res; 
+								}).catch((err) => {
+									console.error("Error while saving local build", err);
+								});
+								console.log("Recorder Test logs", res);
+								navigate("/");
+								goFullScreen(false);
+								sendSnackBarEvent({ type: "test_report", message: null, meta: { totalCount } });
+							});
+
 						}
 						if (!testsCompleted) {
 							// goFullScreen(false);

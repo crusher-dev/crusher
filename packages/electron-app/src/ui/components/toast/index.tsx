@@ -3,6 +3,10 @@ import React, { useEffect, useState } from "react";
 import { Toast } from "dyson/src/components/atoms/toast/Toast";
 import { css } from "@emotion/react";
 import mitt from "mitt";
+import { shell } from "electron";
+import { resolveToBackendPath, resolveToFrontEndPath } from "@shared/utils/url";
+import { getAppSettings } from "electron-app/src/store/selectors/app";
+import { useStore } from "react-redux";
 
 export const snackBarEmitter = mitt();
 
@@ -17,6 +21,13 @@ export const sendSnackBarEvent = (event: SnackbarEvent) => {
 };
 
 const TestReportToast = ({ meta }) => {
+	const store = useStore();
+
+	const handleViewReport = React.useCallback(() => {
+		const appSettings = getAppSettings(store.getState() as any);
+		shell.openExternal(resolveToFrontEndPath("/app/build/" + (window as any).localBuildReportId, appSettings.frontendEndPoint))
+	}, []);
+
 	return (
 		<div css={reportToastContainerStyle}>
 			<div css={reportToastSectionContainerStyle}>
@@ -38,8 +49,9 @@ const TestReportToast = ({ meta }) => {
 						border-top-style: solid;
 					`,
 				]}
+				onClick={handleViewReport}
 			>
-				<div>View report</div>
+				<div css={css`:hover { opacity: 0.8; cursor: default; }`}>View report</div>
 			</div>
 		</div>
 	);
@@ -65,6 +77,7 @@ const reportToastSectionContainerStyle = css`
 	padding: 10px 20px;
 	display: flex;
 	justify-content: space-between;
+
 `;
 export const ToastSnackbar = () => {
 	const [event, setEvent] = useState<SnackbarEvent | null>(null);

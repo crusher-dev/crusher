@@ -23,7 +23,6 @@
 	},
 	"devDependencies": {
 		"@ffmpeg-installer/ffmpeg": "^1.0.20",
-		"lerna": "^3.22.1",
 		"pm2": "^5.1.2"
 	},
 	"dependencies": {
@@ -34,10 +33,10 @@
 		"patch-package": "^6.2.2",
 		"pg": "^8.7.1",
 		"postinstall-postinstall": "^2.1.0",
-		"putout": "^18.16.0",
 		"shelljs": "^0.8.4",
 		"source-map-support": "^0.5.20",
 		"yargs": "^17.0.1"
 	},
-	"license": "MIT"
+	"license": "MIT",
+	"packageManager": "yarn@3.2.1"
 }

@@ -26,6 +26,9 @@ jobs:
       - name: Create ecosystem.config.js and Copy .env.sample file
         run: cp ecosystem.config.sample.js ecosystem.config.js && cp .env.sample .env
 
+      - name: Setup Node.js environment
+        uses: c-hive/gha-yarn-cache@v24
+
       - name: Install crusher modules
         run: yarn
 

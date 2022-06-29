@@ -18,11 +18,11 @@ const getIsArm = () => {
 	}
 };
 
-const IS_ARM = getIsArm();
+const IS_ARM = true || getIsArm();
 // Promise is returned
 builder
 	.build({
-		targets: Platform.MAC.createTarget(),
+		targets: Platform.MAC.createTarget(["zip"], ["arm64"]),
 		publish: process.env.PUBLISH_RELEASE ? process.env.PUBLISH_RELEASE : "never",
 		config: {
 			productName: "Crusher Recorder",

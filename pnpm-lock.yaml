@@ -366,6 +366,7 @@ importers:
       aws-sdk: ^2.931.0
       axios: ^0.25.0
       bullmq: 1.67.1
+      chalk: ^4.0.0
       finalhandler: ^1.1.2
       form-data: ^4.0.0
       ioredis: ^4.27.7
@@ -378,6 +379,7 @@ importers:
       aws-sdk: 2.931.0
       axios: 0.25.0
       bullmq: 1.67.1
+      chalk: 4.1.1
       finalhandler: 1.1.2
       form-data: 4.0.0
       ioredis: 4.28.3
@@ -10813,7 +10815,7 @@ packages:
   /axios/0.25.0:
     resolution: {integrity: sha512-cD8FOb0tRH3uuEe6+evtAbgJtfxr7ly3fQjYcMcuPlgkwVS9xboaVIpcDV+cYQe+yGykgwZCs1pzjntcGa6l5g==}
     dependencies:
-      follow-redirects: 1.14.7
+      follow-redirects: 1.14.7_debug@4.3.3
     transitivePeerDependencies:
       - debug
     dev: false
@@ -15874,7 +15876,7 @@ packages:
       debug:
         optional: true
     dependencies:
-      debug: 4.3.3_supports-color@6.1.0
+      debug: 4.3.3
 
   /for-in/1.0.2:
     resolution: {integrity: sha512-7EwmXrOjyL+ChxMhmG5lnW9MPt1aIeZEwKhQzoBUdTV0N3zuwWDZYVJatDvZ2OyzPUvdIAZDsCetk3coyMfcnQ==}

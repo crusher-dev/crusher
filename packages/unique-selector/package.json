@@ -24,9 +24,11 @@
 	},
 	"dependencies": {
 		"an-array-of-english-words": "^2.0.0",
+		"css.escape": "^1.5.1",
+		"gibberish-detector": "^1.0.0",
 		"html-tags": "^3.1.0",
+		"lodash": "^4.17.21",
 		"playwright": "^1.14.0",
-		"playwright-core": "^1.14.0",
-		"gibberish-detector": "^1.0.0"
+		"playwright-core": "^1.14.0"
 	}
 }

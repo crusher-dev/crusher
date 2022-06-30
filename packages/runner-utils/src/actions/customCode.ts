@@ -38,6 +38,7 @@ async function executeCustomCode(
 		`${customScriptFunction} if(typeof validate === "function") { return validate(crusherSdk, ctx); } return true;`,
 	)(
 		exports,
+		//@ts-ignore
 		typeof __webpack_require__ === "function" ? __non_webpack_require__ : require,
 		module,
 		__filename,

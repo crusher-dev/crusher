@@ -15,15 +15,16 @@
 		"js-beautify": "^1.14.0",
 		"logdna": "^3.5.0",
 		"mongoose": "^5.11.14",
+		"node-fetch": "^2.6.1",
 		"playwright": "^1.14.0",
 		"playwright-chromium": "^1.14.0",
 		"playwright-video": "https://github.com/crusherdev/playwright-video.git#f7dececde258b07bdec207e4bb6869d389655704",
 		"shelljs": "^0.8.4",
 		"ts-node": "^9.1.1",
 		"uuid": "^8.3.2",
-		"yargs": "^17.2.0",
 		"winston": "^3.7.2",
-		"winston-loki": "^6.0.5"
+		"winston-loki": "^6.0.5",
+		"yargs": "^17.2.0"
 	},
 	"devDependencies": {
 		"@types/bull": "^3.15.0",

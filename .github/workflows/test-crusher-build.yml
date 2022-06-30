@@ -1,4 +1,4 @@
-name: Build crusher
+name: Build packages
 
 on: push
 
@@ -9,7 +9,6 @@ jobs:
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v2
-
 
       - uses: pnpm/action-setup@v2
         with:

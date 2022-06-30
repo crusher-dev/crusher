@@ -7,7 +7,7 @@
 		"setup": "node setup/tsconfig.js",
 		"dev:open_source": "NEXT_PUBLIC_CRUSHER_MODE=open-source  NODE_ENV=development node server.js",
 		"build:server": "webpack -c webpack.server.config.js --mode production",
-		"dev": "NODE_ENV=development node server.dev.js",
+		"dev": "next dev",
 		"build": "next build",
 		"lint": "eslint --ext=jsx,ts,tsx src",
 		"export": "next export",

@@ -26,6 +26,7 @@ import { resolveToFrontEndPath } from "@shared/utils/url";
 import { CreateFirstTest } from "../components/create-first-test";
 import { ProxyWarningContainer } from "../components/proxy-warning";
 import InsufficientPermission from "./insufficientPermission";
+import { triggerLocalBuild } from "electron-app/src/_ui/utils/recorder";
 
 const PlusIcon = (props) => (
 	<svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
@@ -102,10 +103,8 @@ function TestListItem({ test, isActive, deleteItem, setLockState, projectId, onM
 	};
 
 	const handleRun = React.useCallback(() => {
-		navigate("/recorder");
-		goFullScreen();
-		performReplayTestUrlAction(test.id, true);
-	}, [test, projectId]);
+		triggerLocalBuild([test.id]);
+	}, [test]);
 
 	const handleOutsideClick = React.useCallback(() => {
 		handleSave();
@@ -493,15 +492,6 @@ const DashboardFooter = ({ userTests, projectId }) => {
 			performReplayTestUrlAction(window["testsToRun"].list[0], true);
 		}
 	}, []);
-	const handleRunAll = React.useCallback(() => {
-		const testIdArr = userTests.map((a) => {
-			return a.id;
-		});
-		window["testsToRun"] = { list: testIdArr, count: testIdArr.length };
-		navigate("/recorder");
-		goFullScreen();
-		performReplayTestUrlAction(window["testsToRun"].list[0], true);
-	}, [projectId]);
 
 	return (
 		<>
@@ -536,7 +526,7 @@ const DashboardFooter = ({ userTests, projectId }) => {
 							onClick={(e) => {
 								e.preventDefault();
 								e.stopPropagation();
-								handleRunAll();
+								triggerLocalBuild(userTests.map((test) => test.id));
 							}}
 							bgColor="tertiary-outline"
 							css={saveButtonStyle}

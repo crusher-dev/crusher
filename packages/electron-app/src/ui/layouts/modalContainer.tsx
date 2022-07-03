@@ -319,7 +319,7 @@ export const MenuDropdown = ({ className, isRecorder, callback }) => {
 		</Dropdown>
 	);
 };
-function ModelContainerLayout({ children, title, titleContainerCss, footer, className, isLoadingScreen, headerStyle, ...props }) {
+function ModelContainerLayout({ children, title, titleContainerCss, footer, footerCss, className, isLoadingScreen, headerStyle, ...props }) {
 	const navigate = useNavigate();
 
 	const handleOpenAppClick = React.useCallback(() => {
@@ -365,7 +365,7 @@ function ModelContainerLayout({ children, title, titleContainerCss, footer, clas
 			<div css={contentStyle} className={className}>
 				{children}
 			</div>
-			{footer ? <div css={footerStyle}>{footer}</div> : ""}
+			{footer ? <div css={[footerStyle, footerCss]}>{footer}</div> : ""}
 			{/* <div css={css`position: relative;`}>
 				<div css={css`background: #0B0B0C; border: 1px solid #282829; border-radius: 8px 8px 0px 0px; padding: 12rem 8rem; display: inline-flex; position: absolute; left: 50%; transform: translateX(-50%); top: -38rem; flex-direction: row;}`}>
 					<div css={css`padding: 0rem 16rem; :hover { opacity: 0.8; svg { fill: #fff } }`}>

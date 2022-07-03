@@ -50,6 +50,7 @@ import { InfoOverLay } from "./components/overlays/infoOverlay";
 import InsufficientPermissionScreen from "./screens/insufficientPermission";
 import CreateProjectDirScreen from "./screens/createProjectDir";
 import SettingsScreen from "./screens/settings";
+import { AuthOnboardingScreen } from "./screens/authOnboarding";
 
 webFrame.setVisualZoomLevelLimits(1, 3);
 
@@ -489,7 +490,7 @@ render(
 			</style>
 			<Routes>
 				<Route path="/login" element={<LoginScreen />} />
-				<Route path="/" element={<DashboardScreen />} />
+				<Route path="/" element={<AuthOnboardingScreen />} />
 				<Route path="/select-project" element={<SelectProjectScreen />} />
 				<Route path="/create-test" element={<CreateTestScreen />} />
 				<Route path="/code-editor" element={<UnDockCodeScreen />} />

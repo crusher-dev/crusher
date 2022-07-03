@@ -56,7 +56,7 @@ const GitlabButton = (props) => {
 	);
 };
 
-const LinkBox = ({ value, ...props }) => {
+export const LinkBox = ({ value, children, ...props }) => {
 	const ref = React.useRef(null);
 
 	const handleOnClick = () => {
@@ -77,6 +77,7 @@ const LinkBox = ({ value, ...props }) => {
 				type={"text"}
 				value={value}
 			/>
+			{children}
 		</div>
 	);
 };

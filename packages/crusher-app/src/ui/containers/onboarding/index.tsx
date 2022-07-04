@@ -21,9 +21,10 @@ import { NoDeveloperInput } from "./NoDeveloperInput";
 import { backendRequest } from "@utils/common/backendRequest";
 import { getTestListAPI, getTestsAPI } from "@constants/api";
 import { RequestMethod } from "@types/RequestOptions";
-import { currentProject } from "@store/atoms/global/project";
+import { currentProject, projectsAtom } from "@store/atoms/global/project";
 import { USER_META_KEYS } from "@constants/USER";
 import { updateMeta } from "@store/mutators/metaData";
+import { SelectProjectContainer } from "./selectProject";
 
 const GetViewByStep = () => {
 	const [step] = useAtom(onboardingStepAtom);
@@ -41,7 +42,7 @@ const GetViewByStep = () => {
 };
 
 const steps = [
-	{ id: OnboardingStepEnum.SURVEY, text: "Download" },
+	{ id: OnboardingStepEnum.SURVEY, text: "Setup" },
 ];
 
 const CrusherOnboarding = () => {
@@ -51,11 +52,12 @@ const CrusherOnboarding = () => {
 	const [selectedOnboardingStep, setOnBoardingStep] = useAtom(onboardingStepAtom);
 	const [isDeveloper, setIsDeveloper] = React.useState(true);
 	const [, updateOnboarding] = useAtom(updateMeta);
+	const [projects, setProjectsAtom] = useAtom(projectsAtom);
 
 	React.useEffect(() => {
 		const testCreatedPoll = setInterval(async () => {
 			const res = await backendRequest(getTestsAPI(), { method: RequestMethod.GET });
-			if (res.list.length) {
+			if (res.list && res.list.length) {
 				updateOnboarding({
 					type: "user",
 					key: USER_META_KEYS.INITIAL_ONBOARDING,
@@ -69,6 +71,16 @@ const CrusherOnboarding = () => {
 	const handleCallback = React.useCallback((value) => {
 		setIsDeveloper(value);
 	}, []);
+
+	const NoProjectContainer = (				<div className="flex mt-60 flex-col">
+	<div>
+		<div css={welcomeHeadingCss}>Welcome Himanshu!</div>
+		<div css={welcomeTaglineCss}>No project found, create project</div>
+	</div>
+	<QuestionPrompt css={css`margin-top: 60rem;`} defaultValue={isDeveloper} callback={handleCallback}/>
+
+	{isDeveloper ? ( <DeveloperInput/>) : (<NoDeveloperInput/>)}
+</div>);
 
 	return (
 		<CrusherBase>
@@ -109,15 +121,12 @@ const CrusherOnboarding = () => {
 						</div>
 					))}
 				</div>
-				<div className="flex mt-100 flex-col">
-					<div>
-						<div css={welcomeHeadingCss}>Welcome Himanshu!</div>
-						<div css={welcomeTaglineCss}>No project found, create project</div>
-					</div>
-					<QuestionPrompt css={css`margin-top: 60rem;`} defaultValue={isDeveloper} callback={handleCallback}/>
+					
+					{projects && projects.length ? (
+						<SelectProjectContainer/>
+					) : NoProjectContainer}
+					
 
-					{isDeveloper ? ( <DeveloperInput/>) : (<NoDeveloperInput/>)}
-				</div>
 			</div>
 		</CrusherBase>
 	);

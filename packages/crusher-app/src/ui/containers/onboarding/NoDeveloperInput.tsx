@@ -50,6 +50,7 @@ color: #FFFFFF;
 display: flex;
 gap: 10rem;
 padding: 8rem 10rem;
+:hover { opacity: 0.8; }
 `;
 const DownloadIcon = (props) => (
     <svg

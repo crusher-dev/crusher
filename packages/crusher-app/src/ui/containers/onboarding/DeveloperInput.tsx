@@ -13,7 +13,7 @@ const DeveloperInput = () => {
               <div css={docsLinkCss}>Docs <NewTabSVG className={"ml-8 mb-4"} /></div>
           </div>
           <div css={inputFormContainerCss}>
-                        <LinkBox css={linkBoxCss} value="npx crusher-cli init">
+                        <LinkBox css={linkBoxCss} value="npx crusher-cli">
                             <ClipboardIcon css={css`width: 13px; height: 13px; position: absolute;     right: 13px;
     top: 13px; :hover { opacity: 0.8 }`}/>
                         </LinkBox>

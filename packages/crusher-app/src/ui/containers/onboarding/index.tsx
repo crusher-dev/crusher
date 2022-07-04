@@ -18,6 +18,12 @@ import { getBoolean } from "@utils/common";
 import { QuestionPrompt } from "@components/molecules/QuestionPrompt";
 import { DeveloperInput } from "./DeveloperInput";
 import { NoDeveloperInput } from "./NoDeveloperInput";
+import { backendRequest } from "@utils/common/backendRequest";
+import { getTestListAPI, getTestsAPI } from "@constants/api";
+import { RequestMethod } from "@types/RequestOptions";
+import { currentProject } from "@store/atoms/global/project";
+import { USER_META_KEYS } from "@constants/USER";
+import { updateMeta } from "@store/mutators/metaData";
 
 const GetViewByStep = () => {
 	const [step] = useAtom(onboardingStepAtom);
@@ -40,10 +46,26 @@ const steps = [
 
 const CrusherOnboarding = () => {
 	const router = useRouter();
+	const [project] = useAtom(currentProject);
 	const [user] = useAtom(userAtom);
 	const [selectedOnboardingStep, setOnBoardingStep] = useAtom(onboardingStepAtom);
 	const [isDeveloper, setIsDeveloper] = React.useState(true);
+	const [, updateOnboarding] = useAtom(updateMeta);
 
+	React.useEffect(() => {
+		const testCreatedPoll = setInterval(async () => {
+			const res = await backendRequest(getTestsAPI(), { method: RequestMethod.GET });
+			if (res.list.length) {
+				updateOnboarding({
+					type: "user",
+					key: USER_META_KEYS.INITIAL_ONBOARDING,
+					value: true,
+				});
+				clearInterval(testCreatedPoll);
+				window.location.href = "/";
+			}
+		}, 1000);
+	}, []);
 	const handleCallback = React.useCallback((value) => {
 		setIsDeveloper(value);
 	}, []);

@@ -35,7 +35,8 @@ export const handleEERouting = async (data: IUserAndSystemInfoResponse, router: 
 	const { pathname } = router;
 
 	if (isUserLoggedIn) {
-		if (!getBoolean(user.meta.INITIAL_ONBOARDING)) {
+		console.log("Starting", ROUTES_ACCESSIBLE_WITHOUT_SESSION, pathname);
+		if (!getBoolean(user.meta.INITIAL_ONBOARDING) && !["/login_sucessful"].includes(pathname)) {
 			await router.push("/setup/onboarding");
 		} else if (ROUTES_TO_REDIRECT_WHEN_SESSION.includes(pathname)) {
 			if (isTempTestPending()) {

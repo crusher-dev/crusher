@@ -92,7 +92,7 @@ class UserAuthService {
 		req: any,
 		res: any,
 		inviteReferral: IInviteReferral = null,
-	): Promise<{ userId: number; projectId: number; teamId: number }> {
+	): Promise<{ userId: number; projectId?: number; teamId: number }> {
 		const referralObject = inviteReferral ? await this.userInviteService.parseInviteReferral(inviteReferral) : null;
 
 		const userRecord = await this.usersService.createUserRecord({

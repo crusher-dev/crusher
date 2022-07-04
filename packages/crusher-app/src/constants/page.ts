@@ -4,7 +4,7 @@ export enum PAGE_TYPE {
 
 export const PreloadLinks = {};
 
-export const ROUTES_ACCESSIBLE_WITHOUT_SESSION = ["/login", "/signup", "/_error", "/reset_password", "/forgot_password"];
+export const ROUTES_ACCESSIBLE_WITHOUT_SESSION = ["/login", "/signup", "/_error", "/reset_password", "/login_sucessful", "/forgot_password"];
 
 export const ROUTES_TO_REDIRECT_WHEN_SESSION = ["/login", "/signup", "/"];
 

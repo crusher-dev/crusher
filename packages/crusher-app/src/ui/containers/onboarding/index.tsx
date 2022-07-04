@@ -15,6 +15,9 @@ import { GitRepoIntegration } from "./gitRepoIntegration";
 import { URLOnboarding } from "@ui/containers/onboarding/URLOnboarding";
 import { SurveyContainer } from "@ui/containers/onboarding/Survey";
 import { getBoolean } from "@utils/common";
+import { QuestionPrompt } from "@components/molecules/QuestionPrompt";
+import { DeveloperInput } from "./DeveloperInput";
+import { NoDeveloperInput } from "./NoDeveloperInput";
 
 const GetViewByStep = () => {
 	const [step] = useAtom(onboardingStepAtom);
@@ -32,36 +35,17 @@ const GetViewByStep = () => {
 };
 
 const steps = [
-	{ id: OnboardingStepEnum.SURVEY, text: "Choose" },
-	{ id: OnboardingStepEnum.URL_ONBOARDING, text: "Create and run test" },
-	{ id: OnboardingStepEnum.SUPPORT_CRUSHER, text: "Support" },
+	{ id: OnboardingStepEnum.SURVEY, text: "Download" },
 ];
 
 const CrusherOnboarding = () => {
 	const router = useRouter();
 	const [user] = useAtom(userAtom);
 	const [selectedOnboardingStep, setOnBoardingStep] = useAtom(onboardingStepAtom);
+	const [isDeveloper, setIsDeveloper] = React.useState(true);
 
-	useEffect(() => {
-		if (getBoolean(user?.meta.INITIAL_ONBOARDING)) {
-			router.push("/app/dashboard");
-		} else {
-			let finalOnboardingStep = null;
-			if (getBoolean(user?.meta.SURVEY)) {
-				finalOnboardingStep = OnboardingStepEnum.URL_ONBOARDING;
-			}
-			if (getBoolean(user?.meta.URL_ONBOARDING)) {
-				finalOnboardingStep = OnboardingStepEnum.SUPPORT_CRUSHER;
-			}
-			if (getBoolean(user?.meta.SUPPORT_CRUSHER)) {
-				finalOnboardingStep = null;
-				router.push("/app/dashboard");
-			}
-
-			if (finalOnboardingStep) {
-				setOnBoardingStep(finalOnboardingStep);
-			}
-		}
+	const handleCallback = React.useCallback((value) => {
+		setIsDeveloper(value);
 	}, []);
 
 	return (
@@ -104,12 +88,40 @@ const CrusherOnboarding = () => {
 					))}
 				</div>
 				<div className="flex mt-100 flex-col">
-					<GetViewByStep />
+					<div>
+						<div css={welcomeHeadingCss}>Welcome Himanshu!</div>
+						<div css={welcomeTaglineCss}>No project found, create project</div>
+					</div>
+					<QuestionPrompt css={css`margin-top: 60rem;`} defaultValue={isDeveloper} callback={handleCallback}/>
+
+					{isDeveloper ? ( <DeveloperInput/>) : (<NoDeveloperInput/>)}
 				</div>
 			</div>
 		</CrusherBase>
 	);
 };
+
+const welcomeTaglineCss = css`
+font-family: 'Gilroy';
+font-style: normal;
+font-weight: 400;
+font-size: 13rem;
+/* identical to box height, or 119% */
+
+letter-spacing: -0.003em;
+color: rgba(220, 220, 220, 0.38);
+margin-top: 8rem;
+`;
+
+const welcomeHeadingCss = css`
+	font-family: 'Gilroy';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 20rem;
+	/* identical to box height, or 90% */
+
+	letter-spacing: -0.003em;
+`;
 
 const contentContainer = css`
 	width: 890rem;

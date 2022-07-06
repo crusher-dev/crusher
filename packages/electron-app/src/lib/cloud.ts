@@ -13,6 +13,18 @@ class CloudCrusher {
 		return testSteps;
 	}
 
+	public static async createProject(projectName: string, userToken: string, customBackendPath: string | undefined = undefined) {
+		return axios
+			.post(resolveToBackendPath(`/projects/actions/create`, customBackendPath), {
+				name: projectName,
+			}, {
+				headers: {
+					Cookie: `isLoggedIn=true; token=${userToken}`,
+				},
+			})
+			.then((res) => res.data);
+	}
+
 	public static async getReplayableTestActions(
 		actions: Array<iAction>,
 		isMainTest: boolean,

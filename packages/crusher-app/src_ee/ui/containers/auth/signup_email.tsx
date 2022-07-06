@@ -88,6 +88,7 @@ export default function Signup_email({ goBackHandler }) {
 	};
 
 	loadUserDataAndRedirect({ fetchData: false, userAndSystemData: data });
+
 	return (
 		<div css={containerCSS}>
 			<div className="pt-28">

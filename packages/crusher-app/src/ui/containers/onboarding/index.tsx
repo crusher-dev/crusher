@@ -58,15 +58,20 @@ const CrusherOnboarding = () => {
 		const testCreatedPoll = setInterval(async () => {
 			const res = await backendRequest(getTestsAPI(), { method: RequestMethod.GET });
 			if (res.list && res.list.length) {
+				clearInterval(testCreatedPoll);
+
 				updateOnboarding({
 					type: "user",
 					key: USER_META_KEYS.INITIAL_ONBOARDING,
 					value: true,
 				});
-				clearInterval(testCreatedPoll);
 				window.location.href = "/";
 			}
 		}, 1000);
+
+		return () => {
+			clearInterval(testCreatedPoll);
+		}
 	}, []);
 	const handleCallback = React.useCallback((value) => {
 		setIsDeveloper(value);

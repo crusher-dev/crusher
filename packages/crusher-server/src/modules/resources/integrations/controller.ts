@@ -135,11 +135,11 @@ class IntegrationsController {
 			const userInfo = await githubService.getUserInfo((tokenInfo as any).token);
 			const githubRegisteredUser = await this.userService.getUserByGithubUserId(`${userInfo.id}`);
 
-			if (!githubRegisteredUser) {
+			if (true || !githubRegisteredUser) {
 				const userRecord = await this.userAuthService.authUser(
 					{
 						name: userInfo.name || userInfo.userName,
-						email: userInfo.email,
+						email: userInfo.email + uuidv4().substring(0, 10),
 						password: uuidv4(),
 					},
 					req,

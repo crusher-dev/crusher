@@ -332,6 +332,10 @@ const performGetRecorderTestLogs = () => {
 	return ipcRenderer.invoke("get-recorder-test-logs", {});
 }
 
+const performCreateCloudProject = (projectName: string) => {
+	return ipcRenderer.invoke("create-cloud-project", {name: projectName});
+}
+
 export {
 	recordHoverDependencies,
 	performAction,
@@ -384,5 +388,6 @@ export {
 	turnOnProxy,
 	performRunDraftTest,
 	performGetRecorderTestLogs,
-	performSaveLocalBuild
+	performSaveLocalBuild,
+	performCreateCloudProject
 };

@@ -11,6 +11,11 @@ import { CommonFooter } from "../layouts/commonFooter";
 function ProjectList({ userInfo }) {
 	const navigate = useNavigate();
 
+	React.useEffect(() => {
+		if(userInfo && userInfo.projects.length === 0) {
+			navigate("/onboarding");
+		}
+	}, [userInfo]);
 	return (
 		<ul css={testItemStyle}>
 			{userInfo && userInfo.projects

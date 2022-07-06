@@ -490,7 +490,8 @@ render(
 			</style>
 			<Routes>
 				<Route path="/login" element={<LoginScreen />} />
-				<Route path="/" element={<AuthOnboardingScreen />} />
+				<Route path="/onboarding" element={<AuthOnboardingScreen />} />
+				<Route path="/" element={<DashboardScreen />} />
 				<Route path="/select-project" element={<SelectProjectScreen />} />
 				<Route path="/create-test" element={<CreateTestScreen />} />
 				<Route path="/code-editor" element={<UnDockCodeScreen />} />

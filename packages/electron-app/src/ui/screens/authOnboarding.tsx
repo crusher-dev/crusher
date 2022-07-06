@@ -3,6 +3,8 @@ import { css } from "@emotion/react";
 import { Link, ModelContainerLayout } from "../layouts/modalContainer";
 import { useInView } from "react-intersection-observer";
 import { LinkBox } from "./login";
+import { performCreateCloudProject } from "../commands/perform";
+import { useNavigate } from "react-router-dom";
 
 const Footer = () => {
     return (
@@ -111,16 +113,30 @@ const yesNoButtonCss = css`
 
 const ProjectInput= () => {
     const mainRef = React.useRef(null);
+    const inputRef: React.Ref<HTMLInputElement> = React.useRef(null);
+    const navigate = useNavigate();
 
     React.useEffect(() => {
         setTimeout(() => {mainRef.current.style.height = "200px";}, 0);
     }, []);
+
+    const handleCreate = React.useCallback(() => {
+        const projectName = inputRef.current.value;
+        performCreateCloudProject(projectName).then((res) => {
+            if(res) {
+                const projectId = res.id;
+                window.localStorage.setItem("projectId", projectId);
+                navigate("/?project_id=" + projectId);
+            } 
+        });
+    }, []);
+
     return (
         <div ref={mainRef} css={[contentCss]}>
                     <div css={headingCss}>Create a project</div>
                     <div css={inputFormContainerCss}>
-                        <input placeholder="pied piper?" css={ inputCss } />
-                        <div css={createButtonCss}>Create</div>
+                        <input ref={inputRef} placeholder="pied piper?" css={ inputCss } />
+                        <div css={createButtonCss} onClick={handleCreate}>Create</div>
                     </div>
                     <div css={noteCss}>later developer can to integrate with workflow</div>
         </div>

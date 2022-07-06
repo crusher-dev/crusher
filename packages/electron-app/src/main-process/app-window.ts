@@ -212,6 +212,7 @@ export class AppWindow {
 				console.error(ex);
 			}
 		});
+		ipcMain.handle("create-cloud-project", this.handleCreateCloudProject.bind(this));
 		ipcMain.handle("turn-on-recorder-inspect-mode", this.turnOnInspectMode.bind(this));
 		ipcMain.handle("turn-on-element-selector-inspect-mode", this.turnOnElementSelectorInspectMode.bind(this));
 		ipcMain.handle("turn-off-element-selector-inspect-mode", this.turnOffElementSelectorInspectMode.bind(this));
@@ -277,17 +278,19 @@ export class AppWindow {
 				this.window.webContents.executeJavaScript(
 					`window.localStorage.setItem('projectConfigFile', ${JSON.stringify(JSON.stringify(projectConfigsObject))})`,
 				);
-			});
+			}).then((res) => console.log(res)).catch((err) => console.error(err));
 			process.argv = process.argv.filter((a) => a.includes("--project-config-file"));
 		}
-		this.handle(projectId);
+		this.handle(projectId).catch((err) => console.error(err));
 	}
 
 	async handle(projectId) {
+		await this.window.loadURL(encodePathAsUrl(__dirname, "static/splash.html"));
+
 		if (app.commandLine.hasSwitch("open-recorder")) {
 			this.window.maximize();
-			await this.window.loadURL(encodePathAsUrl(__dirname, "static/splash.html"));
 		}
+
 		if (projectId) {
 			await this.window.webContents.executeJavaScript(`window.localStorage.setItem("projectId", ${projectId});`);
 			process.argv = process.argv.filter((a) => a.includes("--project-id"));
@@ -459,6 +462,17 @@ export class AppWindow {
 			app.commandLine.getSwitchValue("token") || accountInfo.token,
 			appSettings.backendEndPoint,
 			appSettings.frontendEndPoint,
+		);
+	}
+
+	private async handleCreateCloudProject(event, payload: {name: string}) {
+		const appSettings = getAppSettings(this.store.getState() as any);
+		const accountInfo = getUserAccountInfo(this.store.getState() as any);
+
+		return CloudCrusher.createProject(
+			payload.name,
+			app.commandLine.getSwitchValue("token") || accountInfo.token,
+			appSettings.backendEndPoint,
 		);
 	}
 

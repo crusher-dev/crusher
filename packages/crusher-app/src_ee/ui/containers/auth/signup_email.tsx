@@ -97,7 +97,7 @@ export default function Signup_email({ goBackHandler }) {
 				<div
 					className={"flex flex-col items-center"}
 					css={css`
-						margin-top: 160rem;
+						margin-top: 144rem;
 					`}
 				>
 					<Heading type={1} fontSize={22} weight={900}>

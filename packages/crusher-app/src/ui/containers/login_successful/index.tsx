@@ -26,7 +26,7 @@ text-align: center;
 letter-spacing: 0.03em;
 
 color: rgba(255, 255, 255, 0.62);
-margin-top: 18rem; :hover { opacity: 0.8 } text-align: center;
+margin-top: 24rem; :hover { opacity: 0.8 } text-align: center;
 `;
 const profileIconCss = css`width: 26rem; height: 26rem;`;
 const loginSuccessfulTextCss = css`
@@ -34,7 +34,7 @@ const loginSuccessfulTextCss = css`
     font-style: normal;
     font-weight: 900;
     font-size: 20rem;
-    margin-top: 18rem;
+    margin-top: 28rem;
     text-align: center;
 
     color: #FFFFFF;
@@ -43,10 +43,10 @@ const returnTextCss = css`
     font-family: 'Gilroy';
     font-style: normal;
     font-weight: 400;
-    font-size: 16rem;
+    font-size: 14rem;
     text-align: center;
     letter-spacing: 0.03em;
-    margin-top: 18rem;
+    margin-top: 12rem;
     color: rgba(255, 255, 255, 0.62);
 `;
 const containerCss = css`
@@ -58,11 +58,11 @@ const contentCss = css`
     position: relative;
     left: 50%;
     transform: translateX(-50%);
-    width: 500rem;
+    width: 480rem;
 `;
 const modalCss = css`
     background: rgba(217, 217, 217, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.04);
+    border: .5px solid rgb(255 236 236 / 6%);
     border-radius: 20px;
     display: flex;
     flex-direction: column;

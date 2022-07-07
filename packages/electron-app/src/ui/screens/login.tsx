@@ -354,7 +354,7 @@ const mainContentStyle = css`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	justify-content: center;
+	padding-top: 160rem;
 	flex: 1;
 	height: 100%;
 `;

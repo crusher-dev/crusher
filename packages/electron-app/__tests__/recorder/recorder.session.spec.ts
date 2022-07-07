@@ -1,7 +1,7 @@
 import playwright, { ElectronApplication, ElementHandle, Page } from "playwright";
 import path, { resolve } from "path";
 import http from "http";
-import { getLaunchOptions } from "./utils";
+import { getLaunchOptions } from "../utils";
 const handler = require("serve-handler");
 
 jest.setTimeout(30000);
@@ -16,7 +16,7 @@ describe("Recorder session", () => {
 		assetsServer = http.createServer((request, response) => {
 			// You pass two more arguments for config and middleware
 			// More details here: https://github.com/vercel/serve-handler#options
-			return handler(request, response, { public: path.resolve(__dirname, "assets") });
+			return handler(request, response, { public: path.resolve(__dirname, "../assets") });
 		});
 
 		assetsServer.listen(3913);

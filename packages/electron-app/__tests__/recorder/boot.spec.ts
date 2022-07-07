@@ -1,9 +1,9 @@
 import playwright, { ElectronApplication, ElementHandle, Page } from "playwright";
 import path, { resolve } from "path";
-import { devices } from "../src/devices";
-import { ActionStatusEnum } from "../../crusher-shared/lib/runnerLog/interface";
-import { ActionsInTestEnum } from "../../crusher-shared/constants/recordedActions";
-import { getLaunchOptions } from "./utils";
+import { devices } from "../../src/devices";
+import { ActionStatusEnum } from "../../../crusher-shared/lib/runnerLog/interface";
+import { ActionsInTestEnum } from "../../../crusher-shared/constants/recordedActions";
+import { getLaunchOptions } from "../utils";
 jest.setTimeout(30000);
 
 const VARIANT = (process.env.VARIANT || "dev").toLocaleLowerCase();

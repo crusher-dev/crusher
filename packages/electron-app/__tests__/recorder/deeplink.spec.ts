@@ -1,10 +1,10 @@
 import playwright, { ElectronApplication, ElementHandle, Page } from "playwright";
 import path, { resolve } from "path";
-import { devices } from "../src/devices";
-import { ActionStatusEnum } from "../../crusher-shared/lib/runnerLog/interface";
-import { ActionsInTestEnum } from "../../crusher-shared/constants/recordedActions";
+import { devices } from "../../src/devices";
+import { ActionStatusEnum } from "../../../crusher-shared/lib/runnerLog/interface";
+import { ActionsInTestEnum } from "../../../crusher-shared/constants/recordedActions";
 import { execSync } from "child_process";
-import {getLaunchOptions} from "./utils";
+import {getLaunchOptions} from "../utils";
 
 jest.setTimeout(50000);
 

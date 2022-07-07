@@ -1,6 +1,6 @@
 import playwright, { ElectronApplication, Page } from "playwright";
 import path from "path";
-import {getLaunchOptions} from "./utils";
+import {getLaunchOptions} from "../utils";
 
 jest.setTimeout(320000);
 const VARIANT = (process.env.VARIANT || "dev").toLocaleLowerCase();

@@ -67,7 +67,6 @@ const ProxyWarningContainer = ({ exitCallback, testId, startUrl }) => {
 		if (Object.keys(proxyState).length) {
 			// Run the test with this config now.
 			performRunDraftTest(testId).then((res) => {
-				console.log("Response is", res);
 				window["messageBarCallback"](res.draftJobId);
 			}).catch((err) => {
 				console.log("Err is", err);
@@ -75,6 +74,16 @@ const ProxyWarningContainer = ({ exitCallback, testId, startUrl }) => {
 			exitCallback();
 		}
 	}, [proxyState]);
+
+	const handleSkip = React.useCallback(() => {
+		performRunDraftTest(testId).then((res) => {
+			window["messageBarCallback"](res.draftJobId);
+		}).catch((err) => {
+			console.log("Err is", err);
+		});
+
+		exitCallback();
+	}, []);
 
 	React.useEffect(() => {
 		setSelectedProject(window.localStorage.getItem("projectId"));
@@ -103,7 +112,7 @@ const ProxyWarningContainer = ({ exitCallback, testId, startUrl }) => {
 			</div>
 			<div css={actionsBarContainerStyle}>
 				<ReadDocsButton title={"Read docs"} onClick={openDocs} />
-				<Link onClick={exitCallback} css={skipLinkStyle}>
+				<Link onClick={handleSkip} css={skipLinkStyle}>
 					Skip
 				</Link>
 			</div>

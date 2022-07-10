@@ -43,29 +43,53 @@ export default function Login({ loginWithEmailHandler }) {
 	const router = useRouter();
 
 	return (
-		<div
-			css={containerCSS}
-		>
+		<div css={containerCSS}>
 			<div className="pt-28">
-			<LoginNavBar/>
+				<LoginNavBar />
 			</div>
 			<div className={"flex justify-center"}>
-				<div className={"flex flex-col items-center"} css={css`margin-top:160rem;`}>
+				<div
+					className={"flex flex-col items-center"}
+					css={css`
+						margin-top: 144rem;
+					`}
+				>
 					<Heading type={1} fontSize={22} weight={900}>
-					Get superpowers to <span css={css`color: #D4EB79;`}>ship fast</span> and <span css={css`color: #8C67F5; margin-right: 12px;`}>better</span>🚀
+						Get superpowers to{" "}
+						<span
+							css={css`
+								color: #d4eb79;
+							`}
+						>
+							ship fast
+						</span>{" "}
+						and{" "}
+						<span
+							css={css`
+								color: #8c67f5;
+								margin-right: 12px;
+							`}
+						>
+							better
+						</span>
+						🚀
 					</Heading>
-					<TextBlock fontSize={14.2} color={"#606060"} className={"mt-16"} css={css`letter-spacing: .2px;`} leading={false}>
-					Devs use crusher to test & ship fast with confidence. Get started in seconds
+					<TextBlock
+						fontSize={14.2}
+						color={"#606060"}
+						className={"mt-16"}
+						css={css`
+							letter-spacing: 0.2px;
+						`}
+						leading={false}
+					>
+						Devs use crusher to test & ship fast with confidence. Get started in seconds
 					</TextBlock>
 
 					<div css={overlayContainer} className={"mt-48 pb-60"}>
-
 						<div className={" mb-42"}>
 							<Link href={getGithubLoginURL()}>
-								<Button
-									className={"flex items-center justify-center"}
-									css={githubButtonCSS}
-								>
+								<Button className={"flex items-center justify-center"} css={githubButtonCSS}>
 									<GithubSVG />{" "}
 									<Text className={"ml-10"} fontSize={14} weight={700}>
 										Login with Github
@@ -73,23 +97,22 @@ export default function Login({ loginWithEmailHandler }) {
 								</Button>
 							</Link>
 
-
 							<Button
 								onClick={loginWithEmailHandler}
 								bgColor={"tertiary-dark"}
 								className={"flex items-center justify-center mt-20"}
-								css={[buttonCSS,plainButton]}
+								css={[buttonCSS, plainButton]}
 							>
 								<Text fontSize={14} weight={500}>
 									Login with Gitlab
 								</Text>
 							</Button>
-						
+
 							<Button
 								onClick={loginWithEmailHandler}
 								bgColor={"tertiary-dark"}
 								className={"flex items-center justify-center mt-20"}
-								css={[buttonCSS,plainButton]}
+								css={[buttonCSS, plainButton]}
 							>
 								<Text fontSize={14} weight={500}>
 									or with email
@@ -97,7 +120,7 @@ export default function Login({ loginWithEmailHandler }) {
 							</Button>
 						</div>
 						<div className="flex w-full justify-center">
-							<Text css={[underLineonHover,helpCSS]} fontSize={14}>
+							<Text css={[underLineonHover, helpCSS]} fontSize={14}>
 								Need help?
 							</Text>
 						</div>
@@ -107,14 +130,20 @@ export default function Login({ loginWithEmailHandler }) {
 							color={"#565657"}
 							fontSize={14}
 							css={css`
-							font-size: 14.5rem;
+								font-size: 14.5rem;
 								:hover {
-								
 									text-decoration: underline;
 								}
 							`}
 						>
-							Already registered? <span css={css`color: #855AFF;`}>Signup</span>
+							Already registered?{" "}
+							<span
+								css={css`
+									color: #855aff;
+								`}
+							>
+								Signup
+							</span>
 						</Text>
 					</div>
 				</div>
@@ -124,13 +153,13 @@ export default function Login({ loginWithEmailHandler }) {
 }
 
 const helpCSS = css`
-color: #565657;
-`
+	color: #565657;
+`;
 const containerCSS = css(`
 height: 100vh;
 background: #0D0E11;
 width: 100vw;
-`)
+`);
 
 const overlayContainer = css(`
 	width: 372rem;
@@ -142,10 +171,9 @@ const underLineonHover = css`
 	}
 `;
 
-
 const plainButton = css`
-background: #0F0F0F;
-`
+	background: #0f0f0f;
+`;
 
 const githubButtonCSS = css(`
 width: 100%;
@@ -156,10 +184,10 @@ border-radius: 6rem;
 background: linear-gradient(133.85deg, #905CFF 25.39%, #6D55FF 74.5%, #6951FF 74.5%);
 box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 
-`)
+`);
 
 const buttonCSS = css(`
 width: 100%;
 height: 44rem;
 border-radius: 6rem;
-`)
+`);

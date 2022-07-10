@@ -55,10 +55,10 @@ const normalSelect = (isSelected: boolean) => css`
 			display: block;
 		}
 	}
-	background: ${isSelected ? "#687ef2" : "none"};
+	background: ${isSelected ? "#9462FF" : "none"};
 
 	:hover {
-		background: ${isSelected ? "#5467cb" : "#687ef2"};
+		background: ${isSelected ? "#8a5ee8" : "#9462FF"};
 	}
 `;
 
@@ -67,17 +67,17 @@ const selectAll = (isSelected: boolean) => css`
 		height: 8rem;
 		width: 8rem;
 		border-radius: 2rem;
-		background: ${isSelected ? "#0a0b0e" : "#687ef2"};
+		background: ${isSelected ? "#0a0b0e" : "#9462FF"};
 		display: ${isSelected ? "block" : "none"};
 	}
 
-	background: ${isSelected ? "#687ef2" : "none"};
+	background: ${isSelected ? "#9462FF" : "none"};
 
 	:hover {
 		#tick {
 			display: block;
 		}
-		background: ${isSelected ? "#5467cb" : "#0a0b0e"};
+		background: ${isSelected ? "#8a5ee8" : "#0a0b0e"};
 	}
 `;
 

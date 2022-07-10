@@ -1,16 +1,4 @@
 {
   "backend": "https://backend.crusher.dev/",
-  "project": 1820,
-  "proxy": [{
-    "name": "frontend",
-    "url": "http://localhost:3000/",
-    "intercept": "app.crusher.dev"
-},
-{
-  "name": "backend",
-  "url": "http://localhost:8000/",
-  "intercept": "localhost:8000"
-}
-
-]
+  "project": 2190
 }

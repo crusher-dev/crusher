@@ -68,14 +68,20 @@ export function* generateSelectors(
 	yield { penalty: 1000, selector: getXpath(target) };
 }
 
-export function getSelectors(target: HTMLElement, timeout = 1000, mode : SelectorsModeEnum = SelectorsModeEnum.NORMAL, selectorCache?: Map<HTMLElement, Array<RankedSelector>>, useAdvancedSelector: boolean = false): Array<string> {
+export function getSelectors(
+	target: HTMLElement,
+	timeout = 1000,
+	mode: SelectorsModeEnum = SelectorsModeEnum.NORMAL,
+	selectorCache?: Map<HTMLElement, Array<RankedSelector>>,
+	useAdvancedSelector: boolean = false,
+): Array<string> {
 	if (["::before", "::after"].includes(target.tagName)) {
 		target = getParentElement(target) as any;
 	}
 
 	if (!target) return [];
 	let offsetLimit = 10;
-	if(useAdvancedSelector) {
+	if (useAdvancedSelector) {
 		timeout = 5000;
 		offsetLimit = 200;
 	}
@@ -86,7 +92,9 @@ export function getSelectors(target: HTMLElement, timeout = 1000, mode : Selecto
 	let index = 0;
 	for (const selector of selectors) {
 		// take the first one
-		if (index > offsetLimit) { break; }
+		if (index > offsetLimit) {
+			break;
+		}
 		selectorList.push(selector.selector);
 		index++;
 	}

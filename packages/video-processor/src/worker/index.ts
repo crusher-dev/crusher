@@ -1,3 +1,5 @@
+import { setupLogger } from "@crusher-shared/modules/logger";
+setupLogger("video-processor");
 import * as shell from "shelljs";
 import * as url from "url";
 import { getStorageManager } from "@utils/cache";

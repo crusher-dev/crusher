@@ -1,11 +1,11 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 import { iAction, iActionResult } from "../../../crusher-shared/types/action";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
-import { CookiesSetDetails, session } from "electron";
+import { app, CookiesSetDetails, session } from "electron";
 import { ExportsManager } from "../../../crusher-shared/lib/exports";
 import { CrusherCookieSetPayload } from "../../../crusher-shared/types/sdk/types";
 import { GlobalManagerPolyfill, LogManagerPolyfill, StorageManagerPolyfill } from "./polyfills";
-import { CrusherRunnerActions, CrusherSdk, getMainActions } from "runner-utils/src/index";
+import { ActionDescriptor, CrusherRunnerActions, CrusherSdk, getMainActions } from "runner-utils/src/index";
 import { Browser, BrowserContext, ConsoleMessage, Page, ElementHandle, Frame } from "playwright";
 import { AppWindow } from "../main-process/app-window";
 import * as fs from "fs";
@@ -13,9 +13,8 @@ import * as path from "path";
 import { now } from "../main-process/now";
 import { ACTION_DESCRIPTIONS } from "../ui/components/sidebar/steps";
 import { uuidv4 } from "runner-utils/src/utils/helper";
-const {
-	performance
-  } = require('perf_hooks');
+import { ActionsInTestEnum } from "@shared/constants/recordedActions";
+const { performance } = require("perf_hooks");
 const playwright = typeof __non_webpack_require__ !== "undefined" ? __non_webpack_require__("./playwright/index.js") : require("playwright");
 
 type ElectronCompatibleCookiePayload = Omit<CrusherCookieSetPayload, "sameSite"> & {
@@ -34,6 +33,7 @@ class PlaywrightInstance {
 	private sdkManager: CrusherSdk;
 	private browser: Browser;
 	private browserContext: BrowserContext;
+	private actionDescriptor: ActionDescriptor;
 
 	/* Map to contain element handles from uniqueId saved in renderer */
 	elementsMap: Map<string, { handle: ElementHandle; parentFrameSelectors?: Array<any> }>;
@@ -41,7 +41,7 @@ class PlaywrightInstance {
 
 	private isBusy = false;
 
-	lastAction: { action: iAction; id: string; };
+	lastAction: { action: iAction; id: string };
 
 	constructor(appWindow: AppWindow) {
 		this.appWindow = appWindow;
@@ -50,6 +50,8 @@ class PlaywrightInstance {
 		this._storageManager = new StorageManagerPolyfill();
 		this._globalManager = new GlobalManagerPolyfill();
 		this._exportsManager = new ExportsManager();
+		this.actionDescriptor = new ActionDescriptor();
+		this.actionDescriptor.initActionHandlers();
 
 		this.runnerManager = new CrusherRunnerActions(
 			this._logManager as any,
@@ -61,6 +63,12 @@ class PlaywrightInstance {
 		);
 
 		this._overrideSdkActions();
+
+			// console.log("Test result is", this._globalManager.get("TEST_RESULT"));
+	}
+
+	public getTestLogs() {
+		return this._globalManager.get("TEST_RESULT");
 	}
 
 	getContext() {
@@ -136,7 +144,9 @@ class PlaywrightInstance {
 	}
 
 	async connect() {
-		this.browser = await playwright.chromium.connectOverCDP("http://localhost:9112/", { customBrowserName: "electron-webview" });
+		const debuggingPortFile = fs.readFileSync(path.join(app.getPath("userData"), "DevToolsActivePort"), "utf8");
+		const debuggingPort = debuggingPortFile.split("\n")[0];
+		this.browser = await playwright.chromium.connectOverCDP(`http://localhost:${debuggingPort}/`, { customBrowserName: "electron-webview" });
 		this.browserContext = (await this.browser.contexts())[0];
 		// @TODO: Look into this
 		this.page = await this._getWebViewPage();
@@ -145,12 +155,19 @@ class PlaywrightInstance {
 		this.page.on("console", this._handleConsoleMessage);
 		global.customLogger = {
 			log: (message) => {
-				if(!message.includes("immediate._onImmediate") && this.lastAction) {
+				if (!message.includes("immediate._onImmediate") && this.lastAction) {
 					const prefix = "";
-					this.appWindow.recordLog({id: uuidv4(), parent: this.lastAction ? this.lastAction.id : null, message: prefix + message, type: "info", args: [], time: performance.now()});
+					this.appWindow.recordLog({
+						id: uuidv4(),
+						parent: this.lastAction ? this.lastAction.id : null,
+						message: prefix + message,
+						type: "info",
+						args: [],
+						time: performance.now(),
+					});
 				}
-			}
-		}
+			},
+		};
 	}
 
 	/* Serves as an API to click/hover over elements through playwright */
@@ -203,40 +220,64 @@ class PlaywrightInstance {
 		await this.appWindow.focusWebView();
 
 		await this.runnerManager.runActions(actionsArr, this.browser, this.page, async (action: iAction, result: iActionResult) => {
-				const { status, message, meta } = result;
-				switch (status) {
-					case ActionStatusEnum.STARTED:
-						this.lastAction = {id: uuidv4(), action};
-						this.appWindow.recordLog({id: this.lastAction.id, message: `Performing ${ACTION_DESCRIPTIONS[action.type]}`, type: "info", args: [], time: performance.now()});
-						if(!shouldNotSave)
-						this.appWindow.getRecorder().saveRecordedStep(action, ActionStatusEnum.STARTED);
-						break;
-					case ActionStatusEnum.FAILED:
-						case ActionStatusEnum.STALLED:
-							this.lastAction = null;
-							const failedReason = result.meta.failedReason;
-							const isStalled = status === ActionStatusEnum.STALLED;
+			const { status, message, meta } = result;
+			switch (status) {
+				case ActionStatusEnum.STARTED:
+					this.lastAction = { id: uuidv4(), action };
+					this.appWindow.recordLog({
+						id: this.lastAction.id,
+						message: `${action.name ? action.name : this.actionDescriptor.describeAction(action as any)}`,
+						type: "info",
+						args: [],
+						time: performance.now(),
+					});
 
-							const uniqueId = uuidv4();
-							this.appWindow.recordLog({id: uniqueId, message: `Error performing ${ACTION_DESCRIPTIONS[action.type]} `, type: "error", args: [], time: performance.now()});
-							this.appWindow.recordLog({id: uuidv4(), message: `<= ${failedReason.replace(
-								/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '')}`, type: "error", args: [], time: performance.now(), parent: uniqueId});
-							if(!shouldNotSave) {
-								if(isStalled) {
-									// @TODO: Update it ActionStatusEnum.STALLED
-									this.appWindow.getRecorder().markRunningStepCompleted();
-								}  else {
-									this.appWindow.getRecorder().markRunningStepFailed();
-								}
-							}
-						break;
-					case ActionStatusEnum.COMPLETED:
-						this.lastAction = null;
-						this.appWindow.recordLog({id: uuidv4(), message: `Performed ${ACTION_DESCRIPTIONS[action.type]}`, type: "info", args: [], time: performance.now()});
-						if(!shouldNotSave)
-						this.appWindow.getRecorder().markRunningStepCompleted();
-						break;
-				}
+					if (!shouldNotSave) this.appWindow.getRecorder().saveRecordedStep(action, ActionStatusEnum.STARTED);
+					break;
+				case ActionStatusEnum.FAILED:
+				case ActionStatusEnum.STALLED:
+					this.lastAction = null;
+					const failedReason = result.meta.failedReason;
+					const isStalled = status === ActionStatusEnum.STALLED;
+
+					const uniqueId = uuidv4();
+					this.appWindow.recordLog({
+						id: uniqueId,
+						message: `Error performing ${ACTION_DESCRIPTIONS[action.type]} `,
+						type: "error",
+						args: [],
+						time: performance.now(),
+					});
+					this.appWindow.recordLog({
+						id: uuidv4(),
+						message: `<= ${failedReason.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, "")}`,
+						type: "error",
+						args: [],
+						time: performance.now(),
+						parent: uniqueId,
+					});
+					if (!shouldNotSave) {
+						if (isStalled) {
+							// @TODO: Update it ActionStatusEnum.STALLED
+							this.appWindow.getRecorder().markRunningStepCompleted();
+						} else {
+							this.appWindow.getRecorder().markRunningStepFailed();
+						}
+					}
+					break;
+				case ActionStatusEnum.COMPLETED:
+					this.appWindow.recordLog({
+						id: uuidv4(),
+						message: `Performed ${ACTION_DESCRIPTIONS[action.type]}`,
+						type: "info",
+						args: [],
+						time: performance.now(),
+						parent: this.lastAction.id
+					});
+					this.lastAction = null;
+					if (!shouldNotSave) this.appWindow.getRecorder().markRunningStepCompleted();
+					break;
+			}
 		});
 	}
 
@@ -244,6 +285,24 @@ class PlaywrightInstance {
 		return this.browser.contexts()[0].addInitScript({
 			path: scriptPath,
 		});
+	}
+
+	public clear() {
+		this.elementsMap = new Map();
+		this._logManager = new LogManagerPolyfill();
+		this._storageManager = new StorageManagerPolyfill();
+		this._globalManager = new GlobalManagerPolyfill();
+		this._exportsManager = new ExportsManager();
+
+		this.runnerManager = new CrusherRunnerActions(
+			this._logManager as any,
+			this._storageManager as any,
+			"/tmp/crusher/somedir/",
+			this._globalManager,
+			this._exportsManager,
+			this.sdkManager,
+		);
+
 	}
 
 	public dispose() {

@@ -9,10 +9,10 @@ const generateTypesFile = () => {
 	const playwrightProtocol = readFile("../../../node_modules/playwright/types/protocol.d.ts");
 	const playwrightTypes = readFile("../../../node_modules/playwright/types/types.d.ts");
 
-  const expectMain = readFile("../../../node_modules/expect/build/index.d.ts");
-  const expectTypes = readFile("../../../node_modules/expect/build/types.d.ts");
+	const expectMain = readFile("../../../node_modules/expect/build/index.d.ts");
+	const expectTypes = readFile("../../../node_modules/expect/build/types.d.ts");
 
-  const nodeFetchTypes = readFile("../../../node_modules/@types/node-fetch/index.d.ts");
+	const nodeFetchTypes = readFile("../../../node_modules/@types/node-fetch/index.d.ts");
 
 	const assertTypes = readFile("../../../node_modules/@types/node/assert.d.ts");
 	const axiosTypes = readFile("../../../node_modules/axios/index.d.ts");

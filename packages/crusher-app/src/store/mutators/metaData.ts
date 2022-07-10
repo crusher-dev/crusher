@@ -46,69 +46,72 @@ const updateTeamMeta = (meta: Record<string, any>) => {
 /*
 	Add API filteration to not call API when key-value pair is same.
  */
-export const updateMeta = atom(null, (_get, _set, passedPayload: IUpdateUserOnboarding | {type: IUpdateUserOnboarding["type"], values: Array<Omit<IUpdateUserOnboarding, "type">> }) => {
-	const { selectedProjectId } = _get(appStateAtom);
-	let payload = {};
-	const { type } = passedPayload;
-	//@ts-ignore
-	if (passedPayload.values) {
+export const updateMeta = atom(
+	null,
+	(_get, _set, passedPayload: IUpdateUserOnboarding | { type: IUpdateUserOnboarding["type"]; values: Array<Omit<IUpdateUserOnboarding, "type">> }) => {
+		const { selectedProjectId } = _get(appStateAtom);
+		let payload = {};
+		const { type } = passedPayload;
 		//@ts-ignore
-		payload = passedPayload.values.reduce((acc, cur) => {
-			return {
-				...acc,
-				[String(cur.key)]: cur.value,
-			};
-		}, {});
-	} else if (passedPayload instanceof Object) {
-		//@ts-ignore
-		const { key, value, type } = passedPayload;
-		payload = { [String(key)]: value };
-	}
-	switch (type) {
-		case "project":
-			{
-				const project = _get(projectsAtom);
-				const newState = produce(project, (draftProjects) => {
-					for (const project of draftProjects) {
-						if (project.id === selectedProjectId) {
-							project["meta"] = { ...project["meta"], ...payload };
+		if (passedPayload.values) {
+			//@ts-ignore
+			payload = passedPayload.values.reduce((acc, cur) => {
+				return {
+					...acc,
+					[String(cur.key)]: cur.value,
+				};
+			}, {});
+		} else if (passedPayload instanceof Object) {
+			//@ts-ignore
+			const { key, value, type } = passedPayload;
+			payload = { [String(key)]: value };
+		}
+		switch (type) {
+			case "project":
+				{
+					const project = _get(projectsAtom);
+					const newState = produce(project, (draftProjects) => {
+						for (const project of draftProjects) {
+							if (project.id === selectedProjectId) {
+								project["meta"] = { ...project["meta"], ...payload };
+							}
 						}
-					}
-				});
-				_set(projectsAtom, newState);
+					});
+					_set(projectsAtom, newState);
 
-				updateProjectMeta(selectedProjectId, payload);
-			}
-			break;
+					updateProjectMeta(selectedProjectId, payload);
+				}
+				break;
 
-		case "team":
-			{
-				const team = _get(teamAtom);
-				const newState = produce(team, (newState) => {
-					if (newState === null) {
-						newState = {};
-					}
-					// @ts-ignore
-					newState["meta"] = { ...newState["meta"], ...payload };
-				});
-				_set(teamAtom, newState);
-				updateTeamMeta(payload);
-			}
-			break;
+			case "team":
+				{
+					const team = _get(teamAtom);
+					const newState = produce(team, (newState) => {
+						if (newState === null) {
+							newState = {};
+						}
+						// @ts-ignore
+						newState["meta"] = { ...newState["meta"], ...payload };
+					});
+					_set(teamAtom, newState);
+					updateTeamMeta(payload);
+				}
+				break;
 
-		case "user":
-			{
-				const user = _get(userAtom);
-				const newState = produce(user, (newState) => {
-					if (newState === null) {
-						newState = {};
-					}
-					// @ts-ignore
-					newState["meta"] = { ...newState["meta"], ...payload };
-				});
-				_set(userAtom, newState);
-				updateUserMeta(payload);
-			}
-			break;
-	}
-});
+			case "user":
+				{
+					const user = _get(userAtom);
+					const newState = produce(user, (newState) => {
+						if (newState === null) {
+							newState = {};
+						}
+						// @ts-ignore
+						newState["meta"] = { ...newState["meta"], ...payload };
+					});
+					_set(userAtom, newState);
+					updateUserMeta(payload);
+				}
+				break;
+		}
+	},
+);

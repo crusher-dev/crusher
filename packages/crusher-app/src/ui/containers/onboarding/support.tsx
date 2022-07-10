@@ -34,10 +34,9 @@ const SupportCrusher = () => {
 				{
 					key: USER_META_KEYS.INITIAL_ONBOARDING,
 					value: true,
-				}
+				},
 			],
 		});
-
 	};
 
 	const openDiscord = () => {

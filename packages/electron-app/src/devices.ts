@@ -1,20 +1,20 @@
 enum TDeviceEnum {
-    PIXEL = "Pixel33XL",
-    DESKTOP_M = "GoogleChromeMediumScreen",
-    DESKTOP_L = "GoogleChromeLargeScreenL"
-};
+	PIXEL = "Pixel33XL",
+	DESKTOP_M = "GoogleChromeMediumScreen",
+	DESKTOP_L = "GoogleChromeLargeScreenL",
+}
 
 interface iDevice {
-    id: TDeviceEnum;
-    name: string;
-    width: number;
-    height: number;
-    mobile: boolean;
+	id: TDeviceEnum;
+	name: string;
+	width: number;
+	height: number;
+	mobile: boolean;
 	visible: boolean;
 	/* @Note: Refractor Legacy implementation */
 	userAgent: string;
-    userAgentRaw: string;
-};
+	userAgentRaw: string;
+}
 
 const devices: Array<iDevice> = [
 	{
@@ -22,7 +22,7 @@ const devices: Array<iDevice> = [
 		name: "Desktop",
 		width: 1280,
 		height: 800,
-        mobile: false,
+		mobile: false,
 		visible: true,
 		userAgent: "Google Chrome",
 		userAgentRaw: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36",
@@ -32,7 +32,7 @@ const devices: Array<iDevice> = [
 		name: "Desktop L",
 		width: 1440,
 		height: 800,
-        mobile: false,
+		mobile: false,
 		visible: false,
 		userAgent: "Google Chrome",
 		userAgentRaw: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36",
@@ -50,7 +50,7 @@ const devices: Array<iDevice> = [
 ];
 
 function getDeviceFromId(id: TDeviceEnum | string) {
-	return devices.find(device => device.id === id);
+	return devices.find((device) => device.id === id);
 }
 
 export { TDeviceEnum, iDevice, devices, getDeviceFromId };

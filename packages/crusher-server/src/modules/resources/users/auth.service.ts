@@ -92,7 +92,7 @@ class UserAuthService {
 		req: any,
 		res: any,
 		inviteReferral: IInviteReferral = null,
-	): Promise<{ userId: number; projectId: number; teamId: number }> {
+	): Promise<{ userId: number; projectId?: number; teamId: number }> {
 		const referralObject = inviteReferral ? await this.userInviteService.parseInviteReferral(inviteReferral) : null;
 
 		const userRecord = await this.usersService.createUserRecord({
@@ -130,7 +130,7 @@ class UserAuthService {
 
 		// Login the user
 		await this.setUserAuthCookies(user.id, user.team_id, req, res);
-		return { userId: user.id, teamId: user.team_id};
+		return { userId: user.id, teamId: user.team_id };
 	}
 
 	async authOpenSourceUser(req: any, res: Response): Promise<{ userId: number; teamId: number }> {

@@ -104,7 +104,7 @@ const SurveyContainer = () => {
 
 	const handleRoleInputChange = (value) => {
 		setProfileType(value);
-	}
+	};
 
 	return (
 		<>
@@ -154,7 +154,7 @@ const SurveyContainer = () => {
 						size={"big-medium"}
 						placeholder={"What's your role?"}
 						onKeyDown={(e) => {
-							handleRoleInputChange(e.target.value)
+							handleRoleInputChange(e.target.value);
 							if (e.keyCode === 13) {
 								handleNext();
 							}
@@ -179,7 +179,7 @@ const SurveyContainer = () => {
 						min-width: 152rem;
 					`}
 					onClick={handleNext}
-					disabled={ !profileType }
+					disabled={!profileType}
 				>
 					{" "}
 					Next{" "}

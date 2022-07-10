@@ -1,6 +1,5 @@
 import { IDatabaseManager } from "@modules/db/interface";
 import { ConnectionOptions, PoolOptions } from "mysql2";
-import { Logger } from "@utils/logger";
 import * as mysql from "mysql2/promise";
 
 class MysqlDatabase implements IDatabaseManager {
@@ -19,7 +18,7 @@ class MysqlDatabase implements IDatabaseManager {
 					resolve(true);
 				})
 				.catch((err) => {
-					Logger.error("Cannot connect to mysql database...", err);
+					console.error("Cannot connect to mysql database...", err);
 					resolve(false);
 				});
 		});

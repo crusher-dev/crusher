@@ -17,7 +17,7 @@ import { ExportsManager } from "./functions/exports";
 import { IExportsManager } from "@crusher-shared/lib/exports/interface";
 import { CommunicationChannel } from "./functions/communicationChannel";
 import { ActionDescriptor } from "./functions/actionDescriptor";
-import {handleProxyBrowserContext, handleProxyPage} from "./utils/proxy";
+import { handleProxyBrowserContext, handleProxyPage } from "./utils/proxy";
 
 type IActionCategory = "PAGE" | "BROWSER" | "ELEMENT";
 
@@ -89,8 +89,13 @@ class CrusherRunnerActions {
 		}
 	}
 
-
-	async handleActionExecutionStatus(actionType: ActionsInTestEnum, status: ActionStatusEnum, message: string = "", meta: IRunnerLogStepMeta = {}, actionCallback: OmitFirstArg<ActionStatusCallbackFn> | null = null) {
+	async handleActionExecutionStatus(
+		actionType: ActionsInTestEnum,
+		status: ActionStatusEnum,
+		message: string = "",
+		meta: IRunnerLogStepMeta = {},
+		actionCallback: OmitFirstArg<ActionStatusCallbackFn> | null = null,
+	) {
 		await this.logManager.logStep(actionType, status, message, meta);
 
 		if (actionCallback) await actionCallback({ actionType, status, message, meta });
@@ -114,7 +119,15 @@ class CrusherRunnerActions {
 		wrappedHandler: any,
 		action: { name: ActionsInTestEnum; category: IActionCategory; description: string },
 	): (step: iAction, browser: Browser, page: Page | null) => Promise<any> {
-		return async (step: iAction, browser: Browser, page: Page | null = null, actionCallback: OmitFirstArg<ActionStatusCallbackFn> | null = null, shouldSleepAfterComplete = true, remainingActionsArr: Array<iAction> = [], shouldLog: boolean = true): Promise<void> => {
+		return async (
+			step: iAction,
+			browser: Browser,
+			page: Page | null = null,
+			actionCallback: OmitFirstArg<ActionStatusCallbackFn> | null = null,
+			shouldSleepAfterComplete = true,
+			remainingActionsArr: Array<iAction> = [],
+			shouldLog: boolean = true,
+		): Promise<void> => {
 			let startingScreenshot = null;
 			let stepResult = null;
 
@@ -137,7 +150,6 @@ class CrusherRunnerActions {
 			const beforeUrl = page ? await page.url() : null;
 
 			try {
-				console.log("Context(top)", this.context);
 				switch (action.category) {
 					case ActionCategoryEnum.PAGE:
 						stepResult = await wrappedHandler(
@@ -155,7 +167,16 @@ class CrusherRunnerActions {
 						);
 						break;
 					case ActionCategoryEnum.BROWSER:
-						stepResult = await wrappedHandler(browser, step, this.globals, this.storageManager, this.exportsManager, this.communicationChannel, this.sdk, this.context);
+						stepResult = await wrappedHandler(
+							browser,
+							step,
+							this.globals,
+							this.storageManager,
+							this.exportsManager,
+							this.communicationChannel,
+							this.sdk,
+							this.context,
+						);
 						break;
 					case ActionCategoryEnum.ELEMENT:
 						const crusherSelector = toCrusherSelectorsFormat(step.payload.selectors);
@@ -168,7 +189,17 @@ class CrusherRunnerActions {
 							parentFrame = await parentFrameElement.contentFrame();
 							elementLocator = parentFrame.locator(crusherSelector.value);
 						}
-						stepResult = await wrappedHandler(elementLocator.first(), null, step, this.globals, this.storageManager, this.exportsManager, this.communicationChannel, this.sdk, this.context);
+						stepResult = await wrappedHandler(
+							elementLocator.first(),
+							null,
+							step,
+							this.globals,
+							this.storageManager,
+							this.exportsManager,
+							this.communicationChannel,
+							this.sdk,
+							this.context,
+						);
 						break;
 					default:
 						throw new Error("Invalid action category handler");
@@ -241,7 +272,13 @@ class CrusherRunnerActions {
 		this.actionHandlers[actionType] = this.stepHandlerHOC(handler, { name: actionType, description: description, category: actionCategory });
 	}
 
-	async runActions(actions: Array<iAction>, browser: Browser, page: Page | null = null, actionCallback: ActionStatusCallbackFn | null = null, shouldLog: boolean = true) {
+	async runActions(
+		actions: Array<iAction>,
+		browser: Browser,
+		page: Page | null = null,
+		actionCallback: ActionStatusCallbackFn | null = null,
+		shouldLog: boolean = true,
+	) {
 		let index = 0;
 
 		const remainingActionsArr = [...actions];
@@ -268,4 +305,14 @@ class CrusherRunnerActions {
 	}
 }
 
-export { CrusherRunnerActions, handlePopup, getBrowserActions, getMainActions, CrusherSdk, CommunicationChannel, ActionDescriptor, handleProxyPage, handleProxyBrowserContext };
+export {
+	CrusherRunnerActions,
+	handlePopup,
+	getBrowserActions,
+	getMainActions,
+	CrusherSdk,
+	CommunicationChannel,
+	ActionDescriptor,
+	handleProxyPage,
+	handleProxyBrowserContext,
+};

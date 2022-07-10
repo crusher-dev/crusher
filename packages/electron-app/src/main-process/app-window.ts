@@ -12,6 +12,7 @@ import { ActionsInTestEnum, ACTIONS_IN_TEST } from "@shared/constants/recordedAc
 import { iDevice } from "@shared/types/extension/device";
 import {
 	recordStep,
+	resetRecorder,
 	resetRecorderState,
 	setDevice,
 	setInspectElementSelectorMode,
@@ -39,12 +40,17 @@ import { ILoggerReducer } from "../store/reducers/logger";
 import { clearLogs, recordLog } from "../store/actions/logger";
 import axios from "axios";
 import { identify } from "../lib/analytics";
+import * as fs from "fs";
+import * as path from "path";
+import child_process from "child_process";
 
-const debug = require("debug")("crusher:main");
+import { screen } from "electron";
+import { ProxyManager } from "./proxy-manager";
 
 export class AppWindow {
 	private window: Electron.BrowserWindow;
-	private splashWindow: Electron.BrowserWindow;
+	// Docked code window
+	private codeWindow: Electron.BrowserWindow | null = null;
 	private recorder: Recorder;
 	private webView: WebView;
 	private emitter = new Emitter();
@@ -54,35 +60,37 @@ export class AppWindow {
 	private _loadTime: number | null = null;
 	private _rendererReadyTime: number | null = null;
 
-	private minWidth = 1028;
-	private minHeight = 570;
+	private minWidth = 1025;
+	private minHeight = 620;
 	private savedWindowState: any = null;
 
 	private shouldMaximizeOnShow = true;
 	private useAdvancedSelectorPicker = false;
+	private proxyManager: ProxyManager;
 
 	public getWebContents() {
 		return this.window.webContents;
 	}
 
 	public constructor(store: Store<unknown, AnyAction>) {
-		debug("Constructor called");
 		this.savedWindowState = windowStateKeeper({
 			maximize: true,
 		});
 		this.recorder = new Recorder(store);
 		this.store = store;
 
+		this.proxyManager = new ProxyManager(store);
+
 		const windowOptions: Electron.BrowserWindowConstructorOptions = {
 			title: APP_NAME,
 			titleBarStyle: "hidden",
-			trafficLightPosition: { x: 30, y: 24 },
+			trafficLightPosition: { x: 10, y: 15 },
 			width: this.minWidth,
 			height: this.minHeight,
 			minWidth: this.minWidth,
 			minHeight: this.minHeight,
 			autoHideMenuBar: true,
-			show: true,
+			show: false,
 			frame: process.platform === "darwin" ? false : true,
 			icon: getAppIconPath(),
 			// This fixes subpixel aliasing on Windows
@@ -107,26 +115,22 @@ export class AppWindow {
 		};
 
 		this.window = new BrowserWindow(windowOptions);
+
+		if(app.commandLine.hasSwitch("open-recorder")) {
+			this.window.maximize();
+		}
+
+		this.window.show();
 		this.window.setFullScreenable(false);
 		this.window.setResizable(false);
 
-		this.splashWindow = new BrowserWindow({
-			title: APP_NAME,
-			autoHideMenuBar: true,
-			show:false,
-			frame: false,
-			icon: getAppIconPath(),
-			// This fixes subpixel aliasing on Windows
-			// See https://github.com/atom/atom/commit/683bef5b9d133cb194b476938c77cc07fd05b972
-			backgroundColor: "#111213",
-			hasShadow: false,
-			webPreferences: {
-				nativeWindowOpen: true,
-				enablePreferredSizeMode: true,
+		const cleanExit = () => {
+			if (this.proxyManager) {
+				this.proxyManager.disableProxy();
 			}
-		});
-
-		this.splashWindow.loadURL(encodePathAsUrl(__dirname, "static/splash.html"));
+		};
+		process.on("SIGINT", cleanExit);
+		process.on("SIGTERM", cleanExit);
 	}
 
 	public load() {
@@ -150,14 +154,13 @@ export class AppWindow {
 
 			identify(4);
 
-			console.log("Analaytics done!");
+			console.log("Telemetry sent!");
 
 			this.maybeEmitDidLoad();
 		});
 
 		// Disable zoom-in/zoom-out
-		this.window.webContents.on("did-finish-load", () => {
-		});
+		this.window.webContents.on("did-finish-load", () => {});
 
 		this.window.webContents.on("did-fail-load", () => {
 			this.window.webContents.openDevTools();
@@ -190,8 +193,6 @@ export class AppWindow {
 
 		ipcMain.once("renderer-ready", (event: Electron.IpcMainEvent, readyTime: number) => {
 			this._rendererReadyTime = readyTime;
-			console.log("Rendering time is", this._rendererReadyTime);
-			this.splashWindow.destroy();
 			setTimeout(() => {
 				this.window.show();
 			}, 200);
@@ -207,8 +208,11 @@ export class AppWindow {
 			try {
 				await this.handlePerformAction(event, payload);
 				this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
-			} catch (ex) {}
+			} catch (ex) {
+				console.error(ex);
+			}
 		});
+		ipcMain.handle("create-cloud-project", this.handleCreateCloudProject.bind(this));
 		ipcMain.handle("turn-on-recorder-inspect-mode", this.turnOnInspectMode.bind(this));
 		ipcMain.handle("turn-on-element-selector-inspect-mode", this.turnOnElementSelectorInspectMode.bind(this));
 		ipcMain.handle("turn-off-element-selector-inspect-mode", this.turnOffElementSelectorInspectMode.bind(this));
@@ -218,14 +222,18 @@ export class AppWindow {
 		ipcMain.handle("replay-test", this.handleRemoteReplayTest.bind(this));
 		ipcMain.handle("replay-test-url-action", this.handleRemoteReplayTestUrlAction.bind(this));
 		ipcMain.handle("update-test", this.handleUpdateTest.bind(this));
-		ipcMain.handle("save-test", this.handleSaveTest.bind(this));
+		ipcMain.handle("save-test", this._handleSaveTestCall.bind(this));
+		ipcMain.handle("run-draft-test", this.handleRunDraftTest.bind(this));
+		ipcMain.handle("clear-remaining-steps", this.handleClearRemainingSteps.bind(this));
 		ipcMain.handle("save-step", this.handleSaveStep.bind(this));
 		ipcMain.handle("go-back-page", this.handleGoBackPage.bind(this));
 		ipcMain.handle("reload-page", this.handleReloadPage.bind(this));
 		ipcMain.handle("get-page-seo-info", this.handleGetPageSeoInfo.bind(this));
 		ipcMain.handle("get-element-assert-info", this.handleGetElementAssertInfo.bind(this));
 		ipcMain.handle("continue-remaining-steps", this.continueRemainingSteps.bind(this));
+		ipcMain.handle("undock-code", this.handleUndockCode.bind(this));
 		ipcMain.handle("reset-test", this.handleResetTest.bind(this));
+		ipcMain.handle("delete-test", this.handleDeleteTest.bind(this));
 		ipcMain.handle("reset-app-session", this.handleResetAppSession.bind(this));
 		ipcMain.handle("focus-window", this.focusWindow.bind(this));
 		ipcMain.handle("save-n-get-user-info", this.handleSaveNGetUserInfo.bind(this));
@@ -246,7 +254,11 @@ export class AppWindow {
 		ipcMain.handle("get-code-templates", this.handleGetCodeTemplates.bind(this));
 		ipcMain.handle("update-code-template", this.handleUpdateCodeTemplate.bind(this));
 		ipcMain.handle("delete-code-template", this.handleDeleteCodeTemplate.bind(this));
+		ipcMain.handle("turn-on-proxy", this.handleTurnOnProxy.bind(this));
 		ipcMain.handle("reset-storage", this.handleResetStorage.bind(this));
+		ipcMain.handle("exit-app", this.handleExitApp.bind(this));
+		ipcMain.handle("get-recorder-test-logs", this.handleGetRecorderTestLogs.bind(this));
+		ipcMain.handle("save-local-build", this.handleSaveLocalBuild.bind(this));
 		ipcMain.on("get-var-context", this.handleGetVarContext.bind(this));
 		ipcMain.on("get-is-advanced-selector", this.handleGetVarContext.bind(this));
 
@@ -255,25 +267,100 @@ export class AppWindow {
 
 		/* Loads crusher app */
 		this.window.webContents.setVisualZoomLevelLimits(1, 3);
-		if(app.commandLine.hasSwitch("open-recorder")) {
-			process.argv = process.argv.filter((a) => a !== "--open-recorder");
-			const projectId = app.commandLine.getSwitchValue("projectId");
+		const projectId = app.commandLine.getSwitchValue("projectId");
 
-			this.window.webContents.executeJavaScript(`window.localStorage.setItem("projectId", ${projectId});`);
+		if (app.commandLine.hasSwitch("project-config-file") && projectId) {
+			const configFilePath = app.commandLine.getSwitchValue("project-config-file");
+			this.window.webContents.executeJavaScript("window.localStorage.getItem('projectConfigFile')").then((projectConfigs) => {
+				console.log("Project configs is", projectConfigs);
+				const projectConfigsObject = projectConfigs ? JSON.parse(projectConfigs) : {};
+				projectConfigsObject[projectId] = configFilePath;
+				this.window.webContents.executeJavaScript(
+					`window.localStorage.setItem('projectConfigFile', ${JSON.stringify(JSON.stringify(projectConfigsObject))})`,
+				);
+			}).then((res) => console.log(res)).catch((err) => console.error(err));
+			process.argv = process.argv.filter((a) => a.includes("--project-config-file"));
+		}
+		this.handle(projectId).catch((err) => console.error(err));
+	}
+
+	async handle(projectId) {
+		await this.window.loadURL(encodePathAsUrl(__dirname, "static/splash.html"));
+
+		if (app.commandLine.hasSwitch("open-recorder")) {
+			this.window.maximize();
+		}
+
+		if (projectId) {
+			await this.window.webContents.executeJavaScript(`window.localStorage.setItem("projectId", ${projectId});`);
+			process.argv = process.argv.filter((a) => a.includes("--project-id"));
+		}
+		if (app.commandLine.hasSwitch("open-recorder")) {
+			process.argv = process.argv.filter((a) => a !== "--open-recorder");
 			this.window.loadURL(encodePathAsUrl(__dirname, "index.html") + "#/recorder");
-			this.handleGoFullScreen(null, {fullScreen: true});
+			this.handleGoFullScreen(null, { fullScreen: true });
 		} else {
 			this.window.loadURL(encodePathAsUrl(__dirname, "index.html"));
 		}
+	}
+
+	private proxyProcess: any = null;
+
+	private async handleTurnOnProxy(event: Electron.IpcMainEvent, payload: { configFilePath: string }) {
+		return this.proxyManager.initializeProxy(payload.configFilePath);
+	}
+
+	private async handleUndockCode(event: Electron.IpcMainEvent, payload: { code: string }) {
+		console.log("Undocking now");
+		this.codeWindow = new BrowserWindow({
+			title: APP_NAME,
+			titleBarStyle: "hidden",
+			trafficLightPosition: { x: 10, y: 6 },
+			width: this.window.getBounds().width,
+			height: this.window.getBounds().height,
+			autoHideMenuBar: true,
+			show: true,
+			frame: process.platform === "darwin" ? false : true,
+			icon: getAppIconPath(),
+			// This fixes subpixel aliasing on Windows
+			// See https://github.com/atom/atom/commit/683bef5b9d133cb194b476938c77cc07fd05b972
+			backgroundColor: "#111213",
+			webPreferences: {
+				// Disable auxclick event
+				// See https://developers.google.com/web/updates/2016/10/auxclick
+				nodeIntegration: true,
+				enableRemoteModule: true,
+				spellcheck: true,
+				worldSafeExecuteJavaScript: false,
+				contextIsolation: false,
+				webviewTag: true,
+				nodeIntegrationInSubFrames: true,
+				webSecurity: false,
+				nativeWindowOpen: true,
+				devTools: false,
+				enablePreferredSizeMode: true,
+			},
+			acceptFirstMouse: true,
+		});
+		this.codeWindow.loadURL(encodePathAsUrl(__dirname, "index.html") + "#/code-editor");
+
+		this.codeWindow.webContents.on("destroyed", () => {
+			this.codeWindow = null;
+			const recorderState = getRecorderState(this.store.getState() as any);
+			if (recorderState.payload && (recorderState.payload as any).previousState) {
+				this.store.dispatch(
+					updateRecorderState((recorderState.payload as any).previousState.type, { ...(recorderState.payload as any).previousState.payload }),
+				);
+			}
+		});
 	}
 
 	private async handleCloudRunTests(event: Electron.IpcMainEvent, payload: { projectId: string; testIds: Array<string> | undefined }) {
 		const userAccountInfo = getUserAccountInfo(this.store.getState() as any);
 		const appSettings = getAppSettings(this.store.getState() as any);
 
-		return CloudCrusher.runTests(payload.testIds, payload.projectId, userAccountInfo.token, appSettings.backendEndPoint);
+		return CloudCrusher.runTests(payload.testIds, payload.projectId, this.proxyManager._results, userAccountInfo.token, appSettings.backendEndPoint);
 	}
-
 
 	private handleGetAdvancedSelector(event: Electron.IpcMainEvent, payload: any) {
 		event.returnValue = this.useAdvancedSelectorPicker;
@@ -357,6 +444,38 @@ export class AppWindow {
 			});
 	}
 
+	private async handleGetRecorderTestLogs() {
+		if(this.webView && this.webView.playwrightInstance) {
+			return this.webView.playwrightInstance.getTestLogs();
+		}
+		return null;
+	}
+
+	private async handleSaveLocalBuild(event, payload: { tests: Array<any>}) {
+		const projectId = await this.window.webContents.executeJavaScript("window.localStorage.getItem('projectId');");
+		const appSettings = getAppSettings(this.store.getState() as any);
+		const accountInfo = getUserAccountInfo(this.store.getState() as any);
+
+		return CloudCrusher.saveLocalBuild(
+			payload.tests,
+			projectId,
+			app.commandLine.getSwitchValue("token") || accountInfo.token,
+			appSettings.backendEndPoint,
+			appSettings.frontendEndPoint,
+		);
+	}
+
+	private async handleCreateCloudProject(event, payload: {name: string}) {
+		const appSettings = getAppSettings(this.store.getState() as any);
+		const accountInfo = getUserAccountInfo(this.store.getState() as any);
+
+		return CloudCrusher.createProject(
+			payload.name,
+			app.commandLine.getSwitchValue("token") || accountInfo.token,
+			appSettings.backendEndPoint,
+		);
+	}
+
 	private async handleGetCodeTemplates(event) {
 		const accountInfo = getUserAccountInfo(this.store.getState() as any);
 		if (!accountInfo || !accountInfo.token) {
@@ -380,12 +499,12 @@ export class AppWindow {
 
 	private async disableJavascriptInDebugger() {
 		if (this.window) {
-			return this.webView._disableExecution();
+			return this.webView.disableExecution();
 		}
 	}
 	private async handleEnableJavascriptInDebugger() {
 		if (this.webView) {
-			return this.webView._resumeExecution();
+			return this.webView.resumeExecution();
 		}
 	}
 
@@ -395,7 +514,7 @@ export class AppWindow {
 	}
 
 	private async handleQuitAndRestore() {
-		app.relaunch({args: [...process.argv.slice(1), "--open-recorder"]});
+		app.relaunch({ args: [...process.argv.slice(1), "--open-recorder"] });
 		app.quit();
 	}
 
@@ -408,9 +527,13 @@ export class AppWindow {
 		return true;
 	}
 
+	private handleClearRemainingSteps() {
+		this.setRemainingSteps([]);
+	}
+
 	private handleRecorderCanRecordEvents(event: Electron.IpcMainEvent) {
 		const recorderState = getRecorderState(this.store.getState() as any);
-		event.returnValue = recorderState.type !== TRecorderState.PERFORMING_ACTIONS;
+		event.returnValue = ![TRecorderState.PERFORMING_ACTIONS, TRecorderState.CUSTOM_CODE_ON].includes(recorderState.type);
 	}
 
 	private async handleGetUserTests(event: Electron.IpcMainEvent, payload: { projectId: string }) {
@@ -474,6 +597,11 @@ export class AppWindow {
 		await this.resetRecorder();
 	}
 
+	async handleDeleteTest(event: Electron.IpcMainEvent, payload: { testId: string }) {
+		const userAccountInfo = getUserAccountInfo(this.store.getState() as any);
+		const appSettings = getAppSettings(this.store.getState() as any);
+		return CloudCrusher.deleteTest(payload.testId, userAccountInfo.token, appSettings.backendEndPoint, appSettings.frontendEndPoint);
+	}
 	async handleResetTest(event: Electron.IpcMainEvent, payload: { device: iDevice }) {
 		await this.webView.dispose();
 		const recordedSteps = getSavedSteps(this.store.getState() as any);
@@ -487,7 +615,8 @@ export class AppWindow {
 
 	handleSaveStep(event: Electron.IpcMainInvokeEvent, payload: { action: iAction }) {
 		const { action } = payload;
-		if(!this.webView.playwrightInstance) return;
+		console.log("Saving step", payload.action);
+		if (!this.webView.playwrightInstance) return;
 		const elementInfo = this.webView.playwrightInstance.getElementInfoFromUniqueId(action.payload.meta?.uniqueNodeId);
 		if (elementInfo && elementInfo.parentFrameSelectors) {
 			action.payload.meta = {
@@ -578,7 +707,11 @@ export class AppWindow {
 	}
 
 	async handleGetElementAssertInfo(event: Electron.IpcMainEvent, elementInfo: iElementInfo) {
-		try { await this.webView._resumeExecution(); } catch (e) { console.error("Enabling exection failed", e); }
+		try {
+			await this.webView.resumeExecution();
+		} catch (e) {
+			console.error("Enabling exection failed", e);
+		}
 		await new Promise((resolve) => setTimeout(resolve, 500));
 		const elementHandle = this.webView.playwrightInstance.getElementInfoFromUniqueId(elementInfo.uniqueElementId)?.handle;
 		if (!elementHandle) {
@@ -617,7 +750,11 @@ export class AppWindow {
 				});
 			}
 		}
-		try { await this.webView._disableExecution(); } catch(ex) { console.error("Disabling execution failed", ex); }
+		try {
+			await this.webView.disableExecution();
+		} catch (ex) {
+			console.error("Disabling execution failed", ex);
+		}
 		return assertElementInfo;
 	}
 
@@ -684,10 +821,16 @@ export class AppWindow {
 		const projectId = await this.window.webContents.executeJavaScript("window.localStorage.getItem('projectId');");
 		const accountInfo = getUserAccountInfo(this.store.getState() as any);
 
-		if(projectId && accountInfo) {
-			await CloudCrusher.updateTestDirectly(recordedSteps as any, editingSessionMeta.testId, accountInfo.token, appSettings.backendEndPoint, appSettings.frontendEndPoint);
+		if (projectId && accountInfo) {
+			await CloudCrusher.updateTestDirectly(
+				recordedSteps as any,
+				editingSessionMeta.testId,
+				accountInfo.token,
+				appSettings.backendEndPoint,
+				appSettings.frontendEndPoint,
+			);
 		} else {
-		await CloudCrusher.updateTest(recordedSteps as any, editingSessionMeta.testId, appSettings.backendEndPoint, appSettings.frontendEndPoint);
+			await CloudCrusher.updateTest(recordedSteps as any, editingSessionMeta.testId, appSettings.backendEndPoint, appSettings.frontendEndPoint);
 		}
 
 		return 1;
@@ -697,19 +840,41 @@ export class AppWindow {
 		console.log("Got report", payload.buildId);
 		const userAccountInfo = getUserAccountInfo(this.store.getState() as any);
 		const appSettings = getAppSettings(this.store.getState() as any);
-		const buildReport = await CloudCrusher.getBuildReport(payload.buildId, userAccountInfo.token, appSettings.backendEndPoint, appSettings.frontendEndPoint);
+		const buildReport = await CloudCrusher.getBuildReport(
+			payload.buildId,
+			userAccountInfo.token,
+			appSettings.backendEndPoint,
+			appSettings.frontendEndPoint,
+		);
 		console.log("Got this build report", buildReport, payload.buildId);
 		return buildReport;
 	}
 
-	private async handleUpdateCloudTestName(event: Electron.IpcMainEvent, payload: { testId: string, testName: string }) {
+	private async handleUpdateCloudTestName(event: Electron.IpcMainEvent, payload: { testId: string; testName: string }) {
 		const userAccountInfo = getUserAccountInfo(this.store.getState() as any);
 		const appSettings = getAppSettings(this.store.getState() as any);
 		await CloudCrusher.updateTestName(payload.testId, payload.testName, userAccountInfo.token, appSettings.backendEndPoint, appSettings.frontendEndPoint);
 		return true;
 	}
 
-	async handleSaveTest() {
+	async _handleSaveTestCall(event: Electron.IpcMainEvent, payload: { shouldNotRunTest: boolean }) {
+		return this.handleSaveTest(payload.shouldNotRunTest);
+	}
+
+	async handleRunDraftTest(event: Electron.IpcMainEvent, payload: { testId: number }) {
+		const projectId = await this.window.webContents.executeJavaScript("window.localStorage.getItem('projectId');");
+		const appSettings = getAppSettings(this.store.getState() as any);
+		const accountInfo = getUserAccountInfo(this.store.getState() as any);
+		return CloudCrusher.runDraftTest(
+			payload.testId,
+			projectId,
+			app.commandLine.getSwitchValue("token") || accountInfo.token,
+			appSettings.backendEndPoint,
+			appSettings.frontendEndPoint,
+		);
+	}
+
+	async handleSaveTest(shouldNotRunTest: boolean = false) {
 		const recordedSteps = getSavedSteps(this.store.getState() as any);
 		const appSettings = getAppSettings(this.store.getState() as any);
 		const testName = getTestName(this.store.getState() as any);
@@ -726,13 +891,12 @@ export class AppWindow {
 				appSettings.backendEndPoint,
 				appSettings.frontendEndPoint,
 				testName,
+				shouldNotRunTest,
 			);
-
 		} else {
 			const accountInfo = getUserAccountInfo(this.store.getState() as any);
 
-			if(projectId && accountInfo) {
-
+			if (projectId && accountInfo) {
 				testRecord = await CloudCrusher.saveTestDirectly(
 					recordedSteps as any,
 					projectId,
@@ -740,6 +904,7 @@ export class AppWindow {
 					appSettings.backendEndPoint,
 					appSettings.frontendEndPoint,
 					testName,
+					shouldNotRunTest,
 				);
 			} else {
 				await CloudCrusher.saveTest(recordedSteps as any, appSettings.backendEndPoint, appSettings.frontendEndPoint, testName);
@@ -750,28 +915,33 @@ export class AppWindow {
 	}
 
 	async handleVerifyTest(event, payload) {
-		const { shouldAlsoSave } = payload;
+		const { shouldAlsoSave, shouldNotRunTest } = payload;
 		const recordedSteps = getSavedSteps(this.store.getState() as any);
 		await this.resetRecorder(TRecorderState.PERFORMING_ACTIONS);
 
 		await this.handleReplayTestSteps(recordedSteps as any);
 		this.store.dispatch(setIsTestVerified(true));
 		if (shouldAlsoSave) {
-			return this.handleSaveTest();
+			return this.handleSaveTest(!!payload.shouldNotRunTest);
 		}
 	}
 
 	async handleRemoteReplayTest(event: Electron.IpcMainInvokeEvent, payload: { testId: number }) {
+		console.log("Replaying test", Date.now(), !!this.webView);
+
 		await this.resetRecorder();
 		const appSettings = getAppSettings(this.store.getState() as any);
 		const testSteps = await CloudCrusher.getTest(`${payload.testId}`, appSettings.backendEndPoint);
+		console.log("Replaying test --now", Date.now(), !!this.webView);
 
 		return this.handleReplayTestSteps(testSteps);
 	}
 
-	async handleRemoteReplayTestUrlAction(event: Electron.IpcMainInvokeEvent, payload: { testId: number, redirectAfterSuccess: boolean }) {
-		this.sendMessage("url-action", { action: { commandName: "replay-test", args: {testId: payload.testId, redirectAfterSuccess: payload.redirectAfterSuccess} } });
-	};
+	async handleRemoteReplayTestUrlAction(event: Electron.IpcMainInvokeEvent, payload: { testId: number; redirectAfterSuccess: boolean }) {
+		this.sendMessage("url-action", {
+			action: { commandName: "replay-test", args: { testId: payload.testId, redirectAfterSuccess: payload.redirectAfterSuccess } },
+		});
+	}
 
 	private async handleLoginWithGithub(event: Electron.IpcMainInvokeEvent) {
 		const appSettings = getAppSettings(this.store.getState() as any);
@@ -788,27 +958,28 @@ export class AppWindow {
 			if (process.platform === "darwin") {
 				this.window.setTrafficLightPosition({ x: 10, y: 8 });
 			}
+			const winBounds = this.window.getBounds();
+			const screenSize = screen.getDisplayNearestPoint({ x: winBounds.x, y: winBounds.y });
+
 			this.window.setFullScreenable(true);
 			this.window.setResizable(true);
-			return this.window.maximize();
+			this.window.setSize(screenSize.bounds.width, screenSize.bounds.height, false);
+			this.window.setPosition(screenSize.bounds.x, screenSize.bounds.y, false);
 		} else {
 			return new Promise((resolve) => {
-				this.window.unmaximize();
+				// this.window.unmaximize();
 				this.window.setFullScreen(false);
 				setImmediate(async () => {
 					if (process.platform === "darwin") {
-						this.window.setTrafficLightPosition({ x: 30, y: 24 });
+						this.window.setTrafficLightPosition({ x: 10, y: 15 });
 					}
+					this.window.setSize(this.minWidth, this.minHeight, false);
+					this.window.center();
 					this.window.setFullScreenable(false);
 					this.window.setResizable(false);
-					this.window.setSize(this.minWidth, this.minHeight);
-
-					resolve(this.window.center());
+					resolve(true);
 				});
-
-			})
-
-
+			});
 		}
 	}
 
@@ -845,7 +1016,7 @@ export class AppWindow {
 
 				if (browserAction.type === ActionsInTestEnum.SET_DEVICE) {
 					await this.store.dispatch(setDevice(browserAction.payload.meta.device.id));
-					await this.handlePerformAction(null, { action: browserAction, shouldNotSave: false });
+					await this.handlePerformAction(null, { action: browserAction, shouldNotSave: !!(browserAction as any).shouldNotRecord });
 				} else {
 					if (browserAction.type !== ActionsInTestEnum.RUN_AFTER_TEST) {
 						// @Todo: Add support for future browser actions
@@ -859,7 +1030,11 @@ export class AppWindow {
 			for (const savedStep of mainActions) {
 				reaminingSteps.shift();
 
-				await this.handlePerformAction(null, { action: savedStep });
+				await this.handlePerformAction(null, {
+					action: savedStep,
+					shouldNotSave: !!(savedStep as any).shouldNotRecord,
+					shouldNotSleep: !!(savedStep as any).shouldNotRecordc,
+				});
 			}
 			this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
 		} catch (ex) {
@@ -872,7 +1047,7 @@ export class AppWindow {
 
 	private turnOnInspectMode() {
 		this.store.dispatch(setInspectMode(true));
-		this.webView._turnOnInspectMode();
+		this.webView.turnOnInspectMode();
 		// this.webView.webContents.focus();
 	}
 
@@ -880,21 +1055,21 @@ export class AppWindow {
 		this.store.dispatch(setInspectElementSelectorMode(true));
 		this.useAdvancedSelectorPicker = true;
 
-		this.webView._turnOnInspectMode();
-		this.webView._resumeExecution();
+		this.webView.turnOnInspectMode();
+		this.webView.resumeExecution();
 		this.webView.webContents.focus();
 	}
 
 	private turnOffElementSelectorInspectMode() {
 		this.store.dispatch(setInspectElementSelectorMode(false));
 		this.useAdvancedSelectorPicker = false;
-		this.webView._turnOffInspectMode();
+		this.webView.turnOffInspectMode();
 		this.webView.webContents.focus();
 	}
 
 	private turnOffInspectMode() {
 		this.store.dispatch(setInspectMode(false));
-		this.webView._turnOffInspectMode();
+		this.webView.turnOffInspectMode();
 		this.webView.webContents.focus();
 	}
 
@@ -904,18 +1079,47 @@ export class AppWindow {
 		});
 	}
 
+	private async handleExitApp() {
+		console.log("Exitting now...");
+		console.log("Resetting storage");
+		await this.destroy();
+		process.exit();
+	}
+
 	private async handleResetStorage() {
 		console.log("Resetting storage");
 		await this.clearWebViewStorage();
 	}
 
-	private async handlePerformAction(event: Electron.IpcMainInvokeEvent, payload: { action: iAction; shouldNotSave?: boolean; isRecording?: boolean }) {
-		const { action, shouldNotSave } = payload;
+	private waitForWebView() {
+		return new Promise((resolve, reject) => {
+			// Check for webview every 100ms
+			// till 2s
+			const interval = setInterval(() => {
+				if (this.webView) {
+					clearInterval(interval);
+					resolve(true);
+				}
+			}, 100);
+			setTimeout(() => {
+				clearInterval(interval);
+				reject();
+			}, 2000);
+		});
+	}
+	private async handlePerformAction(
+		event: Electron.IpcMainInvokeEvent,
+		payload: { action: iAction; shouldNotSave?: boolean; isRecording?: boolean; shouldNotSleep?: boolean },
+	) {
+		const { action, shouldNotSave, shouldNotSleep } = payload;
 		console.log("Handle perform action called", payload);
+
 		try {
 			switch (action.type) {
 				case ActionsInTestEnum.SET_DEVICE: {
-					this.store.dispatch(setDevice(action.payload.meta.device.id));
+					if (!shouldNotSave) {
+						this.store.dispatch(setDevice(action.payload.meta.device.id));
+					}
 					// Custom implementation here, because we are in the recorder
 					const userAgent = action.payload.meta?.device.userAgentRaw
 						? action.payload.meta?.device.userAgentRaw
@@ -928,6 +1132,7 @@ export class AppWindow {
 					if (!shouldNotSave) {
 						this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
 					}
+					await this.waitForWebView();
 					break;
 				}
 				case ActionsInTestEnum.NAVIGATE_URL: {
@@ -978,7 +1183,9 @@ export class AppWindow {
 					await this.webView.playwrightInstance.runActions([action], !!shouldNotSave);
 					break;
 			}
-			await sleep(1000);
+			if (!shouldNotSleep) {
+				await sleep(250);
+			}
 		} catch (e) {
 			this.store.dispatch(updateRecorderState(TRecorderState.ACTION_REQUIRED, {}));
 			throw e;
@@ -986,6 +1193,13 @@ export class AppWindow {
 	}
 
 	private async resetRecorder(state: TRecorderState = null) {
+		// if (this.webView) {
+		// 	this.webView.dispose();
+		// 	this.webView = undefined;
+		// }
+		if(this.webView && this.webView.playwrightInstance) {
+			this.webView.playwrightInstance.clear();
+		}
 		this.store.dispatch(resetRecorderState(state));
 		this.store.dispatch(clearLogs());
 		if (this.webView) {
@@ -1036,7 +1250,19 @@ export class AppWindow {
 	}
 
 	async handleWebviewAttached(event, webContents) {
-		this.webView = new WebView(this);
+		console.log("Webview is attached", Date.now());
+		this.webView = new WebView(this, async () => {
+			if (this.codeWindow) {
+				this.codeWindow.destroy();
+			}
+			if (this.webView) {
+				this.webView = undefined;
+			}
+			this.store.dispatch(resetRecorder());
+			await this.resetRecorder();
+			this.store.dispatch(setSessionInfoMeta({}));
+			this.handleResetStorage();
+		});
 		this.webView.webContents.on("dom-ready", () => {
 			if (!this.webView.webContents.debugger.isAttached()) {
 				this.webView.initialize();

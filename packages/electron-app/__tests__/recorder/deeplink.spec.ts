@@ -1,27 +1,23 @@
 import playwright, { ElectronApplication, ElementHandle, Page } from "playwright";
 import path, { resolve } from "path";
-import { devices } from "../src/devices";
-import { ActionStatusEnum } from "../../crusher-shared/lib/runnerLog/interface";
-import { ActionsInTestEnum } from "../../crusher-shared/constants/recordedActions";
+import { devices } from "../../src/devices";
+import { ActionStatusEnum } from "../../../crusher-shared/lib/runnerLog/interface";
+import { ActionsInTestEnum } from "../../../crusher-shared/constants/recordedActions";
 import { execSync } from "child_process";
+import {getLaunchOptions} from "../utils";
 
 jest.setTimeout(50000);
 
 const VARIANT = (process.env.VARIANT || "dev").toLocaleLowerCase();
-describe("Recorder boot", () => {
+const describeFun = VARIANT === "release" ? describe : describe.skip;
+describeFun("Recorder boot", () => {
 	let electronApp: ElectronApplication = null;
 	let appWindow: Page = null;
 
 	async function init() {
-		electronApp = await playwright["_electron"].launch({
-			executablePath:
-				VARIANT === "release"
-				? path.resolve(__dirname, "../../../output/crusher-electron-app-release/darwin/mac/Crusher Recorder.app/Contents/MacOS/Crusher Recorder")
-				: path.resolve(__dirname, "../bin/darwin/Electron.app/Contents/MacOS/Electron"),
-			args: VARIANT === "release" ? undefined : [path.resolve(__dirname, "../../../output/crusher-electron-app")],
-
-		});
+		electronApp = await playwright["_electron"].launch(getLaunchOptions());
 		appWindow = await electronApp.firstWindow();
+		await appWindow.waitForURL((url) => { if (!url.toString().includes("splash.html")) return true; });
 
 		const onboarding = await appWindow.$("#onboarding-overlay");
 		if (onboarding) {
@@ -60,7 +56,7 @@ describe("Recorder boot", () => {
 	});
 
 	test("replay test doesn't record two set devices in case of run_after_test", async () => {
-    await execSync('open "crusher://replay-test?testId=3490"');
+    await execSync('open "crusher://replay-test?testId=4019"');
     await new Promise(resolve => setTimeout(resolve, 3000));
 		await waitForRecorderToInitialize();
 

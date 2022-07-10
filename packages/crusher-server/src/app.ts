@@ -1,10 +1,11 @@
 import "reflect-metadata";
+import { setupLogger } from "@crusher-shared/modules/logger";
+
+setupLogger("crusher-server");
 
 require("dotenv").config();
-require("./utils/logger");
 
 import { authorization, getCurrentUserChecker } from "./server/middleware/Authorization";
-import { Logger } from "./utils/logger";
 import * as bodyParser from "body-parser";
 import { useContainer, useExpressServer } from "routing-controllers";
 import * as http from "http";
@@ -25,6 +26,7 @@ import { ProjectMonitoringController } from "@modules/resources/projects/monitor
 import { ProjectEnvironmentController } from "@modules/resources/projects/environments/controller";
 import { IntegrationsController } from "@modules/resources/integrations/controller";
 import { CLIController } from "@modules/resources/cli/controller";
+import { ProxyController } from "@modules/resources/proxy/controller";
 
 Container.set(RedisManager, new RedisManager());
 
@@ -49,6 +51,7 @@ const controllersArr: any = [
 	ProjectEnvironmentController,
 	IntegrationsController,
 	CLIController,
+	ProxyController
 ];
 
 // @TODO: Look into this
@@ -66,12 +69,12 @@ useExpressServer(expressApp, {
 
 process.on("unhandledRejection", (reason, p) => {
 	p.catch((error) => {
-		Logger.fatal("unhandledRejection", `Caught exception: ${reason}\n` + `Exception origin: ${p}`, { error });
+		console.error("unhandledRejection", `Caught exception: ${reason}\n` + `Exception origin: ${p}`, { error });
 	});
 });
 
 process.on("uncaughtException", (err: Error) => {
-	Logger.fatal("uncaughtException", `Caught exception: ${err.message}\n` + `Exception origin: ${err.stack}`);
+	console.error("uncaughtException", `Caught exception: ${err.message}\n` + `Exception origin: ${err.stack}`);
 	process.exit(1);
 });
 
@@ -80,4 +83,4 @@ const port = process.env.PORT || 8000;
 
 httpServer.listen(port);
 
-Logger.info("App", chalk.hex("#ec2e6a").bold(`Starting at ${port}`));
+console.info("App", chalk.hex("#ec2e6a").bold(`Starting at ${port}`));

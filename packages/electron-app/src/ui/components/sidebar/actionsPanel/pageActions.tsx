@@ -3,6 +3,10 @@ import { css } from "@emotion/react";
 import { ActionsList, ActionsListItem } from "./actionsList";
 import { performTakePageScreenshot } from "electron-app/src/ui/commands/perform";
 import { emitShowModal } from "../../modals";
+import { getRecorderState } from "electron-app/src/store/selectors/recorder";
+import { useStore } from "react-redux";
+import { TRecorderState } from "electron-app/src/store/reducers/recorder";
+import { sendSnackBarEvent } from "../../toast";
 
 export enum TTopLevelActionsEnum {
 	VIEWPORT_SCREENSHOT = "TAKE_VIEWPORT_SCREENSHOT",
@@ -37,8 +41,15 @@ const topActionsList = [
 
 const PageActions = ({ className, ...props }: { className?: any }) => {
 	const [currentModal, setCurrentModal] = React.useState(null);
+	const store = useStore();
 
 	const handleActionSelected = (id: TTopLevelActionsEnum) => {
+		const recorderState = getRecorderState(store.getState());
+		if (recorderState.type !== TRecorderState.RECORDING_ACTIONS) {
+			sendSnackBarEvent({ type: "error", message: "A action is in progress. Wait and retry again" });
+			return;
+		}
+
 		switch (id) {
 			case TTopLevelActionsEnum.VIEWPORT_SCREENSHOT:
 				performTakePageScreenshot();

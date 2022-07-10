@@ -18,7 +18,7 @@ async function executeCustomCode(
 	exportsManager: ExportsManager,
 	communcationChannel: CommunicationChannel,
 	sdk: CrusherSdk | null,
-	context: any
+	context: any,
 ) {
 	const customScriptFunction = action.payload.meta.script;
 
@@ -36,10 +36,20 @@ async function executeCustomCode(
 		"expect",
 		"modules",
 		`${customScriptFunction} if(typeof validate === "function") { return validate(crusherSdk, ctx); } return true;`,
-	)(exports, typeof __webpack_require__ === "function" ? __non_webpack_require__ : require, module, __filename, __dirname, crusherSdk, context, expect, modules);
+	)(
+		exports,
+		typeof __webpack_require__ === "function" ? __non_webpack_require__ : require,
+		module,
+		__filename,
+		__dirname,
+		crusherSdk,
+		context,
+		expect,
+		modules,
+	);
 
 	console.log("Result is", result);
-	
+
 	return {
 		customLogMessage: result ? "Executed custom code" : "Error executing custom code",
 		result: result,

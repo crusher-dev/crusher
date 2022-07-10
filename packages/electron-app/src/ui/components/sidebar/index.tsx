@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 import { css } from "@emotion/react";
 import { useSelector } from "react-redux";
-import { getRecorderInfo } from "../../../store/selectors/recorder";
+import { getRecorderInfo, getRecorderState } from "../../../store/selectors/recorder";
 import { Conditional } from "@dyson/components/layouts";
 import { ActionsPanel } from "./actionsPanel";
 import { StepsPanel } from "./steps";
@@ -9,6 +9,7 @@ import { TemplatesModal } from "./steps/templatesModal";
 import { CypressIcon, LinkIcon, PuppeteerIcon, SeleniumIcon } from "../../icons";
 import { Button, Input } from "@dyson/components/atoms";
 import { ModalManager } from "../modals/";
+import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 
 const TEMPlATES = [
 	{ text: "Check for broken links in the page", id: 1 },
@@ -197,6 +198,7 @@ const GettingStartedSidebar = () => {
 
 const Sidebar = ({ className, ...props }: any) => {
 	const recorderInfo = useSelector(getRecorderInfo);
+	const recorderState = useSelector(getRecorderState);
 	const IS_GETTING_STARTED = false;
 
 	return (
@@ -204,10 +206,49 @@ const Sidebar = ({ className, ...props }: any) => {
 			{/* <GettingStartedSidebar /> */}
 			{recorderInfo.device ? (
 				<>
-					<ActionsPanel />
+					{recorderState.type !== TRecorderState.CUSTOM_CODE_ON ? (
+						<ActionsPanel />
+					) : (
+						<div
+							css={css`
+								display: flex;
+								flex: 1;
+								flex-direction: column;
+								padding: 30rem 24rem;
+							`}
+						>
+							<div>
+								<div
+									css={css`
+										font-family: Gilroy;
+										font-style: normal;
+										font-weight: 700;
+										font-size: 15rem;
+									`}
+								>
+									Coding mode enabled
+								</div>
+								<div
+									css={css`
+										margin-top: 4rem;
+										font-family: Gilroy;
+										font-style: normal;
+										font-weight: 400;
+										font-size: 12rem;
+										color: rgba(255, 255, 255, 0.9);
+									`}
+								>
+									No manual actions are allowed.
+								</div>
+							</div>
+						</div>
+					)}
+
 					<StepsPanel />
 				</>
-			): ""}
+			) : (
+				""
+			)}
 			<ModalManager />
 			<TemplatesModal isOpen={false} handleClose={() => {}} />
 		</div>

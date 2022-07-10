@@ -3,7 +3,7 @@ const path = require("path");
 const { execSync } = require("child_process");
 
 const BIN_DIR = path.resolve(__dirname, "../bin");
-const celectronRegExp = new RegExp(/^celectron-v([\d.]+)-(linux|darwin)-x64.zip/);
+const celectronRegExp = new RegExp(/^celectron-v([\d.]+)-(linux|darwin)-(x64|arm64).zip/);
 
 function extractZipIfNotThere(binaryZipInfoArr) {
 	const platforms = Object.keys(binaryZipInfoArr);
@@ -35,7 +35,7 @@ function init() {
 	const binaryZipEntries = entries.filter((entry) => entry.isFile() && entry.name.match(celectronRegExp));
 	const binaryZipsInfo = binaryZipEntries.reduce((prev, zipEntry) => {
 		const regexGroups = zipEntry.name.match(celectronRegExp);
-		const platformName = regexGroups[2];
+		const platformName = regexGroups[2] + "-" + regexGroups[3];
 		return { ...prev, [platformName]: { path: path.resolve(BIN_DIR, regexGroups[0]), version: regexGroups[1], platform: platformName } };
 	}, {});
 

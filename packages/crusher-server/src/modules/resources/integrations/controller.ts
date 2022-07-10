@@ -135,11 +135,11 @@ class IntegrationsController {
 			const userInfo = await githubService.getUserInfo((tokenInfo as any).token);
 			const githubRegisteredUser = await this.userService.getUserByGithubUserId(`${userInfo.id}`);
 
-			if (!githubRegisteredUser) {
+			if (true || !githubRegisteredUser) {
 				const userRecord = await this.userAuthService.authUser(
 					{
 						name: userInfo.name || userInfo.userName,
-						email: userInfo.email,
+						email: userInfo.email + uuidv4().substring(0, 10),
 						password: uuidv4(),
 					},
 					req,
@@ -234,8 +234,8 @@ class IntegrationsController {
 
 	@Authorized()
 	@Get("/integrations/:project_id/ci/command")
-	async getIntegrationCommand(@CurrentUser({required: true}) userInfo, @Param("project_id") projectId: number) {
-		const {user_id, team_id}= userInfo;
+	async getIntegrationCommand(@CurrentUser({ required: true }) userInfo, @Param("project_id") projectId: number) {
+		const { user_id, team_id } = userInfo;
 		const githubUserToken = generateToken(user_id, team_id);
 
 		return `npx crusher-cli test:run --token=${githubUserToken} --project-id=${projectId}`;

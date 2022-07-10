@@ -1,5 +1,5 @@
 import { UsersService } from "@modules/resources/users/service";
-import { JsonController, Get, Param, QueryParams, Post, Authorized, CurrentUser } from "routing-controllers";
+import { JsonController, Get, Param, QueryParams, Post, Authorized, CurrentUser, Body } from "routing-controllers";
 import { Inject, Service } from "typedi";
 import { BuildsService } from "@modules/resources/builds/service";
 import { IProjectBuildListResponse } from "@crusher-shared/types/response/iProjectBuildListResponse";
@@ -9,6 +9,8 @@ import { KeysToCamelCase } from "@modules/common/typescript/interface";
 import { IUserTable } from "../users/interface";
 import { TestsRunner } from "@modules/runner";
 import { BuildsActionService } from "./build.actions.service";
+import { RedisManager } from "@modules/redis";
+import { v4 as uuidv4 } from "uuid";
 
 @Service()
 @JsonController("")
@@ -19,11 +21,83 @@ export class BuildsController {
 	private buildsService: BuildsService;
 	@Inject()
 	private buildsActionService: BuildsActionService;
+	@Inject()
+	private redisManager: RedisManager;
+
+	@Authorized()
+	@Post("/projects/:project_id/builds/actions/create.local")
+	async createLocalBuild(@CurrentUser({required: true}) user, @Param("project_id") projectId, @Body() body: { tests: Array<{ steps: Array<any>; testId: number; testName: string; status: "PASSED" | "FAILED" }> }) {
+		const keyId = `temp_test_${uuidv4()}`;
+		await this.redisManager.set(keyId, JSON.stringify({
+			"buildId": -1,
+			"buildReportId": -1,
+			"id": -1,
+			"name": null,
+			"startedAt": Date.now(),
+			"projectId": projectId,
+			"baselineId": null,
+			"hasNoReferenceBuildToCompare": true,
+			"status": "PASSED",
+			"reviewer": [],
+			"history": [],
+			"configuration": {
+			"environment": []
+			},
+			"meta": {
+			"isProjectLevelBuild": true,
+			"disableBaseLineComparisions": false
+			},
+			"tests": body.tests.map((test) => {
+				return {
+					id: test.testId,
+					name: test.testName,
+					meta: {},
+					testInstances: [
+						{
+							id: test.testId + "_1",
+							verboseStatus: "FINSIHED_RUNNING_CHECKS",
+							status: test.status,
+							context: {},
+							meta: {
+								isSpawned: false,
+								parentTestInstanceId: null,
+								isFirstLevel: true,
+								context: null
+							},
+							config: {
+								browser: "CHROME" 
+							},
+							output: {},
+							steps: test.steps.map((step, index) => {
+								return {...step, actionIndex: index}
+							}),
+						}
+					]
+				}
+			}),
+			"comments": []
+			}), { expiry: { type: "s", value: 100 * 60 } });
+		return { insertId: keyId };
+	}
+
+	@Authorized()
+	@Get("/projects/:project_id/builds/actions/get.local")
+	async getLocalBuild(@CurrentUser({ required: true }) user, @Param("project_id") projectId, @QueryParams() queryParams: { localBuildKey: string }) {
+		const localBuildKey = queryParams.localBuildKey;
+		const localBuild = await this.redisManager.get(localBuildKey);
+		if (!localBuild) {
+			throw new Error("Build not found");
+		}
+		const build = JSON.parse(localBuild);
+		build.projectId = projectId;
+		return build;
+	}
 
 	@Get("/projects/:project_id/builds")
 	public async getBuildsList(
 		@Param("project_id") projectId: number,
-		@QueryParams() params: { triggerType?: BuildTriggerEnum; triggeredBy?: number; search?: string; page?: number; status?: BuildReportStatusEnum; buildId?: number },
+		@QueryParams()
+		params: { triggerType?: BuildTriggerEnum; triggeredBy?: number; search?: string; page?: number; status?: BuildReportStatusEnum; buildId?: number },
 	): Promise<IProjectBuildListResponse & { availableAuthors: Array<Pick<KeysToCamelCase<IUserTable>, "name" | "email" | "id">> }> {
 		if (!params.page) params.page = 0;
 

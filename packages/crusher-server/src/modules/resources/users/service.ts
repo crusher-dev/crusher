@@ -56,7 +56,7 @@ class UsersService {
 
 	async setupInitialUserWorkspace(
 		user: Omit<ICreateUserPayload, "password" | "uuid"> & { id: number; teamId?: number; projectId?: number },
-	): Promise<{ userId: number; teamId: number; projectId: number }> {
+	): Promise<{ userId: number; teamId: number; projectId?: number }> {
 		const stripeCustomerId = this.stripeManager.isAvailable() ? await this.stripeManager.createCustomer(`${user.name}`, user.email) : null;
 
 		let userTeamId = user.teamId;
@@ -80,21 +80,21 @@ class UsersService {
 		});
 
 		// Create and setup project
-		let userProjectId = user.projectId;
-		if (!userProjectId) {
-			const projectRecord = await this.projectsService.createProject({
-				name: `Default`,
-				teamId: userTeamId,
-			});
-			userProjectId = projectRecord.insertId;
-		}
-		await this.userProjectRolesService.create({
-			userId: user.id,
-			projectId: userProjectId,
-			role: UserProjectRoleEnum.ADMIN,
-		});
+		// let userProjectId = user.projectId;
+		// if (!userProjectId) {
+		// 	const projectRecord = await this.projectsService.createProject({
+		// 		name: `Default`,
+		// 		teamId: userTeamId,
+		// 	});
+		// 	userProjectId = projectRecord.insertId;
+		// }
+		// await this.userProjectRolesService.create({
+		// 	userId: user.id,
+		// 	projectId: userProjectId,
+		// 	role: UserProjectRoleEnum.ADMIN,
+		// });
 
-		return { userId: user.id, teamId: userTeamId, projectId: userProjectId };
+		return { userId: user.id, teamId: userTeamId };
 	}
 
 	async createUserRecord(user: Omit<ICreateUserPayload, "uuid">): Promise<{ insertId: number }> {
@@ -201,9 +201,10 @@ class UsersService {
 
 	@CamelizeResponse()
 	async getUsersInProject(projectId: number): Promise<Array<KeysToCamelCase<IUserTable>>> {
-		return this.dbManager.fetchAllRows("SELECT users.* FROM public.users, public.user_project_roles WHERE project_id = ? AND users.id = user_project_roles.user_id", [
-			projectId,
-		]);
+		return this.dbManager.fetchAllRows(
+			"SELECT users.* FROM public.users, public.user_project_roles WHERE project_id = ? AND users.id = user_project_roles.user_id",
+			[projectId],
+		);
 	}
 
 	async setGithubUserId(githubUserId: string, userId: number) {

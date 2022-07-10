@@ -7,7 +7,7 @@ export type InputProps = {
 	/**
 	 * Size of the component
 	 */
-	size?: "small" |  "tiny" | "x-small" | "small" | "medium" | "big-medium" | "large" | "x-large";
+	size?: "small" | "tiny" | "x-small" | "small" | "medium" | "big-medium" | "large" | "x-large";
 
 	/**
 	 * Is error
@@ -38,19 +38,8 @@ export type InputProps = {
 /**
  * Unified button component for Dyson UI system
  */
- export const Input: React.FC<InputProps> = React.forwardRef((mainProps, ref) => {
-	const {
-		initialValue = "",
-		forwardRef,
-		size = "large",
-		className,
-		rightIcon,
-		leftIcon,
-		isError = false,
-		onReturn,
-		children,
-		...props
-	} = mainProps;
+export const Input: React.FC<InputProps> = React.forwardRef((mainProps, ref) => {
+	const { initialValue = "", forwardRef, size = "large", className, rightIcon, leftIcon, isError = false, onReturn, children, ...props } = mainProps;
 	ref = ref ? ref : useRef<HTMLInputElement>(null);
 
 	const onKeyUp = useCallback(
@@ -138,31 +127,30 @@ const errorState = css`
 `;
 
 function getSizePropery(size: InputProps["size"]) {
-
 	switch (size) {
 		case "small":
-			return { height: 26, fontSize: 12};
+			return { height: 26, fontSize: 12 };
 			break;
 		case "tiny":
-			return { height: 26, fontSize: 12};
+			return { height: 26, fontSize: 12 };
 			break;
 		case "x-small":
-			return { height: 28, fontSize: 12.5,};
+			return { height: 28, fontSize: 12.5 };
 			break;
 		case "small":
-			return { height: 34, fontSize: 14};
+			return { height: 34, fontSize: 14 };
 			break;
 		case "medium":
 			return { height: 38, fontSize: 14 };
 			break;
 		case "big-medium":
-			return { height: 42, fontSize: 14};
+			return { height: 42, fontSize: 14 };
 			break;
 		case "large":
-			return { height: 46, fontSize: 15};
+			return { height: 46, fontSize: 15 };
 			break;
 		case "x-large":
-			return { height: 54, fontSize: 16};
+			return { height: 54, fontSize: 16 };
 			break;
 		default:
 			return { height: 24, fontSize: 12, fontWeight: 500 };

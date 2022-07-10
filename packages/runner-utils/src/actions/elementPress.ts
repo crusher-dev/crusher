@@ -7,13 +7,18 @@ import template from "@crusher-shared/utils/templateString";
 import { IGlobalManager } from "@crusher-shared/lib/globals/interface";
 import { CommunicationChannel } from "../functions/communicationChannel";
 
-async function pressKey(element: Locator, workingSelector: any, action: iAction, 	globals: IGlobalManager,
+async function pressKey(
+	element: Locator,
+	workingSelector: any,
+	action: iAction,
+	globals: IGlobalManager,
 	storageManager: StorageManager,
 	exportsManager: ExportsManager,
 	communicationChannel: CommunicationChannel,
 	sdk: CrusherSdk | null,
-	context: any) {
-	const keyToBePressed = template(action.payload.meta.value, {ctx: context || {}});
+	context: any,
+) {
+	const keyToBePressed = template(action.payload.meta.value, { ctx: context || {} });
 	await element.press(keyToBePressed);
 }
 

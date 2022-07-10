@@ -36,14 +36,14 @@ const ACTION_DESCRIPTIONS = {
 		return `Executing custom code`;
 	},
 	[ACTIONS_IN_TEST.RUN_TEMPLATE]: (meta: ActionMeta) => {
-		return 'Running a template with series of steps';
+		return "Running a template with series of steps";
 	},
 	[ACTIONS_IN_TEST.RELOAD_PAGE]: () => {
-		return 'Reloading page';
+		return "Reloading page";
 	},
 	[ACTIONS_IN_TEST.BACK_PAGE]: () => {
-		return 'Going back in history';
-	}
+		return "Going back in history";
+	},
 };
 
 export { ACTION_DESCRIPTIONS };

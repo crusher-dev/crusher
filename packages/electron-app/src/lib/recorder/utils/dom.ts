@@ -115,18 +115,23 @@ export function openLinkInNewTab(url: string) {
 function getElementTagNameLowerCase(element: HTMLElement) {
 	return element.tagName.toLowerCase();
 }
-export function getElementDescription(node: Node) : string | null {
+export function getElementDescription(node: Node): string | null {
 	if (node.nodeType !== node.ELEMENT_NODE) {
 		return null;
 	}
 	const htmlElement = node as HTMLElement;
 	const tagNameNormalized = getElementTagNameLowerCase(htmlElement);
 	const idStep = htmlElement.id ? `#${htmlElement.id}` : null;
-	if(idStep) {
+	if (idStep) {
 		return `${tagNameNormalized}${idStep}`;
 	}
-	const classStepsArr = htmlElement.classList.length ? htmlElement.classList.toString().split(" ").map(c => `.${c}`) : null;
-	if(classStepsArr) {
+	const classStepsArr = htmlElement.classList.length
+		? htmlElement.classList
+				.toString()
+				.split(" ")
+				.map((c) => `.${c}`)
+		: null;
+	if (classStepsArr) {
 		return `${tagNameNormalized}${classStepsArr.join("")}`;
 	}
 

@@ -1,5 +1,6 @@
 import playwright, { ElectronApplication, Page } from "playwright";
 import path from "path";
+import {getLaunchOptions} from "../utils";
 
 jest.setTimeout(320000);
 const VARIANT = (process.env.VARIANT || "dev").toLocaleLowerCase();
@@ -9,14 +10,11 @@ describe("Onboarding", () => {
 	let appWindow: Page = null;
 
 	async function init() {
-		electronApp = await playwright["_electron"].launch({
-			executablePath:
-			VARIANT === "release"
-			? path.resolve(__dirname, "../../../output/crusher-electron-app-release/darwin/mac/Crusher Recorder.app/Contents/MacOS/Crusher Recorder")
-			: path.resolve(__dirname, "../bin/darwin/Electron.app/Contents/MacOS/Electron"),
-			args: VARIANT === "release" ? undefined : [path.resolve(__dirname, "../../../output/crusher-electron-app")],
-		});
+		electronApp = await playwright["_electron"].launch(getLaunchOptions());
+
 		appWindow = await electronApp.firstWindow();
+		await appWindow.waitForURL((url) => { if (!url.toString().includes("splash.html")) return true; });
+
 		await appWindow.waitForLoadState();
 		await new Promise((resolve) => setTimeout(resolve, 100));
 	}

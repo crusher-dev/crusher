@@ -13,7 +13,7 @@ class QueueManager {
 
 	getFlowProducer() {
 		if (!this.flowProducer) {
-			this.flowProducer = new FlowProducer({ connection: this.redisManager.redisClient as any } );
+			this.flowProducer = new FlowProducer({ connection: this.redisManager.redisClient as any });
 		}
 
 		return this.flowProducer;

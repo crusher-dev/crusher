@@ -8,7 +8,7 @@ import { markTestFail } from "../utils/helper";
 async function assertElementAttributes(
 	element: Locator,
 	assertions: Array<iAssertionRow>,
-	context: any
+	context: any,
 ): Promise<{ hasPassed: boolean; logs: Array<{ status: "FAILED" | "DONE"; message: string; meta: any }> }> {
 	let hasPassed = true;
 	const logs = [];
@@ -87,12 +87,24 @@ async function assertElementAttributes(
 	return { hasPassed, logs };
 }
 
-async function runAssertionOnElement(element: Locator, workingSelector: any, action: iAction, globals, storageManager, exportManager, communicationChannel, _, context) {
+async function runAssertionOnElement(
+	element: Locator,
+	workingSelector: any,
+	action: iAction,
+	globals,
+	storageManager,
+	exportManager,
+	communicationChannel,
+	_,
+	context,
+) {
 	const validationRows = action.payload.meta.validations;
 	try {
 		await (await element.elementHandle()).waitForElementState("visible");
-	} catch(ex) {
-		markTestFail(`Element ${action.payload.meta && action.payload.meta.elementDescription ? action.payload.meta.elementDescription + " " : ""}is not visible`);
+	} catch (ex) {
+		markTestFail(
+			`Element ${action.payload.meta && action.payload.meta.elementDescription ? action.payload.meta.elementDescription + " " : ""}is not visible`,
+		);
 	}
 	const actionResult = await assertElementAttributes(element, validationRows, context);
 
@@ -110,7 +122,7 @@ module.exports = {
 	name: ActionsInTestEnum.ASSERT_ELEMENT,
 	description: "Assertions on element",
 	actionDescriber: (action: iAction) => {
-		if(!action.payload.meta || !action.payload.meta.elementDescription) return "Assert element";
+		if (!action.payload.meta || !action.payload.meta.elementDescription) return "Assert element";
 
 		return `Assert [${action.payload.meta.elementDescription}]`;
 	},

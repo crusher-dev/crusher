@@ -8,15 +8,19 @@ import { IGlobalManager } from "@crusher-shared/lib/globals/interface";
 import template from "@crusher-shared/utils/templateString";
 import { CommunicationChannel } from "../functions/communicationChannel";
 
-async function waitForNavigation(page: Page, action: iAction, globals: IGlobalManager,
+async function waitForNavigation(
+	page: Page,
+	action: iAction,
+	globals: IGlobalManager,
 	storageManager: StorageManager,
 	exportsManager: ExportsManager,
 	communicationChannel: CommunicationChannel,
 	sdk: CrusherSdk | null,
-	context: any) {
+	context: any,
+) {
 	console.log("Waiting for navigation now...");
 	if (action.payload.meta?.value) {
-		let url = template(action.payload.meta?.value, {ctx: context || {}});
+		let url = template(action.payload.meta?.value, { ctx: context || {} });
 		await new Promise((resolve, reject) => {
 			let time = 0;
 
@@ -42,7 +46,7 @@ async function waitForNavigation(page: Page, action: iAction, globals: IGlobalMa
 				}
 				time += 500;
 			}, 500);
-		})
+		});
 	} else {
 		await sleep(2000);
 	}

@@ -22,17 +22,10 @@ export const TestIcon = (props) => (
 );
 
 export const EditIcon = (props) => (
-	<svg
-		width={12}
-		height={12}
-		fill="none"
-		xmlns="http://www.w3.org/2000/svg"
-		{...props}
-	>
+	<svg width={12} height={12} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 		<path
 			d="m1.407 7.733-.633 2.734a.686.686 0 0 0 .666.833.715.715 0 0 0 .144 0l2.75-.633 5.28-5.26-2.947-2.94-5.26 5.266ZM11.272 2.773 9.305.807a.69.69 0 0 0-.973 0L7.238 1.9l2.944 2.943 1.093-1.093a.69.69 0 0 0-.003-.977Z"
 			fill="#636465"
-
 		/>
 	</svg>
-)
+);

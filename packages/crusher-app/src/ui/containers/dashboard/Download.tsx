@@ -12,7 +12,6 @@ import { RELEASE_API } from "@constants/api";
 import { Button } from "dyson/src/components/atoms";
 import { AppleSVG } from "@svg/dashboard";
 
-
 export function DownloadButton(props) {
 	const osType = useMemo(getOSType, []);
 	const label = OS_INFO[osType]?.label;
@@ -72,7 +71,7 @@ export function DownloadButton(props) {
 
 	return (
 		<div className={"flex flex-col items-center"} {...props}>
-				<div>Recorder is only available in dmg and dev :(</div>
+			<div>Recorder is only available in dmg and dev :(</div>
 		</div>
 	);
 }
@@ -84,7 +83,11 @@ export function Download({ onClose }: { onClose: Function }) {
 	return (
 		<OverlayTransparent onClose={onClose}>
 			<CenterLayout>
-				<CreateTestPrompt css={ css`margin-top: -160rem;`} />
+				<CreateTestPrompt
+					css={css`
+						margin-top: -160rem;
+					`}
+				/>
 			</CenterLayout>
 		</OverlayTransparent>
 	);

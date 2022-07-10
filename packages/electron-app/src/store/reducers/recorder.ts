@@ -1,5 +1,24 @@
 import { AnyAction } from "redux";
-import { DELETE_RECORDED_STEPS, MARK_RECORDED_STEPS_OPTIONAL, RECORD_STEP, RESET_RECORDER, RESET_RECORDER_STATE, SET_DEVICE, SET_INSPECT_ELEMENT_SELECTOR_MODE, SET_INSPECT_MODE, SET_IS_TEST_VERIFIED, SET_IS_WEBVIEW_INITIALIZED, SET_RECORDER_CRASH_STATE, SET_SELECTED_ELEMENT, SET_SITE_URL, SET_STATUS_BAR_VISIBILITY, SET_TEST_NAME, UPDATE_CURRENT_RUNNING_STEP_STATUS, UPDATE_RECORDED_STEP, UPDATE_RECORDER_STATE } from "../actions/recorder";
+import {
+	DELETE_RECORDED_STEPS,
+	MARK_RECORDED_STEPS_OPTIONAL,
+	RECORD_STEP,
+	RESET_RECORDER,
+	RESET_RECORDER_STATE,
+	SET_DEVICE,
+	SET_INSPECT_ELEMENT_SELECTOR_MODE,
+	SET_INSPECT_MODE,
+	SET_IS_TEST_VERIFIED,
+	SET_IS_WEBVIEW_INITIALIZED,
+	SET_RECORDER_CRASH_STATE,
+	SET_SELECTED_ELEMENT,
+	SET_SITE_URL,
+	SET_STATUS_BAR_VISIBILITY,
+	SET_TEST_NAME,
+	UPDATE_CURRENT_RUNNING_STEP_STATUS,
+	UPDATE_RECORDED_STEP,
+	UPDATE_RECORDER_STATE,
+} from "../actions/recorder";
 import { iSelectorInfo } from "@shared/types/selectorInfo";
 import { iAction } from "@shared/types/action";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
@@ -16,10 +35,11 @@ export enum TRecorderState {
 	REPLAYING = "REPLAYING", // <- Internal State (Replay all test actions in a test)
 
 	PERFORMING_ACTIONS = "PERFORMING_ACTIONS",
+	CUSTOM_CODE_ON = "CUSTOM_CODE_ON",
 	PERFORMING_RECORDER_ACTIONS = "PERFORMING_RECORDER_ACTIONS",
 
 	ACTION_REQUIRED = "ACTION_REQURED",
-};
+}
 
 export enum TRecorderCrashState {
 	CRASHED = "CRASHED",
@@ -44,7 +64,7 @@ interface IReplayingStatePayload {
 
 interface iActionRequiredStatePayload {
 	actionId: string;
-};
+}
 
 export interface iElementInfo {
 	// Unique id assigned by devtools
@@ -57,10 +77,7 @@ export interface iElementInfo {
 	dependentHovers: Array<Omit<iElementInfo, "dependentHovers">>;
 }
 
-
-export interface iSettings {
-
-}
+export interface iSettings {}
 
 interface IRecorderReducer {
 	currentUrl: string | null;
@@ -68,17 +85,20 @@ interface IRecorderReducer {
 	testName: string | null;
 	isWebViewInitialized: boolean;
 
-	state: {type: TRecorderState, payload: INavigatingStatePayload | IRecordingActionStatePayload | IReplayingStatePayload | iActionRequiredStatePayload | null };
-	crashState: {type: TRecorderCrashState, payload: any} | null;
+	state: {
+		type: TRecorderState;
+		payload: INavigatingStatePayload | IRecordingActionStatePayload | IReplayingStatePayload | iActionRequiredStatePayload | null;
+	};
+	crashState: { type: TRecorderCrashState; payload: any } | null;
 	isInspectModeOn: boolean;
 	isInspectElementSelectorModeOn: boolean;
 
 	selectedElement: iElementInfo | null;
-	savedSteps: Array<Omit<iAction, "status"> & { status: ActionStatusEnum; time: number; }>;
+	savedSteps: Array<Omit<iAction, "status"> & { status: ActionStatusEnum; time: number }>;
 
 	isVerified: boolean;
 	showStatusBar: boolean;
-};
+}
 
 const initialState: IRecorderReducer = {
 	currentUrl: null,
@@ -94,7 +114,7 @@ const initialState: IRecorderReducer = {
 	isVerified: false,
 	crashState: null,
 
-	showStatusBar: false,
+	showStatusBar: true,
 };
 
 const recorderReducer = (state: IRecorderReducer = initialState, action: AnyAction) => {
@@ -112,31 +132,32 @@ const recorderReducer = (state: IRecorderReducer = initialState, action: AnyActi
 		case SET_DEVICE:
 			return {
 				...state,
-				device: action.payload.device
-			}
+				device: action.payload.device,
+			};
 		case SET_SITE_URL:
 			return {
 				...state,
-				currentUrl: action.payload.url
-			}
+				currentUrl: action.payload.url,
+			};
 		case SET_INSPECT_MODE:
 			return {
 				...state,
-				isInspectModeOn: action.payload.isOn
-			}
+				isInspectModeOn: action.payload.isOn,
+			};
 		case SET_INSPECT_ELEMENT_SELECTOR_MODE:
 			return {
 				...state,
-				isInspectElementSelectorModeOn: action.payload.isOn
-			}
+				isInspectElementSelectorModeOn: action.payload.isOn,
+			};
 		case SET_SELECTED_ELEMENT:
 			return {
 				...state,
 				selectedElement: action.payload.element,
-			}
+			};
 		case RECORD_STEP:
 			const lastStep = state.savedSteps.length > 1 ? state.savedSteps[state.savedSteps.length - 1] : null;
-			if(action.type === ActionsInTestEnum.WAIT_FOR_NAVIGATION) { return state;
+			if (action.type === ActionsInTestEnum.WAIT_FOR_NAVIGATION) {
+				return state;
 			}
 			return {
 				...state,
@@ -148,44 +169,44 @@ const recorderReducer = (state: IRecorderReducer = initialState, action: AnyActi
 						...action.payload.step,
 						status: action.payload.status,
 						time: action.payload.time,
-					}
+					},
 				],
-			}
+			};
 		case UPDATE_CURRENT_RUNNING_STEP_STATUS: {
 			let savedSteps = [...state.savedSteps];
 			savedSteps[savedSteps.length - 1].status = action.payload.status;
 
 			return {
 				...state,
-				savedSteps: savedSteps
-			}
+				savedSteps: savedSteps,
+			};
 		}
 		case SET_RECORDER_CRASH_STATE:
 			return {
 				...state,
-				crashState: action.payload
-			}
+				crashState: action.payload,
+			};
 		case RESET_RECORDER_STATE:
 			return {
 				...state,
-				state: action.payload.state ||  initialState.state,
+				state: action.payload.state || initialState.state,
 				isInspectModeOn: initialState.isInspectModeOn,
 
 				selectedElement: initialState.isInspectModeOn,
 				savedSteps: initialState.savedSteps,
 
 				isVerified: initialState.isVerified,
-			}
+			};
 		case UPDATE_RECORDER_STATE:
 			return {
 				...state,
-				state: { type: action.payload.state, payload: action.payload.payload }
-			}
+				state: { type: action.payload.state, payload: action.payload.payload },
+			};
 		case SET_IS_TEST_VERIFIED:
 			return {
 				...state,
-				isVerified: action.payload.isTestVerified
-			}
+				isVerified: action.payload.isTestVerified,
+			};
 		case DELETE_RECORDED_STEPS: {
 			let savedSteps = state.savedSteps.filter((step, index) => !action.payload.indexArr.includes(index));
 			return {
@@ -196,7 +217,7 @@ const recorderReducer = (state: IRecorderReducer = initialState, action: AnyActi
 		}
 		case MARK_RECORDED_STEPS_OPTIONAL: {
 			let savedSteps = state.savedSteps.map((step, index) => {
-				if(action.payload.indexArr.includes(index)) {
+				if (action.payload.indexArr.includes(index)) {
 					step.payload.isOptional = true;
 				}
 				return step;
@@ -210,8 +231,8 @@ const recorderReducer = (state: IRecorderReducer = initialState, action: AnyActi
 		case SET_IS_WEBVIEW_INITIALIZED: {
 			return {
 				...state,
-				isWebViewInitialized: action.payload.isInitialized
-			}
+				isWebViewInitialized: action.payload.isInitialized,
+			};
 		}
 		case RESET_RECORDER: {
 			return initialState;
@@ -223,17 +244,16 @@ const recorderReducer = (state: IRecorderReducer = initialState, action: AnyActi
 		case SET_STATUS_BAR_VISIBILITY:
 			return {
 				...state,
-				showStatusBar: action.payload.isVisible
-			}
+				showStatusBar: action.payload.isVisible,
+			};
 		case SET_TEST_NAME:
 			return {
 				...state,
-				testName: action.payload.testName
-			}
+				testName: action.payload.testName,
+			};
 		default:
 			return state;
 	}
 };
 
-export { IRecorderReducer, recorderReducer};
-
+export { IRecorderReducer, recorderReducer };

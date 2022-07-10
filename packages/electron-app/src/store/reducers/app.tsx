@@ -2,7 +2,15 @@ import { AnyAction } from "redux";
 import {} from "../actions/recorder";
 import { iSelectorInfo } from "@shared/types/selectorInfo";
 import { iAction } from "@shared/types/action";
-import { RESET_APP_SESSION, SET_SESSION_META, SET_SETTINGS, SET_SHOW_SHOULD_ONBOARDING_OVERLAY, SET_USER_ACCOUNT_INFO } from "../actions/app";
+import {
+	RESET_APP_SESSION,
+	SET_PROXY_INITIALIZING,
+	SET_PROXY_STATE,
+	SET_SESSION_META,
+	SET_SETTINGS,
+	SET_SHOW_SHOULD_ONBOARDING_OVERLAY,
+	SET_USER_ACCOUNT_INFO,
+} from "../actions/app";
 
 export interface iSettings {
 	backendEndPoint: string;
@@ -16,12 +24,21 @@ export interface ISessionMeta {
 	remainingSteps?: Array<iAction> | undefined;
 }
 
+export interface IProxyState {
+	[name: string]: {
+		tunnel: string;
+		intercept: string;
+	};
+}
+
 interface IAppReducer {
 	settings: iSettings;
 	shouldShowOnboardingOverlay: boolean;
 
 	sessionMeta: ISessionMeta;
 	accountInfo: any;
+	proxy: IProxyState | null;
+	proxyIsInitializing: boolean;
 }
 
 const initialState: IAppReducer = {
@@ -29,9 +46,11 @@ const initialState: IAppReducer = {
 	shouldShowOnboardingOverlay: true,
 	sessionMeta: {},
 	accountInfo: null,
+	proxy: {},
+	proxyIsInitializing: false,
 };
 
-const appReducer = (state: IAppReducer = initialState, action: AnyAction) => {
+const appReducer = (state: IAppReducer = initialState, action: AnyAction): IAppReducer => {
 	switch (action.type) {
 		case SET_SHOW_SHOULD_ONBOARDING_OVERLAY:
 			return {
@@ -52,6 +71,16 @@ const appReducer = (state: IAppReducer = initialState, action: AnyAction) => {
 			return {
 				...state,
 				settings: action.payload.settings,
+			};
+		case SET_PROXY_STATE:
+			return {
+				...state,
+				proxy: action.payload.proxyState,
+			};
+		case SET_PROXY_INITIALIZING:
+			return {
+				...state,
+				proxyIsInitializing: action.payload.isInitializing,
 			};
 		default:
 			return state;

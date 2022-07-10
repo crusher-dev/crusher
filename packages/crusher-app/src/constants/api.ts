@@ -16,6 +16,19 @@ export const getTestListAPI = (projectId: number, otherFilters: any = {}) => {
 
 	return resolvePathToBackendURI(`/projects/${projectId}/tests?${urlParamString}`);
 };
+
+export const getTestsAPI = (otherFilters: any = {}) => {
+	if (!otherFilters.page) {
+		otherFilters.page = 0;
+	}
+
+	const filteredObj = pickBy(otherFilters, (v) => v !== null && v !== undefined);
+	const urlParams = new URLSearchParams(filteredObj);
+	const urlParamString = urlParams.toString();
+
+	return resolvePathToBackendURI(`/tests?${urlParamString}`);
+};
+
 export const getBuildsList = (projectId: string, triggerType: BuildTriggerEnum, otherFilters = {}) => {
 	const filteredObj = pickBy(otherFilters, (v) => v !== null && v !== undefined);
 	const urlParams = new URLSearchParams(filteredObj);
@@ -25,6 +38,7 @@ export const getBuildsList = (projectId: string, triggerType: BuildTriggerEnum, 
 };
 
 export const getRunTestApi = (projectId: number) => resolvePathToBackendURI(`/projects/${projectId}/tests/actions/run`);
+export const getLocalBuidlReportApi = (id: string) => resolvePathToBackendURI(`/projects/22/builds/actions/get.local?localBuildKey=${id}`);
 export const getBuildReportAPI = (buildId: string) => resolvePathToBackendURI(`/builds/${buildId}/report`);
 export const RELEASE_API = resolvePathToBackendURI("/release/info");
 

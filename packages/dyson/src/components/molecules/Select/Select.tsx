@@ -100,7 +100,7 @@ export const SelectBox: React.FC<TSelectBoxProps> = ({
 	}, [selected]);
 
 	useEffect(() => {
-		if(selected && selected.length) {
+		if (selected && selected.length) {
 			setFilterText("");
 		}
 	}, [selected]);
@@ -138,7 +138,15 @@ export const SelectBox: React.FC<TSelectBoxProps> = ({
 					onInput={handleFilterTextChange}
 					type={"text"}
 					disabled={isInputDisabled}
-					css={[inputBoxCSS, selected !== null && selected.length ? selectedValueCSS : null, isInputDisabled ? css`pointer-events: none;` : null]}
+					css={[
+						inputBoxCSS,
+						selected !== null && selected.length ? selectedValueCSS : null,
+						isInputDisabled
+							? css`
+									pointer-events: none;
+							  `
+							: null,
+					]}
 					value={filterText}
 					className={"selectBox__input selectBox__value"}
 					placeholder={selectedText}
@@ -187,7 +195,7 @@ const DropdownBox = ({ children, selectContainerRef, dropdownCSS, className, onS
 	});
 
 	React.useEffect(() => {
-		if(className) {
+		if (className) {
 			container.classList.add(className);
 		}
 		container.style.position = "absolute";
@@ -213,16 +221,16 @@ const DropdownBox = ({ children, selectContainerRef, dropdownCSS, className, onS
 		}
 	}, [dropDownRef, onScrollEnd]);
 
-	return ReactDOM.createPortal((
+	return ReactDOM.createPortal(
 		<div css={dropdDownContainer} className="select-dropDownContainer">
-				<div ref={dropDownRef} onScroll={handleScroll} css={[dropdDown, dropdownCSS]} className={"dropdown-box flex flex-col justify-between"}>
-					{children}
-				</div>
-				<Conditional showIf={isLoadingResults}>
-					<div style={{ textAlign: "center", padding: "4rem 0rem" }}>Loading....</div>
-				</Conditional>
-		</div>
-	 ), container
+			<div ref={dropDownRef} onScroll={handleScroll} css={[dropdDown, dropdownCSS]} className={"dropdown-box flex flex-col justify-between"}>
+				{children}
+			</div>
+			<Conditional showIf={isLoadingResults}>
+				<div style={{ textAlign: "center", padding: "4rem 0rem" }}>Loading....</div>
+			</Conditional>
+		</div>,
+		container,
 	);
 };
 

@@ -1,6 +1,5 @@
 import { resolvePathToBackendURI, resolvePathToFrontendURI } from "@utils/uri";
 import { emailType } from "@constants";
-import { Logger } from "@utils/logger";
 import * as sgMail from "@sendgrid/mail";
 import * as ejs from "ejs";
 import { iInviteReferral } from "@crusher-shared/types/inviteReferral";
@@ -42,7 +41,7 @@ export class EmailManager {
 			html: html,
 		};
 		sgMail.send(msg);
-		Logger.info("EmailManager::sendEmail", `Email Sent... [Verification] - to ${to}`);
+		console.info("EmailManager::sendEmail", `Email Sent... [Verification] - to ${to}`);
 	}
 
 	public static sendVerificationMail(to, code) {

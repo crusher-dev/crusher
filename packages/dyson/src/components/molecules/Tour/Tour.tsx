@@ -45,7 +45,7 @@ const Input = styled.input`
 `;
 
 const TooltipBody = styled.div`
-	background-color: #16171A;
+	background-color: #16171a;
 	min-width: 466px;
 	max-width: 420px;
 	position: relative;
@@ -66,7 +66,7 @@ const TooltipTitle = styled.h2`
 `;
 
 const TooltipFooter = styled.div`
-	background-color: #16171A;
+	background-color: #16171a;
 	display: flex;
 	justify-content: space-between;
 	margin-top: 1rem;
@@ -74,7 +74,6 @@ const TooltipFooter = styled.div`
 
 	border-bottom-left-radius: 8px;
 	border-bottom-right-radius: 8px;
-
 `;
 
 const Tooltip = ({ continuous, index, isLastStep, step, size, backProps, primaryProps, skipProps, tooltipProps }: TooltipRenderProps) => {
@@ -99,7 +98,7 @@ const Tooltip = ({ continuous, index, isLastStep, step, size, backProps, primary
 							transform: rotate(180deg);
 						`}
 					/>
-					<span className={"ml-8 mr-8 leading-none font-13"}>{`${index+1}/${size}`}</span>
+					<span className={"ml-8 mr-8 leading-none font-13"}>{`${index + 1}/${size}`}</span>
 					<ArrowSVG />
 
 					<div className={"ml-12 font-12"}>skip</div>

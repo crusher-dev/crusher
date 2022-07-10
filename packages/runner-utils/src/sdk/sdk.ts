@@ -27,11 +27,11 @@ class CrusherSdk implements ICrusherSdk {
 	}
 
 	// <----- New sdk begins here ---->
-	async screenshot({ timeout }: { timeout?: number; } = {}) {
+	async screenshot({ timeout }: { timeout?: number } = {}) {
 		return this._page.screenshot({ timeout: timeout });
 	}
 
-	async querySelector(selector: string, { waitUntil, timeout }: { waitUntil?: "visible" | "in-dom" | null; timeout?: number } = {waitUntil: "visible"}) {
+	async querySelector(selector: string, { waitUntil, timeout }: { waitUntil?: "visible" | "in-dom" | null; timeout?: number } = { waitUntil: "visible" }) {
 		let elementHandle;
 		if (waitUntil) {
 			elementHandle = await this._page.waitForSelector(selector, { state: waitUntil === "in-dom" ? "attached" : "visible", timeout });
@@ -131,7 +131,7 @@ class CrusherSdk implements ICrusherSdk {
 	}
 
 	stallTest(errorMessage: string) {
-		const error =  new Error(errorMessage);
+		const error = new Error(errorMessage);
 		(error as any).isStalled = true;
 		(error as any).meta = {
 			failedReason: errorMessage,
@@ -175,7 +175,7 @@ class CrusherSdk implements ICrusherSdk {
 		return result;
 	}
 
-	async spawnTests(payload: Array<{testId: number, groupId: string, context: any}>) {
+	async spawnTests(payload: Array<{ testId: number; groupId: string; context: any }>) {
 		this.communicationChannel.emit("run-parameterized-tests", payload);
 	}
 

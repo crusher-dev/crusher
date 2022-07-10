@@ -110,9 +110,9 @@ export default class EventsController {
 
 	getSelectors(_capturedTarget: any, useAdvancedSelector = false) {
 		const capturedTarget =
-		_capturedTarget instanceof SVGElement && _capturedTarget.tagName.toLocaleLowerCase() !== "svg" ? _capturedTarget.ownerSVGElement : _capturedTarget;
+			_capturedTarget instanceof SVGElement && _capturedTarget.tagName.toLocaleLowerCase() !== "svg" ? _capturedTarget.ownerSVGElement : _capturedTarget;
 
-		return getSelectors(capturedTarget instanceof SVGAElement ? capturedTarget.ownerSVGElement : capturedTarget, useAdvancedSelector)
+		return getSelectors(capturedTarget instanceof SVGAElement ? capturedTarget.ownerSVGElement : capturedTarget, useAdvancedSelector);
 	}
 
 	async saveCapturedEventInBackground(event_type: ActionsInTestEnum, _capturedTarget: any, value: any = "", callback?: any, shouldLogImage = true) {
@@ -154,8 +154,7 @@ export default class EventsController {
 				meta: {
 					value,
 					elementDescription: getElementDescription(capturedTarget),
-					uniqueNodeId:
-							capturedTarget && ![document.body, document].includes(capturedTarget) ? ElementsIdMap.getUniqueId(capturedTarget) : null,
+					uniqueNodeId: capturedTarget && ![document.body, document].includes(capturedTarget) ? ElementsIdMap.getUniqueId(capturedTarget) : null,
 				},
 			},
 			screenshot: capturedElementScreenshot,

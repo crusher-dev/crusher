@@ -45,7 +45,6 @@ class EnterpriseVideoProcessorBootstrap extends VideoProcessorBootstrap {
 
 		this.setupInstanceHeartbeat();
 
-
 		await this.queueManager.setupQueue(VIDEO_PROCESSOR_QUEUE);
 		await this.queueManager.setupQueueScheduler(VIDEO_PROCESSOR_QUEUE, {
 			maxStalledCount: 1,
@@ -109,10 +108,10 @@ class EnterpriseVideoProcessorBootstrap extends VideoProcessorBootstrap {
 						});
 				}
 			} else {
-				 console.log("Processing size:", (this._worker as any).processing.size);
-				 console.log("Processing map:", (this._worker as any).processing);
-				 console.log("Time gap:", Date.now() - this._lastJobPickedUpTime, this._lastJobPickedUpTime);
-				 console.log("Worker offset:", this._bootAfterNJobsOffset);
+				console.log("Processing size:", (this._worker as any).processing.size);
+				console.log("Processing map:", (this._worker as any).processing);
+				console.log("Time gap:", Date.now() - this._lastJobPickedUpTime, this._lastJobPickedUpTime);
+				console.log("Worker offset:", this._bootAfterNJobsOffset);
 			}
 		}, 60000);
 	}

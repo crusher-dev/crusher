@@ -62,13 +62,13 @@ const reactSelectDefaultStyles = {
 	valueContainer: (provided) => ({
 		...provided,
 		top: "-0.2rem",
-		width: "70rem"
+		width: "70rem",
 	}),
 };
 
-const DropdownOption = ({label}) => {
-	return (<div css={{padding: "7rem 8rem", width: "100%", cursor: "default"}}>{label}</div>);
-}
+const DropdownOption = ({ label }) => {
+	return <div css={{ padding: "7rem 8rem", width: "100%", cursor: "default" }}>{label}</div>;
+};
 
 const AssertionFormTable = (props: iAssertionFormTableProps) => {
 	const { rowItems, fields, operations, onFieldChange, onOperationChange, onValidationChange, deleteValidationRow } = props;
@@ -77,7 +77,7 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 		const getFieldOptions = () => {
 			const options = [];
 			fields.forEach((field) => {
-				options.push({ value: field.name, label: field.name, component: <DropdownOption label={field.name}/>, inactive: false });
+				options.push({ value: field.name, label: field.name, component: <DropdownOption label={field.name} />, inactive: false });
 			});
 			return options;
 		};
@@ -92,15 +92,40 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 		};
 
 		return (
-			<SelectBox dropDownHeight={"200rem"} isSearchable={true} css={css`input {outline: none; width: 80%; } .selectBox { height: 34rem; } .selectBox__value { margin-right: 10rem; font-size: 13rem; } width: 160rem; .dropdown-box .dropdown-label { padding-top: 4rem !important; padding-bottom: 4rem !important;}`} size={"large"} selected={[selectedOption]} values={fieldOptions} callback={handleOnFieldChange} />
-		)
+			<SelectBox
+				dropDownHeight={"200rem"}
+				isSearchable={true}
+				css={css`
+					input {
+						outline: none;
+						width: 80%;
+					}
+					.selectBox {
+						height: 34rem;
+					}
+					.selectBox__value {
+						margin-right: 10rem;
+						font-size: 13rem;
+					}
+					width: 160rem;
+					.dropdown-box .dropdown-label {
+						padding-top: 4rem !important;
+						padding-bottom: 4rem !important;
+					}
+				`}
+				size={"large"}
+				selected={[selectedOption]}
+				values={fieldOptions}
+				callback={handleOnFieldChange}
+			/>
+		);
 	};
 
 	const renderFieldOperationInput = (selectedOperation: string, rowId: string) => {
 		const getOperationOptions = () => {
 			const options = [];
 			operations.forEach((operation) => {
-				options.push({ value: operation, label: operation, component: <DropdownOption label={operation}/>, inactive: false  });
+				options.push({ value: operation, label: operation, component: <DropdownOption label={operation} />, inactive: false });
 			});
 			return options;
 		};
@@ -115,8 +140,32 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 		};
 
 		return (
-			<SelectBox isSearchable={true} css={css`input{ outline: none; width: 80%; } .selectBox {height: 34rem; } .selectBox__value { margin-right: 10rem; font-size: 13rem; } width: 100%; .dropdown-box .dropdown-label { padding-top: 4rem !important; padding-bottom: 4rem !important;}`} size={"large"} selected={[selectedOption]} values={operationOptions} callback={handleOnOperationChange} />
-		)
+			<SelectBox
+				isSearchable={true}
+				css={css`
+					input {
+						outline: none;
+						width: 80%;
+					}
+					.selectBox {
+						height: 34rem;
+					}
+					.selectBox__value {
+						margin-right: 10rem;
+						font-size: 13rem;
+					}
+					width: 100%;
+					.dropdown-box .dropdown-label {
+						padding-top: 4rem !important;
+						padding-bottom: 4rem !important;
+					}
+				`}
+				size={"large"}
+				selected={[selectedOption]}
+				values={operationOptions}
+				callback={handleOnOperationChange}
+			/>
+		);
 	};
 
 	const renderValidationInput = (validationValue: string, rowId: string) => {
@@ -126,24 +175,25 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 			}
 		};
 
-		return (<Input
-			css={inputStyle}
-			placeholder={"Enter Value"}
-			size={"medium"}
-			initialValue={validationValue}
-			onChange={handleInputChange}
-		/>);
+		return <Input css={inputStyle} placeholder={"Enter Value"} size={"medium"} initialValue={validationValue} onChange={handleInputChange} />;
 	};
 
 	const handleDeleteRow = (rowIndex: string) => {
-		if(deleteValidationRow)
-		  deleteValidationRow(rowIndex);
+		if (deleteValidationRow) deleteValidationRow(rowIndex);
 	};
 
 	const rowOut = rowItems.map((row, index: number) => {
 		const isValidationCorrect = checkIfValidationPasses(row.field.value, row.validation, row.operation as ASSERTION_OPERATION_TYPE);
 		return (
-			<div key={row.id} css={css`display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4rem; margin-bottom: 25rem;`}>
+			<div
+				key={row.id}
+				css={css`
+					display: grid;
+					grid-template-columns: repeat(3, minmax(0, 1fr));
+					gap: 4rem;
+					margin-bottom: 25rem;
+				`}
+			>
 				<div style={inputTableItemFieldContainerStyle}>
 					<DeleteIcon
 						onClick={handleDeleteRow.bind(this, row.id)}
@@ -153,7 +203,13 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 					{renderFieldInput(row.field.name, row.id)}
 				</div>
 				<div>{renderFieldOperationInput(row.operation as ASSERTION_OPERATION_TYPE, row.id)}</div>
-				<div css={css`display: flex; align-items: center; justify-content: center;`}>
+				<div
+					css={css`
+						display: flex;
+						align-items: center;
+						justify-content: center;
+					`}
+				>
 					<div>{renderValidationInput(row.validation, row.id)}</div>
 					<img
 						src={isValidationCorrect ? "./static/assets/icons/correct.svg" : "./static/assets/icons/cross.svg"}
@@ -164,7 +220,18 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 		);
 	});
 
-	return <div style={containerStyle} css={css`&::-webkit-scrollbar { display: none; }`}>{rowOut}</div>;
+	return (
+		<div
+			style={containerStyle}
+			css={css`
+				&::-webkit-scrollbar {
+					display: none;
+				}
+			`}
+		>
+			{rowOut}
+		</div>
+	);
 };
 
 const containerStyle = {
@@ -194,7 +261,7 @@ const inputTableGridOptionValueInputStyle = {
 
 const inputStyle = css`
 	outline: none;
+	height: 34rem;
 `;
-
 
 export { AssertionFormTable };

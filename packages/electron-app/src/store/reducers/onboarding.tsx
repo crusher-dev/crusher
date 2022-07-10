@@ -4,7 +4,7 @@ import { MARK_ONBOARDING_COMPLETE, SET_CURRENT_ONBOARDING_STEP } from "../action
 export interface IOnboardingState {
 	isComplete: boolean;
 	currentStep: number;
-};
+}
 
 const initialState: IOnboardingState = {
 	isComplete: false,

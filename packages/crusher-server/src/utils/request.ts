@@ -1,5 +1,4 @@
 import { appendParamsToURI, checkIfAbsoluteURI } from "./url";
-import { Logger } from "./logger";
 import * as chalk from "chalk";
 
 const _fetch = require("node-fetch").default;
@@ -45,7 +44,7 @@ export function request(_uri, options: any = {}) {
 			const elapsedHrTime = process.hrtime(startHrTime);
 			const elapsedTimeInMs = elapsedHrTime[0] * 1000 + elapsedHrTime[1] / 1e6;
 
-			Logger.info("Request", `${uri} - ${method}  (${chalk.whiteBright.bold(elapsedTimeInMs)})`, { headers, payload });
+			console.info("Request", `${uri} - ${method}  (${chalk.whiteBright.bold(elapsedTimeInMs)})`, { headers, payload });
 
 			return txt
 				.then((txt) => {
@@ -58,7 +57,7 @@ export function request(_uri, options: any = {}) {
 		} catch (err) {
 			const elapsedHrTime = process.hrtime(startHrTime);
 			const elapsedTimeInMs = elapsedHrTime[0] * 1000 + elapsedHrTime[1] / 1e6;
-			Logger.error("Request", `${uri} - ${method}  (${chalk.whiteBright.bold(elapsedTimeInMs)} ms)`, {
+			console.error("Request", `${uri} - ${method}  (${chalk.whiteBright.bold(elapsedTimeInMs)} ms)`, {
 				headers,
 				err,
 				payload,

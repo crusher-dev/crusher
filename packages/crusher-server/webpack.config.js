@@ -31,7 +31,13 @@ module.exports = {
 			patterns: [{ from: `${path.dirname(require.resolve("bullmq"))}/commands/`, to: "commands/", globOptions: { ignore: ["**/*.js", "**/*.ts"] } }],
 		}),
 		new CopyPlugin({
-			patterns: [{ from: `${path.dirname(require.resolve("bullmq"))}/commands/`, to: "src/modules/runner/workers/commands/", globOptions: { ignore: ["**/*.js", "**/*.ts"] } }],
+			patterns: [
+				{
+					from: `${path.dirname(require.resolve("bullmq"))}/commands/`,
+					to: "src/modules/runner/workers/commands/",
+					globOptions: { ignore: ["**/*.js", "**/*.ts"] },
+				},
+			],
 		}),
 		new CopyPlugin({
 			patterns: [{ from: path.resolve(__dirname, "src/modules/email/templates"), to: "email/templates" }],

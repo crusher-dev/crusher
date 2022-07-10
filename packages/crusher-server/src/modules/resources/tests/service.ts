@@ -83,7 +83,7 @@ class TestService {
 		);
 	}
 
-	async createAndRunTest(payload: { tempTestId?: any; name: string; events?: any }, projectId: number, userId: number) {
+	async createAndRunTest(payload: { tempTestId?: any; name: string; shouldNotRunTests?: boolean; events?: any }, projectId: number, userId: number) {
 		let events = payload.events || [];
 		if (payload.tempTestId) {
 			const tempTest = await this.getTempTest(payload.tempTestId);
@@ -100,6 +100,8 @@ class TestService {
 			userId: userId,
 		});
 
+
+		if(payload.shouldNotRunTests) { return testInsertRecord; }
 		const testRecord = await this.getTest(testInsertRecord.insertId);
 
 		const buildRunInfo = await this.testsRunner.runTests(await this.getCompleteTestsArray(await this.getFullTestArr([testRecord])), {
@@ -117,6 +119,26 @@ class TestService {
 		await this.linkToDraftBuild(buildRunInfo.buildId, testRecord.id);
 
 		return testInsertRecord;
+	}
+
+	async runDraftTest(payload: {testId: any}, projectId: number, userId: number) {
+		const testRecord = await this.getTest(payload.testId);
+
+		const buildRunInfo = await this.testsRunner.runTests(await this.getCompleteTestsArray(await this.getFullTestArr([testRecord])), {
+			userId: userId,
+			projectId: projectId,
+			host: "null",
+			status: BuildStatusEnum.CREATED,
+			buildTrigger: BuildTriggerEnum.MANUAL,
+			browser: [BrowserEnum.CHROME],
+			isDraftJob: true,
+			config: { shouldRecordVideo: true, testIds: [testRecord.id] },
+			meta: { isDraftJob: true },
+		});
+
+		await this.linkToDraftBuild(buildRunInfo.buildId, testRecord.id);
+
+		return this.getTest(payload.testId);
 	}
 
 	async updateTestSteps(testId: number, steps: Array<iAction>) {

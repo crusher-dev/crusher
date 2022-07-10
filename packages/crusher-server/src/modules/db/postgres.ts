@@ -1,6 +1,5 @@
 import { IDatabaseManager } from "@modules/db/interface";
 import { CamelizeResponse } from "@modules/decorators/camelizeResponse";
-import { Logger } from "@utils/logger";
 import { Pool, PoolConfig } from "pg";
 import * as sqlstring from "sqlstring";
 
@@ -20,7 +19,7 @@ class PostgresDatabase implements IDatabaseManager {
 					resolve(true);
 				})
 				.catch((err) => {
-					Logger.error("Cannot connect to postgres database...", err);
+					console.error("Cannot connect to postgres database...", err);
 					resolve(false);
 				});
 		});

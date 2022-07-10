@@ -1,6 +1,5 @@
 import { Service } from "typedi";
 import Stripe from "stripe";
-import { Logger } from "@utils/logger";
 
 @Service()
 class StripeManager {
@@ -8,7 +7,7 @@ class StripeManager {
 
 	constructor() {
 		if (!process.env.STRIPE_SECRET_KEY) {
-			Logger.error("No stripe secret key provided in environment");
+			console.error("No stripe secret key provided in environment");
 			return;
 		}
 
@@ -51,7 +50,7 @@ class StripeManager {
 				customer: stringCustomerId,
 			})
 			.catch((e) => {
-				Logger.error(e);
+				console.error(e);
 				return null;
 			});
 	}

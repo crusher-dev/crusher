@@ -34,7 +34,12 @@ DropdownBox.whyDidYouRender = true;
 
 export const Dropdown = ({ initialState, children, dropdownCSS, className, component, callback }: TDropdown) => {
 	return (
-		<ShowOnClick className={className} callback={callback} initialState={initialState} component={<DropdownBox dropdownCSS={dropdownCSS}>{component}</DropdownBox>}>
+		<ShowOnClick
+			className={className}
+			callback={callback}
+			initialState={initialState}
+			component={<DropdownBox dropdownCSS={dropdownCSS}>{component}</DropdownBox>}
+		>
 			{children}
 		</ShowOnClick>
 	);

@@ -1,6 +1,5 @@
 import { GithubService } from "@modules/thirdParty/github/service";
 import { extractOwnerAndRepoName } from "@utils/helper";
-import { Logger } from "@utils/logger";
 
 export function getGithubToken() {
 	const appId = 70466;

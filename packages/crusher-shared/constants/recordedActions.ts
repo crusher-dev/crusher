@@ -1,4 +1,4 @@
-import {iAction} from "../types/action";
+import { iAction } from "../types/action";
 
 export enum ACTIONS_IN_TEST {
 	SET_DEVICE = "BROWSER_SET_DEVICE",

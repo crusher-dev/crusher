@@ -107,17 +107,19 @@ const URLOnboarding = () => {
 
 		backendRequest(`/projects/${selectedProjectId}/actions/generate.tests`, {
 			method: RequestMethod.POST,
-			payload: {url: finalWebsiteUrl}
-		}).then((data) => {
-			if (data && data.status === "Successful") {
+			payload: { url: finalWebsiteUrl },
+		})
+			.then((data) => {
+				if (data && data.status === "Successful") {
+					setIsCreatingTest(false);
+					setOnboardingStep(OnboardingStepEnum.SUPPORT_CRUSHER);
+				}
+			})
+			.catch((err) => {
 				setIsCreatingTest(false);
-				setOnboardingStep(OnboardingStepEnum.SUPPORT_CRUSHER);
-			}
-		}).catch((err) => {
-			setIsCreatingTest(false);
-			console.error("Error is", err);
-			alert("Some error occured while generating tests");
-		});
+				console.error("Error is", err);
+				alert("Some error occured while generating tests");
+			});
 	};
 
 	usePageTitle("Create & Run your first test");
@@ -160,7 +162,12 @@ const URLOnboarding = () => {
 					We'll create a test to checks page is loading perfectly
 				</div>
 
-				<div className={"flex mt-32 items-center"} css={css`position: relative;`}>
+				<div
+					className={"flex mt-32 items-center"}
+					css={css`
+						position: relative;
+					`}
+				>
 					<Input
 						size={"large"}
 						placeholder={"Enter the URL of the website"}
@@ -181,7 +188,15 @@ const URLOnboarding = () => {
 							setUrlError(null);
 						}}
 					/>
-					<span css={css`position: absolute; bottom: -28rem; color: #ff4583;`}>{urlError}</span>
+					<span
+						css={css`
+							position: absolute;
+							bottom: -28rem;
+							color: #ff4583;
+						`}
+					>
+						{urlError}
+					</span>
 					<Button
 						className={"ml-16"}
 						size={"large"}
@@ -191,13 +206,31 @@ const URLOnboarding = () => {
 						onClick={handleUrlSubmit}
 					>
 						<span>
-							<Conditional showIf={!isCreatingTest}>
-								{" "}Go{" "}
-							</Conditional>
+							<Conditional showIf={!isCreatingTest}> Go </Conditional>
 							<Conditional showIf={isCreatingTest}>
-								<span css={ css`display: flex; align-items: center;`}>
-									<LoadingSVG css={css`width: 18rem; circle { stroke: #fff; }; height: 18rem;`} />
-									<div css={css`text-align: center; flex: 1;`}>Running</div>
+								<span
+									css={css`
+										display: flex;
+										align-items: center;
+									`}
+								>
+									<LoadingSVG
+										css={css`
+											width: 18rem;
+											circle {
+												stroke: #fff;
+											}
+											height: 18rem;
+										`}
+									/>
+									<div
+										css={css`
+											text-align: center;
+											flex: 1;
+										`}
+									>
+										Running
+									</div>
 								</span>
 							</Conditional>
 						</span>

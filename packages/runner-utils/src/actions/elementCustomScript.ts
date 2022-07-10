@@ -50,7 +50,7 @@ module.exports = {
 	name: ActionsInTestEnum.CUSTOM_ELEMENT_SCRIPT,
 	description: "Custom script on element",
 	actionDescriber: (action: iAction) => {
-		if(!action.payload.meta || !action.payload.meta.elementDescription) {
+		if (!action.payload.meta || !action.payload.meta.elementDescription) {
 			return `Run Custom script on element`;
 		}
 		return `Run custom script on [${action.payload.meta.elementDescription}]`;

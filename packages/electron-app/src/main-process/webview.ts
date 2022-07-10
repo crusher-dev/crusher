@@ -1,6 +1,7 @@
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { WebContents, ipcMain, webContents, session } from "electron";
 import * as path from "path";
+import { Disposer } from "../lib/disposable";
 import { PlaywrightInstance } from "../lib/playwright";
 import { TRecorderCrashState, TRecorderState } from "../store/reducers/recorder";
 import { AppWindow } from "./app-window";
@@ -16,72 +17,23 @@ export class WebView {
 
 	private _startTime: number | null = null;
 	private _initializeTime: number | null = null;
+	private _listeners: WebViewListener | null = null;
 
-	getWebContents(): WebContents {
+	/* Returns webContents of the available webview */
+	public getWebContents(): WebContents {
 		const allWebContents = webContents.getAllWebContents();
 
 		const webViewWebContents = allWebContents.find((a) => a.getType() === "webview");
 		if (!webViewWebContents) throw new Error("No webview initialized");
 
-		webViewWebContents.session.webRequest.onBeforeSendHeaders((details, callback) => {
-			details.requestHeaders["Bypass-Tunnel-Reminder"] = "true";
-			callback({ requestHeaders: details.requestHeaders });
-		});
-
-		webViewWebContents.on("crashed", (event, any) => {
-			console.log("Webview crashed", any);
-			this.appWindow.updateRecorderCrashState({type: TRecorderCrashState.CRASHED });
-		});
-
-		webViewWebContents.on("did-fail-load", (event, errorCode, errorDescription, validatedURL, isMainFrame) => {
-			if(isMainFrame) {
-				this.appWindow.updateRecorderCrashState({type: TRecorderCrashState.PAGE_LOAD_FAILED});
-			}
-		});
-
-		webViewWebContents.on("context-menu", (event, any) => {
-			console.log("Webview context menu", any);
-		});
-
-		webViewWebContents.on("did-frame-navigate", (event, url, httpResponseCode, httpStatusText, isMainFrame) => {
-			if(isMainFrame && this.appWindow.getRecorderState().type !== TRecorderState.PERFORMING_ACTIONS) {
-				this.appWindow.handleSaveStep(null, {
-					action: {
-						type: ActionsInTestEnum.WAIT_FOR_NAVIGATION as ActionsInTestEnum,
-						payload: {
-							meta: {
-								value: url,
-							},
-						},
-					},
-				});			}
-		});
-
-		webViewWebContents.on("-will-add-new-contents" as any, (event, url) => {
-			event.preventDefault();
-			console.log("New url is this", url);
-
-			webViewWebContents.loadURL(url);
-			if (this.appWindow.getRecorderState().type !== TRecorderState.PERFORMING_ACTIONS) {
-				this.appWindow.handleSaveStep(null, {
-					action: {
-						type: ActionsInTestEnum.WAIT_FOR_NAVIGATION as ActionsInTestEnum,
-						payload: {
-							meta: {
-								value: url,
-							},
-						},
-					},
-				});
-			}
-		});
-
 		return webViewWebContents;
 	}
 
-	constructor(appWindow) {
+	constructor(appWindow, private resetCallback) {
 		this.appWindow = appWindow;
 		this.webContents = this.getWebContents();
+
+		this._listeners = new WebViewListener(this.webContents, this.appWindow);
 		this._startTime = now();
 	}
 
@@ -115,38 +67,44 @@ export class WebView {
 		this._initializeTime = now() - this._startTime;
 
 		console.log("Initialized in", this._initializeTime);
+		// This signals the renderer process that the webview is ready, and its okay
+		// to continue.
 		this.appWindow.sendMessage("webview-initialized", { initializeTime: this._initializeTime });
 	}
 
-	registerIPCListeners() {
-		ipcMain.on("turn-on-inspect-mode", this._turnOnInspectMode.bind(this));
-		ipcMain.on("turn-off-inspect-mode", this._turnOffInspectMode.bind(this));
+	private registerIPCListeners() {
+		ipcMain.on("turn-on-inspect-mode", this.turnOnInspectMode.bind(this));
+		ipcMain.on("turn-off-inspect-mode", this.turnOffInspectMode.bind(this));
 	}
 
-	async _turnOnInspectMode() {
+	public async turnOnInspectMode() {
 		await this.webContents.debugger.sendCommand("Overlay.setInspectMode", {
 			mode: "searchForNode",
 			highlightConfig: highlighterStyle,
 		});
 	}
 
-	async _turnOffInspectMode() {
+	public async turnOffInspectMode() {
 		await this.webContents.debugger.sendCommand("Overlay.setInspectMode", {
 			mode: "none",
 			highlightConfig: highlighterStyle,
 		});
 	}
 
-	async _resumeExecution() {
+	public async resumeExecution() {
 		try {
 			await this.webContents.debugger.sendCommand("Debugger.resume");
-		} catch(ex){}
+		} catch (ex) {
+			console.info("Error resuming execution", ex);
+		}
 	}
 
-	async _disableExecution() {
+	public async disableExecution() {
 		try {
 			await this.webContents.debugger.sendCommand("Debugger.pause");
-		} catch(ex) {}
+		} catch (ex) {
+			console.info("Error pausing execution", ex);
+		}
 	}
 
 	async handleDebuggerEvents(event, method, params) {
@@ -163,9 +121,11 @@ export class WebView {
 		}
 	}
 
-	dispose() {
+	public dispose() {
 		try {
-			if (this.webContents) {
+			this._listeners.dispose();
+			this.resetCallback();
+			if (this.webContents && !this.webContents.isDestroyed()) {
 				this.webContents.debugger.detach();
 			}
 			if (ipcMain) {
@@ -178,6 +138,88 @@ export class WebView {
 			if (this.playwrightInstance) {
 				this.playwrightInstance.dispose();
 			}
-		} catch (e) { }
+		} catch (e) {
+			console.error("Error while diposing", e);
+		}
+	}
+}
+
+class WebViewListener {
+	constructor(private webContents: WebContents, private appWindow) {
+		webContents.session.webRequest.onBeforeSendHeaders(this.handleBeforeSendHeaders);
+
+		webContents.on("crashed", this.handleCrashed.bind(this));
+		webContents.on("did-fail-load", this.handleDidFailLoad.bind(this));
+		webContents.on("context-menu", this.handleContextMenu.bind(this));
+		webContents.on("did-frame-navigate", this.handleFrameDidNavigate.bind(this));
+		webContents.on("-will-add-new-contents" as any, this.handleAddNewContents.bind(this, webContents));
+	}
+
+	private handleBeforeSendHeaders(details, callback) {
+		details.requestHeaders["Bypass-Tunnel-Reminder"] = "true";
+		callback({ requestHeaders: details.requestHeaders });
+	}
+
+	private handleCrashed(event, any) {
+		console.log("Webview crashed", any);
+		this.appWindow.updateRecorderCrashState({ type: TRecorderCrashState.CRASHED });
+	}
+
+	private handleDidFailLoad(event, errorCode, errorDescription, validatedURL, isMainFrame) {
+		if (isMainFrame) {
+			this.appWindow.updateRecorderCrashState({ type: TRecorderCrashState.PAGE_LOAD_FAILED });
+		}
+	}
+
+	private handleContextMenu(event, any) {
+		console.log("Webview context menu", any);
+	}
+
+	private handleFrameDidNavigate(event, url, httpResponseCode, httpStatusText, isMainFrame) {
+		if (
+			isMainFrame &&
+			![TRecorderState.PERFORMING_ACTIONS, TRecorderState.PERFORMING_RECORDER_ACTIONS, TRecorderState.CUSTOM_CODE_ON].includes(
+				this.appWindow.getRecorderState().type,
+			)
+		) {
+			console.log("Recorder state is", this.appWindow.getRecorderState().type);
+
+			this.appWindow.handleSaveStep(null, {
+				action: {
+					type: ActionsInTestEnum.WAIT_FOR_NAVIGATION as ActionsInTestEnum,
+					payload: {
+						meta: {
+							value: url,
+						},
+					},
+				},
+			});
+		}
+	}
+
+	private handleAddNewContents(webContents, event, url) {
+		event.preventDefault();
+
+		webContents.loadURL(url);
+		if (
+			![TRecorderState.PERFORMING_ACTIONS, TRecorderState.PERFORMING_RECORDER_ACTIONS, TRecorderState.CUSTOM_CODE_ON].includes(
+				this.appWindow.getRecorderState().type,
+			)
+		) {
+			this.appWindow.handleSaveStep(null, {
+				action: {
+					type: ActionsInTestEnum.WAIT_FOR_NAVIGATION as ActionsInTestEnum,
+					payload: {
+						meta: {
+							value: url,
+						},
+					},
+				},
+			});
+		}
+	}
+
+	public dispose() {
+		this.webContents.removeAllListeners();
 	}
 }

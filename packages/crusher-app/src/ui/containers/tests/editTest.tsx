@@ -193,12 +193,7 @@ export const EditTestModal = ({ name, folderId, id, onClose, tags }) => {
 				>
 					Or take action
 				</div>
-				<Button
-					bgColor={"danger"}
-					impactLevel={"low"}
-					size={"x-small"}
-					onClick={deleteTest}
-				>
+				<Button bgColor={"danger"} impactLevel={"low"} size={"x-small"} onClick={deleteTest}>
 					<div className={"flex justify-center items-center pt-2"}>
 						<Conditional showIf={processingDelete}>
 							<LoadingSVG

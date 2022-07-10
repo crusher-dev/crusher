@@ -11,3 +11,7 @@ export const getAppSettings = (state: iReduxState) => state.app.settings;
 export const getRemainingSteps = (state: iReduxState) => state.app.sessionMeta.remainingSteps;
 
 export const getUserAccountInfo = (state: iReduxState) => state.app.accountInfo;
+
+export const getProxyState = (state: iReduxState) => state.app.proxy;
+
+export const getIsProxyInitializing = (state: iReduxState) => state.app.proxyIsInitializing;

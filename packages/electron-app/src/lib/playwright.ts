@@ -5,7 +5,7 @@ import { app, CookiesSetDetails, session } from "electron";
 import { ExportsManager } from "../../../crusher-shared/lib/exports";
 import { CrusherCookieSetPayload } from "../../../crusher-shared/types/sdk/types";
 import { GlobalManagerPolyfill, LogManagerPolyfill, StorageManagerPolyfill } from "./polyfills";
-import { CrusherRunnerActions, CrusherSdk, getMainActions } from "runner-utils/src/index";
+import { ActionDescriptor, CrusherRunnerActions, CrusherSdk, getMainActions } from "runner-utils/src/index";
 import { Browser, BrowserContext, ConsoleMessage, Page, ElementHandle, Frame } from "playwright";
 import { AppWindow } from "../main-process/app-window";
 import * as fs from "fs";
@@ -13,6 +13,7 @@ import * as path from "path";
 import { now } from "../main-process/now";
 import { ACTION_DESCRIPTIONS } from "../ui/components/sidebar/steps";
 import { uuidv4 } from "runner-utils/src/utils/helper";
+import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 const { performance } = require("perf_hooks");
 const playwright = typeof __non_webpack_require__ !== "undefined" ? __non_webpack_require__("./playwright/index.js") : require("playwright");
 
@@ -32,6 +33,7 @@ class PlaywrightInstance {
 	private sdkManager: CrusherSdk;
 	private browser: Browser;
 	private browserContext: BrowserContext;
+	private actionDescriptor: ActionDescriptor;
 
 	/* Map to contain element handles from uniqueId saved in renderer */
 	elementsMap: Map<string, { handle: ElementHandle; parentFrameSelectors?: Array<any> }>;
@@ -48,6 +50,8 @@ class PlaywrightInstance {
 		this._storageManager = new StorageManagerPolyfill();
 		this._globalManager = new GlobalManagerPolyfill();
 		this._exportsManager = new ExportsManager();
+		this.actionDescriptor = new ActionDescriptor();
+		this.actionDescriptor.initActionHandlers();
 
 		this.runnerManager = new CrusherRunnerActions(
 			this._logManager as any,
@@ -222,11 +226,12 @@ class PlaywrightInstance {
 					this.lastAction = { id: uuidv4(), action };
 					this.appWindow.recordLog({
 						id: this.lastAction.id,
-						message: `Performing ${ACTION_DESCRIPTIONS[action.type]}`,
+						message: `${action.name ? action.name : this.actionDescriptor.describeAction(action as any)}`,
 						type: "info",
 						args: [],
 						time: performance.now(),
 					});
+
 					if (!shouldNotSave) this.appWindow.getRecorder().saveRecordedStep(action, ActionStatusEnum.STARTED);
 					break;
 				case ActionStatusEnum.FAILED:
@@ -261,14 +266,15 @@ class PlaywrightInstance {
 					}
 					break;
 				case ActionStatusEnum.COMPLETED:
-					this.lastAction = null;
 					this.appWindow.recordLog({
 						id: uuidv4(),
 						message: `Performed ${ACTION_DESCRIPTIONS[action.type]}`,
 						type: "info",
 						args: [],
 						time: performance.now(),
+						parent: this.lastAction.id
 					});
+					this.lastAction = null;
 					if (!shouldNotSave) this.appWindow.getRecorder().markRunningStepCompleted();
 					break;
 			}

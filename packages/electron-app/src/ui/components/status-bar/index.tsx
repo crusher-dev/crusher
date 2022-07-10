@@ -4,7 +4,7 @@ import { useSelector, useStore } from "react-redux";
 import { css } from "@emotion/react";
 import { Conditional } from "@dyson/components/layouts";
 import { getLogs } from "electron-app/src/store/selectors/logger";
-import { MiniCrossIcon, UpMaximiseIcon } from "../../icons";
+import { MiniCrossIcon, PlayIconV2, UpMaximiseIcon } from "../../icons";
 import { ObjectInspector, TableInspector, chromeDark, ObjectRootLabel, ObjectLabel } from "react-inspector";
 import { BrowserButton } from "../buttons/browser.button";
 import { CustomCodeModal } from "../modals/page/customCodeModal";
@@ -112,6 +112,21 @@ const FIGMA_SAMPLE_CONTEXT = {
 const defaultNodeRenderer = ({ depth, name, data, isNonenumerable, expanded }) =>
 	depth === 0 ? <ObjectRootLabel name={name} data={data} /> : <ObjectLabel name={name} data={data} isNonenumerable={isNonenumerable} />;
 
+
+const ArrowRightIcon = (props) => (
+		<svg
+		  xmlns="http://www.w3.org/2000/svg"
+		  viewBox="0 0 17.804 17.804"
+		  style={{
+			enableBackground: "new 0 0 17.804 17.804",
+		  }}
+		  xmlSpace="preserve"
+		  {...props}
+		>
+		  <path d="M2.067.043a.4.4 0 0 1 .426.042l13.312 8.503a.41.41 0 0 1 .154.313c0 .12-.061.237-.154.314L2.492 17.717a.402.402 0 0 1-.25.087l-.176-.04a.399.399 0 0 1-.222-.361V.402c0-.152.086-.295.223-.359z" />
+		</svg>
+);
+	  
 const StatusBar = (props: any) => {
 	const [currentModal, setCurrentModal] = React.useState({ type: null, stepIndex: null });
 	const store = useStore();
@@ -159,6 +174,9 @@ const StatusBar = (props: any) => {
 		className?: string;
 	}) => {
 		const { log } = props;
+		const [showChildrens, setShowChildrens] = React.useState(false);
+
+		const hasChildrens = React.useMemo(() => (log.children && log.children.length), [log]);
 
 		return (
 			<div className={`${props.className}`}>
@@ -168,6 +186,9 @@ const StatusBar = (props: any) => {
 						display: flex;
 					`}
 				>
+					{hasChildrens ? (
+							<ArrowRightIcon onClick={setShowChildrens.bind(this, !showChildrens)} css={[css`width: 8rem; fill: #797979; margin-right: 4rem; :hover { opacity: 0.8 }`, showChildrens ? css`transform: rotate(90deg)` : undefined]}/>
+					) : "" }
 					<div>
 						<span
 							css={css`
@@ -206,8 +227,7 @@ const StatusBar = (props: any) => {
 						</span>
 					</div>
 				</div>
-				<Conditional showIf={!!log.children && !!log.children.length}>
-					{log.children &&
+					{showChildrens && log.children && log.children.length ? 
 						log.children.map((child: ILoggerReducer["logs"][0] & { children: Array<ILoggerReducer["logs"][0]>; diff: string }) => {
 							return (
 								<LogItem
@@ -219,8 +239,7 @@ const StatusBar = (props: any) => {
 									diff={child.diff}
 								/>
 							);
-						})}
-				</Conditional>
+						}) : ""}
 			</div>
 		);
 	};

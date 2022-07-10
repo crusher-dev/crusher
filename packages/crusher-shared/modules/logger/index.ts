@@ -11,11 +11,15 @@ let winstonLogger = winston.createLogger({
 	transports: [
 		new winston.transports.File({ filename: "error.log", level: "error" }),
 		new winston.transports.File({ filename: "combined.log" }),
-		new winston.transports.Console({ format: winston.format.cli(), level: "debug" }),
+		new winston.transports.Console({ format: winston.format.printf((info) => {
+			const values = Object.keys(info).filter((a) => !["level", "message"].includes(a)).map((a) => info[a]);
+
+			return `${info.level}: ${info.message} ` + (values && values.length ? JSON.stringify(values) : "");
+		}), level: "debug" }),
 	],
 });
 
-const consoleMiddleware = (type, message, meta) => {
+const consoleMiddleware = (type, message, ...meta) => {
 	winstonLogger.log(type, message, meta);
 };
 // Native console.error
@@ -23,12 +27,12 @@ const _error = console.error;
 const _log = console.log;
 
 function modifyNativeConsoleFunctions() {
-	// console.log = consoleMiddleware.bind(this, "info");
-	// console.error = consoleMiddleware.bind(this, "error");
-	// console.warn = consoleMiddleware.bind(this, "warn");
-	// console.info = consoleMiddleware.bind(this, "info");
-	// console.trace = consoleMiddleware.bind(this, "debug");
-	// console.debug = consoleMiddleware.bind(this, "debug");
+	console.log = consoleMiddleware.bind(this, "info");
+	console.error = consoleMiddleware.bind(this, "error");
+	console.warn = consoleMiddleware.bind(this, "warn");
+	console.info = consoleMiddleware.bind(this, "info");
+	console.trace = consoleMiddleware.bind(this, "debug");
+	console.debug = consoleMiddleware.bind(this, "debug");
 }
 
 modifyNativeConsoleFunctions();

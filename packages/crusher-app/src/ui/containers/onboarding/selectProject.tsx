@@ -19,6 +19,11 @@ const ProjectList = ({className, projects, ...props}) => {
         key: USER_META_KEYS.SELECTED_PROJECT_ID,
         value: projectId,
       });
+      updateOnboarding({
+        type: "user",
+        key: USER_META_KEYS.INITIAL_ONBOARDING,
+        value: true,
+      });
       setAppStateItem({ key: "selectedProjectId", value: projectId });
       router.push("/app/dashboard");
   }, []);

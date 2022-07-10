@@ -50,7 +50,6 @@
       "nock": "^13.2.4",
       "prettier": "^2.4.1",
       "replace-json-property": "^1.4.1",
-      "semantic-release": "^18.0.0",
       "strip-ansi": "^7.0.1",
       "ts-jest": "^27.0.5",
       "ts-loader": "^9.2.3",

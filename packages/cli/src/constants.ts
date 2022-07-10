@@ -1,14 +1,14 @@
 import * as path from "path";
 import { getIsArm, getRuntimeEnv } from "./utils/utils";
 
-export const BACKEND_SERVER_URL = "http://localhost:8000";
-export const FRONTEND_SERVER_URL = "http://localhost:3000";
+export const BACKEND_SERVER_URL = "https://backend.crusher.dev";
+export const FRONTEND_SERVER_URL = "https://app.crusher.dev";
 
 export const APP_DIRECTORY =
   getRuntimeEnv().CRUSHER_GLOBAL_DIR ||
   `/${getRuntimeEnv().HOME}/.crusher`;
 
-export const recorderVersion = `1.0.31`;
+export const recorderVersion = `1.0.32`;
 
 export const RECORDER_MAC_BUILD = `https://github.com/crusherdev/crusher-downloads/releases/download/v${recorderVersion}/Crusher.Recorder-${recorderVersion}-mac-x64.zip`;
 export const RECORDER_MAC_ARM64_BUILD = `https://github.com/crusherdev/crusher-downloads/releases/download/v${recorderVersion}/Crusher.Recorder-${recorderVersion}-mac-arm64.zip`;

@@ -1,5 +1,4 @@
 import * as path from "path";
-import { execSync } from "child_process";
 import { getIsArm, getRuntimeEnv } from "./utils/utils";
 
 export const BACKEND_SERVER_URL = "http://localhost:8000";

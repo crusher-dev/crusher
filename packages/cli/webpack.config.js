@@ -11,7 +11,7 @@ console.log( glob.sync("./src/**/*.ts").reduce(function (obj, el) {
   return obj;
 }, {shared: "cli-ux"}));
 module.exports = {
-  mode: "production",
+  mode: "development",
   entry: glob.sync("./src/**/*.ts").reduce(function (obj, el) {
     obj[el.replace(".ts", "")] = {
       import: el,

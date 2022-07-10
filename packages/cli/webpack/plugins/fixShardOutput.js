@@ -11,11 +11,15 @@ class FixSharedOutputPlugin {
         () => {
           // get the file main.js
           const file = compilation.getAsset('./src/shared.js');
-          // console.log("File is", file.source.source());
+          console.log("File is", file.source.source());
           // update main.js with new content
           compilation.updateAsset(
             './src/shared.js',
-            new sources.RawSource(file.source.source().replace('module.exports = __webpack_exports__;', 'module.exports = __webpack_require__;'))
+            new sources.RawSource(file.source.source().replace('module.exports = __webpack_exports__;', 'module.exports = __webpack_require__;')),
+          );
+          compilation.updateAsset(
+            './src/shared.js',
+            new sources.RawSource(file.source.source().replace('/******/ 	// Load entry module and return exports', 'return module.exports;')),
           );
         }
       );

@@ -15,7 +15,7 @@
     "engineStrict": true,
     "scripts": {
         "build": "webpack && node scripts/copyPackageJson.js",
-        "build:debug": "PACKAGE_NAME=crusher-debug yarn webpack",
+        "build:debug": "PACKAGE_NAME=crusher-debug yarn build",
         "test": "jest"
     },
     "dependencies": {},

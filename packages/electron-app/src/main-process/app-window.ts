@@ -871,6 +871,7 @@ export class AppWindow {
 			app.commandLine.getSwitchValue("token") || accountInfo.token,
 			appSettings.backendEndPoint,
 			appSettings.frontendEndPoint,
+			this.proxyManager._results
 		);
 	}
 
@@ -892,6 +893,7 @@ export class AppWindow {
 				appSettings.frontendEndPoint,
 				testName,
 				shouldNotRunTest,
+				this.proxyManager._results
 			);
 		} else {
 			const accountInfo = getUserAccountInfo(this.store.getState() as any);
@@ -905,6 +907,7 @@ export class AppWindow {
 					appSettings.frontendEndPoint,
 					testName,
 					shouldNotRunTest,
+					this.proxyManager._results
 				);
 			} else {
 				await CloudCrusher.saveTest(recordedSteps as any, appSettings.backendEndPoint, appSettings.frontendEndPoint, testName);

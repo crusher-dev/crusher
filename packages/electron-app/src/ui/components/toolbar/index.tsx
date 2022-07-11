@@ -60,7 +60,7 @@ const recorderDevices = devices
 		component: <DeviceItem label={device.name} />,
 	}));
 
-function ActionButtonDropdown({ setShowActionMenu, ...props }) {
+function ActionButtonDropdown({ setShowActionMenu, saveTestCallback, ...props }) {
 	const editingSessionMeta = useSelector(getAppEditingSessionMeta);
 	const navigate = useNavigate();
 
@@ -80,15 +80,11 @@ function ActionButtonDropdown({ setShowActionMenu, ...props }) {
 		);
 	};
 
-	const handleSave = () => {
+	const handleSave = React.useCallback(() => {
 		setShowActionMenu(false);
-		saveTest().then((res) => {
-			window["triggeredTest"] = { id: res.draftJobId };
-			navigate("/");
-			goFullScreen(false);
-		});
-		sendSnackBarEvent({ type: "success", message: "Saving test..." });
-	};
+		saveTestCallback();
+	}, [saveTestCallback]);
+
 	const handleUpdate = () => {
 		setShowActionMenu(false);
 		updateTest().then((res) => {
@@ -118,7 +114,6 @@ function ActionButtonDropdown({ setShowActionMenu, ...props }) {
 ActionButtonDropdown.whyDidYouRender = true;
 
 const SaveVerifyButton = ({ isTestVerificationComplete }) => {
-	const intervalRef = React.useRef(null);
 	const navigate = useNavigate();
 	const totalSecondsToWaitBeforeSave = 5;
 	const editingSessionMeta = useSelector(getAppEditingSessionMeta);
@@ -177,17 +172,12 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 			setIsOpen(false);
 		}
 
-		if (intervalRef.current) {
-			clearInterval(intervalRef.current);
-		}
-		intervalRef.current = null;
-
 		const proxyWarning = handleProxyWarning();
-
 		saveTest(proxyWarning.shouldShow)
 			.then((res) => {
-				console.log("Naviagting to", res);
-				window["triggeredTest"] = { id: res.draftJobId };
+				if(res.draftJobId) {
+					window["triggeredTest"] = { id: res.draftJobId };
+				}
 				if(proxyWarning.shouldShow && res) {
 					window["showProxyWarning"] = { testId: res.id, startUrl: proxyWarning.startUrl };
 				}
@@ -215,7 +205,7 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 		<>
 			<Dropdown
 				initialState={showActionMenu}
-				component={<ActionButtonDropdown setShowActionMenu={setShowActionMenu.bind(this)} />}
+				component={<ActionButtonDropdown saveTestCallback={saveTestToCloud} setShowActionMenu={setShowActionMenu.bind(this)} />}
 				callback={setShowActionMenu.bind(this)}
 				dropdownCSS={css`
 					left: 32rem;

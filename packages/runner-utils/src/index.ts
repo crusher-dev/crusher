@@ -213,7 +213,7 @@ class CrusherRunnerActions {
 					await this.handleActionExecutionStatus(
 						action.name,
 						ActionStatusEnum.COMPLETED,
-						stepResult && stepResult.customLogMessage ? stepResult.customlogMessage : `Finished performing ${action.description}`,
+						stepResult && stepResult.customLogMessage ? stepResult.customLogMessage : `Finished performing ${action.description}`,
 						stepResult
 							? {
 									...stepResult,

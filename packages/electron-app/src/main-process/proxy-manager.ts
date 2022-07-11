@@ -19,7 +19,12 @@ class ProxyManager {
 		const jsonContentRaw = result.replace(/(\r\n|\n|\r)/gm, "").replace(/ /g, "");
 		this._results = JSON.parse(jsonContentRaw);
 
-		console.info("[ProxyManager]: Tunnel ready and created", { results: this._results });
+		console.info("[ProxyManager]: Tunnel is ready and live");
+		// console.table
+		console.table(Object.entries(this._results).map((a: any) => {
+				return { name: a[0], tunnel: a[1].tunnel, intercept: a[1].intercept}
+		}));
+
 		this.store.dispatch(setProxyState(this._results));
 		this.store.dispatch(setProxyInitializing(false));
 	}

@@ -20,7 +20,7 @@ class GlobalManagerPolyfill {
 
 class LogManagerPolyfill {
 	logStep(...args) {
-		console.log(args[2]);
+		console.log(`[Runner] ` + args[2]);
 	}
 }
 

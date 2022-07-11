@@ -272,16 +272,15 @@ export class AppWindow {
 		if (app.commandLine.hasSwitch("project-config-file") && projectId) {
 			const configFilePath = app.commandLine.getSwitchValue("project-config-file");
 			this.window.webContents.executeJavaScript("window.localStorage.getItem('projectConfigFile')").then((projectConfigs) => {
-				console.log("Project configs is", projectConfigs);
 				const projectConfigsObject = projectConfigs ? JSON.parse(projectConfigs) : {};
 				projectConfigsObject[projectId] = configFilePath;
 				this.window.webContents.executeJavaScript(
 					`window.localStorage.setItem('projectConfigFile', ${JSON.stringify(JSON.stringify(projectConfigsObject))})`,
 				);
-			}).then((res) => console.log(res)).catch((err) => console.error(err));
+			}).catch((err) => console.error(err));
 			process.argv = process.argv.filter((a) => a.includes("--project-config-file"));
 		}
-		this.handle(projectId).catch((err) => console.error(err));
+		this.handle(projectId).catch((err) => console.error("Can't initialize project config in renderer process", err));
 	}
 
 	async handle(projectId) {
@@ -310,8 +309,7 @@ export class AppWindow {
 		return this.proxyManager.initializeProxy(payload.configFilePath);
 	}
 
-	private async handleUndockCode(event: Electron.IpcMainEvent, payload: { code: string }) {
-		console.log("Undocking now");
+	private async handleUndockCode(event: Electron.IpcMainEvent, payload: { code: string }) {	
 		this.codeWindow = new BrowserWindow({
 			title: APP_NAME,
 			titleBarStyle: "hidden",
@@ -479,7 +477,6 @@ export class AppWindow {
 	private async handleGetCodeTemplates(event) {
 		const accountInfo = getUserAccountInfo(this.store.getState() as any);
 		if (!accountInfo || !accountInfo.token) {
-			console.log("Account info is", accountInfo);
 			return null;
 		}
 		const appSettings = getAppSettings(this.store.getState() as any);
@@ -587,7 +584,6 @@ export class AppWindow {
 	}
 
 	updateRecorderCrashState(stateMeta) {
-		console.log("Update crash recorder");
 		this.store.dispatch(updateRecorderCrashState(stateMeta));
 	}
 
@@ -615,7 +611,7 @@ export class AppWindow {
 
 	handleSaveStep(event: Electron.IpcMainInvokeEvent, payload: { action: iAction }) {
 		const { action } = payload;
-		console.log("Saving step", payload.action);
+		console.log("Saving step", { type: action.type });
 		if (!this.webView.playwrightInstance) return;
 		const elementInfo = this.webView.playwrightInstance.getElementInfoFromUniqueId(action.payload.meta?.uniqueNodeId);
 		if (elementInfo && elementInfo.parentFrameSelectors) {
@@ -647,13 +643,6 @@ export class AppWindow {
 			}
 		} else if ([ActionsInTestEnum.PAGE_SCROLL, ACTIONS_IN_TEST.ELEMENT_SCROLL].includes(action.type)) {
 			const lastRecordedStep = this.getLastRecordedStep(this.store, true);
-			console.log(
-				"Scroll values",
-				action.payload.meta?.uniqueNodeId,
-				lastRecordedStep.step.payload.meta?.uniqueNodeId,
-				lastRecordedStep.step.type,
-				action.type,
-			);
 			if (
 				[ActionsInTestEnum.PAGE_SCROLL, ActionsInTestEnum.ELEMENT_SCROLL].includes(lastRecordedStep.step.type) &&
 				action.payload.meta?.uniqueNodeId === lastRecordedStep.step.payload.meta?.uniqueNodeId
@@ -837,7 +826,6 @@ export class AppWindow {
 	}
 
 	private async handleGetBuildReport(event: Electron.IpcMainEvent, payload: { buildId: string }) {
-		console.log("Got report", payload.buildId);
 		const userAccountInfo = getUserAccountInfo(this.store.getState() as any);
 		const appSettings = getAppSettings(this.store.getState() as any);
 		const buildReport = await CloudCrusher.getBuildReport(
@@ -846,7 +834,6 @@ export class AppWindow {
 			appSettings.backendEndPoint,
 			appSettings.frontendEndPoint,
 		);
-		console.log("Got this build report", buildReport, payload.buildId);
 		return buildReport;
 	}
 
@@ -930,13 +917,11 @@ export class AppWindow {
 	}
 
 	async handleRemoteReplayTest(event: Electron.IpcMainInvokeEvent, payload: { testId: number }) {
-		console.log("Replaying test", Date.now(), !!this.webView);
+		console.log("Replaying test", { testId: payload.testId });
 
 		await this.resetRecorder();
 		const appSettings = getAppSettings(this.store.getState() as any);
 		const testSteps = await CloudCrusher.getTest(`${payload.testId}`, appSettings.backendEndPoint);
-		console.log("Replaying test --now", Date.now(), !!this.webView);
-
 		return this.handleReplayTestSteps(testSteps);
 	}
 
@@ -948,8 +933,6 @@ export class AppWindow {
 
 	private async handleLoginWithGithub(event: Electron.IpcMainInvokeEvent) {
 		const appSettings = getAppSettings(this.store.getState() as any);
-		console.log("URL is", resolveToFrontEndPath(`/`, appSettings.frontendEndPoint));
-
 		await shell.openExternal(resolveToFrontEndPath(`/`, appSettings.frontendEndPoint));
 	}
 	private handleLoginWithGitlab(event: Electron.IpcMainInvokeEvent) {
@@ -1042,7 +1025,6 @@ export class AppWindow {
 			this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
 		} catch (ex) {
 			this.store.dispatch(updateRecorderState(TRecorderState.ACTION_REQUIRED, {}));
-			console.log("Remaining steps are", reaminingSteps);
 			this.setRemainingSteps(reaminingSteps);
 			throw ex;
 		}
@@ -1084,13 +1066,12 @@ export class AppWindow {
 
 	private async handleExitApp() {
 		console.log("Exitting now...");
-		console.log("Resetting storage");
 		await this.destroy();
 		process.exit();
 	}
 
 	private async handleResetStorage() {
-		console.log("Resetting storage");
+		console.log("Resetting webview storage");
 		await this.clearWebViewStorage();
 	}
 
@@ -1114,8 +1095,13 @@ export class AppWindow {
 		event: Electron.IpcMainInvokeEvent,
 		payload: { action: iAction; shouldNotSave?: boolean; isRecording?: boolean; shouldNotSleep?: boolean },
 	) {
+		if(this.webView && this.webView.playwrightInstance) {
+			console.log("Starting action: " +  this.webView.playwrightInstance.actionDescriptor.describeAction(payload.action));
+		} else { 
+			console.log("Starting action: " + payload.action.type);
+		}
+
 		const { action, shouldNotSave, shouldNotSleep } = payload;
-		console.log("Handle perform action called", payload);
 
 		try {
 			switch (action.type) {
@@ -1173,7 +1159,6 @@ export class AppWindow {
 					break;
 				}
 				default:
-					console.log("Running this action", action);
 					if (payload.isRecording && action.payload.meta?.uniqueNodeId) {
 						const elementInfo = this.webView.playwrightInstance.getElementInfoFromUniqueId(action.payload.meta?.uniqueNodeId);
 						if (elementInfo && elementInfo.parentFrameSelectors) {

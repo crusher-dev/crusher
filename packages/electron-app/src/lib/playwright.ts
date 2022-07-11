@@ -33,7 +33,7 @@ class PlaywrightInstance {
 	private sdkManager: CrusherSdk;
 	private browser: Browser;
 	private browserContext: BrowserContext;
-	private actionDescriptor: ActionDescriptor;
+	public actionDescriptor: ActionDescriptor;
 
 	/* Map to contain element handles from uniqueId saved in renderer */
 	elementsMap: Map<string, { handle: ElementHandle; parentFrameSelectors?: Array<any> }>;
@@ -63,8 +63,6 @@ class PlaywrightInstance {
 		);
 
 		this._overrideSdkActions();
-
-			// console.log("Test result is", this._globalManager.get("TEST_RESULT"));
 	}
 
 	public getTestLogs() {

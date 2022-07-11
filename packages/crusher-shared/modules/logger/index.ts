@@ -1,6 +1,6 @@
 import * as winston from "winston";
 const LokiTransport = require("winston-loki");
-import * as chalk from "chalk";
+const chalk = require('chalk');
 
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
 
@@ -11,11 +11,13 @@ let winstonLogger = winston.createLogger({
 	transports: [
 		new winston.transports.File({ filename: "error.log", level: "error" }),
 		new winston.transports.File({ filename: "combined.log" }),
-		new winston.transports.Console({ format: winston.format.printf((info) => {
+		new winston.transports.Console({ format: winston.format.combine( winston.format.colorize() , winston.format.printf((info) => {
 			const values = Object.keys(info).filter((a) => !["level", "message"].includes(a)).map((a) => info[a]);
-
-			return `${info.level}: ${info.message} ` + (values && values.length ? JSON.stringify(values) : "");
-		}), level: "debug" }),
+			
+			return `${info.level}: ${info.message.replace(/^(\[.+\])/, (x) => {
+				return chalk.bold(x);
+			})} ` + (values && values.length ? JSON.stringify(values) : "");
+		})), level: process.env.CRUSHER_DEBUG ? "debug" : "info" }),
 	],
 });
 

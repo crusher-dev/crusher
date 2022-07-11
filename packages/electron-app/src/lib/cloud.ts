@@ -65,14 +65,7 @@ class CloudCrusher {
 			.then((res) => res.data);
 	}
 
-	public static async runTests(
-		testIds: Array<string> | null,
-		projectId: string,
-		proxyUrlsMap: any | null,
-		userToken: string,
-		customBackendPath: string | undefined = undefined,
-	) {
-		console.log("proxy url is", proxyUrlsMap);
+	public static getProxyFromTunnelData(proxyUrlsMap: any | null) {
 		const proxyUrlsMapsRaw = proxyUrlsMap && Object.keys(proxyUrlsMap).length ? proxyUrlsMap : undefined;
 		let proxyUrlsMapa = undefined;
 		if (proxyUrlsMapsRaw) {
@@ -81,12 +74,24 @@ class CloudCrusher {
 				proxyUrlsMapa[key] = { ...proxyUrlsMap[key], tunnel: proxyUrlsMap[key].tunnel.replace("https://", "http://") };
 			});
 		}
+
+		return proxyUrlsMapa;
+	}
+
+	public static async runTests(
+		testIds: Array<string> | null,
+		projectId: string,
+		proxyUrlsMap: any | null,
+		userToken: string,
+		customBackendPath: string | undefined = undefined,
+	) {
+	
 		return axios
 			.post(
 				resolveToBackendPath(`/projects/${projectId}/tests/actions/run`, customBackendPath),
 				{
 					testIds: Array.isArray(testIds) ? testIds.join(",") : null,
-					proxyUrlsMap: proxyUrlsMapa ? proxyUrlsMapa : undefined,
+					proxyUrlsMap: this.getProxyFromTunnelData(proxyUrlsMap),
 				},
 				{
 					headers: {
@@ -105,7 +110,7 @@ class CloudCrusher {
 		customFrontEndPath: string | undefined = undefined,
 	) {
 		return axios.post(resolveToBackendPath(`/projects/${projectId}/builds/actions/create.local`, customBackendPath), {
-			tests: tests
+			tests: tests,
 		}, {
 			headers: {
 				Cookie: `isLoggedIn=true; token=${userToken}`,
@@ -121,12 +126,14 @@ class CloudCrusher {
 		userToken: string,
 		customBackendPath: string | undefined = undefined,
 		customFrontEndPath: string | undefined = undefined,
+		proxyUrlsMap: any | null = null
 	) {
 		return axios
 			.post(
 				resolveToBackendPath(`/projects/${projectId}/tests/actions/runDraftTest`, customBackendPath),
 				{
-					testId: testId
+					testId: testId,
+					proxyUrlsMap: this.getProxyFromTunnelData(proxyUrlsMap),
 				},
 				{
 					headers: {
@@ -147,6 +154,7 @@ class CloudCrusher {
 		customFrontEndPath: string | undefined = undefined,
 		testName: string | null = null,
 		shouldNotRunTest: boolean = false,
+		proxyUrlsMap: any | null = null
 	) {
 		console.log("Should not run test " + shouldNotRunTest);
 
@@ -166,6 +174,7 @@ class CloudCrusher {
 							tempTestId: result.data.insertId,
 							shouldNotRunTests: shouldNotRunTest,
 							name: testName ? testName : new Date().toDateString().substr(4, 6) + " " + new Date().toLocaleTimeString().substr(0, 10),
+							proxyUrlsMap: this.getProxyFromTunnelData(proxyUrlsMap),
 						},
 						{
 							headers: {

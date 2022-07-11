@@ -83,7 +83,7 @@ class TestService {
 		);
 	}
 
-	async createAndRunTest(payload: { tempTestId?: any; name: string; shouldNotRunTests?: boolean; events?: any }, projectId: number, userId: number) {
+	async createAndRunTest(payload: { tempTestId?: any; name: string; shouldNotRunTests?: boolean; events?: any; proxyUrlsMap?: { [key: string]: { intercept: string | { regex: string }; tunnel: string } }; }, projectId: number, userId: number) {
 		let events = payload.events || [];
 		if (payload.tempTestId) {
 			const tempTest = await this.getTempTest(payload.tempTestId);
@@ -112,7 +112,8 @@ class TestService {
 			buildTrigger: BuildTriggerEnum.MANUAL,
 			browser: [BrowserEnum.CHROME],
 			isDraftJob: true,
-			config: { shouldRecordVideo: true, testIds: [testRecord.id] },
+
+			config: { proxyUrlsMap: payload.proxyUrlsMap, shouldRecordVideo: true, testIds: [testRecord.id] },
 			meta: { isDraftJob: true },
 		});
 
@@ -121,7 +122,7 @@ class TestService {
 		return testInsertRecord;
 	}
 
-	async runDraftTest(payload: {testId: any}, projectId: number, userId: number) {
+	async runDraftTest(payload: {testId: any; proxyUrlsMap?: { [key: string]: { intercept: string | { regex: string }; tunnel: string } }}, projectId: number, userId: number) {
 		const testRecord = await this.getTest(payload.testId);
 
 		const buildRunInfo = await this.testsRunner.runTests(await this.getCompleteTestsArray(await this.getFullTestArr([testRecord])), {
@@ -132,7 +133,7 @@ class TestService {
 			buildTrigger: BuildTriggerEnum.MANUAL,
 			browser: [BrowserEnum.CHROME],
 			isDraftJob: true,
-			config: { shouldRecordVideo: true, testIds: [testRecord.id] },
+			config: { proxyUrlsMap: payload.proxyUrlsMap, shouldRecordVideo: true, testIds: [testRecord.id] },
 			meta: { isDraftJob: true },
 		});
 

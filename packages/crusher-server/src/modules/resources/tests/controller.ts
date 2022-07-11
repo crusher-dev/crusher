@@ -227,7 +227,10 @@ export class TestController {
 	async createTest(
 		@CurrentUser({ required: true }) user,
 		@Param("project_id") projectId: number,
-		@Body() body: Omit<ICreateTestPayload, "projectId" | "userId" | "events"> & { events?: Array<iAction>; shouldNotRunTests?: boolean; tempTestId?: string },
+		@Body() body: Omit<ICreateTestPayload, "projectId" | "userId" | "events"> & {
+			events?: Array<iAction>; shouldNotRunTests?: boolean; tempTestId?: string;
+			proxyUrlsMap?: { [key: string]: { intercept: string | { regex: string }; tunnel: string } };
+		},
 	) {
 		const { user_id } = user;
 		const testInsertRecord = await this.testService.createAndRunTest(body, projectId, user_id);
@@ -240,7 +243,7 @@ export class TestController {
 	async runDraftTest(
 		@CurrentUser({ required: true }) user,
 		@Param("project_id") projectId: number,
-		@Body() body: { testId: number; }
+		@Body() body: { testId: number; proxyUrlsMap?: { [key: string]: { intercept: string | { regex: string }; tunnel: string } }; }
 	) {
 		const { user_id } = user;
 		return this.testService.runDraftTest(body, projectId, user_id);

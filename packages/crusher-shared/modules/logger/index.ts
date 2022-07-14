@@ -14,7 +14,7 @@ let winstonLogger = winston.createLogger({
 		new winston.transports.Console({ format: winston.format.combine( winston.format.colorize() , winston.format.printf((info) => {
 			const values = Object.keys(info).filter((a) => !["level", "message"].includes(a)).map((a) => info[a]);
 			
-			return `${info.level}: ${info.message && typeof info.mesage === "string" ? info.message.replace(/^(\[.+\])/, (x) => {
+			return `${info.level}: ${info.message && typeof info.message === "string" ? info.message.replace(/^(\[.+\])/, (x) => {
 				return chalk.bold(x);
 			}) : info.message} ` + (values && values.length ? JSON.stringify(values) : "");
 		})), level: process.env.CRUSHER_DEBUG ? "debug" : "info" }),
@@ -29,12 +29,12 @@ const _error = console.error;
 const _log = console.log;
 
 function modifyNativeConsoleFunctions() {
-	console.log = consoleMiddleware.bind(this, "info");
-	console.error = consoleMiddleware.bind(this, "error");
-	console.warn = consoleMiddleware.bind(this, "warn");
-	console.info = consoleMiddleware.bind(this, "info");
-	console.trace = consoleMiddleware.bind(this, "debug");
-	console.debug = consoleMiddleware.bind(this, "debug");
+	// console.log = consoleMiddleware.bind(this, "info");
+	// console.error = consoleMiddleware.bind(this, "error");
+	// console.warn = consoleMiddleware.bind(this, "warn");
+	// console.info = consoleMiddleware.bind(this, "info");
+	// console.trace = consoleMiddleware.bind(this, "debug");
+	// console.debug = consoleMiddleware.bind(this, "debug");
 }
 
 modifyNativeConsoleFunctions();

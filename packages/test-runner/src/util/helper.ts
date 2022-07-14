@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import * as fs from "fs";
 import * as path from "path";
-import * as archiver from "archiver";
+import archiver from "archiver";
 import axios from "axios";
 import { Stream } from "stream";
 const { execSync } = require("child_process");

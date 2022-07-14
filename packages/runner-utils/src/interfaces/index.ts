@@ -1,5 +1,5 @@
 import { iAction } from "@crusher-shared/types/action";
-import { Page, ElementHandle } from "playwright/types/types";
+import { Page, ElementHandle } from "playwright";
 
 export enum SelectorTypeEnum {
 	ID = "id",

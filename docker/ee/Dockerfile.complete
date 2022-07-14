@@ -22,11 +22,11 @@ RUN curl https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.t
     rm -rf ffmpeg.tar.xz ffmpeg-*-amd64-static
 
 RUN npm init -y && \
-    npm install dotenv playwright-core@1.14.0 patch-package source-map-support pg && \
+    npm install dotenv playwright@1.23.3 patch-package source-map-support pg && \
     npm install -g pm2 concurrently
 
 # === Setting up crusher project ===
-ADD ./patches/playwright+1.14.0.patch ./patches/playwright+1.14.0.patch
+ADD ./patches/playwright-core+1.23.3.patch ./patches/playwright-core+1.23.3.patch
 ADD ./ecosystem.config.sample.js ecosystem.config.js
 ADD ./.env.sample .env
 ADD ./ecosystem ecosystem

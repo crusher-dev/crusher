@@ -37,11 +37,11 @@ jobs:
 
       - if: matrix.os == 'ubuntu-20.04'
         name: Build release for electron app
-        run: yarn workspace electron-app release:linux
+        run: yarn workspace electron-app release
 
       - if: matrix.os == 'macos-latest'
         name: Build release for electron app
-        run: yarn workspace electron-app release:mac
+        run: yarn workspace electron-app release
 
       - if: matrix.os == 'macos-latest'
         name: 'Store crusher-darwin as artifact'

@@ -24,11 +24,11 @@ RUN /bin/bash -c "source $NVM_DIR/nvm.sh && nvm install $NODE_VERSION && nvm use
 # Install node dependenices
 # RUN npm install -g npm pm2 concurrently @ffmpeg-installer/ffmpeg https://github.com/crusherdev/playwright-video.git#f7dececde258b07bdec207e4bb6869d389655704
 RUN npm install -g concurrently pm2 node-fetch
-RUN npm init -y && npm install pm2 dotenv playwright@1.14.0 patch-package source-map-support
+RUN npm init -y && npm install pm2 dotenv playwright@1.23.3 patch-package source-map-support
 
 # Add and copy necessary files
 ADD docker/ee/test-runner/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-ADD ./patches/playwright+1.14.0.patch ./patches/playwright+1.14.0.patch
+ADD ./patches/playwright-core+1.23.3.patch ./patches/playwright-core+1.23.3.patch
 ADD ./ecosystem.config.sample.js ecosystem.config.js
 ADD ./.env.sample .env
 ADD ./ecosystem ecosystem

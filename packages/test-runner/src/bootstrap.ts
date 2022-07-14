@@ -11,6 +11,7 @@ class TestRunnerBootstrap {
 	queueManager: QueueManager;
 
 	constructor() {
+		//@ts-ignore
 		this.redisManager = getRedisManager();
 		this.queueManager = getQueueManager();
 	}

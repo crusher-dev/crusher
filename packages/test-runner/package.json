@@ -42,7 +42,7 @@
 		"setup": "node setup/tsconfig.js",
 		"generate:local": "NODE_ENV=development ts-node -r tsconfig-paths/register  --project tsconfig.json scripts/runTestInHost.ts",
 		"run:local": "NODE_ENV=development ts-node -r tsconfig-paths/register  --project tsconfig.json bin/out.ts",
-		"start": "NODE_ENV=development ts-node -r tsconfig-paths/register  --project tsconfig.json ./index.ts",
+		"start": "NODE_ENV=development  ts-node  -r tsconfig-paths/register  --project tsconfig.json  --transpile-only ./index.ts",
 		"test": "ts-node -r tsconfig-paths/register --project tsconfig.json  out.ts",
 		"tests": "ts-node -r tsconfig-paths/register --project tsconfig.json  code.ts",
 		"start:cdp": "ts-node -r tsconfig-paths/register --project tsconfig.json ./test.ts",

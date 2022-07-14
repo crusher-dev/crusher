@@ -14,9 +14,9 @@ let winstonLogger = winston.createLogger({
 		new winston.transports.Console({ format: winston.format.combine( winston.format.colorize() , winston.format.printf((info) => {
 			const values = Object.keys(info).filter((a) => !["level", "message"].includes(a)).map((a) => info[a]);
 			
-			return `${info.level}: ${info.message.replace(/^(\[.+\])/, (x) => {
+			return `${info.level}: ${info.message ? info.message.replace(/^(\[.+\])/, (x) => {
 				return chalk.bold(x);
-			})} ` + (values && values.length ? JSON.stringify(values) : "");
+			}) : ""} ` + (values && values.length ? JSON.stringify(values) : "");
 		})), level: process.env.CRUSHER_DEBUG ? "debug" : "info" }),
 	],
 });

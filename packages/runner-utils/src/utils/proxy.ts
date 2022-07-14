@@ -19,20 +19,30 @@ const handleProxyBrowserContext = async (
 					  },
 				async (route) => {
 					try {
+						const requestObj = route.request();
 						const routeUrl = route.request().url();
 						const urlObject = new URL(routeUrl);
 
 						const tunnelUrl = new URL(proxyConfig.tunnel);
-
 						urlObject.host = tunnelUrl.host;
 						urlObject.protocol = tunnelUrl.protocol;
 						urlObject.port = tunnelUrl.port;
+						
+						console.log("URL IS NOW (page) ", urlObject.toString());
+						(requestObj as any)._initializer.url = urlObject.toString();
+						const response = await browserContext.request.fetch(route.request());
+						const responseHeaders = response.headers();
+						delete responseHeaders["content-security-policy"];
 
-						console.log("URL IS NOW (browser) ", urlObject.toString());
-
-						await route.continue({
-							url: urlObject.toString(),
-						});
+						await route.fulfill({
+							// Pass all fields from the response.
+							response,
+	
+							// Force content type to be html.
+							headers: {
+							  ...responseHeaders
+							}
+						  });
 					} catch (err) {
 						console.error("Encountered error", err);
 					}
@@ -55,6 +65,7 @@ const handleProxyPage = async (page: Page, proxyUrlsMap: { [key: string]: { tunn
 					  },
 				async (route) => {
 					try {
+						const requestObj = route.request();
 						const routeUrl = route.request().url();
 						const urlObject = new URL(routeUrl);
 
@@ -62,12 +73,22 @@ const handleProxyPage = async (page: Page, proxyUrlsMap: { [key: string]: { tunn
 						urlObject.host = tunnelUrl.host;
 						urlObject.protocol = tunnelUrl.protocol;
 						urlObject.port = tunnelUrl.port;
-
+						
 						console.log("URL IS NOW (page) ", urlObject.toString());
+						(requestObj as any)._initializer.url = urlObject.toString();
+						const response = await page.request.fetch(route.request());
+						const responseHeaders = response.headers();
+						delete responseHeaders["content-security-policy"];
 
-						await route.continue({
-							url: urlObject.toString(),
-						});
+						await route.fulfill({
+							// Pass all fields from the response.
+							response,
+	
+							// Force content type to be html.
+							headers: {
+							  ...responseHeaders
+							}
+						  });
 					} catch (err) {
 						console.error("Encountered error", err);
 					}

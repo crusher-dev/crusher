@@ -35,7 +35,7 @@ const setupProxyMiddleware = async (context: Page | BrowserContext, tunnelConfig
 			const port = matches.next().value[1];
 			if(port == 80 || port == 443) return route.continue();
 			const matchingTunnel = findTunnelWithPort(port);
-			if(!port) {console.log("Port is", port, tunnelConfigMap); return route.continue(); }
+			if(!matchingTunnel) {console.log("Port is", port, tunnelConfigMap); return route.continue(); }
 
 			return handleProxy(context, new URL(matchingTunnel.tunnel), route);
 		})

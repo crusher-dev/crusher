@@ -34,7 +34,7 @@ function TitleSection() {
 	return (
 		<div>
 			<div className={"font-cera text-19 font-700 leading-none flex items-center"} id={"title"}>
-				{data?.name || "feat: integrated test GTM"} #{data?.id}
+				{data?.name} #{data?.id}
 			</div>
 		</div>
 	);

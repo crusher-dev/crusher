@@ -42,14 +42,31 @@ enum TestTabEnum {
 	OVERVIEW = "overview",
 	LOGS = "logs",
 }
-function ReviewSection() {
+export function ReviewSection() {
 	const [open, setOpen] = useState(false);
 
 	return (
 		<Dropdown component={<ReviewButtonContent closeModal={setOpen.bind(this, false)} />} callback={setOpen} initialState={open} dropdownCSS={reviewCss}>
 			<Button
 				css={css`
-					width: 144px;
+					width: 108px;
+					background: rgba(255, 255, 255, 0.88);
+
+font-family: 'Gilroy';
+font-style: normal;
+font-weight: 600;
+font-size: 13px;
+/* or 131% */
+
+text-align: center;
+border: none;
+color: #000000;
+:hover {
+	border: none;
+	background: rgba(255, 255, 255, 0.88);
+	color: #000000;
+}
+
 				`}
 			>
 				Review
@@ -95,12 +112,12 @@ function ReportSection() {
 
 	return (
 		<div className={"mt-40"}>
-			{/* <div className={"flex justify-between items-center"} id={"review-section"}>
+			{/* <div css={containerWidth} className={"flex justify-between items-center"} id={"review-section"}>
 				<div className={"text-14"}>Jump to</div>
 				<div className={"flex items-center"}> */}
 			{/* Disabled for now*/}
-			{/*<div className={"mr-32 leading-none text-14 font-600"}>-/12 test viewed</div>*/}
-			{/* <ReviewSection />
+			{/* <div className={"mr-32 leading-none text-14 font-600"}>0/12 test viewed</div>
+			<ReviewSection />
 				</div>
 			</div> */}
 
@@ -142,9 +159,12 @@ function ReportSection() {
 				className={"mt-40"}
 				css={css`
 					width: 100%;
-					background: #121316;
-					height: 100%;
+					background: #0E0F12;
+					height: 100vh;
 					display: flex;
+					border-top-color: rgba(196,196,196,0.08);
+					border-top-width: 1rem;
+					border-top-style: solid;
 				`}
 			>
 				<div
@@ -192,7 +212,12 @@ function ReportSection() {
 		</div>
 	);
 }
-
+const containerWidth = css`
+	width: 1468rem;
+	max-width: calc(100vw - 352rem);
+	margin: 0 auto;
+	padding: 0 0;
+`;
 const testListStyle = css`
 	margin-top: 24rem;
 
@@ -201,7 +226,7 @@ const testListStyle = css`
 		align-items: center;
 		gap: 18rem;
 		:hover {
-			background: rgba(0, 0, 0, 0.7);
+			opacity: 0.8;
 		}
 	}
 `;
@@ -428,7 +453,7 @@ function RenderStep({ data, testInstanceData, setIsShowingVideo, testId }) {
 
 	return (
 		<div className={"relative mb-32"}>
-			<div className={" flex px-44"}>
+			<div className={" flex px-34"}>
 				<div css={tick}>
 					<TestStatusSVG
 						css={
@@ -471,7 +496,7 @@ function RenderStep({ data, testInstanceData, setIsShowingVideo, testId }) {
 								{meta?.actionName ? meta.actionName : message}
 							</span>
 						</Conditional>
-						<span
+						{/* <span
 							className={"ml-12"}
 							css={css`
 								:hover {
@@ -486,7 +511,7 @@ function RenderStep({ data, testInstanceData, setIsShowingVideo, testId }) {
 									height: 12rem;
 								`}
 							/>
-						</span>
+						</span> */}
 					</div>
 				</Conditional>
 				<Conditional showIf={status === "FAILED"}>
@@ -514,7 +539,7 @@ function RenderStep({ data, testInstanceData, setIsShowingVideo, testId }) {
 				{data.meta && data.meta.outputs ? data.meta.outputs.map((_, index) => <RenderImageInfo data={data} index={index} />) : null}
 			</Conditional>
 
-			<div className={"px-44 mt-12"}>
+			<div className={"px-34 mt-12"}>
 				{[ActionsInTestEnum.ASSERT_ELEMENT].includes(actionType) &&
 				data.meta &&
 				data.meta.meta &&
@@ -642,7 +667,9 @@ const dropDownSelectionCSS = css`
 	Use Jotai for avoiding props drilling.
 	Make config much more streamline.
  */
-function TestConfigSection({ expand, allCofiguration, setTestCardConfig, testCardConfig }) {
+function TestConfigSection({ expand, videoUrl, allCofiguration, setTestCardConfig, testCardConfig }) {
+	const [openVideoModal, setIsOpenVideoModal] = useState(false);
+
 	const setConfig = (key, value) => {
 		const config = allCofiguration;
 
@@ -656,6 +683,10 @@ function TestConfigSection({ expand, allCofiguration, setTestCardConfig, testCar
 	return (
 		<div className={"flex justify-between items-center mt-6 "}>
 			<div className={"flex"}>
+				<div css={css`display: flex; align-items: center; gap: 10rem; margin-right: 24rem; :hover { opacity: 0.8 }`} onClick={setIsOpenVideoModal.bind(this, true)}>
+					<PlaySVG /> 
+					<span css={css`position: relative; top: 2px;`}>Play video</span>
+				</div>
 				<Dropdown component={<Browsers setConfig={setConfig} browsers={allCofiguration.browser} />} dropdownCSS={dropDownSelectionCSS}>
 					<ClickableText paddingY={4} paddingX={"12rem"}>
 						<div className={"flex items-center "}>
@@ -668,6 +699,11 @@ function TestConfigSection({ expand, allCofiguration, setTestCardConfig, testCar
 					</ClickableText>
 				</Dropdown>
 			</div>
+
+
+			<Conditional showIf={!!videoUrl && openVideoModal}>
+				<TestVideoUrl videoUrl={videoUrl} setOpenVideoModal={setIsOpenVideoModal.bind(this)} />
+			</Conditional>
 		</div>
 	);
 }
@@ -931,7 +967,7 @@ function TestOverviewTabTopSection({
 			</Conditional>
 			<div
 				css={css`
-					gap: 28rem;
+					gap: 34rem;
 				`}
 				className={"px-54 flex items-center leading-none text-15 font-600"}
 			>
@@ -960,8 +996,8 @@ function TestOverviewTabTopSection({
 			{/*	</div>*/}
 			{/*</Conditional>*/}
 
-			<div className={"flex items-center"}>
-				<TestConfigSection expand={expand} allCofiguration={allConfiguration} setTestCardConfig={setTestCardConfig} testCardConfig={testCardConfig} />
+			<div className={"flex items-center mr-60"}>
+				<TestConfigSection videoUrl={testInstanceData?.output?.video} expand={expand} allCofiguration={allConfiguration} setTestCardConfig={setTestCardConfig} testCardConfig={testCardConfig} />
 			</div>
 		</div>
 	);
@@ -1006,7 +1042,7 @@ function ExpandableStepGroup({
 			<Conditional showIf={!expandTestStep}>
 				<Conditional showIf={count > 0}>
 					<div className={"relative mb-32"}>
-						<div className={" flex px-44"} onClick={expandHandler} css={expandDIVCSS}>
+						<div className={" flex px-34"} onClick={expandHandler} css={expandDIVCSS}>
 							<div css={tick} className={"expand-svg"}>
 								<ExpandSVG height={"20rem"} width={"20rem"} />
 							</div>
@@ -1054,7 +1090,7 @@ const expandDIVCSS = css`
 function RenderSteps({ steps, testInstanceData, testId, setIsShowingVideo }: { steps: any[]; testInstanceData: any; setIsShowingVideo: any; testId: any }) {
 	const groupSteps = React.useMemo(() => getCollapsedTestSteps(steps), [steps]);
 	return (
-		<div className={"px-32 w-full"}>
+		<div className={"px-32 mt-20 w-full"}>
 			<div className={"ml-32 py-32"} css={stepsList}>
 				{groupSteps.map(({ type, from, to, count }: any) => (
 					<ExpandableStepGroup

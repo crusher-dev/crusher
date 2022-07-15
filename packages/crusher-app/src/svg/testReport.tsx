@@ -28,7 +28,7 @@ export function ThreeEllipsisSVG(props: ReactPropTypes) {
 
 export function CalendarSVG(props: ReactPropTypes) {
 	return (
-		<svg width={"12rem"} height={"12rem"} viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+		<svg width={"13rem"} height={"13rem"} viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<path
 				d="M11.324 1.016h-1.168v-.61a.406.406 0 10-.812 0v.61H3.656v-.61a.406.406 0 10-.812 0v.61H1.676C.752 1.016 0 1.767 0 2.69v8.633C0 12.248.752 13 1.676 13h9.648c.924 0 1.676-.752 1.676-1.676V2.691c0-.924-.752-1.675-1.676-1.675zm.864 10.308a.863.863 0 01-.864.864H1.676a.863.863 0 01-.863-.864V4.596c0-.07.056-.127.126-.127H12.06c.07 0 .127.057.127.127v6.728z"
 				fill="#505050"

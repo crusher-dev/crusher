@@ -10,7 +10,7 @@ import { Conditional } from "dyson/src/components/layouts";
 
 import { BackSVG } from "@svg/builds";
 import { LayoutSVG, ReportSVG } from "@svg/dashboard";
-import { CalendarSVG, FailedSVG, InitiatedSVG, PassedSVG, RerunSVG, ReviewRequiredSVG, RunningSVG, TestStatusSVG, ThunderSVG } from "@svg/testReport";
+import { CalendarSVG, FailedSVG, InitiatedSVG, PassedSVG, RerunSVG, ReviewRequiredSVG, RunningSVG, TestStatusSVG, ThreeEllipsisSVG, ThunderSVG } from "@svg/testReport";
 import { backendRequest } from "@utils/common/backendRequest";
 import { timeSince } from "@utils/common/dateTimeUtils";
 import { sendSnackBarEvent } from "@utils/common/notify";
@@ -23,6 +23,7 @@ import { updateMeta } from "../../../store/mutators/metaData";
 import { PROJECT_META_KEYS, USER_META_KEYS } from "@constants/USER";
 import { useMemo } from "react";
 import { TestTypeLabel } from "@constants/test";
+import { ReviewSection } from "./testList";
 
 const ReportSection = dynamic(() => import("./testList"));
 function TitleSection() {
@@ -33,14 +34,7 @@ function TitleSection() {
 	return (
 		<div>
 			<div className={"font-cera text-19 font-700 leading-none flex items-center"} id={"title"}>
-				<BackSVG
-					height={"22rem"}
-					className={"mr-12"}
-					onClick={() => {
-						router.push("/app/builds");
-					}}
-				/>{" "}
-				{data?.name} #{data?.id}
+				{data?.name || "feat: integrated test GTM"} #{data?.id}
 			</div>
 		</div>
 	);
@@ -98,6 +92,7 @@ function NameNStatusSection() {
 					className={"ml-20"}
 					css={css`
 						width: 96rem;
+						height: 28rem;
 					`}
 					onClick={rerunBuild.bind(this, query.id)}
 					title="Rerun this build"
@@ -107,7 +102,7 @@ function NameNStatusSection() {
 						Rerun
 					</div>
 				</Button>
-				{/*<ThreeEllipsisSVG className={"ml-22"} width={"25rem"} />*/}
+				<ThreeEllipsisSVG css={css`:hover { opacity: 0.8 }`} className={"ml-22"} width={"25rem"} />
 			</div>
 
 			<StatusTag type={data.status} isMonochrome={true} />
@@ -145,7 +140,7 @@ export const rerunBuild = async (buildId) => {
 function TabBar() {
 	const [selectedTabIndex, setSelectedTabIndex] = useAtom(selectedTabAtom);
 	return (
-		<div css={Tab} className={"flex mt-48 "}>
+		<div css={Tab} className={"flex mt-74 "}>
 			{section.map(({ name, icon, key }, i) => (
 				<div onClick={setSelectedTabIndex.bind(this, i)} key={key}>
 					<div css={[TabItem, selectedTabIndex === i && selected]} className={`flex items-center justify-center text-15`}>
@@ -156,6 +151,9 @@ function TabBar() {
 					</div>
 				</div>
 			))}
+			<div css={css`margin-left: auto;`}>
+				<ReviewSection/>
+			</div>
 		</div>
 	);
 }
@@ -323,16 +321,10 @@ export const TestReportScreen = () => {
 		<div className={"mt-56"}>
 			<div className="px-16" css={containerWidth}>
 				<NameNStatusSection />
-				<div className={"flex items-center leading-none mt-16 text-13"}>
-					<CalendarSVG className={"mr-16"} />
-					Ran {timeSince(new Date(data.startedAt))}
+				<div className={"flex items-center leading-none mt-16 text-12"}>
+					<CalendarSVG className={"mr-8"} />
+					<span style={{position: "relative", top: 1}}>{timeSince(new Date(data.startedAt))}</span>
 				</div>
-				<Conditional showIf={selectedTabIndex !== 1}>
-					<div className={"flex items-center leading-none mt-56 mb-57 text-13"}>
-						<ThunderSVG className={"mr-16"} />
-						Wohoo! You ran {testsCount} tests
-					</div>
-				</Conditional>
 				<Conditional showIf={selectedTabIndex === 1}>
 					<div className={"flex leading-none mt-56 mb-52  items-center invisible"}>
 						<div

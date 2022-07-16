@@ -15,6 +15,7 @@ import { IUserTable } from "../users/interface";
 import { BuildsService } from "../builds/service";
 import { StorageManager } from "@modules/storage";
 import { Auth } from "googleapis";
+import axios from "axios";
 
 @Service()
 @JsonController("")
@@ -179,7 +180,37 @@ export class TestController {
 		},
 		@Param("project_id") projectId: number,
 	) {
-		console.log("BOdy object is", body);
+		if(body.host && body.host.includes("vercel.app")) {
+			await new Promise(async (resolve, reject) => {
+				try {
+					let interval = undefined;
+					let intervalCount = 0;
+					const startPollFunc = async () => {
+						const res = await axios.get(body.host);
+						if(res.status === 302 && res.headers.location && res.headers.location.startsWith("/")) {
+							intervalCount+=10000;
+							if(intervalCount > 60000) {
+								if(interval) clearInterval(interval);
+								reject("Timeout");
+							}
+
+							return false;
+						} else {
+							if(interval) clearInterval(interval);
+							resolve(true);	
+						}
+					}
+					await startPollFunc();
+					interval = setInterval(startPollFunc, 10000);
+					
+				} catch (e) {
+					console.error("Error occured while waiting for Vercel to be ready", e);
+					resolve(false);
+				}
+			})
+
+
+		}
 		const meta = {
 			disableBaseLineComparisions: !!body.disableBaseLineComparisions,
 		};

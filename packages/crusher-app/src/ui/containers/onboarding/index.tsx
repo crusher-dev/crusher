@@ -64,8 +64,10 @@ const CrusherOnboarding = () => {
 					type: "user",
 					key: USER_META_KEYS.INITIAL_ONBOARDING,
 					value: true,
+					callback: () => {
+						window.location.href = "/";
+					}
 				});
-				window.location.href = "/";
 			}
 		}, 5000);
 

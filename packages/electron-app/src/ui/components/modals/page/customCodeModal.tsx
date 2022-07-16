@@ -582,6 +582,8 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 						width: 162rem;
 						z-index: 123123123123123;
 						left: 47rem !important;
+						top: auto;
+						bottom: calc(100% + 4rem);
 					`}
 				>
 					<div css={runLinkStyle}>Run</div>

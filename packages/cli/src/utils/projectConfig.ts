@@ -55,7 +55,7 @@ export const getProjectConfig = () => {
 
   if(!hasLoggedProjectConfig) {
     hasLoggedProjectConfig = true;
-    console.log("Reading project config from: " + configPath);
+    console.log("Project config: " + configPath);
   }
   hasLoggedProjectConfig = true;
   return JSON.parse(fs.readFileSync(configPath, "utf8"));

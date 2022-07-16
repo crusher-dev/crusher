@@ -113,7 +113,6 @@ function TestListItem({ test, isActive, deleteItem, setLockState, projectId, onM
 
 	const handleRightClick = (e) => {
 		const pos = { x: e.clientX, y: e.clientY };
-		console.log("E is", e);
 		const constainerRects = containerRef.current.getBoundingClientRect();
 
 		const dropdownPos = { x: pos.x - constainerRects.left, y: pos.y - constainerRects.top };
@@ -602,7 +601,6 @@ function DashboardScreen() {
 		if (window.localStorage.getItem("projectConfigFile")) {
 			const projectConfigFile = window.localStorage.getItem("projectConfigFile");
 			const projectConfigFileJson = JSON.parse(projectConfigFile);
-			console.log("projectConfigFileJson", projectConfigFileJson, selectedProject);
 			if (projectConfigFileJson[selectedProject]) turnOnProxy(projectConfigFileJson[selectedProject]);
 		}
 	};
@@ -658,7 +656,6 @@ function DashboardScreen() {
 			setSelectedProject(projectId);
 
 			if (!projectId) {
-				console.log("Project id is", projectId, window.localStorage.getItem("projectId"));
 				navigate("/select-project");
 				return;
 			}
@@ -700,11 +697,6 @@ function DashboardScreen() {
 		[userTests],
 	);
 
-	// React.useEffect(() => {
-	//     if(isUnauthorized)
-	//     window.localStorage.removeItem("projectId");
-	// }, [isUnauthorized]);
-
 	let userProjectName = null;
 	if (userProject) {
 		if (userProject.name.length > 16) {
@@ -715,11 +707,13 @@ function DashboardScreen() {
 	}
 
 	const TitleComponent = React.useMemo(() => {
+
+		const isProxyWorking = Object.keys(proxyState).length;
 		return (
 			<div css={titleStyle}>
 				<span>
 					<span css={rocketIconStyle}>🚀</span>
-					&nbsp;&nbsp;
+					&nbsp;
 					<b css={titleBoldStyle}>{userProjectName}</b>
 				</span>
 				<CloudIcon
@@ -728,7 +722,7 @@ function DashboardScreen() {
 						titleCloudIconStyle,
 						proxyIsInitializing
 							? css``
-							: Object.keys(proxyState).length
+							: isProxyWorking
 							? undefined
 							: css`
 									path {

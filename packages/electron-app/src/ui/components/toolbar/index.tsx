@@ -138,7 +138,7 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 		return {shouldShow: false, startUrl};
 	}, []);
 
-	const verifyTest = () => {
+	const verifyTest = (autoSaveType: "UPDATE" | "SAVE", shouldAutoSave: boolean = false) => {
 		localStorage.setItem("app.showShouldOnboardingOverlay", "false");
 		dispatch(setShowShouldOnboardingOverlay(false));
 		const recorderState = getRecorderState(store.getState());
@@ -148,7 +148,7 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 		if (recorderState.type === TRecorderState.RECORDING_ACTIONS) {
 			const proxyWarning = handleProxyWarning();
 
-			performVerifyTest(true, proxyWarning.shouldShow).then((res) => {
+			performVerifyTest(shouldAutoSave, autoSaveType, proxyWarning.shouldShow).then((res) => {
 				if (res) {
 					if(res.draftJobId) {
 					window["triggeredTest"] = {
@@ -221,7 +221,7 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 							if (isTestVerificationComplete) {
 								saveTestToCloud();
 							} else {
-								verifyTest();
+								verifyTest("SAVE", true);
 							}
 						}}
 						bgColor="tertiary-outline"
@@ -247,11 +247,11 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 							if (isTestVerificationComplete) {
 								editTestInCloud();
 							} else {
-								verifyTest();
+								verifyTest("UPDATE", true);
 							}
 						}}
 						bgColor="tertiary-outline"
-						css={saveButtonStyle}
+						css={[saveButtonStyle, css`width: 132rem;`]}
 						className={"ml-20"}
 					>
 						<Conditional showIf={isTestVerificationComplete}>

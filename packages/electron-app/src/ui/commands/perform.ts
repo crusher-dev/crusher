@@ -167,8 +167,8 @@ export const performAssertElementVisibility = async (selectedElement: iElementIn
 	});
 };
 
-const performVerifyTest = async (shouldAlsoSave = true, shouldNotRunTest = true) => {
-	return ipcRenderer.invoke("verify-test", { shouldAlsoSave, shouldNotRunTest });
+const performVerifyTest = async (shouldAlsoSave = true, autoSaveType: "UPDATE" | "SAVE" = "SAVE", shouldNotRunTest = true) => {
+	return ipcRenderer.invoke("verify-test", { shouldAlsoSave, autoSaveType, shouldNotRunTest });
 };
 
 const performRunTests = async (projectId, testIds) => {

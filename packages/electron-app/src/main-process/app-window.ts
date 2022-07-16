@@ -905,14 +905,16 @@ export class AppWindow {
 	}
 
 	async handleVerifyTest(event, payload) {
-		const { shouldAlsoSave, shouldNotRunTest } = payload;
+		const { shouldAlsoSave, shouldNotRunTest, autoSaveType } = payload;
 		const recordedSteps = getSavedSteps(this.store.getState() as any);
 		await this.resetRecorder(TRecorderState.PERFORMING_ACTIONS);
 
 		await this.handleReplayTestSteps(recordedSteps as any);
 		this.store.dispatch(setIsTestVerified(true));
-		if (shouldAlsoSave) {
+		if (shouldAlsoSave && autoSaveType === "SAVE") {
 			return this.handleSaveTest(!!payload.shouldNotRunTest);
+		} else if(shouldAlsoSave && autoSaveType === "UPDATE") {
+			return this.handleUpdateTest(null);
 		}
 	}
 
@@ -1026,7 +1028,6 @@ export class AppWindow {
 		} catch (ex) {
 			this.store.dispatch(updateRecorderState(TRecorderState.ACTION_REQUIRED, {}));
 			this.setRemainingSteps(reaminingSteps);
-			throw ex;
 		}
 	}
 

@@ -160,7 +160,7 @@ function ReportSection() {
 				css={css`
 					width: 100%;
 					background: #0E0F12;
-					height: 100vh;
+					min-height: 100vh;
 					display: flex;
 					border-top-color: rgba(196,196,196,0.08);
 					border-top-width: 1rem;

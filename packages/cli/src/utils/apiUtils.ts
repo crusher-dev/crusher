@@ -10,7 +10,6 @@ import { getProjectConfig } from "./projectConfig";
 
 const getUserInfoFromToken = async (token: string) => {
   // call axios request with token as cookie header
-  console.log("Resolving " +   resolveBackendServerUrl("/users/actions/getUserAndSystemInfo") + " " + token);
   const infoResponse = await axios.get(
     resolveBackendServerUrl("/users/actions/getUserAndSystemInfo"),
     {
@@ -144,12 +143,14 @@ const getTestGroupArr = (testGroups?: string) => {
   return testGroups.split(",");
 }
 
+
 const runTests = async (host: string | undefined, proxyUrlsMap: { [name: string] : {tunnel: string; intercept: any} } = {}, browsers: Array<"CHROME" | "FIREFOX" | "SAFARI"> = ["CHROME"], testIds?: string, testGroups?: string, projectId?: any) => {
   const userInfo = getUserInfo();
   let _projectId = null;
 
   if (projectId) {
     _projectId = projectId;
+    console.log(`Project Id passed in flag, using it: ${projectId}`)
   } else {
     const projectConfig = getProjectConfig();
     _projectId = projectConfig.project;

@@ -1,12 +1,9 @@
 import { Command } from "commander";
 
-import { cli } from "cli-ux";
 import { runTests } from "../../utils/apiUtils";
 import { getProjectConfig } from "../../utils/projectConfig";
 import { loadUserInfoOnLoad } from "../../utils/hooks";
 import { getUserInfo } from "../../state/userInfo";
-import localTunnel from "localtunnel";
-import { createTunnel } from "../../utils/setup";
 import { Cloudflare } from "../../module/cloudflare";
 import { BROWSERS_MAP } from "../../constants";
 
@@ -19,8 +16,9 @@ program.addHelpText(
 );
 program
   .option("-t, --token <string>", "Crusher user token")
-  .option("-pID, --projectID <string>", "Crusher project ID")
+  .option("-projectid, --projectid <string>", "Crusher project ID")
   .option("-b, --browsers <string>", "Browsers to run test on")
+  .option("-host, --host <string>", "Browsers to run test on")
   .parse(process.argv);
 
 export default class CommandBase {
@@ -54,7 +52,6 @@ export default class CommandBase {
   }
 
   async makeSureSetupIsCorrect(options) {
-    const userInfo = getUserInfo();
     const projectConfig = getProjectConfig();
 
     if (!projectConfig && !(options.token && options.projectID))
@@ -65,14 +62,19 @@ export default class CommandBase {
 
   async runTests(flags) {
     const projectConfig = getProjectConfig();
-    let host: string | undefined = undefined;
-
+    const { testId, testGroup, browser, token,host } = flags;
+ 
     let proxyUrls = null;
-    if (projectConfig && !!projectConfig.proxy && projectConfig.proxy.length > 0) {
-      proxyUrls = await Cloudflare.runTunnel();
+
+    if (projectConfig  && !!projectConfig.proxy && projectConfig.proxy.length > 0) {
+      if(!!host){
+        console.log("Host passed, not creating a tunnel")
+      }else{
+        proxyUrls = await Cloudflare.runTunnel();
+      }
+  
     }
 
-    const { testId, testGroup, browser, token } = flags;
     if (token) {
       try {
         await loadUserInfoOnLoad({ token });
@@ -80,13 +82,15 @@ export default class CommandBase {
         throw new Error("Invalid token");
       }
     }
+  
     let _browsers = undefined;
     if(browser){
       _browsers = browser.split(",").map(b => b.trim().toUpperCase()).filter(b => !!BROWSERS_MAP[b]);
     }
 
+
     try {
-      await runTests(host, proxyUrls, _browsers, testId, testGroup, flags.projectID || null );
+      await runTests(host, proxyUrls, _browsers, testId, testGroup, flags.projectid || null );
     } catch (err) {
       console.error("Error is", err);
     } finally {

@@ -5,7 +5,7 @@ import { Button } from "@dyson/components/atoms/button/Button";
 import { useNavigate } from "react-router-dom";
 import { ipcRenderer, shell } from "electron";
 import { resolveToFrontEndPath } from "@shared/utils/url";
-import { waitForUserLogin } from "electron-app/src/utils";
+import { waitForUserLogin } from "electron-app/src/utils/renderer";
 import { focusOnWindow, saveAndGetUserInfo } from "../commands/perform";
 import { sendSnackBarEvent } from "../components/toast";
 import { useSelector } from "react-redux";
@@ -174,7 +174,7 @@ function LoginScreen() {
 				sendSnackBarEvent({ type: "success", message: `Login successful! Welcome, ${info.name}` });
 				handlePostLogin();
 			});
-		}, backendEndPoint).then(async ({ loginKey, interval: intervalMain }) => {
+		}).then(async ({ loginKey, interval: intervalMain }) => {
 			setInterval(interval);
 			setLoginText(resolveToFrontEndPath("?lK=" + loginKey, frontendEndPoint));
 		});
@@ -193,7 +193,7 @@ function LoginScreen() {
 				sendSnackBarEvent({ type: "success", message: `Login successful! Welcome, ${info.name}` });
 				handlePostLogin();
 			});
-		}, backendEndPoint);
+		});
 		setInterval(intervalMain);
 		setLoginText(resolveToFrontEndPath("?lK=" + loginKey, frontendEndPoint));
 		await shell.openExternal(resolveToFrontEndPath("?lK=" + loginKey, frontendEndPoint));

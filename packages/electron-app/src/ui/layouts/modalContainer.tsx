@@ -8,7 +8,7 @@ import { useInView } from "react-intersection-observer";
 import { getBuildReport, performExit } from "../commands/perform";
 import { resolveToFrontEndPath } from "@shared/utils/url";
 import { useStore } from "react-redux";
-import { getAppSettings } from "electron-app/src/store/selectors/app";
+import { getAppSettings, getCurrentSelectedProjct } from "electron-app/src/store/selectors/app";
 import { Dropdown } from "@dyson/components/molecules/Dropdown";
 
 export function Link({ children, ...props }) {
@@ -195,11 +195,12 @@ const statusTextStyle = css`
 
 function ActionButtonDropdown({ setShowActionMenu, isRecorder, ...props }) {
 	const navigate = useNavigate();
+	const store = useStore();
 	const [projectConfigFile, setProjectConfigFile] = React.useState(null);
 
 	React.useEffect(() => {
 		try {
-			const projectId = window.localStorage.getItem("projectId");
+			const projectId = getCurrentSelectedProjct(store.getState() as any);
 			const projectConfigFile = window.localStorage.getItem("projectConfigFile");
 			const projectConfigFileJson = JSON.parse(projectConfigFile);
 			if (projectConfigFileJson[projectId]) {

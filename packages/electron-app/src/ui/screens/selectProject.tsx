@@ -1,15 +1,17 @@
 import React from "react";
 import { css } from "@emotion/react";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useStore } from "react-redux";
 import { getUserAccountInfo } from "electron-app/src/store/selectors/app";
 import { getCloudUserInfo } from "../commands/perform";
 import { ModelContainerLayout } from "../layouts/modalContainer";
 import { LoadingScreen } from "./loading";
 import { CommonFooter } from "../layouts/commonFooter";
+import { setSelectedProject } from "electron-app/src/store/actions/app";
 
 function ProjectList({ userInfo }) {
 	const navigate = useNavigate();
+	const store = useStore();
 
 	React.useEffect(() => {
 		if(userInfo && userInfo.projects.length === 0) {
@@ -23,8 +25,8 @@ function ProjectList({ userInfo }) {
 						return (
 							<li
 								onClick={() => {
-									window.localStorage.setItem("projectId", project.id);
-									navigate("/?project_id=" + project.id);
+									store.dispatch(setSelectedProject(project.id))
+									navigate("/");
 								}}
 							>
 								<span>{project.name}</span>

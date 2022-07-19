@@ -15,3 +15,5 @@ export const getUserAccountInfo = (state: iReduxState) => state.app.accountInfo;
 export const getProxyState = (state: iReduxState) => state.app.proxy;
 
 export const getIsProxyInitializing = (state: iReduxState) => state.app.proxyIsInitializing;
+
+export const getCurrentSelectedProjct = (state: iReduxState) => state.app.selectedProject;

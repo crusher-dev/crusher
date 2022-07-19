@@ -5,6 +5,8 @@ import { useInView } from "react-intersection-observer";
 import { LinkBox } from "./login";
 import { performCreateCloudProject } from "../commands/perform";
 import { useNavigate } from "react-router-dom";
+import { useStore } from "react-redux";
+import { setSelectedProject } from "electron-app/src/store/actions/app";
 
 const Footer = () => {
     return (
@@ -115,6 +117,7 @@ const ProjectInput= () => {
     const mainRef = React.useRef(null);
     const inputRef: React.Ref<HTMLInputElement> = React.useRef(null);
     const navigate = useNavigate();
+    const store = useStore();
 
     React.useEffect(() => {
         setTimeout(() => {mainRef.current.style.height = "200px";}, 0);
@@ -125,8 +128,8 @@ const ProjectInput= () => {
         performCreateCloudProject(projectName).then((res) => {
             if(res) {
                 const projectId = res.id;
-                window.localStorage.setItem("projectId", projectId);
-                navigate("/?project_id=" + projectId);
+                store.dispatch(setSelectedProject(projectId));
+                navigate("/");
             } 
         });
     }, []);

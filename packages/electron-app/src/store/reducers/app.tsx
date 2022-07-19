@@ -6,6 +6,7 @@ import {
 	RESET_APP_SESSION,
 	SET_PROXY_INITIALIZING,
 	SET_PROXY_STATE,
+	SET_SELECTED_PROJECT,
 	SET_SESSION_META,
 	SET_SETTINGS,
 	SET_SHOW_SHOULD_ONBOARDING_OVERLAY,
@@ -39,6 +40,8 @@ interface IAppReducer {
 	accountInfo: any;
 	proxy: IProxyState | null;
 	proxyIsInitializing: boolean;
+
+	selectedProject: string | null;
 }
 
 const initialState: IAppReducer = {
@@ -82,6 +85,11 @@ const appReducer = (state: IAppReducer = initialState, action: AnyAction): IAppR
 				...state,
 				proxyIsInitializing: action.payload.isInitializing,
 			};
+		case SET_SELECTED_PROJECT:
+			return {
+				...state,
+				selectedProject: action.payload.projectId,
+			}
 		default:
 			return state;
 	}

@@ -14,6 +14,13 @@ const composeEnhancers =
 		? (window as any)["__REDUX_DEVTOOLS_EXTENSION_COMPOSE__"]({})
 		: compose;
 
+let _store = undefined;
+
+export function getStore(): Store<unknown> {
+	if(_store) return _store;
+	throw new Error("Store not initialized yet!");
+}
+
 export default function configureStore(intialState: any, scope = "main"): Store<unknown> {
 	let middlewares: Array<any> = [];
 
@@ -46,5 +53,6 @@ export default function configureStore(intialState: any, scope = "main"): Store<
 		replayActionRenderer(store);
 	}
 
+	_store = store;
 	return store;
 }

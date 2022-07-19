@@ -2,6 +2,10 @@ import * as path from "path";
 import fileUrl from "file-url";
 import { IDeepLinkAction } from "./types";
 import { resolveToBackendPath, resolveToFrontEndPath } from "@shared/utils/url";
+import { createAuthorizedRequestFunc, resolveToBackend } from "./utils/url";
+import axios from "axios";
+import { getStore } from "./store/configureStore";
+import { getCurrentSelectedProjct } from "./store/selectors/app";
 
 const isProduction = () => {
 	return process.env.NODE_ENV === "production";
@@ -64,29 +68,10 @@ function isValidHttpUrl(str: string) {
 	return !!pattern.test(str);
 }
 
-const waitForUserLogin = async (callback?, customBackendPath: string | undefined = undefined): Promise<{ loginKey: string; interval }> => {
-	const axios = require("axios").default;
-	const loginKey = await axios.get(resolveToBackendPath("/cli/get.key", customBackendPath)).then((res) => {
-		return res.data.loginKey;
-	});
 
-	const interval = setInterval(async () => {
-		const loginKeyStatus = await axios.get(resolveToBackendPath(`/cli/status.key?loginKey=${loginKey}`, customBackendPath)).then((res) => res.data);
-		if (loginKeyStatus.status === "Validated") {
-			clearInterval(interval);
-			if (callback) {
-				callback(loginKeyStatus.userToken);
-			}
-		}
-	}, 5000);
-
-	return { loginKey: loginKey, interval };
-};
-
-const getUserInfoFromToken = async (token: string, customBackendPath: string | undefined = undefined) => {
-	const axios = require("axios").default;
+const getUserInfoFromToken = async (token: string) => {
 	// call axios request with token as cookie header
-	const infoResponse = await axios.get(resolveToBackendPath("/users/actions/getUserAndSystemInfo", customBackendPath), {
+	const infoResponse = await axios.get(resolveToBackend("/users/actions/getUserAndSystemInfo"), {
 		headers: {
 			Cookie: `isLoggedIn=true; token=${token}`,
 		},
@@ -105,31 +90,21 @@ const getUserInfoFromToken = async (token: string, customBackendPath: string | u
 	};
 };
 
-const getUserAccountTests = async (projectId: string | null, token: string, customBackendPath: string | undefined = undefined) => {
-	const axios = require("axios").default;
-	// call axios request with token as cookie header
-	const infoResponse = await axios.get(resolveToBackendPath(`/projects/${projectId}/tests/`, customBackendPath), {
-		headers: {
-			Cookie: `isLoggedIn=true; token=${token}`,
-		},
-		withCredentials: true,
-	});
+const getSelectedProjectTests: () => Promise<any> = createAuthorizedRequestFunc(async (authorizationOptions: any) => {
+	const store = getStore();
+	const selectedProject = getCurrentSelectedProjct(store.getState() as any);
+	if(!selectedProject) throw new Error("No project selected");
 
-	return infoResponse.data;
-};
+	return axios.get(resolveToBackend(`/projects/${selectedProject}/tests`), {
+		...authorizationOptions
+	}).then((res) => res.data);
+});
 
-const getUserAccountProjects = async (token: string, customBackendPath: string | undefined = undefined) => {
-	const axios = require("axios").default;
-	// call axios request with token as cookie header
-	const infoResponse = await axios.get(resolveToBackendPath("/users/actions/getUserAndSystemInfo", customBackendPath), {
-		headers: {
-			Cookie: `isLoggedIn=true; token=${token}`,
-		},
-		withCredentials: true,
-	});
-
-	return infoResponse.data;
-};
+const getUserAccountProjects : () => Promise<any> = createAuthorizedRequestFunc(async (authorizationOptions: any) => {
+	return axios.get(resolveToBackend("/users/actions/getUserAndSystemInfo"), {
+		...authorizationOptions
+	}).then((res) => res.data);
+});
 
 export {
 	isProduction,
@@ -139,8 +114,7 @@ export {
 	parseDeepLinkUrlAction,
 	sleep,
 	isValidHttpUrl,
-	waitForUserLogin,
 	getUserInfoFromToken,
-	getUserAccountTests,
 	getUserAccountProjects,
+	getSelectedProjectTests,
 };

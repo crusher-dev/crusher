@@ -35,13 +35,16 @@ const PROJECT_CONFIG_PATH = path.resolve(process.cwd(), ".crusher");
 export const setProjectConfig = (config) => {
   createDirIfNotExist(".crusher");
   fs.writeFileSync(
-    path.resolve(PROJECT_CONFIG_PATH, "./config.json"),
-    JSON.stringify(config, null, 2)
+    path.resolve(PROJECT_CONFIG_PATH, "./config.js"),
+    `module.exports = ${JSON.stringify(config, null, 2)}`
   );
 };
 
 export const getProjectConfigPath = () => {
   const existingProjectConfig = findCrusherProjectConfig();
+  if(fs.existsSync(path.resolve(existingProjectConfig || PROJECT_CONFIG_PATH, "./config.js"))) {
+    return path.resolve(existingProjectConfig || PROJECT_CONFIG_PATH, "./config.js");
+  }
   const configPath = path.resolve(existingProjectConfig || PROJECT_CONFIG_PATH, "./config.json");
   if(!fs.existsSync(configPath)) return null;
 
@@ -49,14 +52,15 @@ export const getProjectConfigPath = () => {
 }
 
 let hasLoggedProjectConfig = false;
-export const getProjectConfig = () => {
+export const getProjectConfig = (verbose: boolean = true) => {
   const configPath = getProjectConfigPath();
-  if(!fs.existsSync(configPath)) { if(!hasLoggedProjectConfig) { console.log("No project config found"); hasLoggedProjectConfig=true;} return null; }
+  if(!fs.existsSync(configPath)) { if(!hasLoggedProjectConfig) { if(verbose) console.log("No project config found"); hasLoggedProjectConfig=true;} return null; }
 
   if(!hasLoggedProjectConfig) {
     hasLoggedProjectConfig = true;
     console.log("Project config: " + configPath);
   }
   hasLoggedProjectConfig = true;
+  if(configPath.endsWith(".js")) { const requireOriginal = eval("require"); const config = requireOriginal(configPath); return config; }
   return JSON.parse(fs.readFileSync(configPath, "utf8"));
 };

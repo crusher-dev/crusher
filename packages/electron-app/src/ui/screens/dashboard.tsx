@@ -5,7 +5,7 @@ import { Dropdown } from "@dyson/components/molecules/Dropdown";
 import { DownIcon, LoadingIconV2 } from "../icons";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useStore } from "react-redux";
-import { getIsProxyInitializing, getProxyState, getUserAccountInfo } from "electron-app/src/store/selectors/app";
+import { getCurrentSelectedProjct, getIsProxyInitializing, getProxyState, getUserAccountInfo } from "electron-app/src/store/selectors/app";
 import { LoadingScreen } from "./loading";
 import {
 	getCloudUserInfo,
@@ -26,6 +26,8 @@ import { resolveToFrontEndPath } from "@shared/utils/url";
 import { CreateFirstTest } from "../components/create-first-test";
 import { ProxyWarningContainer } from "../components/proxy-warning";
 import InsufficientPermission from "./insufficientPermission";
+import { setSelectedProject } from "electron-app/src/store/actions/app";
+import { getUserAccountProjects } from "electron-app/src/utils";
 
 const PlusIcon = (props) => (
 	<svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
@@ -574,7 +576,7 @@ const DashboardFooter = ({ userTests, projectId }) => {
 };
 function DashboardScreen() {
 	const [userTests, setUserTests] = React.useState(null);
-	const [selectedProject, setSelectedProject] = React.useState(null);
+	const selectedProject = useSelector(getCurrentSelectedProjct);
 	const store = useStore();
 	const [userInfo, setUserInfo] = React.useState({});
 	const [showProxyWarning, setShowProxyWarning] = React.useState({show: false, testId: null, startUrl: null});
@@ -585,14 +587,12 @@ function DashboardScreen() {
 	let navigate = useNavigate();
 
 	React.useEffect(() => {
-		if (userAccountInfo) {
-			getCloudUserInfo().then((userInfo) => {
-				setUserInfo(userInfo);
-			});
-		}
-	}, [userAccountInfo]);
+		getUserAccountProjects().then((userInfo) => {
+			setUserInfo(userInfo);
+		});
+	}, []);
 
-	const turnOnProxyServers = () => {
+	const turnOnProxyServers = React.useCallback(() => {
 		const proxyState = getProxyState(store.getState());
 		if (Object.keys(proxyState).length) {
 			console.error("Proxy is already enabled", proxyState);
@@ -603,7 +603,7 @@ function DashboardScreen() {
 			const projectConfigFileJson = JSON.parse(projectConfigFile);
 			if (projectConfigFileJson[selectedProject]) turnOnProxy(projectConfigFileJson[selectedProject]);
 		}
-	};
+	}, []);
 
 	React.useEffect(() => {
 		document.querySelector("html").style.fontSize = "1px";
@@ -623,7 +623,7 @@ function DashboardScreen() {
 		const userAccountInfo = getUserAccountInfo(store.getState());
 		const queryParamString = window.location.hash.split("?")[1];
 		const queryParams = new URLSearchParams(queryParamString);
-		const projectId = queryParams.get("project_id") || window.localStorage.getItem("projectId");
+		const projectId = getCurrentSelectedProjct(store.getState() as any);
 
 		if (projectId && userAccountInfo) {
 			getUserTests(projectId).then((tests) => {
@@ -635,7 +635,7 @@ function DashboardScreen() {
 			const userAccountInfo = getUserAccountInfo(store.getState());
 			const queryParamString = window.location.hash.split("?")[1];
 			const queryParams = new URLSearchParams(queryParamString);
-			const projectId = queryParams.get("project_id") || window.localStorage.getItem("projectId");
+			const projectId = getCurrentSelectedProjct(store.getState() as any);
 
 			if (projectId && userAccountInfo) {
 				getUserTests(projectId).then((tests) => {
@@ -650,10 +650,8 @@ function DashboardScreen() {
 
 	React.useEffect(() => {
 		if (userAccountInfo) {
-			const queryParamString = window.location.hash.split("?")[1];
-			const queryParams = new URLSearchParams(queryParamString);
-			const projectId = queryParams.get("project_id") || window.localStorage.getItem("projectId");
-			setSelectedProject(projectId);
+			const projectId = getCurrentSelectedProjct(store.getState() as any);
+			store.dispatch(setSelectedProject(projectId));
 
 			if (!projectId) {
 				navigate("/select-project");
@@ -672,17 +670,17 @@ function DashboardScreen() {
 		}
 	}, [selectedProject]);
 	const userProject = React.useMemo(() => {
-		const selectedProject = window.localStorage.getItem("projectId");
+		const selectedProject = getCurrentSelectedProjct(store.getState() as any);
 		if (userInfo && userInfo.projects) {
 			if (!userInfo.projects.find((project) => project.id == selectedProject)) {
 				console.log("Unauthorized", userInfo, selectedProject);
-				window.localStorage.removeItem("projectId");
+				store.dispatch(setSelectedProject(null));
 				setIsUnauthorized(true);
 			}
 		}
 		return userInfo && userInfo.projects ? userInfo.projects.find((p) => p.id == selectedProject) : null;
 	}, [userInfo]);
-	console.log("User info", userInfo, selectedProject, userProject);
+
 	const handleTestDelete = React.useCallback(
 		(id) => {
 			setUserTests(userTests.filter((a) => a.id != id));

@@ -613,6 +613,16 @@ const GithubIconV2 = (props) => (
 	</svg>
   )
 
+  function ExternalLinkIcon(props) {
+	return (
+		<svg width={10} height={10} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+			<path
+				d="M3.889 1.667v1.11H1.11V8.89h6.111V6.11h1.111v3.333a.556.556 0 01-.555.556H.556A.556.556 0 010 9.444V2.222a.556.556 0 01.556-.555h3.333zM10 0v4.444H8.889V1.896l-4.33 4.33-.785-.785 4.329-4.33H5.556V0H10z"
+				fill="#fff"
+			/>
+		</svg>
+	);
+}
 
 export {
 	CrusherIcon,
@@ -650,5 +660,6 @@ export {
 	CreateIcon,
 	ConnectivityWarningIcon,
 	PlayV2Icon,
-	GithubIconV2
+	GithubIconV2,
+	ExternalLinkIcon
 };

@@ -96,7 +96,7 @@ const getSelectedProjectTests: () => Promise<any> = createAuthorizedRequestFunc(
 	if(!selectedProject) throw new Error("No project selected");
 
 	return axios.get(resolveToBackend(`/projects/${selectedProject}/tests`), {
-		...authorizationOptions
+		...authorizationOptions,
 	}).then((res) => res.data);
 });
 

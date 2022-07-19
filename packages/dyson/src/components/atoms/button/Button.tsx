@@ -150,7 +150,7 @@ export type ButtonProps = {
 	/**
 	 * Optional click handler
 	 */
-	onClick?: () => void;
+	onClick?: (e: any) => void;
 	className?: string;
 } & React.DetailedHTMLProps<React.HTMLAttributes<HTMLButtonElement>, any>;
 

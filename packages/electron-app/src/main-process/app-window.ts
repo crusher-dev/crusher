@@ -46,6 +46,7 @@ import child_process from "child_process";
 
 import { screen } from "electron";
 import { ProxyManager } from "./proxy-manager";
+import { resolveToBackend } from "../utils/url";
 
 export class AppWindow {
 	private window: Electron.BrowserWindow;
@@ -353,10 +354,7 @@ export class AppWindow {
 		});
 	}
 
-	private async handleCloudRunTests(event: Electron.IpcMainEvent, payload: { projectId: string; testIds: Array<string> | undefined }) {
-		const userAccountInfo = getUserAccountInfo(this.store.getState() as any);
-		const appSettings = getAppSettings(this.store.getState() as any);
-
+	private async handleCloudRunTests(event: Electron.IpcMainEvent, payload: { testIds: Array<string> | undefined }) {
 		return CloudCrusher.runTests(payload.testIds, this.proxyManager._results);
 	}
 
@@ -383,7 +381,7 @@ export class AppWindow {
 
 		return axios
 			.post(
-				resolveToBackendPath("teams/actions/update.codeTemplate", appSettings.backendEndPoint),
+				resolveToBackend("teams/actions/update.codeTemplate"),
 				{ id: payload.id, name: payload.name, code: payload.code },
 				{
 					headers: {
@@ -407,7 +405,7 @@ export class AppWindow {
 
 		return axios
 			.post(
-				resolveToBackendPath("teams/actions/delete.codeTemplate", appSettings.backendEndPoint),
+				resolveToBackend("teams/actions/delete.codeTemplate"),
 				{ id: payload.id },
 				{
 					headers: {
@@ -430,7 +428,7 @@ export class AppWindow {
 		const appSettings = getAppSettings(this.store.getState() as any);
 
 		return axios
-			.post(resolveToBackendPath("teams/actions/save.code", appSettings.backendEndPoint), payload.createPayload, {
+			.post(resolveToBackend("teams/actions/save.code"), payload.createPayload, {
 				headers: {
 					Accept: "application/json, text/plain, */*",
 					"Content-Type": "application/json",
@@ -465,7 +463,7 @@ export class AppWindow {
 		const appSettings = getAppSettings(this.store.getState() as any);
 
 		return axios
-			.get(resolveToBackendPath("teams/actions/get.codeTemplates", appSettings.backendEndPoint), {
+			.get(resolveToBackend("teams/actions/get.codeTemplates"), {
 				headers: {
 					Accept: "application/json, text/plain, */*",
 					"Content-Type": "application/json",

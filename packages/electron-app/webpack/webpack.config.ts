@@ -94,7 +94,7 @@ const finalConfig = [
 	},
 	{
 		...commonConfig,
-		entry: { renderer: path.resolve(__dirname, "../src/ui/index") },
+		entry: { renderer: path.resolve(__dirname, "../src/_ui/index") },
 		target: "electron-renderer",
 		plugins: [
 			...commonConfig.plugins,

@@ -171,8 +171,8 @@ const performVerifyTest = async (shouldAlsoSave = true, autoSaveType: "UPDATE" |
 	return ipcRenderer.invoke("verify-test", { shouldAlsoSave, autoSaveType, shouldNotRunTest });
 };
 
-const performRunTests = async (projectId, testIds) => {
-	return ipcRenderer.invoke("run-tests", { projectId, testIds });
+const performRunTests = async (testIds) => {
+	return ipcRenderer.invoke("run-tests", { testIds });
 };
 
 const performResetAppSession = async () => {

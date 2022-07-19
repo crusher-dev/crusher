@@ -23,7 +23,7 @@ const createAuthorizedRequestFunc = (callback) => {
 
         if(!userInfo.token) { throw new Error("User not logged in"); }
         const headers = {
-			Cookie: `isLoggedIn=true; token=${userInfo.token}`,
+			Authorization: `${userInfo.token}`,
             Accept: "application/json, text/plain, */*",
             "Content-Type": "application/json"
         };
@@ -36,6 +36,6 @@ const checkIfLoggedIn = () => {
     const store: any = getStore();
     const userInfo = getUserAccountInfo(store.getState());
 
-    return userInfo.token ? true : false;
+    return userInfo && userInfo.token ? true : false;
 };
 export { resolveToBackend, resolveToFrontend, createAuthorizedRequestFunc, checkIfLoggedIn };

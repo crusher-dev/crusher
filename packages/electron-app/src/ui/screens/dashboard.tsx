@@ -28,6 +28,7 @@ import { ProxyWarningContainer } from "../components/proxy-warning";
 import InsufficientPermission from "./insufficientPermission";
 import { setSelectedProject } from "electron-app/src/store/actions/app";
 import { getUserAccountProjects } from "electron-app/src/utils";
+import { checkIfLoggedIn, resolveToFrontend } from "electron-app/src/utils/url";
 
 const PlusIcon = (props) => (
 	<svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
@@ -417,7 +418,7 @@ function TestItemMenuDropdown({ testId, draftJobId, setShowActionMenu, setIsEdit
 
 	const handleViewReport = () => {
 		setShowActionMenu(false);
-		shell.openExternal(resolveToFrontEndPath(`/app/build/${draftJobId}`));
+		shell.openExternal(resolveToFrontend(`/app/build/${draftJobId}`));
 	};
 
 	return (
@@ -456,7 +457,7 @@ function ActionButtonDropdown({ setShowActionMenu, projectId, ...props }) {
 	const handleRunTestsCloud = React.useCallback(() => {
 		window["messageBarCallback"](-1);
 
-		performRunTests(projectId, null).then((buildRes) => {
+		performRunTests(null).then((buildRes) => {
 			window["messageBarCallback"](buildRes.buildId);
 			// sendSnackBarEvent({ type: "success", message: "Test started successfully!" });
 		});
@@ -587,9 +588,12 @@ function DashboardScreen() {
 	let navigate = useNavigate();
 
 	React.useEffect(() => {
-		getUserAccountProjects().then((userInfo) => {
-			setUserInfo(userInfo);
-		});
+		const loggedIn = checkIfLoggedIn();
+		if(loggedIn) {
+			getUserAccountProjects().then((userInfo) => {
+				setUserInfo(userInfo);
+			});
+		}
 	}, []);
 
 	const turnOnProxyServers = React.useCallback(() => {

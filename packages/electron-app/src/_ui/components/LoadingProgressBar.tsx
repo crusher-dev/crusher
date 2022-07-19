@@ -7,14 +7,36 @@ function LoadingProgressBar() {
     const progressStyle = React.useMemo(() => loadingProgressPillCss(inView), [inView]);
 
 	return (
-		<div ref={ref} css={loadingContainerCss}>
-			<div css={loadingProgressBarCss}>
-				<div css={progressStyle}></div>
+		<div css={containerCss}>
+			<div css={contentCss}>
+				<div ref={ref} css={loadingContainerCss}>
+					<div css={loadingProgressBarCss}>
+						<div css={progressStyle}></div>
+					</div>
+					<div css={loadingTextCss}>loading crusher..</div>
+				</div>
 			</div>
-			<div css={loadingTextCss}>loading crusher..</div>
 		</div>
 	);
-}
+};
+const contentCss = css`
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    flex-direction: column;
+`;
+const containerCss = css`
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translateX(-50%) translateY(-50%);
+	background: #161617;
+	border-radius: 16px;
+	display: flex;
+	flex-direction: column;
+`;
 
 const loadingTextCss = css`
 	font-family: Gilroy;

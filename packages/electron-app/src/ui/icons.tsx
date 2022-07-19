@@ -623,6 +623,22 @@ const GithubIconV2 = (props) => (
 		</svg>
 	);
 }
+const EditIcon = (props) => (
+	<svg viewBox={"0 0 13 13"} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+		<path
+			d="m12.833 6.87-2.157-2.157a.537.537 0 0 0-.775 0l-.645.643V.886a.883.883 0 0 0-.883-.884H.883A.885.885 0 0 0 0 .885V8.34c0 .488.395.884.883.884h4.484l-.109.106a.842.842 0 0 0-.138.276l-.551 2.711c-.104.533.275.748.636.663l2.709-.554c.111 0 .194-.056.276-.138l4.643-4.646a.53.53 0 0 0 0-.772ZM1.06 8.165V1.063h7.137v5.346L6.434 8.162H1.06v.003Zm6.466 3.216-1.74.36.357-1.743 4.118-4.12L11.67 7.26l-4.144 4.12Z"
+			fill="#7A7A7A"
+		/>
+	</svg>
+);
+const PlayIcon = (props) => (
+	<svg viewBox="0 0 12 14" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+		<path
+			d="M1.386 14c-.23 0-.456-.062-.656-.178-.45-.258-.73-.76-.73-1.306V1.484C0 .937.28.436.73.178A1.303 1.303 0 0 1 2.07.195l9.296 5.644c.194.123.353.294.464.497a1.385 1.385 0 0 1-.464 1.824L2.07 13.805a1.317 1.317 0 0 1-.684.195Z"
+			fill="#B061FF"
+		/>
+	</svg>
+);
 
 export {
 	CrusherIcon,
@@ -661,5 +677,7 @@ export {
 	ConnectivityWarningIcon,
 	PlayV2Icon,
 	GithubIconV2,
-	ExternalLinkIcon
+	ExternalLinkIcon,
+	EditIcon,
+	PlayIcon
 };

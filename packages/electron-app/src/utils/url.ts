@@ -21,7 +21,7 @@ const createAuthorizedRequestFunc = (callback) => {
         const store: any = getStore();
         const userInfo = getUserAccountInfo(store.getState());
 
-        if(!userInfo.token) { throw new Error("User not logged in"); }
+        if(!(userInfo && userInfo.token)) { throw new Error("User not logged in"); }
         const headers = {
 			Authorization: `${userInfo.token}`,
             Accept: "application/json, text/plain, */*",

@@ -24,6 +24,7 @@ const navBarCss = css`
 	z-index: 99;
 	width: 100%;
 	color: rgba(255, 255, 255, 0.67);
+	padding: 12rem 24rem;
 `;
 const settingsCss = css`
     margin-left: auto;

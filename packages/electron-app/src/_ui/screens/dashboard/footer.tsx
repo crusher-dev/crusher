@@ -1,11 +1,10 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { goFullScreen, performReplayTestUrlAction, performRunTests } from "electron-app/src/ui/commands/perform";
+import { goFullScreen, performRunTests } from "electron-app/src/ui/commands/perform";
 import { useNavigate } from "react-router-dom";
-import { Dropdown } from "@dyson/components/molecules/Dropdown";
-import { Button } from "@dyson/components/atoms";
-import { DownIcon } from "electron-app/src/ui/icons";
 import { ButtonDropdown } from "../../components/buttonDropdown";
+import { triggerLocalBuild } from "../../utils/recorder";
+import { StatusMessageBar } from "electron-app/src/ui/layouts/modalContainer";
 
 const PlusIcon = (props) => (
 	<svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
@@ -77,10 +76,7 @@ const DashboardFooter = ({ tests }) => {
     const handleDropdownCallback = React.useCallback((optionId) => {
         if(optionId === "run-local-tests") {
             const testIdArr = tests.map((a) => a.id);
-            window["testsToRun"] = { list: testIdArr, count: testIdArr.length };
-            navigate("/recorder");
-            goFullScreen();
-            performReplayTestUrlAction(window["testsToRun"].list[0], true);
+			triggerLocalBuild(testIdArr);
         } else if (optionId === "run-cloud-tests") {
 			window["messageBarCallback"](-1);
 
@@ -94,46 +90,37 @@ const DashboardFooter = ({ tests }) => {
 
 	return (
 		<div css={containerCss}>
-			<div css={footerLeftCss}>
-				<div>
-					<span css={infoTextCss}>{tests.length} low code </span>
+			<div css={contentCss}>
+				<div css={footerLeftCss}>
+					<div>
+						<span css={infoTextCss}>{tests.length} low code </span>
+					</div>
+				</div>
+				<div css={footerRightCss}>
+					<div>
+						<CreateTestLink onClick={handleCreateTest} />
+					</div>
+					<div css={dropdownContainerCss}>
+						<ButtonDropdown options={actionDropdownOptions} primaryOption={"run-local-tests"} callback={handleDropdownCallback}/>
+					</div>
 				</div>
 			</div>
-			<div css={footerRightCss}>
-				<div>
-					<CreateTestLink onClick={handleCreateTest} />
-				</div>
-				<div css={dropdownContainerCss}>
-                    <ButtonDropdown options={actionDropdownOptions} primaryOption={"run-local-tests"} callback={handleDropdownCallback}/>
-				</div>
-			</div>
+			<StatusMessageBar isLoadingScreen={false} />
 		</div>
+
 	);
 }
-const containerCss = css`display: flex; width: 100%;`;
 
-const saveButtonStyle = css`
-	width: 92rem;
-	height: 30rem;
-	background: linear-gradient(0deg, #9462ff, #9462ff);
-	border-radius: 6rem;
-	font-family: Gilroy;
-	font-style: normal;
-	font-weight: 600;
-	font-size: 14rem;
-	line-height: 17rem;
-	border: 0.5px solid transparent;
-	border-right-width: 0rem;
-	border-top-right-radius: 0rem;
-	border-bottom-right-radius: 0rem;
-	color: #ffffff;
-	:hover {
-		border: 0.5px solid #8860de;
-		border-right-width: 0rem;
-		border-top-right-radius: 0rem;
-		border-bottom-right-radius: 0rem;
-	}
+const containerCss = css`
+	display: flex;
+	flex-direction: column;
 `;
+const contentCss = css`
+	display: flex;
+	width: 100%;
+	padding: 12rem 24rem;
+`;
+
 const infoTextCss = css`
 	font-family: "Gilroy";
 	font-style: normal;

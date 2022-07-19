@@ -22,6 +22,7 @@ import {SettingsScreen} from "./screens/settings";
 import historyInstance, { CustomRouter } from './utils/history';
 import { ProjectsListScreen } from "./screens/projectList";
 import { ToastSnackbar } from "../ui/components/toast";
+import { AuthOnboardingScreen } from "../ui/screens/authOnboarding";
 
 const globalAppConfig = getGlobalAppConfig();
 webFrame.setVisualZoomLevelLimits(1, 3);
@@ -67,6 +68,7 @@ render(
             <Global styles={globalStyle}/>
 			<Routes>
                 <Route path="/login" element={<LoginScreen />} />
+                <Route path="/onboarding" element={<AuthOnboardingScreen />} />
 				<Route path="/" element={<DashboardScreen />} />
 				<Route path="/select-project" element={<ProjectsListScreen />} />
 				<Route path="/create-test" element={<CreateTestScreen />} />

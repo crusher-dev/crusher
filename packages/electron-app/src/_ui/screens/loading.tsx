@@ -11,33 +11,10 @@ function LoadingScreen() {
 
 	return (
 		<CompactAppLayout footer={<Footer />}>
-			<div css={containerCss}>
-				<div css={contentCss}>
-					<LoadingProgressBar />
-				</div>
-			</div>
+			<LoadingProgressBar />
 		</CompactAppLayout>
 	);
 }
-
-const contentCss = css`
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    flex-direction: column;
-`;
-const containerCss = css`
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translateX(-50%) translateY(-50%);
-	background: #161617;
-	border-radius: 16px;
-	display: flex;
-	flex-direction: column;
-`;
 
 
 export { LoadingScreen };

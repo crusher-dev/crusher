@@ -35,7 +35,7 @@ const LoginScreen = () => {
         const { loginKey } = await loginUserToCloud(handlePostLogin);
 		setIsWaitingForLogin(true);
 
-		const loginUrl = resolveToFrontend("?lK=" + loginKey);
+		const loginUrl = resolveToFrontend("/login_sucessful?lK=" + loginKey);
 		shell.openExternal(loginUrl);
     }, []);
 

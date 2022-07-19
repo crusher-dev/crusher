@@ -1,3 +1,6 @@
+import { getStore } from "../store/configureStore";
+import { getCurrentSelectedProjct, getProxyState } from "../store/selectors/app";
+import { turnOnProxy } from "../ui/commands/perform";
 import {resolveToBackend, resolveToFrontend} from "./url";
 
 const waitForUserLogin = async (callback?: any): Promise<{ loginKey: string; interval }> => {
@@ -19,4 +22,19 @@ const waitForUserLogin = async (callback?: any): Promise<{ loginKey: string; int
 	return { loginKey: loginKey, interval };
 };
 
-export { waitForUserLogin };
+const turnOnProxyServers = () => {
+	const store = getStore();
+	const proxyState = getProxyState(store.getState() as any);
+	const selectedProject = getCurrentSelectedProjct(store.getState() as any);
+	if (Object.keys(proxyState).length) {
+		console.error("Proxy is already enabled", proxyState);
+		return;
+	}
+	if (window.localStorage.getItem("projectConfigFile")) {
+		const projectConfigFile = window.localStorage.getItem("projectConfigFile");
+		const projectConfigFileJson = JSON.parse(projectConfigFile);
+		if (projectConfigFileJson[selectedProject]) turnOnProxy(projectConfigFileJson[selectedProject]);
+	}
+};
+
+export { turnOnProxyServers, waitForUserLogin };

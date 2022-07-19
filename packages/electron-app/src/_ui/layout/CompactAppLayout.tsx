@@ -136,8 +136,6 @@ const contentCss = css`
 const footerCss = css`
 	margin-top: auto;
 	border-top: 1px solid rgba(255, 255, 255, 0.08);
-	padding: 12rem 24rem;
-	display: flex;
 `;
 
 export { CompactAppLayout };

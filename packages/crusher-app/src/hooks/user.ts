@@ -44,7 +44,8 @@ export function loadUserDataAndRedirect({ fetchData = true, userAndSystemData = 
 			}
 
 			if (loginKey && loginKey !== "null" && dataToConsider.isUserLoggedIn) {
-				backendRequest(resolvePathToBackendURI("/cli/actions/login.user"), { method: RequestMethod.POST, payload: { loginKey } }).catch((err) => {});
+				console.log("Requesting login key", loginKey);
+				backendRequest(resolvePathToBackendURI("/cli/actions/login.user"), { method: RequestMethod.POST, payload: { loginKey } }).catch((err) => { console.error("Error is", err);});
 				setLoginKey(null);
 				window.location.href = "/login_sucessful";
 			} else {

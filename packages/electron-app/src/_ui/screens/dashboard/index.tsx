@@ -148,6 +148,21 @@ const DashboardScreen = () => {
         getSelectedProjectTests().then((res) => {
             setTests(res.list);
         }).catch((err) => {});
+
+        const interval = setInterval(() => {
+			const userAccountInfo = getUserAccountInfo(store.getState());
+			const projectId = getCurrentSelectedProjct(store.getState() as any);
+
+			if (projectId && userAccountInfo) {
+				getSelectedProjectTests().then((res) => {
+					setTests(res.list.filter((a) => { return !((window as any).deletedTest || []).includes(a.id) }));
+				});
+			}
+		}, 5000);
+
+		return () => {
+			clearInterval(interval);
+		};
     }, [selectedProjectId]);
 
     const isLoading = React.useMemo(() => tests === null, [tests]);

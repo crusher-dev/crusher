@@ -60,8 +60,8 @@ export default class CommandBase {
 
   async createTunnel(configFilePath) {
     try {
-        const projectConfig = JSON.parse(this.getProjectConifg(configFilePath));
-        if(!projectConfig.proxy) { throw new Error("No proxy found in config file"); }
+        const projectConfig = this.getProjectConifg(configFilePath);
+        if(!projectConfig.proxy) { throw  Error("No proxy found in config file"); }
         await Cloudflare.runTunnel(projectConfig);
     } catch(err) {
         throw new Error("Error running tunnel:  " + err.message);

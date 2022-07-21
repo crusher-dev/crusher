@@ -167,8 +167,10 @@ export class TestController {
 		@Body()
 		body: {
 			proxyUrlsMap?: { [key: string]: { intercept: string | { regex: string }; tunnel: string } };
+			// @TODO: Legacy remove them
 			githubRepoName?: string;
 			githubCommitId?: string;
+			ci?: { repoName?: string; commitId: string; branchName: string, commitMessage: string; }
 			host?: string;
 			disableBaseLineComparisions: boolean;
 			baselineJobId: number | null;
@@ -218,6 +220,11 @@ export class TestController {
 			meta["github"] = {
 				repoName: body.githubRepoName,
 				commitId: body.githubCommitId,
+			};
+		} else if (body.ci) {
+			meta["github"] = {
+				repoName: body.ci.repoName,
+				commitId: body.ci.commitId,
 			};
 		}
 

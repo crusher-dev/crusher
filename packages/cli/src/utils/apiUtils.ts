@@ -6,6 +6,7 @@ import {
   resolveBackendServerUrl,
   resolveFrontendServerUrl,
 } from "../utils/utils";
+import { CI } from "./ci";
 import { getProjectConfig } from "./projectConfig";
 
 const getUserInfoFromToken = async (token: string) => {
@@ -168,12 +169,14 @@ const runTests = async (host: string | undefined, proxyUrlsMap: { [name: string]
         host: process.env.VERCEL_URL,
       }
     }
+    const environmentInfo  = CI.getEnvironmentInfo();
     const res = await axios.post(
       resolveBackendServerUrl(
         `/projects/${_projectId}/tests/actions/run`
       ),
       {
         ...gitPayload,
+        ...environmentInfo,
         host: host ? host : gitPayload.host,
         proxyUrlsMap: proxyUrlsMap,
         browsers: browsers,

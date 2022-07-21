@@ -2,7 +2,17 @@
 const NodeEnvironment = require('jest-environment-node');
 const playwright = require("playwright");
 const path = require("path");
+export const getIsArm = () => {
+  try {
+    const isCurrentlyTranslated = execSync('sysctl sysctl.proc_translated', { stdio: 'pipe' });
 
+    return true;
+  } catch (e) {
+    // On non-ARM macs `sysctl sysctl.proc_translated` throws with
+    // sysctl: unknown oid 'sysctl.proc_translated'
+    return false;
+  }
+};
 export function getLaunchOptions() {
   const platform = process.platform;
   let executableConfig = null;

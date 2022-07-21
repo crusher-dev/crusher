@@ -68,7 +68,7 @@ export default class CommandBase {
 
     if (projectConfig  && !!projectConfig.proxy && projectConfig.proxy.length > 0) {
       if(!!host){
-        console.log("Host passed, not creating a tunnel")
+        console.log("Host passed, not creating a tunnel", host);
       }else{
         proxyUrls = await Cloudflare.runTunnel();
       }

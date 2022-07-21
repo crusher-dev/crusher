@@ -191,7 +191,7 @@ export class TestController {
 						const res = await axios.get(body.host);
 						if(res.status === 302 && res.headers.location && res.headers.location.startsWith("/")) {
 							intervalCount+=10000;
-							if(intervalCount > 60000) {
+							if(intervalCount > 200000) {
 								if(interval) clearInterval(interval);
 								reject("Timeout");
 							}

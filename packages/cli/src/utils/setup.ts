@@ -117,8 +117,13 @@ async function downloadUpstreamBuild(): Promise<string> {
 
 async function installMacBuild() {
   // handle when crusher is already installed
-
-  cli.info("Crusher Recorder is not installed.\n");
+  if(fs.existsSync(resolvePathToAppDirectory("bin"))) {
+    execSync(`rm -Rf ${resolvePathToAppDirectory("bin")} && mkdir ${resolvePathToAppDirectory("bin")}`);
+    cli.info("New version available! Updating now...\n");
+  } else {
+    execSync(`mkdir ${resolvePathToAppDirectory("bin")}`);
+    cli.info("Crusher Recorder is not installed.\n");
+  }
   const recorderZipPath = await downloadUpstreamBuild();
 
   await cli.action.start("Unzipping");
@@ -145,7 +150,13 @@ async function installMacBuild() {
 async function installLinuxBuild() {
   // handle when crusher is already installed
 
-  cli.info("Crusher Recorder is not installed.\n");
+  if(fs.existsSync(resolvePathToAppDirectory("bin"))) {
+    execSync(`rm -Rf ${resolvePathToAppDirectory("bin")} && mkdir ${resolvePathToAppDirectory("bin")}`);
+    cli.info("New version available! Updating now...\n");
+  } else {
+    execSync(`mkdir ${resolvePathToAppDirectory("bin")}`);
+    cli.info("Crusher Recorder is not installed.\n");
+  }
   const recorderZipPath = await downloadUpstreamBuild();
 
   await cli.action.start("Unzipping");

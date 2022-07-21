@@ -15,17 +15,20 @@ export default class CommandBase {
   ${chalk.hex("C1C1C1")("Commands")}
 
   Basic
-      ${chalk.hex("9A4AFF")(`test:create`)}               Create a new test
-      ${chalk.hex("9A4AFF")(`test:run`)}                  Run all the tests
+      .                         Starts crusher
+      ${chalk.bold(chalk.hex("fff")(`test:create`))}               Create a new test
+      ${chalk.bold(chalk.hex("fff")(`test:run`))}                  Run all the tests
+      login                     Logs into your account or create new one
+      logout                    Logs out of your account
 
   Other commands
-      login
-      open                      Open crusher in browser
       init                      Initialize project in the repo
-      info
-      whoami                    your info
-      logout
-      token                     your token
+      info                      Shows info about the project
+      whoami                    Information about the current logged-in user
+      token                     Get API token for integrations
+      invite                    Invite team members to your project
+      tunnel                    Open a tunnel to the project
+      help                      Show help
     `);
   }
 

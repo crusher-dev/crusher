@@ -12,7 +12,8 @@ if (parseFloat(nodeVersion) >= 10.0) {
   const args = process.argv.slice(2);
   const helpArgs = ["-h", "--h", "help", "--help", "-help"];
 
-  if (args.length === 0 || helpArgs.includes(args[0])) {
+  const isDefaultCommand = args.length === 0 || ["open", "."].some((x) => args && args[0] === x);
+  if (isDefaultCommand) {
     // console.log("Choose a command to run");
     // new EntryCommand().help();
 
@@ -35,8 +36,9 @@ if (parseFloat(nodeVersion) >= 10.0) {
       
       console.log("Basic " + `${getRecorderDistCommand()} --crusher-cli-path=${eval("__dirname") + "/index.js"} ${customFlags} --no-sandbox`);
       execSync(`${getRecorderDistCommand()} --crusher-cli-path=${eval("__dirname") + "/index.js"} ${customFlags} --no-sandbox`, {stdio: "inherit"});
-    })
-
+    });
+  } else if(helpArgs.includes(args[0])) {
+    new EntryCommand().help();
   } else {
     new EntryCommand().run();
   }

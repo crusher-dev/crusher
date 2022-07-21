@@ -42,7 +42,7 @@ describe("recording session", () => {
         // Wait for 5 seconds to make sure recorder is ready
         await recorder.appWindow.waitForFunction(([element]) => {
             return element.querySelectorAll(".recorded-step").length >= 2;
-        }, [recordedStepListContainer], {timeout: 5000});
+        }, [recordedStepListContainer], {timeout: 15000});
 
         const recordedSteps = await recordedStepListContainer.evaluate((element) => {
             return Array.from(element.querySelectorAll(".recorded-step")).map((node: any) => {

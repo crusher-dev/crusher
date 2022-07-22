@@ -210,8 +210,6 @@ export class TestController {
 					resolve(false);
 				}
 			})
-
-
 		}
 		const meta = {
 			disableBaseLineComparisions: !!body.disableBaseLineComparisions,

@@ -24,7 +24,7 @@ class VercelService {
     private gitIntegrationService: GithubIntegrationService;
 
 
-    async getIntegrationRecordFromRepoName(repoFullName: string): Promise<KeysToCamelCase<IIntegrationsTable>> {
+    async getIntegrationRecordFromRepoName(repoFullName: string): Promise<KeysToCamelCase<IIntegrationsTable> & {meta: {accessToken: string; userId: number;}}> {
       const githubIntegrationRecord = await this.gitIntegrationService.getIntegrationRecord(repoFullName);
       if(!githubIntegrationRecord) throw new Error("Github integration not found for " + repoFullName);
 
@@ -68,6 +68,61 @@ class VercelService {
         });
         
         return data.access_token;
+    }
+
+    async createDeploymentStatus(acessToken, deployId, teamId,status) {
+      console.log("Deplyoment satus", `https://api.vercel.com/v1/deployments/${deployId}/checks?teamId=${teamId}`);
+      console.log("Access token", acessToken);
+
+      return axios.post(`https://api.vercel.com/v1/deployments/${deployId}/checks?teamId=${teamId}`, {
+         blocking: true,
+         name: "Crusher check",
+       }, {
+         headers: {
+           Authorization: `Bearer ${acessToken}`
+         }
+       }).then(function (response) {
+         console.log(response.data);
+         return response.data;
+       }).catch((e)=>{
+        console.error("Error", e.response.data.error);
+         return e;
+       })
+    }
+
+
+    async updateDeploymentStatus(accessToken, deployId,checkId, teamId,status, detailsUrl) {
+      return axios.patch(`https://api.vercel.com/v1/deployments/${deployId}/checks/${checkId}?teamId=${teamId}`, {
+        status: status,
+        detailsUrl: detailsUrl
+      },{
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      }).then(function (response) {
+        console.log(response.data);
+        return response.data;
+      }).catch((e)=>{
+        return e;
+      });
+    }
+
+    async finishDeploymentChecks(accessToken, deployId, checkId, teamId, conclusion: "failed" | "neutral" | "succeeded", detailsUrl) {
+      return axios.patch(`https://api.vercel.com/v1/deployments/${deployId}/checks/${checkId}?teamId=${teamId}`, {
+        status: "completed",
+        detailsUrl: detailsUrl,
+        conclusion: conclusion
+      },{
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      }).then(function (response) {
+        console.log(response.data);
+        return response.data;
+      }).catch((e)=>{
+        console.error("Error is" ,e.response.data.error);
+        return e;
+      });
     }
 }
 

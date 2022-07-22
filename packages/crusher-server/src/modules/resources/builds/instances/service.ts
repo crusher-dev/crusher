@@ -306,6 +306,7 @@ class BuildTestInstancesService {
 
 		// Currently there is only one reference type
 		const projectRecord = await this.dbManager.fetchSingleRow("SELECT * FROM public.projects WHERE id = ?", [testRecord.project_id]);
+		console.log("Project id is", projectRecord);
 		if (!projectRecord.baseline_job_id) return testInstanceRecord;
 
 		const projectLevelReferenceInstance = await this.dbManager.fetchSingleRow(

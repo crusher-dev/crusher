@@ -183,6 +183,9 @@ class TestService {
 		if (buildMeta.github) {
 			meta.github = buildMeta.github;
 		}
+		if((buildMeta as any).vercel) {
+			(meta as any).vercel = (buildMeta as any).vercel;
+		}
 
 		return this.testsRunner.runTests(
 			await this.getFullTestArr(testsData.list),

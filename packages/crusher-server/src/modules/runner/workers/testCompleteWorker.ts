@@ -28,6 +28,7 @@ import { IProjectTable } from "@modules/resources/projects/interface";
 import { TEST_COMPLETE_QUEUE, TEST_EXECUTION_QUEUE } from "@crusher-shared/constants/queues";
 import { ITestInstancesTable, TestInstanceResultSetStatusEnum } from "@modules/resources/builds/instances/interface";
 import { BrowserEnum } from "../interface";
+import { VercelService } from "@modules/resources/integrations/vercel/service";
 
 const buildService = Container.get(BuildsService);
 const buildReportService: BuildReportService = Container.get(BuildReportService);
@@ -38,6 +39,7 @@ const buildApproveService = Container.get(BuildApproveService);
 const usersService = Container.get(UsersService);
 const projectIntegrationsService = Container.get(IntegrationsService);
 const testRunnerService = Container.get(TestsRunner);
+const vercelService = Container.get(VercelService);
 
 const emailManager = Container.get(EmailManager);
 const testRunner = Container.get(TestsRunner);
@@ -377,6 +379,18 @@ async function getSlackMessageBlockForBuildReport(
 	];
 }
 
+const getVercelConclusionFromBuildReportStatus = (buildReportStatus: BuildReportStatusEnum) => {
+	switch (buildReportStatus) {
+		case BuildReportStatusEnum.PASSED:
+			return "succeeded";
+		case BuildReportStatusEnum.FAILED:
+			return "failed";
+		case BuildReportStatusEnum.MANUAL_REVIEW_REQUIRED:
+			return "neutral";
+		default:
+			return "neutral";
+	}
+}
 async function handleIntegrations(
 	buildRecord: KeysToCamelCase<IBuildTable>,
 	buildReportRecord: KeysToCamelCase<IBuildReportTable>,
@@ -393,6 +407,29 @@ async function handleIntegrations(
 		await getSlackMessageBlockForBuildReport(buildRecord, projectRecord, buildReportRecord, userInfo, reportStatus),
 		reportStatus === BuildReportStatusEnum.PASSED ? "normal" : "alert",
 	);
+	
+	const buildRecordMeta: { vercel: { checkId: string; deploymentId: string; teamId: string;}, github: { repoName: string; commitId: string;}} = buildRecord.meta ? JSON.parse(buildRecord.meta) : null;
+	console.log("Build record meta: ", buildRecordMeta);
+	if(buildRecordMeta && buildRecordMeta.vercel && buildRecordMeta.github) {
+		const repoName = buildRecordMeta.github.repoName;
+		const vercelIntegrationRecord = await vercelService.getIntegrationRecordFromRepoName(repoName);
+		if(!vercelIntegrationRecord) {
+			console.error("Could not find vercel integration record for repo: ", repoName);
+			return;
+		}
+
+		const vercelIntegrationMeta : {accessToken: string; userId: number;} = vercelIntegrationRecord.meta;
+		const detailsUrl = `${resolvePathToFrontendURI(`/app/build/${buildRecord.id}`)}`;
+		console.log("Vercel integration meta: ", vercelIntegrationMeta);
+		await vercelService.finishDeploymentChecks(
+			vercelIntegrationMeta.accessToken,
+			buildRecordMeta.vercel.deploymentId,
+			buildRecordMeta.vercel.checkId,
+			buildRecordMeta.vercel.teamId,
+			getVercelConclusionFromBuildReportStatus(reportStatus),
+			detailsUrl
+		);
+	};
 }
 
 async function sendReportStatusEmails(buildRecord: KeysToCamelCase<IBuildTable>, buildReportStatus: BuildReportStatusEnum): Promise<Array<Promise<boolean>>> {

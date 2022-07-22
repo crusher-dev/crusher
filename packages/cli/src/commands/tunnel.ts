@@ -48,6 +48,7 @@ export default class CommandBase {
   }
 
   private getProjectConifg(path: string) {
+    if(!path) return getProjectConfig();
     if(path.endsWith(".js")) {
       return eval("require")(path);
     }

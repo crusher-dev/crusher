@@ -3,6 +3,7 @@ import { KeysToCamelCase } from "@modules/common/typescript/interface";
 
 export enum IntegrationServiceEnum {
 	SLACK = "SLACK",
+	VERCEL = "VERCEL",
 }
 
 export interface IIntegrationsTable extends BaseRowInterface {

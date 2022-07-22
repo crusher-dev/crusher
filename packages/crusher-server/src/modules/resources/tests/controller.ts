@@ -170,7 +170,7 @@ export class TestController {
 			// @TODO: Legacy remove them
 			githubRepoName?: string;
 			githubCommitId?: string;
-			ci?: { repoName?: string; commitId: string; branchName: string, commitMessage: string; }
+			ci?: { integrationType?: "vercel"; repoName?: string; commitId: string; branchName: string, commitMessage: string; }
 			host?: string;
 			disableBaseLineComparisions: boolean;
 			baselineJobId: number | null;

@@ -14,15 +14,15 @@ class IntegrationsService {
 	@Inject()
 	private slackService: SlackService;
 
-	async addIntegration(integrationConfig: SlackOAuthResponse, integrationName: IntegrationServiceEnum, projectId: number) {
+	async addIntegration(integrationConfig: any, integrationName: IntegrationServiceEnum, projectId: number) {
 		return this.dbManager.insert(`INSERT INTO public.integrations (project_id, integration_name, meta) VALUES (?, ?, ?)`, [
 			projectId,
 			integrationName,
-			JSON.stringify({ oAuthInfo: integrationConfig }),
+			JSON.stringify(integrationConfig),
 		]);
 	}
 
-	async updateIntegration(integrationConfig: SlackOAuthResponse, id: number) {
+	async updateIntegration(integrationConfig: any, id: number) {
 		return this.dbManager.update(`UPDATE public.integrations SET meta = ? WHERE id = ?`, [JSON.stringify(integrationConfig), id]);
 	}
 

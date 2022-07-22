@@ -24,9 +24,11 @@ class VercelIntegrationsController {
     @Inject()
     private redisManager: RedisManager;
 
+    @Authorized()
     @Get("/integrations/vercel/actions/link")
-    async linkVercelIntegration(@QueryParams() params: {next: string; code: string;}, @Res() res) {
-        const userId: any = "1104";
+    async linkVercelIntegration(@CurrentUser({required: true}) user, @QueryParams() params: {next: string; code: string;}, @Res() res) {
+        const {user_id: userId} = user;
+        
         const userInfo = await this.userService.getUserInfo(userId);
         const userInfoMeta = JSON.parse(userInfo.meta);
         console.log("User info meta", userInfoMeta);

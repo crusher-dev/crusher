@@ -93,6 +93,9 @@ class IntegrationsController {
 		const { user_id } = user;
 		const { repoId, repoName, repoLink, installationId, repoFullName } = body;
 
+		const gitLinkedProject = await this.githubIntegrationService.getIntegrationRecord(repoFullName);
+		if(gitLinkedProject) throw new Error("Git repo is already linked to another project");
+	
 		const linkedRepo = await this.githubIntegrationService.getLinkedRepo(projectId);
 		if (linkedRepo) throw new Error("Project is already connected to a github repository");
 

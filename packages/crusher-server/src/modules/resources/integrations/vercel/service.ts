@@ -10,9 +10,8 @@ import { IntegrationsService } from "../service";
 import axios from "axios";
 import * as qs from "qs";
 import { GithubIntegrationService } from "../githubIntegration.service";
+import { VERCEL_CONFIG } from "../../../../../config/vercel";
 
-const CLIENT_ID = "oac_WuaVOjkHktjvIDiOUaSKr7ep";
-const CLIENT_SECRET = "eqE49TZVVecTdxDp1WrLDSkN";
 
 @Service()
 class VercelService {
@@ -52,8 +51,8 @@ class VercelService {
         const data = await axios.post('https://api.vercel.com/v2/oauth/access_token', qs.stringify({
           code,
           // @TODO: Add to this env
-          client_id: CLIENT_ID,
-          client_secret: CLIENT_SECRET,
+          client_id: VERCEL_CONFIG.CLIENT_ID,
+          client_secret: VERCEL_CONFIG.CLIENT_SECRET,
           redirect_uri: "https://5000-w3cj-expressapistarte-ktz0dzo1h2l.ws-us54.gitpod.io/configure",
         }), {
           headers: {

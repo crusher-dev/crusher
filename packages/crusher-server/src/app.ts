@@ -73,7 +73,7 @@ process.on("unhandledRejection", (reason, p) => {
 });
 
 process.on("uncaughtException", (err: Error) => {
-	console.error("uncaughtException", `Caught excepsadion: ${err.message}\n` + `Exception origin: ${err.stack}`);
+	console.error("uncaughtException", `Caught exception: ${err.message}\n` + `Exception origin: ${err.stack}`);
 	process.exit(1);
 });
 

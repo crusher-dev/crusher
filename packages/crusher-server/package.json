@@ -67,7 +67,6 @@
 		"logdna": "^3.5.0",
 		"module-alias": "^2.2.2",
 		"mongoose": "^5.11.14",
-		"mysql2": "^2.2.5",
 		"node-fetch": "^2.6.1",
 		"pg": "^8.7.1",
 		"pixelmatch": "^5.2.1",
@@ -89,8 +88,8 @@
 	"scripts": {
 		"setup": "node setup/tsconfig.js",
 		"dev": "ts-node-dev --transpile-only true -r tsconfig-paths/register --project tsconfig.json src/app.ts",
-		"dev:cron": "ts-node-dev -r tsconfig-paths/register --project tsconfig.json src/cron.ts",
-		"dev:queue": "ts-node-dev -r tsconfig-paths/register  --project tsconfig.json src/queue.ts",
+		"dev:cron": "ts-node-dev --transpile-only true -r tsconfig-paths/register --project tsconfig.json src/cron.ts",
+		"dev:queue": "ts-node-dev --transpile-only true -r tsconfig-paths/register  --project tsconfig.json src/queue.ts",
 		"dev:storage": "ts-node -r tsconfig-paths/register --project tsconfig.json src/localFileStorageServer.ts",
 		"run:prod": "NODE_ENV=production ts-node src/app.ts",
 		"build:cron": "NODE_ENV=production ncc build src/cron.ts -o dist/cron --external bullmq",

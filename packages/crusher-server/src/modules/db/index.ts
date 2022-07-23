@@ -32,7 +32,6 @@ const CONNECTION_OBJECT: PoolConfig = getConnectionObject();
 @Service()
 class DBManager extends PostgresDatabase {
 	constructor() {
-		console.log("sd")
 		super(CONNECTION_OBJECT);
 	}
 }

@@ -28,10 +28,9 @@ import { IntegrationsController } from "@modules/resources/integrations/controll
 import { CLIController } from "@modules/resources/cli/controller";
 import { ProxyController } from "@modules/resources/proxy/controller";
 
-// Container.set(RedisManager, new RedisManager());
-
 const chalk = require("chalk");
 
+Container.set(RedisManager, new RedisManager());
 useContainer(Container);
 const expressApp = express();
 expressApp.use(ReqLogger);
@@ -75,7 +74,6 @@ process.on("unhandledRejection", (reason, p) => {
 
 process.on("uncaughtException", (err: Error) => {
 	console.error("uncaughtException", `Caught excepsadion: ${err.message}\n` + `Exception origin: ${err.stack}`);
-	console.log("ds")
 	process.exit(1);
 });
 

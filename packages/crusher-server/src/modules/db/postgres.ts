@@ -8,7 +8,6 @@ class PostgresDatabase implements IDatabaseManager {
 
 	constructor(config: PoolConfig) {
 		this.postgresPool = new Pool(config);
-		console.log("Sd")
 	}
 
 	isConnectionAlive(): Promise<boolean> {

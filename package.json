@@ -27,6 +27,8 @@
 		"pm2": "^5.1.2"
 	},
 	"dependencies": {
+		"@swc/core": "^1.2.218",
+		"@swc/helpers": "^0.4.3",
 		"dotenv": "^10.0.0",
 		"ejs": "^3.1.6",
 		"enquirer": "^2.3.6",
@@ -35,6 +37,7 @@
 		"pg": "^8.7.1",
 		"postinstall-postinstall": "^2.1.0",
 		"putout": "^18.16.0",
+		"regenerator-runtime": "^0.13.9",
 		"shelljs": "^0.8.4",
 		"source-map-support": "^0.5.20",
 		"yargs": "^17.0.1"

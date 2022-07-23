@@ -1,4 +1,3 @@
-import { MysqlDatabase } from "@modules/db/mysql";
 import { Service } from "typedi";
 import { isOpenSourceEdition } from "@utils/helper";
 import { PostgresDatabase } from "./postgres";

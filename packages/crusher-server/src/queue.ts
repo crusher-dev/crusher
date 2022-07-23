@@ -134,3 +134,4 @@ async function setupInstanceHeartbeat(worker, redisClient) {
 }
 
 boot();
+

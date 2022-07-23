@@ -5,7 +5,7 @@ import { Link } from "../../layouts/modalContainer";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { shell } from "electron";
 import { performRunDraftTest, performRunTests, turnOnProxy } from "../../commands/perform";
-import { getProxyState } from "electron-app/src/store/selectors/app";
+import { getCurrentSelectedProjct, getProxyState } from "electron-app/src/store/selectors/app";
 import { useSelector, useStore } from "react-redux";
 
 const ReadDocsButton = ({ title, className, onClick }) => {
@@ -44,7 +44,7 @@ const saveButtonStyle = css`
 `;
 
 const ProxyWarningContainer = ({ exitCallback, testId, startUrl }) => {
-	const [selectedProject, setSelectedProject] = React.useState(null);
+	const selectedProject = useSelector(getCurrentSelectedProjct);
 	const [isRetrying, setIsRetrying] = React.useState(false);
 	const proxyState = useSelector(getProxyState);
 	const store = useStore();
@@ -84,11 +84,6 @@ const ProxyWarningContainer = ({ exitCallback, testId, startUrl }) => {
 
 		exitCallback();
 	}, []);
-
-	React.useEffect(() => {
-		setSelectedProject(window.localStorage.getItem("projectId"));
-		// turnOnProxyServers();
-	}, [selectedProject]);
 
 	const openDocs = React.useCallback(() => {
 		shell.openExternal("https://docs.crusher.dev");

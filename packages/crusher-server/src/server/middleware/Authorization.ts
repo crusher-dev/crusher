@@ -9,8 +9,9 @@ export function authorization() {
 			action.response.end();
 		}
 		try {
-			const cookies = cookie.parse(action.request.headers.cookie || "");
-			const user = decodeToken(cookies.token);
+			const cookies = action.request.headers.cookie ? cookie.parse(action.request.headers.cookie) : {};
+			const userToken = action.request.headers['authorization'] || cookies.token;
+			const user = decodeToken(userToken);
 			if (!user) {
 				clearAuthCookies(action.response);
 				return false;
@@ -31,9 +32,9 @@ export function getCurrentUserChecker() {
 		}
 
 		try {
-			const { token } = cookie.parse(action.request.headers.cookie);
-
-			return decodeToken(token);
+			const cookies = action.request.headers.cookie ? cookie.parse(action.request.headers.cookie) : {};
+			const userToken = action.request.headers['authorization'] || cookies.token;
+			return decodeToken(userToken);
 		} catch (error) {
 			console.error(error);
 			return false;

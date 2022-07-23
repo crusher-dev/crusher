@@ -8,6 +8,12 @@ export const SET_USER_ACCOUNT_INFO = "SET_USER_ACCOUNT_INFO";
 export const RESET_APP_SESSION = "RESET_APP_SESSION";
 export const SET_PROXY_STATE = "SET_PROXY_STATE";
 export const SET_PROXY_INITIALIZING = "SET_PROXY_INITIALIZING";
+export const SET_SELECTED_PROJECT = "SET_SELECTED_PROJECT";
+
+export const setSelectedProject = (projectId) => ({
+	type: SET_SELECTED_PROJECT,
+	payload: { projectId }
+});
 
 export const setProxyState = (proxyState: IProxyState) => ({
 	type: SET_PROXY_STATE,

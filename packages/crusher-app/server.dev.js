@@ -5,7 +5,7 @@ const next = require("next");
 const proxy = require("express-http-proxy");
 const port = process.env.port || 3000;
 const dev = process.env.NODE_ENV !== "production";
-const app = next({ dev });
+const app = next({ dev, conf: require("./next.config") });
 const handle = app.getRequestHandler();
 const bodyParser = require("body-parser");
 

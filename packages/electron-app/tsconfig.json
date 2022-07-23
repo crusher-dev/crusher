@@ -28,7 +28,7 @@
 			"@dyson/*": ["dyson/src/*"]
 		}
 	},
-	"typeRoots": ["node_modules/@types"],
+	"typeRoots": ["node_modules/@types", "./**/*.d.ts"],
 	"types": ["@emotion/react/types/css-prop"],
 	"files": [
 		"./src/main-process/main.ts",

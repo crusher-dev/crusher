@@ -24,7 +24,13 @@ async function goToUrl(
 	try {
 		await page.goto(urlToGo, { waitUntil: "load", timeout: action.payload.timeout ? action.payload.timeout * 1000 : undefined });
 	} catch (ex) {
-		console.log("Got error during navigation", ex);
+		const regex = new RegExp(/Timeout [\d]*ms exceeded/g);
+		if(ex.message.match(regex)) {
+			console.log("Got error during navigation", ex);
+		} else {
+			console.log("Got error during navigation", ex);
+			throw ex;
+		}
 	}
 }
 

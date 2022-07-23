@@ -71,6 +71,7 @@
 		"pg": "^8.7.1",
 		"pixelmatch": "^5.2.1",
 		"pngjs": "^6.0.0",
+		"qs": "^6.11.0",
 		"redlock": "^4.2.0",
 		"reflect-metadata": "^0.1.13",
 		"routing-controllers": "0.9.0-alpha.6",

@@ -8,6 +8,8 @@ import { exec, execSync } from "child_process";
 import * as fs from "fs";
 import * as url from "url";
 import * as path from "path";
+import { getProjectConfig } from "./projectConfig";
+import { getAppConfig } from "./appConfig";
 
 export function getRuntimeEnv() {
   return eval("process.env");
@@ -140,11 +142,13 @@ export const createDirIfNotExist = (dirPath: string) => {
 };
 
 export const resolveBackendServerUrl = (endpoint): string => {
-  return url.resolve(BACKEND_SERVER_URL, endpoint);
+  const appConfig = getAppConfig();
+  return appConfig && appConfig.endpoint ? url.resolve(appConfig.endpoint, endpoint) :  url.resolve(BACKEND_SERVER_URL, endpoint);
 };
 
 export const resolveFrontendServerUrl = (endpoint): string => {
-  return url.resolve(FRONTEND_SERVER_URL, endpoint);
+  const appConfig = getAppConfig();
+  return appConfig && appConfig.endpoint ? url.resolve(appConfig.endpoint, `/server/redirectToFrontend?url=${endpoint}`) : url.resolve(FRONTEND_SERVER_URL, endpoint);
 };
 
 export const resolvePathToAppDirectory = (relativePath): string => {

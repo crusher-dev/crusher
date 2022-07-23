@@ -23,6 +23,10 @@ module.exports = {
 		APP_ID: process.env.GITHUB_APP_ID,
 		APP_URL: process.env.GITHUB_APP_URL,
 	},
+	VERCEL_CONFIG: {
+		VERCEL_CLIENT_ID: process.env.VERCEL_CLIENT_ID,
+		VERCEL_CLIENT_SECRET: process.env.VERCEL_CLIENT_SECRET
+	},
 	MONGODB_CONFIG: {
 		CONNECTION_STRING: process.env.MONGODB_CONNECTION_STRING,
 		HOST: process.env.MONGODB_HOST,

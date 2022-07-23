@@ -167,8 +167,10 @@ export class TestController {
 		@Body()
 		body: {
 			proxyUrlsMap?: { [key: string]: { intercept: string | { regex: string }; tunnel: string } };
+			// @TODO: Legacy remove them
 			githubRepoName?: string;
 			githubCommitId?: string;
+			ci?: { integrationType?: "vercel"; repoName?: string; commitId: string; branchName: string, commitMessage: string; }
 			host?: string;
 			disableBaseLineComparisions: boolean;
 			baselineJobId: number | null;
@@ -189,7 +191,7 @@ export class TestController {
 						const res = await axios.get(body.host);
 						if(res.status === 302 && res.headers.location && res.headers.location.startsWith("/")) {
 							intervalCount+=10000;
-							if(intervalCount > 60000) {
+							if(intervalCount > 200000) {
 								if(interval) clearInterval(interval);
 								reject("Timeout");
 							}
@@ -208,8 +210,6 @@ export class TestController {
 					resolve(false);
 				}
 			})
-
-
 		}
 		const meta = {
 			disableBaseLineComparisions: !!body.disableBaseLineComparisions,
@@ -218,6 +218,11 @@ export class TestController {
 			meta["github"] = {
 				repoName: body.githubRepoName,
 				commitId: body.githubCommitId,
+			};
+		} else if (body.ci) {
+			meta["github"] = {
+				repoName: body.ci.repoName,
+				commitId: body.ci.commitId,
 			};
 		}
 

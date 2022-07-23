@@ -8,8 +8,9 @@ import { useInView } from "react-intersection-observer";
 import { getBuildReport, performExit } from "../commands/perform";
 import { resolveToFrontEndPath } from "@shared/utils/url";
 import { useStore } from "react-redux";
-import { getAppSettings } from "electron-app/src/store/selectors/app";
+import { getAppSettings, getCurrentSelectedProjct } from "electron-app/src/store/selectors/app";
 import { Dropdown } from "@dyson/components/molecules/Dropdown";
+import { CloudCrusher } from "electron-app/src/lib/cloud";
 
 export function Link({ children, ...props }) {
 	return (
@@ -37,7 +38,7 @@ export { Link };
 function capitalize(s) {
 	return s[0].toUpperCase() + s.slice(1).toLowerCase();
 }
-function StatusMessageBar({ isLoadingScreen }) {
+export function StatusMessageBar({ isLoadingScreen }) {
 	const [shouldShow, setShouldShow] = React.useState(false);
 	const [testStatus, setTestStatus] = React.useState(null);
 	const [buildId, setBuildId] = React.useState(null);
@@ -76,7 +77,7 @@ function StatusMessageBar({ isLoadingScreen }) {
 			if(buildId === -1) return;
 			setBuildId(buildId);
 			const interval = setInterval(() => {
-				getBuildReport(buildId).then((res) => {
+				CloudCrusher.getBuildReport(buildId).then((res) => {
 					setTestStatus(res.status);
 					if (res.status != "RUNNING") {
 						clearInterval(interval);
@@ -195,11 +196,12 @@ const statusTextStyle = css`
 
 function ActionButtonDropdown({ setShowActionMenu, isRecorder, ...props }) {
 	const navigate = useNavigate();
+	const store = useStore();
 	const [projectConfigFile, setProjectConfigFile] = React.useState(null);
 
 	React.useEffect(() => {
 		try {
-			const projectId = window.localStorage.getItem("projectId");
+			const projectId = getCurrentSelectedProjct(store.getState() as any);
 			const projectConfigFile = window.localStorage.getItem("projectConfigFile");
 			const projectConfigFileJson = JSON.parse(projectConfigFile);
 			if (projectConfigFileJson[projectId]) {

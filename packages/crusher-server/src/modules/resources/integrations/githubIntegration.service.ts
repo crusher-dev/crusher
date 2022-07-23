@@ -17,6 +17,12 @@ export class GithubIntegrationService {
 		);
 	}
 
+
+	@CamelizeResponse()
+	async getIntegrationRecord(repoName: string): Promise<KeysToCamelCase<IGitIntegrations>> { 
+		return this.dbManager.fetchSingleRow("SELECT * FROM public.git_integrations WHERE repo_name = ?", [repoName]);
+	}
+
 	@CamelizeResponse()
 	async getInstallationRepo(repoName: string, projectId: number): Promise<KeysToCamelCase<IGitIntegrations & { _id: string }> | null> {
 		const gitIntegrationRecord = await this.dbManager.fetchSingleRow("SELECT * FROM public.git_integrations WHERE repo_name = ? AND project_id = ?", [

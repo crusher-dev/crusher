@@ -27,6 +27,7 @@ import { ProjectEnvironmentController } from "@modules/resources/projects/enviro
 import { IntegrationsController } from "@modules/resources/integrations/controller";
 import { CLIController } from "@modules/resources/cli/controller";
 import { ProxyController } from "@modules/resources/proxy/controller";
+import { VercelIntegrationsController } from "@modules/resources/integrations/vercel/controller";
 
 const chalk = require("chalk");
 
@@ -49,6 +50,7 @@ const controllersArr: any = [
 	ProjectMonitoringController,
 	ProjectEnvironmentController,
 	IntegrationsController,
+	VercelIntegrationsController,
 	CLIController,
 	ProxyController
 ];

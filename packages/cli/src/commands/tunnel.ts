@@ -47,11 +47,22 @@ export default class CommandBase {
     await this.createTunnel(config);
   }
 
+  private getProjectConifg(path: string) {
+    if(!path) return getProjectConfig();
+    if(path.endsWith(".js")) {
+      return eval("require")(path);
+    }
+
+    const projectConfigRaw = fs.readFileSync(path, "utf8");
+    const projectConfig = JSON.parse(projectConfigRaw);
+
+    return projectConfig;
+  }
+
   async createTunnel(configFilePath) {
     try {
-        const projectConfigRaw = fs.readFileSync(configFilePath, "utf8");
-        const projectConfig = JSON.parse(projectConfigRaw);
-        if(!projectConfig.proxy) { throw new Error("No proxy found in config file"); }
+        const projectConfig = this.getProjectConifg(configFilePath);
+        if(!projectConfig.proxy) { throw  Error("No proxy found in config file"); }
         await Cloudflare.runTunnel(projectConfig);
     } catch(err) {
         throw new Error("Error running tunnel:  " + err.message);

@@ -39,9 +39,9 @@ class IntegrationsController {
 
 		const existingSlackIntegration = await this.integrationsService.getSlackIntegration(projectId);
 		if (existingSlackIntegration) {
-			await this.integrationsService.updateIntegration(integrationConfig, existingSlackIntegration.id);
+			await this.integrationsService.updateIntegration({ oAuthInfo: integrationConfig }, existingSlackIntegration.id);
 		} else {
-			await this.integrationsService.addIntegration(integrationConfig, IntegrationServiceEnum.SLACK, projectId);
+			await this.integrationsService.addIntegration({ oAuthInfo: integrationConfig }, IntegrationServiceEnum.SLACK, projectId);
 		}
 
 		await res.redirect(redirectUrl);
@@ -93,6 +93,9 @@ class IntegrationsController {
 		const { user_id } = user;
 		const { repoId, repoName, repoLink, installationId, repoFullName } = body;
 
+		const gitLinkedProject = await this.githubIntegrationService.getIntegrationRecord(repoFullName);
+		if(gitLinkedProject) throw new Error("Git repo is already linked to another project");
+	
 		const linkedRepo = await this.githubIntegrationService.getLinkedRepo(projectId);
 		if (linkedRepo) throw new Error("Project is already connected to a github repository");
 

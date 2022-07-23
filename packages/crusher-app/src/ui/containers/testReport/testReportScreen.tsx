@@ -299,7 +299,7 @@ export const TestReportScreen = () => {
 	const { query } = useRouter();
 	const { data } = useBuildReport(query.id);
 	const [, updateMetaData] = useAtom(updateMeta);
-
+	
 	const testsCount = data.tests.length;
 
 	useEffect(() => {

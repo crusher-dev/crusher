@@ -1,7 +1,7 @@
 import { app, BrowserWindow, ipcMain, session, shell, webContents, webFrame, webFrameMain } from "electron";
 import windowStateKeeper from "electron-window-state";
 import { APP_NAME } from "../../config/about";
-import { encodePathAsUrl, getAppIconPath, getUserAccountProjects, getUserAccountTests, getUserInfoFromToken, sleep } from "../utils";
+import { encodePathAsUrl, getAppIconPath, getSelectedProjectTests, getUserAccountProjects, getUserInfoFromToken, sleep } from "../utils";
 import { Emitter, Disposable } from "event-kit";
 import { now } from "./now";
 import { AnyAction, Store } from "redux";
@@ -32,7 +32,7 @@ import { iElementInfo, TRecorderState } from "../store/reducers/recorder";
 import { iSeoMetaInformationMeta } from "../types";
 import { getUserAgentFromName } from "@shared/constants/userAgents";
 import { getAppEditingSessionMeta, getAppSessionMeta, getAppSettings, getRemainingSteps, getUserAccountInfo } from "../store/selectors/app";
-import { resetAppSession, setSessionInfoMeta, setUserAccountInfo } from "../store/actions/app";
+import { resetAppSession, setSelectedProject, setSessionInfoMeta, setUserAccountInfo } from "../store/actions/app";
 import { resolveToBackendPath, resolveToFrontEndPath } from "@shared/utils/url";
 import { getGlobalAppConfig, writeGlobalAppConfig } from "../lib/global-config";
 import template from "@crusher-shared/utils/templateString";
@@ -46,6 +46,7 @@ import child_process from "child_process";
 
 import { screen } from "electron";
 import { ProxyManager } from "./proxy-manager";
+import { resolveToBackend } from "../utils/url";
 
 export class AppWindow {
 	private window: Electron.BrowserWindow;
@@ -240,7 +241,7 @@ export class AppWindow {
 		ipcMain.handle("get-user-tests", this.handleGetUserTests.bind(this));
 		ipcMain.handle("get-build-report", this.handleGetBuildReport.bind(this));
 		ipcMain.handle("update-cloud-test-name", this.handleUpdateCloudTestName.bind(this));
-		ipcMain.handle("jump-to-step", this.handleJumpToStep.bind(this));
+		ipcMain.handle("jump-to-step", this.handleJumpToStep.bind(this)); 
 		ipcMain.handle("login-with-github", this.handleLoginWithGithub.bind(this));
 		ipcMain.handle("login-with-gitlab", this.handleLoginWithGitlab.bind(this));
 		ipcMain.handle("go-full-screen", this.handleGoFullScreen.bind(this));
@@ -291,7 +292,7 @@ export class AppWindow {
 		}
 
 		if (projectId) {
-			await this.window.webContents.executeJavaScript(`window.localStorage.setItem("projectId", ${projectId});`);
+			this.store.dispatch(setSelectedProject(projectId));
 			process.argv = process.argv.filter((a) => a.includes("--project-id"));
 		}
 		if (app.commandLine.hasSwitch("open-recorder")) {
@@ -353,11 +354,8 @@ export class AppWindow {
 		});
 	}
 
-	private async handleCloudRunTests(event: Electron.IpcMainEvent, payload: { projectId: string; testIds: Array<string> | undefined }) {
-		const userAccountInfo = getUserAccountInfo(this.store.getState() as any);
-		const appSettings = getAppSettings(this.store.getState() as any);
-
-		return CloudCrusher.runTests(payload.testIds, payload.projectId, this.proxyManager._results, userAccountInfo.token, appSettings.backendEndPoint);
+	private async handleCloudRunTests(event: Electron.IpcMainEvent, payload: { testIds: Array<string> | undefined }) {
+		return CloudCrusher.runTests(payload.testIds, this.proxyManager._results);
 	}
 
 	private handleGetAdvancedSelector(event: Electron.IpcMainEvent, payload: any) {
@@ -383,7 +381,7 @@ export class AppWindow {
 
 		return axios
 			.post(
-				resolveToBackendPath("teams/actions/update.codeTemplate", appSettings.backendEndPoint),
+				resolveToBackend("teams/actions/update.codeTemplate"),
 				{ id: payload.id, name: payload.name, code: payload.code },
 				{
 					headers: {
@@ -407,7 +405,7 @@ export class AppWindow {
 
 		return axios
 			.post(
-				resolveToBackendPath("teams/actions/delete.codeTemplate", appSettings.backendEndPoint),
+				resolveToBackend("teams/actions/delete.codeTemplate"),
 				{ id: payload.id },
 				{
 					headers: {
@@ -430,7 +428,7 @@ export class AppWindow {
 		const appSettings = getAppSettings(this.store.getState() as any);
 
 		return axios
-			.post(resolveToBackendPath("teams/actions/save.code", appSettings.backendEndPoint), payload.createPayload, {
+			.post(resolveToBackend("teams/actions/save.code"), payload.createPayload, {
 				headers: {
 					Accept: "application/json, text/plain, */*",
 					"Content-Type": "application/json",
@@ -450,28 +448,11 @@ export class AppWindow {
 	}
 
 	private async handleSaveLocalBuild(event, payload: { tests: Array<any>}) {
-		const projectId = await this.window.webContents.executeJavaScript("window.localStorage.getItem('projectId');");
-		const appSettings = getAppSettings(this.store.getState() as any);
-		const accountInfo = getUserAccountInfo(this.store.getState() as any);
-
-		return CloudCrusher.saveLocalBuild(
-			payload.tests,
-			projectId,
-			app.commandLine.getSwitchValue("token") || accountInfo.token,
-			appSettings.backendEndPoint,
-			appSettings.frontendEndPoint,
-		);
+		return CloudCrusher.saveLocalBuildReport(payload.tests);
 	}
 
 	private async handleCreateCloudProject(event, payload: {name: string}) {
-		const appSettings = getAppSettings(this.store.getState() as any);
-		const accountInfo = getUserAccountInfo(this.store.getState() as any);
-
-		return CloudCrusher.createProject(
-			payload.name,
-			app.commandLine.getSwitchValue("token") || accountInfo.token,
-			appSettings.backendEndPoint,
-		);
+		return CloudCrusher.createProject(payload.name);
 	}
 
 	private async handleGetCodeTemplates(event) {
@@ -482,7 +463,7 @@ export class AppWindow {
 		const appSettings = getAppSettings(this.store.getState() as any);
 
 		return axios
-			.get(resolveToBackendPath("teams/actions/get.codeTemplates", appSettings.backendEndPoint), {
+			.get(resolveToBackend("teams/actions/get.codeTemplates"), {
 				headers: {
 					Accept: "application/json, text/plain, */*",
 					"Content-Type": "application/json",
@@ -533,12 +514,8 @@ export class AppWindow {
 		event.returnValue = ![TRecorderState.PERFORMING_ACTIONS, TRecorderState.CUSTOM_CODE_ON].includes(recorderState.type);
 	}
 
-	private async handleGetUserTests(event: Electron.IpcMainEvent, payload: { projectId: string }) {
-		const accountInfo = getUserAccountInfo(this.store.getState() as any);
-		const appSettings = getAppSettings(this.store.getState() as any);
-
-		const userTests = await getUserAccountTests(payload.projectId, accountInfo.token, appSettings.backendEndPoint);
-		return userTests;
+	private async handleGetUserTests(event: Electron.IpcMainEvent, payload: { }) {
+		return getSelectedProjectTests();
 	}
 
 	private async setGlobalCrusherAccountInfo(info: any) {
@@ -548,7 +525,7 @@ export class AppWindow {
 	// Workaround to limitation of setting Cookie through XHR in renderer process
 	private async handleSaveNGetUserInfo(event, payload: { token: string }) {
 		const appSettings = getAppSettings(this.store.getState() as any);
-		const userInfo = await getUserInfoFromToken(payload.token, appSettings.backendEndPoint);
+		const userInfo = await getUserInfoFromToken(payload.token);
 		this.store.dispatch(setUserAccountInfo(userInfo));
 
 		this.setGlobalCrusherAccountInfo(userInfo);
@@ -594,9 +571,7 @@ export class AppWindow {
 	}
 
 	async handleDeleteTest(event: Electron.IpcMainEvent, payload: { testId: string }) {
-		const userAccountInfo = getUserAccountInfo(this.store.getState() as any);
-		const appSettings = getAppSettings(this.store.getState() as any);
-		return CloudCrusher.deleteTest(payload.testId, userAccountInfo.token, appSettings.backendEndPoint, appSettings.frontendEndPoint);
+		return CloudCrusher.deleteTest(payload.testId);
 	}
 	async handleResetTest(event: Electron.IpcMainEvent, payload: { device: iDevice }) {
 		await this.webView.dispose();
@@ -810,37 +785,20 @@ export class AppWindow {
 		const projectId = await this.window.webContents.executeJavaScript("window.localStorage.getItem('projectId');");
 		const accountInfo = getUserAccountInfo(this.store.getState() as any);
 
-		if (projectId && accountInfo) {
-			await CloudCrusher.updateTestDirectly(
-				recordedSteps as any,
+		return CloudCrusher.updateTestDirectly(
 				editingSessionMeta.testId,
-				accountInfo.token,
-				appSettings.backendEndPoint,
-				appSettings.frontendEndPoint,
-			);
-		} else {
-			await CloudCrusher.updateTest(recordedSteps as any, editingSessionMeta.testId, appSettings.backendEndPoint, appSettings.frontendEndPoint);
-		}
-
-		return 1;
+				{ events: recordedSteps as any,	}
+		);
 	}
 
 	private async handleGetBuildReport(event: Electron.IpcMainEvent, payload: { buildId: string }) {
-		const userAccountInfo = getUserAccountInfo(this.store.getState() as any);
-		const appSettings = getAppSettings(this.store.getState() as any);
-		const buildReport = await CloudCrusher.getBuildReport(
-			payload.buildId,
-			userAccountInfo.token,
-			appSettings.backendEndPoint,
-			appSettings.frontendEndPoint,
-		);
-		return buildReport;
+		return CloudCrusher.getBuildReport( payload.buildId );
 	}
 
 	private async handleUpdateCloudTestName(event: Electron.IpcMainEvent, payload: { testId: string; testName: string }) {
 		const userAccountInfo = getUserAccountInfo(this.store.getState() as any);
 		const appSettings = getAppSettings(this.store.getState() as any);
-		await CloudCrusher.updateTestName(payload.testId, payload.testName, userAccountInfo.token, appSettings.backendEndPoint, appSettings.frontendEndPoint);
+		await CloudCrusher.updateTestName(payload.testId, payload.testName);
 		return true;
 	}
 
@@ -849,15 +807,8 @@ export class AppWindow {
 	}
 
 	async handleRunDraftTest(event: Electron.IpcMainEvent, payload: { testId: number }) {
-		const projectId = await this.window.webContents.executeJavaScript("window.localStorage.getItem('projectId');");
-		const appSettings = getAppSettings(this.store.getState() as any);
-		const accountInfo = getUserAccountInfo(this.store.getState() as any);
 		return CloudCrusher.runDraftTest(
-			payload.testId,
-			projectId,
-			app.commandLine.getSwitchValue("token") || accountInfo.token,
-			appSettings.backendEndPoint,
-			appSettings.frontendEndPoint,
+			`${payload.testId}`,
 			this.proxyManager._results
 		);
 	}
@@ -873,13 +824,8 @@ export class AppWindow {
 			const projectId = app.commandLine.getSwitchValue("projectId");
 
 			testRecord = await CloudCrusher.saveTestDirectly(
-				recordedSteps as any,
-				projectId,
-				app.commandLine.getSwitchValue("token"),
-				appSettings.backendEndPoint,
-				appSettings.frontendEndPoint,
-				testName,
-				shouldNotRunTest,
+				{ events: recordedSteps as any, name: testName },
+				!shouldNotRunTest,
 				this.proxyManager._results
 			);
 		} else {
@@ -887,17 +833,16 @@ export class AppWindow {
 
 			if (projectId && accountInfo) {
 				testRecord = await CloudCrusher.saveTestDirectly(
-					recordedSteps as any,
-					projectId,
-					app.commandLine.getSwitchValue("token") || accountInfo.token,
-					appSettings.backendEndPoint,
-					appSettings.frontendEndPoint,
-					testName,
-					shouldNotRunTest,
+					{ events: recordedSteps as any, name: testName },
+					!shouldNotRunTest,
 					this.proxyManager._results
 				);
 			} else {
-				await CloudCrusher.saveTest(recordedSteps as any, appSettings.backendEndPoint, appSettings.frontendEndPoint, testName);
+				await CloudCrusher.saveTest(
+					{ events: recordedSteps as any, name: testName },
+					!shouldNotRunTest,
+					// No proxy config during redirect
+				);
 			}
 		}
 
@@ -923,7 +868,7 @@ export class AppWindow {
 
 		await this.resetRecorder();
 		const appSettings = getAppSettings(this.store.getState() as any);
-		const testSteps = await CloudCrusher.getTest(`${payload.testId}`, appSettings.backendEndPoint);
+		const testSteps = await CloudCrusher.getTest(`${payload.testId}`);
 		return this.handleReplayTestSteps(testSteps);
 	}
 
@@ -972,11 +917,7 @@ export class AppWindow {
 	}
 
 	private async handleGetCloudUserInfo() {
-		const accountInfo = getUserAccountInfo(this.store.getState() as any);
-		const appSettings = getAppSettings(this.store.getState() as any);
-
-		const userInfo = await getUserAccountProjects(accountInfo.token, appSettings.backendEndPoint);
-		return userInfo;
+		return getUserAccountProjects();
 	}
 
 	private setRemainingSteps(steps: Array<iAction>) {
@@ -1201,9 +1142,9 @@ export class AppWindow {
 		const appSettings = getAppSettings(this.store.getState() as any);
 
 		try {
-			const testSteps = await CloudCrusher.getTest(action.payload.meta.value, appSettings.backendEndPoint);
+			const testSteps = await CloudCrusher.getTest(action.payload.meta.value);
 
-			const replayableTestSteps = await CloudCrusher.getReplayableTestActions(testSteps, true, appSettings.backendEndPoint);
+			const replayableTestSteps = await CloudCrusher.getReplayableTestActions(testSteps, true);
 			const browserActions = getBrowserActions(replayableTestSteps);
 
 			for (const browserAction of browserActions) {

@@ -5,7 +5,7 @@
 	"workspaces": [
 		"packages/*"
 	],
-	"description": "Mono repository for crusher",
+	"description": "Mono repository for crusher.dev",
 	"scripts": {
 		"setup:oss": "node setup/index.js -m open-source",
 		"setup:ee": "node setup/index.js -m enterprise",

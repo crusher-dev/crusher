@@ -27,9 +27,7 @@ function getConnectionObject(): IORedis.RedisOptions {
 @Service()
 class RedisManager extends ParentRedisManager {
 	constructor() {
-		console.log("biss")
 		super(getConnectionObject());
-
 	}
 }
 

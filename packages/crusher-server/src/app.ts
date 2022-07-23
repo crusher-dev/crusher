@@ -28,7 +28,7 @@ import { IntegrationsController } from "@modules/resources/integrations/controll
 import { CLIController } from "@modules/resources/cli/controller";
 import { ProxyController } from "@modules/resources/proxy/controller";
 
-Container.set(RedisManager, new RedisManager());
+// Container.set(RedisManager, new RedisManager());
 
 const chalk = require("chalk");
 
@@ -74,13 +74,17 @@ process.on("unhandledRejection", (reason, p) => {
 });
 
 process.on("uncaughtException", (err: Error) => {
-	console.error("uncaughtException", `Caught exception: ${err.message}\n` + `Exception origin: ${err.stack}`);
+	console.error("uncaughtException", `Caught excepsadion: ${err.message}\n` + `Exception origin: ${err.stack}`);
+	console.log("ds")
 	process.exit(1);
 });
 
 const httpServer = http.createServer(expressApp);
 const port = process.env.PORT || 8000;
 
+expressApp.use("/testNew",(req,res,next)=>{
+	res.send("new ddffsd")
+})
 httpServer.listen(port);
 
 console.info("App", chalk.hex("#ec2e6a").bold(`Starting at ${port}`));

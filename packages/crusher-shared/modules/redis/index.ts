@@ -4,6 +4,7 @@ class RedisManager {
 	redisClient: IORedis.Redis;
 
 	constructor(connectionObject: IORedis.RedisOptions) {
+		console.log(connectionObject);
 		this.redisClient = new IORedis({ ...connectionObject, maxRetriesPerRequest: null, enableReadyCheck: false });
 	}
 

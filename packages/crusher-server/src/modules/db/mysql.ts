@@ -7,6 +7,7 @@ class MysqlDatabase implements IDatabaseManager {
 
 	constructor(config: ConnectionOptions & PoolOptions) {
 		this.mysqlClient = mysql.createPool(config);
+		console.log("Ds")
 	}
 
 	isConnectionAlive(): Promise<boolean> {

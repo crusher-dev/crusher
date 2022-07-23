@@ -1,4 +1,3 @@
-import { MysqlDatabase } from "@modules/db/mysql";
 import { Service } from "typedi";
 import { isOpenSourceEdition } from "@utils/helper";
 import { PostgresDatabase } from "./postgres";
@@ -33,6 +32,7 @@ const CONNECTION_OBJECT: PoolConfig = getConnectionObject();
 @Service()
 class DBManager extends PostgresDatabase {
 	constructor() {
+		console.log("sd")
 		super(CONNECTION_OBJECT);
 	}
 }

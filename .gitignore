@@ -133,3 +133,4 @@ ecosystem/config/*
 #Env
 ./.env
 .vercel
+*.rdb

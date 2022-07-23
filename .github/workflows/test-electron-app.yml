@@ -1,6 +1,9 @@
 name: Test electron app
 
-on: push
+on:
+  push:
+    branches:
+      - fx-tests
 
 jobs:
   release:

@@ -18,10 +18,10 @@ function SignupPage() {
 	return (
 		<React.Fragment>
 			<Conditional showIf={!signupWithEmail}>
-				<SignupInitial loginWithEmailHandler={setSignupWithEmail} />
+				<SignupInitial loginWithEmailHandler={setSignupWithEmail.bind(this,true)} />
 			</Conditional>
 			<Conditional showIf={signupWithEmail}>
-				<SignupContainer loginWithEmailHandler={setSignupWithEmail} />
+				<SignupContainer loginWithEmailHandler={setSignupWithEmail.bind(this,false)} />
 			</Conditional>
 		</React.Fragment>
 	);

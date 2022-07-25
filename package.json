@@ -41,5 +41,10 @@
 		"source-map-support": "^0.5.20",
 		"yargs": "^17.0.1"
 	},
-	"license": "MIT"
+	"license": "MIT",
+	"pnpm": {
+		"patchedDependencies": {
+			"playwright-core@1.23.3": "patches/playwright-core@1.23.3.patch"
+		}
+	}
 }

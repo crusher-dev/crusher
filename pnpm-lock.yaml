@@ -1,5 +1,10 @@
 lockfileVersion: 5.4
 
+patchedDependencies:
+  playwright-core@1.23.3:
+    hash: nzh6zk5n6spoaegajpj2rekpfq
+    path: patches/playwright-core@1.23.3.patch
+
 importers:
 
   .:
@@ -1402,10 +1407,6 @@ packages:
     dependencies:
       '@babel/types': 7.16.8
 
-  /@babel/helper-environment-visitor/7.18.6:
-    resolution: {integrity: sha512-8n6gSfn2baOY+qlp+VSzsosjCVGFqWKmDF0cCWOybh52Dw3SEyoWR1KrhMJASjLwIEkkAufZ0xvr+SxLHSpy2Q==}
-    engines: {node: '>=6.9.0'}
-
   /@babel/helper-environment-visitor/7.18.9:
     resolution: {integrity: sha512-3r/aACDJ3fhQ/EVgFy0hpj8oHyHpQc+LPtJoY9SzTThAsStm4Ptegq92vqKoE3vD706ZVFWITnMnxucw+S9Ipg==}
     engines: {node: '>=6.9.0'}
@@ -1791,7 +1792,7 @@ packages:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/core': 7.16.7
-      '@babel/helper-environment-visitor': 7.18.6
+      '@babel/helper-environment-visitor': 7.18.9
       '@babel/helper-plugin-utils': 7.18.9
       '@babel/helper-remap-async-to-generator': 7.18.9_@babel+core@7.16.7
       '@babel/plugin-syntax-async-generators': 7.8.4_@babel+core@7.16.7
@@ -4258,7 +4259,7 @@ packages:
     resolution: {integrity: sha512-9E9FJowqAsytyOY6LG+1KuueckRL+aQW+mKvXRXnuFGyRAyepJPmEo9vgMfXUA6O9u3IeEdv9MAkppFcaQwogQ==}
     engines: {node: '>=6.9.0'}
     dependencies:
-      regenerator-runtime: 0.13.7
+      regenerator-runtime: 0.13.9
 
   /@babel/runtime/7.2.0:
     resolution: {integrity: sha512-oouEibCbHMVdZSDlJBO6bZmID/zA/G/Qx3H1d3rSNPTD+L8UNKvCat7aKWSJ74zYbm5zWGh0GQN0hKj8zYFTCg==}

@@ -46,7 +46,9 @@ export const useLoadTempData = () => {
 
 		if (!!loginKey) {
 			setLoginKey(loginKey);
-			backendRequest(resolvePathToBackendURI("/cli/actions/login.user"), { method: RequestMethod.POST, payload: { loginKey } });
+			backendRequest(resolvePathToBackendURI("/cli/actions/login.user"), { method: RequestMethod.POST, payload: { loginKey } }).catch((err) => {
+				console.error("Request failed");
+			});
 		}
 		if (githubToken) {
 			setGithubToken(githubToken);

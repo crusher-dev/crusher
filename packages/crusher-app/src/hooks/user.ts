@@ -47,6 +47,8 @@ export function loadUserDataAndRedirect({ fetchData = true, userAndSystemData = 
 				backendRequest(resolvePathToBackendURI("/cli/actions/login.user"), { method: RequestMethod.POST, payload: { loginKey } }).then((res) => {
 					setLoginKey(null);
 					window.location.href = "/login_sucessful";
+				}).catch((err) => {
+					console.error("Request failed");
 				});
 			} else {
 				await redirectUserOnMount(dataToConsider, router, setDataLoaded.bind(this, true));

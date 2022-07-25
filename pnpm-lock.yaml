@@ -71,6 +71,7 @@ importers:
       nock: ^13.2.4
       prettier: ^2.4.1
       replace-json-property: ^1.4.1
+      semver: ^7.3.7
       strip-ansi: ^7.0.1
       ts-jest: ^27.0.5
       ts-loader: ^9.2.3
@@ -108,6 +109,7 @@ importers:
       nock: 13.2.9
       prettier: 2.7.1
       replace-json-property: 1.8.0
+      semver: 7.3.7
       strip-ansi: 7.0.1
       ts-jest: 27.1.3_k63pjaznknsshr3t2t7o2njo7e
       ts-loader: 9.3.1_icde2qlziaw7qry4f7ahglqajy
@@ -13721,7 +13723,7 @@ packages:
       natural-orderby: 2.0.3
       object-treeify: 1.1.33
       password-prompt: 1.1.2
-      semver: 7.3.5
+      semver: 7.3.7
       string-width: 4.2.2
       strip-ansi: 6.0.1
       supports-color: 8.1.1
@@ -17244,7 +17246,7 @@ packages:
       proxy-addr: 2.0.7
       rfdc: 1.3.0
       secure-json-parse: 2.4.0
-      semver: 7.3.5
+      semver: 7.3.7
       tiny-lru: 8.0.2
     transitivePeerDependencies:
       - supports-color
@@ -20836,7 +20838,7 @@ packages:
       jest-util: 27.4.2
       natural-compare: 1.4.0
       pretty-format: 27.5.1
-      semver: 7.3.5
+      semver: 7.3.7
     transitivePeerDependencies:
       - supports-color
 
@@ -31127,7 +31129,7 @@ packages:
       chalk: 4.1.1
       enhanced-resolve: 5.8.2
       micromatch: 4.0.4
-      semver: 7.3.5
+      semver: 7.3.7
       typescript: 4.3.5
       webpack: 5.21.2_webpack-cli@4.7.2
     dev: true

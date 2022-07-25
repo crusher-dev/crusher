@@ -8,13 +8,14 @@ shell.exec(`cd ${path.resolve("../../output/crusher-electron-app/playwright")} &
 // Promise is returned
 builder
 	.build({
-		targets: Platform.LINUX.createTarget(["appimage", "deb", "zip"]),
+		targets: Platform.LINUX.createTarget(["zip"]),
 		publish: process.env.PUBLISH_RELEASE ? process.env.PUBLISH_RELEASE : "never",
 		config: {
 			productName: "Crusher Recorder",
 			extraResources: [{ from: path.resolve("../../output/crusher-electron-app", "playwright/node_modules"), to: "app/playwright/node_modules" }],
 			executableName: "Crusher Recorder",
 			appId: "com.crusher.electron",
+			artifactName: "Crusher.Recorder-${version}-linux.${ext}",
 			publish: [
 				{
 					provider: "github",

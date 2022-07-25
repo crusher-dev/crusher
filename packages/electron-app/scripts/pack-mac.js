@@ -28,7 +28,8 @@ builder
 			productName: "Crusher Recorder",
 			extraResources: [{ from: path.resolve("../../output/crusher-electron-app", "playwright/node_modules"), to: "app/playwright/node_modules" }],
 			executableName: "Crusher Recorder",
-			defaultArch: IS_ARM ? "arm64" : undefined,
+			defaultArch: IS_ARM ? "arm64" : "x64",
+			artifactName: "Crusher.Recorder-${version}-mac-${arch}.${ext}",
 			publish:
 				process.env.PUBLISH_RELEASE !== "always"
 					? [

@@ -58,6 +58,7 @@ export class EmailManager {
 			inviteLinkUrl.searchParams.append("inviteCode", inviteReferral.code);
 
 			ejs.renderFile(
+				//@ts-ignore
 				typeof __non_webpack_require__ !== "undefined" ? "/email/templates/inviteMember.ejs" : "/../../email/templates/inviteMember.ejs",
 				{
 					invite_link: inviteLinkUrl.toString(),

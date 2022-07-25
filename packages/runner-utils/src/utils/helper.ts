@@ -61,6 +61,7 @@ function getMainActions(actions: iAction[]) {
 }
 
 function isWebpack() {
+	//@ts-ignore
 	return typeof __webpack_require__ === "function";
 }
 

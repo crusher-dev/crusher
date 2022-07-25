@@ -438,12 +438,15 @@ async function sendReportStatusEmails(buildRecord: KeysToCamelCase<IBuildTable>,
 	const usersInProject = await usersService.getUsersInProject(buildRecord.projectId);
 	const emailTemplateFilePathMap = {
 		[BuildReportStatusEnum.PASSED]:
+		//@ts-ignore
 			typeof __non_webpack_require__ !== "undefined" ? "/email/templates/passedJob.ejs" : "/../../email/templates/passedJob.ejs",
 		[BuildReportStatusEnum.MANUAL_REVIEW_REQUIRED]:
+		//@ts-ignore
 			typeof __non_webpack_require__ !== "undefined"
 				? "/email/templates/manualReviewRequiredJob.ejs"
 				: "/../../email/templates/manualReviewRequiredJob.ejs",
 		[BuildReportStatusEnum.FAILED]:
+		//@ts-ignore
 			typeof __non_webpack_require__ !== "undefined" ? "/email/templates/failedJob.ejs" : "/../../email/templates/failedJob.ejs",
 	};
 

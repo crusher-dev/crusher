@@ -46,3 +46,5 @@ USER gitpod
 RUN sudo apt-get update  && sudo apt-get install -y  redis-server redis-tools  && sudo rm -rf /var/lib/apt/lists/*
 
 RUN npm install -g pm2
+
+RUN pnpm install

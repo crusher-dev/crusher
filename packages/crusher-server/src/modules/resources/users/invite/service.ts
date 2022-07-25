@@ -106,6 +106,7 @@ class UserInviteService {
 			ejs.renderFile(
 				path.join(
 					__dirname,
+					//@ts-ignore
 					typeof __non_webpack_require__ !== "undefined" ? "email/templates/inviteMember.ejs" : "/../../email/templates/inviteMember.ejs",
 				),
 				{

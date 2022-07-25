@@ -10,6 +10,6 @@ tasks:
   - name: 'Start redis-server'
     command: 'redis-server'
   - name: 'Start crusher app'
-    init: yarn install && yarn setup:ee && cp ecosystem.config.sample.js ecosystem.config.js && rm -f .env && cp configs/.env.gitpod .env && node setup/dbMigration.js
+    init: pnpm install && yarn setup:ee && cp ecosystem.config.sample.js ecosystem.config.js && rm -f .env && cp configs/.env.gitpod .env && node setup/dbMigration.js
     command: "pm2 start"
     openMode: tab-after

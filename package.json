@@ -44,7 +44,9 @@
 	"license": "MIT",
 	"pnpm": {
 		"patchedDependencies": {
-			"playwright-core@1.23.3": "patches/playwright-core@1.23.3.patch"
+			"playwright-core@1.23.3": "patches/playwright-core@1.23.3.patch",
+			"bullmq@1.67.1": "patches/bullmq@1.67.1.patch",
+			"shelljs@0.8.4": "patches/shelljs@0.8.4.patch"
 		}
 	}
 }

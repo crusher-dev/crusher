@@ -4,6 +4,12 @@ patchedDependencies:
   playwright-core@1.23.3:
     hash: nzh6zk5n6spoaegajpj2rekpfq
     path: patches/playwright-core@1.23.3.patch
+  bullmq@1.67.1:
+    hash: 2g7m7gsxokrxytjfiquzyitsq4
+    path: patches/bullmq@1.67.1.patch
+  shelljs@0.8.4:
+    hash: twnfxsg5hhjhrs4amdtgtidara
+    path: patches/shelljs@0.8.4.patch
 
 importers:
 
@@ -37,7 +43,7 @@ importers:
       postinstall-postinstall: 2.1.0
       putout: 18.16.0_@babel+preset-env@7.18.9
       regenerator-runtime: 0.13.9
-      shelljs: 0.8.4
+      shelljs: 0.8.4_twnfxsg5hhjhrs4amdtgtidara
       source-map-support: 0.5.21
       yargs: 17.2.0
     devDependencies:
@@ -4322,7 +4328,7 @@ packages:
       '@babel/helper-split-export-declaration': 7.16.7
       '@babel/parser': 7.16.8
       '@babel/types': 7.16.8
-      debug: 4.3.3
+      debug: 4.3.4
       globals: 11.12.0
     transitivePeerDependencies:
       - supports-color
@@ -29123,6 +29129,17 @@ packages:
       glob: 7.2.0
       interpret: 1.4.0
       rechoir: 0.6.2
+
+  /shelljs/0.8.4_twnfxsg5hhjhrs4amdtgtidara:
+    resolution: {integrity: sha512-7gk3UZ9kOfPLIAbslLzyWeGiEqx9e3rxwZM0KE6EL8GlGwjym9Mrlx5/p33bWTu9YG6vcS4MBxYZDHYr5lr8BQ==}
+    engines: {node: '>=4'}
+    hasBin: true
+    dependencies:
+      glob: 7.2.0
+      interpret: 1.4.0
+      rechoir: 0.6.2
+    dev: false
+    patched: true
 
   /shellwords/0.1.1:
     resolution: {integrity: sha512-vFwSUfQvqybiICwZY5+DAWIPLKsWO31Q91JSKl3UYv+K5c2QRPzn0qzec6QPu1Qc9eHYItiP3NdJqNVqetYAww==}

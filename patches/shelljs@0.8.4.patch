@@ -1,7 +1,7 @@
-diff --git a/node_modules/shelljs/shell.js b/node_modules/shelljs/shell.js
-index f9c6f36..f21b485 100644
---- a/node_modules/shelljs/shell.js
-+++ b/node_modules/shelljs/shell.js
+diff --git a/shell.js b/shell.js
+index f9c6f36df9de7c10958b01d08dbaa1b20034ad8c..f21b4851a51a6219a04249dd9dcb904ba96c375d 100644
+--- a/shell.js
++++ b/shell.js
 @@ -21,9 +21,33 @@ var common = require('./src/common');
  //@commands
  
@@ -39,10 +39,10 @@ index f9c6f36..f21b485 100644
  
  //@
  //@ ### exit(code)
-diff --git a/node_modules/shelljs/src/mkdir.js b/node_modules/shelljs/src/mkdir.js
-index 6168d59..8092db5 100644
---- a/node_modules/shelljs/src/mkdir.js
-+++ b/node_modules/shelljs/src/mkdir.js
+diff --git a/src/mkdir.js b/src/mkdir.js
+index 6168d592b952292f25b40a2f1b5cbfd8f9e3b86c..8092db5e981b6519fda741d68bce5530be673632 100644
+--- a/src/mkdir.js
++++ b/src/mkdir.js
 @@ -19,17 +19,18 @@ function mkdirSyncRecursive(dir) {
      common.error('dirname() failed: [' + dir + ']');
    }

@@ -15,4 +15,4 @@ fi
 
 echo 'Downloading latest binaries...'
 curl -s https://api.github.com/repos/crusherdev/celectron-releases/releases/latest  | grep "celectron.*.zip" | cut -d : -f 2,3 | tr -d \" | wget -qi - -cP packages/electron-app/bin --show-progress
-yarn workspace electron-app extract:deps
+cd packages/electron-app && pnpm extract:deps

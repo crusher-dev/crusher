@@ -16,14 +16,13 @@
 		"start": "pm2 start",
 		"log:app": "pm2 logs crusher-app",
 		"lint": "lerna run prettify",
-		"postinstall": "patch-package && sh scripts/download-binaries.sh && yarn workspace crusher-runner-utils build",
+		"postinstall": "",
 		"docker:heroku": "cd docker/oss/ && docker-compose up --build -d",
 		"docker:build:heroku": "sh scripts/build/build-oss.sh && yarn docker:heroku",
 		"db:migration": "node setup/dbMigration.js"
 	},
 	"devDependencies": {
 		"@ffmpeg-installer/ffmpeg": "^1.0.20",
-		"lerna": "^3.22.1",
 		"pm2": "^5.1.2"
 	},
 	"dependencies": {
@@ -42,5 +41,6 @@
 		"source-map-support": "^0.5.20",
 		"yargs": "^17.0.1"
 	},
-	"license": "MIT"
+	"license": "MIT",
+	"packageManager": "yarn@3.2.1"
 }

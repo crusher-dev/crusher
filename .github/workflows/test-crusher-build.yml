@@ -1,0 +1,35 @@
+name: Build packages
+
+on: push
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 6.32.9
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          cache: 'pnpm'
+
+      - name: Create ecosystem.config.js and Copy .env.sample file
+        run: cp ecosystem.config.sample.js ecosystem.config.js && cp .env.sample .env
+
+      - name: Install crusher modules
+        run: pnpm install
+
+      # - name: Setup crusher for prod
+      #   run: yarn setup:prod
+
+      # - name: Build electron app
+      #   run: BACKEND_URL=https://backend.crusher.dev FRONTEND_URL=https://app.crusher.dev yarn workspace electron-app build
+
+      # - name: 'Run tests for electron app'
+      #   run: |
+      #     yarn workspace electron-app tests

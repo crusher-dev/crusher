@@ -45,6 +45,7 @@ function setupElectronApp() {
 	// For replaying actions
 	app.commandLine.appendSwitch("--remote-debugging-port", "0");
 
+	console.log("Port is: " + app.getPath("userData"));
 	app.setAboutPanelOptions({
 		applicationName: APP_NAME,
 		applicationVersion: app.getVersion(),

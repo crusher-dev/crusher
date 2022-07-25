@@ -9,7 +9,7 @@ module.exports = {
 		{
 			name: 'crusher-app',
 			cwd: './packages/crusher-app',
-			script: IS_PRODUCTION ? 'node' : "npm",
+			script: IS_PRODUCTION ? 'node' : "pnpm",
 			args: IS_PRODUCTION ? 'server.js' : 'run dev',
 			env: CRUSHER_APP_ENV,
 			merge_logs: true,
@@ -17,7 +17,7 @@ module.exports = {
 		{
 			name: 'crusher-server',
 			cwd: './packages/crusher-server',
-			script: IS_PRODUCTION ? 'node' : 'npm',
+			script: IS_PRODUCTION ? 'node' : 'pnpm',
 			args: IS_PRODUCTION ? '-r source-map-support/register app.js' : 'run dev',
 			env: CRUSHER_SERVER_ENV,
 			merge_logs: true,
@@ -25,7 +25,7 @@ module.exports = {
 		{
 			name: 'crusher-server-cron',
 			cwd: './packages/crusher-server',
-			script: IS_PRODUCTION ? 'node' : 'npm',
+			script: IS_PRODUCTION ? 'node' : 'pnpm',
 			args: IS_PRODUCTION ? 'cron.js' : 'run dev:cron',
 			env: CRUSHER_SERVER_ENV,
 			merge_logs: true,
@@ -34,7 +34,7 @@ module.exports = {
 			merge_logs: true,
 			name: 'crusher-server-queue',
 			cwd: './packages/crusher-server',
-			script: IS_PRODUCTION ? 'node' : 'npm',
+			script: IS_PRODUCTION ? 'node' : 'pnpm',
 			args: IS_PRODUCTION ? '-r source-map-support/register queue.js' : 'run dev:queue',
 			env: CRUSHER_SERVER_ENV,
 			merge_logs: true,
@@ -42,7 +42,7 @@ module.exports = {
 		{
 			name: 'test-runner',
 			cwd: './packages/test-runner',
-			script: IS_PRODUCTION ? 'node' : 'npm',
+			script: IS_PRODUCTION ? 'node' : 'pnpm',
 			args: IS_PRODUCTION ? 'index.js' : 'run start',
 			watch: ['src', 'config', 'util'],
 			env: TEST_RUNNER_ENV,
@@ -50,14 +50,14 @@ module.exports = {
 		{
 			name: 'video-processor',
 			cwd: './packages/video-processor',
-			script: IS_PRODUCTION ? 'node' : 'npm',
+			script: IS_PRODUCTION ? 'node' : 'pnpm',
 			args: IS_PRODUCTION ? 'index.js' : 'run start',
 			env: VIDEO_PROCESSOR_ENV,
 		},
 		{
 			name: 'local-storage',
 			cwd: './packages/crusher-server',
-			script: IS_PRODUCTION ? 'node' : 'npm',
+			script: IS_PRODUCTION ? 'node' : 'pnpm',
 			args: IS_PRODUCTION ? '-r source-map-support/register storage.js' : 'run dev:storage',
 			watch: ['src', 'config'],
 			env: CRUSHER_SERVER_ENV,

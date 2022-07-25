@@ -17,6 +17,7 @@
 		"aws-sdk": "^2.931.0",
 		"axios": "^0.25.0",
 		"bullmq": "1.67.1",
+		"chalk": "^4.0.0",
 		"finalhandler": "^1.1.2",
 		"form-data": "^4.0.0",
 		"ioredis": "^4.27.7",

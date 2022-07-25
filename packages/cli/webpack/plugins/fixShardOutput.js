@@ -11,7 +11,6 @@ class FixSharedOutputPlugin {
         () => {
           // get the file main.js
           const file = compilation.getAsset('./src/shared.js');
-          console.log("File is", file.source.source());
           // update main.js with new content
           compilation.updateAsset(
             './src/shared.js',

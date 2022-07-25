@@ -21,10 +21,10 @@ RUN apt-get update \
 RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.37.2/install.sh | bash
 RUN /bin/bash -c "source $NVM_DIR/nvm.sh && nvm install $NODE_VERSION && nvm use --delete-prefix $NODE_VERSION"
 
-# Install node dependenices
+# Install pnpm and node dependenices
 # RUN npm install -g npm pm2 concurrently @ffmpeg-installer/ffmpeg https://github.com/crusherdev/playwright-video.git#f7dececde258b07bdec207e4bb6869d389655704
-RUN npm install -g concurrently pm2 node-fetch
-RUN npm init -y && npm install pm2 dotenv playwright@1.23.3 patch-package source-map-support
+RUN npm install -g concurrently pm2 node-fetch pnpm
+RUN pnpm init -y && pnpm install pm2 dotenv playwright@1.23.3 patch-package source-map-support
 
 # Add and copy necessary files
 ADD docker/ee/test-runner/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh

@@ -140,7 +140,8 @@ const DashboardScreen = () => {
         turnOnProxyServers();
         // @TODO: Cache this API
         getUserAccountProjects().then((res) => {
-            const project = res.projects.find((p) => p.id === selectedProjectId);
+            const project = res.projects.find((p) => (p.id == selectedProjectId));
+            console.log("Project is", selectedProjectId, project, res);
             if(project) {
                 setSelectedProject(project);
             }

@@ -138,6 +138,8 @@ export class Cloudflare {
         });
       }))
 
+      console.log("Wait for 60 seconds to make sure tunnel is reachable");
+      await new Promise((resolve, reject) => setTimeout(resolve, 60000));
       console.log("results tunnel", JSON.stringify(resultTunnelMap));
       resolve(resultTunnelMap);
     });

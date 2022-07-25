@@ -8,10 +8,10 @@ RUN apk add --no-cache bash
 
 RUN apk add git
 
-RUN npm install -g npm pm2 webpack
-RUN npm init -y
+RUN npm install -g pnpm pm2 webpack 
+RUN pnpm init -y
 
-RUN npm install dotenv source-map-support
+RUN pnpm install dotenv source-map-support
 
 ADD ./ecosystem.config.sample.js ecosystem.config.js
 ADD ./.env.sample .env

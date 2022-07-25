@@ -2,8 +2,9 @@ const builder = require("electron-builder");
 const Platform = builder.Platform;
 const path = require("path");
 const shell = require("shelljs");
-
-shell.exec(`cd ${path.resolve("../../output/crusher-electron-app/playwright")} && yarn install`);
+const { execSync } = require("child_process");
+console.log(`Path is ${path.resolve("../../node_modules/playwright-core")}`);
+execSync(`cd ${path.resolve("../../output/crusher-electron-app/playwright")} && cp ${path.resolve("../../node_modules/.bin/playwright")} ./node_modules/.bin/playwright && cp -R ${path.resolve("../../node_modules/playwright-core")} ./node_modules/playwright-core/`);
 
 // Promise is returned
 builder

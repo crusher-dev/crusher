@@ -31,7 +31,7 @@ import { getBrowserActions, getMainActions } from "runner-utils/src";
 import { iElementInfo, TRecorderState } from "../store/reducers/recorder";
 import { iSeoMetaInformationMeta } from "../types";
 import { getUserAgentFromName } from "@shared/constants/userAgents";
-import { getAppEditingSessionMeta, getAppSessionMeta, getAppSettings, getRemainingSteps, getUserAccountInfo } from "../store/selectors/app";
+import { getAppEditingSessionMeta, getAppSessionMeta, getAppSettings, getCurrentSelectedProjct, getRemainingSteps, getUserAccountInfo } from "../store/selectors/app";
 import { resetAppSession, setSelectedProject, setSessionInfoMeta, setUserAccountInfo } from "../store/actions/app";
 import { resolveToBackendPath, resolveToFrontEndPath } from "@shared/utils/url";
 import { getGlobalAppConfig, writeGlobalAppConfig } from "../lib/global-config";
@@ -818,7 +818,7 @@ export class AppWindow {
 		const appSettings = getAppSettings(this.store.getState() as any);
 		const testName = getTestName(this.store.getState() as any);
 
-		const projectId = await this.window.webContents.executeJavaScript("window.localStorage.getItem('projectId');");
+		const projectId = getCurrentSelectedProjct(this.store.getState() as any);
 		let testRecord = null;
 		if (app.commandLine.hasSwitch("exit-on-save")) {
 			const projectId = app.commandLine.getSwitchValue("projectId");

@@ -84,8 +84,7 @@
 		"tsconfig-paths": "^3.9.0",
 		"typedi": "0.10.0",
 		"uuid": "^8.3.2",
-		"winston": "^3.7.2",
-		"winston-loki": "^6.0.5"
+		"winston": "^3.7.2"
 	},
 	"scripts": {
 		"setup": "node setup/tsconfig.js",

@@ -1,19 +1,25 @@
+const token = "xaat-ce17493a-8da5-428b-93be-01b53d13a525";
+const ORG_ID = "crusher-1fgb"
+process.env.AXIOM_TOKEN = token;
+process.env.AXIOM_ORG_ID = ORG_ID;
+
 import * as winston from "winston";
 import * as path from "path";
 import * as fs from "fs";
-const LokiTransport = require("winston-loki");
 const chalk = require('chalk');
-
+const { Readable } = require("stream")
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
 
+import Client, { datasets } from '@axiomhq/axiom-node';
+const client = new Client();
 
 let isSetupComplete = false;
-export function setupLogger(componentName: string) {
+export function setupLogger(crusherModuleName: string) {
 	console.log("Setting up logger now");
-	if (!componentName) throw new Error("Provide a unique component name for you logger");
+	if (!crusherModuleName) throw new Error("Provide a unique component name for you logger");
 	if (isSetupComplete) return;
 
-	const logsDir = path.join(process.env.HOME, ".crusher/logs", componentName);
+	const logsDir = path.join(process.env.HOME, ".crusher/logs", crusherModuleName);
 	if(!fs.existsSync(logsDir)) {
 		console.log("Logs dir doesn't exist, creating it");
 		fs.mkdirSync(logsDir, {recursive: true});
@@ -37,8 +43,10 @@ export function setupLogger(componentName: string) {
 	});
 
 	const consoleMiddleware = (type, message, ...meta) => {
+		logToAxiom(type,message, ...meta)
 		winstonLogger.log(type, message, meta);
 	};
+
 	// Native console.error
 	const _error = console.error;
 	const _log = console.log;
@@ -54,18 +62,26 @@ export function setupLogger(componentName: string) {
 
 	modifyNativeConsoleFunctions();
 
-	if (IS_PRODUCTION) {
-		winstonLogger.add(
-			new LokiTransport({
-				host:
-					"https://146225:eyJrIjoiY2I4YTU3ODIxMjY4OTIwNzM5YjkzODQzODllNzNjMWQ4Mjk3YmZmZSIsIm4iOiJtYWluLWxvZyIsImlkIjo1ODQ3OTh9@logs-prod-us-central1.grafana.net",
-				json: true,
-				basicAuth: "146225:eyJrIjoiY2I4YTU3ODIxMjY4OTIwNzM5YjkzODQzODllNzNjMWQ4Mjk3YmZmZSIsIm4iOiJtYWluLWxvZyIsImlkIjo1ODQ3OTh9",
-				labels: { component: componentName },
-				onConnectionError: (err) => {
-					_error(err);
-				},
-			}),
-		);
+	// Add better logger later on with winston
+	function logToAxiom(type, message, ...meta){
+		(async()=>{
+			if(IS_PRODUCTION){
+				const str = JSON.stringify([
+					!!meta ? {from :crusherModuleName, type,message} :  {from :crusherModuleName, type,message,meta}
+				]);
+				const stream = Readable.from(str);
+				try{
+					 await client.datasets.ingest(
+						'crusher-prod',
+						stream,
+						datasets.ContentType.JSON,
+						datasets.ContentEncoding.Identity,
+					);
+				}catch(e){
+					console.log("error",e)
+				}
+			}
+		})()
 	}
+
 }

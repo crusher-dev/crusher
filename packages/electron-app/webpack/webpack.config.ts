@@ -78,7 +78,10 @@ const finalConfig = [
 				...dotEnv.parsed,
 			}),
 			new CopyPlugin({
-				patterns: [{ from: path.dirname(require.resolve("playwright/package.json")), to: "playwright" }],
+				patterns: [
+					{ from: path.dirname(require.resolve("playwright/package.json")), to: "playwright" },
+					{ from: path.dirname(require.resolve("playwright-core/package.json")), to: "playwright/node_modules/playwright-core" }
+				],
 			}),
 			new CopyPlugin({
 				patterns: [

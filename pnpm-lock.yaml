@@ -1025,6 +1025,7 @@ importers:
       dotenv: ^10.0.0
       fluent-ffmpeg: ^2.1.2
       got: ^11.8.1
+      ioredis: ^4.27.7
       logdna: ^3.5.0
       node-fetch: ^2.6.1
       prettier: ^2.2.1
@@ -1042,6 +1043,7 @@ importers:
       bullmq: 1.67.1_2g7m7gsxokrxytjfiquzyitsq4
       fluent-ffmpeg: 2.1.2
       got: 11.8.2
+      ioredis: 4.28.3
       logdna: 3.5.2_eslint@7.30.0
       shelljs: 0.8.4_twnfxsg5hhjhrs4amdtgtidara
       ts-node: 9.1.1_typescript@4.3.5
@@ -19687,7 +19689,7 @@ packages:
     engines: {node: '>=6'}
     dependencies:
       cluster-key-slot: 1.1.0
-      debug: 4.3.3
+      debug: 4.3.4
       denque: 1.5.0
       lodash.defaults: 4.2.0
       lodash.flatten: 4.4.0

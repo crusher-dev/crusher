@@ -20,7 +20,7 @@ const registerUser = (name: string, email: string, password: string, inviteType:
 	});
 };
 
-export default function Signup_email({ goBackHandler }) {
+export default function Signup_email({ loginWithEmailHandler }) {
 	const [data, setData] = useState(null);
 	const router = useRouter();
 	const { query } = router;
@@ -167,7 +167,7 @@ export default function Signup_email({ goBackHandler }) {
 							<SubmitButton text="Create an account" onSubmit={signupUser} loading={loading} />
 						</div>
 						<div className="flex items-center justify-between">
-							<Text onClick={goBackHandler} css={underLineonHover} fontSize={12}>
+							<Text onClick={loginWithEmailHandler} css={underLineonHover} fontSize={12}>
 								Go back
 							</Text>
 							<Text onClick={() => router.push("/forgot_password")} css={underLineonHover} fontSize={12}>
@@ -175,7 +175,7 @@ export default function Signup_email({ goBackHandler }) {
 							</Text>
 						</div>
 					</div>
-					<div onClick={() => router.push("/signup")} className="flex w-full justify-center mt-40">
+					<div onClick={() => router.push("/login")} className="flex w-full justify-center mt-40">
 						<Text
 							color={"#565657"}
 							fontSize={14}

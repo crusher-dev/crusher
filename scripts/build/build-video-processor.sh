@@ -1,1 +1,1 @@
-cd packages/video-processor && yarn build && cd ../../
+cd packages/video-processor && pnpm build && cd ../../

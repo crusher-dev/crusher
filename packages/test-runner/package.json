@@ -11,6 +11,7 @@
 		"bullmq": "1.67.1",
 		"crusher-runner-utils": "0.0.9",
 		"dotenv": "^10.0.0",
+		"expect": "^27.5.1",
 		"ioredis": "^4.19.4",
 		"js-beautify": "^1.14.0",
 		"logdna": "^3.5.0",

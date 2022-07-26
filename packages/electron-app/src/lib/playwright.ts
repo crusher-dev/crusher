@@ -15,8 +15,8 @@ import { ACTION_DESCRIPTIONS } from "../ui/components/sidebar/steps";
 import { uuidv4 } from "runner-utils/src/utils/helper";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 const { performance } = require("perf_hooks");
+//@ts-ignore
 const playwright = typeof __non_webpack_require__ !== "undefined" ? __non_webpack_require__("./playwright/index.js") : require("playwright");
-
 type ElectronCompatibleCookiePayload = Omit<CrusherCookieSetPayload, "sameSite"> & {
 	sameSite: Pick<CookiesSetDetails, "sameSite">;
 };

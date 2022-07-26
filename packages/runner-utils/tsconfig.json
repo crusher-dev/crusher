@@ -7,7 +7,7 @@
 		"module": "commonjs",
 		"removeComments": true,
 		"sourceMap": true,
-		"target": "es5",
+		"target": "ES2021",
 		"allowJs": true,
 		"noImplicitAny": false,
 		"noUnusedLocals": false,
@@ -20,5 +20,5 @@
 	"files": ["./src/index.ts"],
 	"typeRoots": ["node_modules/@types"],
 	"include": ["./src/**/*"],
-	"exclude": ["**/*.spec.ts"]
+	"exclude": ["node_modules", "**/*.spec.ts"]
 }

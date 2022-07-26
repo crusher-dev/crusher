@@ -16,7 +16,12 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v2.1.4
         with:
-          node-version: 14.15.4
+          node-version: 16.13.2
+          cache: 'pnpm'
+
+      - uses: pnpm/action-setup@v2.2.2
+        with:
+          version: 6.0.2
 
       - name: Create ecosystem.config.js
         run: cp ecosystem.config.sample.js ecosystem.config.js
@@ -25,10 +30,10 @@ jobs:
         run: cp .env.sample .env
 
       - name: Install crusher node_modules
-        run: yarn
+        run: pnpm install
 
       - name: Setup crusher
-        run: yarn setup:prod
+        run: pnpm setup:prod
 
       - name: Upgrade heap size of node
         run: export NODE_OPTIONS=--max_old_space_size=4096

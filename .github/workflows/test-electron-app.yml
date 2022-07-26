@@ -35,11 +35,11 @@ jobs:
         run: pnpm install
 
       - name: Setup crusher for prod
-        run: yarn setup:prod
+        run: pnpm setup:prod
 
       - name: Build electron app
-        run: BACKEND_URL=https://backend.crusher.dev FRONTEND_URL=https://app.crusher.dev yarn workspace electron-app build
+        run: BACKEND_URL=https://backend.crusher.dev FRONTEND_URL=https://app.crusher.dev cd packages/electron-app && pnpm build
 
       - name: 'Run tests for electron app'
         run: |
-          yarn workspace electron-app tests
+          cd packages/electron-app && pnpm tests

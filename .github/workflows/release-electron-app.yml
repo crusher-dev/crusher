@@ -21,27 +21,28 @@ jobs:
         uses: actions/setup-node@v2.1.4
         with:
           node-version: 16.13.2
-          cache: 'yarn'
+          cache: 'pnpm'
+
+      - uses: pnpm/action-setup@v2.2.2
+        with:
+          version: 6.0.2
 
       - name: Create ecosystem.config.js and Copy .env.sample file
         run: cp ecosystem.config.sample.js ecosystem.config.js && cp .env.sample .env
 
-      - name: Setup Node.js environment
-        uses: c-hive/gha-yarn-cache@v2
-
       - name: Install crusher modules
-        run: yarn
+        run: pnpm ibnstall
 
       - name: Setup crusher for prod
-        run: yarn setup:prod
+        run: pnpm setup:prod
 
       - if: matrix.os == 'ubuntu-20.04'
         name: Build release for electron app
-        run: yarn workspace electron-app release
+        run: cd packages/electron-app && pnpm release
 
       - if: matrix.os == 'macos-latest'
         name: Build release for electron app
-        run: yarn workspace electron-app release
+        run: cd packages/electron-app && pnpm release
 
       - if: matrix.os == 'macos-latest'
         name: 'Store crusher-darwin as artifact'

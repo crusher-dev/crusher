@@ -35,9 +35,6 @@ jobs:
       - name: Setup crusher
         run: pnpm setup:prod
 
-      - name: Install webpack
-        run: npm install -g webpack webpack-cli
-
       - name: Install ncc
         run: npm install -g @vercel/ncc@0.27.0
 

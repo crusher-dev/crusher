@@ -1,4 +1,4 @@
-cd packages/crusher-app && yarn build && yarn export && yarn build:server
+cd packages/crusher-app && pnpm build && pnpm export && pnpm build:server
 rm -rf ../../output/crusher-app/out && mv out ../../output/crusher-app/out
 
 cd ../../

@@ -171,6 +171,7 @@ importers:
       '@zeit/next-css': ^1.0.1
       autoprefixer: ^10.0.1
       babel-plugin-inline-react-svg: ^1.1.2
+      body-parser: ^1.19.0
       clipboard-copy: ^3.1.0
       commitizen: ^4.2.3
       cookie: ^0.4.1
@@ -286,6 +287,7 @@ importers:
       '@zeit/next-css': 1.0.1_webpack@4.46.0
       autoprefixer: 10.4.0_postcss@8.4.14
       babel-plugin-inline-react-svg: 1.1.2_@babel+core@7.16.7
+      body-parser: 1.19.0
       cross-env: 7.0.3
       eslint: 7.30.0
       eslint-config-prettier: 7.2.0_eslint@7.30.0
@@ -1160,7 +1162,7 @@ packages:
       '@babel/traverse': 7.16.8
       '@babel/types': 7.16.8
       convert-source-map: 1.7.0
-      debug: 4.3.3
+      debug: 4.3.4
       gensync: 1.0.0-beta.2
       json5: 2.2.0
       lodash: 4.17.21
@@ -1184,7 +1186,7 @@ packages:
       '@babel/traverse': 7.16.8
       '@babel/types': 7.16.8
       convert-source-map: 1.7.0
-      debug: 4.3.3
+      debug: 4.3.4
       gensync: 1.0.0-beta.2
       json5: 2.2.0
       semver: 6.3.0
@@ -4341,7 +4343,7 @@ packages:
       '@babel/helper-split-export-declaration': 7.16.7
       '@babel/parser': 7.16.8
       '@babel/types': 7.16.8
-      debug: 4.3.3
+      debug: 4.3.4
       globals: 11.12.0
       lodash: 4.17.21
     transitivePeerDependencies:
@@ -20071,7 +20073,7 @@ packages:
     resolution: {integrity: sha512-c16LpFRkR8vQXyHZ5nLpY35JZtzj1PQY1iZmesUbf1FZHbIupcWfjgOXBY9YHkLEQ6puz1u4Dgj6qmU/DisrZg==}
     engines: {node: '>=8'}
     dependencies:
-      debug: 4.3.3
+      debug: 4.3.4
       istanbul-lib-coverage: 3.2.0
       source-map: 0.6.1
     transitivePeerDependencies:

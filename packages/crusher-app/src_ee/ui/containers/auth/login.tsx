@@ -97,7 +97,7 @@ export default function Login({ loginWithEmailHandler }) {
 								</Button>
 							</Link>
 
-							<Button
+							{/* <Button
 								onClick={loginWithEmailHandler}
 								bgColor={"tertiary-dark"}
 								className={"flex items-center justify-center mt-20"}
@@ -106,7 +106,7 @@ export default function Login({ loginWithEmailHandler }) {
 								<Text fontSize={14} weight={500}>
 									Login with Gitlab
 								</Text>
-							</Button>
+							</Button> */}
 
 							<Button
 								onClick={loginWithEmailHandler}

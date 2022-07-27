@@ -11,35 +11,34 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [macos-latest]
 
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v2
 
+      - uses: pnpm/action-setup@v2.2.2
+        with:
+          version: 7.5.1
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.1.4
+        uses: actions/setup-node@v3
         with:
           node-version: 16.13.2
           cache: 'pnpm'
-
-      - uses: pnpm/action-setup@v2.2.2
-        with:
-          version: 6.0.2
 
       - name: Create ecosystem.config.js and Copy .env.sample file
         run: cp ecosystem.config.sample.js ecosystem.config.js && cp .env.sample .env
 
       - name: Install crusher modules
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Setup crusher for prod
-        run: yarn setup:prod
+        run: pnpm setup:prod
 
       - name: Build electron app
-        run: BACKEND_URL=https://backend.crusher.dev FRONTEND_URL=https://app.crusher.dev yarn workspace electron-app build
+        run: cd packages/electron-app && BACKEND_URL=https://backend.crusher.dev FRONTEND_URL=https://app.crusher.dev pnpm build
 
       - name: 'Run tests for electron app'
         run: |
-          yarn workspace electron-app tests
+          cd packages/electron-app && pnpm tests

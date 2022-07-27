@@ -26,7 +26,7 @@ class UserAuthService {
 
 	async setUserAuthCookies(userId: number, teamId: number, req: any, res: any): Promise<string> {
 		const USER_DOMAIN = req.get("host") ? req.get("host") : "";
-		const IS_LOALHOST = USER_DOMAIN.startsWith("localhost") || USER_DOMAIN.startsWith("127.0.0.1");
+		const IS_LOALHOST = USER_DOMAIN.startsWith("localhost") || USER_DOMAIN.startsWith("crusher-server") || USER_DOMAIN.startsWith("127.0.0.1");
 
 		const token = generateToken(userId, teamId);
 

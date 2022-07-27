@@ -4,7 +4,7 @@ const path = require("path");
 const shell = require("shelljs");
 const { notarize } = require("electron-notarize");
 const { execSync } = require("child_process");
-shell.exec(`cd ${path.resolve("../../output/crusher-electron-app/playwright")} && yarn install`);
+// shell.exec(`cd ${path.resolve("../../output/crusher-electron-app/playwright")} && pnpm install`);
 
 const getIsArm = () => {
 	try {

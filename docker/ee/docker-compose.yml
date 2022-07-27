@@ -50,6 +50,7 @@ services:
   crusher-app:
     depends_on:
       - local-storage
+      - crusher-server
     links:
       - 'local-storage:local-storage'
     networks:
@@ -58,7 +59,7 @@ services:
       context: ../../
       dockerfile: docker/ee/crusher-app/Dockerfile
     environment:
-      - NEXT_PUBLIC_INTERNAL_BACKEND_URL=http://localhost:8000
+      - NEXT_PUBLIC_INTERNAL_BACKEND_URL=http://crusher-server:8000
       - STORAGE_PROXY=http://172.12.23.35:3001
     ports:
       - '3000:3000'

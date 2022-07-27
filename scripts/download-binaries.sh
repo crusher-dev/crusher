@@ -1,5 +1,5 @@
 ELECTRON_BIN_DIR="packages/electron-app/bin"
-if [ -d "$ELECTRON_BIN_DIR/linux" ] && [ -d "$ELECTRON_BIN_DIR/darwin" ]; then
+if [ -d "$ELECTRON_BIN_DIR/linux-x64" ] && [ -d "$ELECTRON_BIN_DIR/darwin-x64" ] && [ -d "$ELECTRON_BIN_DIR/darwin-arm64" ]; then
    echo 'Binaries already extracted. Skipping downloading...'
    exit 0
 fi

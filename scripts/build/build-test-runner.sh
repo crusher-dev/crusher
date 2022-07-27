@@ -1,2 +1,2 @@
-cd packages/runner-utils && yarn build && cd ../../
-cd packages/test-runner && yarn build && cd ../../
+cd packages/runner-utils && pnpm build && cd ../../
+cd packages/test-runner && pnpm build && cd ../../

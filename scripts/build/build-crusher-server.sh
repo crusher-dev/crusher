@@ -1,1 +1,1 @@
-cd packages/crusher-server && yarn build && cd ../../
+cd packages/crusher-server && pnpm build && cd ../../

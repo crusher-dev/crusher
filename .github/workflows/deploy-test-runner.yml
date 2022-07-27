@@ -13,10 +13,15 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v2.1.4
+      - uses: pnpm/action-setup@v2.2.2
         with:
-          node-version: 14.15.4
+          version: 7.5.1
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.13.2
+          cache: 'pnpm'
 
       - name: Create ecosystem.config.js
         run: cp ecosystem.config.sample.js ecosystem.config.js
@@ -25,10 +30,10 @@ jobs:
         run: cp .env.sample .env
 
       - name: Install crusher node_modules
-        run: yarn
+        run: pnpm install --frozen-lockfile
 
       - name: Setup crusher
-        run: yarn setup:prod
+        run: pnpm setup:prod
 
       - name: Upgrade heap size of node
         run: export NODE_OPTIONS=--max_old_space_size=4096
@@ -60,6 +65,7 @@ jobs:
           IMAGE_TAG: latest
           PORT: 80
         run: |
+          export DOCKER_BUILDKIT=1
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG . --file docker/ee/test-runner/Dockerfile
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"

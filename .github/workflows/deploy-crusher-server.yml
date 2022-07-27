@@ -13,16 +13,16 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v2.1.4
+
+      - uses: pnpm/action-setup@v2.2.2
         with:
-          node-version: 14.15.4
-
-      - name: Install yarn
-        run: npm install -g yarn
-
-      - name: Use cache for yarn if available
-        uses: c-hive/gha-yarn-cache@v1
+          version: 7.5.1
+          
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.13.2
+          cache: 'pnpm'
 
       - name: Create ecosystem.config.js
         run: cp ecosystem.config.sample.js ecosystem.config.js
@@ -31,13 +31,10 @@ jobs:
         run: cp .env.sample .env
 
       - name: Install crusher modules
-        run: yarn
+        run: pnpm install --frozen-lockfile
 
       - name: Setup crusher
-        run: yarn setup:prod
-
-      - name: Install webpack
-        run: npm install -g webpack
+        run: pnpm setup:prod
 
       - name: Install ncc
         run: npm install -g @vercel/ncc@0.27.0
@@ -76,6 +73,7 @@ jobs:
           IMAGE_TAG: latest
           PORT: 80
         run: |
+          export DOCKER_BUILDKIT=1
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG . --file docker/ee/crusher-server/Dockerfile --build-arg PORT=80 --build-arg REDIS_HOST=$REDIS_HOST --build-arg REDIS_PASSWORD=$REDIS_PASSWORD --build-arg REDIS_PORT=$REDIS_PORT
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"

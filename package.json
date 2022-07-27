@@ -16,7 +16,7 @@
 		"start": "pm2 start",
 		"log:app": "pm2 logs crusher-app",
 		"lint": "lerna run prettify",
-		"postinstall": "",
+		"postinstall": "sh scripts/download-binaries.sh",
 		"docker:heroku": "cd docker/oss/ && docker-compose up --build -d",
 		"docker:build:heroku": "sh scripts/build/build-oss.sh && yarn docker:heroku",
 		"db:migration": "node setup/dbMigration.js"
@@ -42,5 +42,11 @@
 		"yargs": "^17.0.1"
 	},
 	"license": "MIT",
-	"packageManager": "yarn@3.2.1"
+	"pnpm": {
+		"patchedDependencies": {
+			"playwright-core@1.23.3": "patches/playwright-core@1.23.3.patch",
+			"bullmq@1.67.1": "patches/bullmq@1.67.1.patch",
+			"shelljs@0.8.4": "patches/shelljs@0.8.4.patch"
+		}
+	}
 }

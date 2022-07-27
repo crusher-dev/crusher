@@ -1,0 +1,35 @@
+name: 🐛 Bug report
+description: Create a report to help us improve
+labels: [bug, triage]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting an issue.
+
+        This issue tracker is for bugs and issues found within crusher.
+  - type: input
+    attributes:
+      label: Version
+      description: Output of `npx crusher-cli -v`
+  - type: input
+    attributes:
+      label: Platform
+      description: |
+        UNIX: output of `uname -a`
+        Windows: output of `"$([Environment]::OSVersion | ForEach-Object VersionString) $(if ([Environment]::Is64BitOperatingSystem) { "x64" } else { "x86" })"` in PowerShell console
+  - type: textarea
+    attributes:
+      label: What steps will reproduce the bug?
+      description: Enter details about your bug, preferably a simple code snippet that can be run using `bun` directly without installing third-party dependencies.
+  - type: textarea
+    attributes:
+      label: Any loom/screencast describing the issue
+  - type: textarea
+    attributes:
+      label: What is the expected behavior?
+      description: If possible, please provide textual output instead of screenshots.
+  - type: textarea
+    attributes:
+      label: Additional information
+      description: Tell us anything else you think we should know.

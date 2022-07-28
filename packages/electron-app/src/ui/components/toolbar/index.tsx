@@ -635,8 +635,6 @@ const dropdownContainerStyle = css`
 `;
 const selectBoxStyle = css`
 	.selectBox {
-		border-top-right-radius: 100rem;
-		border-bottom-right-radius: 100rem;
 		:hover {
 			border: none;
 			border-left-width: 1rem;
@@ -656,6 +654,8 @@ const selectBoxStyle = css`
 		border-left-width: 1rem;
 		border-left-style: solid;
 		border-left-color: rgba(255, 255, 255, 0.13);
+		border-top-right-radius: 100rem !important;
+		border-bottom-right-radius: 100rem !important;
 	}
 	.selectBox__value {
 		margin-right: 10rem;

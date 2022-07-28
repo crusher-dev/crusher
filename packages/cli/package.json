@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "ini": "^3.0.0",
-    "inquirer": "^9.0.2",
+    "inquirer": "^6.2.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

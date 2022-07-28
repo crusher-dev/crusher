@@ -56,7 +56,6 @@ export default class CommandBase {
 
   async run(): Promise<any> {
     const { token } = this.options;
-    console.log("Token is " + token);
     await loadUserInfoOnLoad({ token: token });
     await installCrusherRecorder();
     await makeSureSetupIsCorrect(this.options.projectID);

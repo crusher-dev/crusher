@@ -155,9 +155,12 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 			}
 		};
 
+		window["resizeCustomCode"] = handleListener;
+
 		window.addEventListener("resize", handleListener.bind(this));
 
 		return () => {
+			window["resizeCustomCode"] = undefined;
 			window.removeEventListener("resize", handleListener.bind(this));
 		};
 	}, []);
@@ -552,6 +555,13 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 						<span>Run with context</span>
 					</div> */}
 				</div>
+				<div css={css`
+					display: flex;
+					align-items: center;
+					margin-left: auto;
+				`}>
+				{/* <div css={runLinkStyle} onClick={runCustomCode}>Run</div> */}
+
 				<Dropdown
 					initialState={showActionMenu}
 					component={
@@ -586,7 +596,6 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 						bottom: calc(100% + 4rem);
 					`}
 				>
-					<div css={runLinkStyle}>Run</div>
 					<Button
 						css={saveButtonStyle}
 						onClick={(e) => {
@@ -603,17 +612,19 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 					</Button>
 					<div
 						css={css`
-							background: #9461ff;
+							background: #7353F5;
 							display: flex;
 							align-items: center;
 							padding: 0rem 9rem;
 							border-top-right-radius: 6rem;
 							border-bottom-right-radius: 6rem;
-							border-left-color: #00000036;
+							border-left-color: #4d37a7;
 							border-left-width: 2.5rem;
 							border-left-style: solid;
 							:hover {
-								opacity: 0.8;
+								filter: brightness(75%);
+								background: #6749de;
+								border-left-color: #6749de;
 							}
 							align-self: stretch;
 						`}
@@ -626,6 +637,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 						/>
 					</div>
 				</Dropdown>
+				</div>
 			</div>
 		</div>
 	);
@@ -706,24 +718,10 @@ const saveButtonStyle = css`
 	margin-left: 24rem;
 	width: 128rem;
 	height: 30rem;
-	background: linear-gradient(0deg, #9462ff, #9462ff);
-	border-radius: 6rem;
-	font-family: Gilroy;
-	font-style: normal;
-	font-weight: normal;
-	font-size: 14rem;
-	line-height: 17rem;
-	border: 0.5px solid transparent;
-	border-right-width: 0rem;
-	border-top-right-radius: 0rem;
-	border-bottom-right-radius: 0rem;
-	color: #ffffff;
-	:hover {
-		border: 0.5px solid #8860de;
-		border-right-width: 0rem;
-		border-top-right-radius: 0rem;
-		border-bottom-right-radius: 0rem;
-	}
+
+	border-right: 0px !important;
+    border-top-right-radius: 0px !important;
+    border-bottom-right-radius: 0px !important;
 `;
 
 export { CustomCodeModal };

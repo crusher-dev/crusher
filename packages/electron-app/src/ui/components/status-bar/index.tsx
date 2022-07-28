@@ -136,6 +136,12 @@ const StatusBar = (props: any) => {
 	const logsScrollRef: React.Ref<HTMLDivElement> = React.useRef(null);
 	const logs = useSelector(getLogs);
 
+
+	React.useEffect(() => {
+		if(clicked && window["resizeCustomCode"]) {
+			setTimeout(() => window["resizeCustomCode"](), 150);
+		}
+	}, [clicked]);
 	React.useEffect(() => {
 		modalEmitter.on("show-modal", ({ type, stepIndex }: { type: TElementActionsEnum | TTopLevelActionsEnum; stepIndex?: number }) => {
 			if (type === TTopLevelActionsEnum.CUSTOM_CODE) {
@@ -287,6 +293,7 @@ const StatusBar = (props: any) => {
 						display: flex;
 						flex-direction: column;
 						overflow: hidden;
+						z-index: 23424234;
 					`}
 				>
 					<CustomCodeModal

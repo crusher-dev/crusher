@@ -484,9 +484,10 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 					defaultValue={initialCodeTemplate}
 				/>
 
-				<Conditional showIf={needName}>
-					<div
+				{needName && (
+<div
 						css={css`
+							position: fixed;
 							display: flex;
 							align-items: center;
 							margin-top: 10rem;
@@ -534,7 +535,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 							</Button>
 						</div>
 					</div>
-				</Conditional>
+				)}
 			</div>
 			<div css={bottomBarStyle}>
 				<div

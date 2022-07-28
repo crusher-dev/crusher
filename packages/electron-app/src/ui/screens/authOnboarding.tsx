@@ -7,6 +7,7 @@ import { performCreateCloudProject } from "../commands/perform";
 import { useNavigate } from "react-router-dom";
 import { useStore } from "react-redux";
 import { setSelectedProject } from "electron-app/src/store/actions/app";
+import { getUserAccountProjects } from "electron-app/src/utils";
 
 const Footer = () => {
     return (
@@ -149,10 +150,26 @@ const ProjectInput= () => {
 
 const DeveloperInput = () => {
     const mainRef = React.useRef(null);
+    const navigate = useNavigate();
+    const store = useStore();
 
     React.useEffect(() => {
+        const pollInterval = setInterval(() => {
+            getUserAccountProjects().then((res) => {
+                if(res && res.projects && res.projects.length) {
+                    // Select the first project
+                    store.dispatch(setSelectedProject(res.projects[0].id));
+                    navigate("/");
+                }
+            });
+        }, 5000);
         setTimeout(() => {mainRef.current.style.height = "200px";}, 0);
+
+        return () => {
+            clearInterval(pollInterval);
+        }
     }, []);
+
     return (
         <div ref={mainRef} css={[contentCss]}>
                     <div css={headingCss}>Add crusher to your project</div>

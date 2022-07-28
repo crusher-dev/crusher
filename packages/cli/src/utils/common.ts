@@ -2,9 +2,14 @@ import axios from "axios";
 import { resolve } from "dns";
 import * as fs from "fs";
 import cli from "cli-ux";
+import * as pathModule from "path";
 
 export const downloadFile = (url, path, bar): Promise<string> => {
   return new Promise((resolve, reject) => {
+    const fileDir = pathModule.dirname(path);
+    if(!fs.existsSync(fileDir)) {
+      fs.mkdirSync(fileDir, { recursive: true });
+    }
     axios
       .get(url, { responseType: "stream" })
       .then(({ data, headers }) => {

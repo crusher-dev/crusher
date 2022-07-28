@@ -41,6 +41,7 @@ export class BuildApproveService {
 			await this.githubService.updateRunCheckStatus(
 				{ repo: buildRecord.repoName, owner: ownerName, checkRunId: buildRecord.checkRunId },
 				GithubCheckConclusionEnum.SUCCESS,
+				await this.buildsService.getFrontendBuildReportUrl(buildRecord.id),
 			);
 		}
 		return true;

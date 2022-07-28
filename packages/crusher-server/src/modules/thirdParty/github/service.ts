@@ -42,12 +42,13 @@ class GithubService {
 		this.octokit = new Octokit({ auth: token });
 	}
 
-	async updateRunCheckStatus(githubMeta: { owner: string; repo: string; checkRunId: any }, conclusion: GithubCheckConclusionEnum) {
+	async updateRunCheckStatus(githubMeta: { owner: string; repo: string; checkRunId: any }, conclusion: GithubCheckConclusionEnum, detailsUrl: string) {
 		const response = await this.octokit.checks.update({
 			owner: githubMeta.owner,
 			repo: githubMeta.repo,
 			check_run_id: githubMeta.checkRunId,
 			conclusion: conclusion,
+			details_url: detailsUrl
 		});
 
 		return response;
@@ -96,7 +97,7 @@ To see the status of your build, click below or on the icon next to each commit.
 		);
 	}
 
-	private async _createCheckRun(fullRepoName: string, commitId: string, installation_id: string, external_id: number) {
+	private async _createCheckRun(fullRepoName: string, commitId: string, installation_id: string, external_id: number, detailsUrl: string) {
 		const { ownerName, repoName } = this.extractRepoAndOwnerName(fullRepoName);
 
 		return this.octokit.checks.create({
@@ -106,13 +107,14 @@ To see the status of your build, click below or on the icon next to each commit.
 			name: "Crusher CI",
 			head_sha: commitId,
 			external_id: external_id.toString(),
+			details_url: detailsUrl
 		});
 	}
 
-	async createCheckRun(payload: { installationId: string; repoName: string; commitId: string; buildId: number }) {
-		const { installationId, repoName: fullReponame, commitId, buildId } = payload;
+	async createCheckRun(payload: { installationId: string; repoName: string; commitId: string; buildId: number; detailsUrl: string; }) {
+		const { installationId, repoName: fullReponame, commitId, buildId, detailsUrl } = payload;
 
-		const createCheckRunResponse = await this._createCheckRun(fullReponame, commitId, installationId, buildId);
+		const createCheckRunResponse = await this._createCheckRun(fullReponame, commitId, installationId, buildId, detailsUrl);
 
 		const {
 			data: { id: checkRunId },

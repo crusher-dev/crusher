@@ -1,4 +1,5 @@
 import { RedisManager } from "@modules/redis";
+import { BuildsService } from "@modules/resources/builds/service";
 import { TestService } from "@modules/resources/tests/service";
 import { UsersService } from "@modules/resources/users/service";
 import { BrowserEnum } from "@modules/runner/interface";
@@ -21,6 +22,8 @@ class VercelIntegrationsController {
     private userService: UsersService;
     @Inject()
     private testService: TestService;
+    @Inject()
+    private buildService: BuildsService;
     @Inject()
     private redisManager: RedisManager;
 
@@ -82,7 +85,7 @@ class VercelIntegrationsController {
                 null,
             );
 
-            await this.vercelService.updateDeploymentStatus(vercelIntegrationMeta.accessToken, body.payload.deploymentId, check, body.teamId, "running", resolvePathToFrontendURI("/app/build/" + build.buildId));
+            await this.vercelService.updateDeploymentStatus(vercelIntegrationMeta.accessToken, body.payload.deploymentId, check, body.teamId, "running", await this.buildService.getFrontendBuildReportUrl(build.buildId));
         } else if (body.type === "deployment") {
             console.log("Deployment created, webhook called");
             const { githubOrg, githubRepo, githubCommitSha, githubCommitMessage } = body.payload.deployment.meta;

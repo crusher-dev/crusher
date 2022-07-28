@@ -11,6 +11,7 @@ import { GithubService } from "@modules/thirdParty/github/service";
 import { GithubIntegrationService } from "../integrations/githubIntegration.service";
 import { BadRequestError } from "routing-controllers";
 import { GithubCheckConclusionEnum } from "@modules/thirdParty/github/interface";
+import { resolvePathToFrontendURI } from "@utils/uri";
 
 interface IBuildInfoItem {
 	buildId: number;
@@ -37,6 +38,7 @@ class BuildsService {
 	private dbManager: DBManager;
 	@Inject()
 	private githubIntegrationService: GithubIntegrationService;
+	@Inject()
 
 	@CamelizeResponse()
 	async getBuildInfoList(
@@ -170,6 +172,7 @@ class BuildsService {
 			commitId: githubMeta.commitId,
 			installationId: githubInstallationRecord.installationId,
 			buildId: buildId,
+			detailsUrl: await this.getFrontendBuildReportUrl(buildId),
 		});
 
 		const meta = JSON.parse(buildRecord.meta);
@@ -196,6 +199,10 @@ class BuildsService {
 		}
 	}
 
+	async getFrontendBuildReportUrl(buildId: any) {
+		return resolvePathToFrontendURI("/app/build/" + buildId);
+	}
+
 	async markGithubCheckFlowFinished(buildStatus: BuildReportStatusEnum, buildId: number) {
 		const githubService = new GithubService();
 		const buildRecord = await this.getBuild(buildId);
@@ -208,7 +215,7 @@ class BuildsService {
 			await githubService.authenticateAsApp(installationId);
 
 			const githubCheckConclusion = this.getGithubConclusionFromReportStatus(buildStatus);
-			await githubService.updateRunCheckStatus({ repo: repoName, owner: ownerName, checkRunId: githubCheckRunId }, githubCheckConclusion);
+			await githubService.updateRunCheckStatus({ repo: repoName, owner: ownerName, checkRunId: githubCheckRunId }, githubCheckConclusion, await this.getFrontendBuildReportUrl(buildRecord.id));
 		}
 	}
 }

@@ -45,7 +45,7 @@
 // 		<div
 // 			css={css(`
 // 				height: 100vh;
-// 				background: #0D0E11;
+// 				background: #0C0C0D;
 // 				width: 100vw;
 // 			`)}
 // 		>
@@ -302,7 +302,7 @@ const helpCSS = css`
 `;
 const containerCSS = css(`
 height: 100vh;
-background: #0D0E11;
+background: #0C0C0D;
 width: 100vw;
 `);
 

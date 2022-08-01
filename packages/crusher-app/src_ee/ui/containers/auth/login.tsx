@@ -104,17 +104,6 @@ export default function Login({ loginWithEmailHandler }) {
 								css={[buttonCSS, plainButton]}
 							>
 								<Text fontSize={14} weight={500}>
-									Login with Gitlab
-								</Text>
-							</Button>
-
-							<Button
-								onClick={loginWithEmailHandler}
-								bgColor={"tertiary-dark"}
-								className={"flex items-center justify-center mt-20"}
-								css={[buttonCSS, plainButton]}
-							>
-								<Text fontSize={14} weight={500}>
 									or with email
 								</Text>
 							</Button>

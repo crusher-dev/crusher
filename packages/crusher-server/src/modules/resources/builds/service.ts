@@ -38,7 +38,6 @@ class BuildsService {
 	private dbManager: DBManager;
 	@Inject()
 	private githubIntegrationService: GithubIntegrationService;
-	@Inject()
 
 	@CamelizeResponse()
 	async getBuildInfoList(

@@ -9,8 +9,8 @@ import { resolvePathToFrontendURI } from "@utils/uri";
 export class AppController {
 	@Get("/server/redirectToFrontend")
 	async getElectronAppReleaseInfo(@Req() req: any, @Res() res: any, @QueryParams() params: { endpoint: string; }): Promise<any> {
-        if(!params.endpoint) throw new BadRequestError("No endpoint passed");
-        response.redirect(resolvePathToFrontendURI(params.endpoint));
-        return response;
+                if(!params.endpoint) throw new BadRequestError("No endpoint passed");
+                response.redirect(resolvePathToFrontendURI(params.endpoint));
+                return response;
 	}
 }

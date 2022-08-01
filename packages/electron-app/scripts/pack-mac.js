@@ -28,8 +28,8 @@ builder
 			productName: "Crusher Recorder",
 			extraResources: [{ from: path.resolve("../../output/crusher-electron-app", "playwright/node_modules"), to: "app/playwright/node_modules" }],
 			executableName: "Crusher Recorder",
-			defaultArch: IS_ARM ? "arm64" : "x64",
 			artifactName: "Crusher.Recorder-${version}-mac-${arch}.${ext}",
+			defaultArch: "x64",
 			publish:
 				process.env.PUBLISH_RELEASE !== "always"
 					? [
@@ -74,7 +74,14 @@ builder
 				app: path.resolve(__dirname, "../../../output/crusher-electron-app/"),
 				output: path.resolve(__dirname, "../../../output/crusher-electron-app-release/darwin"),
 			},
-			electronDist: IS_ARM ? path.resolve(__dirname, "../bin/darwin-arm64") : path.resolve(__dirname, "../bin/darwin-x64"),
+			electronDist: (options) => {
+				if(options.arch === builder.Arch.arm64) {
+					console.log("Choosing arm64");
+					return path.resolve(__dirname, "../bin/darwin-arm64");
+				}
+				console.log("Choosing x64");
+				return path.resolve(__dirname, "../bin/darwin-x64");
+			},
 			electronVersion: "13.1.6",
 			asar: false,
 			protocols: {

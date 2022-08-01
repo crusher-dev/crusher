@@ -1263,7 +1263,7 @@ const containerCSS = css`
 `;
 
 const stickyBar = css`
-	background: #0d0e11;
+	background: #0C0C0D;
 	border: 1px solid #171c24;
 	box-sizing: border-box;
 	height: 70rem;

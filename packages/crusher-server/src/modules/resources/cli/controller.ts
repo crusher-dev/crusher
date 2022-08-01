@@ -30,7 +30,7 @@ class CLIController {
 	}
 
 	@Get("/cli/status.key")
-	async getLoginKeyStatus(@QueryParams() params) {
+	async getLoginKeyStatus(@QueryParams() params: {loginKey?: string}) {
 		const { loginKey } = params;
 		const loginKeyRecord = await this.redisManager.get(loginKey);
 		if (!loginKeyRecord) throw new BadRequestError("Invalid login key");

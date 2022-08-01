@@ -48,7 +48,10 @@ export function loadUserDataAndRedirect({ fetchData = true, userAndSystemData = 
 					setLoginKey(null);
 					window.location.href = "/login_sucessful";
 				}).catch((err) => {
-					console.error("Request failed");
+					if(err.message.includes("Invalid login key")) {
+						setLoginKey(null);
+						redirectUserOnMount(dataToConsider, router, setDataLoaded.bind(this, true));
+					}
 				});
 			} else {
 				await redirectUserOnMount(dataToConsider, router, setDataLoaded.bind(this, true));

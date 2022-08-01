@@ -42,7 +42,7 @@ jobs:
         name: Build release for electron app
         run: cd packages/electron-app && pnpm release
 
-      - if: matrix.os == 'macos-latest'
+      - if: matrix.os == 'macos-10.15'
         name: Build release for electron app
         run: cd packages/electron-app && BACKEND_URL=https://backend.crusher.dev FRONTEND_URL=https://app.crusher.dev PUBLISH_RELEASE=always pnpm release
         env:
@@ -52,7 +52,7 @@ jobs:
           APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
 
 
-      - if: matrix.os == 'macos-latest'
+      - if: matrix.os == 'macos-10.15'
         name: 'Store crusher-darwin as artifact'
         uses: actions/upload-artifact@v2
         with:

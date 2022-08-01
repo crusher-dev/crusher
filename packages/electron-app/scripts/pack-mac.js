@@ -30,20 +30,7 @@ builder
 			executableName: "Crusher Recorder",
 			artifactName: "Crusher.Recorder-${version}-mac-${arch}.${ext}",
 			defaultArch: "x64",
-			publish:
-				process.env.PUBLISH_RELEASE !== "always"
-					? [
-							{
-								provider: "github",
-								repo: "crusher-downloads",
-								owner: "crusherdev",
-								vPrefixedTagName: true,
-								token: process.env.GITHUB_TOKEN,
-								releaseType: "draft",
-								private: false,
-							},
-					  ]
-					: null,
+			publish: null,
 			afterSign: async (context) => {
 				if (process.env.PUBLISH_RELEASE !== "always") return;
 

@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - ft-recorder-ci-complete
 
 jobs:
   release:
@@ -11,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-20.04]
+        os: [macos-latest]
 
     steps:
       - name: Check out Git repository
@@ -43,7 +44,10 @@ jobs:
 
       - if: matrix.os == 'macos-latest'
         name: Build release for electron app
-        run: cd packages/electron-app && pnpm release
+        run: cd packages/electron-app && BACKEND_URL=https://backend.crusher.dev FRONTEND_URL=https://app.crusher.dev pnpm release
+        env:
+          CSC_LINK: ${{ secrets.mac_certs }}
+          CSC_KEY_PASSWORD: ${{ secrets.mac_certs_password }}
 
       - if: matrix.os == 'macos-latest'
         name: 'Store crusher-darwin as artifact'

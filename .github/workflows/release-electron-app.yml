@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - ft-recorder-ci-complete
 
 jobs:
   release:

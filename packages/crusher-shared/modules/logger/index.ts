@@ -67,7 +67,7 @@ export function setupLogger(crusherModuleName: string) {
 		(async()=>{
 			if(IS_PRODUCTION){
 				const str = JSON.stringify([
-					!!meta ? {from :crusherModuleName, type,message} :  {from :crusherModuleName, type,message,meta}
+					!!meta ? {from :crusherModuleName, type,message, meta} :  {from :crusherModuleName, type, message}
 				]);
 				const stream = Readable.from(str);
 				try{

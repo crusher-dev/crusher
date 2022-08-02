@@ -38,6 +38,9 @@ jobs:
       - name: Setup crusher for prod
         run: pnpm setup:prod
 
+      - name: Show binary
+        run: ls -l packages/electron-app/bin
+
       - if: matrix.os == 'ubuntu-20.04'
         name: Build release for electron app
         run: cd packages/electron-app && pnpm release

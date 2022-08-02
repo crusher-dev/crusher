@@ -32,7 +32,7 @@ jobs:
         run: cp ecosystem.config.sample.js ecosystem.config.js && cp .env.sample .env
 
       - name: Install crusher modules
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile --reporter=append-only
 
       - name: Setup crusher for prod
         run: pnpm setup:prod

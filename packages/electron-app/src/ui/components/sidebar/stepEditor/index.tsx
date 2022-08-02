@@ -114,6 +114,7 @@ const containerStyle = css`
 	overflow-y: scroll;
 	display: flex;
 	flex-direction: column;
+	left: -1px;
 `;
 const pinnedContainerStyle = css`
 	z-index: 100;

@@ -11,7 +11,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-20.04]
+        os: [macos-10.15, ubuntu-20.04]
 
     steps:
       - name: Check out Git repository
@@ -27,36 +27,51 @@ jobs:
           node-version: 16.13.2
           cache: 'pnpm'
 
-
       - name: Create ecosystem.config.js and Copy .env.sample file
         run: cp ecosystem.config.sample.js ecosystem.config.js && cp .env.sample .env
 
       - name: Install crusher modules
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile --reporter=append-only
 
       - name: Setup crusher for prod
         run: pnpm setup:prod
+
+      - name: Show binary
+        run: ls -l packages/electron-app/bin
 
       - if: matrix.os == 'ubuntu-20.04'
         name: Build release for electron app
         run: cd packages/electron-app && pnpm release
 
-      - if: matrix.os == 'macos-latest'
+      - if: matrix.os == 'macos-10.15'
         name: Build release for electron app
-        run: cd packages/electron-app && pnpm release
+        run: cd packages/electron-app && BACKEND_URL=https://backend.crusher.dev FRONTEND_URL=https://app.crusher.dev PUBLISH_RELEASE=always pnpm release
+        env:
+          CSC_LINK: ${{ secrets.mac_certs }}
+          CSC_KEY_PASSWORD: ${{ secrets.mac_certs_password }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
 
-      - if: matrix.os == 'macos-latest'
-        name: 'Store crusher-darwin as artifact'
+      - if: matrix.os == 'macos-10.15'
+        name: 'Store crusher-darwin-arm64 as artifact'
         uses: actions/upload-artifact@v2
         with:
-          name: crusher-darwin
-          path: output/crusher-electron-app-release/linux/Crusher.Recorder-*.zip
+          name: crusher-darwin-arm64.zip
+          path: output/crusher-electron-app-release/darwin/Crusher.Recorder-*-arm64.zip
+          retention-days: 5
+  
+      - if: matrix.os == 'macos-10.15'
+        name: 'Store crusher-darwin-x64 as artifact'
+        uses: actions/upload-artifact@v2
+        with:
+          name: crusher-darwin-x64.zip
+          path: output/crusher-electron-app-release/darwin/Crusher.Recorder-*-x64.zip
           retention-days: 5
 
       - if: matrix.os == 'ubuntu-20.04'
         name: 'Store crusher-linux as artifact'
         uses: actions/upload-artifact@v2
         with:
-          name: crusher-linux
+          name: crusher-linux.zip
           path: output/crusher-electron-app-release/linux/Crusher.Recorder-*-linux.zip
           retention-days: 5

@@ -63,7 +63,7 @@ jobs:
           path: output/crusher-electron-app-release/darwin/Crusher.Recorder-*-arm64.zip
           retention-days: 5
   
-    - if: matrix.os == 'macos-10.15'
+      - if: matrix.os == 'macos-10.15'
         name: 'Store crusher-darwin-x64 as artifact'
         uses: actions/upload-artifact@v2
         with:

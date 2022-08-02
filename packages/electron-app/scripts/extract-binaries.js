@@ -9,16 +9,16 @@ function extractZipIfNotThere(binaryZipInfoArr) {
 	const platforms = Object.keys(binaryZipInfoArr);
 
 	console.log("Extracting binaries now...");
-
+	
 	for (let platform of platforms) {
 		if (fs.existsSync(path.resolve(BIN_DIR, platform))) {
 			console.log(`Binaries already extracted for ${platform}. Skipping...`);
 			break;
 		}
 		const zipPath = binaryZipInfoArr[platform].path;
-
-		execSync(`cd ${path.dirname(zipPath)} && unzip ${path.basename(zipPath)} -d ${platform}`);
-
+		console.log(`Running ` + `cd ${path.dirname(zipPath)} && unzip ${path.basename(zipPath)} -d ${platform}`);
+		const output = execSync(`cd ${path.dirname(zipPath)} && unzip ${path.basename(zipPath)} -d ${platform}`);
+		console.log("output is", output.toString());
 		fs.unlinkSync(binaryZipInfoArr[platform].path);
 	}
 }

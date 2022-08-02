@@ -4,6 +4,8 @@ const path = require("path");
 const shell = require("shelljs");
 const { notarize } = require("electron-notarize");
 const { execSync } = require("child_process");
+const { checkIfBuildPresent } = require("./utils");
+const fs = require('fs');
 // shell.exec(`cd ${path.resolve("../../output/crusher-electron-app/playwright")} && pnpm install`);
 
 const getIsArm = () => {
@@ -22,28 +24,14 @@ const IS_ARM = true || getIsArm();
 // Promise is returned
 builder
 	.build({
-		targets: Platform.MAC.createTarget(["zip"], ["arm64"]),
+		targets: Platform.MAC.createTarget(["zip"], "arm64", "x64"),
 		publish: process.env.PUBLISH_RELEASE ? process.env.PUBLISH_RELEASE : "never",
 		config: {
 			productName: "Crusher Recorder",
 			extraResources: [{ from: path.resolve("../../output/crusher-electron-app", "playwright/node_modules"), to: "app/playwright/node_modules" }],
 			executableName: "Crusher Recorder",
 			artifactName: "Crusher.Recorder-${version}-mac-${arch}.${ext}",
-			defaultArch: "x64",
-			publish:
-				process.env.PUBLISH_RELEASE !== "always"
-					? [
-							{
-								provider: "github",
-								repo: "crusher-downloads",
-								owner: "crusherdev",
-								vPrefixedTagName: true,
-								token: process.env.GITHUB_TOKEN,
-								releaseType: "draft",
-								private: false,
-							},
-					  ]
-					: null,
+			publish: null,
 			afterSign: async (context) => {
 				if (process.env.PUBLISH_RELEASE !== "always") return;
 
@@ -97,4 +85,12 @@ builder
 	.catch((error) => {
 		console.error("Failed", error);
 		// handle error
+	}).finally((a) => {
+		let distPath = null;
+		if(distPath = checkIfBuildPresent('mac', builder.Arch.x64)) {
+			fs.renameSync(distPath, distPath.replace(`-${builder.Arch.x64}.zip`, `-x64.zip`));
+		}
+		if(distPath = checkIfBuildPresent('mac', builder.Arch.arm64)) {
+			fs.renameSync(distPath, distPath.replace(`-${builder.Arch.arm64}.zip`, `-arm64.zip`));
+		}
 	});

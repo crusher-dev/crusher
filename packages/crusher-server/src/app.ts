@@ -76,34 +76,34 @@ const storage = getMetadataArgsStorage();
 
 const spec = routingControllersToSpec(
 	storage,
-	// {},
-	// {
-	//     servers: [
-	//         {
-	//             description: "Development",
-	//             url: "http://localhost:3000",
-	//         },
-	//         {
-	//             description: "Production",
-	//             url: "http://35.154.81.210/",
-	//         },
-	//     ],
-	//     info: {
-	//         title: "Monday API",
-	//         version: "1.0.0",
-	//     },
-	//     components: {
-	//         // schemas,
-	//         securitySchemes: {
-	//             bearerAuth: {
-	//                 type: "http",
-	//                 scheme: "bearer",
-	//                 bearerFormat: "jwt",
-	//             },
-	//         },
-	//     },
-	//     security: [{ bearerAuth: [] }],
-	// }
+	{},
+	{
+		servers: [
+			{
+				description: "Dev",
+				url: "http://localhost:8000",
+			},
+			{
+				description: "Prod",
+				url: "http://server.crusher.dev/",
+			},
+		],
+		info: {
+			title: "Crusher API",
+			version: "1.0.0",
+		},
+		components: {
+			// schemas,
+			securitySchemes: {
+				bearerAuth: {
+					type: "http",
+					scheme: "bearer",
+					bearerFormat: "jwt",
+				},
+			},
+		},
+		security: [{ bearerAuth: [] }],
+	},
 );
 
 expressApp.use("/docs", swaggerUi.serve, swaggerUi.setup(spec));

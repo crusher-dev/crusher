@@ -32,6 +32,7 @@ import { VercelIntegrationsController } from "@modules/resources/integrations/ve
 import { routingControllersToSpec } from "routing-controllers-openapi";
 import { getMetadataArgsStorage } from "routing-controllers";
 import * as swaggerUi from "swagger-ui-express";
+import { validationMetadatasToSchemas } from "class-validator-jsonschema";
 
 const chalk = require("chalk");
 
@@ -73,6 +74,9 @@ useExpressServer(expressApp, {
 });
 
 const storage = getMetadataArgsStorage();
+const schemas = validationMetadatasToSchemas({
+	refPointerPrefix: "#/components/schemas/",
+});
 
 const spec = routingControllersToSpec(
 	storage,
@@ -93,7 +97,7 @@ const spec = routingControllersToSpec(
 			version: "1.0.0",
 		},
 		components: {
-			// schemas,
+			schemas,
 			securitySchemes: {
 				bearerAuth: {
 					type: "http",

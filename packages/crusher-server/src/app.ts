@@ -29,6 +29,11 @@ import { CLIController } from "@modules/resources/cli/controller";
 import { ProxyController } from "@modules/resources/proxy/controller";
 import { VercelIntegrationsController } from "@modules/resources/integrations/vercel/controller";
 
+import { routingControllersToSpec } from "routing-controllers-openapi";
+import { getMetadataArgsStorage } from "routing-controllers";
+import * as swaggerUi from "swagger-ui-express";
+import { validationMetadatasToSchemas } from "class-validator-jsonschema";
+
 const chalk = require("chalk");
 
 Container.set(RedisManager, new RedisManager());
@@ -52,7 +57,7 @@ const controllersArr: any = [
 	IntegrationsController,
 	VercelIntegrationsController,
 	CLIController,
-	ProxyController
+	ProxyController,
 ];
 
 // @TODO: Look into this
@@ -67,6 +72,45 @@ useExpressServer(expressApp, {
 	currentUserChecker: getCurrentUserChecker(),
 	defaultErrorHandler: true,
 });
+
+const storage = getMetadataArgsStorage();
+const schemas = validationMetadatasToSchemas({
+	refPointerPrefix: "#/components/schemas/",
+});
+
+const spec = routingControllersToSpec(
+	storage,
+	{},
+	{
+		servers: [
+			{
+				description: "Dev",
+				url: "http://localhost:8000",
+			},
+			{
+				description: "Prod",
+				url: "http://server.crusher.dev/",
+			},
+		],
+		info: {
+			title: "Crusher API",
+			version: "1.0.0",
+		},
+		components: {
+			schemas,
+			securitySchemes: {
+				bearerAuth: {
+					type: "http",
+					scheme: "bearer",
+					bearerFormat: "jwt",
+				},
+			},
+		},
+		security: [{ bearerAuth: [] }],
+	},
+);
+
+expressApp.use("/docs", swaggerUi.serve, swaggerUi.setup(spec));
 
 process.on("unhandledRejection", (reason, p) => {
 	p.catch((error) => {

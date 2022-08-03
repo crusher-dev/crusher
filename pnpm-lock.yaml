@@ -379,12 +379,14 @@ importers:
       qs: ^6.11.0
       redlock: ^4.2.0
       reflect-metadata: ^0.1.13
-      routing-controllers: 0.9.0-alpha.6
+      routing-controllers: 0.9.0
+      routing-controllers-openapi: ^3.1.0
       serve-static: ^1.14.2
       shelljs: ^0.8.4
       sqlstring: ^2.3.2
       string-replace-loader: ^3.0.1
       stripe: ^8.132.0
+      swagger-ui-express: ^4.5.0
       ts-loader: 8.0.14
       ts-node: 9.1.1
       ts-node-dev: ^2.0.0
@@ -437,11 +439,13 @@ importers:
       qs: 6.11.0
       redlock: 4.2.0
       reflect-metadata: 0.1.13
-      routing-controllers: 0.9.0-alpha.6_jaguvfnb4pf3mebtxlpwuutcda
+      routing-controllers: 0.9.0_jaguvfnb4pf3mebtxlpwuutcda
+      routing-controllers-openapi: 3.1.0_routing-controllers@0.9.0
       serve-static: 1.14.2
       shelljs: 0.8.4_twnfxsg5hhjhrs4amdtgtidara
       sqlstring: 2.3.2
       stripe: 8.155.0
+      swagger-ui-express: 4.5.0_express@4.17.1
       ts-node-dev: 2.0.0_zxy2x3evcbnwiy7wl7jaqyzypy
       tsconfig-paths: 3.9.0
       typedi: 0.10.0
@@ -22202,6 +22206,10 @@ packages:
     resolution: {integrity: sha512-TwuEnCnxbc3rAvhf/LbG7tJUDzhqXyFnv3dtzLOPgCG/hODL7WFnsbwktkD7yUV0RrreP/l1PALq/YSg6VvjlA==}
     dev: true
 
+  /lodash.capitalize/4.2.1:
+    resolution: {integrity: sha512-kZzYOKspf8XVX5AvmQF94gQW0lejFVgb80G85bU4ZWzoJ6C03PQg3coYAUpSTpQWelrZELd3XWgHzw4Ck5kaIw==}
+    dev: false
+
   /lodash.clonedeep/4.5.0:
     resolution: {integrity: sha512-H5ZhCF25riFd9uB5UCkVKo61m3S/xZk1x4wA6yp/L3RFP6Z/eHH1ymQcGLo7J3GMPfm0V/7m1tryHuGVxpqEBQ==}
     dev: false
@@ -22293,6 +22301,10 @@ packages:
 
   /lodash.sortby/4.7.0:
     resolution: {integrity: sha512-HDWXG8isMntAyRF5vZ7xKuEvOhT4AhlRt/3czTSjvGUxjYCBVRQY48ViDHyfYz9VIoBkW4TMGQNapx+l3RUwdA==}
+
+  /lodash.startcase/4.4.0:
+    resolution: {integrity: sha512-+WKqsK294HMSc2jEbNgpHpd0JfIBhp7rEV4aqXWqFr6AlXov+SlcgB1Fv01y2kGe3Gc8nMW7VA0SrGuSkRfIEg==}
+    dev: false
 
   /lodash.template/4.5.0:
     resolution: {integrity: sha512-84vYFxIkmidUiFxidA/KjjH9pAycqW+h980j7Fuz5qxRtO9pgB7MDFTdys1N7A5mcucRiDyEq4fusljItR1T/A==}
@@ -24276,6 +24288,12 @@ packages:
     dependencies:
       is-docker: 2.2.1
       is-wsl: 2.2.0
+
+  /openapi3-ts/2.0.2:
+    resolution: {integrity: sha512-TxhYBMoqx9frXyOgnRHufjQfPXomTIHYKhSKJ6jHfj13kS8OEIhvmE8CTuQyKtjjWttAjX5DPxM1vmalEpo8Qw==}
+    dependencies:
+      yaml: 1.10.2
+    dev: false
 
   /opener/1.5.2:
     resolution: {integrity: sha512-ur5UIdyw5Y7yEj9wLzhqXiy6GZ3Mwx0yGI+5sMn2r0N0v3cKJvUmFH5yPP+WXh9e0xfyzyJX95D8l088DNFj7A==}
@@ -28859,10 +28877,25 @@ packages:
       fsevents: 2.3.2
     dev: false
 
-  /routing-controllers/0.9.0-alpha.6_jaguvfnb4pf3mebtxlpwuutcda:
-    resolution: {integrity: sha512-KnZ7SB6S1q0eX2mVLSelSwB3Gf3cmC4Ul6krDZ9j7+tUa12BPzblmTkuiIDwmhNtbZLXJQCgTD7pj18iqW57Ww==}
+  /routing-controllers-openapi/3.1.0_routing-controllers@0.9.0:
+    resolution: {integrity: sha512-FnTYnbNfsCN+vTDAc7rhCm5u0nLAH+p+UpbJXZT10cgo2t7xiZ23BrrzsR5nnqMGwe/iwsDUEEr8lxs6KarscQ==}
     peerDependencies:
-      class-transformer: ^0.2.3
+      routing-controllers: ^0.9.0
+    dependencies:
+      lodash.capitalize: 4.2.1
+      lodash.merge: 4.6.2
+      lodash.startcase: 4.4.0
+      openapi3-ts: 2.0.2
+      path-to-regexp: 2.2.1
+      reflect-metadata: 0.1.13
+      routing-controllers: 0.9.0_jaguvfnb4pf3mebtxlpwuutcda
+      tslib: 2.4.0
+    dev: false
+
+  /routing-controllers/0.9.0_jaguvfnb4pf3mebtxlpwuutcda:
+    resolution: {integrity: sha512-OtARLKA6j8enNgGqi/hoRqBsTjVo2hbxc1+MeKi8mvelNn18+LXUdHpzY3z4GbCERBtaj8CwVjcsiQR+2w6ZFg==}
+    peerDependencies:
+      class-transformer: ^0.3.1
       class-validator: ^0.12.2
     dependencies:
       class-transformer: 0.3.2
@@ -30544,6 +30577,20 @@ packages:
       stable: 0.1.8
       unquote: 1.1.1
       util.promisify: 1.0.1
+
+  /swagger-ui-dist/4.13.2:
+    resolution: {integrity: sha512-jHL6UyIYpvEI7NsuWd0R3hJaPQTg6Oo4qSBo+oVfOEkv6rrQm/475RGSMmZgV6ajp+Sgrp9CqrDjQYAgQqiv1A==}
+    dev: false
+
+  /swagger-ui-express/4.5.0_express@4.17.1:
+    resolution: {integrity: sha512-DHk3zFvsxrkcnurGvQlAcLuTDacAVN1JHKDgcba/gr2NFRE4HGwP1YeHIXMiGznkWR4AeS7X5vEblNn4QljuNA==}
+    engines: {node: '>= v0.10.32'}
+    peerDependencies:
+      express: '>=4.0.0'
+    dependencies:
+      express: 4.17.1
+      swagger-ui-dist: 4.13.2
+    dev: false
 
   /swr/0.5.6_react@17.0.2:
     resolution: {integrity: sha512-Bmx3L4geMZjYT5S2Z6EE6/5Cx6v1Ka0LhqZKq8d6WL2eu9y6gHWz3dUzfIK/ymZVHVfwT/EweFXiYGgfifei3w==}

@@ -250,9 +250,13 @@ export class TestController {
 
 	@Authorized()
 	@Post("/tests/:test_id/actions/update.steps")
-	async updateTestActions(@CurrentUser({ required: true }) user, @Param("test_id") testId: number, @Body() body: { tempTestId: string }) {
-		const tempTest = await this.testService.getTempTest(body.tempTestId);
-		const result = await this.testService.updateTestSteps(testId, tempTest.events);
+	async updateTestActions(@CurrentUser({ required: true }) user, @Param("test_id") testId: number, @Body() body: { tempTestId?: string; events?: Array<iAction> }) {
+		let events = body.events || [];
+		if(!events && body.events) {
+			const tempTest = await this.testService.getTempTest(body.tempTestId);
+			events = tempTest.events;
+		}
+		const result = await this.testService.updateTestSteps(testId, events);
 
 		return result.changedRows ? "Updated" : "No change";
 	}

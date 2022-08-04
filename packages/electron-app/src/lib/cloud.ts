@@ -95,15 +95,9 @@ class CloudCrusher {
 		const selectedProject = getCurrentSelectedProjct(store.getState() as any);
 		if(!selectedProject) throw new Error("No project selected!");
 
-		const tempTest = await axios.post(resolveToBackend("/tests/actions/save.temp"), {
-			events: testPayload.events,
-		}, {
-			...authorizationOptions
-		}).then((res) => res.data);
-
 
 		return axios.post(resolveToBackend(`/projects/${selectedProject}/tests/actions/create`), {
-			tempTestId: tempTest.insertId,
+			events: testPayload.events,
 			shouldNotRunTests: !shouldAutorun,
 			proxyUrlsMap: getProxyFromTunnelData(proxyConfig),
 			name: testPayload.name ? testPayload.name : new Date().toDateString().substr(4, 6) + " " + new Date().toLocaleTimeString().substr(0, 10),
@@ -123,13 +117,8 @@ class CloudCrusher {
 	});
 
 	public static updateTestDirectly: (testId: string, testPayload: { events: Array<iAction>; }) => Promise<any> = createAuthorizedRequestFunc(async (authorizationOptions, testId, testPayload) => {
-		const tempTest = await axios.post(resolveToBackend("/tests/actions/save.temp"),
-			{ events: testPayload.events },
-			{ ...authorizationOptions }
-		).then((res) => res.data);
-
 		return axios.post(resolveToBackend(`/tests/${testId}/actions/update.steps`), {
-			tempTestId: tempTest.insertId,
+			events: testPayload.events,
 		}, {
 			...authorizationOptions
 		}).then((res) => res.data);

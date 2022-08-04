@@ -683,10 +683,13 @@ function TestConfigSection({ expand, videoUrl, allCofiguration, setTestCardConfi
 	return (
 		<div className={"flex justify-between items-center mt-6 "}>
 			<div className={"flex"}>
-				<div css={css`display: flex; align-items: center; gap: 10rem; margin-right: 24rem; :hover { opacity: 0.8 }`} onClick={setIsOpenVideoModal.bind(this, true)}>
-					<PlaySVG /> 
-					<span css={css`position: relative; top: 2px;`}>Play video</span>
-				</div>
+				{videoUrl ? (
+					<div css={css`display: flex; align-items: center; gap: 10rem; margin-right: 24rem; :hover { opacity: 0.8 }`} onClick={setIsOpenVideoModal.bind(this, true)}>
+						<PlaySVG />
+						<span css={css`position: relative; top: 2px;`}>Play video</span>
+					</div>
+				) : ""}
+
 				<Dropdown component={<Browsers setConfig={setConfig} browsers={allCofiguration.browser} />} dropdownCSS={dropDownSelectionCSS}>
 					<ClickableText paddingY={4} paddingX={"12rem"}>
 						<div className={"flex items-center "}>
@@ -1161,15 +1164,6 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 			setExpand(true);
 		}
 	}, []);
-
-	useEffect(() => {
-		setLoading(true);
-		setTimeout(() => {
-			setLoading(false);
-		}, 500);
-	}, [testCardConfig]);
-
-	console.log("Test data", testData);
 
 	return (
 		<div css={testCard} className={" flex-col mt-24 "} id={`test-card-${id}`}>

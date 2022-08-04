@@ -83,9 +83,10 @@ export const hashCode = function (s: string) {
 
 export function getCollapsedTestSteps(steps: any) {
 	return steps.reduce((step: any, { status }: any, index: number) => {
-		if (index < 1) {
+		if (index == 0) {
 			return [{ type: "show", from: 0, to: 1 }];
 		}
+		if( index == 1) return step;
 		if (index + 1 === steps.length) {
 			step.push({ type: "show", from: index, to: index, count: 1 });
 

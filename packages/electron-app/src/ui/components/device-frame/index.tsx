@@ -42,7 +42,7 @@ const CrashScreen = (props: any) => {
 			position: absolute;
 			left: 0;
 			top: 0;
-			z-index: 999;
+			z-index: 998;
 			background: rgba(0, 0, 0, 0.96);
 			color: #fff;
 			font-size: 14rem;
@@ -120,7 +120,7 @@ const PageLoadFailedScreen = (props: any) => {
 			position: absolute;
 			left: 0;
 			top: 0;
-			z-index: 999;
+			z-index: 998;
 			background: rgba(0, 0, 0, 0.96);
 			color: #fff;
 			font-size: 14rem;
@@ -310,7 +310,7 @@ const deviceOverlayStyle = css`
 	position: absolute;
 	left: 0;
 	top: 0;
-	z-index: 999;
+	z-index: 998;
 `;
 
 const runningStatusStyle = css`

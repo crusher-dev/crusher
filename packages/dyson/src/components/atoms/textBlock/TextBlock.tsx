@@ -17,8 +17,6 @@ const TextDefaultProps = {
 };
 
 const getLetterSpacing = (fontSize) => {
-	console.log(fontSize);
-
 	if (fontSize < 12) {
 		return { letterSpacing: `.4px` };
 	}

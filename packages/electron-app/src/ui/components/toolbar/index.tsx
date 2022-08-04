@@ -61,59 +61,6 @@ const recorderDevices = devices
 		component: <DeviceItem label={device.name} />,
 	}));
 
-function ActionButtonDropdown({ setShowActionMenu, saveTestCallback, ...props }) {
-	const editingSessionMeta = useSelector(getAppEditingSessionMeta);
-	const navigate = useNavigate();
-
-	const MenuItem = ({ label, onClick, ...props }) => {
-		return (
-			<div
-				css={css`
-					padding: 8rem 12rem;
-					:hover {
-						background: #687ef2 !important;
-					}
-				`}
-				onClick={onClick}
-			>
-				{label}
-			</div>
-		);
-	};
-
-	const handleSave = React.useCallback(() => {
-		setShowActionMenu(false);
-		saveTestCallback();
-	}, [saveTestCallback]);
-
-	const handleUpdate = () => {
-		setShowActionMenu(false);
-		updateTest().then((res) => {
-			navigate("/");
-			goFullScreen(false);
-		});
-		sendSnackBarEvent({ type: "success", message: "Updating test" });
-	};
-	return (
-		<div
-			className={"flex flex-col justify-between h-full"}
-			css={css`
-				font-size: 13rem;
-				color: #fff;
-			`}
-		>
-			<div>
-				<MenuItem onClick={handleSave} label={"Save"} className={"close-on-click"} />
-				<Conditional showIf={editingSessionMeta && !!editingSessionMeta.testId}>
-					<MenuItem onClick={handleUpdate} label={"Update"} className={"close-on-click"} />
-				</Conditional>
-			</div>
-		</div>
-	);
-}
-
-ActionButtonDropdown.whyDidYouRender = true;
-
 enum ITestActionEnum {
 	VERIFY_SAVE = "VERIFY_SAVE",
 	VERIFY_UPDATE = "VERIFY_UPDATE",
@@ -163,15 +110,16 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 		}
 		if (recorderState.type === TRecorderState.RECORDING_ACTIONS) {
 			const proxyWarning = handleProxyWarning();
-
-			performVerifyTest(shouldAutoSave, autoSaveType, proxyWarning.shouldShow).then((res) => {
+			const shouldSkipWarning = localStorage.getItem("skipProxyWarning");
+			
+			performVerifyTest(shouldAutoSave, autoSaveType, proxyWarning.shouldShow && !shouldSkipWarning).then((res) => {
 				if (res) {
 					if(res.draftJobId) {
 					window["triggeredTest"] = {
 						id: res.draftJobId,
 					};
 				}
-					if(proxyWarning.shouldShow && res) {
+					if(proxyWarning.shouldShow && !shouldSkipWarning && res) {
 						window["showProxyWarning"] = { testId: res.id, startUrl: proxyWarning.startUrl };
 					}
 					navigate("/");
@@ -189,12 +137,14 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 		}
 
 		const proxyWarning = handleProxyWarning();
-		saveTest(proxyWarning.shouldShow)
+		const shouldSkipWarning = localStorage.getItem("skipProxyWarning");
+
+		saveTest(proxyWarning.shouldShow && !shouldSkipWarning)
 			.then((res) => {
 				if(res.draftJobId) {
 					window["triggeredTest"] = { id: res.draftJobId };
 				}
-				if(proxyWarning.shouldShow && res) {
+				if(proxyWarning.shouldShow && !shouldSkipWarning && res) {
 					window["showProxyWarning"] = { testId: res.id, startUrl: proxyWarning.startUrl };
 				}
 				navigate("/");
@@ -273,6 +223,7 @@ const buttonDropdownCss = css`
 	left: 20rem !important;
 	height: max-content !important;
 	top: calc(100% + 4rem) !important;
+	
 `;
 const buttonDropdownMainButtonCss = css`
 	width: 116rem;
@@ -357,7 +308,6 @@ const Toolbar = (props: any) => {
 			// setCurrentStep(1);
 			batch(() => {
 				if (!recorderInfo.url) {
-					console.log("Selected device is", selectedDevice[0]);
 					// @NOTE: Find better way to make sure initScript is done
 					// webview.
 					performSteps([
@@ -482,7 +432,6 @@ const Toolbar = (props: any) => {
 	);
 
 	const handleMenuCallback = React.useCallback((value, isNavigating) => {
-		console.log("Menu callback", value, isNavigating);
 		if (isNavigating) {
 			goFullScreen(false);
 		}

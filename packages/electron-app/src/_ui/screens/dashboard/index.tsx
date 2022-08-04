@@ -141,7 +141,6 @@ const DashboardScreen = () => {
         // @TODO: Cache this API
         getUserAccountProjects().then((res) => {
             const project = res.projects.find((p) => (p.id == selectedProjectId));
-            console.log("Project is", selectedProjectId, project, res);
             if(project) {
                 setSelectedProject(project);
             }
@@ -169,10 +168,17 @@ const DashboardScreen = () => {
     const isLoading = React.useMemo(() => tests === null, [tests]);
     const testContent = tests && tests.length ? (<TestList deleteTest={handleTestDelete} tests={tests}/>) : (<CreateFirstTest />);
 
-    const content = showProxyWarning.show ? <ProxyWarningContainer testId={showProxyWarning.testId} exitCallback={setShowProxyWarning.bind(this, false)} startUrl={showProxyWarning.startUrl} /> : testContent;
+    const mainContent = React.useMemo(() => {
+        const shouldSkipProxyWarning = localStorage.getItem("skipProxyWarning");
+        if(showProxyWarning.show && !shouldSkipProxyWarning) {
+            return (<ProxyWarningContainer testId={showProxyWarning.testId} exitCallback={setShowProxyWarning.bind(this, false)} startUrl={showProxyWarning.startUrl} />);
+        }
+
+        return testContent;
+    }, [testContent, showProxyWarning]);
     return (
         <CompactAppLayout title={selectedProject ? <TitleComponent projectName={selectedProject.name}/> : null} footer={<DashboardFooter tests={tests || []}/>}>
-               {isLoading ? (<LoadingProgressBar/>) : content}
+               {isLoading ? (<LoadingProgressBar/>) : mainContent}
         </CompactAppLayout>
     );
 };

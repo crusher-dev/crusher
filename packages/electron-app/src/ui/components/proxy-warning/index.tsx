@@ -76,6 +76,7 @@ const ProxyWarningContainer = ({ exitCallback, testId, startUrl }) => {
 	}, [proxyState]);
 
 	const handleSkip = React.useCallback(() => {
+		localStorage.setItem("skipProxyWarning", "true");
 		performRunDraftTest(testId).then((res) => {
 			window["messageBarCallback"](res.draftJobId);
 		}).catch((err) => {

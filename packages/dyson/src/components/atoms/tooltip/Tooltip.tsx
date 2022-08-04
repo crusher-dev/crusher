@@ -106,7 +106,6 @@ export const Tooltip: React.FC<TooltipWrapperProps> = ({ children, autoHide = "t
 		};
 	}, [show]);
 
-	console.log(props);
 	return (
 		<React.Fragment>
 			<ClonedElement />

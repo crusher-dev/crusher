@@ -12,9 +12,8 @@ let evaluator: Evaluator;
 try {
 	// eslint-disable-next-line @typescript-eslint/no-var-requires
 	evaluator = require("playwright-evaluator");
-	console.log(evaluator);
 } catch (e) {
-	console.error(e);
+	console.error("Error while loading playwright-evaluator", e);
 	// this will only error on server side tests that
 	// do not require the evaluator but depend on this file
 }
@@ -95,7 +94,6 @@ class UniqueSelector {
 	}
 
 	getUniquenessScore(playwrightSelector: string, currentElement: Node) {
-		console.log(evaluator);
 		try {
 			const elements = evaluator.querySelectorAll(playwrightSelector, document.body);
 			const elementsLength = elements.length;

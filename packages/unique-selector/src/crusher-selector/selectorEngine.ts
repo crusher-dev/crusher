@@ -5,10 +5,10 @@ let evaluator: Evaluator;
 try {
 	// eslint-disable-next-line @typescript-eslint/no-var-requires
 	evaluator = require("playwright-evaluator");
-	console.log(evaluator);
 } catch (e) {
 	// this will only error on server side tests that
 	// do not require the evaluator but depend on this file
+	console.error("Error while loading playwright-evaluator", e);
 }
 
 // -- copied from playwright to match their text engine --

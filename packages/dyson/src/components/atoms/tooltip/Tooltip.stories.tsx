@@ -77,7 +77,6 @@ Click.args = {
 };
 
 const Template: ComponentStory<TooltipWrapperProps> = (args) => {
-	console.log(args);
 	return (
 		<div style={{ marginTop: 60, marginLeft: 200 }}>
 			{/*Component starts*/}

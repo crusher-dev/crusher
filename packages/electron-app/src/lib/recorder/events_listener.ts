@@ -10,8 +10,9 @@ function boot() {
 		recordingOverlay.boot();
 	});
 }
-console.log("Script called", window.location.href);
 
+// @TODO: This also gets added to top recorder screen because
+// of playwright addInitScript. Look into this
 if (!window.location.href.startsWith("file://") && !(window as any).eventRecorderExecuted) {
 	boot();
 }

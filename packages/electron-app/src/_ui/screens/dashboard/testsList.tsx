@@ -8,8 +8,10 @@ import { triggerLocalBuild } from "../../utils/recorder";
 import { Dropdown } from "@dyson/components/molecules/Dropdown";
 import { shell } from "electron";
 import { resolveToFrontend } from "electron-app/src/utils/url";
+import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
+import { CloudCrusher } from "electron-app/src/lib/cloud";
 
-const TestListNameInput = ({ testName, isEditing, setIsEditing }) => {
+const TestListNameInput = ({ testName, testId, isEditing, setIsEditing }) => {
     const [name, setName] = React.useState(testName);
     const inputRef = React.useRef<HTMLInputElement>(null);
     const handleDoubleClick = React.useCallback(() => {
@@ -24,15 +26,26 @@ const TestListNameInput = ({ testName, isEditing, setIsEditing }) => {
         setName(event.target.value);
     }, []);
 
+    const handleSubmit = React.useCallback(() => {
+		CloudCrusher.updateTestName(testId, inputRef.current.value);
+    }, [name]);
+
     const handleKeyDown = React.useCallback((event) => {
         if(event.key === "Enter") {
             setIsEditing(false);
+            handleSubmit();
         }
+    }, []);
+
+    const handleOutsideClick = React.useCallback(() => {
+        setIsEditing(false);
+        handleSubmit();
     }, []);
 
     const testInputStyle = React.useMemo(() => testInputCss(isEditing, name), [isEditing, name]);
 
     return (
+        <OnOutsideClick disable={!isEditing} onOutsideClick={handleOutsideClick}>
     <span css={testInputContainerCss} onDoubleClick={handleDoubleClick}>
         <input
             size={testName.length}
@@ -44,6 +57,8 @@ const TestListNameInput = ({ testName, isEditing, setIsEditing }) => {
             disabled={!isEditing}
         />
     </span>
+        </OnOutsideClick>
+
     );
 };
 
@@ -54,7 +69,7 @@ const testInputCss = (isEditing, name) => {
         padding: 6px 8px;
         border: ${isEditing ? "1px solid rgba(255, 255, 255, 0.25)" : "1px solid transparent"};
         border-radius: ${isEditing ? "4px" : "0px"};
-        width: ${isEditing ? Math.max(7*min.length, 120) : 7 * name.length}rem;
+        width: ${isEditing ? Math.max(7.5*name.length, 120) + "rem" : "100%"};
     `;
 };
 
@@ -183,7 +198,7 @@ const TestListItem = ({ test, deleteTest, lock }) => {
 
     return (
         <li ref={containerRef} css={itemStyle} onContextMenu={handleRightClick} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-            <TestListNameInput isEditing={isEditingName} setIsEditing={setIsEditingName} testName={test.testName}/>
+            <TestListNameInput testId={test.id} isEditing={isEditingName} setIsEditing={setIsEditingName} testName={test.testName}/>
             {!test.firstRunCompleted ? (
 				<LoadingIconV2 css={loadingIconCss}/>
 			) : (

@@ -263,7 +263,7 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 			dropdownCss={buttonDropdownCss}
 			css={buttonDropdownMainButtonCss}
 			options={SAVE_TEST_ACTION_DROPDOWN_OPTIONS}
-			primaryOption={isTestVerificationComplete ? ITestActionEnum.SAVE : ITestActionEnum.VER}
+			primaryOption={isTestVerificationComplete ? ITestActionEnum.SAVE : ITestActionEnum.VERIFY_SAVE}
 			callback={handleCallback}
 		/>
 	);

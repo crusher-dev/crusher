@@ -36,6 +36,7 @@ import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
 import { Navigate, useNavigate } from "react-router-dom";
 import { MenuDropdown } from "../../layouts/modalContainer";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
+import { ButtonDropdown } from "electron-app/src/_ui/components/buttonDropdown";
 
 const DeviceItem = ({ label }) => {
 	return (
@@ -112,6 +113,21 @@ function ActionButtonDropdown({ setShowActionMenu, saveTestCallback, ...props })
 }
 
 ActionButtonDropdown.whyDidYouRender = true;
+
+enum ITestActionEnum {
+	VERIFY_SAVE = "VERIFY_SAVE",
+	VERIFY_UPDATE = "VERIFY_UPDATE",
+	SAVE = "SAVE",
+	UPDATE = "UPDATE"
+};
+const SAVE_TEST_ACTION_DROPDOWN_OPTIONS = [
+	{id: ITestActionEnum.VERIFY_SAVE, content: (<span>Verify & Save</span>)},
+	{id: ITestActionEnum.SAVE, content: (<span>Save</span>)}
+];
+const UPDATE_TEST_ACTION_DROPDOWN_OPTIONS = [
+	{id: ITestActionEnum.VERIFY_UPDATE, content: (<span>Verify & Update</span>)},
+	{id: ITestActionEnum.UPDATE, content: (<span>Update</span>)}
+];
 
 const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 	const navigate = useNavigate();
@@ -201,96 +217,68 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 		});
 	};
 
-	return (
-		<>
-			<Dropdown
-				initialState={showActionMenu}
-				component={<ActionButtonDropdown saveTestCallback={saveTestToCloud} setShowActionMenu={setShowActionMenu.bind(this)} />}
-				callback={setShowActionMenu.bind(this)}
-				dropdownCSS={css`
-					left: 32rem;
-					width: 162rem;
-				`}
-			>
-				<Conditional showIf={!editingSessionMeta}>
-					<Button
-						id={"verify-save-test"}
-						onClick={(e) => {
-							e.preventDefault();
-							e.stopPropagation();
-							if (isTestVerificationComplete) {
-								saveTestToCloud();
-							} else {
-								verifyTest("SAVE", true);
-							}
-						}}
-						bgColor="tertiary-outline"
-						css={saveButtonStyle}
-						className={"ml-20"}
-					>
-						<Conditional showIf={isTestVerificationComplete}>
-							<span>
-								<span>Save test</span>
-							</span>
-						</Conditional>
-						<Conditional showIf={!isTestVerificationComplete}>
-							<span>Verify & Save</span>
-						</Conditional>
-					</Button>
-				</Conditional>
+	const handleCallback = React.useCallback(async (actionType: ITestActionEnum) => {
+		switch(actionType) {
+			case ITestActionEnum.UPDATE: {
+				await updateTest().then((res) => {
+					navigate("/");
+					goFullScreen(false);
+				});
+				sendSnackBarEvent({ type: "success", message: "Updating test" });
+				break;
+			}
+			case ITestActionEnum.SAVE: {
+				await saveTestToCloud();
+				break;
+			}
+			case ITestActionEnum.VERIFY_UPDATE: {
+				if(isTestVerificationComplete) {
+					editTestInCloud();
+				} else {
+					verifyTest("UPDATE", true);
+				}
+				break;
+			}
+			case ITestActionEnum.VERIFY_SAVE: {
+				if(isTestVerificationComplete) {
+					saveTestToCloud();
+				} else {
+					verifyTest("SAVE", true);
+				}
+				break;
+			}
+		}
+	}, [isTestVerificationComplete]);
 
-				<Conditional showIf={!!editingSessionMeta}>
-					<Button
-						onClick={(e) => {
-							e.preventDefault();
-							e.stopPropagation();
-							if (isTestVerificationComplete) {
-								editTestInCloud();
-							} else {
-								verifyTest("UPDATE", true);
-							}
-						}}
-						bgColor="tertiary-outline"
-						css={[saveButtonStyle, css`width: 132rem;`]}
-						className={"ml-20"}
-					>
-						<Conditional showIf={isTestVerificationComplete}>
-							<span>
-								<span>Update test</span>
-							</span>
-						</Conditional>
-						<Conditional showIf={!isTestVerificationComplete}>
-							<span>Verify & Update</span>
-						</Conditional>
-					</Button>
-				</Conditional>
-				<div
-					css={css`
-						background: #9461ff;
-						display: flex;
-						align-items: center;
-						padding: 0rem 9rem;
-						border-top-right-radius: 6rem;
-						border-bottom-right-radius: 6rem;
-						border-left-color: #00000036;
-						border-left-width: 2.5rem;
-						border-left-style: solid;
-						:hover {
-							opacity: 0.8;
-						}
-					`}
-				>
-					<DownIcon
-						fill={"#fff"}
-						css={css`
-							width: 9rem;
-						`}
-					/>
-				</div>
-			</Dropdown>
-		</>
+	return editingSessionMeta ? (
+		<ButtonDropdown
+			dropdownCss={buttonDropdownCss}
+			css={[buttonDropdownMainButtonCss, css`width: 132rem;`]}
+			options={UPDATE_TEST_ACTION_DROPDOWN_OPTIONS}
+			primaryOption={isTestVerificationComplete ? ITestActionEnum.UPDATE : ITestActionEnum.VERIFY_UPDATE}
+			callback={handleCallback}
+		/>
+	) : (
+		<ButtonDropdown
+			dropdownCss={buttonDropdownCss}
+			css={buttonDropdownMainButtonCss}
+			options={SAVE_TEST_ACTION_DROPDOWN_OPTIONS}
+			primaryOption={isTestVerificationComplete ? ITestActionEnum.SAVE : ITestActionEnum.VER}
+			callback={handleCallback}
+		/>
 	);
 };
+
+const buttonDropdownCss = css`
+	left: 20rem !important;
+	height: max-content !important;
+	top: calc(100% + 4rem) !important;
+`;
+const buttonDropdownMainButtonCss = css`
+	width: 116rem;
+	height: 32rem;
+	margin-left: 20rem;
+`;
 
 SaveVerifyButton.whyDidYouRender = true;
 

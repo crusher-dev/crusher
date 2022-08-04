@@ -3,7 +3,6 @@ import { css } from "@emotion/react";
 import { Dropdown } from "@dyson/components/molecules/Dropdown";
 import { ActionButton } from "electron-app/src/ui/components/buttons/action.button";
 import { DownIcon } from "electron-app/src/ui/icons";
-import { performRunTests } from "electron-app/src/ui/commands/perform";
 
 const ActionButtonDropdown = ({options, callback}) => {
     const handleClick = React.useCallback((optionId: string) => {
@@ -45,9 +44,11 @@ interface IProps {
     options: Array<{id: string, content: any}>;
     primaryOption: string;
     callback?: any;
+    className?: any;
+    dropdownCss?: any;
 };
 
-const ButtonDropdown = ({options, primaryOption, callback}: IProps) => {
+const ButtonDropdown = ({options, primaryOption, className, callback, ...props}: IProps) => {
     const [showActionDropdown, setShowActionDropdown] = React.useState(false);
 
     const handleCallback = React.useCallback((id: string) => {
@@ -67,9 +68,9 @@ const ButtonDropdown = ({options, primaryOption, callback}: IProps) => {
         initialState={showActionDropdown}
         component={<ActionButtonDropdown options={dropdownOptions} callback={handleCallback} />}
         callback={setShowActionDropdown.bind(this)}
-        dropdownCSS={dropdownCss}
+        dropdownCSS={[props.dropdownCss, dropdownCss]}
     >
-		<ActionButton title={primaryOptionsObject.content} onClick={handleCallback.bind(this, primaryOptionsObject.id)} css={saveButtonStyle} />
+		<ActionButton className={className} title={primaryOptionsObject.content} onClick={handleCallback.bind(this, primaryOptionsObject.id)} css={saveButtonStyle} />
 
         <div css={downIconContainerCss}>
             <DownIcon fill={"#fff"} css={downIconCss} />
@@ -87,23 +88,22 @@ const dropdownCss = css`
 const saveButtonStyle = css`
     width: 92rem;
     height: 30rem;
-    background: linear-gradient(0deg, #9462ff, #9462ff);
+    background: #7353F5;
     border-radius: 6rem;
     font-family: Gilroy;
     font-style: normal;
     font-weight: 600;
     font-size: 14rem;
     line-height: 17rem;
-    border: 0.5px solid transparent;
-    border-right-width: 0rem;
-    border-top-right-radius: 0rem;
-    border-bottom-right-radius: 0rem;
+    border: 1px solid #7353F5;
+    border-right-width: 0rem !important;
+    border-top-right-radius: 0rem !important;
+    border-bottom-right-radius: 0rem !important;
     color: #ffffff;
     :hover {
-        border: 0.5px solid #8860de;
-        border-right-width: 0rem;
-        border-top-right-radius: 0rem;
-        border-bottom-right-radius: 0rem;
+        background: #6749de;
+        color: #fff;
+        border: .5px solid #6749de;
     }
 `;
 const downIconContainerCss = css`

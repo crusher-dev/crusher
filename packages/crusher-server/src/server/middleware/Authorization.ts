@@ -34,10 +34,10 @@ export function getCurrentUserChecker() {
 		try {
 			const cookies = action.request.headers.cookie ? cookie.parse(action.request.headers.cookie) : {};
 			const userToken = action.request.headers['authorization'] || cookies.token;
-			return decodeToken(userToken);
-		} catch (error) {
-			console.error(error);
-			return false;
-		}
+			if(userToken) {
+				return decodeToken(userToken);
+			}
+		} catch (error) {}
+		return false;
 	};
 }

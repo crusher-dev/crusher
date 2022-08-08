@@ -2,10 +2,14 @@ import React from "react";
 import { css } from "@emotion/react";
 import { shell } from "electron";
 import { Link } from "../components/Link";
+import { useNavigate } from "react-router-dom";
 
 function Footer() {
+	const navigate = useNavigate();
     const handleOpenDocs = React.useCallback(() => shell.openExternal("https://docs.crusher.dev"), []);
-    const handleOpenSettings = React.useCallback(() => shell.openExternal("https://app.crusher.dev"), []);
+    const handleOpenSettings = React.useCallback(() => {
+		navigate("/settings");
+	}, []);
 
 	return (
 		<div css={navBarCss}>

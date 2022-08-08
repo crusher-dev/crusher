@@ -31,6 +31,7 @@ import { getRecorderState } from "electron-app/src/store/selectors/recorder";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 import { editor } from "monaco-editor";
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
+import { shell } from "electron";
 
 function ensureFirstBackSlash(str) {
 	return str.length > 0 && str.charAt(0) !== "/" ? "/" + str : str;
@@ -338,6 +339,10 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 		props.handleClose();
 	};
 
+	const handleReadDocs = React.useCallback(() => {
+		shell.openExternal("https://docs.crusher.dev");
+	}, []);
+
 	return (
 		<div
 			css={css`
@@ -375,7 +380,11 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 								align-items: center;
 								padding-top: 1rem;
 								margin-left: 14rem;
+								:hover {
+									opacity: 0.8;
+								}
 							`}
+							onClick={handleReadDocs}
 						>
 							Read docs
 						</div>

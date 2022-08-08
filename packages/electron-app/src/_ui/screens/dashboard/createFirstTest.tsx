@@ -15,6 +15,10 @@ const CreateFirstTest = ({}) => {
 		goFullScreen();
 	}, []);
 
+	const handleOpenHelpVideo = React.useCallback(() => {
+		shell.openExternal("https://docs.crusher.dev/getting-started/create-your-first-test#watch-video");
+	}, []);
+
 	return (
 		<div css={containerCss}>
 			<div css={contentCss}>
@@ -24,7 +28,7 @@ const CreateFirstTest = ({}) => {
 			</div>
 			<DocsGoBackActionBar buttonTitle={"Create"} buttonCallback={handleCreateTest} />
 
-			<div css={watchCss}>
+			<div css={watchCss} onClick={handleOpenHelpVideo}>
 				<PlayV2Icon /> Watch video
 			</div>
 		</div>

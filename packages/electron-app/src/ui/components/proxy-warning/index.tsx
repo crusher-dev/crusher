@@ -95,6 +95,10 @@ const ProxyWarningContainer = ({ exitCallback, testId, startUrl }) => {
 		setIsRetrying(true);
 	}, [selectedProject, proxyState]);
 
+	const handleOpenHelpVideo = React.useCallback(() => {
+		shell.openExternal("https://docs.crusher.dev/guides/setting-up-services#watch-video");
+	}, []);
+
 	return (
 		<div css={containerStyle}>
 			<div css={contentContainerStyle}>
@@ -115,7 +119,7 @@ const ProxyWarningContainer = ({ exitCallback, testId, startUrl }) => {
 			<div css={waitingTextStyle}>
 				<Link onClick={isRetrying ? undefined : handleRetry}>{isRetrying ? (<span css={css`display: flex; align-items:center;`}>Retrying <LoadingIconV2 css={css`margin-left: 8rem; height: 18rem;`}/></span>) : "Retry"}</Link>
 			</div>
-			<div css={watch}>
+			<div css={watch} onClick={handleOpenHelpVideo}>
 				<PlayV2Icon /> Watch video
 			</div>
 		</div>

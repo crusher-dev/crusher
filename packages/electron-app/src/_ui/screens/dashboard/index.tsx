@@ -4,7 +4,7 @@ import { useSelector, useStore } from "react-redux";
 import { getCurrentSelectedProjct, getIsProxyInitializing, getProxyState, getUserAccountInfo } from "electron-app/src/store/selectors/app";
 import { useNavigate } from "react-router-dom";
 import { CreateFirstTest } from "./createFirstTest";
-import { getSelectedProjectTests, getUserAccountProjects, getSelectedProjectTestsRequest } from "electron-app/src/utils";
+import { getSelectedProjectTests, getUserAccountProjects } from "electron-app/src/utils";
 import { TestList } from "./testsList";
 import { DashboardFooter } from "./footer";
 import { LoadingProgressBar } from "../../components/LoadingProgressBar";
@@ -17,7 +17,9 @@ import { CloudCrusher } from "electron-app/src/lib/cloud";
 import { ProxyWarningContainer } from "electron-app/src/ui/components/proxy-warning";
 import { checkIfLoggedIn } from "electron-app/src/utils/url";
 import useRequest from "../../utils/useRequest";
-import { useUser } from "../../api/user";
+import { useUser } from "../../api/user/user";
+import { getSelectedProjectTestsRequest } from "../../api/tests/tests.request";
+import { SWRConfig } from "swr";
 
 const TitleComponent = ({ projectName }) => {
     const proxyIsInitializing = useSelector(getIsProxyInitializing);
@@ -104,8 +106,8 @@ const titleStyle = css`
 	align-items: center;
 `;
 const DashboardScreen = () => {
-    const {userInfo, projects, error: userError} = useUser();
-    const { data: tests, isValidating, error } = useRequest(getSelectedProjectTestsRequest, { refreshInterval: 5000 })
+    const {userInfo, projects} = useUser();
+    const { data: tests, isValidating } = useRequest(getSelectedProjectTestsRequest, { refreshInterval: 5000 })
     const [selectedProject, setSelectedProject] = React.useState(null);
     const [showProxyWarning, setShowProxyWarning] = React.useState({show: false, testId: null, startUrl: null});
 
@@ -129,7 +131,7 @@ const DashboardScreen = () => {
     React.useEffect(() => {
         const selectedProjectId = getCurrentSelectedProjct(store.getState());
         if(!selectedProjectId)
-            navigate("/select-project");
+            return navigate("/select-project");
         const loggedIn = checkIfLoggedIn();
         if(!loggedIn) {
             return navigate("/login");
@@ -150,9 +152,6 @@ const DashboardScreen = () => {
         };
     }, [projects]);
 
-    React.useMemo(() => {
-            console.error("Error is", userError);
-    }, [userError]);
     const isLoading = React.useMemo(() => (!tests), [tests]);
     const testContent = tests && tests.list && tests.list.length ? (<TestList deleteTest={handleTestDelete} tests={tests.list}/>) : (<CreateFirstTest />);
     const content = showProxyWarning.show ? <ProxyWarningContainer testId={showProxyWarning.testId} exitCallback={setShowProxyWarning.bind(this, false)} startUrl={showProxyWarning.startUrl} /> : testContent;

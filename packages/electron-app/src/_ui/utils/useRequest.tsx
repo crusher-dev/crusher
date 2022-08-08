@@ -7,12 +7,6 @@ export default function useRequest(request, { fallbackData, ...config } : any = 
     () => axios(request() || {}).then(response => response.data),
     {
       ...config,
-      fallbackData: fallbackData && {
-        status: 200,
-        statusText: 'InitialData',
-        headers: {},
-        data: fallbackData
-      }
     }
   ) 
-}
+} 

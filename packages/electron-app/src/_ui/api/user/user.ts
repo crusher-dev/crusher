@@ -1,6 +1,6 @@
 import React from "react";
 import { CloudCrusher } from "electron-app/src/lib/cloud";
-import useRequest from "../utils/useRequest";
+import useRequest from "../../utils/useRequest";
 import { getUserInfoAPIRequest } from "./user.requests";
 
 export function useUser() {

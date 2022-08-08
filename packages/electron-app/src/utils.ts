@@ -3,7 +3,7 @@ import fileUrl from "file-url";
 import { IDeepLinkAction } from "./types";
 import { resolveToBackendPath, resolveToFrontEndPath } from "@shared/utils/url";
 import { createAuthorizedRequestFunc, resolveToBackend } from "./utils/url";
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import { getStore } from "./store/configureStore";
 import { getCurrentSelectedProjct } from "./store/selectors/app";
 
@@ -90,14 +90,23 @@ const getUserInfoFromToken = async (token: string) => {
 	};
 };
 
-const getSelectedProjectTests: () => Promise<any> = createAuthorizedRequestFunc(async (authorizationOptions: any) => {
+const getSelectedProjectTestsRequest: () => AxiosRequestConfig = createAuthorizedRequestFunc((authorizationOptions: any) => {
 	const store = getStore();
 	const selectedProject = getCurrentSelectedProjct(store.getState() as any);
-	if(!selectedProject) throw new Error("No project selected");
+	if(!selectedProject) return null;
 
-	return axios.get(resolveToBackend(`/projects/${selectedProject}/tests`), {
+	return {
+		url: resolveToBackend(`/projects/${selectedProject}/tests`),
+		method: "GET",
 		...authorizationOptions,
-	}).then((res) => res.data);
+	};
+}, true);
+
+const getSelectedProjectTests: () => Promise<any> = createAuthorizedRequestFunc(async (authorizationOptions: any) => {
+	let axiosRequest = getSelectedProjectTestsRequest();
+	if(!axiosRequest) throw new Error("No project selected");
+
+	return axios(axiosRequest).then((res) => res.data);
 });
 
 const getUserAccountProjects : () => Promise<any> = createAuthorizedRequestFunc(async (authorizationOptions: any) => {
@@ -117,4 +126,5 @@ export {
 	getUserInfoFromToken,
 	getUserAccountProjects,
 	getSelectedProjectTests,
+	getSelectedProjectTestsRequest
 };

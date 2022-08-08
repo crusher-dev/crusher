@@ -1,20 +1,16 @@
-import axios from "axios";
+import React from "react";
+import { CloudCrusher } from "electron-app/src/lib/cloud";
+import useRequest from "../utils/useRequest";
+import { getUserInfoAPIRequest } from "./user.requests";
 
-export default async () => {
-    // sleep 500
-    await new Promise(res => setTimeout(res, 500));
-  
-    if (document.cookie.includes("swr-test-token=swr")) {
-      // authorized
-      return {
-        name: "Shu",
-        avatar: "https://github.com/shuding.png"
-      };
+export function useUser() {
+  const { data: userInfo, error } = useRequest(getUserInfoAPIRequest);
+  const projects = React.useMemo(() => {
+    if(userInfo && userInfo.projects) {
+      return userInfo.projects;
     }
-  
-    // not authorized
-    const error = new Error("Not authorized!");
-    error.status = 403;
-    throw error;
-  };
-  
+    return null;
+  }, [userInfo]);
+
+  return { userInfo, projects, error: error  };
+}

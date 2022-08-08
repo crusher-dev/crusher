@@ -16,9 +16,10 @@ class FixSharedOutputPlugin {
             './src/shared.js',
             new sources.RawSource(file.source.source().replace('module.exports = __webpack_exports__;', 'module.exports = __webpack_require__;')),
           );
+          const updatedSource =   new sources.RawSource(file.source.source().replace('/******/ 	var __webpack_exports__ =', 'return module.exports; \n/******/ 	var __webpack_exports__ = '));
           compilation.updateAsset(
             './src/shared.js',
-            new sources.RawSource(file.source.source().replace('/******/ 	// Load entry module and return exports', 'return module.exports;')),
+            updatedSource
           );
         }
       );

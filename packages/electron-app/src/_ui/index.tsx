@@ -40,18 +40,15 @@ function getPersistStore() {
         initialReduxState.app.settings.backendEndPoint = process.env.BACKEND_URL;
         initialReduxState.app.settings.frontendEndPoint = process.env.FRONTEND_URL;
     }
+    if (globalAppConfig && globalAppConfig.userInfo) {
+        initialReduxState.app.accountInfo = globalAppConfig.userInfo;
+    }
 
     const store = configureStore(initialReduxState, "renderer");
-
-    if (globalAppConfig && globalAppConfig.userInfo) {
-        store.dispatch(setUserAccountInfo(globalAppConfig.userInfo));
-    }
-    store.dispatch(setSettngs(initialReduxState.app.settings));
-    store.dispatch(setShowShouldOnboardingOverlay(initialReduxState.app.shouldShowOnboardingOverlay));
-
     return store;
 }
 
+const store = getPersistStore();
 
 const globalStyle = css`
     .drag {
@@ -69,7 +66,7 @@ function RootApp() {
     }, []);
 
    return (
-    <Provider store={getPersistStore()}>
+    <Provider store={store}>
         <SWRConfig value={{   onError: handleErrorCallback.bind(this) }}>
             <CustomRouter>
                 <ToastSnackbar />

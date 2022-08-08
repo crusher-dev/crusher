@@ -1,0 +1,30 @@
+name: Test electron app
+
+on:
+  push:
+    branches:
+      - ft-swra
+
+jobs:
+  release:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [macos-latest]
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+
+      - uses: pnpm/action-setup@v2.2.2
+        with:
+          version: 7.5.1
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.13.2
+          cache: 'pnpm'
+
+      - npx crusher-cli test:run --projectid=2075 --host=https://app.crusher.dev --token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMjgyIiwidGVhbV9pZCI6MjE5LCJpYXQiOjE2NTkwNjA0MTEsImV4cCI6MTY5MDU5NjQxMX0.-px__Bc4Cday7KILnqQct_TeLz3Ybg2AiRUYyabrc0E

@@ -27,4 +27,5 @@ jobs:
           node-version: 16.13.2
           cache: 'pnpm'
 
-      - npx crusher-cli test:run --projectid=2075 --host=https://app.crusher.dev --token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMjgyIiwidGVhbV9pZCI6MjE5LCJpYXQiOjE2NTkwNjA0MTEsImV4cCI6MTY5MDU5NjQxMX0.-px__Bc4Cday7KILnqQct_TeLz3Ybg2AiRUYyabrc0E
+      - name: Start crusher
+        run: npx crusher-cli test:run --projectid=2075 --host=https://app.crusher.dev --token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMjgyIiwidGVhbV9pZCI6MjE5LCJpYXQiOjE2NTkwNjA0MTEsImV4cCI6MTY5MDU5NjQxMX0.-px__Bc4Cday7KILnqQct_TeLz3Ybg2AiRUYyabrc0E

@@ -16,17 +16,21 @@ const resolveToFrontend = (endpoint: string) => {
 	return appSettings.frontendEndPoint ? resolveToFrontEndPath(endpoint, appSettings.frontendEndPoint) : resolveToFrontEndPath(endpoint);
 };
 
-const createAuthorizedRequestFunc = (callback) => {
+const createAuthorizedRequestFunc = (callback, silent = false) => {
     return (...args) => {
         const store: any = getStore();
         const userInfo = getUserAccountInfo(store.getState());
-
-        if(!(userInfo && userInfo.token)) { throw new Error("User not logged in"); }
+        const isUserLoggedIn = userInfo && userInfo.token;
+        if(!isUserLoggedIn && !silent) { throw new Error("User not logged in"); }
+        
         const headers = {
-			Authorization: `${userInfo.token}`,
             Accept: "application/json, text/plain, */*",
             "Content-Type": "application/json"
         };
+
+        if(isUserLoggedIn) {
+            headers["Authorization"] =  `${userInfo.token}`;
+        }
  
         return callback({ headers, withCredentials: true }, ...args);
     };

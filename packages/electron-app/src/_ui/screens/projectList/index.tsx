@@ -7,23 +7,17 @@ import { useStore } from "react-redux";
 import { setSelectedProject } from "electron-app/src/store/actions/app";
 import { getUserAccountProjects } from "electron-app/src/utils";
 import { LoadingScreen } from "../loading";
+import { useUser } from "../../api/user/user";
 
 const ProjectsListScreen = () => {
-    const [projects, setProjects] = React.useState(null);
+    const { projects, userInfo, error } = useUser();
     const navigate = useNavigate();
 
-    React.useEffect(() => {
-        getUserAccountProjects().then((res) => {
-            if(res && res.projects) {
-                if(res.projects.length === 0) {
-                    navigate("/onboarding");
-                    return;
-                }
-                setProjects(res.projects);
-            }
-        });
-    }, []);
-
+	React.useEffect(() => {
+		if(projects && !projects.length){
+			navigate("/onboarding");
+		}
+	}, [projects]);
 	if(!projects) return (<LoadingScreen />);
     return (
         <CompactAppLayout title={<div css={titleCss}>Select project</div>} footer={<Footer/>}>

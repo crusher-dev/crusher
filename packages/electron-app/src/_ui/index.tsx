@@ -23,6 +23,8 @@ import historyInstance, { CustomRouter } from './utils/history';
 import { ProjectsListScreen } from "./screens/projectList";
 import { ToastSnackbar } from "../ui/components/toast";
 import { AuthOnboardingScreen } from "../ui/screens/authOnboarding";
+import { SWRConfig } from "swr";
+import { NetworkErrorContainer } from "./containers/errors/networkError";
 
 const globalAppConfig = getGlobalAppConfig();
 webFrame.setVisualZoomLevelLimits(1, 3);
@@ -38,18 +40,15 @@ function getPersistStore() {
         initialReduxState.app.settings.backendEndPoint = process.env.BACKEND_URL;
         initialReduxState.app.settings.frontendEndPoint = process.env.FRONTEND_URL;
     }
+    if (globalAppConfig && globalAppConfig.userInfo) {
+        initialReduxState.app.accountInfo = globalAppConfig.userInfo;
+    }
 
     const store = configureStore(initialReduxState, "renderer");
-
-    if (globalAppConfig && globalAppConfig.userInfo) {
-        store.dispatch(setUserAccountInfo(globalAppConfig.userInfo));
-    }
-    store.dispatch(setSettngs(initialReduxState.app.settings));
-    store.dispatch(setShowShouldOnboardingOverlay(initialReduxState.app.shouldShowOnboardingOverlay));
-
     return store;
 }
 
+const store = getPersistStore();
 
 const globalStyle = css`
     .drag {
@@ -60,23 +59,37 @@ const globalStyle = css`
     }
 `;
 
+function RootApp() {
+    const [showNetworkError, setShowNetworkError] = React.useState(false);
+    const handleErrorCallback = React.useCallback(() => {
+        setShowNetworkError(true);
+    }, []);
 
+   return (
+    <Provider store={store}>
+        <SWRConfig value={{   onError: handleErrorCallback.bind(this) }}>
+            <CustomRouter>
+                <ToastSnackbar />
+            {showNetworkError ? (
+                <NetworkErrorContainer/>
+            ) : ""}
+                <Global styles={globalStyle}/>
+                <Routes>
+                    <Route path="/login" element={<LoginScreen />} />
+                    <Route path="/onboarding" element={<AuthOnboardingScreen />} />
+                    <Route path="/" element={<DashboardScreen />} />
+                    <Route path="/select-project" element={<ProjectsListScreen />} />
+                    <Route path="/create-test" element={<CreateTestScreen />} />
+                    <Route path="/code-editor" element={<UnDockCodeScreen />} />
+                    <Route path="/settings" element={<SettingsScreen />} />
+                    <Route path="/recorder" element={<App/>} />
+                </Routes>
+            </CustomRouter>
+        </SWRConfig>
+	</Provider>
+   );
+}
 render(
-	<Provider store={getPersistStore()}>
-		<CustomRouter>
-			<ToastSnackbar />
-            <Global styles={globalStyle}/>
-			<Routes>
-                <Route path="/login" element={<LoginScreen />} />
-                <Route path="/onboarding" element={<AuthOnboardingScreen />} />
-				<Route path="/" element={<DashboardScreen />} />
-				<Route path="/select-project" element={<ProjectsListScreen />} />
-				<Route path="/create-test" element={<CreateTestScreen />} />
-				<Route path="/code-editor" element={<UnDockCodeScreen />} />
-				<Route path="/settings" element={<SettingsScreen />} />
-				<Route path="/recorder" element={<App/>} />
-			</Routes>
-		</CustomRouter>
-	</Provider>,
+	<RootApp/>,
 	document.querySelector("#app-container"),
 );

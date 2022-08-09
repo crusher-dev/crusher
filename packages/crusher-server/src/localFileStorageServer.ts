@@ -8,7 +8,7 @@ const path = require("path");
 const bodyParser = require("body-parser");
 const url = require("url");
 
-const SERVER_PROXY = new URL(process.env.FILE_SERVER_PROXY || "http://localhost:3000/output/");
+const SERVER_PROXY = new URL(process.env.FILE_SERVER_PROXY || "http://localhost:3001/");
 const baseFolder = process.env.BASE_STORAGE_FOLDER || "/tmp/";
 
 const serveStatic = require("serve-static");

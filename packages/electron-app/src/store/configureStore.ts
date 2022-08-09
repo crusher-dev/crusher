@@ -33,7 +33,7 @@ export default function configureStore(intialState: any, scope = "main"): Store<
 	}
 
 	if (scope === "main") {
-		middlewares = [triggerAlias, ...middlewares, forwardToRenderer];
+		middlewares = [...middlewares, forwardToRenderer];
 	}
 
 	const middlewareEnhancer = applyMiddleware(...middlewares);

@@ -21,7 +21,6 @@ const createAuthorizedRequestFunc = (callback, silent = false) => {
         const store: any = getStore();
         const userInfo = getUserAccountInfo(store.getState());
         const isUserLoggedIn = userInfo && userInfo.token;
-        console.log("State is", store.getState().app.accountInfo);
         if(!isUserLoggedIn && !silent) { throw new Error("User not logged in"); }
         
         const headers = {

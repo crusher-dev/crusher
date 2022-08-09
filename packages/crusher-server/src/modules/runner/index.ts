@@ -1,6 +1,6 @@
 import Container, { Inject, Service } from "typedi";
 import { BuildsService } from "@modules/resources/builds/service";
-import { ICreateBuildRequestPayload } from "@modules/resources/builds/interface";
+import { BuildStatusEnum, ICreateBuildRequestPayload } from "@modules/resources/builds/interface";
 import { BrowserEnum, IBuildTaskPayload, ITestDependencyArray, ITestInstanceDependencyArray } from "./interface";
 import { KeysToCamelCase } from "@modules/common/typescript/interface";
 import { ITestTable } from "@modules/resources/tests/interface";
@@ -10,13 +10,14 @@ import { TEST_COMPLETE_QUEUE, TEST_EXECUTION_QUEUE } from "@crusher-shared/const
 import { INextTestInstancesDependencies, ITestCompleteQueuePayload, ITestExecutionQueuePayload } from "@crusher-shared/types/queues";
 import { BuildReportService } from "@modules/resources/buildReports/service";
 import { BuildTestInstancesService } from "@modules/resources/builds/instances/service";
-import { ICreateTestInstancePayload, ITestInstancesTable } from "@modules/resources/builds/instances/interface";
+import { IBuildTestInstanceResultsTable, ICreateTestInstancePayload, ITestInstancesTable } from "@modules/resources/builds/instances/interface";
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { BadRequestError } from "routing-controllers";
 import { iAction } from "@crusher-shared/types/action";
 import { CamelizeResponse } from "@modules/decorators/camelizeResponse";
 import { DBManager } from "@modules/db";
 import { GithubService } from "@modules/thirdParty/github/service";
+import { BuildReportStatusEnum } from "@modules/resources/buildReports/interface";
 @Service()
 class TestsRunner {
 	@Inject()
@@ -338,6 +339,24 @@ class TestsRunner {
 			console.error("Error is", err);
 			throw err;
 		}
+	}
+
+
+	async saveLocalBuildResults(
+		tests: Array<{ steps: Array<any>; id: number; name: string; status: "FINISHED" | "FAILED" }>,
+		buildPayload: ICreateBuildRequestPayload,
+	) {
+		const build = await this.buildsService.createBuild(buildPayload);
+		const referenceBuild = await this.buildsService.getBuild(build.insertId);
+
+		const buildReport = await this.buildReportService.createBuildReport(
+			tests.length * buildPayload.browser.length,
+			build.insertId,
+			referenceBuild.id,
+			buildPayload.projectId,
+		);
+		await this.buildsService.updateLatestReportId(buildReport.insertId, build.insertId);
+
 	}
 
 	async runTests(tests: Array<KeysToCamelCase<ITestTable>>, buildPayload: ICreateBuildRequestPayload, baselineBuildId: number = null) {

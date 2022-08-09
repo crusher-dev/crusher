@@ -129,13 +129,13 @@ const DashboardScreen = () => {
         [tests],
     );
     React.useEffect(() => {
-        const selectedProjectId = getCurrentSelectedProjct(store.getState());
-        if(!selectedProjectId)
-            return navigate("/select-project");
         const loggedIn = checkIfLoggedIn();
         if(!loggedIn) {
             return navigate("/login");
 		}
+        const selectedProjectId = getCurrentSelectedProjct(store.getState());
+        if(!selectedProjectId)
+            return navigate("/select-project");
         const proxyState = getProxyState(store.getState());
         if (window["showProxyWarning"] && !Object.keys(proxyState).length) {
             setShowProxyWarning({show: true, testId: window["showProxyWarning"].testId, startUrl: window["showProxyWarning"].startUrl});

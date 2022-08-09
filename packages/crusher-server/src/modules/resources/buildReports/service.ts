@@ -62,6 +62,7 @@ export class BuildReportService {
 
 	private async getPublicUrl(url: string) {
 		if (!url) return null;
+		console.log("GEt url", url);
 		return url.startsWith("http") ? url : await this.storageManager.getUrl(url);
 	}
 

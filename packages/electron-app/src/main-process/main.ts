@@ -13,6 +13,8 @@ import { installSameOriginFilter } from "./same-origin-filter";
 import configureStore from "../store/configureStore";
 import * as path from "path";
 import net from "net";
+import { getGlobalAppConfig } from "../lib/global-config";
+import { rootReducer } from "../store/reducers";
 
 const os = require("os");
 
@@ -122,8 +124,18 @@ app.on("open-url", (event, url) => {
 let store;
 function createWindow() {
 	console.log("Creating window now...");
-	const store = configureStore(global.state, "main");
+	const globalAppConfig = getGlobalAppConfig();
+	const _store = configureStore(undefined, "main");
 
+	const initialState = {
+		...(_store.getState() as any),
+		app: {
+			...(_store.getState() as any).app,
+			accountInfo: globalAppConfig && globalAppConfig.userInfo ? globalAppConfig.userInfo : null
+		}
+	};
+	const store = configureStore(initialState, "main");
+	
 	const window = new AppWindow(store);
 
 	if (!isProduction()) {

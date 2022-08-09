@@ -5,7 +5,7 @@ const LOCAL_STORAGE_ENDPOINT = process.env.LOCAL_STORAGE_ENDPOINT || "http://loc
 
 function setupStorage(storageMode: "local" | "aws", storagePort: number, baseStorageFolder: string): IStorageManager {
 	console.log("Storage mode is", storageMode);
-	if (storageMode === "local") {
+	if (storageMode === "local" || !storageMode) {
 		return new LocalFileStorage({
 			endpoint: LOCAL_STORAGE_ENDPOINT,
 		});

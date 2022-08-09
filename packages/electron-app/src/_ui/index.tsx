@@ -26,7 +26,6 @@ import { AuthOnboardingScreen } from "../ui/screens/authOnboarding";
 import { SWRConfig } from "swr";
 import { NetworkErrorContainer } from "./containers/errors/networkError";
 
-const globalAppConfig = getGlobalAppConfig();
 webFrame.setVisualZoomLevelLimits(1, 3);
 
 function getPersistStore() {
@@ -39,9 +38,6 @@ function getPersistStore() {
         // Modify BACKEND_URL and FRONTEND_URL to default values
         initialReduxState.app.settings.backendEndPoint = process.env.BACKEND_URL;
         initialReduxState.app.settings.frontendEndPoint = process.env.FRONTEND_URL;
-    }
-    if (globalAppConfig && globalAppConfig.userInfo) {
-        initialReduxState.app.accountInfo = globalAppConfig.userInfo;
     }
 
     const store = configureStore(initialReduxState, "renderer");

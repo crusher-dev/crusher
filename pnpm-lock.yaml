@@ -635,7 +635,6 @@ importers:
       electron: ^12.0.2
       electron-builder: ^23.3.1
       electron-debug: ^3.2.0
-      electron-deeplink: ^1.0.7
       electron-devtools-installer: ^3.2.0
       electron-notarize: ^1.1.1
       electron-redux: ^1.5.4
@@ -754,7 +753,6 @@ importers:
       electron: 12.0.11
       electron-builder: 23.3.2
       electron-debug: 3.2.0
-      electron-deeplink: 1.0.7
       electron-devtools-installer: 3.2.0
       electron-notarize: 1.1.1
       electron-redux: 1.5.4
@@ -1270,7 +1268,7 @@ packages:
       '@babel/compat-data': 7.16.8
       '@babel/core': 7.12.3
       '@babel/helper-validator-option': 7.16.7
-      browserslist: 4.21.2
+      browserslist: 4.19.1
       semver: 6.3.0
 
   /@babel/helper-compilation-targets/7.16.7_@babel+core@7.13.10:
@@ -10068,15 +10066,6 @@ packages:
     resolution: {integrity: sha512-fj1hi+ZSW0xPLrJJD+YNwIh9GZbyaIepG26E/gXvp8nCa2pYokxUYO1sK9qjGxp2g8ryZYuon7wmjpwE2cyASQ==}
     dev: true
 
-  /@types/electron/1.6.10:
-    resolution: {integrity: sha512-MOCVyzIwkBEloreoCVrTV108vSf8fFIJPsGruLCoAoBZdxtnJUqKA4lNonf/2u1twSjAspPEfmEheC+TLm/cMw==}
-    deprecated: This is a stub types definition for electron (https://github.com/electron/electron). electron provides its own type definitions, so you don't need @types/electron installed!
-    dependencies:
-      electron: 13.1.9
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
-
   /@types/eslint-scope/3.7.0:
     resolution: {integrity: sha512-O/ql2+rrCUe2W2rs7wMR+GqPRcgB6UiqN5RhrR5xruFlY7l9YLMn0ZkDzjoHLeiFkR8MCQZVudUuuvQ2BLC9Qw==}
     dependencies:
@@ -12874,6 +12863,7 @@ packages:
     resolution: {integrity: sha512-p2q/t/mhvuOj/UeLlV6566GD/guowlr0hHxClI0W9m7MWYkL1F0hLo+0Aexs9HSPCtR1SXQ0TD3MMKrXZajbiQ==}
     dependencies:
       file-uri-to-path: 1.0.0
+    optional: true
 
   /bitsyntax/0.0.4:
     resolution: {integrity: sha512-Pav3HSZXD2NLQOWfJldY3bpJLt8+HS2nUo5Z1bLLmHg2vCE/cM1qfEvNjlYo7GgYQPneNr715Bh42i01ZHZPvw==}
@@ -16129,18 +16119,6 @@ packages:
       - supports-color
     dev: false
 
-  /electron-deeplink/1.0.7:
-    resolution: {integrity: sha512-kWQFjh010AwvhMg67x4l5uZRu4cXIbwwdz3HNot7wRMfUsuLPpV1ZcD1tMBAg1zUff/awyOJw+Ct3cWClxRGIg==}
-    requiresBuild: true
-    dependencies:
-      '@types/electron': 1.6.10
-      bindings: 1.5.0
-      electron-log: 4.4.1
-      node-addon-api: 2.0.2
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
-
   /electron-devtools-installer/3.2.0:
     resolution: {integrity: sha512-t3UczsYugm4OAbqvdImMCImIMVdFzJAHgbwHpkl5jmfu1izVgUcP/mnrPqJIpEeCK1uZGpt+yHgWEN+9EwoYhQ==}
     dependencies:
@@ -16171,10 +16149,6 @@ packages:
       keyboardevents-areequal: 0.2.2
     transitivePeerDependencies:
       - supports-color
-    dev: false
-
-  /electron-log/4.4.1:
-    resolution: {integrity: sha512-nK/DwxPLtwWbggPCm27eMQhYHc3gzoZ+cokBK99diO4WsZJKrv5l44EUW8mRfWpmC8ZubnMyp6GTUIJyTc9AJA==}
     dev: false
 
   /electron-notarize/1.1.1:
@@ -16256,19 +16230,6 @@ packages:
 
   /electron/12.0.11:
     resolution: {integrity: sha512-6gPjcce3QCeAWZ8UVAqVy6os+86D5BcxgkIzlROxX89u+du/i7WpZXF5F1vgv419rspds9OHejP3JrJnoUGh6w==}
-    engines: {node: '>= 8.6'}
-    hasBin: true
-    requiresBuild: true
-    dependencies:
-      '@electron/get': 1.12.4
-      '@types/node': 14.17.5
-      extract-zip: 1.7.0
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
-
-  /electron/13.1.9:
-    resolution: {integrity: sha512-By4Zb72XNQLrPb70BXdIW3NtEHFwybP5DIQjohnCxOYONq5vojuHjNcTuWnBgMvwQ2qwykk6Tw5EwF2Pt0CWjA==}
     engines: {node: '>= 8.6'}
     hasBin: true
     requiresBuild: true
@@ -17635,6 +17596,7 @@ packages:
   /file-uri-to-path/1.0.0:
     resolution: {integrity: sha512-0Zt+s3L7Vf1biwWZ29aARiVYLx7iMGnEUl9x33fbB/j3jR81u/O2LbqK+Bm1CDSNDKVtJ/YjwY7TUd5SkeLQLw==}
     requiresBuild: true
+    optional: true
 
   /file-uri-to-path/2.0.0:
     resolution: {integrity: sha512-hjPFI8oE/2iQPVe4gbrJ73Pp+Xfub2+WI2LlXDbsaJBwT5wuMh35WNWVYYTpnz895shtwfyutMFLFywpQAFdLg==}
@@ -23854,10 +23816,6 @@ packages:
     requiresBuild: true
     dev: false
     optional: true
-
-  /node-addon-api/2.0.2:
-    resolution: {integrity: sha512-Ntyt4AIXyaLIuMHF6IOoTakB3K+RWxwtsHNRxllEoA6vPwP9o4866g6YWDLUdnucilZhmkxiHwHr11gAENw+QA==}
-    dev: false
 
   /node-dir/0.1.17:
     resolution: {integrity: sha512-tmPX422rYgofd4epzrNoOXiE8XFZYOcCq1vD7MAXCDO+O+zndlA2ztdKKMa+EeuBG5tHETpr4ml4RGgpqDCCAg==}

@@ -3,6 +3,7 @@ import * as fs from "fs";
 import { APP_DIRECTORY } from "../constants";
 import { createDirIfNotExist } from "../utils/utils";
 import * as path from "path";
+import chalk from "chalk";
 
 export function findCrusherProjectConfig(_start = null) {
   let start: any = _start || process.cwd();
@@ -54,11 +55,13 @@ export const getProjectConfigPath = () => {
 let hasLoggedProjectConfig = false;
 export const getProjectConfig = (verbose: boolean = true) => {
   const configPath = getProjectConfigPath();
-  if(!fs.existsSync(configPath)) { if(!hasLoggedProjectConfig) { if(verbose) console.log("No project config found"); hasLoggedProjectConfig=true;} return null; }
+  if(!fs.existsSync(configPath)) { if(!hasLoggedProjectConfig) { if(verbose) 
+    console.log(`Project config not found`);
+     hasLoggedProjectConfig=true;} return null; }
 
   if(!hasLoggedProjectConfig) {
     hasLoggedProjectConfig = true;
-    console.log("Project config: " + configPath);
+    console.log(chalk.green("Project config: ") + configPath);
   }
   hasLoggedProjectConfig = true;
   if(configPath.endsWith(".js")) { const requireOriginal = eval("require"); const config = requireOriginal(configPath); return config; }

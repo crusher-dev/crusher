@@ -341,7 +341,6 @@ class TestsRunner {
 		}
 	}
 
-
 	async saveLocalBuildResults(
 		tests: Array<{ steps: Array<any>; id: number; name: string; status: "FINISHED" | "FAILED" }>,
 		buildPayload: ICreateBuildRequestPayload,
@@ -356,6 +355,21 @@ class TestsRunner {
 			buildPayload.projectId,
 		);
 		await this.buildsService.updateLatestReportId(buildReport.insertId, build.insertId);
+
+	 	const testList: { [id: number]: ITestDependencyArray[0] } = tests.reduce((prev, test) => {
+			return { ...prev, [test.id]: { ...test, isFirstLevelTest: true, postTestList: [], parentTestId: null } };
+		}, {});
+		const testInstancesArr: ITestInstanceDependencyArray = await this.createTestInstances(Object.values(testList), buildPayload, build.insertId);
+		const testsResultsSetsInsertPromiseArr = testInstancesArr.map(async (testInstance) => {
+			const referenceInstance = await this.buildTestInstanceService.getReferenceInstance(testInstance.id);
+			return this.buildTestInstanceService.createBuildTestInstanceResultSet({
+				reportId: buildReport.insertId,
+				instanceId: testInstance.id,
+				targetInstanceId: buildPayload.meta.disableBaseLineComparisions ? testInstance.id : referenceInstance.id,
+			});
+		});
+		await Promise.all(testsResultsSetsInsertPromiseArr);
+
 
 	}
 

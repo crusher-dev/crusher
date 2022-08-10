@@ -14,7 +14,7 @@
 
 <h3 align="">Fast all-in-one testing with low-code</h3>
 <p>
-  Open-source testing framework to test with minimal effort.
+  Open-source testing framework to test with minimal effort
 </p>
 
 <div align="">

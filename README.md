@@ -28,7 +28,7 @@
   </div>
 <br />
 
-[Crusher](https://crusher.dev) 🦖 is a faster testing framework, an alternative to traditional workflows using cypress, selenium, etc.
+[Crusher](https://crusher.dev) 🦖 is a all in one, faster testing framework, an modern replacement to traditional workflows using cypress, selenium, etc.
 
 **Create, run and debug tests** with dead simple workflow, use **low-code or code**. We're reimagining testing to make it blazingly simple, fast and effective.
 
@@ -55,15 +55,15 @@
 
 Read the [Getting Started](https://docs.crusher.dev/getting-started/what-is-crusher) tutorial or follow the steps below:
 
-**Create your first test**
-
-In your git repo run,
+**Create your first test** In the repo run,
 
 ```
 npx crusher-cli
 ```
 
-You can use our recorder to create tests or if you're feeling adventurous try writing tests using code with our CrusherSDK.
+or download binary.
+
+Create: 
 
 **Run test**
 
@@ -71,11 +71,11 @@ You can use our recorder to create tests or if you're feeling adventurous try wr
 npx crusher-cli test:run
 ```
 
-You can run test locally on your machine to debug. Run it on cloud to see faster execution.
+You can run test locally on your machine to debug. Run it on cloud for faster execution.
 
 ## 🦖 Features
 
-- 🏆 **Create tests using low-code:** Create tests using our customized recorder based on chromium.
+- 🏆 **Test using low-code:** Create tests using our customized recorder based on chromium.
 - 📝 **Write tests using code:** Better APIs and more control with native playwright APIs.
 - 🔥 **Fast test execution:** No more execution on selenium grid.
 - 🔋 **All major browsers supported:** Run tests on chromium, safari, and firefox in seconds.
@@ -87,7 +87,6 @@ You can run test locally on your machine to debug. Run it on cloud to see faster
 Crusher is built on playwright as the base to give you the best developer experience you need for testing. We're building a customized toolkit to upgrade the testing experience, by focusing heavily on the engineering + product side.
 
 ## 🏃 Use cases
-
 - **Test e2e user flows:** Never compromise your user experience by testing important end-to-end user flows.
 - **Test UI of your project:** Never let a UI change catch you off guard.
 - **Run tests locally:** Test specific functionalities of your app easily with a single click.
@@ -95,7 +94,6 @@ Crusher is built on playwright as the base to give you the best developer experi
 - **Monitor production:** Periodically run tests for your website and get notified if something goes wrong.
 
 ## 💡 Philosophy
-
 If you are involved in software development, you are no stranger to things breaking now and then. Sometimes it's because of a small typo/change, and sometimes because of reasons out of your control.
 
 It seems like every time you are changing something, there is a chance that something else might break. The worst part is you have no idea what went wrong until it goes into production and someone reports it.
@@ -110,10 +108,10 @@ Testing solves this, but it hasn't evolved. We're changing it by creating an int
 
 ## FAQs
 
-- **I don't have any prior experience, Can I use Crusher?** Yes, we primarily designed crusher to make testing easy.
-- **Low-code ain't powerful? I believe in code supremacy:** Fair enough, you can write code too. We might support other top frameworks later on.
-- **Why this over selenium, cypress, etc?** With any library, you'll have to spend a lot of time setting up testing workflow. We take care of all the for you.
-- **Why the new framework?** Testing has not evolved. We still have old flaky APIs that don't work.
+- **I don't have any prior experience, Can I use Crusher?** Yes, we primarily designed crusher to make testing easy. Most developer have never tested.
+- **Low-code ain't powerful? I believe code is more powerful:** Fair enough, you can write code too. We might support other frameworks later on.
+- **Why use this over selenium, cypress, etc?** With any library, you'll have to spend a lot of time setting up testing workflow. For us the whole experience was frustrating, from both time and reliability.
+- **Why a new framework?** Testing has not evolved. We still have old flaky APIs that don't work.
 - **Is crusher using electron?** We need to use chromium to build the recorder and also to run tests locally. We also modify V8 and Blink to make the recorder more powerful.
 
 ## Resources & Getting involved

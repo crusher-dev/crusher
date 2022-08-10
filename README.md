@@ -53,7 +53,7 @@
 
 ## 🚀 Getting started
 
-Read the [Getting Started](https://docs.crusher.dev/getting-started/what-is-crusher) tutorial or follow the steps below:
+Read the [Getting Started](https://docs.crusher.dev/getting-started/create-your-first-test#using-cli) tutorial or follow the steps below:
 
 **Create your first test** In the repo run,
 
@@ -61,7 +61,7 @@ Read the [Getting Started](https://docs.crusher.dev/getting-started/what-is-crus
 npx crusher-cli
 ```
 
-or download binary.
+or [download binary](https://docs.crusher.dev/getting-started/create-your-first-test#or-install-recorder)
 
 Create: 
 

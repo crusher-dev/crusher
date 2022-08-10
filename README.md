@@ -22,10 +22,10 @@
     <tbody>
       <tr>
          <td>
-          <a href="#-getting-started">⌛ Try Crusher</a>
+             <a href="#-getting-started">⠀ Create test</a>
         </td>
         <td>
-          <a href="https://docs.crusher.dev">📚 Docs</a>
+          <a href="https://docs.crusher.dev">⠀ Read docs</a>
         </td>
       </tr>
     </tbody>

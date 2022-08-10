@@ -59,7 +59,7 @@
 
 ##  Getting started
 
-**👨‍💻Create your first test**
+**☄️Create your first test**
 
 ```
 npx crusher-cli
@@ -68,7 +68,7 @@ npx crusher-cli
 or [download binary](https://docs.crusher.dev/getting-started/create-your-first-test#or-install-recorder)
 
 
-**Run test**
+**🚖 Run test**
 
 ```
 npx crusher-cli test:run
@@ -108,9 +108,9 @@ Testing solves this, but it hasn't evolved. We're changing it by creating an int
 
 ## 🧱 Deployment
 
-**Crusher cloud:** 🏖️ Start using | Zero configuration setup. (Recommended: Faster, cheaper and less hassle)
+**[Crusher cloud](https://crusher.dev)**  Start using | Zero configuration setup. (Recommended: Faster, cheaper and less hassle)
 
-**Self host:** 🧱 Deploy using Docker or Kubernetes. [Docs](https://docs.crusher.dev/development/docker-deploy-locally)
+**Self host:** Deploy using Docker or Kubernetes. [Docs](https://docs.crusher.dev/development/docker-deploy-locally)
 
 ## FAQs
 

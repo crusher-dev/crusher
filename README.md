@@ -51,8 +51,8 @@
 
 <div align="center">
   <img src="https://img.shields.io/github/stars/crusherdev/crusher.svg?style=social&label=Star" height="24"/>  
-    <img src="https://img.shields.io/github/forks/crusherdev/crusher.svg?style=social&label=Fork" height="24"/>
-     <img src="https://img.shields.io/github/watchers/crusherdev/crusher.svg?style=social&label=Watch" height="24"/>
+  <img src="https://img.shields.io/github/forks/crusherdev/crusher.svg?style=social&label=Fork" height="24"/>
+  <img src="https://img.shields.io/github/watchers/crusherdev/crusher.svg?style=social&label=Watch" height="24"/>
 </div>
 
 <br/>
@@ -82,15 +82,15 @@ Reference/ [Getting Started](https://docs.crusher.dev/getting-started/create-you
 ## 🦖 Features
 
 - 🏆 **Test using low-code:** Create tests using our customized recorder based on chromium.
-- 📝 **Write tests using code:** Better APIs and more control with native playwright APIs.
+- **Write tests using code:** Better APIs and more control with native playwright APIs.
 - 🔥 **Fast test execution:** No more execution on selenium grid.
 - 🔋 **All major browsers supported:** Run tests on chromium, safari, and firefox in seconds.
 - ⚡ **Blazing Fast:** Built on top of Playwright, Crusher delivers an amazing performance during execution.
-- 👏 **Easy integration with your projects:** Use npx base CLI to integrate.
+- **Easy integration with your projects:** Use npx base CLI to integrate.
 - 🦄 **Central reporting & dashboard:** See how your app is doing overall anytime-anywhere.
-- 👨‍💻 **Built for developers:** Use modern javascript to write tests with dead-simple workflow.
+- **Built for developers:** Use modern javascript to write tests with dead-simple workflow.
 
-Crusher is built on playwright as the base to give you the best developer experience you need for testing. We're building a customized toolkit to upgrade the testing experience, by focusing heavily on the engineering + product side.
+Built using playwright as the base for better developer experience. We're building a customized toolkit to upgrade the testing experience, by focusing heavily on the engineering + product side.
 
 ## 🏃 Use cases
 - **Test e2e user flows:** Never compromise your user experience by testing important end-to-end user flows.

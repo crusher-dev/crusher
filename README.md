@@ -121,11 +121,9 @@ Testing solves this, but it hasn't evolved. We're changing it by creating an int
 - **Why a new framework?** Testing has not evolved. We still have old flaky APIs that don't work.
 - **Is crusher using electron?** We need to use chromium to build the recorder and also to run tests locally. We also modify V8 and Blink to make the recorder more powerful.
 
-## Resources & Getting involved
-
-Check out our live documentation:
-
-- [Getting Started](https://docs.crusher.dev/getting-started/create-your-first-test)
+## Resources
+- [Documentation🌱](https://docs.crusher.dev)
+- [Getting started](https://docs.crusher.dev/getting-started/create-your-first-test)
 - [Developing locally](https://docs.crusher.dev/development/setting-up-development-env)
 
 For general help using Crusher, please refer to [the official documentation](https://docs.crusher.dev).

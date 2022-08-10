@@ -133,8 +133,8 @@ For general help using Crusher, please refer to [the official documentation](htt
 
 ## Contribute to Crusher
 
-- Setup Crusher locally. [Docs](https://docs.crusher.dev/development/setting-up-development-env)
-- Found a bug? File an issue.
+- Setup crusher locally [Docs](https://docs.crusher.dev/development/setting-up-development-env)
+- Found a bug? [File an issue](https://github.com/crusherdev/crusher/issues/new/choose)
 - Wanna help. We love pull requests, too!
 
 ## 📝 License

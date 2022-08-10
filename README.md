@@ -1,18 +1,23 @@
-<p align="center">
-  <p align="center">
+<p align="">
+  <p align="">
   <a href="https://crusher.dev/#gh-light-mode-only">
-    <img src="https://i.imgur.com/BRG9MxQ.png" width="220px" alt="Crusher logo" />
+    <img src="https://i.imgur.com/BRG9MxQ.png" width="160px" alt="Crusher logo" />
   </a>
   <a href="https://crusher.dev/#gh-dark-mode-only">
-    <img src="https://i.imgur.com/ncVx1vo.png"  width="220px" alt="Crusher logo" />
+    <img src="https://i.imgur.com/ncVx1vo.png"  width="160px" alt="Crusher logo" />
   </a>
 </p>
 </p>
 
-<h3 align="center">Fast all-in-one testing with low-code</h3>
-<p align="center">Open-source testing framework to test with minimal effort.</p>
 
-<div align="center">
+
+
+<h3 align="">Fast all-in-one testing with low-code</h3>
+<p>
+  Open-source testing framework to test with minimal effort.
+</p>
+
+<div align="">
   <table>
     <tbody>
       <tr>
@@ -26,7 +31,8 @@
     </tbody>
   </table>
   </div>
-<br />
+<hr/>
+
 
 [Crusher](https://crusher.dev) 🦖 is an all in one, faster testing framework, an modern replacement to traditional workflows using cypress, selenium, etc.
 

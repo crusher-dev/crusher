@@ -22,7 +22,7 @@
     <tbody>
       <tr>
          <td>
-             <a href="#-getting-started">⠀ ☄️ Try Crusher</a>
+             <a href="#-getting-started">☄️ Try Crusher</a>
         </td>
         <td>
           <a href="https://docs.crusher.dev">⠀ Read docs</a>

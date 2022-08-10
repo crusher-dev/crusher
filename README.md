@@ -108,7 +108,8 @@ Testing solves this, but it hasn't evolved. We're changing it by creating an int
 
 ## 🧱 Deployment
 
-**[Crusher cloud](https://crusher.dev)**  Start using | Zero configuration setup. (Recommended: Faster, cheaper and less hassle)
+**Crusher cloud-**  [Start using](https://crusher.dev) | Zero configuration setup
+(Recommended: Faster, cheaper and less hassle)
 
 **Self host:** Deploy using Docker or Kubernetes. [Docs](https://docs.crusher.dev/development/docker-deploy-locally)
 

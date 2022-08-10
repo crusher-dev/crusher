@@ -17,6 +17,7 @@ import { shell, webFrame } from "electron";
 import { getUserInfoFromToken, waitForUserLogin } from "electron-app/src/utils";
 import { resolveToFrontEndPath } from "@shared/utils/url";
 import { showReportDialog } from "@sentry/electron";
+import { SettingsManager } from "electron-app/src/lib/settingsManager";
 
 interface iStartupModalProps {
 	isOpen: boolean;
@@ -75,6 +76,7 @@ const SettingsModalContent = ({className, ...props}: iStartupModalProps & { clas
 			enableMouseTracker,
 		};
 		localStorage.setItem("app.settings", JSON.stringify(settings));
+		SettingsManager.saveSettings(settings);
 		dispatch(setSettngs(settings));
 
 		sendSnackBarEvent({ type: "success", message: "Settings saved" });

@@ -4,6 +4,7 @@ import thunkMiddleware from "redux-thunk";
 import { iReduxState, rootReducer } from "./reducers";
 import loggerMiddleware from "redux-logger";
 import { forwardToMain, forwardToRenderer, triggerAlias, replayActionMain, replayActionRenderer } from "electron-redux";
+import { isProduction } from "../utils";
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -24,9 +25,9 @@ export function getStore(): Store<unknown> {
 export default function configureStore(intialState: any, scope = "main"): Store<unknown> {
 	let middlewares: Array<any> = [];
 
-	// if (!isProduction()) {
-	// middlewares.push(loggerMiddleware);
-	// }
+	if (!isProduction()) {
+	middlewares.push(loggerMiddleware);
+	}
 
 	if (scope === "renderer") {
 		middlewares = [forwardToMain, ...middlewares];

@@ -30,15 +30,6 @@ webFrame.setVisualZoomLevelLimits(1, 3);
 
 function getPersistStore() {
     const initialReduxState: iReduxState = getInitialStateRenderer();
-    
-    initialReduxState.app.shouldShowOnboardingOverlay = localStorage.getItem("app.showShouldOnboardingOverlay") === "false" ? false : true;
-    if(localStorage.getItem("app.settings")) {
-        initialReduxState.app.settings = JSON.parse(localStorage.getItem("app.settings"));
-    } else {
-        // Modify BACKEND_URL and FRONTEND_URL to default values
-        initialReduxState.app.settings.backendEndPoint = process.env.BACKEND_URL;
-        initialReduxState.app.settings.frontendEndPoint = process.env.FRONTEND_URL;
-    }
 
     const store = configureStore(initialReduxState, "renderer");
     return store;

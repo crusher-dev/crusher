@@ -370,7 +370,7 @@ class TestsRunner {
 		});
 		await Promise.all(testsResultsSetsInsertPromiseArr);
 
-
+		
 	}
 
 	async runTests(tests: Array<KeysToCamelCase<ITestTable>>, buildPayload: ICreateBuildRequestPayload, baselineBuildId: number = null) {

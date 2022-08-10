@@ -1,16 +1,16 @@
 <p align="center">
   <p align="center">
   <a href="https://crusher.dev/#gh-light-mode-only">
-    <img src="https://i.imgur.com/EhNlMyB.png" width="220px" alt="Crusher logo" />
+    <img src="https://i.imgur.com/BRG9MxQ.png" width="220px" alt="Crusher logo" />
   </a>
   <a href="https://crusher.dev/#gh-dark-mode-only">
-    <img src="https://i.imgur.com/AAjf4pL.png"  width="220px" alt="Crusher logo" />
+    <img src="https://i.imgur.com/ncVx1vo.png"  width="220px" alt="Crusher logo" />
   </a>
 </p>
 </p>
 
-<h3 align="center">Test more & fast with low-code</h3>
-<p align="center">Open-source testing framework to test with no effort.</p>
+<h3 align="center">Fast all-in-one testing with low-code</h3>
+<p align="center">Open-source testing framework to test with minimal effort.</p>
 
 <div align="center">
   <table>

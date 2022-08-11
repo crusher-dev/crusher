@@ -25,9 +25,9 @@ export function getStore(): Store<unknown> {
 export default function configureStore(intialState: any, scope = "main"): Store<unknown> {
 	let middlewares: Array<any> = [];
 
-	if (!isProduction()) {
-	middlewares.push(loggerMiddleware);
-	}
+	// if (!isProduction()) {
+	// middlewares.push(loggerMiddleware);
+	// }
 
 	if (scope === "renderer") {
 		middlewares = [forwardToMain, ...middlewares];

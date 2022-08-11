@@ -40,7 +40,7 @@ const handleCompletion = async (store: Store, action: IDeepLinkAction) => {
             // steps: Array<any>; id: number; name: string; status: "FINISHED" | "FAILED"
             console.log("Passed", [{ steps: logs, id: action.args.testId, name: action.args.testName || "Some random name", status: "FINISHED"}]);
             const localBuildId = await performSaveLocalBuild([{ steps: logs, id: action.args.testId, name: action.args.testName || "Some random name", status: "FINISHED"}]);
-            window["localBuildReportId"] = localBuildId;
+            window["localBuildReportId"] = localBuildId.build.id;
 
             historyInstance.push("/", {});
 

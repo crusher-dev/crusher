@@ -14,6 +14,8 @@ import { zipDirectory } from "@src/util/helper";
 import { CommunicationChannel } from "crusher-runner-utils";
 
 const TEST_ACTIONS_RESULT_KEY = "TEST_RESULT";
+const TEST_ACTIONS_LOG = "TEST_ACTIONS_LOG";
+
 export class CodeRunnerService {
 	codeGenerator: CodeGenerator;
 	actions: Array<iAction>;
@@ -134,9 +136,11 @@ export class CodeRunnerService {
 				);
 			}
 		}
-
+		
 		const testActionResults = this.globalManager.get(TEST_ACTIONS_RESULT_KEY);
-
+		if(this.globalManager.get(TEST_ACTIONS_LOG)) { 
+			await Promise.all(this.globalManager.get(TEST_ACTIONS_LOG));
+		}
 		let persistenContextZipURL = null;
 		if (this.persistentContextDir) {
 			const persistenContextZipBuffer = await zipDirectory(this.persistentContextDir);

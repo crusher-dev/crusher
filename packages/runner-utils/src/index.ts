@@ -28,6 +28,7 @@ export enum ActionCategoryEnum {
 }
 
 const TEST_RESULT_KEY = "TEST_RESULT";
+const LOGS_PROMISE_KEY = "LOGS_PROMISE_ARRAY";
 
 type OmitFirstArg<F> = F extends (x: any, ...args: infer P) => infer R ? (...args: P) => R : never;
 export type ActionStatusCallbackFn = (action: iAction, result: iActionResult) => Promise<number | void | boolean>;
@@ -97,13 +98,16 @@ class CrusherRunnerActions {
 		meta: IRunnerLogStepMeta = {},
 		actionCallback: OmitFirstArg<ActionStatusCallbackFn> | null = null,
 	) {
-		await this.logManager.logStep(actionType, status, message, meta);
+		this.globals.get(TEST_RESULT_KEY).push((async () => {
+			await this.logManager.logStep(actionType, status, message, meta);
 
-		if (actionCallback) await actionCallback({ actionType, status, message, meta });
-
-		if (status === ActionStatusEnum.COMPLETED || status === ActionStatusEnum.FAILED || status === ActionStatusEnum.STALLED) {
-			this.globals.get(TEST_RESULT_KEY).push({ actionType, status, message, meta });
-		}
+			if (actionCallback) await actionCallback({ actionType, status, message, meta });
+	
+			if (status === ActionStatusEnum.COMPLETED || status === ActionStatusEnum.FAILED || status === ActionStatusEnum.STALLED) {
+				return { actionType, status, message, meta };
+			}
+		}));
+	
 	}
 
 	async _getCurrentScreenshot(page: Page): Promise<string | null> {

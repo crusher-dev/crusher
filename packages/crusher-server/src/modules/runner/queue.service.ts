@@ -233,8 +233,10 @@ class TestRunnerQueue {
 
 			await this.runnerIntegrationsService.handleIntegrations(buildRecord, buildReportRecord, buildReportStatus);
 			// await Promise.all(await sendReportStatusEmails(buildRecord, buildReportStatus));
-			return "SHOULD_CALL_POST_EXECUTION_INTEGRATIONS_NOW";
+			return { buildReportStatus };
 		}
+
+        return {};
     }
 
     async handleWorkerJob(bullJob: ITestResultWorkerJob) {
@@ -273,8 +275,8 @@ class TestRunnerQueue {
                     testInstanceId: instanceWithResult.id,
                     buildTestCount: testInstanceWithActionResults.length,
                     storageState: null,
-                    hasPassed: true,
-                    failedReason: undefined,
+                    hasPassed: instanceWithResult.status === "FINISHED",
+                    failedReason: instanceWithResult.status !== "FINISHED" ? new Error("Error during local run") : undefined,
                     // failedReason?: Error & { isStalled: boolean };
                     isStalled: undefined,
                     persistenContextZipURL: null
@@ -283,9 +285,9 @@ class TestRunnerQueue {
         });
         await Promise.all(processPromiseArr);
 
-        await this.handleCompleteBuild(build, buildReport);
+        const { buildReportStatus} = await this.handleCompleteBuild(build, buildReport);
 
-        return { build, buildReport };
+        return { build, buildReport, buildReportStatus };
     }
 }
 

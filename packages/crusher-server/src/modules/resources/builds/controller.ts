@@ -31,7 +31,7 @@ export class BuildsController {
 	@Authorized()
 	@Post("/projects/:project_id/builds/actions/create.local")
 	async createLocalBuild(@CurrentUser({required: true}) user, @Param("project_id") projectId, @Body() body: { tests: Array<{ steps: Array<any>; id: number; name: string; status: "FINISHED" | "FAILED" }> }) {
-		const { build, buildReport } = await this.testRunnerQueueService.saveLocalBuilds(body.tests, {
+		const { build, buildReport, buildReportStatus } = await this.testRunnerQueueService.saveLocalBuilds(body.tests, {
 			userId: user.user_id,
 			projectId: projectId,
 			host: "",
@@ -50,7 +50,7 @@ export class BuildsController {
 
 		console.log("Build id is", build);
 
-		return { build };
+		return { build, buildReportStatus };
 	}
 
 	@Authorized()

@@ -25,7 +25,10 @@ const handleCompletion = async (store: Store, action: IDeepLinkAction) => {
     console.log("Action args", action, window["testsToRun"]);
     if(action.args.redirectAfterSuccess && window["testsToRun"]) {
         window["testsToRun"].list = window["testsToRun"].list.filter(testId => testId !== action.args.testId);
- 
+        const logs = await performGetRecorderTestLogs();
+        const recorderState = getRecorderState(store.getState());
+        window["localRunCache"][action.args.testId] = { steps: logs, id: action.args.testId, status: recorderState.type !== TRecorderState.ACTION_REQUIRED? "FINISHED" : "FAILED"} }
+
         if(window["testsToRun"].list.length) {
             historyInstance.push("/recorder", {});
             goFullScreen();
@@ -35,17 +38,16 @@ const handleCompletion = async (store: Store, action: IDeepLinkAction) => {
             // Time to redirect to dashboard
             const totalTestsInBuild = window["testsToRun"].count;
             window["testsToRun"] = undefined;
-
-            const logs = await performGetRecorderTestLogs();
+            const localBuild = await performSaveLocalBuild(Object.values(window["localRunCache"]));
+            console.log("local build is", localBuild);
+            window["localRunCache"] = undefined;
             // steps: Array<any>; id: number; name: string; status: "FINISHED" | "FAILED"
-            console.log("Passed", [{ steps: logs, id: action.args.testId, name: action.args.testName || "Some random name", status: "FINISHED"}]);
-            const localBuildId = await performSaveLocalBuild([{ steps: logs, id: action.args.testId, name: action.args.testName || "Some random name", status: "FINISHED"}]);
-            window["localBuildReportId"] = localBuildId.build.id;
+            window["localBuildReportId"] = localBuild.build.id;
 
             historyInstance.push("/", {});
 
             goFullScreen(false);
-            sendSnackBarEvent({ type: "test_report", message: null, meta: { totalCount: totalTestsInBuild }});
+            sendSnackBarEvent({ type: "test_report", message: null, meta: { totalCount: totalTestsInBuild, buildReportStatus: localBuild.buildReportStatus }});
         }
     }
 };

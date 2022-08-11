@@ -372,6 +372,7 @@ class TestsRunner {
 
 		const instanceResults = testInstancesArr.map((testInstance) => {
 			testInstance["results"] = (testList[testInstance.testId] as any).steps;
+			testInstance["status"] = (testList[testInstance.testId] as any).status;
 			return testInstance;
 		});
 		return { tests, instanceResults, buildReportId: buildReport.insertId, buildId: build.insertId };

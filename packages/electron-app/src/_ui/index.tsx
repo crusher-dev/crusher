@@ -30,8 +30,11 @@ webFrame.setVisualZoomLevelLimits(1, 3);
 
 function getPersistStore() {
     const initialReduxState: iReduxState = getInitialStateRenderer();
+    // Will only be used in renderer store ( won't be tarnsim)
+    const shouldShowOnboardingOverlay = localStorage.getItem("app.showShouldOnboardingOverlay") === "false" ? false : true;
 
     const store = configureStore(initialReduxState, "renderer");
+    store.dispatch(setShowShouldOnboardingOverlay(shouldShowOnboardingOverlay));
     return store;
 }
 

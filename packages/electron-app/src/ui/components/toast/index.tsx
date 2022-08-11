@@ -36,7 +36,7 @@ const TestReportToast = ({ meta }) => {
 						font-weight: bold;
 					`}
 				>
-					Tests passed
+					Tests <span css={css`text-transform: lowercase;`}>{meta.buildReportStatus}</span>
 				</div>
 				<div>{meta.totalCount} test</div>
 			</div>

@@ -229,8 +229,6 @@ class TestRunnerQueue {
 				await this.projectsService.updateBaselineBuild(buildRecord.id, buildRecord.projectId);
 			}
 			// @TODO: Add integrations here (Notify slack, etc.)
-			console.log("Build status: ", buildReportStatus);
-
 			await this.runnerIntegrationsService.handleIntegrations(buildRecord, buildReportRecord, buildReportStatus);
 			// await Promise.all(await sendReportStatusEmails(buildRecord, buildReportStatus));
 			return { buildReportStatus };
@@ -259,7 +257,6 @@ class TestRunnerQueue {
         const buildReport = await this.buildReportService.getBuildReportRecord(buildReportId);
         const build = await this.buildService.getBuild(buildId);
         
-        console.log("Build is", build, buildId, buildReportId);
         const testInstanceWithActionResults = instanceResults;
         const processPromiseArr = testInstanceWithActionResults.map(async (instanceWithResult) => {
             return this.handleProcessJob({

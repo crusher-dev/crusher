@@ -44,7 +44,6 @@ class RunnerIntegrationsService {
         );
         
         const buildRecordMeta: { vercel: { checkId: string; deploymentId: string; teamId: string;}, github: { repoName: string; commitId: string;}} = buildRecord.meta ? JSON.parse(buildRecord.meta) : null;
-        console.log("Build record meta: ", buildRecordMeta);
         if(buildRecordMeta && buildRecordMeta.vercel && buildRecordMeta.github) {
             const repoName = buildRecordMeta.github.repoName;
             const vercelIntegrationRecord = await this.vercelService.getIntegrationRecordFromRepoName(repoName);
@@ -55,7 +54,6 @@ class RunnerIntegrationsService {
     
             const vercelIntegrationMeta : {accessToken: string; userId: number;} = vercelIntegrationRecord.meta;
             const detailsUrl = `${resolvePathToFrontendURI(`/app/build/${buildRecord.id}`)}`;
-            console.log("Vercel integration meta: ", vercelIntegrationMeta);
             await this.vercelService.finishDeploymentChecks(
                 vercelIntegrationMeta.accessToken,
                 buildRecordMeta.vercel.deploymentId,
@@ -85,9 +83,7 @@ class RunnerIntegrationsService {
             //@ts-ignore
                 typeof __non_webpack_require__ !== "undefined" ? "/email/templates/failedJob.ejs" : "/../../email/templates/failedJob.ejs",
         };
-    
-        console.log("Reading email template from: ", __dirname + emailTemplateFilePathMap[buildReportStatus]);
-    
+        
         const emailTemplate = await getTemplateFileContent(__dirname + emailTemplateFilePathMap[buildReportStatus], {
             buildId: buildRecord.id,
             branchName: buildRecord.branchName,

@@ -272,16 +272,11 @@ class TestsRunner {
 
 	async spawnTestInstances(tests: Array<{ testId: number; groupId: string; context: any }>, browser: BrowserEnum, buildReportId: number) {
 		try {
-			console.log("Tests are", tests);
 			const build = await this.buildsService.getBuildFromReportId(buildReportId);
-			console.log("Buid is", build);
 			const buildMeta = JSON.parse(build.meta);
-			console.log("Build meta is", buildMeta);
 
 			const buildReport = await this.buildReportService.getBuildReportRecord(buildReportId);
 			const testsMap = await this._getTestMapFromArr(tests.map((test) => test.testId));
-
-			console.log("Tests map is", testsMap);
 
 			const testsArr = tests.map((test) => {
 				return {

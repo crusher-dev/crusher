@@ -11,6 +11,7 @@ import axios from "axios";
 import * as qs from "qs";
 import { GithubIntegrationService } from "../githubIntegration.service";
 import { VERCEL_CONFIG } from "../../../../../config/vercel";
+import { BuildReportStatusEnum } from "@modules/resources/buildReports/interface";
 
 
 @Service()
@@ -122,6 +123,19 @@ class VercelService {
         console.error("Error is" ,e.response.data.error);
         return e;
       });
+    }
+
+    getVercelConclusionFromBuildReportStatus(buildReportStatus: BuildReportStatusEnum) {
+      switch (buildReportStatus) {
+        case BuildReportStatusEnum.PASSED:
+          return "succeeded";
+        case BuildReportStatusEnum.FAILED:
+          return "failed";
+        case BuildReportStatusEnum.MANUAL_REVIEW_REQUIRED:
+          return "neutral";
+        default:
+          return "neutral";
+      }
     }
 }
 

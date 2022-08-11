@@ -3,6 +3,7 @@ import historyInstance from "./history";
 
 const triggerLocalBuild = (testsList: Array<number> = undefined) => {
     window["testsToRun"] = { list: testsList, count: testsList.length };
+    window["localRunCache"] = {};
 
     historyInstance.push("/recorder", "");
     goFullScreen();

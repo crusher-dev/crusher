@@ -3,8 +3,13 @@ import { DBManager } from "@modules/db";
 import { CamelizeResponse } from "@modules/decorators/camelizeResponse";
 import { SlackOAuthResponse } from "@modules/slack/interface";
 import { SlackService } from "@modules/slack/service";
+import { resolvePathToFrontendURI } from "@utils/uri";
 import { BadRequestError } from "routing-controllers";
 import { Inject, Service } from "typedi";
+import { BuildReportStatusEnum, IBuildReportTable } from "../buildReports/interface";
+import { IBuildTable } from "../builds/interface";
+import { IProjectTable } from "../projects/interface";
+import { IUserTable } from "../users/interface";
 import { IIntegrationsTable, IntegrationServiceEnum } from "./interface";
 
 @Service()
@@ -72,6 +77,74 @@ class IntegrationsService {
 		if (!integrationConfig.channel[type]) return;
 		return this.slackService.postMessage(blocks, integrationConfig.channel[type].value, integrationConfig.oAuthInfo.accessToken);
 	}
+
+
+	async getSlackMessageBlockForBuildReport(
+		buildRecord: KeysToCamelCase<IBuildTable>,
+		projectRecord: KeysToCamelCase<IProjectTable>,
+		buildReportRecord: KeysToCamelCase<IBuildReportTable>,
+		userInfo: KeysToCamelCase<IUserTable>,
+		reportStatus: BuildReportStatusEnum,
+	): Promise<Array<any>> {
+		const infoFields = [
+			{
+				type: "mrkdwn",
+				text: `*Build Id:*\n${buildRecord.id}`,
+			},
+			{
+				type: "mrkdwn",
+				text: `*Tests Count:*\n${buildReportRecord.totalTestCount}`,
+			},
+			{
+				type: "mrkdwn",
+				text: `*Triggerred By:*\n${userInfo.name}`,
+			},
+			{
+				type: "mrkdwn",
+				text: `*Status:*\n${reportStatus}`,
+			},
+		];
+
+		if (buildRecord.host && buildRecord.host !== "null") {
+			infoFields.push({
+				type: "mrkdwn",
+				text: `*Host*:\n${buildRecord.host}`,
+			});
+		}
+
+		return [
+			{
+				type: "section",
+				text: {
+					type: "mrkdwn",
+					text: `A build was triggered for project ${projectRecord.name}:\n*<${resolvePathToFrontendURI(`/app/build/${buildRecord.id}`)}|#${
+						buildRecord.latestReportId
+					}>*`,
+				},
+			},
+			{
+				type: "section",
+				fields: infoFields,
+			},
+			{
+				type: "actions",
+				elements: [
+					{
+						type: "button",
+						text: {
+							type: "plain_text",
+							text: "View Reports",
+							emoji: true,
+						},
+						value: "click_me_123",
+						url: resolvePathToFrontendURI(`/app/build/${buildRecord.id}`),
+						action_id: "button-action",
+					},
+				],
+			},
+		];
+	}
+
 }
 
 export { IntegrationsService };

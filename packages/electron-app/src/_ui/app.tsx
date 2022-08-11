@@ -37,7 +37,9 @@ const handleCompletion = async (store: Store, action: IDeepLinkAction) => {
             window["testsToRun"] = undefined;
 
             const logs = await performGetRecorderTestLogs();
-            const localBuildId = await performSaveLocalBuild([{ steps: logs, testId: action.args.testId, testName: action.args.testName || "Some random name", status: "Passed"}]);
+            // steps: Array<any>; id: number; name: string; status: "FINISHED" | "FAILED"
+            console.log("Passed", [{ steps: logs, id: action.args.testId, name: action.args.testName || "Some random name", status: "FINISHED"}]);
+            const localBuildId = await performSaveLocalBuild([{ steps: logs, id: action.args.testId, name: action.args.testName || "Some random name", status: "FINISHED"}]);
             window["localBuildReportId"] = localBuildId;
 
             historyInstance.push("/", {});

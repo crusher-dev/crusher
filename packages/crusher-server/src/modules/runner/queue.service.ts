@@ -9,7 +9,7 @@ import { BuildReportService } from "@modules/resources/buildReports/service";
 import { ITestInstancesTable, TestInstanceResultSetStatusEnum } from "@modules/resources/builds/instances/interface";
 import { BuildTestInstanceScreenshotService } from "@modules/resources/builds/instances/screenshots.service";
 import { BuildTestInstancesService } from "@modules/resources/builds/instances/service";
-import { BuildStatusEnum, IBuildTable } from "@modules/resources/builds/interface";
+import { BuildStatusEnum, IBuildTable, ICreateBuildRequestPayload } from "@modules/resources/builds/interface";
 import { BuildsService } from "@modules/resources/builds/service";
 import { ProjectsService } from "@modules/resources/projects/service";
 import { getScreenshotActionsResult } from "@utils/helper";
@@ -247,6 +247,45 @@ class TestRunnerQueue {
             // bullJob.data.tyle === "complete-build"
             return this.handleCompleteBuild(buildRecord, buildReportRecord);
         }
+    }
+
+    async saveLocalBuilds(
+        tests: Array<{ steps: Array<any>; id: number; name: string; status: "FINISHED" | "FAILED" }>,
+        buildPayload: ICreateBuildRequestPayload
+    ) {
+        const { tests: testRecords, instanceResults, buildReportId, buildId } = await this.testRunner.setupLocalBuild(tests, buildPayload);
+        const buildReport = await this.buildReportService.getBuildReportRecord(buildReportId);
+        const build = await this.buildService.getBuild(buildId);
+        
+        console.log("Build is", build, buildId, buildReportId);
+        const testInstanceWithActionResults = instanceResults;
+        const processPromiseArr = testInstanceWithActionResults.map(async (instanceWithResult) => {
+            return this.handleProcessJob({
+                data: {
+                    type: "process",
+                    exports: [],
+                    context: null,
+                    nextTestDependencies: [],
+                    parameterizedTests: [],
+                    buildExecutionPayload: {} as any, // build-execution payload
+                    actionResults: instanceWithResult["results"] as any,
+                    buildId: buildId,
+                    testInstanceId: instanceWithResult.id,
+                    buildTestCount: testInstanceWithActionResults.length,
+                    storageState: null,
+                    hasPassed: true,
+                    failedReason: undefined,
+                    // failedReason?: Error & { isStalled: boolean };
+                    isStalled: undefined,
+                    persistenContextZipURL: null
+                }
+            } as any, build, buildReport);
+        });
+        await Promise.all(processPromiseArr);
+
+        await this.handleCompleteBuild(build, buildReport);
+
+        return { build, buildReport };
     }
 }
 

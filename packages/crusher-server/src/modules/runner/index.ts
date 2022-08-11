@@ -341,7 +341,7 @@ class TestsRunner {
 		}
 	}
 
-	async saveLocalBuildResults(
+	async setupLocalBuild(
 		tests: Array<{ steps: Array<any>; id: number; name: string; status: "FINISHED" | "FAILED" }>,
 		buildPayload: ICreateBuildRequestPayload,
 	) {
@@ -370,7 +370,11 @@ class TestsRunner {
 		});
 		await Promise.all(testsResultsSetsInsertPromiseArr);
 
-		
+		const instanceResults = testInstancesArr.map((testInstance) => {
+			testInstance["results"] = (testList[testInstance.testId] as any).steps;
+			return testInstance;
+		});
+		return { tests, instanceResults, buildReportId: buildReport.insertId, buildId: build.insertId };
 	}
 
 	async runTests(tests: Array<KeysToCamelCase<ITestTable>>, buildPayload: ICreateBuildRequestPayload, baselineBuildId: number = null) {

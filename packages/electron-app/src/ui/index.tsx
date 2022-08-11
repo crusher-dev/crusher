@@ -109,9 +109,9 @@ const App = () => {
 							performGetRecorderTestLogs().then((res) => {
 								performSaveLocalBuild([{
 									steps: res,
-									testId: action.args.testId,
-									testName: action.args.testName || "Some random name",
-									status: "PASSED",
+									id: action.args.testId,
+									name: action.args.testName || "Some random name",
+									status: "FINISHED",
 								}]).then((res) => {
 									console.log("Saved local build", res);
 									(window as any).localBuildReportId = res; 

@@ -3,7 +3,7 @@ import { JsonController, Get, Param, QueryParams, Post, Authorized, CurrentUser,
 import { Inject, Service } from "typedi";
 import { BuildsService } from "@modules/resources/builds/service";
 import { IProjectBuildListResponse } from "@crusher-shared/types/response/iProjectBuildListResponse";
-import { BuildTriggerEnum } from "./interface";
+import { BuildStatusEnum, BuildTriggerEnum } from "./interface";
 import { BuildReportStatusEnum } from "../buildReports/interface";
 import { KeysToCamelCase } from "@modules/common/typescript/interface";
 import { IUserTable } from "../users/interface";
@@ -11,6 +11,8 @@ import { TestsRunner } from "@modules/runner";
 import { BuildsActionService } from "./build.actions.service";
 import { RedisManager } from "@modules/redis";
 import { v4 as uuidv4 } from "uuid";
+import { TestRunnerQueue } from "@modules/runner/queue.service";
+import { BrowserEnum } from "@modules/runner/interface";
 
 @Service()
 @JsonController("")
@@ -22,62 +24,33 @@ export class BuildsController {
 	@Inject()
 	private buildsActionService: BuildsActionService;
 	@Inject()
+	private testRunnerQueueService: TestRunnerQueue;
+	@Inject()
 	private redisManager: RedisManager;
 
 	@Authorized()
 	@Post("/projects/:project_id/builds/actions/create.local")
-	async createLocalBuild(@CurrentUser({required: true}) user, @Param("project_id") projectId, @Body() body: { tests: Array<{ steps: Array<any>; testId: number; testName: string; status: "PASSED" | "FAILED" }> }) {
-		const keyId = `temp_test_${uuidv4()}`;
-		await this.redisManager.set(keyId, JSON.stringify({
-			"buildId": -1,
-			"buildReportId": -1,
-			"id": -1,
-			"name": null,
-			"startedAt": Date.now(),
-			"projectId": projectId,
-			"baselineId": null,
-			"hasNoReferenceBuildToCompare": true,
-			"status": "PASSED",
-			"reviewer": [],
-			"history": [],
-			"configuration": {
-			"environment": []
+	async createLocalBuild(@CurrentUser({required: true}) user, @Param("project_id") projectId, @Body() body: { tests: Array<{ steps: Array<any>; id: number; name: string; status: "FINISHED" | "FAILED" }> }) {
+		const { build, buildReport } = await this.testRunnerQueueService.saveLocalBuilds(body.tests, {
+			userId: user.user_id,
+			projectId: projectId,
+			host: "",
+			config: {
+				shouldRecordVideo: false,
+				testIds: body.tests.map((a) => a.id),
+				browser: BrowserEnum.CHROME,
 			},
-			"meta": {
-			"isProjectLevelBuild": true,
-			"disableBaseLineComparisions": false
+			meta: {
+				disableBaseLineComparisions: true
 			},
-			"tests": body.tests.map((test) => {
-				return {
-					id: test.testId,
-					name: test.testName,
-					meta: {},
-					testInstances: [
-						{
-							id: test.testId + "_1",
-							verboseStatus: "FINSIHED_RUNNING_CHECKS",
-							status: test.status,
-							context: {},
-							meta: {
-								isSpawned: false,
-								parentTestInstanceId: null,
-								isFirstLevel: true,
-								context: null
-							},
-							config: {
-								browser: "CHROME" 
-							},
-							output: {},
-							steps: test.steps.map((step, index) => {
-								return {...step, actionIndex: index}
-							}),
-						}
-					]
-				}
-			}),
-			"comments": []
-			}), { expiry: { type: "s", value: 100 * 60 } });
-		return { insertId: keyId };
+			status: BuildStatusEnum.CREATED,
+			buildTrigger: BuildTriggerEnum.MANUAL,
+			browser: [BrowserEnum.CHROME],
+		});
+
+		console.log("Build id is", build);
+
+		return { build };
 	}
 
 	@Authorized()

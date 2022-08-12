@@ -139,7 +139,7 @@ export class CodeRunnerService {
 		
 		const testActionResults = this.globalManager.get(TEST_ACTIONS_RESULT_KEY);
 		if(this.globalManager.get(TEST_ACTIONS_LOG)) { 
-			await Promise.all(this.globalManager.get(TEST_ACTIONS_LOG));
+			await Promise.all(this.globalManager.get(TEST_ACTIONS_LOG).map((a) => { return a(); }));
 		}
 		let persistenContextZipURL = null;
 		if (this.persistentContextDir) {

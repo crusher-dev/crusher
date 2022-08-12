@@ -70,6 +70,10 @@ class CrusherRunnerActions {
 			this.globals.set(TEST_RESULT_KEY, []);
 		}
 
+		if (!this.globals.has(TEST_ACTIONS_LOG)) {
+			this.globals.set(TEST_ACTIONS_LOG, []);
+		}
+	
 		this.initActionHandlers();
 	}
 
@@ -105,8 +109,9 @@ class CrusherRunnerActions {
 			this.globals.get(TEST_RESULT_KEY).push({ actionType, status, message, meta });
 		}
 
-		this.globals.get(TEST_ACTIONS_LOG).push((async () => {
-			await this.logManager.logStep(actionType, status, message, meta);
+		this.globals.get(TEST_ACTIONS_LOG).push((() => {
+			// @TODO: Add a local logging service for fast logs-saving
+			return this.logManager.logStep.bind(null, actionType, status, message, meta);
 		}));
 	
 	}

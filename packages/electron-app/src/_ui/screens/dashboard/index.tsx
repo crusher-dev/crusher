@@ -156,7 +156,7 @@ const DashboardScreen = () => {
     const testContent = tests && tests.list && tests.list.length ? (<TestList deleteTest={handleTestDelete} tests={tests.list}/>) : (<CreateFirstTest />);
     const content = showProxyWarning.show ? <ProxyWarningContainer testId={showProxyWarning.testId} exitCallback={setShowProxyWarning.bind(this, false)} startUrl={showProxyWarning.startUrl} /> : testContent;
     return (
-        <CompactAppLayout title={selectedProject ? <TitleComponent projectName={selectedProject.name}/> : null} footer={<DashboardFooter tests={tests || []}/>}>
+        <CompactAppLayout title={selectedProject ? <TitleComponent projectName={selectedProject.name}/> : null} footer={<DashboardFooter tests={tests ? tests.list : undefined || []}/>}>
                {isLoading ? (<LoadingProgressBar/>) : content}
         </CompactAppLayout>
     );

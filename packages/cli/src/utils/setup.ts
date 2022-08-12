@@ -15,6 +15,7 @@ import localTunnel from "localtunnel";
 import { getProjectNameFromGitInfo } from "./index";
 import { getAppConfig, setAppConfig } from "../utils/appConfig";
 import { downloadFile } from "./common";
+import chalk from "chalk";
 
 export async function makeSureSetupIsCorrect(projectId: string | null = null, ask = false) {
   const projectConfig = getProjectConfig();
@@ -25,7 +26,7 @@ export async function makeSureSetupIsCorrect(projectId: string | null = null, as
       const shouldInit = await inquirer.prompt([
         {
           name: "shouldInit",
-          message: "Should we create a project for this dir?",
+          message: chalk( `Create new crusher project in this dir?`),
           type: "confirm",
           default: true,
         },

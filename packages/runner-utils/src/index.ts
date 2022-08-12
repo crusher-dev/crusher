@@ -28,6 +28,7 @@ export enum ActionCategoryEnum {
 }
 
 const TEST_RESULT_KEY = "TEST_RESULT";
+const TEST_ACTIONS_LOG = "TEST_ACTIONS_LOG";
 
 type OmitFirstArg<F> = F extends (x: any, ...args: infer P) => infer R ? (...args: P) => R : never;
 export type ActionStatusCallbackFn = (action: iAction, result: iActionResult) => Promise<number | void | boolean>;
@@ -69,6 +70,10 @@ class CrusherRunnerActions {
 			this.globals.set(TEST_RESULT_KEY, []);
 		}
 
+		if (!this.globals.has(TEST_ACTIONS_LOG)) {
+			this.globals.set(TEST_ACTIONS_LOG, []);
+		}
+	
 		this.initActionHandlers();
 	}
 
@@ -97,13 +102,18 @@ class CrusherRunnerActions {
 		meta: IRunnerLogStepMeta = {},
 		actionCallback: OmitFirstArg<ActionStatusCallbackFn> | null = null,
 	) {
-		await this.logManager.logStep(actionType, status, message, meta);
 
 		if (actionCallback) await actionCallback({ actionType, status, message, meta });
-
+	
 		if (status === ActionStatusEnum.COMPLETED || status === ActionStatusEnum.FAILED || status === ActionStatusEnum.STALLED) {
 			this.globals.get(TEST_RESULT_KEY).push({ actionType, status, message, meta });
 		}
+
+		this.globals.get(TEST_ACTIONS_LOG).push((() => {
+			// @TODO: Add a local logging service for fast logs-saving
+			return this.logManager.logStep.bind(null, actionType, status, message, meta);
+		}));
+	
 	}
 
 	async _getCurrentScreenshot(page: Page): Promise<string | null> {

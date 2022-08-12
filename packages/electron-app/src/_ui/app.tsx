@@ -27,7 +27,7 @@ const handleCompletion = async (store: Store, action: IDeepLinkAction) => {
         window["testsToRun"].list = window["testsToRun"].list.filter(testId => testId !== action.args.testId);
         const logs = await performGetRecorderTestLogs();
         const recorderState = getRecorderState(store.getState());
-        window["localRunCache"][action.args.testId] = { steps: logs, id: action.args.testId, status: recorderState.type !== TRecorderState.ACTION_REQUIRED? "FINISHED" : "FAILED"}
+        window["localRunCache"][action.args.testId] = { steps: logs, id: action.args.testId, status: recorderState.type !== TRecorderState.ACTION_REQUIRED? "FINISHED" : "FAILED"};
 
         if(window["testsToRun"].list.length) {
             historyInstance.push("/recorder", {});

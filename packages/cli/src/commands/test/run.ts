@@ -19,6 +19,7 @@ program
   .option("-projectid, --projectid <string>", "Crusher project ID")
   .option("-b, --browsers <string>", "Browsers to run test on")
   .option("-host, --host <string>", "Browsers to run test on")
+  .option("-C, --disable-project-config", "Disable project config", false)
   .parse(process.argv);
 
 export default class CommandBase {
@@ -61,9 +62,10 @@ export default class CommandBase {
   }
 
   async runTests(flags) {
-    const projectConfig = getProjectConfig();
+    const disableProjectConfig = flags["disable-project-config"];
+
+    const projectConfig = !disableProjectConfig ? getProjectConfig() : null;
     const { testId, testGroup, browser, token,host } = flags;
- 
     let proxyUrls = null;
 
     if (projectConfig  && !!projectConfig.proxy && projectConfig.proxy.length > 0) {

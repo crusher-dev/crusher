@@ -19,6 +19,7 @@ async function index() {
 	await copyTemplate(path.resolve(__dirname, ".env.ejs"), path.resolve(__dirname, "../.env"), {
 		appHost: process.env.APP_HOST,
 		backendUrl: process.env.BACKEND_URL,
+		frontendUrl: process.env.FRONTEND_URL
 	});
 }
 

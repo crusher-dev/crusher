@@ -41,7 +41,7 @@ jobs:
 
       - if: matrix.os == 'ubuntu-20.04'
         name: Build release for electron app
-        run: cd packages/electron-app && pnpm release
+        run: cd packages/electron-app && BACKEND_URL=https://backend.crusher.dev FRONTEND_URL=https://app.crusher.dev pnpm release
 
       - if: matrix.os == 'macos-latest'
         name: Build release for electron app

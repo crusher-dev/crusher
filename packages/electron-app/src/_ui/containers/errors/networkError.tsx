@@ -81,6 +81,7 @@ const contentContainerStyle = css`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	margin-top: -80px;
 `;
 const headingStyle = css`
 	margin-top: 24rem;

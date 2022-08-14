@@ -131,7 +131,6 @@ function createWindow() {
 
     // initialReduxState.app.shouldShowOnboardingOverlay = localStorage.getItem("app.showShouldOnboardingOverlay") === "false" ? false : true;
    
-
 	if(!settings.backendEndPoint) { settings.backendEndPoint = process.env.BACKEND_URL; }
 	if(!settings.frontendEndPoint) { settings.frontendEndPoint = process.env.FRONTEND_URL; }
 

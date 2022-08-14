@@ -191,8 +191,8 @@ function ReportSection() {
 								}
 								onClick={setSelectedTest.bind(this, i)}
 							>
-								<TestStatusSVG type={getStatusFromTestInstances(testData?.testInstances)} height={"20rem"} width={"20rem"} />
-								<span>{testData!.name}</span>
+								<TestStatusSVG type={getStatusFromTestInstances(testData?.testInstances)} height={"20rem"} width={"20rem"}  css={css`min-width: 20rem;`}/>
+								<span css={css`white-space: nowrap; overflow: hidden;`}>{testData!.name}</span>
 							</li>
 						))}
 					</ul>

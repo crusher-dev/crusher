@@ -16,10 +16,13 @@ const NoDeveloperInput = () => {
                 </div>
 
                     <div css={downloadButtonContainerCss}>
-                            <div css={downloadButtonCss}>
+                            <a href="https://docs.crusher.dev/getting-started/create-your-first-test#or-install-recorder" target="_blank">
+                              <div css={downloadButtonCss}>
                                 download
                                 <DownloadIcon/>
-                            </div>
+                              </div>
+                            </a>
+
                     </div>
         </div>
 

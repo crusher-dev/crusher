@@ -9,8 +9,11 @@ const DeveloperInput = () => {
     return (
         <div ref={mainRef} css={[contentCss]}>
           <div css={headerCss}>
-              <div css={headingCss}>Use in your project</div>
-              <div css={docsLinkCss}>Docs <NewTabSVG className={"ml-8 mb-4"} /></div>
+              <div css={headingCss}>In project, run</div>
+              <div css={docsLinkCss}>
+                <a href="https://docs.crusher.dev" target="_blank" className="flex">Docs <NewTabSVG className={"ml-8 mb-4"} /></a>
+
+              </div>
           </div>
           <div css={inputFormContainerCss}>
                         <LinkBox css={linkBoxCss} value="npx crusher-cli">
@@ -140,23 +143,6 @@ const inputFormContainerCss = css`
     margin-top: 16px;
     width: 100%;
 `;
-const inputCss = css`
-width: 100%; padding: 8px 20px;
-background: linear-gradient(0deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), linear-gradient(0deg, #151516, #151516), #4D4D4D;
-border: 0.5px solid rgba(255, 255, 255, 0.4);
-box-shadow: 0px 0px 1px 2px rgba(184, 94, 255, 0.03);
-border-radius: 8px;
-font-family: 'Gilroy';
-font-style: normal;
-font-weight: 400;
-caret-color: #BD6FE2;
-font-size: 15px;
-/* or 93% */
-
-
-color: rgba(255, 255, 255, 0.71);
-
-`;
 const noteCss = css`
     font-family: 'Gilroy';
     font-style: normal;
@@ -174,24 +160,6 @@ letter-spacing: 0.03em;
 
 color: rgba(255, 255, 255, 0.35);
 `;
-const createButtonCss = css`
-    padding: 10px 24px;
-    font-family: 'Gilroy';
-    font-style: normal;
-    font-weight: 600;
-    font-size: 14px;
-    text-align: center;
-
-    color: #FFFFFF;
-    background: linear-gradient(0deg, #151516, #151516), linear-gradient(0deg, #933EFF, #933EFF), #4D4D4D;
-    border: 0.5px solid rgba(114, 114, 114, 0.4);
-    border-radius: 8px;
-    :hover {
-        opacity: 0.8;
-    }
-`;
-
-
 
 const ClipboardIcon = (props) => (
     <svg

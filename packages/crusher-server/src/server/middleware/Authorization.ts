@@ -1,9 +1,22 @@
+import "reflect-metadata";
+
 import { Action } from "routing-controllers";
 import { clearAuthCookies, decodeToken } from "@utils/auth";
 import * as cookie from "cookie";
+import Container from "typedi";
+import { UsersService } from "@modules/resources/users/service";
+import { UserProjectRolesService } from "@modules/resources/users/roles/project/service";
+import { Request } from "express";
+import { TeamsService } from "@modules/resources/teams/service";
 
-export function authorization() {
-	return async (action: Action) => {
+export const API_ROLES = [
+	"project"
+];
+
+const teamsService = Container.get(TeamsService);
+
+export function authorization(expressApp) {
+	return async (action: Action, roles: string[]) => {
 		if (action.request.headers.method === "OPTIONS") {
 			action.response.status(200);
 			action.response.end();
@@ -16,6 +29,12 @@ export function authorization() {
 				clearAuthCookies(action.response);
 				return false;
 			}
+
+			if(action.request.params["project_id"]) {
+				const userCanAccessProject = await teamsService.hasProject(action.request.params["project_id"], user.team_id);
+				if(!userCanAccessProject) return false;
+				return user;
+			}
 			return user;
 		} catch (error) {
 			clearAuthCookies(action.response);
@@ -24,7 +43,7 @@ export function authorization() {
 	};
 }
 
-export function getCurrentUserChecker() {
+export function getCurrentUserChecker(expressApp) {
 	return async (action: Action) => {
 		if (action.request.headers.method === "OPTIONS") {
 			action.response.status(200);

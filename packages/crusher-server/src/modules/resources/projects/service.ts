@@ -23,6 +23,7 @@ class ProjectsService {
 		]);
 	}
 
+
 	@CamelizeResponse()
 	async getProject(projectId: number): Promise<KeysToCamelCase<IProjectTable>> {
 		return this.dbManager.fetchSingleRow("SELECT * FROM public.projects WHERE id = ?", [projectId]);

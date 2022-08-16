@@ -11,6 +11,10 @@ class TeamsService {
 	@Inject()
 	private dbManager: DBManager;
 
+	async hasProject(projectId: number, teamId: number): Promise<boolean> {
+		return !!(await this.dbManager.fetchSingleRow("SELECT * FROM projects WHERE id = ? AND team_id = ?", [projectId, teamId]));
+	}
+
 	@CamelizeResponse()
 	async getTeam(teamId: number): Promise<KeysToCamelCase<ITeamsTable>> {
 		return this.dbManager.fetchSingleRow("SELECT * FROM public.teams WHERE id = ?", [teamId]);

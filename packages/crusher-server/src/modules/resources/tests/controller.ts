@@ -101,6 +101,7 @@ export class TestController {
 		return { totalPages: testsListData.totalPages, list: testsList, currentPage: params.page };
 	}
 
+	@Authorized()
 	@Get("/projects/:project_id/tests/")
 	async getList(
 		@Param("project_id") projectId: number,

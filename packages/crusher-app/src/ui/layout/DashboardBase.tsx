@@ -28,6 +28,7 @@ import { PROJECT_META_KEYS, USER_META_KEYS } from "@constants/USER";
 import { handleTestRun } from "@utils/core/testUtils";
 import { Tooltip } from "dyson/src/components/atoms/tooltip/Tooltip";
 import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
+import { Global } from "@emotion/react";
 
 const Download = dynamic(() => import("@ui/containers/dashboard/Download"));
 const AddProject = dynamic(() => import("@ui/containers/dashboard/AddProject"));
@@ -43,9 +44,18 @@ function ProjectList() {
 	const [, updateOnboarding] = useAtom(updateMeta);
 
 	const [showAddProject, setShowAddProject] = useState(false);
+	const handleProjectSelect = React.useCallback((id) => {
+		updateOnboarding({
+			type: "user",
+			key: USER_META_KEYS.SELECTED_PROJECT_ID,
+			value: id,
+		});
+		setAppStateItem({ key: "selectedProjectId", value: id });
+		router.push("/app/dashboard");
+	}, []);
 
 	return (
-		<>
+		<div css={css`max-height: 100%; overflow: hidden; display: flex; flex-direction: column;`}>
 			<div className={"flex pl-10 mr-2 mt- justify-between mt-36"} css={project}>
 				<div className={"flex items-center"}>
 					<span className={"text-12.5 leading-none mr-8 font-600"}>Projects</span>
@@ -66,20 +76,12 @@ function ProjectList() {
 				</div>
 			)}
 
-			<div className={"mt-6"}>
+			<div css={css`overflow-y: overlay;`} className={"mt-6 fancy-scroll"}>
 				{projects.map(({ id, name }) => (
 					<MenuItemHorizontal
 						className={"mt-2"}
 						selected={appState.selectedProjectId === id}
-						onClick={() => {
-							updateOnboarding({
-								type: "user",
-								key: USER_META_KEYS.SELECTED_PROJECT_ID,
-								value: id,
-							});
-							setAppStateItem({ key: "selectedProjectId", value: id });
-							router.push("/app/dashboard");
-						}}
+						onClick={handleProjectSelect.bind(this, id)}
 						key={id}
 					>
 						<LayoutSVG />
@@ -87,7 +89,28 @@ function ProjectList() {
 					</MenuItemHorizontal>
 				))}
 			</div>
-		</>
+			<Global styles={css`
+				.fancy-scroll::-webkit-scrollbar {
+					width: 9px;
+					left: -10px;
+				}
+				
+				.fancy-scroll::-webkit-scrollbar-track {
+					background-color: #0a0b0e;
+					box-shadow: none;
+				}
+				
+				.fancy-scroll::-webkit-scrollbar-thumb {
+					background-color: #1b1f23;
+					border-radius: 100px;
+				}
+				
+				.fancy-scroll::-webkit-scrollbar-thumb:hover {
+					background-color: #272b31;
+					border-radius: 100px;
+				}
+			`}/>
+		</div>
 	);
 }
 
@@ -240,11 +263,10 @@ function LeftSection() {
 				{/*		</MenuItemHorizontal>*/}
 				{/*	))}*/}
 				{/*</div>*/}
-
-				<ProjectList />
 			</div>
+			<ProjectList />
 
-			<div>
+			<div css={css`margin-top: auto;`}>
 				<Conditional showIf={inviteTeammates}>
 					<InviteMembers onClose={setInviteTeamMates.bind(this, false)} />
 				</Conditional>
@@ -527,6 +549,7 @@ const sidebar = css`
 	height: 100vh;
 	border-right: 1px solid #171b20;
 	box-sizing: border-box;
+	justify-content: flex-start;
 `;
 
 const nav = css`

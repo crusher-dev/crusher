@@ -25,6 +25,7 @@ import { ToastSnackbar } from "../ui/components/toast";
 import { AuthOnboardingScreen } from "../ui/screens/authOnboarding";
 import { SWRConfig } from "swr";
 import { NetworkErrorContainer } from "./containers/errors/networkError";
+import { UnAuthorizedErrorContainer } from "./containers/errors/unauthorizedError";
 
 webFrame.setVisualZoomLevelLimits(1, 3);
 
@@ -51,8 +52,13 @@ const globalStyle = css`
 
 function RootApp() {
     const [showNetworkError, setShowNetworkError] = React.useState(false);
-    const handleErrorCallback = React.useCallback(() => {
-        setShowNetworkError(true);
+    const [ showUnauthorizedError, setShowUnauthorizedError ] = React.useState(false);
+    const handleErrorCallback = React.useCallback((err, key, config) => {
+        if(err.message.includes("status code 401")) {
+            setShowUnauthorizedError(true);
+        } else {
+            setShowNetworkError(true);
+        }
     }, []);
 
    return (
@@ -62,6 +68,9 @@ function RootApp() {
                 <ToastSnackbar />
             {showNetworkError ? (
                 <NetworkErrorContainer/>
+            ) : ""}
+            {showUnauthorizedError ? (
+                <UnAuthorizedErrorContainer/>
             ) : ""}
                 <Global styles={globalStyle}/>
                 <Routes>

@@ -132,7 +132,7 @@ color: #FFFFFF;
 `;
 const contentCss = css`
     margin-top: 20px;
-    width: 500rem;
+    width: 100%;
     padding-top: 28px;
     transition: height 0.3s;
     overflow: hidden;

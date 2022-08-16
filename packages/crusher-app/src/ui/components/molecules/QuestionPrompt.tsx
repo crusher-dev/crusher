@@ -13,7 +13,7 @@ const QuestionPrompt = ({className, defaultValue, callback, ...props} : { classN
         <div css={[developerQuestionCss]} className={`${className}`}>
             <div css={titleContainerCss}>
                 <div css={headingCss}>Are you a developer</div>
-                <div css={titleTaglineCss}>can you run commands in terminal?</div>
+                <div css={titleTaglineCss}>run commands in terminal</div>
             </div>
                 <div css={yesNoButtonContainerCss} {...props}>
                     <div css={[yesNoButtonCss, isYes ? selectedButtonCss : undefined]} onClick={handleSelect.bind(this, true)}>
@@ -44,7 +44,7 @@ const developerQuestionCss = css`
     border-bottom-style: solid;
     border-bottom-width: 1px;
     padding-bottom: 22px;
-    width: 500rem;
+    width: 100%;
     transition: transform 0.3s;
     display: flex;
     align-items: center;

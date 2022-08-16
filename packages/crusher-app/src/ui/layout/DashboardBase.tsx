@@ -559,7 +559,7 @@ const nav = css`
 `;
 const containerWidth = css`
 	//width: calc(100vw - 250rem);
-	//max-width: 1500rem;
+	//max-width: 1100%;
 
 	width: 1468rem;
 	max-width: calc(100vw - 352rem);

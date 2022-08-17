@@ -5,11 +5,13 @@ import { Link } from "../../../ui/layouts/modalContainer";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { shell } from "electron";
 import { performRunDraftTest, performRunTests, turnOnProxy } from "../../../ui/commands/perform";
-import { getCurrentSelectedProjct, getProxyState } from "electron-app/src/store/selectors/app";
+import { getCurrentSelectedProjct, getProxyState, getUserAccountInfo } from "electron-app/src/store/selectors/app";
 import { useSelector, useStore } from "react-redux";
 import { CompactAppLayout } from "../../layout/CompactAppLayout";
 import { Footer } from "../../layout/Footer";
 import { NormalButton } from "../../components/buttons/NormalButton";
+import { getGlobalAppConfig, writeGlobalAppConfig } from "electron-app/src/lib/global-config";
+import { setUserAccountInfo } from "electron-app/src/store/actions/app";
 
 const ReadDocsButton = ({ title, className, onClick }) => {
 	return (
@@ -47,12 +49,24 @@ const saveButtonStyle = css`
 `;
 
 const UnAuthorizedErrorContainer = () => {
+    const store = useStore();
 	const handeLogout = React.useCallback(() => {
-		window.location.reload();
+        const appConfig = getGlobalAppConfig();
+        if (appConfig && appConfig["userInfo"]) {
+            delete appConfig["userInfo"];
+            writeGlobalAppConfig(appConfig);
+        }
+        store.dispatch(setUserAccountInfo(null));
+        window.location.reload();
 	}, []);
 
     const handleAccountInfo = React.useCallback(() => {
-        alert("Account info\n\nTeam: Utkarsh's workspace\nName: Utkarsh Dixit\nLogin: utkarsh@crusher.dev")
+        const acc = getUserAccountInfo(store.getState() as any);
+        if(acc) {
+            alert(`Account info\n\nTeam: ${acc.teamName}\nName: ${acc.name}\nLogin: ${acc.email}`)
+        } else {
+            alert("No account info available.");
+        }
     }, []);
 
 	return (

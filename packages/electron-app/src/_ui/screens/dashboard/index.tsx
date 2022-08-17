@@ -111,7 +111,7 @@ const titleStyle = css`
 `;
 const DashboardScreen = () => {
     const {userInfo, projects} = useUser();
-    const { data: tests, isValidating, mutate } = useRequest(getSelectedProjectTestsRequest, { refreshInterval: 5000 })
+    const { data: tests, isValidating, mutate } = useRequest(userInfo && userInfo.isUserLoggedIn ? getSelectedProjectTestsRequest : () => null, { refreshInterval: 5000 })
     const [selectedProject, setSelectedProject] = React.useState(null);
     const [showProxyWarning, setShowProxyWarning] = React.useState({show: false, testId: null, startUrl: null});
 
@@ -133,11 +133,8 @@ const DashboardScreen = () => {
         },
         [tests],
     );
+
     React.useEffect(() => {
-        const loggedIn = checkIfLoggedIn();
-        if(!loggedIn) {
-            return navigate("/login");
-		}
         const selectedProjectId = getCurrentSelectedProjct(store.getState());
         if(!selectedProjectId)
             return navigate("/select-project");
@@ -155,11 +152,11 @@ const DashboardScreen = () => {
                 setSelectedProject(project);
             }
         };
-    }, [userInfo]);
+    }, [projects]);
 
     const isLoading = React.useMemo(() => (!tests), [tests]);
     // To make delete experience fast
-    const testContent = tests && tests.list && tests.list.length ? (<TestList deleteTest={handleTestDelete} tests={tests.list.filter(test => {return !((window as any).deletedTest || []).includes(test.id); }}/>) : (<CreateFirstTest />);
+    const testContent = tests && tests.list && tests.list.length ? (<TestList deleteTest={handleTestDelete} tests={tests.list.filter(test => {return !((window as any).deletedTest || []).includes(test.id); })}/>) : (<CreateFirstTest />);
     const content = showProxyWarning.show ? <ProxyWarningContainer testId={showProxyWarning.testId} exitCallback={setShowProxyWarning.bind(this, false)} startUrl={showProxyWarning.startUrl} /> : testContent;
     return (
         <CompactAppLayout title={selectedProject ? <TitleComponent projectName={selectedProject.name}/> : null} footer={<DashboardFooter tests={tests ? tests.list : undefined || []}/>}>

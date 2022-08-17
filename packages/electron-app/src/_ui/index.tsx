@@ -26,6 +26,7 @@ import { AuthOnboardingScreen } from "../ui/screens/authOnboarding";
 import { SWRConfig } from "swr";
 import { NetworkErrorContainer } from "./containers/errors/networkError";
 import { UnAuthorizedErrorContainer } from "./containers/errors/unauthorizedError";
+import { InvalidCredsErrorContainer } from "./containers/errors/invalidCreds";
 
 webFrame.setVisualZoomLevelLimits(1, 3);
 
@@ -77,6 +78,7 @@ function InsideRouter() {
 
                 <Route path="/network_error" element={<NetworkErrorContainer/>} />
                 <Route path="/unauthorized_error" element={<UnAuthorizedErrorContainer/>} />
+                <Route path="/invalid_creds_error" element={<InvalidCredsErrorContainer/>} />
             </Routes>
         </SWRConfig>
     )

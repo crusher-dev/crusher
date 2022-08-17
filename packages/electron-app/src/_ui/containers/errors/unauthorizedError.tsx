@@ -12,6 +12,7 @@ import { Footer } from "../../layout/Footer";
 import { NormalButton } from "../../components/buttons/NormalButton";
 import { getGlobalAppConfig, writeGlobalAppConfig } from "electron-app/src/lib/global-config";
 import { setUserAccountInfo } from "electron-app/src/store/actions/app";
+import { useNavigate } from "react-router-dom";
 
 const ReadDocsButton = ({ title, className, onClick }) => {
 	return (
@@ -50,6 +51,8 @@ const saveButtonStyle = css`
 
 const UnAuthorizedErrorContainer = () => {
     const store = useStore();
+	const navigate = useNavigate();
+
 	const handeLogout = React.useCallback(() => {
         const appConfig = getGlobalAppConfig();
         if (appConfig && appConfig["userInfo"]) {
@@ -57,7 +60,7 @@ const UnAuthorizedErrorContainer = () => {
             writeGlobalAppConfig(appConfig);
         }
         store.dispatch(setUserAccountInfo(null));
-        window.location.reload();
+        navigate("/");
 	}, []);
 
     const handleAccountInfo = React.useCallback(() => {

@@ -3,7 +3,7 @@ import React from 'react';
 import { HashRouterProps, Router } from 'react-router-dom';
 const historyInstance = createHashHistory();
 
-export function CustomRouter({ basename, children, window }: HashRouterProps) {
+export function CustomRouter({ basename, children }: HashRouterProps) {
     let historyRef = React.useRef<any>();
     if (historyRef.current == null) {
       historyRef.current = historyInstance;

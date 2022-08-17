@@ -155,7 +155,7 @@ const DashboardScreen = () => {
                 setSelectedProject(project);
             }
         };
-    }, [projects]);
+    }, [userInfo]);
 
     const isLoading = React.useMemo(() => (!tests), [tests]);
     // To make delete experience fast

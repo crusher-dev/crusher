@@ -50,41 +50,44 @@ const globalStyle = css`
     }
 `;
 
-function RootApp() {
-    const [showNetworkError, setShowNetworkError] = React.useState(false);
-    const [ showUnauthorizedError, setShowUnauthorizedError ] = React.useState(false);
+function InsideRouter() {
+    const navigate = useNavigate();
     const handleErrorCallback = React.useCallback((err, key, config) => {
         if(err.message.includes("status code 401")) {
-            setShowUnauthorizedError(true);
+            console.log("Unauthorized API: ", key, config);
+            navigate("/unauthorized_error");
         } else {
-            setShowNetworkError(true);
+            navigate("/network_error");
         }
     }, []);
 
+    return (
+        <SWRConfig value={{   onError: handleErrorCallback.bind(this) }}>
+            <ToastSnackbar />
+            <Global styles={globalStyle}/>
+            <Routes>
+                <Route path="/login" element={<LoginScreen />} />
+                <Route path="/onboarding" element={<AuthOnboardingScreen />} />
+                <Route path="/" element={<DashboardScreen />} />
+                <Route path="/select-project" element={<ProjectsListScreen />} />
+                <Route path="/create-test" element={<CreateTestScreen />} />
+                <Route path="/code-editor" element={<UnDockCodeScreen />} />
+                <Route path="/settings" element={<SettingsScreen />} />
+                <Route path="/recorder" element={<App/>} />
+
+                <Route path="/network_error" element={<NetworkErrorContainer/>} />
+                <Route path="/unauthorized_error" element={<UnAuthorizedErrorContainer/>} />
+            </Routes>
+        </SWRConfig>
+    )
+}
+
+function RootApp() {
    return (
     <Provider store={store}>
-        <SWRConfig value={{   onError: handleErrorCallback.bind(this) }}>
             <CustomRouter>
-                <ToastSnackbar />
-            {showNetworkError ? (
-                <NetworkErrorContainer/>
-            ) : ""}
-            {showUnauthorizedError ? (
-                <UnAuthorizedErrorContainer/>
-            ) : ""}
-                <Global styles={globalStyle}/>
-                <Routes>
-                    <Route path="/login" element={<LoginScreen />} />
-                    <Route path="/onboarding" element={<AuthOnboardingScreen />} />
-                    <Route path="/" element={<DashboardScreen />} />
-                    <Route path="/select-project" element={<ProjectsListScreen />} />
-                    <Route path="/create-test" element={<CreateTestScreen />} />
-                    <Route path="/code-editor" element={<UnDockCodeScreen />} />
-                    <Route path="/settings" element={<SettingsScreen />} />
-                    <Route path="/recorder" element={<App/>} />
-                </Routes>
+                <InsideRouter/>
             </CustomRouter>
-        </SWRConfig>
 	</Provider>
    );
 }

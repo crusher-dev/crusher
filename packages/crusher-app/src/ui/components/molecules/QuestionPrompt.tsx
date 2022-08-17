@@ -13,7 +13,7 @@ const QuestionPrompt = ({className, defaultValue, callback, ...props} : { classN
         <div css={[developerQuestionCss]} className={`${className}`}>
             <div css={titleContainerCss}>
                 <div css={headingCss}>Are you a developer</div>
-                <div css={titleTaglineCss}>can you run commands in terminal?</div>
+                <div css={titleTaglineCss}>run commands in terminal</div>
             </div>
                 <div css={yesNoButtonContainerCss} {...props}>
                     <div css={[yesNoButtonCss, isYes ? selectedButtonCss : undefined]} onClick={handleSelect.bind(this, true)}>
@@ -44,7 +44,7 @@ const developerQuestionCss = css`
     border-bottom-style: solid;
     border-bottom-width: 1px;
     padding-bottom: 22px;
-    width: 500rem;
+    width: 100%;
     transition: transform 0.3s;
     display: flex;
     align-items: center;
@@ -53,7 +53,7 @@ const developerQuestionCss = css`
 const headingCss = css`
 font-family: 'Cera Pro';
 font-style: normal;
-font-weight: 500;
+font-weight: 800;
 font-size: 18rem;
 /* identical to box height */
 color: #FFFFFF;
@@ -68,8 +68,8 @@ const yesNoButtonContainerCss = css`
 `;
 
 const yesNoButtonCss = css`
-    background: linear-gradient(0deg, #151516, #151516), #4D4D4D;
-    border: 0.5px solid #9A9A9A;
+
+border: 0.5px solid #212121;
     border-radius: 23423px;
     font-family: 'Gilroy';
     font-style: normal;
@@ -106,8 +106,8 @@ const SelectedIcon = (props) => (
 
   
 const selectedButtonCss = css`
-    background: rgba(174, 100, 209, 0.9);
-    border-color: rgba(174, 100, 209, 1);
+    background: linear-gradient(0deg,#9651EF,#9651EF),linear-gradient(0deg,#8C45E8,#8C45E8),#BC66FF;
+    border: 1px solid rgba(169,84,255,0.4);
     gap: 8px;
     :hover {
         opacity: 1;

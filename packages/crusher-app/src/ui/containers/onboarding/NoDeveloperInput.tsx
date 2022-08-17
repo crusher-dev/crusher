@@ -1,7 +1,6 @@
 import React from "react";
 import {css } from "@emotion/react";
-import { LinkBox } from "@components/common/LinkBox";
-import { NewTabSVG } from "@svg/dashboard";
+
 
 const NoDeveloperInput = () => {
     const mainRef = React.useRef(null);
@@ -11,15 +10,18 @@ const NoDeveloperInput = () => {
 
         <div css={mainContainerCss}>
                 <div css={titleContainerCss}>
-                        <div css={headingCss}>download recorder</div>
+                        <div css={headingCss}>download binary</div>
                         <div css={titleTaglineCss}>with recorder you can create and run test</div>
                 </div>
 
                     <div css={downloadButtonContainerCss}>
-                            <div css={downloadButtonCss}>
+                            <a href="https://docs.crusher.dev/getting-started/create-your-first-test#or-install-recorder" target="_blank">
+                              <div css={downloadButtonCss}>
                                 download
                                 <DownloadIcon/>
-                            </div>
+                              </div>
+                            </a>
+
                     </div>
         </div>
 
@@ -70,9 +72,7 @@ const DownloadIcon = (props) => (
   )
 
   
-const downloadIconCss = css`
 
-`;
 const mainContainerCss = css`display: flex; align-items: center;`;
 const downloadButtonContainerCss = css`margin-left: auto`;
 const titleContainerCss = css`
@@ -137,127 +137,24 @@ const ClockIcon = (props: any) => (
 )
 
 
-const headerCss = css`
-    display: flex;
-    align-items: center;
-    width: 100%;
-`;
-const docsLinkCss =css`
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  font-family: 'Gilroy';
-font-style: normal;
-font-weight: 400;
-font-size: 13rem;
-text-align: right;
-letter-spacing: 0.03em;
-
-color: #88868B;
-:hover {
-  opacity: 0.8;
-}
-`;
-const linkBoxCss = css`
-font-family: 'Gilroy';
-font-style: normal;
-font-weight: 500;
-font-size: 16px;
-text-align: center;
-letter-spacing: 0.01em;
-padding: 10rem 18rem;
-width: 250px;
-background: #000;
-color: #A864FF;
-position: relative;
-
-border: 0.5px solid rgba(255, 255, 255, 0.21);
-border-radius: 11px;
-`;
 
 
 const headingCss = css`
 font-family: 'Cera Pro';
 font-style: normal;
-font-weight: 500;
+font-weight: 800;
 font-size: 18rem;
 /* identical to box height */
 color: #FFFFFF;
 `;
 const contentCss = css`
     margin-top: 20px;
-    width: 500rem;
+    width: 100%;
     padding-top: 34px;
     transition: height 0.3s;
     overflow: hidden;
 `;
-const inputFormContainerCss = css`
-    display: flex;
-    gap: 10px;
-    margin-top: 16px;
-    width: 100%;
-`;
-const inputCss = css`
-width: 100%; padding: 8px 20px;
-background: linear-gradient(0deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), linear-gradient(0deg, #151516, #151516), #4D4D4D;
-border: 0.5px solid rgba(255, 255, 255, 0.4);
-box-shadow: 0px 0px 1px 2px rgba(184, 94, 255, 0.03);
-border-radius: 8px;
-font-family: 'Gilroy';
-font-style: normal;
-font-weight: 400;
-caret-color: #BD6FE2;
-font-size: 15px;
-/* or 93% */
 
 
-color: rgba(255, 255, 255, 0.71);
-
-`;
-const noteCss = css`
-    font-family: 'Gilroy';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 12px;
-    letter-spacing: 0.03em;
-    margin-top: 20px;
-    color: rgba(255, 255, 255, 0.35);
-`;
-const createButtonCss = css`
-    padding: 10px 24px;
-    font-family: 'Gilroy';
-    font-style: normal;
-    font-weight: 600;
-    font-size: 14px;
-    text-align: center;
-
-    color: #FFFFFF;
-    background: linear-gradient(0deg, #151516, #151516), linear-gradient(0deg, #933EFF, #933EFF), #4D4D4D;
-    border: 0.5px solid rgba(114, 114, 114, 0.4);
-    border-radius: 8px;
-    :hover {
-        opacity: 0.8;
-    }
-`;
-
-
-
-const ClipboardIcon = (props) => (
-    <svg
-      css={css`0 0 13 13`}
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      {...props}
-    >
-      <path
-        d="M12.037 0H4.851a.93.93 0 0 0-.928.929v2.18h4.226c.98 0 1.776.797 1.776 1.776v4.159h2.112a.93.93 0 0 0 .929-.93V.93A.93.93 0 0 0 12.037 0Z"
-        fill="#fff"
-      />
-      <path
-        d="M8.149 3.957H.963a.93.93 0 0 0-.929.928v7.186a.93.93 0 0 0 .929.93h7.186a.93.93 0 0 0 .929-.93V4.885a.93.93 0 0 0-.93-.928Z"
-        fill="#fff"
-      />
-    </svg>
-  )
 
 export { NoDeveloperInput };

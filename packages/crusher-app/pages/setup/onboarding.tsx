@@ -32,8 +32,7 @@ const yesNoButtonContainerCss = css`
 `;
 
 const yesNoButtonCss = css`
-    background: linear-gradient(0deg, #151516, #151516), #4D4D4D;
-    border: 0.5px solid #9A9A9A;
+    border: 0.5px solid #212121;
     border-radius: 23423px;
     font-family: 'Gilroy';
     font-style: normal;
@@ -70,8 +69,8 @@ const SelectedIcon = (props) => (
 
   
 const selectedButtonCss = css`
-    background: rgba(174, 100, 209, 0.9);
-    border-color: rgba(174, 100, 209, 1);
+    background: linear-gradient(0deg,#9651EF,#9651EF),linear-gradient(0deg,#8C45E8,#8C45E8),#BC66FF;
+    border: 1px solid rgba(169,84,255,0.4);
     gap: 8px;
     :hover {
         opacity: 1;

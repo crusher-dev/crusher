@@ -81,8 +81,7 @@ const CrusherOnboarding = () => {
 
 	const NoProjectContainer = (				<div className="flex mt-60 flex-col">
 	<div>
-		<div css={welcomeHeadingCss}>Welcome Himanshu!</div>
-		<div css={welcomeTaglineCss}>No project found, create project</div>
+		<div css={welcomeHeadingCss}>Create test with Crusher</div>
 	</div>
 	<QuestionPrompt css={css`margin-top: 60rem;`} defaultValue={isDeveloper} callback={handleCallback}/>
 
@@ -162,7 +161,7 @@ const welcomeHeadingCss = css`
 `;
 
 const contentContainer = css`
-	width: 890rem;
+	width: 600rem;
 	margin: 0 auto;
 	padding-top: 48rem;
 `;

@@ -1118,7 +1118,7 @@ function TestLogs({ testId, testInstanceData, ...props }) {
 			css={css`
 				margin-top: 50rem;
 				margin-left: 54rem;
-				width: 500rem;
+				width: 100%;
 				height: 200rem;
 				color: #fff;
 				border: 1rem solid rgba(196, 196, 196, 0.08);

@@ -5,7 +5,7 @@
 	"dependencies": {
 		"@emotion/babel-preset-css-prop": "^11.2.0",
 		"@emotion/react": "^11.4.0",
-		"@etchteam/storybook-addon-status": "^3.0.0",
+		"@etchteam/storybook-addon-status": "^4.2.1",
 		"@floating-ui/react-dom": "^0.4.3",
 		"@storybook/addon-info": "^5.3.21",
 		"@testing-library/jest-dom": "^5.11.4",
@@ -15,13 +15,14 @@
 		"@types/node": "^12.0.0",
 		"@types/react": "^17.0.0",
 		"@types/react-dom": "^17.0.0",
-		"postcss": "^8.2.9",
+		"autoprefixer": "^9",
+		"postcss": "^7",
 		"react": "^17.0.1",
 		"react-dom": "^17.0.1",
 		"react-joyride": "^2.3.2",
 		"react-scripts": "4.0.3",
-		"storybook-addon-designs": "^5.4.5",
-		"tailwindcss": "^2.1.1",
+		"storybook-addon-designs": "^6.3.1",
+		"tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.17",
 		"typescript": "^4.1.2"
 	},
 	"scripts": {
@@ -49,13 +50,13 @@
 		]
 	},
 	"devDependencies": {
-		"@storybook/addon-actions": "^6.2.7",
-		"@storybook/addon-essentials": "^6.2.7",
-		"@storybook/addon-links": "^6.2.7",
+		"@storybook/addon-actions": "^6.5.10",
+		"@storybook/addon-essentials": "^6.5.10",
+		"@storybook/addon-links": "^6.5.10",
 		"@storybook/addon-notes": "^5.3.21",
-		"@storybook/node-logger": "^6.2.7",
+		"@storybook/node-logger": "^6.5.10",
 		"@storybook/preset-create-react-app": "^3.1.7",
-		"@storybook/react": "^6.2.7",
+		"@storybook/react": "^6.5.10",
 		"postcss-loader": "^4.2.0"
 	}
 }

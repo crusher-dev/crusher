@@ -854,12 +854,16 @@ export class AppWindow {
 		const recordedSteps = getSavedSteps(this.store.getState() as any);
 		await this.resetRecorder(TRecorderState.PERFORMING_ACTIONS);
 
-		await this.handleReplayTestSteps(recordedSteps as any);
+		const isSuccessful = await this.handleReplayTestSteps(recordedSteps as any);
 		this.store.dispatch(setIsTestVerified(true));
-		if (shouldAlsoSave && autoSaveType === "SAVE") {
-			return this.handleSaveTest(!!payload.shouldNotRunTest);
-		} else if(shouldAlsoSave && autoSaveType === "UPDATE") {
-			return this.handleUpdateTest(null);
+		if(isSuccessful) { 
+			if (shouldAlsoSave && autoSaveType === "SAVE") {
+				return this.handleSaveTest(!!payload.shouldNotRunTest);
+			} else if(shouldAlsoSave && autoSaveType === "UPDATE") {
+				return this.handleUpdateTest(null);
+			}
+		} else {
+			throw new Error("Error occurred while verifying");
 		}
 	}
 
@@ -966,9 +970,11 @@ export class AppWindow {
 				});
 			}
 			this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
+			return true;
 		} catch (ex) {
 			this.store.dispatch(updateRecorderState(TRecorderState.ACTION_REQUIRED, {}));
 			this.setRemainingSteps(reaminingSteps);
+			return false;
 		}
 	}
 

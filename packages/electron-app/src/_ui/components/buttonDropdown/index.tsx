@@ -89,7 +89,7 @@ const saveButtonStyle = css`
     width: 92rem;
     height: 30rem;
     background: #7353F5;
-    border-radius: 6rem;
+    border-radius: 6rem !important;
     font-family: Gilroy;
     font-style: normal;
     font-weight: 600;

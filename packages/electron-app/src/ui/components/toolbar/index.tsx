@@ -122,9 +122,6 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 					if(proxyWarning.shouldShow && !shouldSkipWarning && res) {
 						window["showProxyWarning"] = { testId: res.id, startUrl: proxyWarning.startUrl };
 					}
-					window["localRunCache"] = undefined;
-					// steps: Array<any>; id: number; name: string; status: "FINISHED" | "FAILED"
-					window["localBuildReportId"] = res.draftJobId;
 					sendSnackBarEvent({ type: "test_created", message: null});
 
 					navigate("/");
@@ -152,6 +149,8 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 				if(proxyWarning.shouldShow && !shouldSkipWarning && res) {
 					window["showProxyWarning"] = { testId: res.id, startUrl: proxyWarning.startUrl };
 				}
+
+				sendSnackBarEvent({ type: "test_created", message: null});
 				navigate("/");
 				goFullScreen(false);
 			})
@@ -589,9 +588,9 @@ const selectBoxStyle = css`
 			width: 50rem;
 			height: 30rem;
 		}
+		outline: none;
 		padding: 14rem;
-		height: 30rem !important;
-		border: none;
+		height: 34rem !important;
 		background: none;
 		border-left-width: 1rem;
 		border-left-style: solid;

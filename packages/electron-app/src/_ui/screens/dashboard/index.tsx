@@ -159,7 +159,7 @@ const DashboardScreen = () => {
 
     const isLoading = React.useMemo(() => (!tests), [tests]);
     // To make delete experience fast
-    const testContent = tests && tests.list && tests.list.length ? (<TestList deleteTest={handleTestDelete} tests={tests.list}/>) : (<CreateFirstTest />);
+    const testContent = tests && tests.list && tests.list.length ? (<TestList deleteTest={handleTestDelete} tests={tests.list.filter(test => {return !((window as any).deletedTest || []).includes(test.id); }}/>) : (<CreateFirstTest />);
     const content = showProxyWarning.show ? <ProxyWarningContainer testId={showProxyWarning.testId} exitCallback={setShowProxyWarning.bind(this, false)} startUrl={showProxyWarning.startUrl} /> : testContent;
     return (
         <CompactAppLayout title={selectedProject ? <TitleComponent projectName={selectedProject.name}/> : null} footer={<DashboardFooter tests={tests ? tests.list : undefined || []}/>}>

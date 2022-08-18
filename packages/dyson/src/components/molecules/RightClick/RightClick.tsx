@@ -66,7 +66,7 @@ const itemStyles = {
     backgroundColor: "#8735D9",
     color: violet.violet1
   },
-  "&[data-state-open]": {
+  "&[data-state=open]": {
     backgroundColor: "#8735D9",
     color: violet.violet1
   }

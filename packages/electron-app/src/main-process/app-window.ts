@@ -47,6 +47,7 @@ import child_process from "child_process";
 import { screen } from "electron";
 import { ProxyManager } from "./proxy-manager";
 import { resolveToBackend } from "../utils/url";
+import { url } from "inspector";
 
 export class AppWindow {
 	private window: Electron.BrowserWindow;
@@ -260,6 +261,7 @@ export class AppWindow {
 		ipcMain.handle("exit-app", this.handleExitApp.bind(this));
 		ipcMain.handle("get-recorder-test-logs", this.handleGetRecorderTestLogs.bind(this));
 		ipcMain.handle("save-local-build", this.handleSaveLocalBuild.bind(this));
+		ipcMain.handle("goto-url", this.handleGotoUrl.bind(this));;
 		ipcMain.on("get-var-context", this.handleGetVarContext.bind(this));
 		ipcMain.on("get-is-advanced-selector", this.handleGetVarContext.bind(this));
 
@@ -438,6 +440,15 @@ export class AppWindow {
 			.then((res) => {
 				return res.data;
 			});
+	}
+
+	private async handleGotoUrl(event, payload: {url: string}) {
+		let finalUrl = payload.url;
+		if(finalUrl[0] == '/') { 
+			finalUrl = encodePathAsUrl(__dirname, "index.html") + ( finalUrl[1] ? "#/" + payload.url.substring(1) + `?test=${Date.now()}` : "");
+			
+		}
+		return this.window.webContents.loadURL(finalUrl);
 	}
 
 	private async handleGetRecorderTestLogs() {

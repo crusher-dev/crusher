@@ -96,7 +96,7 @@
 	},
 	"scripts": {
 		"setup": "node setup/tsconfig.js",
-		"dev": "ts-node-dev --transpile-only true -r tsconfig-paths/register --project tsconfig.json src/app.ts",
+		"dev": "ts-node-dev --transpile-only true -r tsconfig-paths/register --inspect=127.0.0.1:9230 --project tsconfig.json src/app.ts",
 		"dev:cron": "ts-node-dev --transpile-only true -r tsconfig-paths/register --project tsconfig.json src/cron.ts",
 		"dev:queue": "ts-node-dev --transpile-only true -r tsconfig-paths/register  --project tsconfig.json src/queue.ts",
 		"dev:storage": "ts-node-dev --transpile-only true -r tsconfig-paths/register --project tsconfig.json src/localFileStorageServer.ts",

@@ -59,7 +59,6 @@ const controllersArr: any = [
 	CLIController,
 	ProxyController,
 ];
-
 // @TODO: Look into this
 // if (getEdition() === EDITION_TYPE.EE) {
 // 	const eeControllerArr: any = require("./ee/controllers");
@@ -68,8 +67,8 @@ const controllersArr: any = [
 useExpressServer(expressApp, {
 	controllers: controllersArr,
 	middlewares: [CorsMiddleware],
-	authorizationChecker: authorization(),
-	currentUserChecker: getCurrentUserChecker(),
+	authorizationChecker: authorization(expressApp),
+	currentUserChecker: getCurrentUserChecker(expressApp),
 	defaultErrorHandler: true,
 });
 

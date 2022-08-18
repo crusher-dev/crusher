@@ -31,7 +31,7 @@ const createAuthorizedRequestFunc = (callback, silent = false) => {
         if(isUserLoggedIn) {
             headers["Authorization"] =  `${userInfo.token}`;
         }
- 
+        
         return callback({ headers, withCredentials: true }, ...args);
     };
 };

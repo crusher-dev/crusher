@@ -1,6 +1,7 @@
 import { KeysToCamelCase } from "@modules/common/typescript/interface";
 import { DBManager } from "@modules/db";
 import { CamelizeResponse } from "@modules/decorators/camelizeResponse";
+import { ProjectsService } from "@modules/resources/projects/service";
 import { Inject, Service } from "typedi";
 import { IUserTeamRoleTable, ICreateUserTeamRole, UserTeamRoleEnum } from "./interface";
 

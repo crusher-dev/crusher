@@ -25,6 +25,9 @@ import { ToastSnackbar } from "../ui/components/toast";
 import { AuthOnboardingScreen } from "../ui/screens/authOnboarding";
 import { SWRConfig } from "swr";
 import { NetworkErrorContainer } from "./containers/errors/networkError";
+import { UnAuthorizedErrorContainer } from "./containers/errors/unauthorizedError";
+import { InvalidCredsErrorContainer } from "./containers/errors/invalidCreds";
+import { performGoToUrl } from "../ui/commands/perform";
 
 webFrame.setVisualZoomLevelLimits(1, 3);
 
@@ -49,33 +52,45 @@ const globalStyle = css`
     }
 `;
 
-function RootApp() {
-    const [showNetworkError, setShowNetworkError] = React.useState(false);
-    const handleErrorCallback = React.useCallback(() => {
-        setShowNetworkError(true);
+function InsideRouter() {
+    const navigate = useNavigate();
+    const handleErrorCallback = React.useCallback((err, key, config) => {
+        if(err.message.includes("status code 401")) {
+            console.log("Unauthorized API: ", key, config);
+            performGoToUrl("/unauthorized_error");
+        } else {
+            performGoToUrl("/network_error");
+        }
     }, []);
 
+    return (
+        <SWRConfig value={{   onError: handleErrorCallback.bind(this) }}>
+            <ToastSnackbar />
+            <Global styles={globalStyle}/>
+            <Routes>
+                <Route path="/login" element={<LoginScreen />} />
+                <Route path="/onboarding" element={<AuthOnboardingScreen />} />
+                <Route path="/" element={<DashboardScreen />} />
+                <Route path="/select-project" element={<ProjectsListScreen />} />
+                <Route path="/create-test" element={<CreateTestScreen />} />
+                <Route path="/code-editor" element={<UnDockCodeScreen />} />
+                <Route path="/settings" element={<SettingsScreen />} />
+                <Route path="/recorder" element={<App/>} />
+
+                <Route path="/network_error" element={<NetworkErrorContainer/>} />
+                <Route path="/unauthorized_error" element={<UnAuthorizedErrorContainer/>} />
+                <Route path="/invalid_creds_error" element={<InvalidCredsErrorContainer/>} />
+            </Routes>
+        </SWRConfig>
+    )
+}
+
+function RootApp() {
    return (
     <Provider store={store}>
-        <SWRConfig value={{   onError: handleErrorCallback.bind(this) }}>
             <CustomRouter>
-                <ToastSnackbar />
-            {showNetworkError ? (
-                <NetworkErrorContainer/>
-            ) : ""}
-                <Global styles={globalStyle}/>
-                <Routes>
-                    <Route path="/login" element={<LoginScreen />} />
-                    <Route path="/onboarding" element={<AuthOnboardingScreen />} />
-                    <Route path="/" element={<DashboardScreen />} />
-                    <Route path="/select-project" element={<ProjectsListScreen />} />
-                    <Route path="/create-test" element={<CreateTestScreen />} />
-                    <Route path="/code-editor" element={<UnDockCodeScreen />} />
-                    <Route path="/settings" element={<SettingsScreen />} />
-                    <Route path="/recorder" element={<App/>} />
-                </Routes>
+                <InsideRouter/>
             </CustomRouter>
-        </SWRConfig>
 	</Provider>
    );
 }

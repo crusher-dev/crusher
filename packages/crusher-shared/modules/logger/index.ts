@@ -15,7 +15,7 @@ const client = new Client();
 
 let isSetupComplete = false;
 export function setupLogger(crusherModuleName: string) {
-	console.log("Setting up logger now");
+	// console.debug("Setting up logger now");
 	if (!crusherModuleName) throw new Error("Provide a unique component name for you logger");
 	if (isSetupComplete) return;
 
@@ -37,7 +37,7 @@ export function setupLogger(crusherModuleName: string) {
 				
 				return `${info.level}: ${info.message && typeof info.message === "string" ? info.message.replace(/^(\[.+\])/, (x) => {
 					return chalk.bold(x);
-				}) : info.message} ` + (values && values.length ? JSON.stringify(values) : "");
+				}) : info.message} ` + (values && values.length ? values.map((v) => { return JSON.stringify(v, null) }).join(", ") : "");
 			})), level: process.env.CRUSHER_DEBUG ? "debug" : "info" }),
 		],
 	});

@@ -61,7 +61,7 @@ export const getProjectConfig = (verbose: boolean = true) => {
 
   if(!hasLoggedProjectConfig) {
     hasLoggedProjectConfig = true;
-    console.log(chalk.green("Project config: ") + configPath);
+    console.log(chalk.green("Using project config: ") + configPath);
   }
   hasLoggedProjectConfig = true;
   if(configPath.endsWith(".js")) { const requireOriginal = eval("require"); const config = requireOriginal(configPath); return config; }

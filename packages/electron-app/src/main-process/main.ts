@@ -1,7 +1,6 @@
 import { setupLogger } from "@crusher-shared/modules/logger";
 setupLogger("recorder");
 
-console.log("Ready now...");
 require("v8-compile-cache");
 import * as Sentry from "@sentry/electron";
 import { isProduction, parseDeepLinkUrlAction } from "./../utils";
@@ -48,7 +47,6 @@ function setupElectronApp() {
 	// For replaying actions
 	app.commandLine.appendSwitch("--remote-debugging-port", "0");
 
-	console.log("Port is: " + app.getPath("userData"));
 	app.setAboutPanelOptions({
 		applicationName: APP_NAME,
 		applicationVersion: app.getVersion(),

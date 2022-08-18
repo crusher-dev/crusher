@@ -66,10 +66,10 @@ export class WebView {
 		await this.playwrightInstance.addInitScript(path.join(__dirname, "recorder.js"));
 		this._initializeTime = now() - this._startTime;
 
-		console.log("Initialized in", this._initializeTime);
+		console.log("Initialized recorder in", this._initializeTime.toFixed(2) + "ms");
 		// This signals the renderer process that the webview is ready, and its okay
 		// to continue.
-		this.appWindow.sendMessage("webview-initialized", { initializeTime: this._initializeTime });
+		this.appWindow.sendMessage("webview-initialized", { initializeTime: this._initializeTime.toFixed(2)});
 	}
 
 	private registerIPCListeners() {

@@ -122,6 +122,11 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 					if(proxyWarning.shouldShow && !shouldSkipWarning && res) {
 						window["showProxyWarning"] = { testId: res.id, startUrl: proxyWarning.startUrl };
 					}
+					window["localRunCache"] = undefined;
+					// steps: Array<any>; id: number; name: string; status: "FINISHED" | "FAILED"
+					window["localBuildReportId"] = res.draftJobId;
+					sendSnackBarEvent({ type: "test_created", message: null});
+
 					navigate("/");
 					goFullScreen(false);
 				}

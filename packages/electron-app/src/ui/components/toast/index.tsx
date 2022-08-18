@@ -12,7 +12,7 @@ export const snackBarEmitter = mitt();
 
 export type SnackbarEvent = {
 	message: string;
-	type?: "normal" | "success" | "info" | "error" | "test_report";
+	type?: "normal" | "success" | "info" | "error" | "test_report" | "test_created";
 	meta?: any;
 };
 
@@ -57,6 +57,39 @@ const TestReportToast = ({ meta }) => {
 	);
 };
 
+
+const TestCreatedToast = ({ meta }) => {
+	const store = useStore();
+
+
+
+	return (
+		<div css={reportToastContainerStyle}>
+			<div css={reportToastSectionContainerStyle}>
+				<div
+					css={css`
+						font-weight: bold;
+					`}
+				>
+					Tests <span css={css`text-transform: lowercase;`}>Created</span>
+				</div>
+			</div>
+			<div
+				css={[
+					reportToastSectionContainerStyle,
+					css`
+						border-top-color: rgba(255, 255, 255, 0.03);
+						border-top-width: 1px;
+						border-top-style: solid;
+					`,
+				]}
+			>
+				<div>It will now be verified from our servers.</div>
+			</div>
+		</div>
+	);
+};
+
 const reportToastContainerStyle = css`
 	color: #fff;
 	font-size: 13px;
@@ -93,6 +126,7 @@ export const ToastSnackbar = () => {
 
 	if (event === null) return null;
 	if (event.type === "test_report") return <TestReportToast meta={event.meta} />;
+	if (event.type === "test_created") return <TestCreatedToast meta={event.meta} />;
 
 	return (
 		<Toast type={event.type} onClose={setEvent.bind(this, null)}>

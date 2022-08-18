@@ -111,7 +111,7 @@ const titleStyle = css`
 `;
 const DashboardScreen = () => {
     const {userInfo, projects} = useUser();
-    const { data: tests, isValidating } = useRequest(getSelectedProjectTestsRequest, { refreshInterval: 5000 })
+    const { data: tests, isValidating, mutate } = useRequest(getSelectedProjectTestsRequest, { refreshInterval: 5000 })
     const [selectedProject, setSelectedProject] = React.useState(null);
     const [showProxyWarning, setShowProxyWarning] = React.useState({show: false, testId: null, startUrl: null});
 
@@ -126,6 +126,7 @@ const DashboardScreen = () => {
                 (window as any).deletedTest = [];
             }
             (window as any).deletedTest.push(id);
+            mutate({ ...tests, list: tests.list.filter(test => {return !((window as any).deletedTest || []).includes(test.id)}) })
             CloudCrusher.deleteTest(id).catch((err) => {
                 sendSnackBarEvent({ message: "Error deleting test", type: "error" });
             });
@@ -157,6 +158,7 @@ const DashboardScreen = () => {
     }, [projects]);
 
     const isLoading = React.useMemo(() => (!tests), [tests]);
+    // To make delete experience fast
     const testContent = tests && tests.list && tests.list.length ? (<TestList deleteTest={handleTestDelete} tests={tests.list}/>) : (<CreateFirstTest />);
     const content = showProxyWarning.show ? <ProxyWarningContainer testId={showProxyWarning.testId} exitCallback={setShowProxyWarning.bind(this, false)} startUrl={showProxyWarning.startUrl} /> : testContent;
     return (

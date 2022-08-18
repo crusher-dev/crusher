@@ -31,7 +31,8 @@ class ProxyManager {
 
 	initializeProxy(configFilePath: string) {
 		if (this.isDisabled) return;
-		console.info("[ProxyManager]: Starting proxy declared in " + configFilePath);
+		console.info("[ProxyManager]: Initializing proxy", { configFilePath });
+
 		this._logs = [];
 		try {
 			const cliPath = app.commandLine.getSwitchValue("crusher-cli-path");

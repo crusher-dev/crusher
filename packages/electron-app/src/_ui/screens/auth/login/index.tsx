@@ -8,7 +8,7 @@ import { LoadingIconV2 } from "electron-app/src/ui/icons";
 import { LinkBox } from "../../../components/LinkBox";
 import { loginUserToCloud } from "../../../utils/login";
 import { resolveToFrontEndPath } from "@shared/utils/url";
-import { focusOnWindow } from "electron-app/src/ui/commands/perform";
+import { focusOnWindow, performGoToUrl } from "electron-app/src/ui/commands/perform";
 import { shell } from "electron";
 import { resolveToFrontend } from "electron-app/src/utils/url";
 import { Navigate, useNavigate } from "react-router-dom";
@@ -30,7 +30,7 @@ const LoginScreen = () => {
 	
 	const handlePostLogin = React.useCallback((userInfo: string) => {
 		focusOnWindow();
-		navigate("/");
+		performGoToUrl("/");
 	}, []);
 
     const handleLogin = React.useCallback(async ()=> {

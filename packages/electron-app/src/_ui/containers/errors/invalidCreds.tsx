@@ -4,7 +4,7 @@ import { ConnectivityWarningIcon, LoadingIconV2, PlayV2Icon } from "../../../ui/
 import { Link } from "../../../ui/layouts/modalContainer";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { shell } from "electron";
-import { performRunDraftTest, performRunTests, turnOnProxy } from "../../../ui/commands/perform";
+import { performGoToUrl, performRunDraftTest, performRunTests, turnOnProxy } from "../../../ui/commands/perform";
 import { getCurrentSelectedProjct, getProxyState, getUserAccountInfo } from "electron-app/src/store/selectors/app";
 import { useSelector, useStore } from "react-redux";
 import { CompactAppLayout } from "../../layout/CompactAppLayout";
@@ -13,6 +13,7 @@ import { NormalButton } from "../../components/buttons/NormalButton";
 import { getGlobalAppConfig, writeGlobalAppConfig } from "electron-app/src/lib/global-config";
 import { setUserAccountInfo } from "electron-app/src/store/actions/app";
 import { useNavigate } from "react-router-dom";
+import url from "url";
 
 const ReadDocsButton = ({ title, className, onClick }) => {
 	return (
@@ -60,7 +61,7 @@ const InvalidCredsErrorContainer = () => {
             writeGlobalAppConfig(appConfig);
         }
         store.dispatch(setUserAccountInfo(null));
-        navigate("/");
+        performGoToUrl("/login");
 	}, []);
 
     const handleSettings = React.useCallback(() => {

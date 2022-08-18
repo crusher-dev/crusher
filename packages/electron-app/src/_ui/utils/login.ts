@@ -6,16 +6,16 @@ import { waitForUserLogin } from "electron-app/src/utils/renderer";
 let _interval = null;
 
 const loginUserToCloud = async (loginCallback, store) => {
-    if(_interval) { clearInterval(_interval); _interval = null; }
-    
-    const {loginKey, interval} = await waitForUserLogin((loginToken: string) => {
-        if(_interval) { clearInterval(_interval); _interval = null; }
-            
+    if (_interval) { clearInterval(_interval); _interval = null; }
+
+    const { loginKey, interval } = await waitForUserLogin((loginToken: string) => {
+        if (_interval) { clearInterval(_interval); _interval = null; }
+
         const userInfo = getUserAccountInfo(store.getState());
-        store.dispatch(setUserAccountInfo({...(userInfo ? userInfo : {}), token: loginToken }));
+        store.dispatch(setUserAccountInfo({ ...(userInfo ? userInfo : {}), token: loginToken }));
 
         saveAndGetUserInfo(loginToken).then((userInfo) => {
-           loginCallback(userInfo);
+            loginCallback(userInfo);
         });
     });
 

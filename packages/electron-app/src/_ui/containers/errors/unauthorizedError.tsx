@@ -4,7 +4,7 @@ import { ConnectivityWarningIcon, LoadingIconV2, PlayV2Icon } from "../../../ui/
 import { Link } from "../../../ui/layouts/modalContainer";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { shell } from "electron";
-import { performRunDraftTest, performRunTests, turnOnProxy } from "../../../ui/commands/perform";
+import { performGoToUrl, performRunDraftTest, performRunTests, turnOnProxy } from "../../../ui/commands/perform";
 import { getCurrentSelectedProjct, getProxyState, getUserAccountInfo } from "electron-app/src/store/selectors/app";
 import { useSelector, useStore } from "react-redux";
 import { CompactAppLayout } from "../../layout/CompactAppLayout";
@@ -60,7 +60,7 @@ const UnAuthorizedErrorContainer = () => {
             writeGlobalAppConfig(appConfig);
         }
         store.dispatch(setUserAccountInfo(null));
-        navigate("/");
+		performGoToUrl("/");
 	}, []);
 
     const handleAccountInfo = React.useCallback(() => {

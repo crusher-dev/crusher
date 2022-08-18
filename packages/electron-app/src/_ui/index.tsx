@@ -27,6 +27,7 @@ import { SWRConfig } from "swr";
 import { NetworkErrorContainer } from "./containers/errors/networkError";
 import { UnAuthorizedErrorContainer } from "./containers/errors/unauthorizedError";
 import { InvalidCredsErrorContainer } from "./containers/errors/invalidCreds";
+import { performGoToUrl } from "../ui/commands/perform";
 
 webFrame.setVisualZoomLevelLimits(1, 3);
 
@@ -56,9 +57,9 @@ function InsideRouter() {
     const handleErrorCallback = React.useCallback((err, key, config) => {
         if(err.message.includes("status code 401")) {
             console.log("Unauthorized API: ", key, config);
-            navigate("/unauthorized_error");
+            performGoToUrl("/unauthorized_error");
         } else {
-            navigate("/network_error");
+            performGoToUrl("/network_error");
         }
     }, []);
 

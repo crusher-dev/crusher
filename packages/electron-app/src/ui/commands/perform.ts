@@ -336,6 +336,11 @@ const performCreateCloudProject = (projectName: string) => {
 	return ipcRenderer.invoke("create-cloud-project", {name: projectName});
 }
 
+
+const performGoToUrl = (url: string ) => {
+	return ipcRenderer.invoke("goto-url", {url: url});
+};
+
 export {
 	recordHoverDependencies,
 	performAction,
@@ -389,5 +394,6 @@ export {
 	performRunDraftTest,
 	performGetRecorderTestLogs,
 	performSaveLocalBuild,
-	performCreateCloudProject
+	performCreateCloudProject,
+	performGoToUrl
 };

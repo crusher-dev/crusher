@@ -6,6 +6,7 @@ import {
 } from "../utils/projectConfig";
 
 import { getLoggedInUser } from "../utils/index";
+import { blue, bold, dim, green, magenta, underline } from "chalk";
 
 const program = new Command();
 program.addHelpText(
@@ -35,7 +36,6 @@ export default class CommandBase {
   async run(): Promise<any> {
     const projectConfig = getProjectConfig();
 
-    console.log(projectConfig);
     if (!projectConfig || !projectConfig.project) {
       throw new Error(
         "Crusher not initialized in this project. Run `crusher-cli init` to fix this."
@@ -46,14 +46,16 @@ export default class CommandBase {
     const testsCountInProject = await getTotalTestsInProject(
       projectConfig.project
     );
-
-    console.log("-----------");
-    console.log("Team:", userAccount.teamName);
-    console.log("Name:", userAccount.name);
-    console.log("Login:", userAccount.email);
-    console.log("-----------");
-    console.log("Project name: ", projectInfo.name);
-    console.log("Tests in the project:", testsCountInProject);
-    console.log("Project config path: ", findCrusherProjectConfig());
+    console.log(bold(magenta(`📟  Project info\n`)));
+    
+    console.log('  Details 🗺️');
+    console.log(`  Project:      ${blue(projectInfo.name)} | #${projectInfo.id}`);
+    console.log(`  Config File:  ${green(findCrusherProjectConfig())}`);
+    console.log(`  Team:         ${userAccount.teamName}`);
+    
+    console.log(`\n\n> to create new project?\nrun crusher-cli --blank`);
+    console.log(
+      `\n\n> ${dim(underline('View docs'))} | ${magenta('or use --help')}\n`
+    );
   }
 }

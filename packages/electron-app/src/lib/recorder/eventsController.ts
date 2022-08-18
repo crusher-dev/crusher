@@ -137,7 +137,7 @@ export default class EventsController {
 			console.log(capturedTarget);
 			console.log("Tryng to take screenshot");
 			capturedElementScreenshot = null;
-			console.log("Finsihed");
+			console.log("Finished");
 		}
 
 		console.log("Captured target", capturedTarget);

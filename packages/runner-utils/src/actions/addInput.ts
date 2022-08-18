@@ -6,7 +6,6 @@ import template from "@crusher-shared/utils/templateString";
 // elementLocator.first(), null, step, this.globals, this.storageManager, this.exportsManager, this.sdk, this.context
 async function addInput(element: Locator, workingSelector: any, action: iAction, globals, storageManager, exportManager, _, __, context) {
 	// For legacy addInput type
-	console.log("Add input context", context);
 	if (typeof action.payload.meta.value === "string") {
 		await element.fill("");
 		await element.type(template(action.payload.meta.value, { ctx: context || {} }));

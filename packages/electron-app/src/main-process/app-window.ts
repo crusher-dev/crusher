@@ -1038,9 +1038,9 @@ export class AppWindow {
 		payload: { action: iAction; shouldNotSave?: boolean; isRecording?: boolean; shouldNotSleep?: boolean },
 	) {
 		if(this.webView && this.webView.playwrightInstance) {
-			console.log("Starting action: " +  this.webView.playwrightInstance.actionDescriptor.describeAction(payload.action));
+			console.log("Starting action",  this.webView.playwrightInstance.actionDescriptor.describeAction(payload.action));
 		} else { 
-			console.log("Starting action: " + payload.action.type);
+			console.log("Starting action", payload.action.type);
 		}
 
 		const { action, shouldNotSave, shouldNotSleep } = payload;
@@ -1180,7 +1180,7 @@ export class AppWindow {
 	}
 
 	async handleWebviewAttached(event, webContents) {
-		console.log("Webview is attached", Date.now());
+		console.debug("Webview is attached");
 		this.webView = new WebView(this, async () => {
 			if (this.codeWindow) {
 				this.codeWindow.destroy();
@@ -1196,7 +1196,7 @@ export class AppWindow {
 		this.webView.webContents.on("dom-ready", () => {
 			if (!this.webView.webContents.debugger.isAttached()) {
 				this.webView.initialize();
-				console.log("Webview initialized");
+				console.debug("Webview has initialized");
 			}
 		});
 	}

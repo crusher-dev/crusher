@@ -18,7 +18,6 @@ async function waitForNavigation(
 	sdk: CrusherSdk | null,
 	context: any,
 ) {
-	console.log("Waiting for navigation now...");
 	if (action.payload.meta?.value) {
 		let url = template(action.payload.meta?.value, { ctx: context || {} });
 		await new Promise((resolve, reject) => {
@@ -50,7 +49,7 @@ async function waitForNavigation(
 	} else {
 		await sleep(2000);
 	}
-	console.log("Finsihed navigation");
+	console.log("Finished navigation");
 }
 
 module.exports = {

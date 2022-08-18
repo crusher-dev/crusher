@@ -49,8 +49,6 @@ async function executeCustomCode(
 		modules,
 	);
 
-	console.log("Result is", result);
-
 	return {
 		customLogMessage: result ? "Executed custom code" : "Error executing custom code",
 		result: result,

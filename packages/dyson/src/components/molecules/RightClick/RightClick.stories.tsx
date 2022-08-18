@@ -48,7 +48,7 @@ Default.args = {
 			value: 'Back',
 			rightItem: <div>⌘+[</div>,
 			onClick: ()=>{
-				alert("SD")
+				alert("Back")
 			}
 		},
 		{
@@ -56,7 +56,7 @@ Default.args = {
 			value: 'Disabled',
 			disabled: true,
 			onClick: ()=>{
-				alert("SD")
+				alert("Disabled")
 			}
 		},
 		{
@@ -76,7 +76,7 @@ Default.args = {
 				value: 'Back',
 				rightItem: <div>⌘+[</div>,
 				onClick: ()=>{
-					alert("SD")
+					alert("Back")
 				}
 			},
 			{
@@ -84,11 +84,11 @@ Default.args = {
 				value: 'Disabled',
 				disabled: true,
 				onClick: ()=>{
-					alert("SD")
+					alert("Disabled")
 				}
 			}],
 			onClick: ()=>{
-				alert("SD")
+				alert("Disabled")
 			}
 		},
 		{
@@ -103,7 +103,7 @@ Default.args = {
 			value: 'Forward',
 			rightItem: <div>⌘+F</div>,
 			onClick: ()=>{
-				alert("SD")
+				alert("Forward")
 			}
 		},
 		{
@@ -114,14 +114,14 @@ Default.args = {
 			value: 'Rename',
 			rightItem: <div>⌘+F</div>,
 			onClick: ()=>{
-				alert("SD")
+				alert("Rename")
 			}
 		},
 		{
 			type: 'menuItem',
 			value: 'Save as',
 			onClick: ()=>{
-				alert("SD")
+				alert("Save as")
 			}
 		},
 		]

@@ -3,8 +3,6 @@ import React, { ReactElement} from "react";
 import { styled } from "@stitches/react";
 import { violet, mauve } from "@radix-ui/colors";
 import {
-  DotFilledIcon,
-  CheckIcon,
   ChevronRightIcon
 } from "@radix-ui/react-icons";
 import * as ContextMenuPrimitive from "@radix-ui/react-context-menu";
@@ -67,6 +65,10 @@ const itemStyles = {
   "&[data-highlighted]": {
     backgroundColor: "#8735D9",
     color: violet.violet1
+  },
+  "&[data-state-open]": {
+    backgroundColor: "#8735D9",
+    color: violet.violet1
   }
 };
 
@@ -107,6 +109,90 @@ const StyledItemIndicator = styled(ContextMenuPrimitive.ItemIndicator, {
   justifyContent: "center"
 });
 
+
+const RightSlot = styled("div", {
+  marginLeft: "auto",
+  paddingLeft: 20,
+  color: mauve.mauve11,
+  "[data-highlighted] > &": { color: "white" },
+  "[data-disabled] &": { color: mauve.mauve8 }
+});
+
+
+const RenderMenuItems = ({menuItems,isSubItem=false})=>{
+  return (menuItems.map((menuItem,i)=>{
+    const {value,rightItem,disabled,subItems, onClick, type} = menuItem;
+
+    if(type === 'separator') return (<ContextMenuSeparator />)
+    if(type === 'heading') return ( <ContextMenuLabel>{value}</ContextMenuLabel>)
+
+    if(subItems && subItems.length > 0){
+      return (
+        <ContextMenuSub>
+          <ContextMenuSubTrigger>
+            {value} 
+            <RightSlot>
+                <ChevronRightIcon />
+            </RightSlot>
+          </ContextMenuSubTrigger>
+          <ContextMenuSubContent sideOffset={2} alignOffset={-2}>
+            <RenderMenuItems menuItems={subItems}/>
+          </ContextMenuSubContent>
+        </ContextMenuSub>
+      )
+    }
+    return (
+    <ContextMenuItem key={i} disabled={disabled} onClick={onClick}>
+      {value} {rightItem ? (<RightSlot>{rightItem}</RightSlot>) : null}
+    </ContextMenuItem>
+    )
+  }))
+}
+
+export const RightClickMenu = ({children,menuItems})=>{
+	return (
+		<ContextMenu>
+        <ContextMenuTrigger>
+        {children}
+        </ContextMenuTrigger>
+        <ContextMenuContent sideOffset={5} align="start">
+        <RenderMenuItems menuItems={menuItems}/>
+        </ContextMenuContent>
+      </ContextMenu>
+	)
+}
+
+type parentItem = {
+  type: 'menuItem',
+	value?: string,
+	rightItem?: ReactElement | string,
+	subMenu?: subMenuItem[],
+  onClick: Function,
+	disabled?: boolean
+  //let it handle everything
+  element?: any
+}
+
+type subMenuItem = Omit<parentItem, 'subMenu'>
+
+type headingItem = {
+	type: 'heading'
+  value: string
+};
+type separatorItem = {
+	type: 'separator'
+};
+
+type Item = separatorItem|MenuItem|headingItem
+
+export type TRightItemProps = {
+	menuItems: Item[]
+} & React.DetailedHTMLProps<React.HTMLAttributes<HTMLButtonElement>, any>;
+
+
+
+
+// Use to contstruct new components, if needed
 // Exports
 export const ContextMenu = ContextMenuPrimitive.Root;
 export const ContextMenuTrigger = ContextMenuPrimitive.Trigger;
@@ -121,135 +207,3 @@ export const ContextMenuSeparator = StyledSeparator;
 export const ContextMenuSub = ContextMenuPrimitive.Sub;
 export const ContextMenuSubTrigger = StyledSubTrigger;
 export const ContextMenuSubContent = SubContent;
-
-
-const RightSlot = styled("div", {
-  marginLeft: "auto",
-  paddingLeft: 20,
-  color: mauve.mauve11,
-  "[data-highlighted] > &": { color: "white" },
-  "[data-disabled] &": { color: mauve.mauve8 }
-});
-
-
-export const RightClickMenu = ({children})=>{
-	const [bookmarksChecked, setBookmarksChecked] = React.useState(true);
-	const [urlsChecked, setUrlsChecked] = React.useState(false);
-	const [person, setPerson] = React.useState("pedro");
-	return (
-		<ContextMenu>
-			<ContextMenuTrigger>
-			{children}
-			</ContextMenuTrigger>
-        <ContextMenuContent sideOffset={5} align="start">
-			<StyledCheckboxItem>
-			Back <RightSlot>⌘+[</RightSlot>
-			</StyledCheckboxItem>
-
-			<StyledCheckboxItem>
-			Back <RightSlot>⌘+[</RightSlot>
-			</StyledCheckboxItem>
-
-			<StyledCheckboxItem>
-			Back <RightSlot>⌘+[</RightSlot>
-			</StyledCheckboxItem>
-
-          <ContextMenuItem>
-            Back <RightSlot>⌘+[</RightSlot>
-          </ContextMenuItem>
-          <ContextMenuItem disabled>
-            Foward <RightSlot>⌘+]</RightSlot>
-          </ContextMenuItem>
-          <ContextMenuItem>
-            Reload <RightSlot>⌘+R</RightSlot>
-          </ContextMenuItem>
-          <ContextMenuSub>
-            <ContextMenuSubTrigger>
-              More Tools
-              <RightSlot>
-                <ChevronRightIcon />
-              </RightSlot>
-            </ContextMenuSubTrigger>
-            <ContextMenuSubContent sideOffset={2} alignOffset={-2}>
-              <ContextMenuItem>
-                Save Page As… <RightSlot>⌘+S</RightSlot>
-              </ContextMenuItem>
-              <ContextMenuItem>Create Shortcut…</ContextMenuItem>
-              <ContextMenuItem>Name Window…</ContextMenuItem>
-              <ContextMenuSeparator />
-              <ContextMenuItem>Developer Tools</ContextMenuItem>
-            </ContextMenuSubContent>
-          </ContextMenuSub>
-          <ContextMenuSeparator />
-          <ContextMenuCheckboxItem
-            checked={bookmarksChecked}
-            onCheckedChange={setBookmarksChecked}
-          >
-            Show Bookmarks <RightSlot>⌘+B</RightSlot>
-          </ContextMenuCheckboxItem>
-          <ContextMenuCheckboxItem
-            checked={urlsChecked}
-            onCheckedChange={setUrlsChecked}
-          >
-            <ContextMenuItemIndicator>
-              <CheckIcon />
-            </ContextMenuItemIndicator>
-            Show Full URLs
-          </ContextMenuCheckboxItem>
-          <ContextMenuSeparator />
-          <ContextMenuLabel>People</ContextMenuLabel>
-          <ContextMenuRadioGroup value={person} onValueChange={setPerson}>
-            <ContextMenuRadioItem value="pedro">
-              Pedro Duarte
-            </ContextMenuRadioItem>
-            <ContextMenuRadioItem value="colm">
-              <ContextMenuItemIndicator>
-                <DotFilledIcon />
-              </ContextMenuItemIndicator>
-              Colm Tuite
-            </ContextMenuRadioItem>
-          </ContextMenuRadioGroup>
-        </ContextMenuContent>
-      </ContextMenu>
-	)
-}
-
-type subMenuItem = {
-	value?: string,
-	rightItem?: string,
-	disabled?: boolean
-}
-
-type Item = {
-	value?: string,
-	rightItem?: string,
-	subMenu?: subMenuItem[],
-	disabled?: boolean
-}
-
-type heading = {
-	headingName: string
-};
-type highlight = {
-	hightlight: true
-};
-
-export type TSelectBoxProps = {
-	menuItems: highlight|Item|heading[]
-} & React.DetailedHTMLProps<React.HTMLAttributes<HTMLButtonElement>, any>;
-
-const SelectDefaultProps = {
-	disabled: false,
-	value: 'test',
-
-};
-
-export const SelectBox: React.FC<TSelectBoxProps> = ({}) => {
-	return (
-		<div>dsf</div>
-	);
-};
-
-
-
-SelectBox.defaultProps = SelectDefaultProps;

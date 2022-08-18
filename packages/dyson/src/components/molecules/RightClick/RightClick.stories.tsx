@@ -2,13 +2,14 @@ import React from "react";
 import "../../../style/base.css";
 // also exported from '@storybook/react' if you can deal with breaking changes in 6.1
 import { Story, Meta } from "@storybook/react/types-6-0";
+import markdown from "./info.stories.md";
 
-import { SelectBox, TSelectBoxProps,RightClickMenu } from "./RightClick";
+import { TRightItemProps,RightClickMenu } from "./RightClick";
 export default {
 	title: "Molecules/RightClick",
-	component: SelectBox,
+	component: RightClickMenu,
 } as Meta;
-import { css, SerializedStyles } from "@emotion/react";
+import { css } from "@emotion/react";
 
 const boxCSS= css`
 border: 1px dashed #ffffff1a;
@@ -23,12 +24,12 @@ border: 1px dashed #ffffff1a;
 	margin: 0 auto;
 `
 
-const Template: Story<TSelectBoxProps> = (args) => {
-	
-
-	return (<RightClickMenu>
+const Template: Story<TRightItemProps> = (args) => {
+	return (
+	<RightClickMenu menuItems={args.menuItems}>
 		<div css={boxCSS}>Click here to activate</div>
-	</RightClickMenu>)
+	</RightClickMenu>
+	)
 };
 
 Template.parameters = {
@@ -38,29 +39,93 @@ Template.parameters = {
 export const Default = Template.bind({});
 
 Default.parameters = {
-	status: "ready",
-	height: "100rem",
-	docs: { iframeHeight: 270 },
+	notes: { markdown },
 };
 Default.args = {
-	children: "SelectBox",
-	values: generateSelectBoxValues(5),
-	callback: () => {},
-	placeholder: "Select an option",
+	menuItems:[
+		{
+			type: 'menuItem',
+			value: 'Back',
+			rightItem: <div>⌘+[</div>,
+			onClick: ()=>{
+				alert("SD")
+			}
+		},
+		{
+			type: 'menuItem',
+			value: 'Disabled',
+			disabled: true,
+			onClick: ()=>{
+				alert("SD")
+			}
+		},
+		{
+			type: 'menuItem',
+			value: 'Forward',
+			rightItem: <div>⌘+F</div>,
+			onClick: ()=>{
+				alert("Forward")
+			}
+		},
+		{
+			type: 'menuItem',
+			value: 'Reload',
+			rightItem: <div>⌘+R</div>,
+			subItems: [{
+				type: 'menuItem',
+				value: 'Back',
+				rightItem: <div>⌘+[</div>,
+				onClick: ()=>{
+					alert("SD")
+				}
+			},
+			{
+				type: 'menuItem',
+				value: 'Disabled',
+				disabled: true,
+				onClick: ()=>{
+					alert("SD")
+				}
+			}],
+			onClick: ()=>{
+				alert("SD")
+			}
+		},
+		{
+			type: 'separator',
+		},
+		{
+			type: 'heading',
+			value: "People"
+		},
+		{
+			type: 'menuItem',
+			value: 'Forward',
+			rightItem: <div>⌘+F</div>,
+			onClick: ()=>{
+				alert("SD")
+			}
+		},
+		{
+			type: 'separator',
+		},
+		{
+			type: 'menuItem',
+			value: 'Rename',
+			rightItem: <div>⌘+F</div>,
+			onClick: ()=>{
+				alert("SD")
+			}
+		},
+		{
+			type: 'menuItem',
+			value: 'Save as',
+			onClick: ()=>{
+				alert("SD")
+			}
+		},
+		]
+
 };
 
-function generateSelectBoxValues(len: number): Array<{ component: any; value: string; inactive: boolean }> {
-	const CustomSelectOptionComponent = ({ label }) => {
-		return <div>{label}</div>;
-	};
 
-	const values: Array<{ component: any; value: string; inactive: boolean }> = [];
-	for (let i = 0; i < len; i++) {
-		values.push({
-			component: <CustomSelectOptionComponent label={`Item ${i + 1}`} />,
-			value: `item${i}`,
-			inactive: false,
-		});
-	}
-	return values;
-}

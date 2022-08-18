@@ -74,7 +74,7 @@ const InvalidCredsErrorContainer = () => {
 				<div css={contentContainerStyle}>
 					<LockIconSvg css={iconStyle} />
 					<div css={headingStyle}>
-						<span css={highlightStyle}></span>Invalid authroization credentials!
+						<span css={highlightStyle}></span>Invalid authorization credentials!
 					</div>
 					<div css={descriptionStyle}>
 						Possible causes:<br/>

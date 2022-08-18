@@ -4,6 +4,8 @@ import "../../../style/base.css";
 import { Story, Meta } from "@storybook/react/types-6-0";
 import markdown from "./info.stories.md";
 
+import { SunIcon} from '@radix-ui/react-icons'
+
 import { TRightItemProps,RightClickMenu } from "./RightClick";
 export default {
 	title: "Molecules/RightClick",
@@ -26,8 +28,11 @@ border: 1px dashed #ffffff1a;
 
 const Template: Story<TRightItemProps> = (args) => {
 	return (
-	<RightClickMenu menuItems={args.menuItems}>
-		<div css={boxCSS}>Click here to activate</div>
+	<RightClickMenu menuItems={[...args.menuItems]}>
+		<div css={boxCSS} className="flex flex-col items-center justify-center">
+			<SunIcon/>
+			<div className="mt-12">Click here to open right click menu</div>
+		</div>
 	</RightClickMenu>
 	)
 };

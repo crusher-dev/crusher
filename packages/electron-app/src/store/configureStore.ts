@@ -22,21 +22,22 @@ export function getStore(): Store<unknown> {
 	throw new Error("Store not initialized yet!");
 }
 
-export default function configureStore(intialState: any, scope = "main"): Store<unknown> {
+export default function configureStore(intialState: any, scope = "main", isTemporary = false): Store<unknown> {
 	let middlewares: Array<any> = [];
 
-	// if (!isProduction()) {
-	// middlewares.push(loggerMiddleware);
-	// }
+	if(!isTemporary) {
+		// if (!isProduction()) {
+		// middlewares.push(loggerMiddleware);
+		// }
 
-	if (scope === "renderer") {
-		middlewares = [forwardToMain, ...middlewares];
+		if (scope === "renderer") {
+			middlewares = [forwardToMain, ...middlewares];
+		}
+
+		if (scope === "main") {
+			middlewares = [...middlewares, forwardToRenderer];
+		}
 	}
-
-	if (scope === "main") {
-		middlewares = [...middlewares, forwardToRenderer];
-	}
-
 	const middlewareEnhancer = applyMiddleware(...middlewares);
 
 	const enhancers = [middlewareEnhancer];
@@ -48,10 +49,12 @@ export default function configureStore(intialState: any, scope = "main"): Store<
 		hotModule.accept("./reducers", () => store?.replaceReducer(rootReducer));
 	}
 
-	if (scope === "main") {
-		replayActionMain(store);
-	} else {
-		replayActionRenderer(store);
+	if(!isTemporary) {
+		if (scope === "main") {
+			replayActionMain(store);
+		} else {
+			replayActionRenderer(store);
+		}
 	}
 
 	_store = store;

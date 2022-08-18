@@ -124,7 +124,7 @@ let store;
 function createWindow() {
 	console.log("Creating window now...");
 	const globalAppConfig = getGlobalAppConfig();
-	const _store = configureStore(undefined, "main");
+	const _store = configureStore(undefined, "main", true);
     const settings = SettingsManager.getSavedSettings();
 
     // initialReduxState.app.shouldShowOnboardingOverlay = localStorage.getItem("app.showShouldOnboardingOverlay") === "false" ? false : true;

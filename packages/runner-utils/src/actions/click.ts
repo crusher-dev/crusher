@@ -19,9 +19,7 @@ async function clickOnElement(
 			const posObj = action.payload.meta.value.mousePos;
 			if (posObj.x >= 0 && posObj.y >= 0) {
 				const boundingBox = await element.boundingBox();
-				console.log("Pos obj is", posObj, boundingBox);
 				pos = { x: boundingBox.width * posObj.x, y: boundingBox.height * posObj.y };
-				console.log("Position is", pos);
 			}
 		}
 		await element.click({ timeout: action.payload.timeout ? action.payload.timeout * 1000 : undefined, position: pos });

@@ -65,8 +65,7 @@ export default class CommandBase {
         ).default)()).init();
       } catch (err) {
         if (err.message === "SIGINT") process.exit(1);
-
-        console.log("Error:", err);
+        console.log(chalk.red("Error:"), err.message);
         process.exit(1);
       }
     } else {

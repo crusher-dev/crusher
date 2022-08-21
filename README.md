@@ -40,10 +40,10 @@
 
 <p align="center">
     <a href="https://crusher.dev/#gh-light-mode-only">
-  <img src="https://i.imgur.com/49kekwc.png" width="890px" =/>
+  <img src="https://i.imgur.com/6foga5A.png" width="890px" =/>
   </a>
   <a href="https://crusher.dev/#gh-dark-mode-only">
-    <img src="https://i.imgur.com/49kekwc.png"  width="890px" />
+    <img src="https://i.imgur.com/6foga5A.png"  width="890px" />
   </a>
   </p>
 

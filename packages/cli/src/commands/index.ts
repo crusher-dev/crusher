@@ -10,13 +10,13 @@ export default class CommandBase {
   help() {
     console.log(`
   Run a command: ${chalk(`npx crusher-cli [command]`)}
-  Example:       ${chalk(`npx crusher-cli create:test`)}
+  Example:       ${chalk(`npx crusher-cli test:test`)}
 
   ${chalk.hex("C1C1C1")("Commands")}
 
   Basic
       .                         Starts crusher
-      ${chalk.bold(chalk.hex("fff")(`test:create`))}               Create a new test
+      ${chalk.bold(chalk.hex("fff")(`test:create`))}               Create new test
       ${chalk.bold(chalk.hex("fff")(`test:run`))}                  Run all the tests
       login                     Logs into your account or create new one
       logout                    Logs out of your account

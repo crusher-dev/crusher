@@ -74,6 +74,10 @@ const DashboardFooter = ({ tests }) => {
 	}, []);
 
     const handleDropdownCallback = React.useCallback((optionId) => {
+		if(!tests.length) {
+			alert("No tests present in the project.");
+			return;
+		}
         if(optionId === "run-local-tests") {
             const testIdArr = tests.map((a) => a.id);
 			triggerLocalBuild(testIdArr);

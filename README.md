@@ -38,12 +38,14 @@
 
 **Create, run and debug tests** with dead simple workflow, use **low-code or code**. We're reimagining testing to make it blazingly simple, fast and effective.
 
-  <a href="https://crusher.dev/#gh-light-mode-only">
-  <img src="https://i.imgur.com/nqE0S1B.png"/>
+<p align="center">
+    <a href="https://crusher.dev/#gh-light-mode-only">
+  <img src="https://i.imgur.com/49kekwc.png" width="890px" =/>
   </a>
   <a href="https://crusher.dev/#gh-dark-mode-only">
-    <img src="https://i.imgur.com/qQ2uda9.png"  />
+    <img src="https://i.imgur.com/49kekwc.png"  width="890px" />
   </a>
+  </p>
 
 <div>
 <h5  align="center"> Star repo to support us and get updates :heart: </h5>

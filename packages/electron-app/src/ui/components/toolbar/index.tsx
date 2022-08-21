@@ -590,7 +590,7 @@ const selectBoxStyle = css`
 		}
 		outline: none;
 		padding: 14rem;
-		height: 34rem !important;
+		height: 33rem !important;
 		background: none;
 		border-left-width: 1rem;
 		border-left-style: solid;

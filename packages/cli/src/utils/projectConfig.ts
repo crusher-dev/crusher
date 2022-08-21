@@ -41,6 +41,9 @@ export const setProjectConfig = (config) => {
   );
 };
 
+export const getSuggestedProjectConfigPath = () => {
+  return path.resolve(PROJECT_CONFIG_PATH, "./config.js");
+};
 export const getProjectConfigPath = () => {
   const existingProjectConfig = findCrusherProjectConfig();
   if(fs.existsSync(path.resolve(existingProjectConfig || PROJECT_CONFIG_PATH, "./config.js"))) {

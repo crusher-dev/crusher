@@ -7,7 +7,7 @@ import axios from "axios";
 import * as path from "path";
 import { getRecorderBuildForPlatfrom, recorderVersion } from "../constants";
 import cli from "cli-ux";
-import { getProjectConfig, setProjectConfig } from "../utils/projectConfig";
+import { getProjectConfig, getProjectConfigPath, getSuggestedProjectConfigPath, setProjectConfig } from "../utils/projectConfig";
 import { execSync } from "child_process";
 import * as inquirer from "inquirer";
 import { getProjectsOfCurrentUser, createProject } from "../utils/apiUtils";
@@ -42,7 +42,7 @@ export async function makeSureSetupIsCorrect(projectId: string | null = null, as
       });
     } else {
       const projects = await getProjectsOfCurrentUser();
-      const suggestedProjectName = await getProjectNameFromGitInfo();
+      const {projectName: suggestedProjectName, gitInfo: suggestedGitInfo} = await getProjectNameFromGitInfo();
 
       if (!suggestedProjectName) {
         const projectRes = await inquirer.prompt([
@@ -81,7 +81,12 @@ export async function makeSureSetupIsCorrect(projectId: string | null = null, as
         });
       } else {
         const projectRecord = await createProject(suggestedProjectName);
-        console.log(`Selecting project ${projectRecord.name} by default`);
+        console.log(chalk.bold(chalk.magenta(`\nCreating a new crusher project from current git repo:`)));
+        // Pretty output here
+        console.log(`${chalk.bold('Details')}`);
+        console.log(`     project:      ${chalk.blueBright(suggestedProjectName)}`);
+        console.log(`     gitRepo:      ${chalk.blueBright(suggestedGitInfo.url)}`);
+        console.log(`     configFile:   ${chalk.blueBright(getSuggestedProjectConfigPath())}\n`);
         projectConfig.project = projectRecord.id;
 
         setProjectConfig({

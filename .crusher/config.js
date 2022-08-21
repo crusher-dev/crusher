@@ -1,4 +1,4 @@
 module.exports = {
-  "backend": "https://backend.crusher.dev/",
-  "project": 900
+  "backend": "http://localhost:8000/",
+  "project": 866
 }

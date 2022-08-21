@@ -51,19 +51,23 @@ function findGitRoot(_start = null) {
   return findGitRoot(start);
 }
 
-const getProjectNameFromGitInfo = () => {
+const getProjectNameFromGitInfo = () : { projectName, gitInfo} => {
   try {
-    if (!findGitRoot()) return null;
-
-    const config = fs.readFileSync(findGitRoot() + "/config", "utf-8");
+    const gitRoot = findGitRoot();
+    if (!gitRoot) return null;
+    const config = fs.readFileSync(gitRoot + "/config", "utf-8");
     const configFile = ini.parse(config);
     const remotes = Object.keys(configFile)
       .filter((key) => key.startsWith("remote"))
       .map((key) => configFile[key]);
     if (remotes.length === 0) return null;
-    return remotes.map((remote) =>
-      remote.url.split("/").pop().replace(".git", "")
-    )[0];
+    return {
+      projectName: remotes.map((remote) => remote.url.split("/").pop().replace(".git", ""))[0],
+      gitInfo: {
+        location: gitRoot,
+        url: remotes[0].url
+      }
+    };
   } catch (error) {
     return null;
   }

@@ -2,7 +2,7 @@ import React from "react";
 import { css, Global } from "@emotion/react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useSelector, useStore } from "react-redux";
-import { getIsStatusBarVisible, getRecorderInfo, getRecorderState, isWebViewInitialized } from "../store/selectors/recorder";
+import { getIsStatusBarVisible, getRecorderInfo, getRecorderState, getSavedSteps, isWebViewInitialized } from "../store/selectors/recorder";
 import Sidebar from "../ui/components/sidebar";
 import Toolbar from "../ui/components/toolbar";
 import DeviceFrame from "../ui/components/device-frame";
@@ -18,6 +18,7 @@ import { getAppSessionMeta } from "../store/selectors/app";
 import { setSessionInfoMeta } from "../store/actions/app";
 import { sendSnackBarEvent } from "../ui/components/toast";
 import historyInstance from "./utils/history";
+import { StepType, TourProvider, useTour } from "@reactour/tour";
 
 const handleCompletion = async (store: Store, action: IDeepLinkAction) => {
 
@@ -80,6 +81,140 @@ const handleUrlAction = (store: Store, event: Electron.IpcRendererEvent, { actio
     }
 };
 
+
+const MoreStepsOnboarding = () => {
+	const store = useStore();
+	const [startingOffset, setStartingOffset] = React.useState(getSavedSteps(store.getState() as any).length);
+	const savedSteps = useSelector(getSavedSteps);
+	const { setCurrentStep } = useTour();
+
+	React.useEffect(() => {
+		if (savedSteps.length - startingOffset === 5) {
+			setCurrentStep(5);
+		}
+	}, [savedSteps]);
+
+	return (
+		<div>
+			<div
+				css={css`
+					font-family: Cera Pro;
+					font-size: 15rem;
+					font-weight: 600;
+				`}
+			>
+				We automatically detect your actions
+			</div>
+			<p
+				className={"mt-8"}
+				css={css`
+					font-family: Gilroy;
+					font-size: 14rem;
+				`}
+			>
+				Let's record few more steps in our test and finally save it
+			</p>
+			<div
+				className={"mt-4"}
+				css={css`
+					position: absolute;
+					font-size: 12rem;
+				`}
+			>
+				{savedSteps.length - startingOffset}/5
+			</div>
+		</div>
+	);
+};
+
+const OnboardingItem = ({ title, description }) => {
+	return (
+		<div>
+			<div
+				css={css`
+					font-family: Cera Pro;
+					font-size: 15rem;
+					font-weight: 600;
+				`}
+			>
+				{title}
+			</div>
+			<p
+				className={"mt-8"}
+				css={css`
+					font-family: Gilroy;
+					font-size: 14rem;
+				`}
+			>
+				{description}
+			</p>
+		</div>
+	);
+};
+const steps: Array<StepType> = [
+	{
+		selector: "#target-site-input",
+		content: <OnboardingItem title={"Enter URL of website you want to test"} description={"You can open crusher-recorder from apps or CLI."} />,
+	},
+	{
+		selector: "#select-element-action",
+		content: <OnboardingItem title={"Turn on element mode"} description={"Right click over the element or click here"} />,
+	},
+	{
+		selector: "#device_browser",
+		content: <OnboardingItem title={"Select an element"} description={"Move your mouse over the element and click on it"} />,
+	},
+	{
+		selector: "#element-actions-list",
+		content: <OnboardingItem title={"Select a element action"} description={"You can click, hover, take screenshot or add assertions"} />,
+	},
+	{
+		selector: "#device_browser",
+		content: <MoreStepsOnboarding />,
+	},
+	{
+		selector: "#verify-save-test",
+		content: <OnboardingItem title={"Verify and Save"} description={"Time to save your first test"} />,
+	},
+];
+
+function doArrow(position, verticalAlign, horizontalAlign) {
+    const opositeSide = {
+        top: "bottom",
+        bottom: "top",
+        right: "left",
+        left: "right",
+    };
+    const popoverPadding = 10;
+
+	if (!position || position === "custom") {
+		return {};
+	}
+
+	const width = 16;
+	const height = 12;
+	const color = "#111213";
+	const isVertical = position === "top" || position === "bottom";
+	const spaceFromSide = popoverPadding;
+	const obj = {
+		[isVertical ? "borderLeft" : "borderTop"]: `${width / 2}px solid transparent`, // CSS Triangle width
+		[isVertical ? "borderRight" : "borderBottom"]: `${width / 2}px solid transparent`, // CSS Triangle width
+		[`border${position[0].toUpperCase()}${position.substring(1)}`]: `${height}px solid ${color}`, // CSS Triangle height
+		[isVertical ? opositeSide[horizontalAlign] : verticalAlign]: height + spaceFromSide, // space from side
+		[opositeSide[position]]: -height + 2,
+	};
+
+	return {
+		"&::after": {
+			content: "''",
+			width: 0,
+			height: 0,
+			position: "absolute",
+			...obj,
+		},
+	};
+}
+
 const App = () => {
     let navigate = useNavigate();
     
@@ -119,6 +254,27 @@ const App = () => {
     const toolbarStyle = React.useMemo(() => { toolbarCss(recorderState.type === TRecorderState.CUSTOM_CODE_ON) }, [recorderState]);
 
     return (
+        <TourProvider
+        onClickMask={() => {}}
+        disableDotsNavigation={true}
+        disableKeyboardNavigation={true}
+        showPrevNextButtons={false}
+        disableFocusLock={true}
+        showBadge={false}
+        styles={{
+            popover: (base, state) => ({
+                ...base,
+                background: "linear-gradient(0deg, #111213, #111213), rgba(10, 11, 14, 0.4)",
+                border: "0.5px solid rgba(255, 255, 255, 0.1)",
+                borderRadius: "8rem",
+                color: "#fff",
+                fontSize: "14rem",
+                minWidth: "400rem",
+                ...doArrow(state.position, state.verticalAlign, state.horizontalAlign),
+            }),
+        }}
+        steps={steps}
+    >
         <div>
             <div css={dragableStyle} className={"drag"}></div>
             <div css={contentStyle}>
@@ -133,6 +289,7 @@ const App = () => {
             <Global styles={globalCss}/>
             <InfoOverLay />
         </div>
+        </TourProvider>
     )
 };
 

@@ -961,6 +961,25 @@ export class AppWindow {
 				if (browserAction.type === ActionsInTestEnum.SET_DEVICE) {
 					await this.store.dispatch(setDevice(browserAction.payload.meta.device.id));
 					await this.handlePerformAction(null, { action: browserAction, shouldNotSave: !!(browserAction as any).shouldNotRecord });
+					if(reaminingSteps.length) { 
+						await new Promise((resolve, reject) => {
+							const intervalFun = () => {
+								if(this.webView && this.webView.playwrightInstance && this.webView.playwrightInstance.page) {
+									resolve(true);
+									return true;
+								}
+								return false
+							}
+							const result = intervalFun();
+							if(!result){
+								const _interval = setInterval(() => {
+									if(intervalFun()) {
+										clearInterval(_interval);
+									}
+								}, 250);
+							}
+						});
+					}
 				} else {
 					if (browserAction.type !== ActionsInTestEnum.RUN_AFTER_TEST) {
 						// @Todo: Add support for future browser actions

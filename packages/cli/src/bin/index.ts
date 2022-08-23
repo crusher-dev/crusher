@@ -15,11 +15,14 @@ if (parseFloat(nodeVersion) >= 10.0) {
 
   console.log(`\n🦖  Crusher v${cliVersion} \n`);
 
-  const isDefaultCommand = args.length === 0 || ["open", "."].some((x) => args && args[0] === x);
+  const hasDiscordInveite = args && args[0]?.includes("--")
+
+  const isDefaultCommand = (args.length === 0 || true) || ["open", "."].some((x) => args && args[0] === x);
+
   if(["version", "--version"].includes(args[0])) {
     // Do nothing since version gets printed for every command
   } else { 
-    if (isDefaultCommand) {
+    if (isDefaultCommand) { 
       // console.log("Choose a command to run");
       // new EntryCommand().help();
 

@@ -145,6 +145,9 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 			});
 		}
 		addValidationRows(newValidationRowsData);
+		setTimeout(() => {
+			setCurrentStep(4);
+		}, 100);
 	};
 
 	const updateFieldOfValidationRow = (newFieldName: string, rowId: string) => {
@@ -191,7 +194,7 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 		await enableJavascriptInDebugger();
 
 		store.dispatch(setSelectedElement(null));
-		handleCloseWrapper();
+		handleCloseWrapper(true);
 	};
 
 	const updateSeoValidationAction = () => {
@@ -203,7 +206,7 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 		props.stepAction.payload.meta.validations = validationRows;
 		store.dispatch(updateRecordedStep({ ...props.stepAction }, props.stepIndex));
 		sendSnackBarEvent({ type: "success", message: "Updated Element assertions" });
-		handleCloseWrapper();
+		handleCloseWrapper(true);
 	};
 
 	const deleteValidationRow = (rowIndex) => {
@@ -211,9 +214,15 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 		setValidationRows([...newValidationRows]);
 	};
 
-	const handleCloseWrapper = () => {
+	const handleCloseWrapper = (isAfterSave = false) => {
 		if (isOnboardingOpen) {
-			setCurrentStep(4);
+			if(isAfterSave === true) {
+				setCurrentStep(5);
+			} else {
+				// Timeout so that it can find the element to highlight,
+				// (which will be mounted after closing current modal)
+				setTimeout(() => { setCurrentStep(3) }, 50);
+			} 
 		}
 		if (handleClose) {
 			handleClose();
@@ -223,9 +232,10 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 	if (!isOpen) return null;
 
 	return (
-		<Modal modalStyle={modalStyle} onOutsideClick={handleCloseWrapper}>
+		<Modal id="current-modal" modalStyle={modalStyle} onOutsideClick={handleCloseWrapper}>
 			<ModalTopBar title={"Assert element"} desc={"These are run over the selected element"} closeModal={handleCloseWrapper} />
 			<div
+				className={"assert-rows"}
 				css={css`
 					padding: 0rem 34rem;
 					margin-top: 8rem;

@@ -232,7 +232,6 @@ const buttonDropdownCss = css`
 const buttonDropdownMainButtonCss = css`
 	width: 116rem;
 	height: 32rem;
-	margin-left: 20rem;
 `;
 
 SaveVerifyButton.whyDidYouRender = true;
@@ -550,8 +549,9 @@ const Toolbar = (props: any) => {
 
 					<div className={"ml-auto mr-22 flex items-center"}>
 						<SettingsIcon onClick={setShowSettingsModal.bind(this, true)} css={settingsIconStyle} className={"ml-12"} />
-
-						<SaveVerifyButton isTestVerificationComplete={isTestVerificationComplete} />
+						<div id={"verify-save-test"} css={verifySaveTestContainerStyle}>
+							<SaveVerifyButton isTestVerificationComplete={isTestVerificationComplete} />
+						</div>
 					</div>
 				</Conditional>
 			</Conditional>
@@ -559,6 +559,10 @@ const Toolbar = (props: any) => {
 		</div>
 	);
 };
+
+const verifySaveTestContainerStyle = css`
+	margin-left: 20rem;
+`;
 
 StepActionMenu.whyDidYouRender = true;
 

@@ -349,7 +349,7 @@ const MoreStepsOnboarding = () => {
 
 	React.useEffect(() => {
 		if (savedSteps.length - startingOffset === 5) {
-			setCurrentStep(5);
+			setCurrentStep(6);
 		}
 	}, [savedSteps]);
 

@@ -19,6 +19,7 @@ import { setSessionInfoMeta } from "../store/actions/app";
 import { sendSnackBarEvent } from "../ui/components/toast";
 import historyInstance from "./utils/history";
 import { StepType, TourProvider, useTour } from "@reactour/tour";
+import { useSizes } from "@reactour/tour/dist/tour.esm";
 
 const handleCompletion = async (store: Store, action: IDeepLinkAction) => {
 
@@ -89,8 +90,8 @@ const MoreStepsOnboarding = () => {
 	const { setCurrentStep } = useTour();
 
 	React.useEffect(() => {
-		if (savedSteps.length - startingOffset === 5) {
-			setCurrentStep(5);
+		if (savedSteps.length - startingOffset === 6) {
+			setCurrentStep(6);
 		}
 	}, [savedSteps]);
 
@@ -154,11 +155,11 @@ const OnboardingItem = ({ title, description }) => {
 const steps: Array<StepType> = [
 	{
 		selector: "#target-site-input",
-		content: <OnboardingItem title={"Enter URL of website you want to test"} description={"You can open crusher-recorder from apps or CLI."} />,
+		content: <OnboardingItem title={"Enter URL of website you want to test"} description={""} />,
 	},
 	{
 		selector: "#select-element-action",
-		content: <OnboardingItem title={"Turn on element mode"} description={"Right click over the element or click here"} />,
+		content: <OnboardingItem title={"Turn on element mode"} description={"Select an element to record actions on it"} />,
 	},
 	{
 		selector: "#device_browser",
@@ -167,6 +168,11 @@ const steps: Array<StepType> = [
 	{
 		selector: "#element-actions-list",
 		content: <OnboardingItem title={"Select a element action"} description={"You can click, hover, take screenshot or add assertions"} />,
+	},
+    {
+		selector: "#current-modal",
+		content: <OnboardingItem title={"Select a element action"} description={"You can click, hover, take screenshot or add assertions"} />,
+        resizeObservables: ["#current-modal"],
 	},
 	{
 		selector: "#device_browser",

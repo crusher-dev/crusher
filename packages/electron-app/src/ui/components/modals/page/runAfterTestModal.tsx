@@ -81,7 +81,7 @@ const RunAfterTestModal = (props: iStartupModalProps) => {
 	};
 
 	return (
-		<Modal modalStyle={modalStyle} onOutsideClick={props.handleClose}>
+		<Modal id="current-modal" modalStyle={modalStyle} onOutsideClick={props.handleClose}>
 			<ModalTopBar title={"Run after test"} desc={"Runs test in the same browser context as specified"} closeModal={props.handleClose} />
 			<div
 				css={formContainerStyle}

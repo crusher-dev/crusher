@@ -183,7 +183,7 @@ const SeoModalContent = (props: iSEOModalProps) => {
 	if (!isOpen) return null;
 
 	return (
-		<Modal modalStyle={modalStyle} onOutsideClick={handleClose}>
+		<Modal 	id="current-modal"	modalStyle={modalStyle} onOutsideClick={handleClose}>
 			<ModalTopBar title={"SEO Checks"} desc={"These are run when page is loaded"} closeModal={handleClose} />
 			<div
 				css={css`

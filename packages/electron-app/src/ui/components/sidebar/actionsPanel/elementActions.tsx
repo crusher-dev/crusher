@@ -69,7 +69,7 @@ const ElementActions = ({ className, ...props }: { className?: any }) => {
 
 		if ([TElementActionsEnum.CLICK, TElementActionsEnum.HOVER, TElementActionsEnum.SCREENSHOT].includes(id)) {
 			if (isOpen) {
-				setCurrentStep(4);
+				setCurrentStep(5);
 			}
 		}
 		switch (id) {
@@ -90,9 +90,11 @@ const ElementActions = ({ className, ...props }: { className?: any }) => {
 				break;
 			case TElementActionsEnum.SHOW_ASSERT_MODAL:
 				emitShowModal({ type: TElementActionsEnum.SHOW_ASSERT_MODAL });
+				setCurrentStep(4);
 				break;
 			case TElementActionsEnum.SHOW_CUSTOM_SCRIPT_MODAL:
 				emitShowModal({ type: TElementActionsEnum.SHOW_ASSERT_MODAL });
+				setCurrentStep(4);
 				break;
 			case TElementActionsEnum.ASSERT_VISIBILITY:
 				await enableJavascriptInDebugger();

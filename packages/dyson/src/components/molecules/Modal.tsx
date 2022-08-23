@@ -10,6 +10,7 @@ type TModalProps = {
 	/**
 	 * Emotion CSS style if any
 	 */
+	id?: any;
 	css?: SerializedStyles;
 	modalStyle?: SerializedStyles;
 	children: ReactElement | ReactElement[];
@@ -19,12 +20,12 @@ type TModalProps = {
 	lightOverlay?: boolean;
 } & React.DetailedHTMLProps<HTMLAttributes<any>, any>;
 
-export const Modal = ({ modalStyle, children, onClose, lightOverlay, onOutsideClick }: TModalProps) => {
+export const Modal = ({ modalStyle, id, children, onClose, lightOverlay, onOutsideClick }: TModalProps) => {
 	return (
 		<OverlayTransparent lightOverlay={typeof lightOverlay !== "undefined" && lightOverlay !== null ? lightOverlay : true}>
 			<CenterLayout>
 				<OnOutsideClick blackListClassNames={["select-dropDownContainer"]} onOutsideClick={onOutsideClick}>
-					<div css={[primaryModalStyle, modalStyle]} className={"relative"}>
+					<div css={[primaryModalStyle, modalStyle]} id={id} className={"relative"}>
 						{children}
 
 						<Conditional showIf={!!onClose}>

@@ -2,8 +2,8 @@ import React from "react";
 import { css } from "@emotion/react";
 import { Button } from "@dyson/components/atoms";
 
-interface IProps { title: string; className?: string; onClick?: any }
-const ActionButton = ({ title, className, onClick }: IProps) => {
+interface IProps { title: string; className?: string; id?: string; onClick?: any }
+const ActionButton = ({ title, id, className, onClick }: IProps) => {
     const handleClick = React.useCallback((e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -12,6 +12,7 @@ const ActionButton = ({ title, className, onClick }: IProps) => {
 
 	return (
 		<Button
+            id={id}
 			onClick={handleClick}
 			className={`${className}`}
 			bgColor="tertiary-outline"

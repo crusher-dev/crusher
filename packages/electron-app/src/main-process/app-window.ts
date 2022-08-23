@@ -915,7 +915,9 @@ export class AppWindow {
 			this.window.setPosition(screenSize.bounds.x, screenSize.bounds.y, false);
 		} else {
 			return new Promise((resolve) => {
-				// this.window.unmaximize();
+				if(this.window.isMaximized) {
+				 this.window.unmaximize();
+				}
 				this.window.setFullScreen(false);
 				setImmediate(async () => {
 					if (process.platform === "darwin") {

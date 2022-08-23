@@ -1,6 +1,6 @@
 import { setUserAccountInfo } from "electron-app/src/store/actions/app";
 import { getUserAccountInfo } from "electron-app/src/store/selectors/app";
-import { focusOnWindow, saveAndGetUserInfo } from "electron-app/src/ui/commands/perform";
+import { saveAndGetUserInfo } from "electron-app/src/ui/commands/perform";
 import { waitForUserLogin } from "electron-app/src/utils/renderer";
 
 let _interval = null;

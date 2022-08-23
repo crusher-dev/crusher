@@ -43,6 +43,7 @@ const checkForDiscord = async()=>{
 const waitForUserLogin = async (): Promise<string> => {
   await checkForDiscord();
 
+  // ask for discord code here?
   const discordCode = process.argv.find((i)=>{
     return i.includes("--") || i===secretInviteCode
   });

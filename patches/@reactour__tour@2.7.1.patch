@@ -1,0 +1,12 @@
+diff --git a/dist/tour.esm.js b/dist/tour.esm.js
+index 788644b3f54281bd6db506e5a0ff123b9ee905ce..444ab48a266d233652659f1665ec104176d6bbb4 100644
+--- a/dist/tour.esm.js
++++ b/dist/tour.esm.js
+@@ -145,6 +145,7 @@ function useSizes(step, scrollOptions) {
+ 
+   function observableRefresher() {
+     setObserving(true);
++    var target = (step == null ? void 0 : step.selector) instanceof Element ? step == null ? void 0 : step.selector : document.querySelector(step == null ? void 0 : step.selector);
+     setdDimensions(getHighlightedRect(target, step == null ? void 0 : step.highlightedSelectors, step == null ? void 0 : step.bypassElem));
+     setObserving(false);
+   }

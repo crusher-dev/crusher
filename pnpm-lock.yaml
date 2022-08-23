@@ -10,6 +10,9 @@ patchedDependencies:
   shelljs@0.8.4:
     hash: twnfxsg5hhjhrs4amdtgtidara
     path: patches/shelljs@0.8.4.patch
+  '@reactour/tour@2.7.1':
+    hash: mcwkmtep3csmg7ppdzmd4xxddu
+    path: patches/@reactour__tour@2.7.1.patch
 
 importers:
 
@@ -2095,7 +2098,7 @@ packages:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/core': 7.16.7
-      '@babel/helper-create-class-features-plugin': 7.18.6_@babel+core@7.16.7
+      '@babel/helper-create-class-features-plugin': 7.18.9_@babel+core@7.16.7
       '@babel/helper-plugin-utils': 7.18.9
     transitivePeerDependencies:
       - supports-color
@@ -2122,7 +2125,7 @@ packages:
     dependencies:
       '@babel/core': 7.16.7
       '@babel/helper-annotate-as-pure': 7.18.6
-      '@babel/helper-create-class-features-plugin': 7.18.6_@babel+core@7.16.7
+      '@babel/helper-create-class-features-plugin': 7.18.9_@babel+core@7.16.7
       '@babel/helper-plugin-utils': 7.18.9
       '@babel/plugin-syntax-private-property-in-object': 7.14.5_@babel+core@7.16.7
     transitivePeerDependencies:

@@ -65,8 +65,11 @@
 
 **☄️Create your first test**
 
+<img width="666" alt="create first test" src="https://user-images.githubusercontent.com/6849438/186475366-f5c3e511-7c70-476f-aecd-01d02b9786d8.png">
+
+
 ```
-npx crusher-cli
+npx crusher-cli init
 ```
 
 or [download binary](https://docs.crusher.dev/getting-started/create-your-first-test#or-install-recorder)

@@ -12,6 +12,8 @@ import { FormInput } from "./components/FormInput";
 import { LoginNavBar } from "@ui/containers/common/login/navbar";
 import { backendRequest } from "@utils/common/backendRequest";
 import { RequestMethod } from "@types/RequestOptions";
+import { inviteCodeUserKeyAtom } from "@store/atoms/global/inviteCode";
+import { useAtom } from "jotai";
 
 const registerUser = (name: string, email: string, password: string, inviteType: string | null = null, inviteCode: string | null = null) => {
 	return backendRequest("/users/actions/signup", {
@@ -28,8 +30,15 @@ export default function Signup_email({ loginWithEmailHandler }) {
 	const [email, setEmail] = useState({ value: "", error: "" });
 	const [password, setPassword] = useState({ value: "", error: "" });
 	const [name, setName] = useState({ value: "", error: "" });
+	const [sessionInviteCode, setSessionInviteCode] = useAtom(inviteCodeUserKeyAtom);
+
 	const [inviteCode, setInviteCode] = React.useState({value: "", error: ""});
 
+	React.useEffect(() => {
+		if(sessionInviteCode) {
+			setInviteCode({value: sessionInviteCode, error: ""});
+		}
+	}, [sessionInviteCode]);
 	const [loading, setLoading] = useState(false);
 
 	const emailChange = useCallback(
@@ -87,6 +96,7 @@ export default function Signup_email({ loginWithEmailHandler }) {
 		try {
 			const data = await registerUser(name.value, email.value, password.value, query?.inviteType?.toString(), query?.inviteCode?.toString());
 			setData(data.systemInfo);
+			setSessionInviteCode(null);
 		} catch (e: any) {
 			console.error(e);
 			alert(e.message === "USER_EMAIL_NOT_AVAILABLE" ? "User already registered" : "Some error occurred while registering");
@@ -184,7 +194,7 @@ export default function Signup_email({ loginWithEmailHandler }) {
 									onBlur={verifyInfo.bind(this, false)}
 								/>
 								<div css={css`display: flex; justify-content: flex-end;`}>
-									<span css={css`:hover { opacity: 0.8 }`}>Don't have any? Get one</span>
+									<a href="https://discord.gg/sWbWNYWv" target="__blank" css={css`:hover { opacity: 0.8 }`}>Don't have any? Get one</a>
 								</div>
 							</div>
 

@@ -1,13 +1,22 @@
 <p align="center">
   <p align="center">
   <a href="https://crusher.dev/#gh-light-mode-only">
-    <img src="https://i.imgur.com/BRG9MxQ.png" width="180px" alt="Crusher logo" />
+    <img src="https://i.imgur.com/BRG9MxQ.png" width="140px" alt="Crusher logo" />
   </a>
   <a href="https://crusher.dev/#gh-dark-mode-only">
-    <img src="https://i.imgur.com/ncVx1vo.png"  width="180px" alt="Crusher logo" />
+    <img src="https://i.imgur.com/ncVx1vo.png"  width="140px" alt="Crusher logo" />
   </a>
 </p>
 </p>
+
+<p align="center">
+    <a href="https://crusher.dev/#gh-light-mode-only">
+  <img src="https://i.imgur.com/oHZjIaK.png" width="890px" =/>
+  </a>
+  <a href="https://crusher.dev/#gh-dark-mode-only">
+    <img src="https://i.imgur.com/oHZjIaK.png"  width="890px" />
+  </a>
+  </p>
 
 
 
@@ -38,14 +47,7 @@
 
 **Create, run and debug tests** with dead simple workflow, use **low-code or code**. We're reimagining testing to make it blazingly simple, fast and effective.
 
-<p align="center">
-    <a href="https://crusher.dev/#gh-light-mode-only">
-  <img src="https://i.imgur.com/oHZjIaK.png" width="890px" =/>
-  </a>
-  <a href="https://crusher.dev/#gh-dark-mode-only">
-    <img src="https://i.imgur.com/oHZjIaK.png"  width="890px" />
-  </a>
-  </p>
+
 
 <div>
 <h5  align="center"> Star repo to support us and get updates :heart: </h5>

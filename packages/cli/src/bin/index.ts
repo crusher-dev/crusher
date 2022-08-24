@@ -17,6 +17,7 @@ if (parseFloat(nodeVersion) >= 10.0) {
 
   const hasDiscordInveite = args && args[0]?.includes("--")
 
+  const commandArgs = args ? args.filter((a) => !a.startsWith("-")) : [];
   const isDefaultCommand = (args.length === 0) || ["open", "."].some((x) => args && args[0] === x);
 
   if(["version", "--version", "-v"].includes(args[0])) {

@@ -18,3 +18,7 @@ export const validateName = (name: string) => {
 	}
 	return true;
 };
+
+export const validateInviteCode = (inviteCode: string) => {
+	return inviteCode && inviteCode.startsWith("CRU-");
+};

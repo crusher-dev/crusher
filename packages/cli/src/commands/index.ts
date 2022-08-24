@@ -1,4 +1,4 @@
-import { Command } from "commander";
+import { Command, program } from "commander";
 import * as packgeJSON from "../../package.json";
 import fs from "fs";
 import path from "path";

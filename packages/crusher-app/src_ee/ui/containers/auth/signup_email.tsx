@@ -5,7 +5,7 @@ import { Text } from "dyson/src/components/atoms/text/Text";
 import { useRouter } from "next/router";
 import React, { useCallback, useState } from "react";
 import { loadUserDataAndRedirect } from "@hooks/user";
-import { validateEmail, validatePassword, validateName } from "@utils/common/validationUtils";
+import { validateEmail, validatePassword, validateName, validateInviteCode } from "@utils/common/validationUtils";
 import { SubmitButton } from "./components/SubmitButton";
 import { FormInput } from "./components/FormInput";
 
@@ -28,6 +28,8 @@ export default function Signup_email({ loginWithEmailHandler }) {
 	const [email, setEmail] = useState({ value: "", error: "" });
 	const [password, setPassword] = useState({ value: "", error: "" });
 	const [name, setName] = useState({ value: "", error: "" });
+	const [inviteCode, setInviteCode] = React.useState({value: "", error: ""});
+
 	const [loading, setLoading] = useState(false);
 
 	const emailChange = useCallback(
@@ -48,11 +50,16 @@ export default function Signup_email({ loginWithEmailHandler }) {
 		},
 		[name],
 	);
+	const inviteCodeChange = useCallback((e) => {
+		setInviteCode({...inviteCode, value: e.target.value});
+	}, [inviteCode]);
 
 	const verifyInfo = (completeVerify = false) => {
 		const shouldValidateEmail = completeVerify || email.value;
 		const shouldValidatePassword = completeVerify || password.value;
 		const shouldValidateName = completeVerify || name.value;
+		const shouldValidateInvitecode = completeVerify || inviteCode.value;
+		
 		if (!validateEmail(email.value) && shouldValidateEmail) {
 			setEmail({ ...email, error: "Please enter valid email" });
 		} else setEmail({ ...email, error: "" });
@@ -64,12 +71,18 @@ export default function Signup_email({ loginWithEmailHandler }) {
 		if (!validateName(name.value) && shouldValidateName) {
 			setName({ ...name, error: "Please enter a valid name" });
 		} else setName({ ...name, error: "" });
+
+		if(!validateInviteCode(inviteCode.value) && shouldValidateInvitecode) {
+			setInviteCode({...inviteCode, error: "Please enter correct invite code."})
+		} else {
+			setName({ ...name, error: ""});
+		}
 	};
 
 	const signupUser = async () => {
 		verifyInfo(true);
 
-		if (!validateEmail(email.value) || !validatePassword(password.value) || !validateName(email.value)) return;
+		if (!validateEmail(email.value) || !validatePassword(password.value) || !validateName(email.value) || !validateInviteCode(inviteCode.value)) return;
 		setLoading(true);
 		try {
 			const data = await registerUser(name.value, email.value, password.value, query?.inviteType?.toString(), query?.inviteCode?.toString());
@@ -155,13 +168,24 @@ export default function Signup_email({ loginWithEmailHandler }) {
 								<FormInput
 									type={"password"}
 									data={password}
-									onReturn={signupUser.bind(this)}
 									onChange={passwordChange}
 									onEnter={signupOnEnter}
 									autoComplete={"new-password"}
 									placeholder={"Enter password"}
 									onBlur={verifyInfo.bind(this, false)}
 								/>
+								<FormInput
+									type={"text"}
+									data={inviteCode}
+									onReturn={signupUser.bind(this)}
+									onChange={inviteCodeChange}
+									onEnter={signupOnEnter}
+									placeholder={"Enter invite code"}
+									onBlur={verifyInfo.bind(this, false)}
+								/>
+								<div css={css`display: flex; justify-content: flex-end;`}>
+									<span css={css`:hover { opacity: 0.8 }`}>Don't have any? Get one</span>
+								</div>
 							</div>
 
 							<SubmitButton text="Create an account" onSubmit={signupUser} loading={loading} />

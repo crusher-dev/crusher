@@ -20,16 +20,17 @@ const secretInviteCode = "crush"
 */
 const checkForDiscord = async()=>{
   const isCodeInCommandLine = process.argv.some((e)=>{
-    return e.includes("--") || e === secretInviteCode
+    return e.includes("--invite-code=") && !["help", "--help", "-h"].includes(e)
   })
+  const hasLoginFlag = process.argv.some((e) => e.includes("--login"));
 
 
   if(isUserLoggedIn() || isCodeInCommandLine) return;
 
-  if(!isCodeInCommandLine){
+  if(!isCodeInCommandLine && !hasLoginFlag){
     await cli.log(chalk.green(`New to crusher?`))
 
-    await cli.log(`Get access code - ${chalk.green("https://discord.com/")}`)
+    await cli.log(`Get access code - ${chalk.green("https://discord.gg/sWbWNYWv")}`)
   await cli.log(`1.) Get access code on home screen`)
   await cli.log(`2.) Run command with access code`)
 
@@ -45,7 +46,7 @@ const waitForUserLogin = async (): Promise<string> => {
 
   // ask for discord code here?
   const discordCode = process.argv.find((i)=>{
-    return i.includes("--") || i===secretInviteCode
+    return i.includes("--invite-code=")
   });
 
   const loginKey = await axios

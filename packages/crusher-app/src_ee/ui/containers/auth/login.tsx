@@ -88,7 +88,7 @@ export default function Login({ loginWithEmailHandler }) {
 
 					<div css={overlayContainer} className={"mt-48 pb-60"}>
 						<div className={" mb-42"}>
-							<Link href={getGithubLoginURL()}>
+							<Link href={getGithubLoginURL(query?.inviteType?.toString(), query?.inviteCode?.toString(), sessionInviteCode)}>
 								<Button className={"flex items-center justify-center"} css={githubButtonCSS}>
 									<GithubSVG />{" "}
 									<Text className={"ml-10"} fontSize={14} weight={700}>

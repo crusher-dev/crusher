@@ -11,6 +11,7 @@ import { ICreateUserPayload } from "./interface";
 import { v4 as uuidv4 } from "uuid";
 import { UserInviteService } from "./invite/service";
 import { InviteReferralEnum } from "./invite/interface";
+import { OCTOKIT_CONFIG } from "crusher-server/config/github";
 
 @Service()
 @JsonController("")
@@ -74,12 +75,29 @@ export class UserController {
 		return res.redirect(url);
 	}
 
+
+	@Get("/users/actions/auth.github")
+	async authenticateWithGithub(@Res() res: any, @QueryParams() params) {
+		const { inviteCode, inviteType, sessionInviteCode } = params;
+
+		const url = new URL("https://github.com/login/oauth/authorize");
+		url.searchParams.append("client_id", OCTOKIT_CONFIG.clientId);
+		let payload: any = {};
+		if(inviteCode && inviteType) {
+			payload.inviteCode = inviteCode;
+			payload.inviteType = inviteType;
+		}
+		if(!sessionInviteCode) { throw new Error("sessionInviteCode is requered to signup"); }
+		url.searchParams.append("state", `${btoa(JSON.stringify({ type: "auth", ...payload }))}`);
+		return res.redirect(url);
+	}
+
 	@Post("/users/actions/signup")
-	async createUser(@Body() userInfo: ICreateUserPayload & { inviteReferral: any }, @Req() req: any, @Res() res) {
+	async createUser(@Body() userInfo: ICreateUserPayload & { inviteReferral: any, discordInviteCode: any }, @Req() req: any, @Res() res) {
 		const userDBRecord = await this.usersService.getUserByEmail(userInfo.email);
 		if (userDBRecord) throw new BadRequestError("USER_EMAIL_NOT_AVAILABLE");
 
-		const userEntries = await this.userAuthService.signupUser(userInfo, req, res, userInfo.inviteReferral);
+		const userEntries = await this.userAuthService.signupUser(userInfo, req, res, userInfo.inviteReferral, userInfo.discordInviteCode);
 		// @TODO: Send verification mail
 		// EmailManager.sendVerificationMail(userInfo.email, generateVerificationCode(userEntries.userId, userInfo.email));
 

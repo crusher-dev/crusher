@@ -24,11 +24,15 @@ const getGithubOAuthURLLegacy = (alreadyAuthorized = false) => {
 	return githubUrl.toString();
 };
 
-export const getGithubLoginURL = () => {
-	const url = new URL("https://github.com/login/oauth/authorize");
-	url.searchParams.append("client_id", CLIENT_ID);
-	url.searchParams.append("state", `${btoa(JSON.stringify({ type: "auth" }))}`);
-
+export const getGithubLoginURL = (inviteType, inviteCode, sessionInviteCode) => {
+	const url = new URL(resolvePathToBackendURI("/users/actions/auth.github"));
+	if(inviteCode && inviteType) {
+		url.searchParams.append("inviteCode", inviteCode);
+		url.searchParams.append("inviteType", inviteType);
+	}
+	if(sessionInviteCode) {
+		url.searchParams.append("sessionInviteCode", sessionInviteCode);
+	}
 	return url.toString();
 };
 

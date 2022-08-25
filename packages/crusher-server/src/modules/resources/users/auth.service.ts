@@ -92,13 +92,16 @@ class UserAuthService {
 		req: any,
 		res: any,
 		inviteReferral: IInviteReferral = null,
+		sessionInviteCode = null,
 	): Promise<{ userId: number; projectId?: number; teamId: number }> {
+		if(!sessionInviteCode) { throw new Error("Invite code is required to signup."); }
 		const referralObject = inviteReferral ? await this.userInviteService.parseInviteReferral(inviteReferral) : null;
 
 		const userRecord = await this.usersService.createUserRecord({
 			name: user.name,
 			email: user.email,
 			password: user.password,
+			meta: JSON.stringify({ sessionInviteCode: sessionInviteCode })
 		});
 		const userRecordEntries = await this.usersService.setupInitialUserWorkspace({
 			id: userRecord.insertId,
@@ -114,7 +117,7 @@ class UserAuthService {
 	}
 
 	// If the user is registered, login otherwise register the user
-	async authUser(userPayload: Omit<ICreateUserPayload, "uuid">, req: any, res: any, encodedInviteCode: string = null) {
+	async authUser(userPayload: Omit<ICreateUserPayload, "uuid">, req: any, res: any, encodedInviteCode: string = null, sessionInviteCode: string = null) {
 		const user = await this.usersService.getUserByEmail(userPayload.email);
 
 		let inviteReferral: IInviteReferral = null;
@@ -126,7 +129,7 @@ class UserAuthService {
 			};
 		}
 
-		if (!user) return this.signupUser(userPayload, req, res, inviteReferral);
+		if (!user) return this.signupUser(userPayload, req, res, inviteReferral, sessionInviteCode);
 
 		// Login the user
 		await this.setUserAuthCookies(user.id, user.team_id, req, res);

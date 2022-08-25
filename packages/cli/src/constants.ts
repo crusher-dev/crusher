@@ -1,8 +1,8 @@
 import * as path from "path";
 import { getIsArm, getRuntimeEnv } from "./utils/utils";
 
-export const BACKEND_SERVER_URL = "http://localhost:8000";
-export const FRONTEND_SERVER_URL = "http://localhost:3000";
+export const BACKEND_SERVER_URL = "https://backend.crusher.dev";
+export const FRONTEND_SERVER_URL = "https://app.crusher.dev";
 
 export const APP_DIRECTORY =
   getRuntimeEnv().CRUSHER_GLOBAL_DIR ||

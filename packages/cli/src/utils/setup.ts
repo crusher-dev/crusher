@@ -85,7 +85,9 @@ export async function makeSureSetupIsCorrect(projectId: string | null = null, as
         // Pretty output here
         console.log(`${chalk.bold('Details')}`);
         console.log(`     project:      ${chalk.blueBright(suggestedProjectName)}`);
-        console.log(`     gitRepo:      ${chalk.blueBright(suggestedGitInfo.url)}`);
+        if(suggestedGitInfo) {
+          console.log(`     gitRepo:      ${chalk.blueBright(suggestedGitInfo.url)}`);
+        }
         console.log(`     configFile:   ${chalk.blueBright(getSuggestedProjectConfigPath())}\n`);
         projectConfig.project = projectRecord.id;
 

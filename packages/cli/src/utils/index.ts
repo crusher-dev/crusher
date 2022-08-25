@@ -54,13 +54,13 @@ function findGitRoot(_start = null) {
 const getProjectNameFromGitInfo = () : { projectName, gitInfo} => {
   try {
     const gitRoot = findGitRoot();
-    if (!gitRoot) return null;
+    if (!gitRoot) return {projectName: null, gitInfo: null};
     const config = fs.readFileSync(gitRoot + "/config", "utf-8");
     const configFile = ini.parse(config);
     const remotes = Object.keys(configFile)
       .filter((key) => key.startsWith("remote"))
       .map((key) => configFile[key]);
-    if (remotes.length === 0) return null;
+    if (remotes.length === 0) return {projectName: null, gitInfo: null};
     return {
       projectName: remotes.map((remote) => remote.url.split("/").pop().replace(".git", ""))[0],
       gitInfo: {
@@ -69,7 +69,7 @@ const getProjectNameFromGitInfo = () : { projectName, gitInfo} => {
       }
     };
   } catch (error) {
-    return null;
+    return {projectName: null, gitInfo: null};
   }
 };
 

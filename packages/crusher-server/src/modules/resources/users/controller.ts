@@ -11,7 +11,7 @@ import { ICreateUserPayload } from "./interface";
 import { v4 as uuidv4 } from "uuid";
 import { UserInviteService } from "./invite/service";
 import { InviteReferralEnum } from "./invite/interface";
-import { OCTOKIT_CONFIG } from "crusher-server/config/github";
+import { OCTOKIT_CONFIG } from "../../../../config/github";
 
 @Service()
 @JsonController("")

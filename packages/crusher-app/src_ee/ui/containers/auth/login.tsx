@@ -41,6 +41,7 @@ export const GithubSVG = function (props) {
 
 export default function Login({ loginWithEmailHandler }) {
 	const router = useRouter();
+	const { query } = router;
 
 	return (
 		<div css={containerCSS}>
@@ -88,7 +89,7 @@ export default function Login({ loginWithEmailHandler }) {
 
 					<div css={overlayContainer} className={"mt-48 pb-60"}>
 						<div className={" mb-42"}>
-							<Link href={getGithubLoginURL(query?.inviteType?.toString(), query?.inviteCode?.toString(), sessionInviteCode)}>
+							<Link href={getGithubLoginURL(query?.inviteType?.toString(), query?.inviteCode?.toString(), null)}>
 								<Button className={"flex items-center justify-center"} css={githubButtonCSS}>
 									<GithubSVG />{" "}
 									<Text className={"ml-10"} fontSize={14} weight={700}>

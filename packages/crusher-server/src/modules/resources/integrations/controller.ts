@@ -128,7 +128,7 @@ class IntegrationsController {
 
 	// @TODO: Clean "cannot set headers after they are sent" error
 	@Get("/integrations/:project_id/github/actions/callback")
-	async connectGithubAccount(@QueryParams() params, @Req() req: any, @Res() res: any) {
+	async connectGithubAccount(@QueryParams() params: any, @Req() req: any, @Res() res: any) {
 		const { code, state: encodedState } = params;
 		const githubService = new GithubService();
 		const tokenInfo = await githubService.parseGithubAccessToken(code);

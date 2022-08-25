@@ -190,7 +190,10 @@ export default function SignupInitial({ loginWithEmailHandler }) {
 	const router = useRouter();
 	const { query } = router;
 	const [sessionInviteCode, setSessionInviteCode] = useAtom(inviteCodeUserKeyAtom);
-
+	const handleGithub = () => { 
+		if(!sessionInviteCode) { alert("Invite code needed to signup"); return; }
+		window.location.href = getGithubLoginURL(query?.inviteType?.toString(), query?.inviteCode?.toString(), sessionInviteCode)
+	};
 	return (
 		<div css={containerCSS}>
 			<div className="pt-28">
@@ -237,14 +240,12 @@ export default function SignupInitial({ loginWithEmailHandler }) {
 
 					<div css={overlayContainer} className={"mt-48 pb-60"}>
 						<div className={" mb-42"}>
-							<Link href={getGithubLoginURL(query?.inviteType?.toString(), query?.inviteCode?.toString(), sessionInviteCode)}>
-								<Button className={"flex items-center justify-center"} css={githubButtonCSS}>
+								<Button onClick={handleGithub} className={"flex items-center justify-center"} css={githubButtonCSS}>
 									<GithubSVG />{" "}
 									<Text className={"ml-10"} fontSize={14} weight={700}>
 										Signup with Github
 									</Text>
 								</Button>
-							</Link>
 
 							{/* <Button
 								onClick={loginWithEmailHandler}

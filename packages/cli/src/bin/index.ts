@@ -17,12 +17,13 @@ if (parseFloat(nodeVersion) >= 10.0) {
 
   const hasDiscordInveite = args && args[0]?.includes("--")
 
-  const isDefaultCommand = (args.length === 0 || true) || ["open", "."].some((x) => args && args[0] === x);
-
-  if(["version", "--version"].includes(args[0])) {
+  const commandArgs = args ? args.filter((a) => !a.startsWith("-")) : [];
+  const isDefaultCommand = (commandArgs.length === 0) || ["open", "."].some((x) => args && args[0] === x);
+  const isHelpArg = helpArgs.includes(args[0]);
+  if(["version", "--version", "-v"].includes(args[0])) {
     // Do nothing since version gets printed for every command
   } else { 
-    if (isDefaultCommand) { 
+    if (isDefaultCommand && !isHelpArg) { 
       // console.log("Choose a command to run");
       // new EntryCommand().help();
 
@@ -45,7 +46,7 @@ if (parseFloat(nodeVersion) >= 10.0) {
         
         execSync(`${getRecorderDistCommand()} --crusher-cli-path=${eval("__dirname") + "/index.js"} ${customFlags} --no-sandbox`, {stdio: "inherit"});
       });
-    } else if(helpArgs.includes(args[0])) {
+    } else if(isHelpArg) {
       new EntryCommand().help();
     } else {
       new EntryCommand().run();

@@ -12,6 +12,7 @@ import { cliLoginUserKeyAtom } from "@store/atoms/global/cliToken";
 import { backendRequest } from "@utils/common/backendRequest";
 import { resolvePathToBackendURI } from "@utils/common/url";
 import { RequestMethod } from "@types/RequestOptions";
+import { inviteCodeUserKeyAtom } from "@store/atoms/global/inviteCode";
 
 export const useLoadTempData = () => {
 	const [, setTempTest] = useAtom(tempTestAtom);
@@ -21,6 +22,7 @@ export const useLoadTempData = () => {
 	const [, setGithubToken] = useAtom(githubTokenAtom);
 	const [, setLoginKey] = useAtom(cliLoginUserKeyAtom);
 	const [, setProjectToRedirect] = useAtom(tempProjectAtom);
+	const [, setInviteCode] = useAtom(inviteCodeUserKeyAtom);
 
 	const { asPath } = useRouter();
 
@@ -35,6 +37,7 @@ export const useLoadTempData = () => {
 
 		const githubToken = urlQuery.get("github_token");
 		const loginKey = urlQuery.get("lK");
+		const inviteCode = urlQuery.get("inviteCode");
 
 		setTempTestName(tempTestName);
 		setTempTest(tempTestId);
@@ -49,6 +52,9 @@ export const useLoadTempData = () => {
 			backendRequest(resolvePathToBackendURI("/cli/actions/login.user"), { method: RequestMethod.POST, payload: { loginKey } }).catch((err) => {
 				console.error("Request failed");
 			});
+		}
+		if(!!inviteCode) {
+			setInviteCode(inviteCode);
 		}
 		if (githubToken) {
 			setGithubToken(githubToken);

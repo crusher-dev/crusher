@@ -13,7 +13,7 @@ class CLIController {
 	@Get("/cli/get.key")
 	async getUniqueLoginKey() {
 		const key = uuidv4() + Date.now();
-		await this.redisManager.set(key, JSON.stringify({ userId: null, teamId: null }), { expiry: { type: "s", value: 5 * 60 } });
+		await this.redisManager.set(key, JSON.stringify({ userId: null, teamId: null }), { expiry: { type: "s", value: 60 * 60 } });
 		return { loginKey: key };
 	}
 

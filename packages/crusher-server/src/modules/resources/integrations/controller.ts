@@ -128,7 +128,7 @@ class IntegrationsController {
 
 	// @TODO: Clean "cannot set headers after they are sent" error
 	@Get("/integrations/:project_id/github/actions/callback")
-	async connectGithubAccount(@QueryParams() params, @Req() req: any, @Res() res: any) {
+	async connectGithubAccount(@QueryParams() params: any, @Req() req: any, @Res() res: any) {
 		const { code, state: encodedState } = params;
 		const githubService = new GithubService();
 		const tokenInfo = await githubService.parseGithubAccessToken(code);
@@ -138,7 +138,7 @@ class IntegrationsController {
 			const userInfo = await githubService.getUserInfo((tokenInfo as any).token);
 			const githubRegisteredUser = await this.userService.getUserByGithubUserId(`${userInfo.id}`);
 
-			if (true || !githubRegisteredUser) {
+			if (!githubRegisteredUser) {
 				const userRecord = await this.userAuthService.authUser(
 					{
 						name: userInfo.name || userInfo.userName,
@@ -148,6 +148,7 @@ class IntegrationsController {
 					req,
 					res,
 					state.inviteType ? encodedState : null,
+					state.sessionInviteCode ? state.sessionInviteCode : null
 				);
 
 				await this.userService.setGithubUserId(`${userInfo.id}`, userRecord.userId);
@@ -157,6 +158,7 @@ class IntegrationsController {
 			return res.redirect(resolvePathToFrontendURI("/?github_token=" + (tokenInfo as any).token));
 		}
 
+		// @TODO: Use proper util functions here
 		const redirectUrl = new URL(process.env.FRONTEND_URL ? process.env.FRONTEND_URL : "http://localhost:3000/");
 		redirectUrl.searchParams.append("token", (tokenInfo as any).token);
 		res.redirect(redirectUrl.toString());

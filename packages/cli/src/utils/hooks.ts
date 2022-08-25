@@ -20,16 +20,17 @@ const secretInviteCode = "crush"
 */
 const checkForDiscord = async()=>{
   const isCodeInCommandLine = process.argv.some((e)=>{
-    return e.includes("--") || e === secretInviteCode
+    return e.includes("--code=") && !["help", "--help", "-h"].includes(e)
   })
+  const hasLoginFlag = process.argv.some((e) => e.includes("--login"));
 
 
   if(isUserLoggedIn() || isCodeInCommandLine) return;
 
-  if(!isCodeInCommandLine){
+  if(!isCodeInCommandLine && !hasLoginFlag){
     await cli.log(chalk.green(`New to crusher?`))
 
-    await cli.log(`Get access code - ${chalk.green("https://discord.com/")}`)
+    await cli.log(`Get access code - ${chalk.green("https://discord.gg/sWbWNYWv")}`)
   await cli.log(`1.) Get access code on home screen`)
   await cli.log(`2.) Run command with access code`)
 
@@ -40,28 +41,36 @@ const checkForDiscord = async()=>{
   }
 }
 
+const parseDiscordFlag = (flag: string) => {
+  if(!flag) return null;
+  return flag.split("--code=")[1];
+};
+
 const waitForUserLogin = async (): Promise<string> => {
   await checkForDiscord();
 
   // ask for discord code here?
-  const discordCode = process.argv.find((i)=>{
-    return i.includes("--") || i===secretInviteCode
-  });
+  
+  const discordCode = parseDiscordFlag(process.argv.find((i)=>{
+    return i.includes("--code=");
+  }));
+  
 
   const loginKey = await axios
     .get(resolveBackendServerUrl("/cli/get.key"))
     .then((res) => {
       return res.data.loginKey;
     });
+  const loginUrl = resolveFrontendServerUrl(`/login_sucessful?lK=${loginKey}&inviteCode=${discordCode}`);
 
   await cli.log(
     "Login or create an account to create/sync tests⚡⚡. Opening a browser to sync test.\nOr open this link:"
   );
-  await cli.log(`${resolveFrontendServerUrl(`/login_sucessful?lK=${loginKey}&code=${discordCode}`)} \n`);
+  await cli.log(`${loginUrl} \n`);
   await cli.action.start("Waiting for login");
 
   await cli
-    .open(`${resolveFrontendServerUrl(`/login_sucessful?lK=${loginKey}&code=${discordCode}`)}`)
+    .open(loginUrl)
     .catch((err) => {
       console.error(err);
     });

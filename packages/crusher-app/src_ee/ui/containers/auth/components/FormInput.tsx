@@ -5,11 +5,11 @@ import { css } from "@emotion/react";
 	@Note - Wrong implementation of the loading state.
 						It should be implemented in the parent component.
  */
-export function FormInput({ type, data, onChange, placeholder, autoComplete, onBlur, onKeyDown, onReturn }: any) {
+export function FormInput({ type, data, onChange, placeholder, autoComplete, onBlur, onKeyDown, onReturn, className }: any) {
 	return (
 		<div>
 			<Input
-				className="md-20 bg"
+				className={`${className} md-20 bg`}
 				autoComplete={autoComplete}
 				value={data.value}
 				placeholder={placeholder}

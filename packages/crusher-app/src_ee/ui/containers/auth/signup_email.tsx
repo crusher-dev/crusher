@@ -5,18 +5,20 @@ import { Text } from "dyson/src/components/atoms/text/Text";
 import { useRouter } from "next/router";
 import React, { useCallback, useState } from "react";
 import { loadUserDataAndRedirect } from "@hooks/user";
-import { validateEmail, validatePassword, validateName } from "@utils/common/validationUtils";
+import { validateEmail, validatePassword, validateName, validateSessionInviteCode } from "@utils/common/validationUtils";
 import { SubmitButton } from "./components/SubmitButton";
 import { FormInput } from "./components/FormInput";
 
 import { LoginNavBar } from "@ui/containers/common/login/navbar";
 import { backendRequest } from "@utils/common/backendRequest";
 import { RequestMethod } from "@types/RequestOptions";
+import { inviteCodeUserKeyAtom } from "@store/atoms/global/inviteCode";
+import { useAtom } from "jotai";
 
-const registerUser = (name: string, email: string, password: string, inviteType: string | null = null, inviteCode: string | null = null) => {
+const registerUser = (name: string, email: string, password: string, discordInviteCode: string, inviteType: string | null = null, inviteCode: string | null = null) => {
 	return backendRequest("/users/actions/signup", {
 		method: RequestMethod.POST,
-		payload: { email, password, name: name, lastName: "", inviteReferral: inviteType && inviteCode ? { code: inviteCode, type: inviteType } : null },
+		payload: { email, password, name: name, lastName: "", discordInviteCode: discordInviteCode, inviteReferral: inviteType && inviteCode ? { code: inviteCode, type: inviteType } : null },
 	});
 };
 
@@ -28,6 +30,15 @@ export default function Signup_email({ loginWithEmailHandler }) {
 	const [email, setEmail] = useState({ value: "", error: "" });
 	const [password, setPassword] = useState({ value: "", error: "" });
 	const [name, setName] = useState({ value: "", error: "" });
+	const [sessionInviteCode, setSessionInviteCode] = useAtom(inviteCodeUserKeyAtom);
+
+	const [discordInviteCode, setDiscordInviteCode] = React.useState({value: "", error: ""});
+
+	React.useEffect(() => {
+		if(sessionInviteCode) {
+			setDiscordInviteCode({value: sessionInviteCode, error: ""});
+		}
+	}, [sessionInviteCode]);
 	const [loading, setLoading] = useState(false);
 
 	const emailChange = useCallback(
@@ -48,11 +59,16 @@ export default function Signup_email({ loginWithEmailHandler }) {
 		},
 		[name],
 	);
+	const inviteCodeChange = useCallback((e) => {
+		setDiscordInviteCode({...discordInviteCode, value: e.target.value});
+	}, [discordInviteCode]);
 
 	const verifyInfo = (completeVerify = false) => {
 		const shouldValidateEmail = completeVerify || email.value;
 		const shouldValidatePassword = completeVerify || password.value;
 		const shouldValidateName = completeVerify || name.value;
+		const shouldValidateInvitecode = completeVerify || discordInviteCode.value;
+		
 		if (!validateEmail(email.value) && shouldValidateEmail) {
 			setEmail({ ...email, error: "Please enter valid email" });
 		} else setEmail({ ...email, error: "" });
@@ -64,16 +80,23 @@ export default function Signup_email({ loginWithEmailHandler }) {
 		if (!validateName(name.value) && shouldValidateName) {
 			setName({ ...name, error: "Please enter a valid name" });
 		} else setName({ ...name, error: "" });
+
+		if(!validateSessionInviteCode(discordInviteCode.value) && shouldValidateInvitecode) {
+			setDiscordInviteCode({...discordInviteCode, error: "Please enter correct invite code."})
+		} else {
+			setName({ ...name, error: ""});
+		}
 	};
 
 	const signupUser = async () => {
 		verifyInfo(true);
 
-		if (!validateEmail(email.value) || !validatePassword(password.value) || !validateName(email.value)) return;
+		if (!validateEmail(email.value) || !validatePassword(password.value) || !validateName(email.value) || !validateSessionInviteCode(discordInviteCode.value)) return;
 		setLoading(true);
 		try {
-			const data = await registerUser(name.value, email.value, password.value, query?.inviteType?.toString(), query?.inviteCode?.toString());
+			const data = await registerUser(name.value, email.value, password.value, discordInviteCode.value, query?.inviteType?.toString(), query?.inviteCode?.toString());
 			setData(data.systemInfo);
+			setSessionInviteCode(null);
 		} catch (e: any) {
 			console.error(e);
 			alert(e.message === "USER_EMAIL_NOT_AVAILABLE" ? "User already registered" : "Some error occurred while registering");
@@ -155,13 +178,24 @@ export default function Signup_email({ loginWithEmailHandler }) {
 								<FormInput
 									type={"password"}
 									data={password}
-									onReturn={signupUser.bind(this)}
 									onChange={passwordChange}
 									onEnter={signupOnEnter}
 									autoComplete={"new-password"}
 									placeholder={"Enter password"}
 									onBlur={verifyInfo.bind(this, false)}
 								/>
+								<FormInput
+									type={"text"}
+									data={discordInviteCode}
+									onReturn={signupUser.bind(this)}
+									onChange={inviteCodeChange}
+									onEnter={signupOnEnter}
+									placeholder={"Enter invite code"}
+									onBlur={verifyInfo.bind(this, false)}
+								/>
+								<div css={css`display: flex; justify-content: flex-end;`}>
+									<a href="https://discord.gg/sWbWNYWv" target="__blank" css={css`:hover { opacity: 0.8 }`}>Don't have any? Get one</a>
+								</div>
 							</div>
 
 							<SubmitButton text="Create an account" onSubmit={signupUser} loading={loading} />

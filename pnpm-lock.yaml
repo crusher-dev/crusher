@@ -95,10 +95,6 @@ importers:
       uuid: ^8.3.2
       webpack: 5.73.0
       webpack-cli: ^4.10.0
-    dependencies:
-      ini: 3.0.0
-      inquirer: 6.5.2
-      uuid: 8.3.2
     devDependencies:
       '@babel/plugin-transform-modules-commonjs': 7.18.6_@babel+core@7.16.7
       '@babel/preset-env': 7.18.9_@babel+core@7.16.7
@@ -123,6 +119,8 @@ importers:
       fs-extra: 10.0.0
       glob: 7.2.0
       husky: 7.0.4
+      ini: 3.0.0
+      inquirer: 6.5.2
       jest: 27.4.7
       jsonfile: 6.1.0
       lint-staged: 11.2.6
@@ -135,6 +133,7 @@ importers:
       ts-jest: 27.1.3_k63pjaznknsshr3t2t7o2njo7e
       ts-loader: 9.3.1_ub35lyjrfansgnglcfaofeaefe
       typescript: 4.3.5
+      uuid: 8.3.2
       webpack: 5.73.0_webpack-cli@4.10.0
       webpack-cli: 4.10.0_webpack@5.73.0
 
@@ -743,7 +742,7 @@ importers:
       '@medv/finder': 2.0.0
       '@monaco-editor/react': 4.3.1_m23risk2t2ktwbmyoufat5z4ue
       '@popperjs/core': 2.9.2
-      '@reactour/tour': 2.7.1_zfgodjqc2ybm5ssmtszs3phgfu
+      '@reactour/tour': 2.7.1_mcwkmtep3csmg7ppdzmd4xxddu_zfgodjqc2ybm5ssmtszs3phgfu
       '@reduxjs/toolkit': 1.6.0_ytnka23jj3rep3duyup65rjuba
       '@sentry/electron': 2.5.4
       '@types/analytics-node': 3.1.8
@@ -7294,7 +7293,7 @@ packages:
       react: 17.0.2
     dev: false
 
-  /@reactour/tour/2.7.1_zfgodjqc2ybm5ssmtszs3phgfu:
+  /@reactour/tour/2.7.1_mcwkmtep3csmg7ppdzmd4xxddu_zfgodjqc2ybm5ssmtszs3phgfu:
     resolution: {integrity: sha512-cDpwvgUh222Qj1jaRTPTYWTT/BdGJbGem0IO2nOeFi+2T6xZnwioVVAeDEcB5E3lpMpM6HJl512Om7SGbr2G4w==}
     engines: {node: '>=10'}
     peerDependencies:
@@ -7308,6 +7307,7 @@ packages:
       '@reactour/utils': 0.2.1_react@17.0.2
       react: 17.0.2
     dev: false
+    patched: true
 
   /@reactour/utils/0.2.1_react@17.0.2:
     resolution: {integrity: sha512-HiMH304EMOIBN0sO3zZhqxaujJvJdQLnCOjvHOqM4Az8rtul4N9uTIYQ4QyMwvEZ1Mko/INlpQv6y2sBFRmzhA==}
@@ -17454,28 +17454,6 @@ packages:
       debug:
         optional: true
 
-  /follow-redirects/1.14.7_debug@4.3.3:
-    resolution: {integrity: sha512-+hbxoLbFMbRKDwohX8GkTataGqO6Jb7jGwpAlwgy2bIz25XtRm7KEzJM76R1WiNT5SwZkX4Y75SwBolkpmE7iQ==}
-    engines: {node: '>=4.0'}
-    peerDependencies:
-      debug: '*'
-    peerDependenciesMeta:
-      debug:
-        optional: true
-    dependencies:
-      debug: 4.3.3_supports-color@6.1.0
-
-  /follow-redirects/1.14.7_debug@4.3.4:
-    resolution: {integrity: sha512-+hbxoLbFMbRKDwohX8GkTataGqO6Jb7jGwpAlwgy2bIz25XtRm7KEzJM76R1WiNT5SwZkX4Y75SwBolkpmE7iQ==}
-    engines: {node: '>=4.0'}
-    peerDependencies:
-      debug: '*'
-    peerDependenciesMeta:
-      debug:
-        optional: true
-    dependencies:
-      debug: 4.3.4_supports-color@6.1.0
-
   /follow-redirects/1.15.1:
     resolution: {integrity: sha512-yLAMQs+k0b2m7cVxpS1VKJVvoz7SS9Td1zss3XRwXj+ZDH00RJgnuLx7E44wx02kQLrdM3aOOy+FpzS7+8OizA==}
     engines: {node: '>=4.0'}
@@ -18855,7 +18833,7 @@ packages:
     engines: {node: '>=8.0.0'}
     dependencies:
       eventemitter3: 4.0.7
-      follow-redirects: 1.14.7_debug@4.3.3
+      follow-redirects: 1.14.7
       requires-port: 1.0.0
     transitivePeerDependencies:
       - debug
@@ -18865,7 +18843,7 @@ packages:
     engines: {node: '>=8.0.0'}
     dependencies:
       eventemitter3: 4.0.7
-      follow-redirects: 1.14.7_debug@4.3.4
+      follow-redirects: 1.14.7
       requires-port: 1.0.0
     transitivePeerDependencies:
       - debug
@@ -19168,7 +19146,7 @@ packages:
   /ini/3.0.0:
     resolution: {integrity: sha512-TxYQaeNW/N8ymDvwAxPyRbhMBtnEwuvaTYpOQkFx1nSeusgezHniEc/l35Vo4iCq/mMiTJbpD7oYxN98hFlfmw==}
     engines: {node: ^12.13.0 || ^14.15.0 || >=16.0.0}
-    dev: false
+    dev: true
 
   /inline-style-parser/0.1.1:
     resolution: {integrity: sha512-7NXolsK4CAS5+xvdj5OMMbI962hU/wvwoxk+LWR9Ek9bVtyuuYScDN6eS0rUm6TxApFpw7CX1o4uJzcd4AyD3Q==}
@@ -30597,7 +30575,7 @@ packages:
       serialize-javascript: 6.0.0
       source-map: 0.6.1
       terser: 5.13.1
-      webpack: 5.73.0
+      webpack: 5.73.0_webpack-cli@4.10.0
     dev: true
 
   /terser-webpack-plugin/5.3.1_zjtckeea76d3oit4tw4tcptpni:
@@ -33907,7 +33885,7 @@ packages:
     dev: false
 
   github.com/crusherdev/playwright-video/f7dececde258b07bdec207e4bb6869d389655704:
-    resolution: {tarball: https://codeload.github.com/crusherdev/playwright-video/tar.gz/f7dececde258b07bdec207e4bb6869d389655704}
+    resolution: {commit: f7dececde258b07bdec207e4bb6869d389655704, repo: git+ssh://git@github.com/crusherdev/playwright-video.git, type: git}
     name: playwright-video
     version: 2.3.1
     engines: {node: '>=10.15.0'}
@@ -33922,7 +33900,7 @@ packages:
     dev: false
 
   github.com/crusherdev/webpack-extension-reloader/ef1a48f07c4658c914005994d3d5eb4b30d98534_webpack@5.21.2:
-    resolution: {tarball: https://codeload.github.com/crusherdev/webpack-extension-reloader/tar.gz/ef1a48f07c4658c914005994d3d5eb4b30d98534}
+    resolution: {commit: ef1a48f07c4658c914005994d3d5eb4b30d98534, repo: git+ssh://git@github.com/crusherdev/webpack-extension-reloader.git, type: git}
     id: github.com/crusherdev/webpack-extension-reloader/ef1a48f07c4658c914005994d3d5eb4b30d98534
     name: webpack-extension-reloader
     version: 1.1.4

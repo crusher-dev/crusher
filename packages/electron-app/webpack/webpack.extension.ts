@@ -90,16 +90,4 @@ let finalConfig: any = {
 	devtool: "cheap-module-source-map",
 };
 
-if (process.env.NODE_ENV === "development") {
-	const ExtensionReloader = require("webpack-extension-reloader");
-	const RunElectronOnFirstCompile = require("./plugin/runElectronFirstCompile");
-
-	finalConfig = {
-		...finalConfig,
-		plugins: [...finalConfig.plugins, new RunElectronOnFirstCompile()],
-		mode: "development",
-		watch: true,
-	};
-}
-
 module.exports = smp.wrap(finalConfig);

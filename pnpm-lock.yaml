@@ -947,7 +947,6 @@ importers:
       node-fetch: ^2.6.1
       playwright: 1.23.3
       playwright-chromium: 1.23.3
-      playwright-video: https://github.com/crusherdev/playwright-video.git#f7dececde258b07bdec207e4bb6869d389655704
       prettier: ^2.2.1
       shelljs: ^0.8.4
       string-replace-loader: ^3.0.1
@@ -977,7 +976,6 @@ importers:
       node-fetch: 2.6.1
       playwright: 1.23.3
       playwright-chromium: 1.23.3
-      playwright-video: github.com/crusherdev/playwright-video/f7dececde258b07bdec207e4bb6869d389655704
       shelljs: 0.8.4_twnfxsg5hhjhrs4amdtgtidara
       ts-loader: 8.0.14_f7c4xikhwelr3ea7p4v6h3nwx4
       ts-node: 9.1.1_typescript@4.3.5
@@ -17454,6 +17452,17 @@ packages:
       debug:
         optional: true
 
+  /follow-redirects/1.14.7_debug@4.3.4:
+    resolution: {integrity: sha512-+hbxoLbFMbRKDwohX8GkTataGqO6Jb7jGwpAlwgy2bIz25XtRm7KEzJM76R1WiNT5SwZkX4Y75SwBolkpmE7iQ==}
+    engines: {node: '>=4.0'}
+    peerDependencies:
+      debug: '*'
+    peerDependenciesMeta:
+      debug:
+        optional: true
+    dependencies:
+      debug: 4.3.4_supports-color@6.1.0
+
   /follow-redirects/1.15.1:
     resolution: {integrity: sha512-yLAMQs+k0b2m7cVxpS1VKJVvoz7SS9Td1zss3XRwXj+ZDH00RJgnuLx7E44wx02kQLrdM3aOOy+FpzS7+8OizA==}
     engines: {node: '>=4.0'}
@@ -18843,7 +18852,7 @@ packages:
     engines: {node: '>=8.0.0'}
     dependencies:
       eventemitter3: 4.0.7
-      follow-redirects: 1.14.7
+      follow-redirects: 1.14.7_debug@4.3.4
       requires-port: 1.0.0
     transitivePeerDependencies:
       - debug
@@ -24585,12 +24594,6 @@ packages:
     hasBin: true
     dev: false
     patched: true
-
-  /playwright-core/1.24.0:
-    resolution: {integrity: sha512-BkDWdVsoEEC8m2glQlfNu1EN2qvjBsLIg5bD0wjrfwv9zVHktIsp80yYFObAcWreLNYhfRP4PlXE04lr5R4DFQ==}
-    engines: {node: '>=14'}
-    hasBin: true
-    dev: false
 
   /playwright/1.23.3:
     resolution: {integrity: sha512-4uPqXU1PBTBnNhqIyuz+WmvjlMNrt+Rje8lwBf3RpUP9UCjP8G41qrr/vDUbMoHhQaUfdWeDuZAkPUxAv5Ag8g==}
@@ -33882,21 +33885,6 @@ packages:
 
   /zwitch/2.0.2:
     resolution: {integrity: sha512-JZxotl7SxAJH0j7dN4pxsTV6ZLXoLdGME+PsjkL/DaBrVryK9kTGq06GfKrwcSOqypP+fdXGoCHE36b99fWVoA==}
-    dev: false
-
-  github.com/crusherdev/playwright-video/f7dececde258b07bdec207e4bb6869d389655704:
-    resolution: {commit: f7dececde258b07bdec207e4bb6869d389655704, repo: git+ssh://git@github.com/crusherdev/playwright-video.git, type: git}
-    name: playwright-video
-    version: 2.3.1
-    engines: {node: '>=10.15.0'}
-    dependencies:
-      debug: 4.3.4
-      fluent-ffmpeg: 2.1.2
-      fs-extra: 9.1.0
-      playwright-core: 1.24.0
-      tslib: 2.4.0
-    transitivePeerDependencies:
-      - supports-color
     dev: false
 
   github.com/crusherdev/webpack-extension-reloader/ef1a48f07c4658c914005994d3d5eb4b30d98534_webpack@5.21.2:

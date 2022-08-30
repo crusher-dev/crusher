@@ -3,15 +3,15 @@ name: Build/release electron-app
 on:
   push:
     branches:
-      - master
+      - ft-recorder-release-debug
 
 jobs:
-  release:
+  prepare:
     runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-20.04]
+        os: [ubuntu-20.04]
 
     steps:
       - name: Check out Git repository
@@ -75,3 +75,14 @@ jobs:
           name: crusher-linux.zip
           path: output/crusher-electron-app-release/linux/Crusher.Recorder-*-linux.zip
           retention-days: 5
+
+  release:
+    needs: prepare
+    runs-on: ubuntu-20.04
+    concurrency: recorder-release
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+
+      - name: Download all workflow run artifacts
+        uses: actions/download-artifact@v3

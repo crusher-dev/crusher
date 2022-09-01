@@ -19,6 +19,7 @@ importers:
   .:
     specifiers:
       '@ffmpeg-installer/ffmpeg': ^1.0.20
+      '@octokit/rest': ^18.0.14
       '@swc/core': ^1.2.218
       '@swc/helpers': ^0.4.3
       dotenv: ^10.0.0
@@ -35,6 +36,7 @@ importers:
       source-map-support: ^0.5.20
       yargs: ^17.0.1
     dependencies:
+      '@octokit/rest': 18.6.0
       '@swc/core': 1.2.218
       '@swc/helpers': 0.4.3
       dotenv: 10.0.0
@@ -5179,6 +5181,8 @@ packages:
       lru-cache: 6.0.0
       universal-github-app-jwt: 1.1.0
       universal-user-agent: 6.0.0
+    transitivePeerDependencies:
+      - encoding
     dev: false
 
   /@octokit/auth-basic/1.4.8:
@@ -5190,6 +5194,8 @@ packages:
       '@types/btoa-lite': 1.0.0
       btoa-lite: 1.0.0
       universal-user-agent: 6.0.0
+    transitivePeerDependencies:
+      - encoding
     dev: false
 
   /@octokit/auth-oauth-app/3.1.1:
@@ -5201,6 +5207,8 @@ packages:
       '@types/btoa-lite': 1.0.0
       btoa-lite: 1.0.0
       universal-user-agent: 6.0.0
+    transitivePeerDependencies:
+      - encoding
     dev: false
 
   /@octokit/auth-token/2.4.5:
@@ -5218,6 +5226,8 @@ packages:
       '@octokit/auth-basic': 1.4.8
       '@octokit/auth-oauth-app': 3.1.1
       '@octokit/auth-token': 2.4.5
+    transitivePeerDependencies:
+      - encoding
     dev: false
 
   /@octokit/core/3.5.1:
@@ -5230,6 +5240,8 @@ packages:
       '@octokit/types': 6.16.4
       before-after-hook: 2.2.2
       universal-user-agent: 6.0.0
+    transitivePeerDependencies:
+      - encoding
     dev: false
 
   /@octokit/endpoint/6.0.12:
@@ -5246,6 +5258,8 @@ packages:
       '@octokit/request': 5.6.0
       '@octokit/types': 6.16.4
       universal-user-agent: 6.0.0
+    transitivePeerDependencies:
+      - encoding
     dev: false
 
   /@octokit/oauth-app/1.2.1:
@@ -5258,6 +5272,8 @@ packages:
       btoa-lite: 1.0.0
       fromentries: 1.3.2
       universal-user-agent: 6.0.0
+    transitivePeerDependencies:
+      - encoding
     dev: false
 
   /@octokit/oauth-authorization-url/4.3.2:
@@ -5310,8 +5326,10 @@ packages:
       '@octokit/request-error': 2.1.0
       '@octokit/types': 6.16.4
       is-plain-object: 5.0.0
-      node-fetch: 2.6.1
+      node-fetch: 2.6.7
       universal-user-agent: 6.0.0
+    transitivePeerDependencies:
+      - encoding
     dev: false
 
   /@octokit/rest/18.6.0:
@@ -5321,6 +5339,8 @@ packages:
       '@octokit/plugin-paginate-rest': 2.13.5_@octokit+core@3.5.1
       '@octokit/plugin-request-log': 1.0.4_@octokit+core@3.5.1
       '@octokit/plugin-rest-endpoint-methods': 5.3.1_@octokit+core@3.5.1
+    transitivePeerDependencies:
+      - encoding
     dev: false
 
   /@octokit/types/6.16.4:
@@ -17406,6 +17426,17 @@ packages:
       debug:
         optional: true
 
+  /follow-redirects/1.14.7_debug@4.3.4:
+    resolution: {integrity: sha512-+hbxoLbFMbRKDwohX8GkTataGqO6Jb7jGwpAlwgy2bIz25XtRm7KEzJM76R1WiNT5SwZkX4Y75SwBolkpmE7iQ==}
+    engines: {node: '>=4.0'}
+    peerDependencies:
+      debug: '*'
+    peerDependenciesMeta:
+      debug:
+        optional: true
+    dependencies:
+      debug: 4.3.4_supports-color@6.1.0
+
   /follow-redirects/1.15.1:
     resolution: {integrity: sha512-yLAMQs+k0b2m7cVxpS1VKJVvoz7SS9Td1zss3XRwXj+ZDH00RJgnuLx7E44wx02kQLrdM3aOOy+FpzS7+8OizA==}
     engines: {node: '>=4.0'}
@@ -18762,7 +18793,7 @@ packages:
     engines: {node: '>=8.0.0'}
     dependencies:
       eventemitter3: 4.0.7
-      follow-redirects: 1.14.7
+      follow-redirects: 1.14.7_debug@4.3.4
       requires-port: 1.0.0
     transitivePeerDependencies:
       - debug
@@ -23398,7 +23429,6 @@ packages:
         optional: true
     dependencies:
       whatwg-url: 5.0.0
-    dev: true
 
   /node-forge/0.10.0:
     resolution: {integrity: sha512-PPmu8eEeG9saEUvI97fm4OYxXVB6bFvyNTyiUOBichBpFG8A1Ljw3bY62+5oOjDEMHRnd0Y7HQ+x7uzxOzC6JA==}
@@ -30620,7 +30650,6 @@ packages:
 
   /tr46/0.0.3:
     resolution: {integrity: sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==}
-    dev: true
 
   /tr46/1.0.1:
     resolution: {integrity: sha512-dTpowEjclQ7Kgx5SdBkqRzVhERQXov8/l9Ft9dVM9fmg0W0KQSVaXX9T4i6twCPNtYiZM53lpSSUAwJbFPOHxA==}
@@ -31989,7 +32018,6 @@ packages:
 
   /webidl-conversions/3.0.1:
     resolution: {integrity: sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==}
-    dev: true
 
   /webidl-conversions/4.0.2:
     resolution: {integrity: sha512-YQ+BmxuTgd6UXZW3+ICGfyqRyHXVlD5GtQr5+qjiNW7bF0cqrzX500HVXPBOvgXb5YnzDd+h0zqyv61KUD7+Sg==}
@@ -32916,7 +32944,6 @@ packages:
     dependencies:
       tr46: 0.0.3
       webidl-conversions: 3.0.1
-    dev: true
 
   /whatwg-url/7.1.0:
     resolution: {integrity: sha512-WUu7Rg1DroM7oQvGWfOiAK21n74Gg+T4elXEQYkOhtyLeWiJFoOGLXPKI/9gzIie9CtwVLm8wtw6YJdKyxSjeg==}

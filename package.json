@@ -26,6 +26,7 @@
 		"pm2": "^5.1.2"
 	},
 	"dependencies": {
+		"@octokit/rest": "^18.0.14",
 		"@swc/core": "^1.2.218",
 		"@swc/helpers": "^0.4.3",
 		"dotenv": "^10.0.0",

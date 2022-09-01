@@ -48,11 +48,10 @@ async function createRelease(tag) {
     }
 
     const artifacts = fs.readdirSync(ARTIFACTS_PATH);
-    process.chdir(ARTIFACTS_PATH);
 
     for(let artifact of artifacts) {
         console.time("Extracting " + artifact);
-        child_process.execSync("unzip " + artifact + " -d dist");
+        child_process.execSync(`cd ${ARTIFACTS_PATH} && unzip ` + artifact + " -d dist");
         console.timeEnd("Extracting " + artifact);
     }
 

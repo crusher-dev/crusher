@@ -3,10 +3,10 @@ name: Build/release electron-app
 on:
   push:
     branches:
-      - master
+      - ft-recorder-release-debug
 
 jobs:
-  release:
+  prepare:
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -38,6 +38,11 @@ jobs:
 
       - name: Show binary
         run: ls -l packages/electron-app/bin
+
+      - name: Update packages/electron-app/package.json versions
+        run: node ./scripts/update-local-ea-version.js
+        env:
+          CRUSHER_GIT_RELEASE_TOKEN: ${{ secrets.CRUSHER_GIT_RELEASE_TOKEN }}
 
       - if: matrix.os == 'ubuntu-20.04'
         name: Build release for electron app
@@ -75,3 +80,43 @@ jobs:
           name: crusher-linux.zip
           path: output/crusher-electron-app-release/linux/Crusher.Recorder-*-linux.zip
           retention-days: 5
+
+  release:
+    needs: prepare
+    runs-on: ubuntu-20.04
+    concurrency: recorder-release
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+
+      - name: Download all workflow run artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: artifacts
+    
+      - name: Show artifact
+        run: ls -l artifacts
+
+      - uses: pnpm/action-setup@v2.2.2
+        with:
+          version: 7.5.1
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.13.2
+          cache: 'pnpm'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install crusher modules
+        run: pnpm install --frozen-lockfile --reporter=append-only --ignore-scripts
+
+      - name: Run release script
+        run: node ./scripts/release-debug.js
+        env:
+          CRUSHER_GIT_RELEASE_TOKEN: ${{ secrets.CRUSHER_GIT_RELEASE_TOKEN }}
+          DOWNLOADS_REPO_URL: https://github.com/crusher-dev/crusher-debug-downloads/
+
+      - run: cd output/crusher-cli && npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}

@@ -54,7 +54,7 @@ async function createRelease(tag) {
         const files = fs.readdirSync(path.resolve(ARTIFACTS_PATH, artifact));
         console.time("Moving " + files[0] + " to ../dist");
         child_process.execSync(`cd ${artifact} && unzip` + files[0] + " -d ../dist");
-        console.time("Moving " + files[0] + " to ../dist");
+        console.timeEnd("Moving " + files[0] + " to ../dist");
     }
 
     const dists = fs.readdirSync(DIST_PATH);

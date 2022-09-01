@@ -13,13 +13,13 @@ console.log( glob.sync("./src/**/*.ts").reduce(function (obj, el) {
 
 
 const environmentVariables = {
-  'process.env.DOWNLOADS_REPO_URL': 'https://github.com/crusherdev/crusher-downloads',
+  'process.env.DOWNLOADS_REPO_URL': JSON.stringify('https://github.com/crusherdev/crusher-downloads'),
 };
 if(process.env.RECORDER_VERSION) {
-  environmentVariables['process.env.RECORDER_VERSION'] = process.env.RECORDER_VERSION;
+  environmentVariables['process.env.RECORDER_VERSION'] = JSON.stringify(process.env.RECORDER_VERSION);
 }
 if(process.env.DOWNLOADS_REPO_URL) {
-  environmentVariables['process.env.DOWNLOADS_REPO_URL'] = process.env.DOWNLOADS_REPO_URL;
+  environmentVariables['process.env.DOWNLOADS_REPO_URL'] = JSON.stringify(process.env.DOWNLOADS_REPO_URL);
 }
 
 module.exports = {

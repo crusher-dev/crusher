@@ -15,7 +15,6 @@ export const RECORDER_MAC_BUILD = url.resolve(process.env.DOWNLOADS_REPO_URL, `.
 export const RECORDER_MAC_ARM64_BUILD = url.resolve(process.env.DOWNLOADS_REPO_URL, `./releases/download/v${recorderVersion}/Crusher.Recorder-${recorderVersion}-mac-arm64.zip`);
 export const RECORDER_LINUX_BUILd = url.resolve(process.env.DOWNLOADS_REPO_URL, `./releases/download/v${recorderVersion}/Crusher.Recorder-${recorderVersion}-linux.zip`);
 
-console.log("LINUX BUILD", RECORDER_LINUX_BUILd);
 export const CLOUDFLARED_URL = {
   MAC: "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-darwin-amd64.tgz",
   LINUX: "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64"

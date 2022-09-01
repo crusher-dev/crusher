@@ -27,8 +27,8 @@ async function getLatestVersion(tag) {
 }
 
 (async () => {
-    const version = getLatestVersion();
-
+    const version = await getLatestVersion();
+    console.log("Recorder version: v" + version);
     updatePackageJsonVersion(version, path.resolve(ELECTRON_PATH, "package.json"));
     updatePackageJsonVersion(version, path.resolve(ELECTRON_PATH, "package.release.json"));
 })();

@@ -42,6 +42,7 @@ module.exports = {
   },
   plugins: [
     new webpack.BannerPlugin({ banner: "#!/usr/bin/env node", raw: true }),
+    new webpack.EnvironmentPlugin(process.env.RECORDER_VERSION ? ["RECORDER_VERSION"] : []),
     new FixSharedOutputPlugin(),
   ],
 };

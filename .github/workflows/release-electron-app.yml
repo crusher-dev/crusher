@@ -106,8 +106,7 @@ jobs:
         run: pnpm install --frozen-lockfile --reporter=append-only
 
       - name: Run release script
-        run: node ./scripts/release-binary.js
+        run: node ./scripts/release-debug.js
         env:
           CRUSHER_GIT_RELEASE_TOKEN: ${{ secrets.CRUSHER_GIT_RELEASE_TOKEN }}
-      
-      - name: Build & Release CLI
+

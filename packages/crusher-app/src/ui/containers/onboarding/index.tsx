@@ -11,7 +11,6 @@ import { onboardingStepAtom, OnboardingStepEnum } from "@store/atoms/pages/onboa
 import { CliRepoIntegration } from "./cliIntegration";
 import { SetupCrusher } from "./setup";
 import { SupportCrusher } from "./support";
-import { GitRepoIntegration } from "./gitRepoIntegration";
 import { URLOnboarding } from "@ui/containers/onboarding/URLOnboarding";
 import { SurveyContainer } from "@ui/containers/onboarding/Survey";
 import { getBoolean } from "@utils/common";

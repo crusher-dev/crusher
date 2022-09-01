@@ -266,16 +266,16 @@ function ConnectionGithub() {
 						onClick={onGithubClick.bind(this, false)}
 						css={css`
 							border-width: 0;
-							background: #343a41;
+							background: #fff !important;
 							//
 							:hover {
 								border-width: 0;
-								background: #424850;
+								background: #fff !important;
 							}
 						`}
 					>
 						<div className={"flex items-center"}>
-							<GithubSVG height={"12rem"} width={"12rem"} className={"mt-1"} />
+							<GithubSVG css={css`path { fill: #fff !important; }`} height={"12rem"} width={"12rem"} className={"mt-1"} />
 							<span className={"mt-2 ml-8"}>Github</span>
 						</div>
 					</Button>
@@ -452,7 +452,7 @@ function GitIntegration() {
 		<div className={"flex flex-col justify-between items-start mt-44 mb-24"}>
 			<div className={"flex justify-between items-center w-full"}>
 				<div className={"flex"}>
-					<GitSVG height={28} width={28} />
+					<GitSVG css={css`path { fill: #fff !important; }`} height={28} width={28} />
 					<div className={"ml-16"}>
 						<Heading type={2} fontSize={"14"} className={"mb-8"}>
 							Git Integration

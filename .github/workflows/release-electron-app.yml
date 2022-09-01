@@ -39,6 +39,11 @@ jobs:
       - name: Show binary
         run: ls -l packages/electron-app/bin
 
+      - name: Update packages/electron-app/package.json versions
+        run: node ./scripts/update-local-ea-version.js
+        env:
+          CRUSHER_GIT_RELEASE_TOKEN: ${{ secrets.CRUSHER_GIT_RELEASE_TOKEN }}
+
       - if: matrix.os == 'ubuntu-20.04'
         name: Build release for electron app
         run: cd packages/electron-app && BACKEND_URL=https://backend.crusher.dev FRONTEND_URL=https://app.crusher.dev pnpm release

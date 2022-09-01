@@ -38,6 +38,7 @@
 		"postinstall-postinstall": "^2.1.0",
 		"putout": "^18.16.0",
 		"regenerator-runtime": "^0.13.9",
+		"semver": "^7.3.7",
 		"shelljs": "^0.8.4",
 		"source-map-support": "^0.5.20",
 		"yargs": "^17.0.1"

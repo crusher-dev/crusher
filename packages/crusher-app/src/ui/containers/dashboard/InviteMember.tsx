@@ -66,7 +66,7 @@ export const InvitePeople = ({ onClose }) => {
 					color: #d8d8d8;
 				`}
 			>
-				Enter email - comma separated
+				Enter emails - comma separated
 			</div>
 			<Input
 				placeholder={"test@x.ai, new@x.ai"}

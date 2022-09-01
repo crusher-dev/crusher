@@ -54,11 +54,11 @@ export const AddProjectModal = ({ onClose }) => {
 	return (
 		<Modal onOutsideClick={onClose} onClose={onClose}>
 			<div className={"font-cera text-16 font-600 leading-none"}>Create new project</div>
-			<div className={"text-13 mt-8"}>Organize test under one group</div>
 			<div
 				className={"mt-44 text-13 font-600 mb-16"}
 				css={css`
 					color: #d8d8d8;
+					margin-top: 62rem;
 				`}
 			>
 				Enter Project name

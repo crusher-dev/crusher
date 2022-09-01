@@ -115,7 +115,7 @@ jobs:
         run: node ./scripts/release-debug.js
         env:
           CRUSHER_GIT_RELEASE_TOKEN: ${{ secrets.CRUSHER_GIT_RELEASE_TOKEN }}
-          DOWNLOADS_REPO_URL: https://github.com/crusherdev/crusher-debug-downloads
+          DOWNLOADS_REPO_URL: https://github.com/crusher-dev/crusher-debug-downloads
 
       - run: cd output/crusher-cli && npm publish
         env:

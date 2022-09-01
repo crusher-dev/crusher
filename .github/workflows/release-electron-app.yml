@@ -92,6 +92,19 @@ jobs:
       - name: Show artifact
         run: ls -l artifacts
 
+      - uses: pnpm/action-setup@v2.2.2
+        with:
+          version: 7.5.1
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.13.2
+          cache: 'pnpm'
+
+      - name: Install crusher modules
+        run: pnpm install --frozen-lockfile --reporter=append-only
+
       - name: Run release script
         run: node ./scripts/release-binary.js
         env:

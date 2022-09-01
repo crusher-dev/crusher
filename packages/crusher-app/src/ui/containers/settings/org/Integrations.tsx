@@ -275,7 +275,7 @@ function ConnectionGithub() {
 						`}
 					>
 						<div className={"flex items-center"}>
-							<GithubSVG css={css`path { fill: #fff !important; }`} height={"12rem"} width={"12rem"} className={"mt-1"} />
+							<GithubSVG css={css`path { fill: #000 !important; }`} height={"12rem"} width={"12rem"} className={"mt-1"} />
 							<span className={"mt-2 ml-8"}>Github</span>
 						</div>
 					</Button>

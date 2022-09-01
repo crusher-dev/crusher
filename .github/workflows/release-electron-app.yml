@@ -101,6 +101,7 @@ jobs:
         with:
           node-version: 16.13.2
           cache: 'pnpm'
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Install crusher modules
         run: pnpm install --frozen-lockfile --reporter=append-only

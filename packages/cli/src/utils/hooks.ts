@@ -30,7 +30,7 @@ const checkForDiscord = async()=>{
   if(!isCodeInCommandLine && !hasLoginFlag){
     await cli.log(chalk.green(`New to crusher?`))
 
-    await cli.log(`Get access code - ${chalk.green("https://discord.gg/sWbWNYWv")}`)
+    await cli.log(`Get access code - ${chalk.green("https://discord.gg/dHZkSNXQrg")}`)
   await cli.log(`1.) Get access code on home screen`)
   await cli.log(`2.) Run command with access code`)
 

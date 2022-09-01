@@ -243,7 +243,7 @@ class IntegrationsController {
 		const { user_id, team_id } = userInfo;
 		const githubUserToken = generateToken(user_id, team_id);
 
-		return `npx crusher-cli test:run --token=${githubUserToken} --project-id=${projectId}`;
+		return `npx crusher-cli test:run --token=${githubUserToken} --projectid=${projectId}`;
 	}
 }
 

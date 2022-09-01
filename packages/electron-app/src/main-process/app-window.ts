@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, session, shell, webContents, webFrame, webFrameMain } from "electron";
+import { app, BrowserWindow, ipcMain, session, shell } from "electron";
 import windowStateKeeper from "electron-window-state";
 import { APP_NAME } from "../../config/about";
 import { encodePathAsUrl, getAppIconPath, getSelectedProjectTests, getUserAccountProjects, getUserInfoFromToken, sleep } from "../utils";
@@ -33,21 +33,17 @@ import { iSeoMetaInformationMeta } from "../types";
 import { getUserAgentFromName } from "@shared/constants/userAgents";
 import { getAppEditingSessionMeta, getAppSessionMeta, getAppSettings, getCurrentSelectedProjct, getRemainingSteps, getUserAccountInfo } from "../store/selectors/app";
 import { resetAppSession, setSelectedProject, setSessionInfoMeta, setUserAccountInfo } from "../store/actions/app";
-import { resolveToBackendPath, resolveToFrontEndPath } from "@shared/utils/url";
+import { resolveToFrontEndPath } from "@shared/utils/url";
 import { getGlobalAppConfig, writeGlobalAppConfig } from "../lib/global-config";
 import template from "@crusher-shared/utils/templateString";
 import { ILoggerReducer } from "../store/reducers/logger";
 import { clearLogs, recordLog } from "../store/actions/logger";
 import axios from "axios";
 import { identify } from "../lib/analytics";
-import * as fs from "fs";
-import * as path from "path";
-import child_process from "child_process";
 
 import { screen } from "electron";
 import { ProxyManager } from "./proxy-manager";
 import { resolveToBackend } from "../utils/url";
-import { url } from "inspector";
 
 export class AppWindow {
 	private window: Electron.BrowserWindow;

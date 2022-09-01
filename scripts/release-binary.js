@@ -53,11 +53,12 @@ async function createRelease(tag) {
     for(let artifact of artifacts) {
         const files = fs.readdirSync(path.resolve(ARTIFACTS_PATH, artifact));
         console.time("Moving " + files[0] + " to ../dist");
-        child_process.execSync(`cd ${artifact} && unzip ` + files[0] + " -d ../dist");
+        child_process.execSync(`cd ${artifact} && unzip ` + files[0] + " -d " + DIST_PATH);
         console.timeEnd("Moving " + files[0] + " to ../dist");
     }
 
     const dists = fs.readdirSync(DIST_PATH);
+    console.log("Files in dist", dists);
     const [_, version] = new RegExp(/Crusher\.Recorder\-([\d.]*)\-/gm).exec(dists[0]);
 
     createRelease("v" + version);

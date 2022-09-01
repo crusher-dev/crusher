@@ -3,7 +3,7 @@ name: Build/release electron-app
 on:
   push:
     branches:
-      - ft-recorder-release-debug
+      - master
 
 jobs:
   prepare:

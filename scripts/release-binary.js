@@ -7,7 +7,7 @@ const DIST_PATH = path.resolve(ARTIFACTS_PATH, "dist");
 const { Octokit } = require("@octokit/rest");
 
 async function createRelease(tag) {
-    const octokit = new Octokit({ auth: process.env.GITHUB_RELEASE_TOKEN });
+    const octokit = new Octokit({ auth: process.env.CRUSHER_GIT_RELEASE_TOKEN });
 
     const release = await octokit.request('POST /repos/{owner}/{repo}/releases', {
         owner: 'crusher-dev',

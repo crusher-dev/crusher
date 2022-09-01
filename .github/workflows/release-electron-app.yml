@@ -91,3 +91,8 @@ jobs:
     
       - name: Show artifact
         run: ls -l artifacts
+
+      - name: Run release script
+        run: node ./scripts/release-binary.js
+        env:
+          CRUSHER_GIT_RELEASE_TOKEN: ${{ secrets.CRUSHER_GIT_RELEASE_TOKEN }}

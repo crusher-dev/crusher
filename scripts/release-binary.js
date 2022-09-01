@@ -58,7 +58,6 @@ async function createRelease(tag) {
     }
 
     const dists = fs.readdirSync(DIST_PATH);
-    console.log("Files in dist", dists);
     const [_, version] = new RegExp(/Crusher\.Recorder\-([\d.]*)\-/gm).exec(dists[0]);
 
     createRelease("v" + version);

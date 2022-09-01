@@ -1,4 +1,5 @@
 import * as path from "path";
+import * as url from "url";
 import { getIsArm, getRuntimeEnv } from "./utils/utils";
 
 export const BACKEND_SERVER_URL = "https://backend.crusher.dev";
@@ -10,9 +11,9 @@ export const APP_DIRECTORY =
 
 export const recorderVersion = process.env.RECORDER_VERSION || `1.0.33`;
 
-export const RECORDER_MAC_BUILD = `https://github.com/crusherdev/crusher-downloads/releases/download/v${recorderVersion}/Crusher.Recorder-${recorderVersion}-mac-x64.zip`;
-export const RECORDER_MAC_ARM64_BUILD = `https://github.com/crusherdev/crusher-downloads/releases/download/v${recorderVersion}/Crusher.Recorder-${recorderVersion}-mac-arm64.zip`;
-export const RECORDER_LINUX_BUILd = `https://github.com/crusherdev/crusher-downloads/releases/download/v${recorderVersion}/Crusher.Recorder-${recorderVersion}-linux.zip`;
+export const RECORDER_MAC_BUILD = url.resolve(process.env.DOWNLOADS_REPO_URL, `./releases/download/v${recorderVersion}/Crusher.Recorder-${recorderVersion}-mac-x64.zip`);
+export const RECORDER_MAC_ARM64_BUILD = url.resolve(process.env.DOWNLOADS_REPO_URL, `./releases/download/v${recorderVersion}/Crusher.Recorder-${recorderVersion}-mac-arm64.zip`;
+export const RECORDER_LINUX_BUILd = url.resolve(process.env.DOWNLOADS_REPO_URL, `./releases/download/v${recorderVersion}/Crusher.Recorder-${recorderVersion}-linux.zip`;
 
 
 export const CLOUDFLARED_URL = {

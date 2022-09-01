@@ -10,6 +10,18 @@ console.log( glob.sync("./src/**/*.ts").reduce(function (obj, el) {
   };
   return obj;
 }, {shared: "cli-ux"}));
+
+
+const environmentVariables = {
+  'process.env.DOWNLOADS_REPO_URL': 'https://github.com/crusherdev/crusher-downloads',
+};
+if(process.env.RECORDER_VERSION) {
+  environmentVariables['process.env.RECORDER_VERSION'] = process.env.RECORDER_VERSION;
+}
+if(process.env.DOWNLOADS_REPO_URL) {
+  environmentVariables['process.env.DOWNLOADS_REPO_URL'] = process.env.DOWNLOADS_REPO_URL;
+}
+
 module.exports = {
   mode: "production",
   entry: glob.sync("./src/**/*.ts").reduce(function (obj, el) {
@@ -42,7 +54,9 @@ module.exports = {
   },
   plugins: [
     new webpack.BannerPlugin({ banner: "#!/usr/bin/env node", raw: true }),
-    new webpack.EnvironmentPlugin(process.env.RECORDER_VERSION ? ["RECORDER_VERSION"] : []),
+    new webpack.DefinePlugin({
+      ...environmentVariables
+    }),
     new FixSharedOutputPlugin(),
   ],
 };

@@ -13,7 +13,6 @@ program.parse(process.argv);
 
 export default class CommandBase {
   constructor() {
-
   }
 
   async init() {

@@ -25,7 +25,7 @@ if(process.env.DOWNLOADS_REPO_URL) {
 
 module.exports = {
   mode: "production",
-  entry: glob.sync("./src/bin/*.ts").reduce(function (obj, el) {
+  entry: glob.sync("./src/**/*.ts").reduce(function (obj, el) {
     obj[el.replace(".ts", "")] = {
       import: el,
       dependOn: "./src/shared",

@@ -1,8 +1,21 @@
-import { Command, program } from "commander";
-import * as packgeJSON from "../../package.json";
-import fs from "fs";
-import path from "path";
 import chalk from "chalk";
+
+import whoami from "./whoami";
+import info from "./info";
+import logout from "./logout";
+import login from "./login";
+import tunnel from "./tunnel";
+import invite from "./invite";
+import init from "./init";
+import token from "./token";
+import testCreate from "./test/create";
+import testRun from "./test/run";
+
+const CommandRegister = {
+  whoami,info, logout, login, token, tunnel, invite, init,
+  "test:create": testCreate,
+  "test:run":testRun
+}
 
 export default class CommandBase {
   constructor() {}
@@ -39,30 +52,13 @@ export default class CommandBase {
 
   async run() {
     const type = process.argv[2];
+
     if (
-      type &&
-      fs.existsSync(
-        path.resolve(
-          __dirname,
-          "../commands/",
-          `${this.getPathForType(type)}.${
-            process.env.NODE_ENV === "production" ? "js" : "ts"
-          }`
-        )
-      )
+      type
     ) {
-      //@ts-ignore
-      const requireCommand =typeof __webpack_require__ === "function" ? __non_webpack_require__ : require;
       try {
-        await (new (requireCommand(
-          path.resolve(
-            __dirname,
-            "../commands/",
-            `${this.getPathForType(type)}.${
-              process.env.NODE_ENV === "production" ? "js" : "ts"
-            }`
-          )
-        ).default)()).init();
+        const commandInstance = new CommandRegister[type]();
+        commandInstance.init()
       } catch (err) {
         if (err.message === "SIGINT") process.exit(1);
         console.log(chalk.red("Error:"), err.message);

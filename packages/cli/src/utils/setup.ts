@@ -15,6 +15,7 @@ import { getProjectNameFromGitInfo } from "./index";
 import { getAppConfig, setAppConfig } from "../utils/appConfig";
 import { downloadFile } from "./common";
 import chalk from "chalk";
+import ora from "ora";
 const cliProgress = require('cli-progress');
 
 export async function makeSureSetupIsCorrect(projectId: string | null = null, ask = false) {
@@ -118,9 +119,6 @@ async function downloadUpstreamBuild(): Promise<string> {
   const bar = new cliProgress.SingleBar({
     format: `Downloading latest version (${packagesRecorderUrl.version})\t[{bar}] {percentage}%`,
   }, cliProgress.Presets.shades_classic);
-  // const bar = cli.progress({
-  //   format: `Downloading latest version (${packagesRecorderUrl.version})\t[{bar}] {percentage}%`,
-  // });
   bar.start(100, 0, { speed: "N/A" });
 
   return downloadFile(packagesRecorderUrl.url, recorderZipPath, bar);
@@ -137,7 +135,8 @@ async function installMacBuild() {
   }
   const recorderZipPath = await downloadUpstreamBuild();
 
-  await console.log("Unzipping");
+
+  const spinner = ora('Unzipping').start();
   if (fs.existsSync(resolvePathToAppDirectory("bin/Crusher Recorder.app"))) {
     execSync(
       `cd ${path.dirname(recorderZipPath)} && rm -Rrf "Crusher Recorder.app"`
@@ -155,6 +154,7 @@ async function installMacBuild() {
       resolve(true);
     }, 3000)
   );
+  spinner.stop()
   console.log("done\n");
 }
 
@@ -170,7 +170,7 @@ async function installLinuxBuild() {
   }
   const recorderZipPath = await downloadUpstreamBuild();
 
-  await console.log("Unzipping");
+  const spinner = ora('Unzipping').start();
   execSync(
     `cd ${path.dirname(recorderZipPath)} && unzip ${path.basename(
       recorderZipPath
@@ -183,6 +183,7 @@ async function installLinuxBuild() {
       resolve(true);
     }, 3000)
   );
+  spinner.stop()
   console.log("done\n");
 }
 
@@ -222,10 +223,10 @@ export async function installCrusherRecorder() {
 }
 
 export async function createTunnel(port: string): Promise<localTunnel.Tunnel> {
-  await console.log("Creating tunnel to local system");
+  const spinner = ora('Creating tunnel to local system').start();
   // eslint-disable-next-line radix
   const tunnel = await localTunnel({ port: parseInt(port) });
-  console.log("");
+  spinner.stop()
 
   tunnel.on("close", () => {
     console.log(`Tunnel for http://localhost:${port} closed`);

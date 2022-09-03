@@ -9,6 +9,10 @@ import axios from "axios";
 import chalk from "chalk";
 import { isUserLoggedIn } from ".";
 const open = require('open');
+
+import ora from 'ora';
+
+
 /*
     Crusher secret invite code. Don't share it with anyone🤫
 */
@@ -18,10 +22,11 @@ const secretInviteCode = "crush"
   Remove this after beta
 */
 const checkForDiscord = async()=>{
+
   const isCodeInCommandLine = process.argv.some((e)=>{
     return e.includes("--code=") && !["help", "--help", "-h"].includes(e)
   })
-  const hasLoginFlag = process.argv.some((e) => e.includes("--login"));
+  const hasLoginFlag = process.argv.some((e) => e.includes("login"));
 
 
   if(isUserLoggedIn() || isCodeInCommandLine) return;
@@ -30,11 +35,11 @@ const checkForDiscord = async()=>{
     await console.log(chalk.green(`New to crusher?`))
 
     await console.log(`Get access code - ${chalk.green("https://discord.gg/dHZkSNXQrg")}`)
-  await console.log(`1.) Get access code on home screen`)
-  await console.log(`2.) Run command with access code`)
+    await console.log(`1.) Get access code on home screen`)
+    await console.log(`2.) Run command with access code`)
 
     await console.log(`\n${chalk.yellow('Already have an account?')}
-    run npx crusher-cli --login \n`)
+    run npx crusher-cli login \n`)
 
   process.exit(0)
   }
@@ -66,7 +71,8 @@ const waitForUserLogin = async (): Promise<string> => {
     "Login or create an account to create/sync tests⚡⚡. Opening a browser to sync test.\nOr open this link:"
   );
   await console.log(`${loginUrl} \n`);
-  await console.log("Waiting for login");
+
+  const spinner = ora('Waiting for login').start();
 
   await open(loginUrl)
     .catch((err) => {
@@ -85,7 +91,7 @@ const waitForUserLogin = async (): Promise<string> => {
     }, 5000);
   });
 
-  console.log("");
+  spinner.stop()
 
   await console.log("\nLogin completed! Let's ship high quality software fast⚡⚡");
   return token as string;

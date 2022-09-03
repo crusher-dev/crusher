@@ -22,6 +22,8 @@ const patchVersion = (versionStr) => {
     if (fs.existsSync(path.resolve(__dirname, "../../../output/crusher-cli/package.json"))) {
       fs.unlinkSync(path.resolve(__dirname, "../../../output/crusher-cli/package.json"));
     }
+
+    fs.writeFileSync(path.resolve(__dirname, "../../../output/crusher-cli/package.json"), JSON.stringify(packageJSON), "utf8");  
     
     fs.writeFileSync(path.resolve(__dirname, "../../../output/crusher-cli/package.json"), JSON.stringify(packageJSON), "utf8");  
   }).catch((err) => {

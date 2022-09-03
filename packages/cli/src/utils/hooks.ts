@@ -6,9 +6,12 @@ import {
   resolveFrontendServerUrl,
 } from "../utils/utils";
 import axios from "axios";
-import cli from "cli-ux";
 import chalk from "chalk";
 import { isUserLoggedIn } from ".";
+const open = require('open');
+
+import ora from 'ora';
+
 
 /*
     Crusher secret invite code. Don't share it with anyone🤫
@@ -19,23 +22,24 @@ const secretInviteCode = "crush"
   Remove this after beta
 */
 const checkForDiscord = async()=>{
+
   const isCodeInCommandLine = process.argv.some((e)=>{
     return e.includes("--code=") && !["help", "--help", "-h"].includes(e)
   })
-  const hasLoginFlag = process.argv.some((e) => e.includes("--login"));
+  const hasLoginFlag = process.argv.some((e) => e.includes("login"));
 
 
   if(isUserLoggedIn() || isCodeInCommandLine) return;
 
   if(!isCodeInCommandLine && !hasLoginFlag){
-    await cli.log(chalk.green(`New to crusher?`))
+    await console.log(chalk.green(`New to crusher?`))
 
-    await cli.log(`Get access code - ${chalk.green("https://discord.gg/dHZkSNXQrg")}`)
-  await cli.log(`1.) Get access code on home screen`)
-  await cli.log(`2.) Run command with access code`)
+    await console.log(`Get access code - ${chalk.green("https://discord.gg/dHZkSNXQrg")}`)
+    await console.log(`1.) Get access code on home screen`)
+    await console.log(`2.) Run command with access code`)
 
-    await cli.log(`\n${chalk.yellow('Already have an account?')}
-    run npx crusher-cli --login \n`)
+    await console.log(`\n${chalk.yellow('Already have an account?')}
+    run npx crusher-cli login \n`)
 
   process.exit(0)
   }
@@ -63,14 +67,14 @@ const waitForUserLogin = async (): Promise<string> => {
     });
   const loginUrl = resolveFrontendServerUrl(`/login_sucessful?lK=${loginKey}&inviteCode=${discordCode}`);
 
-  await cli.log(
+  await console.log(
     "Login or create an account to create/sync tests⚡⚡. Opening a browser to sync test.\nOr open this link:"
   );
-  await cli.log(`${loginUrl} \n`);
-  await cli.action.start("Waiting for login");
+  await console.log(`${loginUrl} \n`);
 
-  await cli
-    .open(loginUrl)
+  const spinner = ora('Waiting for login').start();
+
+  await open(loginUrl)
     .catch((err) => {
       console.error(err);
     });
@@ -87,9 +91,9 @@ const waitForUserLogin = async (): Promise<string> => {
     }, 5000);
   });
 
-  await cli.action.stop();
+  spinner.stop()
 
-  await cli.log("\nLogin completed! Let's ship high quality software fast⚡⚡");
+  await console.log("\nLogin completed! Let's ship high quality software fast⚡⚡");
   return token as string;
 };
 

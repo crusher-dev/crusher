@@ -3,7 +3,7 @@ import { Command } from "commander";
 import { loadUserInfoOnLoad } from "../../utils/hooks";
 import { getUserInfo } from "../../state/userInfo";
 import { getRecorderDistCommand, resolvePathToAppDirectory } from "../../utils/utils";
-import cli from "cli-ux";
+
 import { getProjectConfig, getProjectConfigPath } from "../../utils/projectConfig";
 import { execSync } from "child_process";
 import localTunnel from "localtunnel";
@@ -70,7 +70,7 @@ export default class CommandBase {
       tunnel = await createTunnel(port);
       const host = tunnel.url;
 
-      await cli.log("\nServing at " + host + " now \n");
+      await console.log("\nServing at " + host + " now \n");
     }
 
     const projectConfig = getProjectConfig();
@@ -83,11 +83,11 @@ export default class CommandBase {
   
     execSync(`${getRecorderDistCommand()} ${customFlags} --no-sandbox --open-recorder --projectId=${projectId} --token=${userToken}`, {stdio: "ignore"});
 
-    cli.log("Created your test. Few command that might be helpful\n");
-    cli.log("1.) Run all tests in your project");
-    cli.log(`${chalk.hex("9A4AFF")(`npx crusher-cli test:run`)}`);
+    console.log("Created your test. Few command that might be helpful\n");
+    console.log("1.) Run all tests in your project");
+    console.log(`${chalk.hex("9A4AFF")(`npx crusher-cli test:run`)}`);
 
-    cli.log("2.) Invite team members to the project");
-    cli.log(`${chalk.hex("9A4AFF")(`npx crusher-cli invite`)}`);
+    console.log("2.) Invite team members to the project");
+    console.log(`${chalk.hex("9A4AFF")(`npx crusher-cli invite`)}`);
   }
 }

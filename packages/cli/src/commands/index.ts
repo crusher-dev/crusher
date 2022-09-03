@@ -61,6 +61,10 @@ export default class CommandBase {
         commandInstance.init()
       } catch (err) {
         if (err.message === "SIGINT") process.exit(1);
+        if(err.message.includes("not a constructor")){
+          console.log(`No such command -> ${type }. Run --help.`);
+          process.exit(1);
+        }
         console.log(chalk.red("Error:"), err.message);
         process.exit(1);
       }

@@ -364,6 +364,7 @@ export default class EventRecording {
 
 	// eslint-disable-next-line consistent-return
 	async handleWindowClick(event: any) {
+		console.log("Event here", event);
 		const originalTimestamp = event.timeStamp;
 		event.timestamp = Date.now();
 		if (event.which === 3) {
@@ -548,7 +549,7 @@ export default class EventRecording {
 		window.onbeforeunload = this.handleBeforeNavigation;
 		window.addEventListener("keydown", this.handleKeyDown, true);
 
-		window.addEventListener("mousedown", this.stopRightClickFocusLoose.bind(this), true);
+		window.addEventListener("pointerdown", this.stopRightClickFocusLoose.bind(this), true);
 
 		let lastPush = Date.now();
 		window.history.pushState = new Proxy(window.history.pushState, {

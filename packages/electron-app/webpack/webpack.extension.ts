@@ -90,4 +90,8 @@ let finalConfig: any = {
 	devtool: "cheap-module-source-map",
 };
 
+if(process.env.NODE_ENV === "development") {
+	finalConfig.watch = true;
+}
+
 module.exports = smp.wrap(finalConfig);

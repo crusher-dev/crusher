@@ -71,10 +71,10 @@ class VercelService {
     }
 
     async createDeploymentStatus(acessToken, deployId, teamId,status) {
-      console.log("Deplyoment satus", `https://api.vercel.com/v1/deployments/${deployId}/checks?teamId=${teamId}`);
+      console.log("Deplyoment satus", `https://api.vercel.com/v1/deployments/${deployId}/checks` + (teamId ? `?teamId=${teamId}` : ""));
       console.log("Access token", acessToken);
 
-      return axios.post(`https://api.vercel.com/v1/deployments/${deployId}/checks?teamId=${teamId}`, {
+      return axios.post(`https://api.vercel.com/v1/deployments/${deployId}/checks` + (teamId ? `?teamId=${teamId}` : ""), {
          blocking: true,
          name: "Crusher check",
        }, {
@@ -92,7 +92,7 @@ class VercelService {
 
 
     async updateDeploymentStatus(accessToken, deployId,checkId, teamId,status, detailsUrl) {
-      return axios.patch(`https://api.vercel.com/v1/deployments/${deployId}/checks/${checkId}?teamId=${teamId}`, {
+      return axios.patch(`https://api.vercel.com/v1/deployments/${deployId}/checks/${checkId}` + (teamId ? `?teamId=${teamId}` : ""), {
         status: status,
         detailsUrl: detailsUrl
       },{
@@ -108,7 +108,7 @@ class VercelService {
     }
 
     async finishDeploymentChecks(accessToken, deployId, checkId, teamId, conclusion: "failed" | "neutral" | "succeeded", detailsUrl) {
-      return axios.patch(`https://api.vercel.com/v1/deployments/${deployId}/checks/${checkId}?teamId=${teamId}`, {
+      return axios.patch(`https://api.vercel.com/v1/deployments/${deployId}/checks/${checkId}` + (teamId ? `?teamId=${teamId}` : ""), {
         status: "completed",
         detailsUrl: detailsUrl,
         conclusion: conclusion

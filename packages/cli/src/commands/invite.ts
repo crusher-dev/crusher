@@ -2,7 +2,7 @@ import { Command } from "commander";
 import * as packgeJSON from "../../package.json";
 
 import * as inquirer from "inquirer";
-import cli from "cli-ux";
+
 import { getProjectConfig } from "../utils/projectConfig";
 import { getInviteLink, inviteProjectMembers } from "../utils/apiUtils";
 
@@ -53,9 +53,9 @@ export default class CommandBase {
       },
     ]);
     console.log("\n");
-    await cli.action.start("Preparing a cryptic invite code.");
+    await console.log("Preparing a cryptic invite code.");
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    await cli.action.stop();
+    console.log("");
 
     if (res.method === 0) {
       const emailsRes = await inquirer.prompt([
@@ -66,12 +66,12 @@ export default class CommandBase {
         },
       ]);
       console.log("Email res is", emailsRes.emails);
-      await cli.action.start("Sending invites");
+      await console.log("Sending invites");
       const inviteRes = await inviteProjectMembers(
         projectConfig.project,
         emailsRes.emails.split(",")
       );
-      await cli.action.stop();
+      console.log("");
       console.log(
         "\nInvited your folks to use crusher!. Ask them to check there mail."
       );

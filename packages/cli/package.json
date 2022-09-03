@@ -20,6 +20,8 @@
     "test": "jest"
   },
   "dependencies": {
+    "cli-progress": "^3.11.2",
+    "open": "^8.4.0",
     "webpack-bundle-analyzer": "^4.6.1"
   },
   "devDependencies": {

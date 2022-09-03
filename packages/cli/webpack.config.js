@@ -27,11 +27,10 @@ module.exports = {
   mode: "production",
   entry: glob.sync("./src/bin/*.ts").reduce(function (obj, el) {
     obj[el.replace(".ts", "")] = {
-      import: el,
-      dependOn: "./src/shared",
+      import: el
     };
     return obj;
-  }, {"./src/shared": "cli-ux"}),
+  }, {}),
   node: {
     __dirname: false,
   },
@@ -57,8 +56,8 @@ module.exports = {
     new webpack.DefinePlugin({
       ...environmentVariables
     }),
-    new FixSharedOutputPlugin(),
-    // new BundleAnalyzerPlugin()
+    // new FixSharedOutputPlugin(),
+    new BundleAnalyzerPlugin({generateStatsFile: true})
   ],
   optimization: {
     splitChunks: {

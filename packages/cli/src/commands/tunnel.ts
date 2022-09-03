@@ -1,10 +1,7 @@
 import { Command } from "commander";
 
-import { cli } from "cli-ux";
-import { runTests } from "../utils/apiUtils";
 import { getProjectConfig } from "../utils/projectConfig";
 import { loadUserInfoOnLoad } from "../utils/hooks";
-import { getUserInfo } from "../state/userInfo";
 import { Cloudflare } from "../module/cloudflare";
 import fs from "fs";
 

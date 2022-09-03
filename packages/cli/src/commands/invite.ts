@@ -4,25 +4,25 @@ import { getProjectConfig } from "../utils/projectConfig";
 import { getInviteLink, inviteProjectMembers } from "../utils/apiUtils";
 import ora from 'ora';
 
-
-const program = new Command();
-program.addHelpText(
-  "after",
-  `
-    Example call:
-      $ custom-help --help`
-);
-program.parse(process.argv);
-
 export default class CommandBase {
-  constructor() {}
+  program: Command;
+  constructor() {
+    this.program = new Command();
+    this.program.addHelpText(
+      "after",
+      `
+        Example call:
+          $ custom-help --help`
+    );
+    this.program.parse(process.argv);
+  }
 
   help() {
     console.log(`Logs user out from this machine`);
   }
 
   async init() {
-    const options = program.opts();
+    const options = this.program.opts();
     const { help } = options;
     if (help === true) {
       await this.help();

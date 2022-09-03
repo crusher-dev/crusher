@@ -14,37 +14,32 @@ import {
   makeSureSetupIsCorrect,
 } from "../../utils/setup";
 
-const program = new Command();
-
-program.addHelpText(
-  "after",
-  `
-    Example call:
-      $ crusher-cli test:create --help`
-);
-
-// // If custom help write code here
-// if (process.argv.includes("-h")) {
-//     console.log("Custom help")
-//     process.exit()
-// }
-
-program
-  .option("-p, --port <number>", "port number")
-  .option("-t, --token <string>", "Crusher user token")
-  .option("-pID, --projectID <string>", "Crusher project ID")
-  .parse(process.argv);
-
 export default class CommandBase {
   options;
-  constructor() {}
+  program: Command;
+  constructor() {
+    this.program = new Command();
+
+    this.program.addHelpText(
+      "after",
+      `
+        Example call:
+          $ crusher-cli test:create --help`
+    );
+
+    this.program
+      .option("-p, --port <number>", "port number")
+      .option("-t, --token <string>", "Crusher user token")
+      .option("-pID, --projectID <string>", "Crusher project ID")
+      .parse(process.argv);
+  }
   
   help() {
     console.log(`Create a new test`);
   }
 
   async init() {
-    this.options = program.opts();
+    this.options = this.program.opts();
     const { help, version } = this.options;
     if (help === true) {
       await this.help();

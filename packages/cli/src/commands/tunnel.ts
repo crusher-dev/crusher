@@ -5,23 +5,27 @@ import { loadUserInfoOnLoad } from "../utils/hooks";
 import { Cloudflare } from "../module/cloudflare";
 import fs from "fs";
 
-const program = new Command();
-program.addHelpText(
-  "after",
-  `
-    Example call:
-      $ custom-help --help`
-);
-program
-  .option("-t, --token <string>", "Crusher user token")
-  .option("-c, --config <string>", "Config file of the project")
-  .parse(process.argv);
 
 export default class CommandBase {
-  constructor() {}
+  program: Command;
+  constructor() {
+    this.program = new Command();
+    
+    this.program.addHelpText(
+      "after",
+      `
+        Example call:
+          $ custom-help --help`
+    );
+    this.program
+      .option("-t, --token <string>", "Crusher user token")
+      .option("-c, --config <string>", "Config file of the project")
+      .parse(process.argv);
+
+  }
 
   async init() {
-    const options = program.opts();
+    const options = this.program.opts();
     const { help, version } = options;
     if (help === true) {
       await this.help();
@@ -36,7 +40,7 @@ export default class CommandBase {
   }
 
   async run(): Promise<any> {
-    const options = program.opts();
+    const options = this.program.opts();
     const { token, config } = options;
     if(!config) {
         await loadUserInfoOnLoad({ token });

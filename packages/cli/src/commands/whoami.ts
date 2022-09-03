@@ -1,22 +1,26 @@
 import { blue, bold, dim, green, magenta, underline } from "chalk";
 import { Command } from "commander";
-const program = new Command();
 import { getLoggedInUser } from "../utils/index";
 
-program.addHelpText(
-  "after",
-  `
-    Example call:
-      $ custom-help --help`
-);
-program.parse(process.argv);
+
 
 export default class CommandBase {
+  program: Command;
+
   constructor() {
+    this.program = new Command();
+
+    this.program.addHelpText(
+      "after",
+      `
+        Example call:
+          $ custom-help --help`
+    );
+    this.program.parse(process.argv);
   }
 
   async init() {
-    const options = program.opts();
+    const options = this.program.opts();
     const { help, version } = options;
     if (help === true) {
       await this.help();

@@ -7,28 +7,27 @@ import { getUserInfo } from "../../state/userInfo";
 import { Cloudflare } from "../../module/cloudflare";
 import { BROWSERS_MAP } from "../../constants";
 
-const program = new Command();
-program.addHelpText(
-  "after",
-  `
-    Example call:
-      $ custom-help --help`
-);
-program
-  .option("-t, --token <string>", "Crusher user token")
-  .option("-projectid, --projectid <string>", "Crusher project ID")
-  .option("-b, --browsers <string>", "Browsers to run test on")
-  .option("-host, --host <string>", "Browsers to run test on")
-  .option("-C, --disable-project-config", "Disable project config", false)
-  .parse(process.argv);
-
 export default class CommandBase {
+  program: Command;
   constructor() {
-
+    this.program = new Command();
+    this.program.addHelpText(
+      "after",
+      `
+        Example call:
+          $ custom-help --help`
+    );
+    this.program
+      .option("-t, --token <string>", "Crusher user token")
+      .option("-projectid, --projectid <string>", "Crusher project ID")
+      .option("-b, --browsers <string>", "Browsers to run test on")
+      .option("-host, --host <string>", "Browsers to run test on")
+      .option("-C, --disable-project-config", "Disable project config", false)
+      .parse(process.argv);
   }
 
   async init() {
-    const options = program.opts();
+    const options = this.program.opts();
     const { help, version } = options;
     if (help === true) {
       await this.help();
@@ -43,7 +42,7 @@ export default class CommandBase {
   }
 
   async run(): Promise<any> {
-    const options = program.opts();
+    const options = this.program.opts();
     const { token } = options;
 
     await loadUserInfoOnLoad({ token });

@@ -1,10 +1,9 @@
 import { Command } from "commander";
-import * as packgeJSON from "../../package.json";
-
-import * as inquirer from "inquirer";
-import cli from "cli-ux";
+import inquirer from 'inquirer';
 import { getProjectConfig } from "../utils/projectConfig";
 import { getInviteLink, inviteProjectMembers } from "../utils/apiUtils";
+import ora from 'ora';
+
 
 const program = new Command();
 program.addHelpText(
@@ -53,9 +52,10 @@ export default class CommandBase {
       },
     ]);
     console.log("\n");
-    await cli.action.start("Preparing a cryptic invite code.");
+    const spinner = ora('Preparing a cryptic invite code').start();
+
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    await cli.action.stop();
+    spinner.stop()
 
     if (res.method === 0) {
       const emailsRes = await inquirer.prompt([
@@ -66,12 +66,12 @@ export default class CommandBase {
         },
       ]);
       console.log("Email res is", emailsRes.emails);
-      await cli.action.start("Sending invites");
-      const inviteRes = await inviteProjectMembers(
-        projectConfig.project,
-        emailsRes.emails.split(",")
-      );
-      await cli.action.stop();
+      const spinner2 = ora('Sending invites').start();
+
+      await console.log("Sending invites");
+
+      spinner2.stop()
+
       console.log(
         "\nInvited your folks to use crusher!. Ask them to check there mail."
       );

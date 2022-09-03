@@ -1,7 +1,5 @@
 import axios from "axios";
-import { resolve } from "dns";
 import * as fs from "fs";
-import cli from "cli-ux";
 import * as pathModule from "path";
 
 export const downloadFile = (url, path, bar): Promise<string> => {

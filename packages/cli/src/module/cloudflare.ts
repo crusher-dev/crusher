@@ -1,5 +1,5 @@
 import { downloadFile } from "../utils/common";
-import cli from "cli-ux";
+
 import { resolveBackendServerUrl, resolvePathToAppDirectory } from "../utils/utils";
 import { execSync } from "child_process";
 import path from "path";
@@ -11,10 +11,12 @@ import { CLOUDFLARED_URL } from "../constants";
 
 var { spawn, exec } = require("child_process");
 const fs = require("fs");
+const cliProgress = require('cli-progress');
 
 async function installNSetupOnMac() {
   const recorderZipPath = resolvePathToAppDirectory(`cloudflare.tgz`);
-  const bar = cli.progress({
+  
+  const bar = new cliProgress.SingleBar({
     format: `Downloading cloudflare tunnel {percentage}%`,
   });
 
@@ -34,7 +36,7 @@ async function installNSetupOnMac() {
 
 async function installLinuxBuild() {
   const recorderZipPath = resolvePathToAppDirectory(`bin/cloudflared`);
-  const bar = cli.progress({
+  const bar = new cliProgress.SingleBar({
     format: `Downloading cloudflare tunnel {percentage}%`,
   });
 

@@ -1,5 +1,4 @@
 import axios from "axios";
-import { cli } from "cli-ux";
 import { getUserInfo } from "../state/userInfo";
 import { getLoggedInUser } from "../utils/index";
 import {
@@ -156,7 +155,7 @@ const runTests = async (host: string | undefined, proxyUrlsMap: { [name: string]
     const projectConfig = getProjectConfig();
     _projectId = projectConfig.project;
   }
-  await cli.action.start("Running tests now");
+  await console.log("Running tests now");
 
   try {
     const context = getContextEnvVariables();
@@ -182,12 +181,12 @@ const runTests = async (host: string | undefined, proxyUrlsMap: { [name: string]
       }
     );
 
-    await cli.action.stop();
+    console.log("");
 
     const buildInfo = res.data.buildInfo;
     const buildId = buildInfo.buildId;
 
-    await cli.action.start("Waiting for tests to finish");
+    await console.log("Waiting for tests to finish");
     // sleep for 20 seconds
     await new Promise((resolve) => {
       // create a poll to check if tests are done
@@ -210,12 +209,12 @@ const runTests = async (host: string | undefined, proxyUrlsMap: { [name: string]
           buildInfo.status === "MANUAL_REVIEW_REQUIRED"
         ) {
           clearInterval(poll);
-          await cli.action.stop(
+          console.log(
             buildInfo.status === "PASSED"
               ? `Build passed in ${parseInt(buildInfo.duration)}s`
               : `Build failed in ${parseInt(buildInfo.duration)}s`
           );
-          await cli.log(
+          await console.log(
             "View build report at " +
               resolveFrontendServerUrl(`/app/build/${buildId}`)
           );
@@ -225,7 +224,7 @@ const runTests = async (host: string | undefined, proxyUrlsMap: { [name: string]
     });
   } catch (err: any) {
     console.error(err);
-    await cli.action.stop(err.message);
+    console.error(err.message);
   }
 };
 

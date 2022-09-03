@@ -3,11 +3,10 @@ import {
   resolvePathToAppDirectory,
 } from "../utils/utils";
 import * as fs from "fs";
-import axios from "axios";
 import * as path from "path";
 import { getRecorderBuildForPlatfrom, recorderVersion } from "../constants";
-import cli from "cli-ux";
-import { getProjectConfig, getProjectConfigPath, getSuggestedProjectConfigPath, setProjectConfig } from "../utils/projectConfig";
+
+import { getProjectConfig, getSuggestedProjectConfigPath, setProjectConfig } from "../utils/projectConfig";
 import { execSync } from "child_process";
 import * as inquirer from "inquirer";
 import { getProjectsOfCurrentUser, createProject } from "../utils/apiUtils";
@@ -16,6 +15,8 @@ import { getProjectNameFromGitInfo } from "./index";
 import { getAppConfig, setAppConfig } from "../utils/appConfig";
 import { downloadFile } from "./common";
 import chalk from "chalk";
+import ora from "ora";
+const cliProgress = require('cli-progress');
 
 export async function makeSureSetupIsCorrect(projectId: string | null = null, ask = false) {
   const projectConfig = getProjectConfig();
@@ -115,9 +116,9 @@ async function downloadUpstreamBuild(): Promise<string> {
     `bin/${packagesRecorderUrl.name}`
   );
 
-  const bar = cli.progress({
+  const bar = new cliProgress.SingleBar({
     format: `Downloading latest version (${packagesRecorderUrl.version})\t[{bar}] {percentage}%`,
-  });
+  }, cliProgress.Presets.shades_classic);
   bar.start(100, 0, { speed: "N/A" });
 
   return downloadFile(packagesRecorderUrl.url, recorderZipPath, bar);
@@ -127,14 +128,15 @@ async function installMacBuild() {
   // handle when crusher is already installed
   if(fs.existsSync(resolvePathToAppDirectory("bin"))) {
     execSync(`rm -Rf ${resolvePathToAppDirectory("bin")} && mkdir ${resolvePathToAppDirectory("bin")}`);
-    cli.info("New version available! Updating now...\n");
+    console.log("New version available! Updating now...\n");
   } else {
     execSync(`mkdir ${resolvePathToAppDirectory("bin")}`);
-    cli.info("Crusher Recorder is not installed.\n");
+    console.log("Crusher Recorder is not installed.\n");
   }
   const recorderZipPath = await downloadUpstreamBuild();
 
-  await cli.action.start("Unzipping");
+
+  const spinner = ora('Unzipping').start();
   if (fs.existsSync(resolvePathToAppDirectory("bin/Crusher Recorder.app"))) {
     execSync(
       `cd ${path.dirname(recorderZipPath)} && rm -Rrf "Crusher Recorder.app"`
@@ -152,7 +154,8 @@ async function installMacBuild() {
       resolve(true);
     }, 3000)
   );
-  await cli.action.stop("done\n");
+  spinner.stop()
+  console.log("done\n");
 }
 
 async function installLinuxBuild() {
@@ -160,14 +163,14 @@ async function installLinuxBuild() {
 
   if(fs.existsSync(resolvePathToAppDirectory("bin"))) {
     execSync(`rm -Rf ${resolvePathToAppDirectory("bin")} && mkdir ${resolvePathToAppDirectory("bin")}`);
-    cli.info("New version available! Updating now...\n");
+    console.log("New version available! Updating now...\n");
   } else {
     execSync(`mkdir ${resolvePathToAppDirectory("bin")}`);
-    cli.info("Crusher Recorder is not installed.\n");
+    console.log("Crusher Recorder is not installed.\n");
   }
   const recorderZipPath = await downloadUpstreamBuild();
 
-  await cli.action.start("Unzipping");
+  const spinner = ora('Unzipping').start();
   execSync(
     `cd ${path.dirname(recorderZipPath)} && unzip ${path.basename(
       recorderZipPath
@@ -180,7 +183,8 @@ async function installLinuxBuild() {
       resolve(true);
     }, 3000)
   );
-  await cli.action.stop("done\n");
+  spinner.stop()
+  console.log("done\n");
 }
 
 export async function installCrusherRecorder() {
@@ -219,13 +223,13 @@ export async function installCrusherRecorder() {
 }
 
 export async function createTunnel(port: string): Promise<localTunnel.Tunnel> {
-  await cli.action.start("Creating tunnel to local system");
+  const spinner = ora('Creating tunnel to local system').start();
   // eslint-disable-next-line radix
   const tunnel = await localTunnel({ port: parseInt(port) });
-  await cli.action.stop();
+  spinner.stop()
 
   tunnel.on("close", () => {
-    cli.log(`Tunnel for http://localhost:${port} closed`);
+    console.log(`Tunnel for http://localhost:${port} closed`);
     process.exit(0);
   });
   return tunnel;

@@ -1,9 +1,11 @@
-name: Build/release electron-app
+name: Release electron-app && crusher-cli/debug
 
 on:
   push:
     branches:
       - master
+  release:
+    types: [published]
 
 jobs:
   prepare:

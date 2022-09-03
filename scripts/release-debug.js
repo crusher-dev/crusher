@@ -1,17 +1,22 @@
+/**
+ * Extract the same code for production build, when new release is built.
+ * Create release every 7 days, upload it to crusher-downloads. bump a version.
+ */
 const fs = require('fs');
 const path = require('path');
 const child_process = require("child_process");
 const ARTIFACTS_PATH = path.resolve(process.cwd(), "./artifacts");
 const DIST_PATH = path.resolve(ARTIFACTS_PATH, "dist");
-
 const { Octokit } = require("@octokit/rest");
+
+const IS_CRUSHER_MASTER_RELEASE = process.env.github?.event === "release";
 
 async function createRelease(tag) {
     const octokit = new Octokit({ auth: process.env.CRUSHER_GIT_RELEASE_TOKEN });
 
     const release = await octokit.request('POST /repos/{owner}/{repo}/releases', {
         owner: 'crusher-dev',
-        repo: 'crusher-debug-downloads',
+        repo: IS_PRODUCTION? 'crusher-downloads': 'crusher-debug-downloads',
         tag_name: tag,
         target_commitish: 'main',
         name: tag,
@@ -65,7 +70,7 @@ async function createRelease(tag) {
     await createRelease("v" + version);
     process.chdir(path.resolve(ARTIFACTS_PATH, '../'));
 
-    child_process.execSync(`cd packages/cli && RECORDER_VERSION=${version} pnpm build:debug`);
+    child_process.execSync(`cd packages/cli && RECORDER_VERSION=${version} pnpm ${IS_CRUSHER_MASTER_RELEASE? 'build': 'build:debug'}`);
     const dir = fs.readdirSync(path.resolve(process.cwd(), "output/crusher-cli"));
-    console.log("DIr is", dir);
+    console.log("Dir is", dir);
 })();

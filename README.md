@@ -1,13 +1,22 @@
 <p align="center">
   <p align="center">
   <a href="https://crusher.dev/#gh-light-mode-only">
-    <img src="https://i.imgur.com/BRG9MxQ.png" width="180px" alt="Crusher logo" />
+    <img src="https://i.imgur.com/BRG9MxQ.png" width="140px" alt="Crusher logo" />
   </a>
   <a href="https://crusher.dev/#gh-dark-mode-only">
-    <img src="https://i.imgur.com/ncVx1vo.png"  width="180px" alt="Crusher logo" />
+    <img src="https://i.imgur.com/ncVx1vo.png"  width="140px" alt="Crusher logo" />
   </a>
 </p>
 </p>
+
+<p align="center">
+    <a href="https://crusher.dev/#gh-light-mode-only">
+  <img src="https://i.imgur.com/oHZjIaK.png" width="890px" =/>
+  </a>
+  <a href="https://crusher.dev/#gh-dark-mode-only">
+    <img src="https://i.imgur.com/oHZjIaK.png"  width="890px" />
+  </a>
+  </p>
 
 
 
@@ -22,7 +31,7 @@
     <tbody>
       <tr>
          <td>
-             <a href="#-getting-started">☄️ Try Crusher</a>
+             <a href="https://discord.gg/dHZkSNXQrg">☄️ Try Crusher</a>
         </td>
         <td>
           <a href="https://docs.crusher.dev">⠀ Read docs</a>
@@ -38,12 +47,7 @@
 
 **Create, run and debug tests** with dead simple workflow, use **low-code or code**. We're reimagining testing to make it blazingly simple, fast and effective.
 
-  <a href="https://crusher.dev/#gh-light-mode-only">
-  <img src="https://i.imgur.com/nqE0S1B.png"/>
-  </a>
-  <a href="https://crusher.dev/#gh-dark-mode-only">
-    <img src="https://i.imgur.com/qQ2uda9.png"  />
-  </a>
+
 
 <div>
 <h5  align="center"> Star repo to support us and get updates :heart: </h5>
@@ -62,7 +66,7 @@
 **☄️Create your first test**
 
 ```
-npx crusher-cli
+npx crusher-cli init
 ```
 
 or [download binary](https://docs.crusher.dev/getting-started/create-your-first-test#or-install-recorder)

@@ -4,6 +4,7 @@ const semver = require("semver");
 const { Octokit } = require("@octokit/rest");
 
 const ELECTRON_PATH = path.resolve(process.cwd(), "./packages/electron-app");
+const IS_CRUSHER_MASTER_RELEASE = process.env.github?.event === "release";
 
 function updatePackageJsonVersion(version, path) {
     const package = JSON.parse(fs.readFileSync(path, "utf-8"));
@@ -16,7 +17,7 @@ async function getLatestVersion(tag) {
    const octokit = new Octokit({ auth: process.env.CRUSHER_GIT_RELEASE_TOKEN });
    const release = await octokit.request('GET /repos/{owner}/{repo}/releases/latest', {
         owner: 'crusher-dev',
-        repo: 'crusher-debug-downloads'
+        repo: IS_CRUSHER_MASTER_RELEASE? 'crusher-downloads': 'crusher-debug-downloads'
     });
 
     const releaseName = release.data.name;

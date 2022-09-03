@@ -4,7 +4,8 @@ const semver = require("semver");
 const { Octokit } = require("@octokit/rest");
 
 const ELECTRON_PATH = path.resolve(process.cwd(), "./packages/electron-app");
-const IS_CRUSHER_MASTER_RELEASE = process.env.github?.event === "release";
+const IS_CRUSHER_MASTER_RELEASE = process.env.GITHUB_ACTION_EVENT_NAME == "release";
+console.log("event", process.env.GITHUB_ACTION_EVENT_NAME )
 
 function updatePackageJsonVersion(version, path) {
     const package = JSON.parse(fs.readFileSync(path, "utf-8"));

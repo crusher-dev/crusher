@@ -9,9 +9,9 @@ const ARTIFACTS_PATH = path.resolve(process.cwd(), "./artifacts");
 const DIST_PATH = path.resolve(ARTIFACTS_PATH, "dist");
 const { Octokit } = require("@octokit/rest");
 
-const IS_CRUSHER_MASTER_RELEASE = process.env.github?.event.action == "release";
+const IS_CRUSHER_MASTER_RELEASE = process.env.GITHUB_ACTION_EVENT_NAME == "release";
 
-console.log("event", process.env.github?.event )
+console.log("event", process.env.GITHUB_ACTION_EVENT_NAME )
 
 async function createRelease(tag) {
     const octokit = new Octokit({ auth: process.env.CRUSHER_GIT_RELEASE_TOKEN });

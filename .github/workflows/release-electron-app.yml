@@ -42,7 +42,7 @@ jobs:
         run: ls -l packages/electron-app/bin
 
       - name: Update packages/electron-app/package.json versions
-        run: node ./scripts/update-local-ea-version.js
+        run: GITHUB_ACTION_EVENT_NAME=${{ github.event_name } node ./scripts/update-local-ea-version.js
         env:
           CRUSHER_GIT_RELEASE_TOKEN: ${{ secrets.CRUSHER_GIT_RELEASE_TOKEN }}
 
@@ -114,7 +114,7 @@ jobs:
         run: pnpm install --frozen-lockfile --reporter=append-only --ignore-scripts
 
       - name: Run release script
-        run: node ./scripts/release-debug.js
+        run: GITHUB_ACTION_EVENT_NAME=${{ github.event_name } node ./scripts/release-debug.js
         env:
           CRUSHER_GIT_RELEASE_TOKEN: ${{ secrets.CRUSHER_GIT_RELEASE_TOKEN }}
           DOWNLOADS_REPO_URL: https://github.com/crusher-dev/crusher-debug-downloads/

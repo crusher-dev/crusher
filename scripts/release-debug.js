@@ -16,7 +16,7 @@ async function createRelease(tag) {
 
     const release = await octokit.request('POST /repos/{owner}/{repo}/releases', {
         owner: 'crusher-dev',
-        repo: IS_PRODUCTION? 'crusher-downloads': 'crusher-debug-downloads',
+        repo: IS_CRUSHER_MASTER_RELEASE? 'crusher-downloads': 'crusher-debug-downloads',
         tag_name: tag,
         target_commitish: 'main',
         name: tag,

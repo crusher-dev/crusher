@@ -2,6 +2,7 @@ const path = require("path");
 const glob = require("glob");
 const webpack = require("webpack");
 const { FixSharedOutputPlugin } = require("./webpack/plugins/fixShardOutput");
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 console.log( glob.sync("./src/**/*.ts").reduce(function (obj, el) {
   obj[el.replace(".ts", "")] = {
@@ -24,7 +25,7 @@ if(process.env.DOWNLOADS_REPO_URL) {
 
 module.exports = {
   mode: "production",
-  entry: glob.sync("./src/**/*.ts").reduce(function (obj, el) {
+  entry: glob.sync("./src/bin/*.ts").reduce(function (obj, el) {
     obj[el.replace(".ts", "")] = {
       import: el,
       dependOn: "./src/shared",
@@ -50,7 +51,6 @@ module.exports = {
   output: {
     filename: "[name].js",
     path: path.resolve(__dirname, "../../output/crusher-cli"),
-    libraryTarget: "commonjs-module",
   },
   plugins: [
     new webpack.BannerPlugin({ banner: "#!/usr/bin/env node", raw: true }),
@@ -58,5 +58,18 @@ module.exports = {
       ...environmentVariables
     }),
     new FixSharedOutputPlugin(),
+    // new BundleAnalyzerPlugin()
   ],
+  optimization: {
+    splitChunks: {
+        cacheGroups: {
+            vendor: {
+                test: /[\\/]node_modules[\\/]/,
+                name: 'vendors',
+                enforce: true,
+                chunks: 'all'
+            }
+        }
+    }
+  }
 };

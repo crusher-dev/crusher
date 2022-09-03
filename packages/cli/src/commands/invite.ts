@@ -1,6 +1,4 @@
 import { Command } from "commander";
-import * as packgeJSON from "../../package.json";
-
 import * as inquirer from "inquirer";
 
 import { getProjectConfig } from "../utils/projectConfig";

@@ -3,6 +3,8 @@ const glob = require("glob");
 const webpack = require("webpack");
 const { FixSharedOutputPlugin } = require("./webpack/plugins/fixShardOutput");
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+var WebpackBundleSizeAnalyzerPlugin = require('webpack-bundle-size-analyzer').WebpackBundleSizeAnalyzerPlugin;
+const StatoscopeWebpackPlugin = require('@statoscope/webpack-plugin').default;
 
 console.log( glob.sync("./src/**/*.ts").reduce(function (obj, el) {
   obj[el.replace(".ts", "")] = {
@@ -56,8 +58,10 @@ module.exports = {
     new webpack.DefinePlugin({
       ...environmentVariables
     }),
+    // new StatoscopeWebpackPlugin()
     // new FixSharedOutputPlugin(),
-    new BundleAnalyzerPlugin({generateStatsFile: true})
+    // new BundleAnalyzerPlugin({generateStatsFile: true}),
+    // new WebpackBundleSizeAnalyzerPlugin('./reports/plain-report.txt')
   ],
   optimization: {
     splitChunks: {

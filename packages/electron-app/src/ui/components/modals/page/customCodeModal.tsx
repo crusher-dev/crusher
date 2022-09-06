@@ -117,8 +117,10 @@ function ActionButtonDropdown({ setShowActionMenu, callback, selectedTemplate, .
 
 const initialCodeTemplate = `/* Write your custom code here. For more infromation
 checkout SDK docs here at, https://docs.crusher.dev/sdk */
-async function validate() {
-
+async function validate(crusherSdk) {
+	// const { page } = crusherSdk;
+    // const button = await page.waitForSelector("#signup");
+    // expect(await button.innerText()).toBe("Signup");
 }`;
 const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 	const { isOpen } = props;

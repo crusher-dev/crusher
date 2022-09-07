@@ -9,7 +9,7 @@ import template from "@crusher-shared/utils/templateString";
 import expect from "expect";
 import * as modules from "../utils/modules";
 import { CommunicationChannel } from "../functions/communicationChannel";
-import * as ts from "typescript";
+import * as util from "@babel/cli/lib/babel/util";
 
 async function executeCustomCode(
 	page: Page,
@@ -26,6 +26,11 @@ async function executeCustomCode(
 	const crusherSdk = sdk ? sdk : new CrusherSdk(page, exportsManager, storageManager, communcationChannel);
 
 	let result = null;
+
+	const res = await util.transformRepl("main.js", customScriptFunction, {
+		plugins: [require("@babel/plugin-transform-typescript"), require("babel-plugin-auto-await/index")]
+	  });
+
 	result = await new Function(
 		"exports",
 		"require",
@@ -36,7 +41,7 @@ async function executeCustomCode(
 		"ctx",
 		"expect",
 		"modules",
-		`${ts.transpile(customScriptFunction)} if(typeof validate === "function") { return validate(crusherSdk, ctx); } return true;`,
+		`${res.code} if(typeof validate === "function") { return validate(crusherSdk, ctx); } return true;`,
 	)(
 		exports,
 		//@ts-ignore

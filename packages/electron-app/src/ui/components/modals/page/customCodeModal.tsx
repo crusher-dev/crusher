@@ -119,8 +119,10 @@ const initialCodeTemplate = `/* Write your custom code here. For more infromatio
 checkout SDK docs here at, https://docs.crusher.dev/sdk */
 async function validate(crusherSdk: CrusherSdk) {
 	// const { page } = crusherSdk;
-    // const button = await page.waitForSelector("#signup");
-    // expect(await button.innerText()).toBe("Signup");
+    // page.goto("https://news.ycombinator.com/login?goto=news");
+	// const input = page.waitForSelector("input[name=acct]");
+	// input.type(page.url());
+    // expect(input.inputValue()).toBe(page.url());
 }`;
 const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 	const { isOpen } = props;

@@ -9,6 +9,7 @@ import template from "@crusher-shared/utils/templateString";
 import expect from "expect";
 import * as modules from "../utils/modules";
 import { CommunicationChannel } from "../functions/communicationChannel";
+import * as ts from "typescript";
 
 async function executeCustomCode(
 	page: Page,
@@ -35,7 +36,7 @@ async function executeCustomCode(
 		"ctx",
 		"expect",
 		"modules",
-		`${customScriptFunction} if(typeof validate === "function") { return validate(crusherSdk, ctx); } return true;`,
+		`${ts.transpile(customScriptFunction)} if(typeof validate === "function") { return validate(crusherSdk, ctx); } return true;`,
 	)(
 		exports,
 		//@ts-ignore

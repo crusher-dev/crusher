@@ -117,7 +117,7 @@ function ActionButtonDropdown({ setShowActionMenu, callback, selectedTemplate, .
 
 const initialCodeTemplate = `/* Write your custom code here. For more infromation
 checkout SDK docs here at, https://docs.crusher.dev/sdk */
-async function validate(crusherSdk) {
+async function validate(crusherSdk: CrusherSdk) {
 	// const { page } = crusherSdk;
     // const button = await page.waitForSelector("#signup");
     // expect(await button.innerText()).toBe("Signup");
@@ -285,7 +285,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 	const handleEditorWillMount = (monaco: Monaco) => {
 		monacoRef.current = monaco;
 
-		monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
+		monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
 			target: monaco.languages.typescript.ScriptTarget.ESNext,
 			module: monaco.languages.typescript.ModuleKind.ESNext,
 			allowSyntheticDefaultImports: true,
@@ -300,9 +300,9 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 				return `${a}: ${ctx[a]};`;
 			})
 			.join("")} | any };`;
-		monaco.languages.typescript.javascriptDefaults.addExtraLib(types, libUri);
+		monaco.languages.typescript.typescriptDefaults.addExtraLib(types, libUri);
 
-		monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
+		monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
 			diagnosticCodesToIgnore: [1375],
 		});
 
@@ -488,7 +488,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 				<Editor
 					path={"ts:modal.ts"}
 					height="100%"
-					defaultLanguage="javascript"
+					defaultLanguage="typescript"
 					beforeMount={handleEditorWillMount}
 					onMount={handleOnMount}
 					theme={"my-theme"}

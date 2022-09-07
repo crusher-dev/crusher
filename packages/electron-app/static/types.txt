@@ -32449,3 +32449,4 @@ declare const modules: {
 };
 
 declare const crusherSdk: import("crusherSdk").CrusherSdk;
+type CrusherSdk = import("crusherSdk").CrusherSdk;

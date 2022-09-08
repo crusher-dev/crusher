@@ -6,7 +6,7 @@ import { DownIcon, LoadingIconV2 } from "../icons";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useStore } from "react-redux";
 import { getCurrentSelectedProjct, getIsProxyInitializing, getProxyState, getUserAccountInfo } from "electron-app/src/store/selectors/app";
-import { LoadingScreen } from "./loading";
+import { LoadingScreen } from "../../_ui/screens/loading";
 import {
 	getCloudUserInfo,
 	getUserTests,

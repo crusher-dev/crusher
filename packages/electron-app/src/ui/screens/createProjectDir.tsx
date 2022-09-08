@@ -1,17 +1,12 @@
-import React from "react";
 import { css } from "@emotion/react";
+import React from "react";
 
-import { useSelector } from "react-redux";
-import { getUserAccountInfo } from "electron-app/src/store/selectors/app";
-import { getCloudUserInfo } from "../commands/perform";
-import { ModelContainerLayout } from "../layouts/modalContainer";
-import { LoadingScreen } from "./loading";
-import { CommonFooter } from "../layouts/commonFooter";
-import { ActionButton, DocsGoBackActionBar } from "../components/create-first-test";
-import { useNavigate } from "react-router-dom";
-import { GithubIconV2 } from "../icons";
 import Checkbox from "@dyson/components/atoms/checkbox/checkbox";
-import {Text} from "@dyson/components/atoms/text/Text";
+import { Text } from "@dyson/components/atoms/text/Text";
+import { useNavigate } from "react-router-dom";
+import { ActionButton } from "../components/create-first-test";
+import { GithubIconV2 } from "../icons";
+import { ModelContainerLayout } from "../layouts/modalContainer";
 
 function CreateProjectDirScreen() {
 	const navigate = useNavigate();

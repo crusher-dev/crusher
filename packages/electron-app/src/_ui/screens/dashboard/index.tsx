@@ -1,25 +1,20 @@
-import React from "react";
-import { CompactAppLayout } from "../../layout/CompactAppLayout";
-import { useSelector, useStore } from "react-redux";
-import { getCurrentSelectedProjct, getIsProxyInitializing, getProxyState, getUserAccountInfo } from "electron-app/src/store/selectors/app";
-import { useNavigate } from "react-router-dom";
-import { CreateFirstTest } from "./createFirstTest";
-import { getSelectedProjectTests, getUserAccountProjects } from "electron-app/src/utils";
-import { TestList } from "./testsList";
-import { DashboardFooter } from "./footer";
-import { LoadingProgressBar } from "../../components/LoadingProgressBar";
 import { css } from "@emotion/react";
-import { turnOnProxyServers } from "electron-app/src/utils/renderer";
-import { StatusMessageBar } from "electron-app/src/ui/layouts/modalContainer";
-import { performDeleteTest } from "electron-app/src/ui/commands/perform";
-import { sendSnackBarEvent } from "electron-app/src/ui/components/toast";
 import { CloudCrusher } from "electron-app/src/lib/cloud";
+import { getCurrentSelectedProjct, getIsProxyInitializing, getProxyState } from "electron-app/src/store/selectors/app";
 import { ProxyWarningContainer } from "electron-app/src/ui/components/proxy-warning";
-import { checkIfLoggedIn } from "electron-app/src/utils/url";
-import useRequest from "../../utils/useRequest";
-import { useUser } from "../../api/user/user";
+import { sendSnackBarEvent } from "electron-app/src/ui/components/toast";
+import { turnOnProxyServers } from "electron-app/src/utils/renderer";
+import React from "react";
+import { useSelector, useStore } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { getSelectedProjectTestsRequest } from "../../api/tests/tests.request";
-import { SWRConfig } from "swr";
+import { useUser } from "../../api/user/user";
+import { LoadingProgressBar } from "../../components/LoadingProgressBar";
+import { CompactAppLayout } from "../../layout/CompactAppLayout";
+import useRequest from "../../utils/useRequest";
+import { CreateFirstTest } from "./createFirstTest";
+import { DashboardFooter } from "./footer";
+import { TestList } from "./testsList";
 
 const TitleComponent = ({ projectName }) => {
     const proxyIsInitializing = useSelector(getIsProxyInitializing);
@@ -27,7 +22,7 @@ const TitleComponent = ({ projectName }) => {
 
     const isProxyWorking = Object.keys(proxyState).length;
     return (
-        <div css={titleStyle}>
+        <div css={titleStyle}>¯
             <span>
                 <span css={rocketIconStyle}>🚀</span>
                 &nbsp;
@@ -110,6 +105,7 @@ const titleStyle = css`
     transform: translate(-50%, -50%);
 `;
 const DashboardScreen = () => {
+    const [animationComplete, setAnimationComplete] =React.useState(false);
     const {userInfo, projects} = useUser();
     const { data: tests, isValidating, mutate } = useRequest(userInfo && userInfo.isUserLoggedIn ? getSelectedProjectTestsRequest : () => null, { refreshInterval: 5000 })
     const [selectedProject, setSelectedProject] = React.useState(null);
@@ -117,6 +113,10 @@ const DashboardScreen = () => {
 
     const navigate = useNavigate();
     const store = useStore();
+
+    React.useEffect(()=>{
+        setTimeout(setAnimationComplete.bind(this,true),2200)
+    },[])
 
     const handleTestDelete = React.useCallback(
         (id) => {
@@ -157,11 +157,17 @@ const DashboardScreen = () => {
     // To make delete experience fast
     const testContent = tests && tests.list && tests.list.length ? (<TestList deleteTest={handleTestDelete} tests={tests.list.filter(test => {return !((window as any).deletedTest || []).includes(test.id); })}/>) : (<CreateFirstTest />);
     const content = showProxyWarning.show ? <ProxyWarningContainer testId={showProxyWarning.testId} exitCallback={setShowProxyWarning.bind(this, false)} startUrl={showProxyWarning.startUrl} /> : testContent;
+    
+    const hasNotLoaded = isLoading || !animationComplete;
     return (
-        <CompactAppLayout title={selectedProject ? <TitleComponent projectName={selectedProject.name}/> : null} footer={<DashboardFooter tests={tests ? tests.list : undefined || []}/>}>
-               {isLoading ? (<LoadingProgressBar/>) : content}
+        <CompactAppLayout showHeader={!hasNotLoaded} css={loadingCSS(hasNotLoaded)} title={selectedProject && !hasNotLoaded  ? <TitleComponent projectName={selectedProject.name}/> : null} footer={!hasNotLoaded && <DashboardFooter tests={tests ? tests.list : undefined || []}/>}>
+               {hasNotLoaded ? (<LoadingProgressBar inAppLoading={false}/>) : content}
         </CompactAppLayout>
     );
 };
+
+const loadingCSS = (hasNotLoaded) => css`
+    background: ${hasNotLoaded ? "#0C0C0C": "#161617"};
+`
 
 export { DashboardScreen };

@@ -1,14 +1,9 @@
-import React from "react";
 import { css } from "@emotion/react";
+import React from "react";
 
-import { useSelector } from "react-redux";
-import { getUserAccountInfo } from "electron-app/src/store/selectors/app";
-import { getCloudUserInfo } from "../commands/perform";
-import { ModelContainerLayout } from "../layouts/modalContainer";
-import { LoadingScreen } from "./loading";
-import { CommonFooter } from "../layouts/commonFooter";
-import { DocsGoBackActionBar } from "../components/create-first-test";
 import { useNavigate } from "react-router-dom";
+import { DocsGoBackActionBar } from "../components/create-first-test";
+import { ModelContainerLayout } from "../layouts/modalContainer";
 
 function InsufficientPermissionScreen() {
 	const navigate = useNavigate();

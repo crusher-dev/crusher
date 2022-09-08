@@ -653,7 +653,6 @@ importers:
       autoprefixer: ^9
       axios: ^0.21.4
       babel-loader: ^8.1.0
-      babel-plugin-auto-await: ^0.4.2
       babel-preset-react: ^6.24.1
       body-scroll-lock: ^3.1.5
       child_process: ^1.0.2
@@ -860,7 +859,6 @@ importers:
       '@welldone-software/why-did-you-render': 7.0.1_react@17.0.2
       autoprefixer: 9.8.6
       babel-loader: 8.2.2_cnlvqvl25fxymsnsquenxtcivy
-      babel-plugin-auto-await: 0.4.2
       babel-preset-react: 6.24.1
       css-loader: 5.2.6_webpack@5.21.2
       css.escape: 1.5.1
@@ -2235,7 +2233,7 @@ packages:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/core': 7.12.3
-      '@babel/helper-plugin-utils': 7.18.9
+      '@babel/helper-plugin-utils': 7.19.0
 
   /@babel/plugin-syntax-bigint/7.8.3_@babel+core@7.16.7:
     resolution: {integrity: sha512-wnTnFlG+YxQm3vDxpGE57Pj0srRU4sHE/mDkt1qv2YJJSeUAec2ma4WLUnUPeKjyrfntVwe/N6dCXpU+zL3Npg==}
@@ -2329,7 +2327,7 @@ packages:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/core': 7.12.3
-      '@babel/helper-plugin-utils': 7.18.9
+      '@babel/helper-plugin-utils': 7.19.0
 
   /@babel/plugin-syntax-import-meta/7.10.4_@babel+core@7.16.7:
     resolution: {integrity: sha512-Yqfm+XDx0+Prh3VSeEQCPU81yC+JWZ2pDPFSS4ZdpfZhp4MkFMaDC1UqseovEKwSUpnIL7+vK+Clp7bfh0iD7g==}
@@ -10980,7 +10978,7 @@ packages:
       webpack-dev-server:
         optional: true
     dependencies:
-      webpack-cli: 4.10.0_webpack@5.21.2
+      webpack-cli: 4.10.0_webpack@5.39.1
 
   /@webpack-cli/serve/1.7.0_xcsigq56yu4htn6anmcckynncu:
     resolution: {integrity: sha512-oxnCNGj88fL+xzV+dacXs44HcDwf1ovs3AuEzvP7mqXw7fQntqIhQ1BRmynh4qEKQSSSRSWVyXRjmTbZIX9V2Q==}
@@ -17669,17 +17667,6 @@ packages:
       debug:
         optional: true
 
-  /follow-redirects/1.14.7_debug@4.3.3:
-    resolution: {integrity: sha512-+hbxoLbFMbRKDwohX8GkTataGqO6Jb7jGwpAlwgy2bIz25XtRm7KEzJM76R1WiNT5SwZkX4Y75SwBolkpmE7iQ==}
-    engines: {node: '>=4.0'}
-    peerDependencies:
-      debug: '*'
-    peerDependenciesMeta:
-      debug:
-        optional: true
-    dependencies:
-      debug: 4.3.3_supports-color@6.1.0
-
   /follow-redirects/1.14.7_debug@4.3.4:
     resolution: {integrity: sha512-+hbxoLbFMbRKDwohX8GkTataGqO6Jb7jGwpAlwgy2bIz25XtRm7KEzJM76R1WiNT5SwZkX4Y75SwBolkpmE7iQ==}
     engines: {node: '>=4.0'}
@@ -19041,7 +19028,7 @@ packages:
     engines: {node: '>=8.0.0'}
     dependencies:
       eventemitter3: 4.0.7
-      follow-redirects: 1.14.7_debug@4.3.3
+      follow-redirects: 1.14.7
       requires-port: 1.0.0
     transitivePeerDependencies:
       - debug

@@ -4,8 +4,9 @@ import { Link } from "../components/Link";
 import { ExternalLinkIcon } from "electron-app/src/ui/icons";
 import { shell } from "electron";
 import { MenuDropdown } from "electron-app/src/ui/layouts/modalContainer";
+import { Conditional } from "@dyson/components/layouts";
 
-const CompactAppLayout = ({ className, title, footer, children, ...props } : { className?: any; title?: any; footer?: any; children: any}) => {
+const CompactAppLayout = ({ className, title, showHeader=true, footer, children, ...props } : { showHeader: boolean; className?: any; title?: any; footer?: any; children: any}) => {
     React.useEffect(() => {
 		document.querySelector("html").style.fontSize = "1px";
 	}, []);
@@ -16,19 +17,21 @@ const CompactAppLayout = ({ className, title, footer, children, ...props } : { c
     return (
         <div className={`${className}`} css={containerCss} {...props}>
             <div css={dragCss} className={"drag"}></div>
-            <div css={headerCss} className={"header"}>
-                <div css={headerLeftSectionCss}>
-                    <MenuDropdown isRecorder={false} css={menuDropdownCss} />
+            <Conditional showIf={showHeader}>
+                <div css={headerCss} className={"header"}>
+                    <div css={headerLeftSectionCss}>
+                        <MenuDropdown isRecorder={false} css={menuDropdownCss} />
+                    </div>
+                    <div css={titleCss} className={"header-title"}>{title}</div>
+                    <div css={headerRightSectionCss}>
+                        <Link css={linkCss} onClick={handleOpenDocs}>Docs</Link>
+                        <Link onClick={handleOpenApp} css={[linkCss, openAppLinkCss]}>
+                            Open app {" "}
+                            <ExternalLinkIcon css={externalLinkIconCss}/>
+                        </Link>
+                    </div>
                 </div>
-                <div css={titleCss} className={"header-title"}>{title}</div>
-                <div css={headerRightSectionCss}>
-                    <Link css={linkCss} onClick={handleOpenDocs}>Docs</Link>
-                    <Link onClick={handleOpenApp} css={[linkCss, openAppLinkCss]}>
-                        Open app {" "}
-                        <ExternalLinkIcon css={externalLinkIconCss}/>
-                    </Link>
-                </div>
-            </div>
+            </Conditional>
 
             <div css={contentCss} className={"content-section"}>
                 {children}
@@ -61,7 +64,6 @@ const containerCss = css`
     top: 50%;
     left: 50%;
     transform: translateX(-50%) translateY(-50%);
-    background: #161617;
     transition: width 0.3s, height 0.3s;
     display: flex;
     flex-direction: column;

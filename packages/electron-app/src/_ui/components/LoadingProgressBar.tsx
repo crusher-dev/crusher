@@ -1,64 +1,56 @@
 import React from "react";
 import { useInView } from "react-intersection-observer";
+import { LogoAnimated } from "../../../../dyson/src/components/atoms/logo/LogoAnimated";
 import { css } from "@emotion/react";
+import { Conditional } from "@dyson/components/layouts";
 
-function LoadingProgressBar() {
+function LoadingProgressBar({inAppLoading= true}) {
 	const { ref, inView } = useInView();
     const progressStyle = React.useMemo(() => loadingProgressPillCss(inView), [inView]);
 
 	return (
 		<div css={containerCss}>
-			<div css={contentCss}>
 				<div ref={ref} css={loadingContainerCss}>
+					<Conditional showIf={!inAppLoading}>
+						<LogoAnimated/>
+					</Conditional>
 					<div css={loadingProgressBarCss}>
 						<div css={progressStyle}></div>
 					</div>
-					<div css={loadingTextCss}>loading crusher..</div>
 				</div>
-			</div>
 		</div>
 	);
 };
-const contentCss = css`
-    flex: 1;
+
+const containerCss = css`
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translateX(-50%) translateY(-50%);
+	border-radius: 16px;
+	display: flex;
+	flex-direction: column;
+
+	flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
     height: 100%;
     flex-direction: column;
 `;
-const containerCss = css`
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translateX(-50%) translateY(-50%);
-	background: #161617;
-	border-radius: 16px;
-	display: flex;
-	flex-direction: column;
-`;
 
-const loadingTextCss = css`
-	font-family: Gilroy;
-	font-style: normal;
-	font-weight: 700;
-	font-size: 16px;
-	margin-top: 16rem;
-
-	text-align: center;
-
-	color: #ffffff;
-`;
 const loadingContainerCss = css`
 	display: flex;
 	flex-direction: column;
+	padding-bottom: 96px;
 `;
 const loadingProgressBarCss = css`
 	background: rgba(255, 255, 255, 0.15);
 	border-radius: 4px;
 	padding: 0;
 	width: 168px;
-	height: 6px;
+	height: 4px;
+	margin-top: 20px;
 `;
 const loadingProgressPillCss = (isInView: boolean) => {
     return css`

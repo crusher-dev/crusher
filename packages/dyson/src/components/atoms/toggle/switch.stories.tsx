@@ -1,7 +1,7 @@
 import React from "react";
 import { Story, Meta } from "@storybook/react/types-6-0";
 
-import SwitchDemo,{ ToggleProps} from "./toggle1";
+import SwitchDemo,{ ToggleProps} from "./switch";
 export default {
 	title: "Atoms/Forms/Switch",
 	component: SwitchDemo,

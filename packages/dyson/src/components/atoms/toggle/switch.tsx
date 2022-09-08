@@ -84,7 +84,4 @@ export type ToggleProps = {
     disabled?: boolean;
     name?: string;
     className?: any;
-    // callback?: (state: boolean) => void;
-  //   leftSide?: ReactElement;
-	// rightSide?: ReactElement;
 } & React.DetailedHTMLProps<any, any>;

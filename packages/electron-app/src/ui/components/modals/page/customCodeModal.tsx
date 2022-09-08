@@ -48,8 +48,6 @@ loader.config({
 	},
 });
 
-console.log("path is", uriFromPath(path.join(remote.app.getAppPath(), "static/monaco-editor/min/vs")));
-
 interface iElementCustomScriptModalContent {
 	isOpen: boolean;
 	handleClose: any;

@@ -36,7 +36,7 @@ import { resetAppSession, setSelectedProject, setSessionInfoMeta, setUserAccount
 import { resolveToFrontEndPath } from "@shared/utils/url";
 import { getGlobalAppConfig, writeGlobalAppConfig } from "../lib/global-config";
 import template from "@crusher-shared/utils/templateString";
-import { ILoggerReducer } from "../store/reducers/logger";
+import { ILog, ILoggerReducer } from "../store/reducers/logger";
 import { clearLogs, recordLog } from "../store/actions/logger";
 import axios from "axios";
 import { identify } from "../lib/analytics";
@@ -44,6 +44,7 @@ import { identify } from "../lib/analytics";
 import { screen } from "electron";
 import { ProxyManager } from "./proxy-manager";
 import { resolveToBackend } from "../utils/url";
+import { getLogs } from "../store/selectors/logger";
 
 export class AppWindow {
 	private window: Electron.BrowserWindow;
@@ -559,8 +560,15 @@ export class AppWindow {
 		return null;
 	}
 
-	recordLog(log: ILoggerReducer["logs"][0]) {
-		this.store.dispatch(recordLog(log));
+	recordLog(log: ILog) {
+		const logs = new Map(getLogs(this.store.getState() as any));
+		
+		if(!log.parent) {
+			logs.set("_", [...(logs.get("_") as Array<any>), log]);
+		} else {
+			logs.set(log.parent, [...(logs.get(log.parent) || []), log]);
+		}
+		this.store.dispatch(recordLog(logs));
 	}
 
 	updateRecorderState(state) {

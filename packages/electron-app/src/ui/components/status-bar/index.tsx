@@ -1,4 +1,4 @@
-import { ILoggerReducer } from "electron-app/src/store/reducers/logger";
+import { ILog, ILoggerReducer } from "electron-app/src/store/reducers/logger";
 import React from "react";
 import { useSelector, useStore } from "react-redux";
 import { css } from "@emotion/react";
@@ -14,6 +14,7 @@ import { TTopLevelActionsEnum } from "../sidebar/actionsPanel/pageActions";
 import { getRecorderState, getSavedSteps } from "electron-app/src/store/selectors/recorder";
 import { updateRecorderState } from "electron-app/src/store/actions/recorder";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
+import { now } from "electron-app/src/main-process/now";
 
 function formatLogs(logs: Array<ILoggerReducer["logs"][0]>): Array<ILoggerReducer["logs"][0]> {
 	logs = logs.map((log, index) => {
@@ -134,8 +135,7 @@ const StatusBar = (props: any) => {
 	const [clicked, setClicked] = React.useState(false);
 	const [selectedTab, setSelectedTab] = React.useState(TabsEnum.LOGS);
 	const logsScrollRef: React.Ref<HTMLDivElement> = React.useRef(null);
-	const logs = useSelector(getLogs);
-
+	const logs: ILoggerReducer["logs"] = useSelector(getLogs);
 
 	React.useEffect(() => {
 		if(clicked && window["resizeCustomCode"]) {
@@ -158,14 +158,15 @@ const StatusBar = (props: any) => {
 			}
 		});
 	}, []);
+
 	const closeModal = (isDocking: boolean = false) => {
 		const recorderState = getRecorderState(store.getState());
 		setCurrentModal({ type: null, stepIndex: null });
-		setClicked(false);
+		window["openLogTime"] = performance.now();
 	};
 
 	React.useEffect(() => {
-		if (logs && logs.length) {
+		if (logs && logs.get("_").length > 0) {
 			const listContainer: any = document.querySelector("#logs-list");
 			if (listContainer) {
 				const elementHeight = listContainer.scrollHeight;
@@ -175,12 +176,13 @@ const StatusBar = (props: any) => {
 	}, [logs]);
 
 	const LogItem = (props: {
-		log: ILoggerReducer["logs"][0] & { children: Array<ILoggerReducer["logs"][0]>; diff: string };
+		log: ILog & { children: Array<ILog>; diff: string };
 		diff: string;
 		className?: string;
+		shouldShowChildren;
 	}) => {
-		const { log } = props;
-		const [showChildrens, setShowChildrens] = React.useState(false);
+		const { log, shouldShowChildren } = props;
+		const [showChildrens, setShowChildrens] = React.useState(shouldShowChildren);
 
 		const hasChildrens = React.useMemo(() => (log.children && log.children.length), [log]);
 
@@ -217,7 +219,7 @@ const StatusBar = (props: any) => {
 							{log.message}
 						</span>
 					</div>
-					<div
+					{/* <div
 						css={css`
 							margin-left: auto;
 						`}
@@ -231,10 +233,10 @@ const StatusBar = (props: any) => {
 						>
 							+{props.diff} ms
 						</span>
-					</div>
+					</div> */}
 				</div>
 					{showChildrens && log.children && log.children.length ? 
-						log.children.map((child: ILoggerReducer["logs"][0] & { children: Array<ILoggerReducer["logs"][0]>; diff: string }) => {
+						log.children.map((child: ILog & { children: Array<ILog>; diff: string }) => {
 							return (
 								<LogItem
 									css={css`
@@ -258,7 +260,7 @@ const StatusBar = (props: any) => {
 		setClicked(true);
 	};
 
-	const lastLogMessage = logs && logs.length ? logs[logs.length - 1].message : "";
+	const lastLogMessage = logs && logs.get("_").length ? logs.get("_")[logs.get("_").length - 1].message : "";
 	const stepAction = React.useMemo(() => {
 		if (currentModal && typeof currentModal.stepIndex !== "undefined") {
 			const savedSteps = getSavedSteps(store.getState() as any);
@@ -334,8 +336,9 @@ const StatusBar = (props: any) => {
 					<TabButton
 						selected={selectedTab === TabsEnum.LOGS}
 						title="Logs"
-						count={logs && logs.length}
+						count={logs && logs.get("_").length}
 						callback={() => {
+							window["openLogTime"] = performance.now();
 							setClicked(true);
 							handleTabSelection(TabsEnum.LOGS);
 						}}
@@ -392,11 +395,12 @@ const StatusBar = (props: any) => {
 							`}
 							className={"custom-scroll"}
 						>
-							{logs && logs.length
-								? formatLogs(logs).map((log: ILoggerReducer["logs"][0], index: number) => {
-										return <LogItem diff={log.diff} log={log} key={log.id} />;
-								  })
-								: ""}
+							{logs && logs.get("_").length
+								? logs.get("_").map((log: ILog, index: number) => {
+									// console.log("Log time", log.time,  window["openLogTime"]/1000, log.time - (window["openLogTime"]/1000) );
+										return <LogItem diff={"0"} shouldShowChildren={log.time - (window["openLogTime"]) >= 0 && index == logs.get("_").length -1} log={{...log, children: logs.get(log.id)}} key={log.id} />;
+								})
+							: ""}
 						</div>
 					</Conditional>
 					<Conditional showIf={selectedTab === TabsEnum.CONTEXT}>

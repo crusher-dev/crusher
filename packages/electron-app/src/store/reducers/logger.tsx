@@ -2,12 +2,21 @@ import { AnyAction } from "redux";
 import { CLEAR_LOGS, RECORD_LOG } from "../actions/logger";
 import { RESET_RECORDER } from "../actions/recorder";
 
+export interface ILog {
+	id: string;
+	type: "log" | "info" | "error";
+	parent?: string;
+	message: string;
+	args: Array<any>;
+	time: number;
+};
+
 interface ILoggerReducer {
-	logs: Array<{ id: string; type: "log" | "info" | "error"; parent?: string | null; message: string; args: Array<any>; time: number }>;
+	logs: Map<string, Array<ILog>>;
 }
 
 const initialState: ILoggerReducer = {
-	logs: [],
+	logs: new Map([["_", []]])
 };
 
 const loggerReducer = (state: ILoggerReducer = initialState, action: AnyAction) => {
@@ -15,13 +24,13 @@ const loggerReducer = (state: ILoggerReducer = initialState, action: AnyAction) 
 		case RECORD_LOG:
 			return {
 				...state,
-				logs: [...state.logs, action.payload],
+				logs: action.payload,
 			};
 		case CLEAR_LOGS:
 		case RESET_RECORDER:
 			return {
 				...state,
-				logs: [],
+				logs: new Map([["_", []]]),
 			};
 		default:
 			return state;

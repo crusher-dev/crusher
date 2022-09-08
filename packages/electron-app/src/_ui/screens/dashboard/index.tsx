@@ -118,7 +118,6 @@ const DashboardScreen = () => {
     const navigate = useNavigate();
     const store = useStore();
 
-
     const handleTestDelete = React.useCallback(
         (id) => {
             // setTests(tests.filter((a) => a.id != id));

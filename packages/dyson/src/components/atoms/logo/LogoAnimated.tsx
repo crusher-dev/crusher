@@ -103,7 +103,7 @@ const animatedCSS = css`
   }
   
   .logo-svg {
-	animation: zoominoutsinglefeatured 1.3s cubic-bezier(1, -0.35, 0.77, 0.89);
+	animation: zoominoutsinglefeatured 1.1s cubic-bezier(1, -0.35, 0.77, 0.89);
   }
   
   .tagline {

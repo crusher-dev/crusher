@@ -1,25 +1,24 @@
-import React from "react";
 import { css, Global } from "@emotion/react";
-import { Navigate, useNavigate } from "react-router-dom";
-import { useSelector, useStore } from "react-redux";
-import { getIsStatusBarVisible, getRecorderInfo, getRecorderState, getSavedSteps, isWebViewInitialized } from "../store/selectors/recorder";
-import Sidebar from "../ui/components/sidebar";
-import Toolbar from "../ui/components/toolbar";
-import DeviceFrame from "../ui/components/device-frame";
-import { TRecorderState } from "../store/reducers/recorder";
-import { StatusBar } from "../ui/components/status-bar";
-import { InfoOverLay } from "../ui/components/overlays/infoOverlay";
-import { ipcRenderer } from "electron";
-import { resetRecorder, setIsWebViewInitialized } from "../store/actions/recorder";
-import { IDeepLinkAction } from "../types";
-import { Store } from "redux";
-import { goFullScreen, performGetRecorderTestLogs, performReplayTest, performReplayTestUrlAction, performSaveLocalBuild, performSteps, resetStorage } from "../ui/commands/perform";
-import { getAppSessionMeta } from "../store/selectors/app";
-import { setSessionInfoMeta } from "../store/actions/app";
-import { sendSnackBarEvent } from "../ui/components/toast";
-import historyInstance from "./utils/history";
 import { StepType, TourProvider, useTour } from "@reactour/tour";
-import { useSizes } from "@reactour/tour/dist/tour.esm";
+import { ipcRenderer } from "electron";
+import React from "react";
+import { useSelector, useStore } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { Store } from "redux";
+import { setSessionInfoMeta } from "../store/actions/app";
+import { resetRecorder, setIsWebViewInitialized } from "../store/actions/recorder";
+import { TRecorderState } from "../store/reducers/recorder";
+import { getAppSessionMeta } from "../store/selectors/app";
+import { getIsStatusBarVisible, getRecorderInfo, getRecorderState, getSavedSteps } from "../store/selectors/recorder";
+import { IDeepLinkAction } from "../types";
+import { goFullScreen, performGetRecorderTestLogs, performReplayTest, performReplayTestUrlAction, performSaveLocalBuild, performSteps, resetStorage } from "../ui/commands/perform";
+import DeviceFrame from "../ui/components/device-frame";
+import { InfoOverLay } from "../ui/components/overlays/infoOverlay";
+import Sidebar from "../ui/components/sidebar";
+import { StatusBar } from "../ui/components/status-bar";
+import { sendSnackBarEvent } from "../ui/components/toast";
+import Toolbar from "../ui/components/toolbar";
+import historyInstance from "./utils/history";
 
 const handleCompletion = async (store: Store, action: IDeepLinkAction) => {
 
@@ -370,4 +369,5 @@ const deviceFrameContainerCss = css`
 	flex: 1;
 	overflow: auto;
 `;
-export { App }; 
+export { App };
+

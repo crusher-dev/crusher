@@ -1,13 +1,12 @@
 import { webFrame } from "electron";
 import { getInitialStateRenderer } from "electron-redux";
 import React from "react";
-import { getGlobalAppConfig } from "../lib/global-config";
-import { setSettngs, setShowShouldOnboardingOverlay, setUserAccountInfo } from "../store/actions/app";
+import {  setShowShouldOnboardingOverlay } from "../store/actions/app";
 import configureStore from "../store/configureStore";
 import { iReduxState } from "../store/reducers";
 import { render } from "react-dom";
-import { Provider, useDispatch, useSelector, useStore } from "react-redux";
-import { Router, Route, NavLink, HashRouter, Routes, useNavigate, HashRouterProps } from "react-router-dom";
+import { Provider} from "react-redux";
+import { Router, Route, Routes } from "react-router-dom";
 import { Store } from "redux";
 import { Global } from "@emotion/react";
 import { css } from "@emotion/react";
@@ -53,7 +52,6 @@ const globalStyle = css`
 `;
 
 function InsideRouter() {
-    const navigate = useNavigate();
     const handleErrorCallback = React.useCallback((err, key, config) => {
         if(err.message.includes("status code 401")) {
             console.log("Unauthorized API: ", key, config);

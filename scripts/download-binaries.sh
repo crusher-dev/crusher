@@ -14,5 +14,5 @@ if [ "$(uname)" = "Darwin" ] && ! [ -x "$(command -v wget)" ]; then
 fi
 
 echo 'Downloading latest binaries...'
-curl -L --retry 3 --max-time 900 --connect-timeout 60 -s https://api.github.com/repos/crusherdev/celectron-releases/releases/latest  | grep "celectron.*.zip" | cut -d : -f 2,3 | tr -d \" | wget -qi - -cP packages/electron-app/bin --show-progress
+curl -L --retry 3 --max-time 900 --connect-timeout 60 -s https://api.github.com/repos/crusher-dev/celectron-releases/releases/latest  | grep "celectron.*.zip" | cut -d : -f 2,3 | tr -d \" | wget -qi - -cP packages/electron-app/bin --show-progress
 cd packages/electron-app && pnpm extract:deps

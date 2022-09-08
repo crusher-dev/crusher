@@ -1,20 +1,14 @@
 import React from "react";
 import { Story, Meta } from "@storybook/react/types-6-0";
 
-import { Toggle } from "./toggle";
-import { ToggleProps} from "./toggle1";
+import SwitchDemo,{ ToggleProps} from "./toggle1";
 export default {
-	title: "Atoms/Forms/Toogle",
-	component: Toggle,
+	title: "Atoms/Forms/Switch",
+	component: SwitchDemo,
 } as Meta;
 
 const Template: Story<ToggleProps> = (args) => (
-	<div>
-
-	<Toggle {...args}></Toggle>
-
-	</div>
-
+	<SwitchDemo size={"medium"} {...args}/>
 
 );
 
@@ -38,4 +32,4 @@ export const Labels = Template.bind({});
 Labels.parameters = {
 	status: "ready",
 };
-Labels.args = { leftSide: "Off", rightSide: "On" };
+Labels.args = { size: "small"};

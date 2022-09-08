@@ -3,28 +3,59 @@ import { Logo } from "dyson/src/components/atoms";
 import { ClickableText } from "dyson/src/components/atoms/clickacbleLink/Text";
 import React from "react";
 
+
+function ExternalLink(props: any) {
+	return (
+	  <svg
+		width={9}
+		height={9}
+		fill="none"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	  >
+		<path
+		  fillRule="evenodd"
+		  clipRule="evenodd"
+		  d="M7.651 1.001c.24.216.259.585.043.824L2 8c-.215.24-.76.216-1 0-.239-.216-.215-.76 0-1l5.827-5.956a.583.583 0 01.824-.043z"
+		  fill="#3C3C3D"
+		/>
+		<path
+		  fillRule="evenodd"
+		  clipRule="evenodd"
+		  d="M.853 1.77a.583.583 0 01.552-.613L7.23.852a.583.583 0 01.613.552l.305 5.826a.583.583 0 11-1.165.06L6.71 2.049l-5.243.275a.583.583 0 01-.613-.552z"
+		  fill="#3C3C3D"
+		/>
+	  </svg>
+	);
+  }
+
 export const LoginNavBar = () => {
 	return (
 		<div className="flex justify-between items-center" css={topBar}>
-			<Logo height={24} />
+			<a href="https://crusher.dev" css={logoCSS}><Logo height={20} /></a>
+
 
 			<div css={linkSection} className="flex">
 				<a className="text-14" href="https://docs.crusher.dev" target="_blank">
-					{" "}
-					<ClickableText paddingY={4}>Docs</ClickableText>
+					<ClickableText paddingY={4} className="flex items-center text-14"><span className="mr-4">Documentation</span> <ExternalLink/> </ClickableText>
 				</a>
 				<a className="text-14" href="https://github.com/crusherdev/crusher" target="_blank">
-					{" "}
-					<ClickableText paddingY={4}>Github</ClickableText>
+					<ClickableText paddingY={4} className="text-14">Login</ClickableText>
 				</a>
 			</div>
 		</div>
 	);
 };
 
+const logoCSS = css`
+	:hover{
+		filter: brightness(.75);
+	}
+`
+
 const topBar = css`
 	margin: 0 auto;
-	width: 1400px;
+	width: 1002rem;
 	padding: 0 30px;
 	max-width: 100%;
 `;

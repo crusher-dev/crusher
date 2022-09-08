@@ -45,7 +45,7 @@ export default function Login({ loginWithEmailHandler }) {
 
 	return (
 		<div css={containerCSS}>
-			<div className="pt-28">
+			<div className="pt-20">
 				<LoginNavBar />
 			</div>
 			<div className={"flex justify-center"}>
@@ -147,7 +147,7 @@ const helpCSS = css`
 `;
 const containerCSS = css(`
 height: 100vh;
-background: #0C0C0D;
+background: linear-gradient(180deg, #0A0A0A 0%, #0A0A0A 100%);
 width: 100vw;
 `);
 

@@ -535,8 +535,6 @@ export default class EventRecording {
 	}
 
 	registerNodeListeners() {
-		console.log("Registering node listeners", window.location.href);
-
 		window.addEventListener("crusherHoverTrace", this.handleCrusherHoverTrace);
 		window.addEventListener("elementSelected", this.handleElementSelected);
 		window.addEventListener("input", this.handleElementInput);

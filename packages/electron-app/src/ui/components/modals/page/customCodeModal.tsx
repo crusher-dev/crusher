@@ -108,10 +108,13 @@ function ActionButtonDropdown({ setShowActionMenu, callback, selectedTemplate, .
 	);
 }
 
-const initialCodeTemplate = `/* Write your custom code here. For more infromation
-checkout SDK docs here at, https://docs.crusher.dev/sdk */
+const initialCodeTemplate = `/*
+	Write your custom code here.
+	SDK docs: https://docs.crusher.dev/sdk 
+*/
 async function validate(crusherSdk: CrusherSdk) {
-	// const { page } = crusherSdk;
+	const { page } = crusherSdk;
+
     // page.goto("https://news.ycombinator.com/login?goto=news");
 	// const input = page.waitForSelector("input[name=acct]");
 	// input.type(page.url());

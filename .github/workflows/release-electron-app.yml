@@ -40,6 +40,12 @@ jobs:
 
       - name: Show binary
         run: ls -l packages/electron-app/bin
+      
+      - name: Test
+        run: curl -u $GA_CLIENT_ID:$GA_CLIENT_SECRET -L --retry 3 --max-time 900 --connect-timeout 60 -s https://api.github.com/repos/crusher-dev/celectron-releases/releases/latest
+        env:
+          GA_CLIENT_ID: ${{ secrets.GA_CLIENT_ID }}
+          GA_CLIENT_SECRET: ${{ secrets.GA_CLIENT_SECRET }}
 
       - name: Throw error if all artifacts are not present (i.e < 3)
         run: eval 't=$(ls -1q packages/electron-app/bin | wc -l);' && eval "if [ $t -lt 3 ]; then echo Error All artifacts not present; exit 64; fi"

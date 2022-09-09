@@ -16,7 +16,6 @@
 		"start": "pm2 start",
 		"log:app": "pm2 logs crusher-app",
 		"lint": "lerna run prettify",
-		"postinstall": "sh scripts/download-binaries.sh",
 		"docker:heroku": "cd docker/oss/ && docker-compose up --build -d",
 		"docker:build:heroku": "sh scripts/build/build-oss.sh && yarn docker:heroku",
 		"db:migration": "node setup/dbMigration.js"

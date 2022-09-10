@@ -109,8 +109,7 @@ function ActionButtonDropdown({ setShowActionMenu, callback, selectedTemplate, .
 }
 
 const initialCodeTemplate = `/*
-	Write your custom code here.
-	SDK docs: https://docs.crusher.dev/sdk 
+	Docs: https://docs.crusher.dev/sdk 
 */
 async function validate(crusherSdk: CrusherSdk) {
 	const { page } = crusherSdk;

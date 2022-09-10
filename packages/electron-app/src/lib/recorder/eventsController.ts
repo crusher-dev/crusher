@@ -121,7 +121,7 @@ export default class EventsController {
 			_capturedTarget instanceof SVGElement && _capturedTarget.tagName.toLocaleLowerCase() !== "svg" ? _capturedTarget.ownerSVGElement : _capturedTarget;
 		const uniqueElementId = capturedTarget && ![document.body, document].includes(capturedTarget) ? ElementsIdMap.getUniqueId(capturedTarget) : null;
 
-		const selectors = capturedTarget && uniqueElementId.isNew ? getSelectors(capturedTarget instanceof SVGAElement ? capturedTarget.ownerSVGElement : capturedTarget) : (window["crusherCacheSelectors"] ? window["crusherCacheSelectors"][uniqueElementId.value] : null);
+		const selectors = capturedTarget && uniqueElementId.isNew ? getSelectors(capturedTarget instanceof SVGAElement ? capturedTarget.ownerSVGElement : capturedTarget, true) : (window["crusherCacheSelectors"] ? window["crusherCacheSelectors"][uniqueElementId.value] : null);
 
 		if(uniqueElementId.isNew && selectors) {
 			if(!window["crusherCacheSelectors"]) window["crusherCacheSelectors"] = {};

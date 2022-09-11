@@ -6,7 +6,7 @@ import { ExportsManager } from "../../../crusher-shared/lib/exports";
 import { CrusherCookieSetPayload } from "../../../crusher-shared/types/sdk/types";
 import { GlobalManagerPolyfill, LogManagerPolyfill, StorageManagerPolyfill } from "./polyfills";
 import { ActionDescriptor, CrusherRunnerActions, CrusherSdk, getMainActions } from "runner-utils/src/index";
-import { Browser, BrowserContext, ConsoleMessage, Page, ElementHandle, Frame } from "playwright";
+import { Browser, BrowserContext, ConsoleMessage, Page, ElementHandle, Frame, JSHandle } from "playwright";
 import { AppWindow } from "../main-process/app-window";
 import * as fs from "fs";
 import * as path from "path";
@@ -153,12 +153,13 @@ class PlaywrightInstance {
 		await element.hover();
 	}
 
-	private async handleSaveElementHandle(source, args: {element, uniqueElementId}) {
-		console.log("Saving element handle...");
-		const { uniqueElementId, element: elementHandle } = args; 
+	private async handleSaveElementHandle(source, args: JSHandle) {
+		const properties = await args.getProperties();
+		const uniqueElementId = await properties.get("uniqueElementId").jsonValue();
+		const elementHandle = await properties.get("element").asElement();
+
 		const ownerFrame = await elementHandle.ownerFrame();
 		const parentFrame = await ownerFrame.parentFrame();
-
 		let parentFrameSelectors = null;
 		if (parentFrame) {
 			if (!(await ownerFrame.isDetached())) {
@@ -171,7 +172,6 @@ class PlaywrightInstance {
 				);
 			}
 		}
-
 		if (elementHandle) {
 			this.elementsMap.set(uniqueElementId, { handle: elementHandle, parentFrameSelectors });
 			this.appWindow.reinstateElementSteps(uniqueElementId, this.elementsMap.get(uniqueElementId));
@@ -192,7 +192,7 @@ class PlaywrightInstance {
 			this.page.exposeBinding("crusherSdk.logInfo", this.handleWebviewLogInfo.bind(this));
 			this.page.exposeBinding("crusherSdk.click", this.handleWebviewClick.bind(this));
 			this.page.exposeBinding("crusherSdk.hover", this.handleWebviewHover.bind(this));
-			this.page.exposeBinding("crusherSdk.saveElementHandle", this.handleSaveElementHandle.bind(this));
+			this.page.exposeBinding("crusherSdk.saveElementHandle", this.handleSaveElementHandle.bind(this), {handle: true});
 		} catch(e) {
 			console.error("Error while exposing crusherSdk binding", e);
 		}

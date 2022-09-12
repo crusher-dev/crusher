@@ -20,6 +20,7 @@ import { checkForDiscord, waitForLogin } from "./hooks";
 import axios from "axios";
 import { getUserInfo, setUserInfo } from "../state/userInfo";
 import { CloudCrusher } from "../module/api";
+
 const cliProgress = require('cli-progress');
 const open = require("open");
 
@@ -64,11 +65,14 @@ export async function askUserLogin(shouldCheckForDiscord: boolean = true) {
         });
       } else {
 
+        const email = execSync(`git config --global user.email`);
+        const emailText = email.toString();
         const promptRes = await inquirer.prompt([
           {
             name: "email",
             message: "Your email:",
             type: "input",
+            default: emailText && emailText.length ? emailText.split("\n")[0] : null
             // @TODO: Can get git email here
           },
           {

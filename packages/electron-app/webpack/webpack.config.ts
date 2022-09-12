@@ -1,6 +1,7 @@
 import * as webpack from "webpack";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import * as path from "path";
+import { IgnorePlugin } from "webpack";
 
 require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
@@ -21,7 +22,7 @@ if (fs.existsSync(OUTPUT_DIR)) {
 
 const commonConfig = {
 	mode: process.env.NODE_ENV || "development",
-	plugins: [new MiniCssExtractPlugin()],
+	plugins: [			new IgnorePlugin({ resourceRegExp: /^fsevents$/ }),	new MiniCssExtractPlugin()],
 	module: {
 		rules: [
 			{
@@ -73,6 +74,7 @@ const finalConfig = [
 		...commonConfig,
 		target: "electron-main",
 		plugins: [
+			new IgnorePlugin({ resourceRegExp: /^fsevents$/ }),
 			new webpack.EnvironmentPlugin({
 				NODE_ENV: "production",
 				...dotEnv.parsed,

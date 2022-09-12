@@ -6,7 +6,7 @@ import { ExportsManager } from "../../../crusher-shared/lib/exports";
 import { CrusherCookieSetPayload } from "../../../crusher-shared/types/sdk/types";
 import { GlobalManagerPolyfill, LogManagerPolyfill, StorageManagerPolyfill } from "./polyfills";
 import { ActionDescriptor, CrusherRunnerActions, CrusherSdk, getMainActions } from "runner-utils/src/index";
-import { Browser, BrowserContext, ConsoleMessage, Page, ElementHandle, Frame } from "playwright";
+import { Browser, BrowserContext, ConsoleMessage, Page, ElementHandle, Frame, JSHandle } from "playwright";
 import { AppWindow } from "../main-process/app-window";
 import * as fs from "fs";
 import * as path from "path";
@@ -141,6 +141,43 @@ class PlaywrightInstance {
 		return page;
 	}
 
+	private async handleWebviewLogInfo(source, message: string) { 
+		console.log(message);
+	}
+
+	private async handleWebviewClick(source, element: ElementHandle) {
+		await element.click();
+	}
+
+	private async handleWebviewHover(source, element: ElementHandle) {
+		await element.hover();
+	}
+
+	private async handleSaveElementHandle(source, args: JSHandle) {
+		const properties = await args.getProperties();
+		const uniqueElementId = await properties.get("uniqueElementId").jsonValue();
+		const elementHandle = await properties.get("element").asElement();
+
+		const ownerFrame = await elementHandle.ownerFrame();
+		const parentFrame = await ownerFrame.parentFrame();
+		let parentFrameSelectors = null;
+		if (parentFrame) {
+			if (!(await ownerFrame.isDetached())) {
+				const ownerFrameElement = await ownerFrame.frameElement();
+				parentFrameSelectors = await parentFrame.evaluate(
+					(element) => {
+						return (window as any).getSelectors(element[0]);
+					},
+					[ownerFrameElement],
+				);
+			}
+		}
+		if (elementHandle) {
+			this.elementsMap.set(uniqueElementId, { handle: elementHandle, parentFrameSelectors });
+			this.appWindow.reinstateElementSteps(uniqueElementId, this.elementsMap.get(uniqueElementId));
+		}
+	}
+
 	async connect() {
 		const debuggingPortFile = fs.readFileSync(path.join(app.getPath("userData"), "DevToolsActivePort"), "utf8");
 		const debuggingPort = debuggingPortFile.split("\n")[0];
@@ -150,7 +187,15 @@ class PlaywrightInstance {
 		this.page = await this._getWebViewPage();
 		this.sdkManager = new CrusherSdk(this.page, this._exportsManager as any, this._storageManager as any);
 
-		this.page.on("console", this._handleConsoleMessage);
+		
+		try {
+			this.page.exposeBinding("crusherSdk.logInfo", this.handleWebviewLogInfo.bind(this));
+			this.page.exposeBinding("crusherSdk.click", this.handleWebviewClick.bind(this));
+			this.page.exposeBinding("crusherSdk.hover", this.handleWebviewHover.bind(this));
+			this.page.exposeBinding("crusherSdk.saveElementHandle", this.handleSaveElementHandle.bind(this), {handle: true});
+		} catch(e) {
+			console.error("Error while exposing crusherSdk binding", e);
+		}
 		global.customLogger = {
 			log: (message) => {
 				if (!message.includes("immediate._onImmediate") && this.lastAction) {
@@ -184,29 +229,7 @@ class PlaywrightInstance {
 				await (valueObj as ElementHandle).click();
 				break;
 			case "CRUSHER_SAVE_ELEMENT_HANDLE": {
-				const uniqueElementId = messageArgs[2].toString();
-
-				const elementHandle = valueObj.asElement();
-				const ownerFrame = await elementHandle.ownerFrame();
-				const parentFrame = await ownerFrame.parentFrame();
-
-				let parentFrameSelectors = null;
-				if (parentFrame) {
-					if (!(await ownerFrame.isDetached())) {
-						const ownerFrameElement = await ownerFrame.frameElement();
-						parentFrameSelectors = await parentFrame.evaluate(
-							(element) => {
-								return (window as any).getSelectors(element[0]);
-							},
-							[ownerFrameElement],
-						);
-					}
-				}
-
-				if (elementHandle) {
-					this.elementsMap.set(uniqueElementId, { handle: elementHandle, parentFrameSelectors });
-					this.appWindow.reinstateElementSteps(uniqueElementId, this.elementsMap.get(uniqueElementId));
-				}
+			
 			}
 		}
 	};

@@ -1,37 +1,32 @@
-import React, { RefObject, useEffect, useRef } from "react";
-import { css, Global } from "@emotion/react";
-import { Conditional } from "@dyson/components/layouts";
-import { Modal } from "@dyson/components/molecules/Modal";
-import { ModalTopBar } from "../topBar";
+import { Input } from "@dyson/components/atoms";
 import { Button } from "@dyson/components/atoms/button/Button";
+import { Conditional } from "@dyson/components/layouts";
+import { Dropdown } from "@dyson/components/molecules/Dropdown";
+import { SelectBox } from "@dyson/components/molecules/Select/Select";
+import { css, Global } from "@emotion/react";
+import Editor, { loader, Monaco } from "@monaco-editor/react";
+import { iAction } from "@shared/types/action";
+import { ipcRenderer, remote, shell } from "electron";
+import { updateRecordedStep, updateRecorderState } from "electron-app/src/store/actions/recorder";
+import { TRecorderState } from "electron-app/src/store/reducers/recorder";
+import { getRecorderState } from "electron-app/src/store/selectors/recorder";
 import {
 	deleteCodeTemplate,
 	getCodeTemplates,
 	performCustomCode,
 	performUndockCode,
 	saveCodeTemplate,
-	updateCodeTemplate,
+	updateCodeTemplate
 } from "electron-app/src/ui/commands/perform";
-import { iAction } from "@shared/types/action";
-import { useSelector, useStore } from "react-redux";
-import { setSelectedElement, updateRecordedStep, updateRecorderState } from "electron-app/src/store/actions/recorder";
-import { sendSnackBarEvent } from "../../toast";
-import { Checkbox } from "@dyson/components/atoms/checkbox/checkbox";
-import { Input } from "@dyson/components/atoms";
-import { SelectBox } from "@dyson/components/molecules/Select/Select";
-import Editor, { Monaco } from "@monaco-editor/react";
-import { loader } from "@monaco-editor/react";
-import * as path from "path";
+import { DownIcon } from "electron-app/src/ui/icons";
 import * as fs from "fs";
-import { ipcRenderer, remote } from "electron";
-import { Dropdown } from "@dyson/components/molecules/Dropdown";
-import { DownIcon, PlayIconV2 } from "electron-app/src/ui/icons";
-import { monacoTheme } from "./monaco.theme";
-import { getRecorderState } from "electron-app/src/store/selectors/recorder";
-import { TRecorderState } from "electron-app/src/store/reducers/recorder";
-import { editor } from "monaco-editor";
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
-import { shell } from "electron";
+import * as path from "path";
+import React, { useRef } from "react";
+import { useStore } from "react-redux";
+import { sendSnackBarEvent } from "../../toast";
+import { ModalTopBar } from "../topBar";
+import { newTheme } from "./monaco.theme";
 
 function ensureFirstBackSlash(str) {
 	return str.length > 0 && str.charAt(0) !== "/" ? "/" + str : str;
@@ -113,10 +108,12 @@ function ActionButtonDropdown({ setShowActionMenu, callback, selectedTemplate, .
 	);
 }
 
-const initialCodeTemplate = `/* Write your custom code here. For more infromation
-checkout SDK docs here at, https://docs.crusher.dev/sdk */
+const initialCodeTemplate = `/*
+	Docs: https://docs.crusher.dev/sdk 
+*/
 async function validate(crusherSdk: CrusherSdk) {
-	// const { page } = crusherSdk;
+	const { page } = crusherSdk;
+
     // page.goto("https://news.ycombinator.com/login?goto=news");
 	// const input = page.waitForSelector("input[name=acct]");
 	// input.type(page.url());
@@ -140,7 +137,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 
 	React.useEffect(() => {
 		const handleListener = () => {
-			if(editorMainRef.current && editorMainRef.current) {
+			if (editorMainRef.current && editorMainRef.current) {
 				const topbar = document.querySelector("#top-bar");
 				const rect = topbar.parentElement.getBoundingClientRect();
 				const containerNode = (editorMainRef.current as monaco.editor.IStandaloneCodeEditor).getContainerDomNode();
@@ -148,8 +145,8 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 
 				const childNodes = mainContainerNode.parentNode.childNodes;
 				let occupiedHeight = 0;
-				for(let childNode of Array.from(childNodes)) { 
-					if(childNode !== mainContainerNode) {
+				for (let childNode of Array.from(childNodes)) {
+					if (childNode !== mainContainerNode) {
 						occupiedHeight += (childNode as HTMLElement).getBoundingClientRect().height;
 					}
 				}
@@ -309,9 +306,9 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 		monaco.editor.defineTheme("my-theme", {
 			base: "vs-dark",
 			inherit: true,
-			rules: [...monacoTheme.rules],
+			rules: [...newTheme.rules],
 			colors: {
-				...monacoTheme.colors,
+				...newTheme.colors,
 				"editor.background": "#080809",
 			},
 		});
@@ -497,7 +494,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 				/>
 
 				{needName && (
-<div
+					<div
 						css={css`
 							position: fixed;
 							display: flex;
@@ -573,34 +570,34 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 					align-items: center;
 					margin-left: auto;
 				`}>
-				{/* <div css={runLinkStyle} onClick={runCustomCode}>Run</div> */}
+					{/* <div css={runLinkStyle} onClick={runCustomCode}>Run</div> */}
 
-				<Dropdown
-					initialState={showActionMenu}
-					component={
-						<ActionButtonDropdown
-							callback={(method) => {
-								if (method === "save-new-template") {
-									handleSaveAsTemplate();
-								} else if (method === "detach") {
-									handleDetach();
-								} else if (method === "update-template") {
-									handleUpdateTemplate();
-								}
-							}}
-							selectedTemplate={selectedTemplate}
-							setShowActionMenu={setShowActionMenu.bind(this)}
-						/>
-					}
-					callback={setShowActionMenu.bind(this)}
-					css={css`
+					<Dropdown
+						initialState={showActionMenu}
+						component={
+							<ActionButtonDropdown
+								callback={(method) => {
+									if (method === "save-new-template") {
+										handleSaveAsTemplate();
+									} else if (method === "detach") {
+										handleDetach();
+									} else if (method === "update-template") {
+										handleUpdateTemplate();
+									}
+								}}
+								selectedTemplate={selectedTemplate}
+								setShowActionMenu={setShowActionMenu.bind(this)}
+							/>
+						}
+						callback={setShowActionMenu.bind(this)}
+						css={css`
 						margin-left: auto;
 						.showOnClick {
 							display: flex;
 							align-items: center;
 						}
 					`}
-					dropdownCSS={css`
+						dropdownCSS={css`
 						left: 0rem !important;
 						width: 162rem;
 						z-index: 123123123123123;
@@ -608,23 +605,23 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 						top: auto;
 						bottom: calc(100% + 4rem);
 					`}
-				>
-					<Button
-						css={saveButtonStyle}
-						onClick={(e) => {
-							e.preventDefault();
-							e.stopPropagation();
-							if (props.stepAction) {
-								updateCustomCode();
-							} else {
-								runCustomCode();
-							}
-						}}
 					>
-						{props.stepAction ? (selectedTemplate ? "Save step" : "Save step") : "Save and run"}
-					</Button>
-					<div
-						css={css`
+						<Button
+							css={saveButtonStyle}
+							onClick={(e) => {
+								e.preventDefault();
+								e.stopPropagation();
+								if (props.stepAction) {
+									updateCustomCode();
+								} else {
+									runCustomCode();
+								}
+							}}
+						>
+							{props.stepAction ? (selectedTemplate ? "Save step" : "Save step") : "Save and run"}
+						</Button>
+						<div
+							css={css`
 							background: #7353F5;
 							display: flex;
 							align-items: center;
@@ -641,15 +638,15 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 							}
 							align-self: stretch;
 						`}
-					>
-						<DownIcon
-							fill={"#fff"}
-							css={css`
+						>
+							<DownIcon
+								fill={"#fff"}
+								css={css`
 								width: 9rem;
 							`}
-						/>
-					</div>
-				</Dropdown>
+							/>
+						</div>
+					</Dropdown>
 				</div>
 			</div>
 		</div>

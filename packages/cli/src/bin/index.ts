@@ -3,7 +3,7 @@ import EntryCommand from "../commands/index";
 import { getProjectNameFromGitInfo } from "../utils";
 import { loadUserInfoOnLoad } from "../utils/hooks";
 import { getProjectConfig, getProjectConfigPath } from "../utils/projectConfig";
-import { installCrusherRecorder, makeSureSetupIsCorrect } from "../utils/setup";
+import { askUserLogin, installCrusherRecorder, makeSureSetupIsCorrect } from "../utils/setup";
 import { getRecorderDistCommand, resolvePathToAppDirectory } from "../utils/utils";
 
 const nodeVersion = process.version.match(/^v(\d+\.\d+)/)[1];
@@ -29,6 +29,7 @@ if (parseFloat(nodeVersion) >= 10.0) {
 
       new Promise(async () => {
 
+        const { token } = await askUserLogin();
         // @Todo: Add support for flag token here
         await loadUserInfoOnLoad({token: undefined});
         await installCrusherRecorder();

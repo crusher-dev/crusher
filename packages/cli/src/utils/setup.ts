@@ -9,14 +9,66 @@ import { getRecorderBuildForPlatfrom, recorderVersion } from "../constants";
 import { getProjectConfig, getSuggestedProjectConfigPath, setProjectConfig } from "../utils/projectConfig";
 import { execSync } from "child_process";
 import * as inquirer from "inquirer";
-import { getProjectsOfCurrentUser, createProject } from "../utils/apiUtils";
+import { getProjectsOfCurrentUser, createProject, getUserInfoFromToken } from "../utils/apiUtils";
 import localTunnel from "localtunnel";
-import { getProjectNameFromGitInfo } from "./index";
-import { getAppConfig, setAppConfig } from "../utils/appConfig";
-import { downloadFile } from "./common";
+import { getProjectNameFromGitInfo, isUserLoggedIn } from "./index";
+import { getAppConfig, initializeAppConfig, setAppConfig } from "../utils/appConfig";
+import { downloadFile, openUrl } from "./common";
 import chalk from "chalk";
 import ora from "ora";
+import { checkForDiscord, waitForLogin } from "./hooks";
+import axios from "axios";
+import { getUserInfo, setUserInfo } from "../state/userInfo";
 const cliProgress = require('cli-progress');
+const open = require("open");
+
+// Does nothing if the user is alreadyLoggedIn
+export async function askUserLogin(shouldCheckForDiscord: boolean = true) {
+  initializeAppConfig();
+
+  const loggedIn = isUserLoggedIn();
+  if(!loggedIn) {
+      const inviteCode = await checkForDiscord(shouldCheckForDiscord);
+      const promptRes = await inquirer.prompt([
+        {
+          name: "loginChoice",
+          message: "How do you want to login?",
+          type: "list",
+          choices: [
+            { name: "Signup via github", value: 0 },
+            { name: "Signup via email", value: 1 }
+          ],
+          default: 0
+        }
+      ]);
+      const loginKey = await axios
+      .get(resolveBackendServerUrl("/cli/get.key"))
+      .then((res) => {
+        return res.data.loginKey;
+      });
+      if(promptRes.loginChoice === 0) {
+        const url = new URL(resolveBackendServerUrl("/users/actions/auth.github"));
+        if(inviteCode) url.searchParams.append("sessionInviteCode", inviteCode.code);
+        url.searchParams.append("lK", loginKey);
+        await openUrl(url.toString());
+
+        const { token } = await waitForLogin(loginKey);
+
+        await getUserInfoFromToken(token as any).then((userInfo) => {
+          setUserInfo(userInfo);
+          setAppConfig({
+            ...getAppConfig(),
+            userInfo: getUserInfo(),
+          });
+        });
+      } else {
+        console.log("Login via email");
+      }
+  }
+  
+  return { token: null } ;
+}
+
 
 export async function makeSureSetupIsCorrect(projectId: string | null = null, ask = false) {
   const projectConfig = getProjectConfig();
@@ -27,7 +79,7 @@ export async function makeSureSetupIsCorrect(projectId: string | null = null, as
       const shouldInit = await inquirer.prompt([
         {
           name: "shouldInit",
-          message: chalk( `Create new crusher project in this dir?`),
+          message: chalk( `Create new project?`),
           type: "confirm",
           default: true,
         },

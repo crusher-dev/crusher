@@ -8,6 +8,9 @@ import {
 import axios from "axios";
 import chalk from "chalk";
 import { isUserLoggedIn } from ".";
+import yargs from "yargs";
+import { hideBin } from "yargs/helpers";
+
 const open = require('open');
 
 import ora from 'ora';
@@ -18,20 +21,25 @@ import ora from 'ora';
 */
 const secretInviteCode = "crush"
 
+export const getDiscordInviteCode = () => {
+  const argv = yargs(hideBin(process.argv)).help(false).argv;
+  const commandsArr: Array<string> = argv["_"];
+
+  const shouldIgnoreParsing = argv["help"] || argv["h"] || commandsArr.some((cmd) => (["help", "login"].includes(cmd)));
+  if(shouldIgnoreParsing || !argv["code"]) return; // Not our business here
+
+
+  return { code : argv["code"] };
+}
+
 /*
   Remove this after beta
 */
-const checkForDiscord = async()=>{
-
-  const isCodeInCommandLine = process.argv.some((e)=>{
-    return e.includes("--code=") && !["help", "--help", "-h"].includes(e)
-  })
-  const hasLoginFlag = process.argv.some((e) => e.includes("login"));
-
-
-  if(isUserLoggedIn() || isCodeInCommandLine) return;
-
-  if(!isCodeInCommandLine && !hasLoginFlag){
+export const checkForDiscord = async ( shouldCheckForDiscord = true )=>{
+  if(isUserLoggedIn()) return;
+  
+  const discordArgv = getDiscordInviteCode();
+  if(!discordArgv && shouldCheckForDiscord) { 
     await console.log(chalk.green(`New to crusher?`))
 
     await console.log(`Get access code - ${chalk.green("https://discord.gg/dHZkSNXQrg")}`)
@@ -41,7 +49,9 @@ const checkForDiscord = async()=>{
     await console.log(`\n${chalk.yellow('Already have an account?')}
     run npx crusher-cli login \n`)
 
-  process.exit(0)
+    process.exit(0)
+  } else {
+    return discordArgv;
   }
 }
 
@@ -66,18 +76,22 @@ const waitForUserLogin = async (): Promise<string> => {
       return res.data.loginKey;
     });
   const loginUrl = resolveFrontendServerUrl(`/login_sucessful?lK=${loginKey}&inviteCode=${discordCode}`);
+  await open(loginUrl)
+    .catch((err) => {
+      console.error(err);
+  });
 
+  const { token } = await waitForLogin(loginKey);
   await console.log(
     "Login or create an account to create/sync tests⚡⚡. Opening a browser to sync test.\nOr open this link:"
   );
   await console.log(`${loginUrl} \n`);
 
-  const spinner = ora('Waiting for login').start();
+  return token as string;
+};
 
-  await open(loginUrl)
-    .catch((err) => {
-      console.error(err);
-    });
+const waitForLogin = async (loginKey) => {
+  const spinner = ora('Waiting for login').start();
 
   const token = await new Promise((resolve) => {
     const interval = setInterval(async () => {
@@ -94,9 +108,9 @@ const waitForUserLogin = async (): Promise<string> => {
   spinner.stop()
 
   await console.log("\nLogin completed! Let's ship high quality software fast⚡⚡");
-  return token as string;
-};
 
+  return { token };
+}
 const loadUserInfoOnLoad = async function (options: { token?: string }) {
   initializeAppConfig();
 
@@ -128,4 +142,4 @@ const loadUserInfoOnLoad = async function (options: { token?: string }) {
   }
 };
 
-export { loadUserInfoOnLoad };
+export { loadUserInfoOnLoad, waitForLogin };

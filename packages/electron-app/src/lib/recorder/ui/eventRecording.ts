@@ -165,13 +165,13 @@ export default class EventRecording {
 		}
 	}
 
-	clickThroughElectron(node) {
-		console.log("CRUSHER_CLICK_ELEMENT", node);
+	async clickThroughElectron(node) {
+		await window["crusherSdk.click"](node);
 		return true;
 	}
 
-	hoverThroughElectron(node) {
-		console.log("CRUSHER_HOVER_ELEMENT", node);
+	async hoverThroughElectron(node) {
+		await window["crusherSdk.hover"](node);
 		return true;
 	}
 
@@ -314,14 +314,14 @@ export default class EventRecording {
 
 			dependentHovers = hoverDependedNodes.map((node) => {
 				return {
-					uniqueElementId: ElementsIdMap.getUniqueId(node),
+					uniqueElementId: ElementsIdMap.getUniqueId(node).value,
 					selectors: this.eventsController.getSelectors(selectedElement),
 				};
 			});
 		}
 
 		turnOnElementMode({
-			uniqueElementId: ElementsIdMap.getUniqueId(selectedElement),
+			uniqueElementId: ElementsIdMap.getUniqueId(selectedElement).value,
 			selectors: this.eventsController.getSelectors(selectedElement, shouldUseAdvancedSelector),
 			elementDescription: getElementDescription(selectedElement),
 			dependentHovers: dependentHovers,

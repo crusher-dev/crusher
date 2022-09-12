@@ -94,12 +94,12 @@ export default function Login({ loginWithEmailHandler }) {
 					<div css={overlayContainer} className={"mt-58 pb-60"}>
 						<div className={"mb-42"}>
 							<Link href={getGithubLoginURL(query?.inviteType?.toString(), query?.inviteCode?.toString(), null)}>
-								<NewButton svg={<GithubSVG />} text={"Login with Github"} />
+								<NewButton svg={<GithubSVG className="mr-12" />} text={"Login with Github"} />
 							</Link>
 
 							<div className="mt-12">
 								<Link href={getGithubLoginURL(query?.inviteType?.toString(), query?.inviteCode?.toString(), null)}>
-									<NewButton svg={<GitlabSVG />} text={"Login with Gitlab"} />
+									<NewButton svg={<GitlabSVG className="mr-12" />} text={"Login with Gitlab"} />
 								</Link>
 							</div>
 
@@ -118,16 +118,6 @@ export default function Login({ loginWithEmailHandler }) {
 							/>
 
 							<NewButton svg={null} text={"login"} className={"mt-16"} />
-							{/* <Button
-								onClick={loginWithEmailHandler}
-								bgColor={"tertiary-dark"}
-								className={"flex items-center justify-center mt-20"}
-								css={[buttonCSS, plainButton]}
-							>
-								<Text fontSize={14} weight={500}>
-									or with email
-								</Text>
-							</Button> */}
 						</div>
 						<div className="flex w-full justify-center">
 							<Text css={[underLineonHover, helpCSS]} fontSize={14}>
@@ -146,7 +136,7 @@ export default function Login({ loginWithEmailHandler }) {
 								}
 							`}
 						>
-							Already registered?{" "}
+							Have an account?{" "}
 							<span
 								css={css`
 									color: #855aff;
@@ -163,8 +153,35 @@ export default function Login({ loginWithEmailHandler }) {
 }
 
 const newInputBoxCSS = css`
-	background: trasnparent;
-	border: 0.5px solid rgba(56, 56, 56, 0.6);
+	input {
+		background: transparent;
+		border: 0.5px solid rgba(56, 56, 56, 0.6);
+		border-radius: 8px;
+		font-weight: 500;
+		::placeholder {
+			color: #808080;
+		}
+		:hover {
+			box-shadow: 0px 0px 0px 3px rgba(28, 28, 28, 0.72);
+		}
+		:-webkit-autofill {
+			background: transparent;
+		}
+	}
+
+	@-webkit-keyframes autofill {
+		0%,
+		100% {
+			color: #666;
+			background: transparent;
+		}
+	}
+
+	input:-webkit-autofill {
+		-webkit-animation-delay: 1s; /* Safari support - any positive time runs instantly */
+		-webkit-animation-name: autofill;
+		-webkit-animation-fill-mode: both;
+	}
 `;
 const helpCSS = css`
 	color: #565657;
@@ -211,16 +228,12 @@ const newButtonCSS = css`
 		filter: brightness(100%);
 	}
 `;
-const buttonCSS = css(`
-width: 100%;
-height: 44rem;
-border-radius: 6rem;
-`);
+
 function NewButton({ svg, text, ...props }) {
 	return (
 		<Button className={"flex items-center justify-center"} css={[githubButtonCSS, newButtonCSS]} {...props}>
 			{svg}
-			<Text className={"ml-12 mt-3"} fontSize={14} weight={600}>
+			<Text className={"mt-3"} fontSize={14} weight={600}>
 				{text}
 			</Text>
 		</Button>

@@ -163,126 +163,112 @@ export async function makeSureSetupIsCorrect(projectId: string | null = null, as
 }
 
 async function downloadUpstreamBuild(): Promise<string> {
-  const packagesRecorderUrl = getRecorderBuildForPlatfrom();
-  const recorderZipPath = resolvePathToAppDirectory(
-    `bin/${packagesRecorderUrl.name}`
-  );
+	const packagesRecorderUrl = getRecorderBuildForPlatfrom();
+	const recorderZipPath = resolvePathToAppDirectory(`bin/${packagesRecorderUrl.name}`);
 
-  const bar = new cliProgress.SingleBar({
-    format: `Downloading latest version (${packagesRecorderUrl.version})\t[{bar}] {percentage}%`,
-  }, cliProgress.Presets.shades_classic);
-  bar.start(100, 0, { speed: "N/A" });
+	const bar = new cliProgress.SingleBar(
+		{
+			format: `Downloading latest version (${packagesRecorderUrl.version})\t[{bar}] {percentage}%`,
+		},
+		cliProgress.Presets.shades_classic,
+	);
+	bar.start(100, 0, { speed: 'N/A' });
 
-  return downloadFile(packagesRecorderUrl.url, recorderZipPath, bar);
+	return downloadFile(packagesRecorderUrl.url, recorderZipPath, bar);
 }
 
 async function installMacBuild() {
-  // handle when crusher is already installed
-  if(fs.existsSync(resolvePathToAppDirectory("bin"))) {
-    execSync(`rm -Rf ${resolvePathToAppDirectory("bin")} && mkdir ${resolvePathToAppDirectory("bin")}`);
-    console.log("New version available! Updating now...\n");
-  } else {
-    execSync(`mkdir ${resolvePathToAppDirectory("bin")}`);
-    console.log("Crusher Recorder is not installed.\n");
-  }
-  const recorderZipPath = await downloadUpstreamBuild();
+	// handle when crusher is already installed
+	if (fs.existsSync(resolvePathToAppDirectory('bin'))) {
+		execSync(`rm -Rf ${resolvePathToAppDirectory('bin')} && mkdir ${resolvePathToAppDirectory('bin')}`);
+		console.log('New version available! Updating now...\n');
+	} else {
+		execSync(`mkdir ${resolvePathToAppDirectory('bin')}`);
+		console.log('Crusher Recorder is not installed.\n');
+	}
+	const recorderZipPath = await downloadUpstreamBuild();
 
+	const spinner = ora('Unzipping').start();
+	if (fs.existsSync(resolvePathToAppDirectory('bin/Crusher Recorder.app'))) {
+		execSync(`cd ${path.dirname(recorderZipPath)} && rm -Rrf "Crusher Recorder.app"`);
+	}
+	execSync(`cd ${path.dirname(recorderZipPath)} && ditto -xk ${path.basename(recorderZipPath)} . && rm -R ${path.basename(recorderZipPath)}`, {
+		stdio: 'ignore',
+	});
 
-  const spinner = ora('Unzipping').start();
-  if (fs.existsSync(resolvePathToAppDirectory("bin/Crusher Recorder.app"))) {
-    execSync(
-      `cd ${path.dirname(recorderZipPath)} && rm -Rrf "Crusher Recorder.app"`
-    );
-  }
-  execSync(
-    `cd ${path.dirname(recorderZipPath)} && ditto -xk ${path.basename(
-      recorderZipPath
-    )} . && rm -R ${path.basename(recorderZipPath)}`,
-    { stdio: "ignore" }
-  );
-
-  await new Promise((resolve, reject) =>
-    setTimeout(() => {
-      resolve(true);
-    }, 3000)
-  );
-  spinner.stop()
-  console.log("done\n");
+	await new Promise((resolve, reject) =>
+		setTimeout(() => {
+			resolve(true);
+		}, 3000),
+	);
+	spinner.stop();
+	console.log('done\n');
 }
 
 async function installLinuxBuild() {
-  // handle when crusher is already installed
+	// handle when crusher is already installed
 
-  if(fs.existsSync(resolvePathToAppDirectory("bin"))) {
-    execSync(`rm -Rf ${resolvePathToAppDirectory("bin")} && mkdir ${resolvePathToAppDirectory("bin")}`);
-    console.log("New version available! Updating now...\n");
-  } else {
-    execSync(`mkdir ${resolvePathToAppDirectory("bin")}`);
-    console.log("Crusher Recorder is not installed.\n");
-  }
-  const recorderZipPath = await downloadUpstreamBuild();
+	if (fs.existsSync(resolvePathToAppDirectory('bin'))) {
+		execSync(`rm -Rf ${resolvePathToAppDirectory('bin')} && mkdir ${resolvePathToAppDirectory('bin')}`);
+		console.log('New version available! Updating now...\n');
+	} else {
+		execSync(`mkdir ${resolvePathToAppDirectory('bin')}`);
+		console.log('Crusher Recorder is not installed.\n');
+	}
+	const recorderZipPath = await downloadUpstreamBuild();
 
-  const spinner = ora('Unzipping').start();
-  execSync(
-    `cd ${path.dirname(recorderZipPath)} && unzip ${path.basename(
-      recorderZipPath
-    )} -d . && rm -R ${path.basename(recorderZipPath)}`,
-    { stdio: "ignore" }
-  );
+	const spinner = ora('Unzipping').start();
+	execSync(`cd ${path.dirname(recorderZipPath)} && unzip ${path.basename(recorderZipPath)} -d . && rm -R ${path.basename(recorderZipPath)}`, {
+		stdio: 'ignore',
+	});
 
-  await new Promise((resolve, reject) =>
-    setTimeout(() => {
-      resolve(true);
-    }, 3000)
-  );
-  spinner.stop()
-  console.log("done\n");
+	await new Promise((resolve, reject) =>
+		setTimeout(() => {
+			resolve(true);
+		}, 3000),
+	);
+	spinner.stop();
+	console.log('done\n');
 }
 
 export async function installCrusherRecorder() {
-  const cliConfig = getAppConfig();
-  let shouldReinstall = false;
+	const cliConfig = getAppConfig();
+	let shouldReinstall = false;
 
-  if (cliConfig["recorderVersion"] !== recorderVersion) {
-    shouldReinstall = true;
-    cliConfig["recorderVersion"] = "";
-    setAppConfig(cliConfig);
-  }
+	if (cliConfig['recorderVersion'] !== recorderVersion) {
+		shouldReinstall = true;
+		cliConfig['recorderVersion'] = '';
+		setAppConfig(cliConfig);
+	}
 
-  if (process.platform === "darwin") {
-    if (
-      fs.existsSync(resolvePathToAppDirectory("bin/Crusher Recorder.app")) &&
-      shouldReinstall == false
-    ) {
-      return;
-    }
+	if (process.platform === 'darwin') {
+		if (fs.existsSync(resolvePathToAppDirectory('bin/Crusher Recorder.app')) && shouldReinstall == false) {
+			return;
+		}
 
-    await installMacBuild();
-  } else if (process.platform === "linux") {
-    if (
-      fs.existsSync(resolvePathToAppDirectory("bin/electron-app")) &&
-      shouldReinstall == false
-    ) {
-      return;
-    }
+		await installMacBuild();
+	} else if (process.platform === 'linux') {
+		if (fs.existsSync(resolvePathToAppDirectory('bin/electron-app')) && shouldReinstall == false) {
+			return;
+		}
 
-    await installLinuxBuild();
-  }
+		await installLinuxBuild();
+	}
 
-  // Set config after succesfull installation
-  cliConfig["recorderVersion"] = recorderVersion;
-  setAppConfig(cliConfig);
+	// Set config after succesfull installation
+	cliConfig['recorderVersion'] = recorderVersion;
+	setAppConfig(cliConfig);
 }
 
 export async function createTunnel(port: string): Promise<localTunnel.Tunnel> {
-  const spinner = ora('Creating tunnel to local system').start();
-  // eslint-disable-next-line radix
-  const tunnel = await localTunnel({ port: parseInt(port) });
-  spinner.stop()
+	const spinner = ora('Creating tunnel to local system').start();
+	// eslint-disable-next-line radix
+	const tunnel = await localTunnel({ port: parseInt(port) });
+	spinner.stop();
 
-  tunnel.on("close", () => {
-    console.log(`Tunnel for http://localhost:${port} closed`);
-    process.exit(0);
-  });
-  return tunnel;
+	tunnel.on('close', () => {
+		console.log(`Tunnel for http://localhost:${port} closed`);
+		process.exit(0);
+	});
+	return tunnel;
 }

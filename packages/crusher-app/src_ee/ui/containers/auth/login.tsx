@@ -1,20 +1,14 @@
 import { css } from "@emotion/react";
 import { LoginNavBar } from "@ui/containers/common/login/navbar";
 import { getGithubLoginURL } from "@utils/core/external";
-import { Button } from "dyson/src/components/atoms";
+import { Button, Input } from "dyson/src/components/atoms";
 import { Heading } from "dyson/src/components/atoms/heading/Heading";
 import { Text } from "dyson/src/components/atoms/text/Text";
 import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import Link from "next/link";
 import { useRouter } from "next/router";
-const RocketImage = (props) => (
-	<img
-		{...props}
-		src={
-			"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAPCAYAAADUFP50AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAJBSURBVHgBndJNSJNxHAfw77ZnPcu5Cb4u3yrnzMhMxQyLOnRQC0yJ9NBFSjHo0k0yIuhSmNClCJUOlpGHDpUkmka+5NSp0Wh7Njc3n/a4ILH26rO5t+efGXWaFX3P38/l9/sC/xnRvxbbOjoUyozy0kBUdCzgX3/9V9ja2io9W3O63UsltLz3yXNo1T4YtLN2yZ/QpE5XQDPWye4nTxvSx0aTKpvqUZgFvJxiV8Tbob6+vqP+Ce1Cz9R04QTzEYrkJBTlZcPD2uCxvhuNCzuLy07yGQf651b9ijO8F90aDaovNcNiYTA8NBxJ8OsfUb/KvkzVBXg8u1YIUfXmV1weN/ISWXoxGrtO4KA6G1bWjumpGTCmpTsL49PGLejLT2umvb6H4dgGFiHFiFiFRD6II0UliAoGmPVa6BkOM7Pz8zYHe/eHocj1HHXYFeykXCFwTnhGuBTZ3pIymWZ3Eg6/7cVAmMYnrxMSj8PImJfrvjrMri0YruDvUztiYmGN/nazJ/Mqu7/03vHEIJTd7eiXZ2FOkIOsfXnBuwwXvRzn/n0IQn6OgHt8qNphqmXPN9WRc8oE0pWbFm1JySODO5XLDUD8t324hhKBq4qG3LfJgwY1GaqRDeoU1PNVMYhbhFfxjJhszk5TntojUsoldt1nVJ4SZnJpLKjFsXp6syCIYI8LLbXYI9kIFkUYW1SJgbGlIbaqIC8clCrIegS4kSLgSjxI8RlIhlR0yzW2+IaxRAyNz8C726SmQGqoJssJLbbJd0nz9aMpv90CAAAAAElFTkSuQmCC"
-		}
-	/>
-);
+import React, { useState } from "react";
+
 const GitlabSVG = (props) => (
 	<svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 		<path fillRule="evenodd" clipRule="evenodd" d="m8.001 15.37 2.946-9.07H5.055l2.946 9.07Z" fill="#E24329" />
@@ -42,6 +36,18 @@ export default function Login({ loginWithEmailHandler }) {
 	const router = useRouter();
 	const { query } = router;
 
+	const [state, setState] = React.useState("");
+	const [email, setEmail] = useState({ value: "", error: null });
+	const emailChange = (event: any) => {
+		setEmail({ error: null, value: event.target.value });
+	};
+
+	const onEnter = (event: any): void | Promise => {
+		if (event.key === "Enter") {
+			return onSubmit();
+		}
+	};
+
 	return (
 		<div css={containerCSS}>
 			<div className="pt-20">
@@ -51,7 +57,7 @@ export default function Login({ loginWithEmailHandler }) {
 				<div
 					className={"flex flex-col items-center"}
 					css={css`
-						margin-top: 120rem;
+						margin-top: 95rem;
 					`}
 				>
 					<Heading
@@ -79,32 +85,40 @@ export default function Login({ loginWithEmailHandler }) {
 						>
 							better
 						</span>
-						<Text fontSize={18} className="leading-none">🚀</Text>
+						<Text fontSize={16}>🚀</Text>
 					</Heading>
-					<TextBlock
-						fontSize={14.2}
-						color={"#606060"}
-						className={"mt-16"}
-						css={css`
-							letter-spacing: 0.2px;
-						`}
-						leading={false}
-					>
-						Devs use crusher to test & ship fast with confidence. Get started in seconds
+					<TextBlock fontSize={15} color={"#4D4D4D"} className={"mt-16"} leading={false}>
+						Devs use crusher to test website fast, ship fast. Get started in seconds
 					</TextBlock>
 
-					<div css={overlayContainer} className={"mt-48 pb-60"}>
-						<div className={" mb-42"}>
+					<div css={overlayContainer} className={"mt-58 pb-60"}>
+						<div className={"mb-42"}>
 							<Link href={getGithubLoginURL(query?.inviteType?.toString(), query?.inviteCode?.toString(), null)}>
-								<Button className={"flex items-center justify-center"} css={githubButtonCSS}>
-									<GithubSVG />{" "}
-									<Text className={"ml-10"} fontSize={14} weight={700}>
-										Login with Github
-									</Text>
-								</Button>
+								<NewButton svg={<GithubSVG />} text={"Login with Github"} />
 							</Link>
 
-							<Button
+							<div className="mt-12">
+								<Link href={getGithubLoginURL(query?.inviteType?.toString(), query?.inviteCode?.toString(), null)}>
+									<NewButton svg={<GitlabSVG />} text={"Login with Gitlab"} />
+								</Link>
+							</div>
+
+							<Line />
+
+							<Input
+								className="bg"
+								autoComplete={"email"}
+								value={email.value}
+								onChange={emailChange}
+								placeholder={"Enter email"}
+								isError={email.error}
+								css={newInputBoxCSS}
+								// onReturn={onLogin.bind(this)}
+								// onBlur={verifyInfo.bind(this, false)}
+							/>
+
+							<NewButton svg={null} text={"login"} className={"mt-16"} />
+							{/* <Button
 								onClick={loginWithEmailHandler}
 								bgColor={"tertiary-dark"}
 								className={"flex items-center justify-center mt-20"}
@@ -113,7 +127,7 @@ export default function Login({ loginWithEmailHandler }) {
 								<Text fontSize={14} weight={500}>
 									or with email
 								</Text>
-							</Button>
+							</Button> */}
 						</div>
 						<div className="flex w-full justify-center">
 							<Text css={[underLineonHover, helpCSS]} fontSize={14}>
@@ -148,6 +162,10 @@ export default function Login({ loginWithEmailHandler }) {
 	);
 }
 
+const newInputBoxCSS = css`
+	background: trasnparent;
+	border: 0.5px solid rgba(56, 56, 56, 0.6);
+`;
 const helpCSS = css`
 	color: #565657;
 `;
@@ -158,7 +176,7 @@ width: 100vw;
 `);
 
 const overlayContainer = css(`
-	width: 372rem;
+	width: 368rem;
 `);
 
 const underLineonHover = css`
@@ -175,15 +193,90 @@ const githubButtonCSS = css(`
 width: 100%;
 height: 44rem;
 font-weight: 400;
-border-radius: 6rem;
 
-background: linear-gradient(133.85deg, #905CFF 25.39%, #6D55FF 74.5%, #6951FF 74.5%);
+
 box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 
 `);
 
+const newButtonCSS = css`
+	border-radius: 10rem;
+
+	background: #191919;
+	border: 0.5px solid rgba(56, 56, 56, 0.35);
+
+	:hover {
+		background: #202020;
+		border: 0.5px solid rgba(56, 56, 56, 0.35);
+		filter: brightness(100%);
+	}
+`;
 const buttonCSS = css(`
 width: 100%;
 height: 44rem;
 border-radius: 6rem;
 `);
+function NewButton({ svg, text, ...props }) {
+	return (
+		<Button className={"flex items-center justify-center"} css={[githubButtonCSS, newButtonCSS]} {...props}>
+			{svg}
+			<Text className={"ml-12 mt-3"} fontSize={14} weight={600}>
+				{text}
+			</Text>
+		</Button>
+	);
+}
+
+function Line(props) {
+	return (
+		<>
+			<div className="or-container mt-22 mb-24">
+				<div className="line" />
+				<span className="or-text">
+					<span>or</span>
+				</span>
+				<div className="line" />
+			</div>
+			<style jsx>
+				{`
+					.or-container {
+						display: flex;
+
+						max-width: 364px;
+
+						align-items: center;
+
+						gap: 8rem;
+					}
+					.line {
+						width: auto;
+						min-height: 1px;
+						position: relative;
+						background: rgba(217, 217, 217, 0.04);
+						flex-grow: 1;
+						box-sizing: border-box;
+						border-color: transparent;
+						margin-right: 7px;
+						margin-bottom: 0;
+					}
+					.or-text {
+						color: rgba(85, 85, 87, 1);
+						width: 12px;
+						height: auto;
+						font-size: 12.800000190734863px;
+						align-self: auto;
+						font-style: Regular;
+						text-align: left;
+						font-family: Gilroy;
+						font-weight: 400;
+						line-height: normal;
+						font-stretch: normal;
+						margin-right: 7px;
+						margin-bottom: 0;
+						text-decoration: none;
+					}
+				`}
+			</style>
+		</>
+	);
+}

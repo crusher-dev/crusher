@@ -19,6 +19,7 @@ import ora from "ora";
 import { checkForDiscord, waitForLogin } from "./hooks";
 import axios from "axios";
 import { getUserInfo, setUserInfo } from "../state/userInfo";
+import { CloudCrusher } from "../module/api";
 const cliProgress = require('cli-progress');
 const open = require("open");
 
@@ -62,7 +63,29 @@ export async function askUserLogin(shouldCheckForDiscord: boolean = true) {
           });
         });
       } else {
-        console.log("Login via email");
+
+        const promptRes = await inquirer.prompt([
+          {
+            name: "email",
+            message: "Your email:",
+            type: "input",
+            // @TODO: Can get git email here
+          },
+          {
+            name: "password",
+            message: "Your password:",
+            type: "password"
+          }
+        ]);
+
+        const { token, ...res } = await CloudCrusher.authUser(promptRes.email, promptRes.password, { discordInviteCode: inviteCode?.code as any });
+        await getUserInfoFromToken(token as any).then((userInfo) => {
+          setUserInfo(userInfo);
+          setAppConfig({
+            ...getAppConfig(),
+            userInfo: getUserInfo(),
+          });
+        });
       }
   }
   

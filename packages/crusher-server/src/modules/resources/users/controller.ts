@@ -12,6 +12,7 @@ import { v4 as uuidv4 } from "uuid";
 import { UserInviteService } from "./invite/service";
 import { InviteReferralEnum } from "./invite/interface";
 import { OCTOKIT_CONFIG } from "../../../../config/github";
+import { encryptPassword, generateToken } from "@utils/auth";
 
 @Service()
 @JsonController("")
@@ -95,6 +96,25 @@ export class UserController {
 		}
 		url.searchParams.append("state", `${btoa(JSON.stringify({ type: "auth", ...payload }))}`);
 		return res.redirect(url);
+	}
+
+	@Post("/users/actions/auth")
+	async authUser(@Body() userInfo: Omit<ICreateUserPayload, "name">& { inviteReferral: any, discordInviteCode: any }, @Req() req: any, @Res() res: any) {
+		const userDBRecord = await this.usersService.getUserByEmail(userInfo.email);
+		if(userDBRecord) {
+			if(userDBRecord.password !== encryptPassword(userInfo.password)) return { status: "WRONG_CREDS" };
+			
+			return {
+				status: "LOGGED_IN",
+				token: generateToken(userDBRecord.id, userDBRecord.team_id)
+			}
+		}
+		const userEntries = await this.userAuthService.signupUser({...userInfo, name: userInfo.email}, req, res, userInfo.inviteReferral, userInfo.discordInviteCode);
+
+		return {
+			status: "SIGNUP_SUCCESS",
+			token: generateToken(userEntries.userId, userEntries.teamId)
+		};
 	}
 
 	@Post("/users/actions/signup")

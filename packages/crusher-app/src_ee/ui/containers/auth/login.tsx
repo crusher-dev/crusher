@@ -1,13 +1,12 @@
 import { css } from "@emotion/react";
-import { Heading } from "dyson/src/components/atoms/heading/Heading";
-import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
-import { Text } from "dyson/src/components/atoms/text/Text";
-import { Button } from "dyson/src/components/atoms";
-import { useRouter } from "next/router";
-import Link from "next/link";
-import { getGithubLoginURL } from "@utils/core/external";
 import { LoginNavBar } from "@ui/containers/common/login/navbar";
-import React from "react";
+import { getGithubLoginURL } from "@utils/core/external";
+import { Button } from "dyson/src/components/atoms";
+import { Heading } from "dyson/src/components/atoms/heading/Heading";
+import { Text } from "dyson/src/components/atoms/text/Text";
+import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
+import Link from "next/link";
+import { useRouter } from "next/router";
 const RocketImage = (props) => (
 	<img
 		{...props}
@@ -52,28 +51,35 @@ export default function Login({ loginWithEmailHandler }) {
 				<div
 					className={"flex flex-col items-center"}
 					css={css`
-						margin-top: 144rem;
+						margin-top: 120rem;
 					`}
 				>
-					<Heading type={1} fontSize={22} weight={900}>
-						Get superpowers to{" "}
+					<Heading
+						type={1}
+						fontSize={24}
+						weight={900}
+						css={css`
+							letter-spacing: 0;
+						`}
+					>
+						Get superpowers to ship{" "}
 						<span
 							css={css`
-								color: #d4eb79;
+								color: #9446dd;
 							`}
 						>
-							ship fast
+							fast
 						</span>{" "}
 						and{" "}
 						<span
 							css={css`
-								color: #8c67f5;
-								margin-right: 12px;
+								color: #9446dd;
+								margin-right: 9px;
 							`}
 						>
 							better
 						</span>
-						🚀
+						<Text fontSize={18} className="leading-none">🚀</Text>
 					</Heading>
 					<TextBlock
 						fontSize={14.2}

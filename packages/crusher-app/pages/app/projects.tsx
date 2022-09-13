@@ -28,7 +28,7 @@ function Dashboard() {
 				<Conditional showIf={onboardingIndex !== -1}>
 					<div className="flex items-center">
 						<Input css={newInputBoxCSS} size={"medium"} placeholder={"Searh project"}></Input>
-						<Button css={buttonCss} size="big-medium" className="ml-16">
+						<Button css={buttonCss} size="big-medium" className="ml-12">
 							+ new project
 						</Button>
 					</div>
@@ -47,8 +47,8 @@ export const newInputBoxCSS = css`
 		font-weight: 500;
 		:focus {
 			// background: #121316;
-			border: 0.5px solid #ae47ff;
-			border-color: #ae47ff;
+			border: 0.5px solid #dadada;
+			border-color: #dadada;
 		}
 		::placeholder {
 			color: #808080;
@@ -85,9 +85,8 @@ const buttonCss = css`
 	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0) !important;
 
 	:hover {
-		background: #eeeeee;
+		background: #fff !important;
 		color: #202020;
-		filter: brightness(80%);
 	}
 
 	:focus {

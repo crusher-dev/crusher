@@ -499,7 +499,7 @@ export const SidebarTopBarLayout = ({ children, noContainerWidth = false, hideSi
 					<div className="flex items-center h-full">
 						<div css={projectsLabel} className={"flex items-center w-full"}>
 							<span>Projects</span>
-							<span className="badge flex items-center justify-center">12</span>
+							<span className="badge flex items-center justify-center pt-1">12</span>
 						</div>
 
 						<a href="https://docs.crusher.dev" target="_blank">
@@ -555,6 +555,7 @@ const projectsLabel = css`
 		border-radius: 16px;
 		font-weight: 500;
 		color: #aaaaaa;
+		font-size
 	}
 `;
 

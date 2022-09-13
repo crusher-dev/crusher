@@ -26,7 +26,7 @@ export const getDiscordInviteCode = () => {
   const commandsArr: Array<string> = argv["_"];
 
   const shouldIgnoreParsing = argv["help"] || argv["h"] || commandsArr.some((cmd) => (["help", "login"].includes(cmd)));
-  if(shouldIgnoreParsing || !argv["code"]) return; // Not our business here
+  if(shouldIgnoreParsing || !argv["code"]) return { shouldIgnore: true }; // Not our business here
 
 
   return { code : argv["code"] };
@@ -39,7 +39,9 @@ export const checkForDiscord = async ( shouldCheckForDiscord = true )=>{
   if(isUserLoggedIn()) return;
   
   const discordArgv = getDiscordInviteCode();
-  if(!discordArgv && shouldCheckForDiscord) { 
+  if(discordArgv.shouldIgnore) return;
+
+  if(!discordArgv?.code && shouldCheckForDiscord) { 
     await console.log(chalk.green(`New to crusher?`))
 
     await console.log(`Get access code - ${chalk.green("https://discord.gg/dHZkSNXQrg")}`)

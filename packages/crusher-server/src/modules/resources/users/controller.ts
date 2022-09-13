@@ -94,7 +94,7 @@ export class UserController {
 		else {
 			payload.sessionInviteCode = sessionInviteCode;
 		}
-		url.searchParams.append("state", `${btoa(JSON.stringify({ type: "auth", ...payload }))}`);
+		url.searchParams.append("state", `${Buffer.from((JSON.stringify({ type: "auth", ...payload })), "binary").toString("base64")}`);
 		return res.redirect(url);
 	}
 

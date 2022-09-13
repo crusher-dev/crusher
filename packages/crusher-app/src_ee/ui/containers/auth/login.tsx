@@ -1,14 +1,13 @@
 import { css } from "@emotion/react";
 import { loadUserDataAndRedirect } from "@hooks/user";
-import { LoginNavBar } from "@ui/containers/common/login/navbar";
 import { getGithubLoginURL } from "@utils/core/external";
 import { Button, Input } from "dyson/src/components/atoms";
-import { Heading } from "dyson/src/components/atoms/heading/Heading";
+
 import { Text } from "dyson/src/components/atoms/text/Text";
-import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
+
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import React from "react";
 import { Conditional } from "dyson/src/components/layouts";
 import { validateEmail, validatePassword } from "@utils/common/validationUtils";
@@ -17,7 +16,7 @@ import { backendRequest } from "@utils/common/backendRequest";
 import { LoadingSVG } from "@svg/dashboard";
 import BaseContainer from "./components/BaseContainer";
 
-const GitlabSVG = (props) => (
+const GitlabSVG = (props: any) => (
 	<svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 		<path fillRule="evenodd" clipRule="evenodd" d="m8.001 15.37 2.946-9.07H5.055l2.946 9.07Z" fill="#E24329" />
 		<path fillRule="evenodd" clipRule="evenodd" d="M8 15.37 5.056 6.3H.925l7.076 9.07Z" fill="#FC6D26" />
@@ -29,7 +28,7 @@ const GitlabSVG = (props) => (
 	</svg>
 );
 
-function EmailIcon(props) {
+function EmailIcon(props: any) {
 	return (
 		<svg width={12} height={12} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<g clipPath="url(#prefix__clip0_7467_5625)">
@@ -47,7 +46,7 @@ function EmailIcon(props) {
 	);
 }
 
-function BackIcon(props) {
+function BackIcon(props: any) {
 	return (
 		<svg width={11} height={9} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<path
@@ -65,7 +64,7 @@ const emailLogin = (email: string, password: string) => {
 	});
 };
 
-export const GithubSVG = function (props) {
+export const GithubSVG = function (props: any) {
 	return (
 		<svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<path
@@ -79,6 +78,9 @@ export const GithubSVG = function (props) {
 export default function Login() {
 	const router = useRouter();
 	const { query } = router;
+
+	const emailRef = useRef();
+	const passwordRef = useRef();
 
 	const [emailState, setEmailState] = useState(0); // - for email and 1 for password
 	const [email, setEmail] = useState({ value: "", error: null });
@@ -118,11 +120,18 @@ export default function Login() {
 		}
 		setEmail({ ...email, error: null });
 		setEmailState(1);
+		requestAnimationFrame(() => {
+			passwordRef?.current?.focus();
+		});
 	};
 
 	const goBackToEmail = () => {
+		setEmail({ ...email, error: null });
 		setPassword({ ...password, error: null });
 		setEmailState(0);
+		requestAnimationFrame(() => {
+			emailRef?.current?.focus();
+		});
 	};
 
 	const onLogin = async () => {
@@ -142,6 +151,11 @@ export default function Login() {
 	loadUserDataAndRedirect({ fetchData: false, userAndSystemData: data });
 
 	const showUniversalError = email.error || password.error;
+
+	useEffect(() => {
+		emailRef?.current?.focus();
+	}, []);
+
 	return (
 		<BaseContainer>
 			<div css={overlayContainer} className={"mt-58 pb-60"}>
@@ -163,15 +177,21 @@ export default function Login() {
 							className="bg"
 							autoComplete={"email"}
 							value={email.value}
+							initialValue={email.value}
 							onChange={emailChange}
 							placeholder={"Enter email"}
 							isError={email.error}
 							css={newInputBoxCSS}
+							ref={emailRef}
 							onReturn={goToPasswordState.bind(this)}
 							rightIcon={<EmailIcon />}
 						/>
 
-						<NewButton svg={null} text={"next"} className={"mt-16"} onClick={goToPasswordState.bind(this)} />
+						<NewButton className={"mt-16"} onClick={goToPasswordState.bind(this)}>
+							<Text fontSize={14} weight={600} className={"pt-2"}>
+								Next
+							</Text>
+						</NewButton>
 					</Conditional>
 
 					<Conditional showIf={emailState === 1}>
@@ -185,6 +205,7 @@ export default function Login() {
 							isError={password.error}
 							css={newInputBoxCSS}
 							onReturn={loginOnEnter.bind(this)}
+							ref={passwordRef}
 							leftIcon={
 								<div className="mt-1 p-10" onClick={goBackToEmail.bind(this)} css={onHoverBack}>
 									<BackIcon />
@@ -285,9 +306,6 @@ export const newInputBoxCSS = css`
 		:hover {
 			box-shadow: 0px 0px 0px 3px rgba(28, 28, 28, 0.72);
 		}
-		:-webkit-autofill {
-			background: transparent;
-		}
 	}
 
 	@-webkit-keyframes autofill {
@@ -342,18 +360,18 @@ const newButtonCSS = css`
 	}
 `;
 
-export function NewButton({ svg, text, children, ...props }) {
+export function NewButton({ svg, text, children, ...props }: any) {
 	return (
 		<Button className={"flex items-center justify-center"} css={[githubButtonCSS, newButtonCSS]} {...props}>
 			{svg}
-			<Text className={"mt-3"} fontSize={14} weight={600}>
+			<Text className={"mt-2"} fontSize={14} weight={600}>
 				{text || children}
 			</Text>
 		</Button>
 	);
 }
 
-export function Line(props) {
+export function Line() {
 	return (
 		<>
 			<div className="or-container mt-22 mb-24">

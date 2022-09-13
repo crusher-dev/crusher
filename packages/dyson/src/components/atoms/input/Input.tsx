@@ -32,6 +32,9 @@ export type InputProps = {
 
 	className?: string;
 
+	autoComplete?: string;
+	value?: string;
+	type?: string;
 	forwardRef?: React.Ref<HTMLInputElement>;
 } & React.DetailedHTMLProps<React.HTMLAttributes<HTMLInputElement>, any>;
 

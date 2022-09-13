@@ -1,4 +1,3 @@
-import identity from "lodash/identity";
 import pickBy from "lodash/pickBy";
 
 import { BuildTriggerEnum } from "@crusher-shared/types/response/iProjectBuildListResponse";

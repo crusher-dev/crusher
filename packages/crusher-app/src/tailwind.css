@@ -67,3 +67,8 @@ img {
 .underline-on-hover:hover {
 	text-decoration: underline;
 }
+
+input:-webkit-autofill {
+	-webkit-text-fill-color: white;
+	transition: background-color 5000s ease-in-out 0s;
+}

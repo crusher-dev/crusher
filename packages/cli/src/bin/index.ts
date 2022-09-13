@@ -1,4 +1,5 @@
 import chalk from 'chalk';
+import "../utils/inquirer-patch";
 import { execSync } from 'child_process';
 import EntryCommand from '../commands/index';
 import { loadUserInfoOnLoad } from '../utils/hooks';

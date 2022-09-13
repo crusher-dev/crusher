@@ -243,7 +243,7 @@ export default function Login() {
 				</div>
 			</div>
 
-			<div onClick={() => router.push("/signup")} className="flex w-full justify-center mt-40">
+			<div onClick={() => router.push("/signup")} className="flex w-full justify-center mt-20">
 				<Text
 					color={"#565657"}
 					fontSize={14}
@@ -365,6 +365,10 @@ const newButtonCSS = css`
 		background: #202020;
 		border: 0.5px solid rgba(56, 56, 56, 0.35);
 		filter: brightness(100%);
+	}
+
+	:focus {
+		outline: 1px solid #ae47ff;
 	}
 `;
 

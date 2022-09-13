@@ -295,10 +295,12 @@ export const newInputBoxCSS = css`
 	input {
 		background: transparent;
 		border: 0.5px solid rgba(56, 56, 56, 0.6);
-		border-radius: 8px;
+		border-radius: 10rem;
 		font-weight: 500;
 		:focus {
 			background: #121316;
+			border: 1px solid #ae47ff;
+			border-color: #ae47ff;
 		}
 		::placeholder {
 			color: #808080;

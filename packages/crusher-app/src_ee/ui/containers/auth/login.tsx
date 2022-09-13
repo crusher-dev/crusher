@@ -161,7 +161,7 @@ export default function Login() {
 			<div css={overlayContainer} className={"mt-58 pb-60"}>
 				<div className={"mb-42"}>
 					<Link href={getGithubLoginURL(query?.inviteType?.toString(), query?.inviteCode?.toString(), null)}>
-						<NewButton svg={<GithubSVG className="mr-12" />} text={"Login with Github"} />
+						<NewButton svg={<GithubSVG className="mr-12" />} text={"Login with Github"} css={purpleButton} />
 					</Link>
 
 					{/* <div className="mt-12">
@@ -342,9 +342,15 @@ height: 44rem;
 font-weight: 400;
 
 
-box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-
 `);
+
+export const purpleButton = css`
+	background: linear-gradient(0deg, rgba(11, 11, 13, 0.06), rgba(11, 11, 13, 0.06)), linear-gradient(219.19deg, #9c44f3 23.83%, #902be0 78.16%);
+	:hover {
+		background: linear-gradient(0deg, rgba(11, 11, 13, 0.06), rgba(11, 11, 13, 0.06)), linear-gradient(219.19deg, #9c44f3 23.83%, #902be0 78.16%);
+		filter: brightness(0.75);
+	}
+`;
 
 const newButtonCSS = css`
 	border-radius: 10rem;
@@ -360,9 +366,9 @@ const newButtonCSS = css`
 	}
 `;
 
-export function NewButton({ svg, text, children, ...props }: any) {
+export function NewButton({ svg, text, children, className = "", ...props }: any) {
 	return (
-		<Button className={"flex items-center justify-center"} css={[githubButtonCSS, newButtonCSS]} {...props}>
+		<Button className={`flex items-center justify-center ${className}`} css={[githubButtonCSS, newButtonCSS, props.css]} {...props}>
 			{svg}
 			<Text className={"mt-2"} fontSize={14} weight={600}>
 				{text || children}

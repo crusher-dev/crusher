@@ -8,7 +8,7 @@ import React from "react";
 import { useAtom } from "jotai";
 import { inviteCodeUserKeyAtom } from "@store/atoms/global/inviteCode";
 import BaseContainer from "./components/BaseContainer";
-import { Line, NewButton } from "./login";
+import { Line, NewButton, purpleButton } from "./login";
 
 export const GithubSVG = function (props) {
 	return (
@@ -36,7 +36,7 @@ export default function SignupInitial({ loginWithEmailHandler }) {
 		<BaseContainer>
 			<div css={overlayContainer} className={"mt-58 pb-60"}>
 				<div className={"mb-42"}>
-					<NewButton onClick={handleGithub} svg={<GithubSVG className="mr-12" />} text={"Login with Github"} />
+					<NewButton onClick={handleGithub} css={purpleButton} svg={<GithubSVG className="mr-12" />} text={"Continue with Github"} />
 					<Line />
 					<NewButton svg={null} text={"Signup with email"} className={"mt-0"} onClick={loginWithEmailHandler} />
 				</div>

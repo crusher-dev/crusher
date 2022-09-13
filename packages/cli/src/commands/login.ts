@@ -2,6 +2,7 @@ import { Command } from "commander";
 import { loadUserInfoOnLoad } from "../utils/hooks";
 import { getLoggedInUser } from "../utils/index";
 import { isUserLoggedIn } from "../utils/index";
+import { askUserLogin } from "../utils/setup";
 
 export default class CommandBase {
   program: Command;
@@ -38,6 +39,8 @@ export default class CommandBase {
 
     const loggedIn = isUserLoggedIn();
     if (!loggedIn) {
+      if(!token)
+      await askUserLogin();
       await loadUserInfoOnLoad({ token });
     } else {
       const loggedInUser = getLoggedInUser();

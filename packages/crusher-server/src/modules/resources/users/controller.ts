@@ -12,6 +12,7 @@ import { v4 as uuidv4 } from "uuid";
 import { UserInviteService } from "./invite/service";
 import { InviteReferralEnum } from "./invite/interface";
 import { OCTOKIT_CONFIG } from "../../../../config/github";
+import { encryptPassword, generateToken } from "@utils/auth";
 
 @Service()
 @JsonController("")
@@ -78,7 +79,7 @@ export class UserController {
 
 	@Get("/users/actions/auth.github")
 	async authenticateWithGithub(@Res() res: any, @QueryParams() params: any) {
-		const { inviteCode, inviteType, sessionInviteCode } = params;
+		const { inviteCode, inviteType, sessionInviteCode, lK } = params;
 		const url = new URL("https://github.com/login/oauth/authorize");
 		url.searchParams.append("client_id", OCTOKIT_CONFIG.clientId);
 		let payload: any = {};
@@ -86,12 +87,34 @@ export class UserController {
 			payload.inviteCode = inviteCode;
 			payload.inviteType = inviteType;
 		}
+		if(lK) {
+			payload.lK = lK;
+		}
 		if(!sessionInviteCode) { throw new Error("sessionInviteCode is requered to signup"); }
 		else {
 			payload.sessionInviteCode = sessionInviteCode;
 		}
 		url.searchParams.append("state", `${btoa(JSON.stringify({ type: "auth", ...payload }))}`);
 		return res.redirect(url);
+	}
+
+	@Post("/users/actions/auth")
+	async authUser(@Body() userInfo: Omit<ICreateUserPayload, "name">& { inviteReferral: any, discordInviteCode: any }, @Req() req: any, @Res() res: any) {
+		const userDBRecord = await this.usersService.getUserByEmail(userInfo.email);
+		if(userDBRecord) {
+			if(userDBRecord.password !== encryptPassword(userInfo.password)) return { status: "WRONG_CREDS" };
+			
+			return {
+				status: "LOGGED_IN",
+				token: generateToken(userDBRecord.id, userDBRecord.team_id)
+			}
+		}
+		const userEntries = await this.userAuthService.signupUser({...userInfo, name: userInfo.email}, req, res, userInfo.inviteReferral, userInfo.discordInviteCode);
+
+		return {
+			status: "SIGNUP_SUCCESS",
+			token: generateToken(userEntries.userId, userEntries.teamId)
+		};
 	}
 
 	@Post("/users/actions/signup")

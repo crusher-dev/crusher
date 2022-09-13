@@ -178,12 +178,12 @@ export async function makeSureSetupIsCorrect(projectId: string | null = null, as
     }
 
 
-    const workflowsPromptRes = await inquirer.prompt([{
-      type: "checkbox",
-      name: "workflows",
-      message: "Activate Workflows?",
-      choices: ["Monitoring", "Get alerts on slack", "Setup CI/CD"]
-    }]);
+    // const workflowsPromptRes = await inquirer.prompt([{
+    //   type: "list",
+    //   name: "workflows",
+    //   message: "Activate more workflows?",
+    //   choices: ["Monitoring", "Get alerts on slack", "Setup CI/CD"]
+    // }]);
   }
 
   // Add commands to package.json

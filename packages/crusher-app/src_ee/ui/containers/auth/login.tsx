@@ -15,6 +15,7 @@ import { validateEmail, validatePassword } from "@utils/common/validationUtils";
 import { RequestMethod } from "@types/RequestOptions";
 import { backendRequest } from "@utils/common/backendRequest";
 import { LoadingSVG } from "@svg/dashboard";
+import BaseContainer from "./components/BaseContainer";
 
 const GitlabSVG = (props) => (
 	<svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
@@ -142,149 +143,107 @@ export default function Login() {
 
 	const showUniversalError = email.error || password.error;
 	return (
-		<div css={containerCSS}>
-			<div className="pt-20">
-				<LoginNavBar />
-			</div>
-			<div className={"flex justify-center"}>
-				<div
-					className={"flex flex-col items-center"}
-					css={css`
-						margin-top: 95rem;
-					`}
-				>
-					<Heading
-						type={1}
-						fontSize={24}
-						weight={900}
-						css={css`
-							letter-spacing: 0;
-						`}
-					>
-						Get superpowers to ship{" "}
-						<span
-							css={css`
-								color: #9446dd;
-							`}
-						>
-							fast
-						</span>{" "}
-						and{" "}
-						<span
-							css={css`
-								color: #9446dd;
-								margin-right: 9px;
-							`}
-						>
-							better
-						</span>
-						<Text fontSize={16}>🚀</Text>
-					</Heading>
-					<TextBlock fontSize={15} color={"#4D4D4D"} className={"mt-16"} leading={false}>
-						Devs use crusher to test website fast, ship fast. Get started in seconds
-					</TextBlock>
+		<BaseContainer>
+			<div css={overlayContainer} className={"mt-58 pb-60"}>
+				<div className={"mb-42"}>
+					<Link href={getGithubLoginURL(query?.inviteType?.toString(), query?.inviteCode?.toString(), null)}>
+						<NewButton svg={<GithubSVG className="mr-12" />} text={"Login with Github"} />
+					</Link>
 
-					<div css={overlayContainer} className={"mt-58 pb-60"}>
-						<div className={"mb-42"}>
-							<Link href={getGithubLoginURL(query?.inviteType?.toString(), query?.inviteCode?.toString(), null)}>
-								<NewButton svg={<GithubSVG className="mr-12" />} text={"Login with Github"} />
-							</Link>
-
-							{/* <div className="mt-12">
+					{/* <div className="mt-12">
 								<Link href={getGithubLoginURL(query?.inviteType?.toString(), query?.inviteCode?.toString(), null)}>
 									<NewButton svg={<GitlabSVG className="mr-12" />} text={"Login with Gitlab"} />
 								</Link>
 							</div> */}
 
-							<Line />
+					<Line />
 
-							<Conditional showIf={emailState === 0}>
-								<Input
-									className="bg"
-									autoComplete={"email"}
-									value={email.value}
-									onChange={emailChange}
-									placeholder={"Enter email"}
-									isError={email.error}
-									css={newInputBoxCSS}
-									onReturn={goToPasswordState.bind(this)}
-									rightIcon={<EmailIcon />}
-								/>
+					<Conditional showIf={emailState === 0}>
+						<Input
+							className="bg"
+							autoComplete={"email"}
+							value={email.value}
+							onChange={emailChange}
+							placeholder={"Enter email"}
+							isError={email.error}
+							css={newInputBoxCSS}
+							onReturn={goToPasswordState.bind(this)}
+							rightIcon={<EmailIcon />}
+						/>
 
-								<NewButton svg={null} text={"next"} className={"mt-16"} onClick={goToPasswordState.bind(this)} />
-							</Conditional>
+						<NewButton svg={null} text={"next"} className={"mt-16"} onClick={goToPasswordState.bind(this)} />
+					</Conditional>
 
-							<Conditional showIf={emailState === 1}>
-								<Input
-									className="bg"
-									autoComplete={"password"}
-									value={password.value}
-									onChange={passwordChange}
-									placeholder={"Enter password"}
-									isError={password.error}
-									css={newInputBoxCSS}
-									onReturn={loginOnEnter.bind(this)}
-									leftIcon={
-										<div className="mt-1 p-10" onClick={goBackToEmail.bind(this)} css={onHoverBack}>
-											<BackIcon />
-										</div>
-									}
-								/>
+					<Conditional showIf={emailState === 1}>
+						<Input
+							className="bg"
+							autoComplete={"password"}
+							value={password.value}
+							onChange={passwordChange}
+							placeholder={"Enter password"}
+							type={"password"}
+							isError={password.error}
+							css={newInputBoxCSS}
+							onReturn={loginOnEnter.bind(this)}
+							leftIcon={
+								<div className="mt-1 p-10" onClick={goBackToEmail.bind(this)} css={onHoverBack}>
+									<BackIcon />
+								</div>
+							}
+						/>
 
-								<NewButton disabled={loading} svg={null} className={"mt-16 flex items-center justify-center"} onClick={onLogin.bind(this)}>
-									<Conditional showIf={!loading}>
-										<Text fontSize={14} weight={600}>
-											Login
-										</Text>
-									</Conditional>
-									<Conditional showIf={loading}>
-										<div className="flex">
-											<LoadingSVG color={"#fff"} height={"16rem"} width={"16rem"} />
-											<Text fontSize={14} weight={600} className={"ml-8"}>
-												Loading
-											</Text>
-										</div>
-									</Conditional>
-								</NewButton>
-							</Conditional>
-						</div>
-						<div className="flex w-full justify-center">
-							<Link href={"/forgot_password"}>
-								<Text css={[underLineonHover, helpCSS]} fontSize={14}>
-									Forgot password?
+						<NewButton disabled={loading} svg={null} className={"mt-16 flex items-center justify-center"} onClick={onLogin.bind(this)}>
+							<Conditional showIf={!loading}>
+								<Text fontSize={14} weight={600}>
+									Login
 								</Text>
-							</Link>
-						</div>
-
-						<div css={[error, showUniversalError || dontShow]} className="flex w-full items-center pl-16 mt-80 pt-2">
-							{email.error || password.error}
-						</div>
-					</div>
-
-					<div onClick={() => router.push("/signup")} className="flex w-full justify-center mt-40">
-						<Text
-							color={"#565657"}
-							fontSize={14}
-							css={css`
-								font-size: 14.5rem;
-								:hover {
-									text-decoration: underline;
-								}
-							`}
-						>
-							Have an account?{" "}
-							<span
-								css={css`
-									color: #855aff;
-								`}
-							>
-								Signup
-							</span>
+							</Conditional>
+							<Conditional showIf={loading}>
+								<div className="flex">
+									<LoadingSVG color={"#fff"} height={"16rem"} width={"16rem"} />
+									<Text fontSize={14} weight={600} className={"ml-8"}>
+										Loading
+									</Text>
+								</div>
+							</Conditional>
+						</NewButton>
+					</Conditional>
+				</div>
+				<div className="flex w-full justify-center">
+					<Link href={"/forgot_password"}>
+						<Text css={[underLineonHover, helpCSS]} fontSize={14}>
+							Forgot password?
 						</Text>
-					</div>
+					</Link>
+				</div>
+
+				<div css={[error, showUniversalError || dontShow]} className="flex w-full items-center pl-16 mt-80 pt-2">
+					{email.error || password.error}
 				</div>
 			</div>
-		</div>
+
+			<div onClick={() => router.push("/signup")} className="flex w-full justify-center mt-40">
+				<Text
+					color={"#565657"}
+					fontSize={14}
+					css={css`
+						font-size: 14.5rem;
+						:hover {
+							text-decoration: underline;
+						}
+					`}
+				>
+					Have an account?{" "}
+					<span
+						css={css`
+							color: #855aff;
+						`}
+					>
+						Signup
+					</span>
+				</Text>
+			</div>
+		</BaseContainer>
 	);
 }
 
@@ -311,7 +270,7 @@ const error = css`
 	color: #ff71ac;
 `;
 
-const newInputBoxCSS = css`
+export const newInputBoxCSS = css`
 	input {
 		background: transparent;
 		border: 0.5px solid rgba(56, 56, 56, 0.6);
@@ -348,11 +307,6 @@ const newInputBoxCSS = css`
 const helpCSS = css`
 	color: #565657;
 `;
-const containerCSS = css(`
-height: 100vh;
-background: linear-gradient(180deg, #0A0A0A 0%, #0A0A0A 100%);
-width: 100vw;
-`);
 
 const overlayContainer = css(`
 	width: 368rem;
@@ -388,7 +342,7 @@ const newButtonCSS = css`
 	}
 `;
 
-function NewButton({ svg, text, children, ...props }) {
+export function NewButton({ svg, text, children, ...props }) {
 	return (
 		<Button className={"flex items-center justify-center"} css={[githubButtonCSS, newButtonCSS]} {...props}>
 			{svg}
@@ -399,7 +353,7 @@ function NewButton({ svg, text, children, ...props }) {
 	);
 }
 
-function Line(props) {
+export function Line(props) {
 	return (
 		<>
 			<div className="or-container mt-22 mb-24">

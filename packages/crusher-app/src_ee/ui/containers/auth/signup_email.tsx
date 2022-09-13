@@ -14,11 +14,26 @@ import { backendRequest } from "@utils/common/backendRequest";
 import { RequestMethod } from "@types/RequestOptions";
 import { inviteCodeUserKeyAtom } from "@store/atoms/global/inviteCode";
 import { useAtom } from "jotai";
+import BaseContainer from "./components/BaseContainer";
 
-const registerUser = (name: string, email: string, password: string, discordInviteCode: string, inviteType: string | null = null, inviteCode: string | null = null) => {
+const registerUser = (
+	name: string,
+	email: string,
+	password: string,
+	discordInviteCode: string,
+	inviteType: string | null = null,
+	inviteCode: string | null = null,
+) => {
 	return backendRequest("/users/actions/signup", {
 		method: RequestMethod.POST,
-		payload: { email, password, name: name, lastName: "", discordInviteCode: discordInviteCode, inviteReferral: inviteType && inviteCode ? { code: inviteCode, type: inviteType } : null },
+		payload: {
+			email,
+			password,
+			name: name,
+			lastName: "",
+			discordInviteCode: discordInviteCode,
+			inviteReferral: inviteType && inviteCode ? { code: inviteCode, type: inviteType } : null,
+		},
 	});
 };
 
@@ -32,11 +47,11 @@ export default function Signup_email({ loginWithEmailHandler }) {
 	const [name, setName] = useState({ value: "", error: "" });
 	const [sessionInviteCode, setSessionInviteCode] = useAtom(inviteCodeUserKeyAtom);
 
-	const [discordInviteCode, setDiscordInviteCode] = React.useState({value: "", error: ""});
+	const [discordInviteCode, setDiscordInviteCode] = React.useState({ value: "", error: "" });
 
 	React.useEffect(() => {
-		if(sessionInviteCode) {
-			setDiscordInviteCode({value: sessionInviteCode, error: ""});
+		if (sessionInviteCode) {
+			setDiscordInviteCode({ value: sessionInviteCode, error: "" });
 		}
 	}, [sessionInviteCode]);
 	const [loading, setLoading] = useState(false);
@@ -59,16 +74,19 @@ export default function Signup_email({ loginWithEmailHandler }) {
 		},
 		[name],
 	);
-	const inviteCodeChange = useCallback((e) => {
-		setDiscordInviteCode({...discordInviteCode, value: e.target.value});
-	}, [discordInviteCode]);
+	const inviteCodeChange = useCallback(
+		(e) => {
+			setDiscordInviteCode({ ...discordInviteCode, value: e.target.value });
+		},
+		[discordInviteCode],
+	);
 
 	const verifyInfo = (completeVerify = false) => {
 		const shouldValidateEmail = completeVerify || email.value;
 		const shouldValidatePassword = completeVerify || password.value;
 		const shouldValidateName = completeVerify || name.value;
 		const shouldValidateInvitecode = completeVerify || discordInviteCode.value;
-		
+
 		if (!validateEmail(email.value) && shouldValidateEmail) {
 			setEmail({ ...email, error: "Please enter valid email" });
 		} else setEmail({ ...email, error: "" });
@@ -81,20 +99,28 @@ export default function Signup_email({ loginWithEmailHandler }) {
 			setName({ ...name, error: "Please enter a valid name" });
 		} else setName({ ...name, error: "" });
 
-		if(!validateSessionInviteCode(discordInviteCode.value) && shouldValidateInvitecode) {
-			setDiscordInviteCode({...discordInviteCode, error: "Please enter correct invite code."})
+		if (!validateSessionInviteCode(discordInviteCode.value) && shouldValidateInvitecode) {
+			setDiscordInviteCode({ ...discordInviteCode, error: "Please enter correct invite code." });
 		} else {
-			setName({ ...name, error: ""});
+			setName({ ...name, error: "" });
 		}
 	};
 
 	const signupUser = async () => {
 		verifyInfo(true);
 
-		if (!validateEmail(email.value) || !validatePassword(password.value) || !validateName(email.value) || !validateSessionInviteCode(discordInviteCode.value)) return;
+		if (!validateEmail(email.value) || !validatePassword(password.value) || !validateName(email.value) || !validateSessionInviteCode(discordInviteCode.value))
+			return;
 		setLoading(true);
 		try {
-			const data = await registerUser(name.value, email.value, password.value, discordInviteCode.value, query?.inviteType?.toString(), query?.inviteCode?.toString());
+			const data = await registerUser(
+				name.value,
+				email.value,
+				password.value,
+				discordInviteCode.value,
+				query?.inviteType?.toString(),
+				query?.inviteCode?.toString(),
+			);
 			setData(data.systemInfo);
 			setSessionInviteCode(null);
 		} catch (e: any) {
@@ -113,143 +139,98 @@ export default function Signup_email({ loginWithEmailHandler }) {
 	loadUserDataAndRedirect({ fetchData: false, userAndSystemData: data });
 
 	return (
-		<div css={containerCSS}>
-			<div className="pt-28">
-				<LoginNavBar />
-			</div>
-			<div className={"flex justify-center"}>
-				<div
-					className={"flex flex-col items-center"}
-					css={css`
-						margin-top: 144rem;
-					`}
-				>
-					<Heading type={1} fontSize={22} weight={900}>
-						Get superpowers to{" "}
-						<span
-							css={css`
-								color: #d4eb79;
-							`}
-						>
-							ship fast
-						</span>{" "}
-						and{" "}
-						<span
-							css={css`
-								color: #8c67f5;
-								margin-right: 12px;
-							`}
-						>
-							better
-						</span>
-						🚀
-					</Heading>
-					<TextBlock
-						fontSize={14.2}
-						color={"#606060"}
-						className={"mt-16"}
-						css={css`
-							letter-spacing: 0.2px;
-						`}
-						leading={false}
-					>
-						Devs use crusher to test & ship fast with confidence. Get started in seconds
-					</TextBlock>
-
-					<div css={overlayContainer} className={"mt-48 pb-60"}>
-						<div className={" mb-72"}>
-							<div className={" mb-20"}>
-								<FormInput
-									onReturn={signupUser.bind(this)}
-									data={name}
-									onChange={nameChange}
-									autoComplete={"name"}
-									placeholder={"Enter name"}
-									onBlur={verifyInfo.bind(this, false)}
-								/>
-								<FormInput
-									onReturn={signupUser.bind(this)}
-									data={email}
-									onChange={emailChange}
-									autoComplete={"email"}
-									placeholder={"Enter email"}
-									onBlur={verifyInfo.bind(this, false)}
-								/>
-								<FormInput
-									type={"password"}
-									data={password}
-									onChange={passwordChange}
-									onEnter={signupOnEnter}
-									autoComplete={"new-password"}
-									placeholder={"Enter password"}
-									onBlur={verifyInfo.bind(this, false)}
-								/>
-								<FormInput
-									type={"text"}
-									data={discordInviteCode}
-									onReturn={signupUser.bind(this)}
-									onChange={inviteCodeChange}
-									onEnter={signupOnEnter}
-									placeholder={"Enter invite code"}
-									onBlur={verifyInfo.bind(this, false)}
-								/>
-								<div css={css`display: flex; justify-content: flex-end;`}>
-									<a href="https://discord.gg/sWbWNYWv" target="__blank" css={css`:hover { opacity: 0.8 }`}>Don't have any? Get one</a>
-								</div>
-							</div>
-
-							<SubmitButton text="Create an account" onSubmit={signupUser} loading={loading} />
-						</div>
-						<div className="flex items-center justify-between">
-							<Text onClick={loginWithEmailHandler} css={underLineonHover} fontSize={12}>
-								Go back
-							</Text>
-							<Text onClick={() => router.push("/forgot_password")} css={underLineonHover} fontSize={12}>
-								Forgot Password
-							</Text>
-						</div>
+		<BaseContainer>
+			<div css={overlayContainer} className={"mt-48 pb-60"}>
+				<div className={" mb-72"}>
+					<div className={" mb-20"}>
+						<FormInput
+							onReturn={signupUser.bind(this)}
+							data={name}
+							onChange={nameChange}
+							autoComplete={"name"}
+							placeholder={"Enter name"}
+							onBlur={verifyInfo.bind(this, false)}
+						/>
+						<FormInput
+							onReturn={signupUser.bind(this)}
+							data={email}
+							onChange={emailChange}
+							autoComplete={"email"}
+							placeholder={"Enter email"}
+							onBlur={verifyInfo.bind(this, false)}
+						/>
+						<FormInput
+							type={"password"}
+							data={password}
+							onChange={passwordChange}
+							onEnter={signupOnEnter}
+							autoComplete={"new-password"}
+							placeholder={"Enter password"}
+							onBlur={verifyInfo.bind(this, false)}
+						/>
+						<FormInput
+							type={"text"}
+							data={discordInviteCode}
+							onReturn={signupUser.bind(this)}
+							onChange={inviteCodeChange}
+							onEnter={signupOnEnter}
+							placeholder={"Enter invite code"}
+							onBlur={verifyInfo.bind(this, false)}
+						/>
 					</div>
-					<div onClick={() => router.push("/login")} className="flex w-full justify-center mt-40">
-						<Text
-							color={"#565657"}
-							fontSize={14}
-							css={css`
-								font-size: 14.5rem;
-								:hover {
-									text-decoration: underline;
-								}
-							`}
-						>
-							Already registered?{" "}
-							<span
-								css={css`
-									color: #855aff;
-								`}
-							>
-								Login
-							</span>
-						</Text>
+
+					<SubmitButton text="Create an account" onSubmit={signupUser} loading={loading} />
+				</div>
+				<div className="flex items-center justify-between">
+					<Text onClick={loginWithEmailHandler} css={underLineonHover} fontSize={13}>
+						Go back
+					</Text>
+
+					<div
+						css={css`
+							display: flex;
+							justify-content: flex-end;
+						`}
+					>
+						<a href="https://discord.gg/sWbWNYWv" target="__blank">
+							<Text onClick={loginWithEmailHandler} css={underLineonHover} fontSize={13}>
+								Don't have code?
+							</Text>
+						</a>
 					</div>
 				</div>
 			</div>
-		</div>
+			{/* <div onClick={() => router.push("/login")} className="flex w-full justify-center mt-40">
+				<Text
+					color={"#565657"}
+					fontSize={14}
+					css={css`
+						font-size: 14.5rem;
+						:hover {
+							text-decoration: underline;
+						}
+					`}
+				>
+					Already registered?{" "}
+					<span
+						css={css`
+							color: #855aff;
+						`}
+					>
+						Login
+					</span>
+				</Text>
+			</div> */}
+		</BaseContainer>
 	);
 }
-
-const helpCSS = css`
-	color: #565657;
-`;
-const containerCSS = css(`
-height: 100vh;
-background: #0C0C0D;
-width: 100vw;
-`);
 
 const overlayContainer = css(`
 	width: 372rem;
 `);
 
 const underLineonHover = css`
+	color: #bdbdbd;
 	:hover {
 		text-decoration: underline;
 	}

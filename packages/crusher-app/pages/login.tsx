@@ -1,7 +1,5 @@
 import React from "react";
-
 import LoginContainer from "@ui/containers/auth/login";
-import LoginWithEmailContainer from "@ui/containers/auth/login_email";
 import { usePageTitle } from "../src/hooks/seo";
 
 function LoginPage() {
@@ -13,7 +11,7 @@ function LoginPage() {
 		}
 	}, []);
 
-	return <LoginContainer loginWithEmailHandler={() => {}} />;
+	return <LoginContainer />;
 }
 
 export default LoginPage;

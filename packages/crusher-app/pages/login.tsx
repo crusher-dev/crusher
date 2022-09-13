@@ -6,7 +6,6 @@ import { usePageTitle } from "../src/hooks/seo";
 
 function LoginPage() {
 	usePageTitle("Login");
-	const [isLoginWithEmail, setLoginWithEmail] = React.useState(false);
 
 	React.useEffect(() => {
 		if ((window as any).localStorage.getItem("githubToken") !== null) {
@@ -14,11 +13,7 @@ function LoginPage() {
 		}
 	}, []);
 
-	if (isLoginWithEmail) {
-		return <LoginWithEmailContainer goBackHandler={() => setLoginWithEmail(false)} />;
-	} else {
-		return <LoginContainer loginWithEmailHandler={() => setLoginWithEmail(true)} />;
-	}
+	return <LoginContainer loginWithEmailHandler={() => {}} />;
 }
 
 export default LoginPage;

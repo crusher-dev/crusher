@@ -71,7 +71,7 @@ export const Input: React.FC<InputProps> = React.forwardRef((mainProps, ref) => 
 					{leftIcon}
 				</div>
 			</Conditional>
-			<input ref={ref} css={[inputBox(sizeStyle), isError && errorState]} {...props} onKeyUp={onKeyUp} />
+			<input ref={ref} css={[inputBox(sizeStyle, !!leftIcon), isError && errorState]} {...props} onKeyUp={onKeyUp} />
 			<Conditional showIf={!!rightIcon}>
 				<div css={rightIconStyle} className="input__rightIconContainer">
 					{rightIcon}
@@ -99,8 +99,11 @@ const leftIconStyle = css`
 	height: 100%;
 	left: 0px;
 	transform: translateY(-50%);
+
+	display: flex;
+	align-items: center;
 `;
-const inputBox = (sizeStyle: { height: number }) => css`
+const inputBox = (sizeStyle: { height: number }, leftIconStyle) => css`
 	background: linear-gradient(0deg, #0e1012, #0e1012);
 	border: 1px solid #2a2e38;
 	box-sizing: border-box;
@@ -108,7 +111,7 @@ const inputBox = (sizeStyle: { height: number }) => css`
 	height: ${sizeStyle.height}rem;
 	padding-top: 3rem;
 	font-size: ${sizeStyle.fontSize}rem;
-	padding-left: 16rem;
+	padding-left: calc(16rem + ${leftIconStyle === true ? "12rem" : "0rem"});
 	color: #fff;
 
 	width: 100%;
@@ -120,9 +123,9 @@ const inputBox = (sizeStyle: { height: number }) => css`
 `;
 
 const errorState = css`
-	border-color: #ff4583;
+	border-color: #ff4583 !important;
 	:focus {
-		border-color: #ff4583;
+		border-color: #ff4583 !important;
 	}
 `;
 

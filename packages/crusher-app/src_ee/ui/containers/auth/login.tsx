@@ -1,4 +1,5 @@
 import { css } from "@emotion/react";
+import { loadUserDataAndRedirect } from "@hooks/user";
 import { LoginNavBar } from "@ui/containers/common/login/navbar";
 import { getGithubLoginURL } from "@utils/core/external";
 import { Button, Input } from "dyson/src/components/atoms";
@@ -7,7 +8,13 @@ import { Text } from "dyson/src/components/atoms/text/Text";
 import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import { useState } from "react";
+import React from "react";
+import { Conditional } from "dyson/src/components/layouts";
+import { validateEmail, validatePassword } from "@utils/common/validationUtils";
+import { RequestMethod } from "@types/RequestOptions";
+import { backendRequest } from "@utils/common/backendRequest";
+import { LoadingSVG } from "@svg/dashboard";
 
 const GitlabSVG = (props) => (
 	<svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
@@ -21,6 +28,42 @@ const GitlabSVG = (props) => (
 	</svg>
 );
 
+function EmailIcon(props) {
+	return (
+		<svg width={12} height={12} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+			<g clipPath="url(#prefix__clip0_7467_5625)">
+				<path
+					d="M8.58 10.97a.472.472 0 01-.282.58c-.871.333-1.686.45-2.746.45C2.69 12 .172 9.948.172 6.569.173 3.052 2.726 0 6.623 0c3.033 0 5.206 2.086 5.206 4.983 0 2.517-1.414 4.103-3.276 4.103-.81 0-1.397-.414-1.483-1.328h-.034c-.534.88-1.31 1.328-2.224 1.328-1.121 0-1.93-.827-1.93-2.241 0-2.104 1.55-4.017 4.033-4.017.455 0 .946.068 1.36.174.4.103.653.492.587.9L8.45 6.448c-.172 1.017-.052 1.483.43 1.5.742.018 1.673-.93 1.673-2.913 0-2.242-1.448-3.983-4.12-3.983-2.638 0-4.949 2.069-4.949 5.362 0 2.88 1.845 4.517 4.414 4.517.668 0 1.367-.11 1.966-.321a.557.557 0 01.717.36zM7.15 4.411a.166.166 0 00-.133-.188 2.051 2.051 0 00-.379-.034c-1.138 0-2.034 1.12-2.034 2.448 0 .655.293 1.069.862 1.069.638 0 1.31-.81 1.466-1.81l.219-1.485z"
+					fill="#CDCDCD"
+				/>
+			</g>
+			<defs>
+				<clipPath id="prefix__clip0_7467_5625">
+					<path fill="#fff" d="M0 0h12v12H0z" />
+				</clipPath>
+			</defs>
+		</svg>
+	);
+}
+
+function BackIcon(props) {
+	return (
+		<svg width={11} height={9} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+			<path
+				d="M10.08 3.75H2.46l2.37-2.47a.772.772 0 000-1.06.704.704 0 00-1.017 0l-3.6 3.75a.772.772 0 000 1.06l3.6 3.75a.7.7 0 001.018 0 .772.772 0 000-1.06L2.459 5.25h3.254l4.368-.05c.397 0 .72-.286.72-.7s-.323-.75-.72-.75z"
+				fill="#424242"
+			/>
+		</svg>
+	);
+}
+
+const emailLogin = (email: string, password: string) => {
+	return backendRequest("/users/actions/login", {
+		method: RequestMethod.POST,
+		payload: { email, password },
+	});
+};
+
 export const GithubSVG = function (props) {
 	return (
 		<svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
@@ -32,22 +75,72 @@ export const GithubSVG = function (props) {
 	);
 };
 
-export default function Login({ loginWithEmailHandler }) {
+export default function Login() {
 	const router = useRouter();
 	const { query } = router;
 
-	const [state, setState] = React.useState("");
+	const [emailState, setEmailState] = useState(0); // - for email and 1 for password
 	const [email, setEmail] = useState({ value: "", error: null });
+	const [password, setPassword] = useState({ value: "", error: null });
+	const [loading, setLoading] = useState(false);
+	const [data, setData] = useState(null);
+
 	const emailChange = (event: any) => {
-		setEmail({ error: null, value: event.target.value });
+		setEmail({ ...email, value: event.target.value });
+	};
+	const passwordChange = (event: any) => {
+		setPassword({ ...password, value: event.target.value });
 	};
 
-	const onEnter = (event: any): void | Promise => {
+	const loginOnEnter = (event: any) => {
 		if (event.key === "Enter") {
-			return onSubmit();
+			return onLogin();
 		}
 	};
 
+	const verifyInfo = (completeVerify = false) => {
+		const shouldValidateEmail = completeVerify || email.value;
+		const shouldValidatePassword = completeVerify || password.value;
+		if (!validateEmail(email.value) && shouldValidateEmail) {
+			setEmail({ ...email, error: "Please enter a valid email" });
+		} else setEmail({ ...email, error: "" });
+
+		if (!validatePassword(password.value) && shouldValidatePassword) {
+			setPassword({ ...password, error: "Please enter min 5 char password" });
+		} else setPassword({ ...password, error: "" });
+	};
+
+	const goToPasswordState = () => {
+		if (!validateEmail(email.value)) {
+			setEmail({ ...email, error: "Please enter a valid email" });
+			return;
+		}
+		setEmail({ ...email, error: null });
+		setEmailState(1);
+	};
+
+	const goBackToEmail = () => {
+		setPassword({ ...password, error: null });
+		setEmailState(0);
+	};
+
+	const onLogin = async () => {
+		verifyInfo(true);
+		if (!validatePassword(password.value)) return;
+		setLoading(true);
+		try {
+			const { systemInfo } = await emailLogin(email.value, password.value);
+			setData(systemInfo);
+			router.push("/app/dashboard");
+		} catch (e: any) {
+			setPassword({ ...password, error: "Please enter valid email and password" });
+		}
+		setLoading(false);
+	};
+
+	loadUserDataAndRedirect({ fetchData: false, userAndSystemData: data });
+
+	const showUniversalError = email.error || password.error;
 	return (
 		<div css={containerCSS}>
 			<div className="pt-20">
@@ -97,34 +190,77 @@ export default function Login({ loginWithEmailHandler }) {
 								<NewButton svg={<GithubSVG className="mr-12" />} text={"Login with Github"} />
 							</Link>
 
-							<div className="mt-12">
+							{/* <div className="mt-12">
 								<Link href={getGithubLoginURL(query?.inviteType?.toString(), query?.inviteCode?.toString(), null)}>
 									<NewButton svg={<GitlabSVG className="mr-12" />} text={"Login with Gitlab"} />
 								</Link>
-							</div>
+							</div> */}
 
 							<Line />
 
-							<Input
-								className="bg"
-								autoComplete={"email"}
-								value={email.value}
-								onChange={emailChange}
-								placeholder={"Enter email"}
-								isError={email.error}
-								css={newInputBoxCSS}
-								// onReturn={onLogin.bind(this)}
-								// onBlur={verifyInfo.bind(this, false)}
-							/>
+							<Conditional showIf={emailState === 0}>
+								<Input
+									className="bg"
+									autoComplete={"email"}
+									value={email.value}
+									onChange={emailChange}
+									placeholder={"Enter email"}
+									isError={email.error}
+									css={newInputBoxCSS}
+									onReturn={goToPasswordState.bind(this)}
+									rightIcon={<EmailIcon />}
+								/>
 
-							<NewButton svg={null} text={"login"} className={"mt-16"} />
+								<NewButton svg={null} text={"next"} className={"mt-16"} onClick={goToPasswordState.bind(this)} />
+							</Conditional>
+
+							<Conditional showIf={emailState === 1}>
+								<Input
+									className="bg"
+									autoComplete={"password"}
+									value={password.value}
+									onChange={passwordChange}
+									placeholder={"Enter password"}
+									isError={password.error}
+									css={newInputBoxCSS}
+									onReturn={loginOnEnter.bind(this)}
+									leftIcon={
+										<div className="mt-1 p-10" onClick={goBackToEmail.bind(this)} css={onHoverBack}>
+											<BackIcon />
+										</div>
+									}
+								/>
+
+								<NewButton disabled={loading} svg={null} className={"mt-16 flex items-center justify-center"} onClick={onLogin.bind(this)}>
+									<Conditional showIf={!loading}>
+										<Text fontSize={14} weight={600}>
+											Login
+										</Text>
+									</Conditional>
+									<Conditional showIf={loading}>
+										<div className="flex">
+											<LoadingSVG color={"#fff"} height={"16rem"} width={"16rem"} />
+											<Text fontSize={14} weight={600} className={"ml-8"}>
+												Loading
+											</Text>
+										</div>
+									</Conditional>
+								</NewButton>
+							</Conditional>
 						</div>
 						<div className="flex w-full justify-center">
-							<Text css={[underLineonHover, helpCSS]} fontSize={14}>
-								Need help?
-							</Text>
+							<Link href={"/forgot_password"}>
+								<Text css={[underLineonHover, helpCSS]} fontSize={14}>
+									Forgot password?
+								</Text>
+							</Link>
+						</div>
+
+						<div css={[error, showUniversalError || dontShow]} className="flex w-full items-center pl-16 mt-80 pt-2">
+							{email.error || password.error}
 						</div>
 					</div>
+
 					<div onClick={() => router.push("/signup")} className="flex w-full justify-center mt-40">
 						<Text
 							color={"#565657"}
@@ -152,12 +288,38 @@ export default function Login({ loginWithEmailHandler }) {
 	);
 }
 
+const onHoverBack = css`
+	:hover {
+		path {
+			fill: white;
+		}
+	}
+`;
+
+const dontShow = css`
+	visibility: hidden;
+`;
+const error = css`
+	height: 36rem;
+
+	background: linear-gradient(0deg, rgba(255, 113, 224, 0.02), rgba(255, 113, 224, 0.02)), rgba(16, 14, 16, 0.2);
+	border-radius: 10rem;
+
+	border: 0.5rem solid #ff4583;
+	width: 100%;
+
+	color: #ff71ac;
+`;
+
 const newInputBoxCSS = css`
 	input {
 		background: transparent;
 		border: 0.5px solid rgba(56, 56, 56, 0.6);
 		border-radius: 8px;
 		font-weight: 500;
+		:focus {
+			background: #121316;
+		}
 		::placeholder {
 			color: #808080;
 		}
@@ -202,10 +364,6 @@ const underLineonHover = css`
 	}
 `;
 
-const plainButton = css`
-	background: #0f0f0f;
-`;
-
 const githubButtonCSS = css(`
 width: 100%;
 height: 44rem;
@@ -221,6 +379,7 @@ const newButtonCSS = css`
 
 	background: #191919;
 	border: 0.5px solid rgba(56, 56, 56, 0.35);
+	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0) !important;
 
 	:hover {
 		background: #202020;
@@ -229,12 +388,12 @@ const newButtonCSS = css`
 	}
 `;
 
-function NewButton({ svg, text, ...props }) {
+function NewButton({ svg, text, children, ...props }) {
 	return (
 		<Button className={"flex items-center justify-center"} css={[githubButtonCSS, newButtonCSS]} {...props}>
 			{svg}
 			<Text className={"mt-3"} fontSize={14} weight={600}>
-				{text}
+				{text || children}
 			</Text>
 		</Button>
 	);

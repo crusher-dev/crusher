@@ -37,8 +37,8 @@ export async function askUserLogin(shouldCheckForDiscord: boolean = true) {
           message: "How do you want to login?",
           type: "list",
           choices: [
-            { name: "Signup via github", value: 0 },
-            { name: "Signup via email", value: 1 }
+            { name: "via Github", value: 0 },
+            { name: "via Email", value: 1 }
           ],
           default: 0
         }
@@ -67,29 +67,35 @@ export async function askUserLogin(shouldCheckForDiscord: boolean = true) {
 
         const email = execSync(`git config --global user.email`);
         const emailText = email.toString();
-        const promptRes = await inquirer.prompt([
+        const emailRes = await inquirer.prompt([
           {
             name: "email",
             message: "Your email:",
             type: "input",
             default: emailText && emailText.length ? emailText.split("\n")[0] : null
             // @TODO: Can get git email here
-          },
+        }]);
+        const promptRes = await inquirer.prompt([
           {
             name: "password",
             message: "Your password:",
-            type: "password"
+            type: "password",
+            validate: async (input) => {
+              const { token, ...res } = await CloudCrusher.authUser(emailRes.email, input, { discordInviteCode: inviteCode?.code as any });
+              if(res.status === "WRONG_CREDS") {
+                return "Invalid Credentials for the email";
+              }
+              await getUserInfoFromToken(token as any).then((userInfo) => {
+                setUserInfo(userInfo);
+                setAppConfig({
+                  ...getAppConfig(),
+                  userInfo: getUserInfo(),
+                });
+              });
+              return true;
+            }
           }
-        ]);
-
-        const { token, ...res } = await CloudCrusher.authUser(promptRes.email, promptRes.password, { discordInviteCode: inviteCode?.code as any });
-        await getUserInfoFromToken(token as any).then((userInfo) => {
-          setUserInfo(userInfo);
-          setAppConfig({
-            ...getAppConfig(),
-            userInfo: getUserInfo(),
-          });
-        });
+        ]);      
       }
   }
   

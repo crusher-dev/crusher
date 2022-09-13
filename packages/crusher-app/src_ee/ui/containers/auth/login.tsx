@@ -204,7 +204,7 @@ export default function Login() {
 							type={"password"}
 							isError={password.error}
 							css={newInputBoxCSS}
-							onReturn={loginOnEnter.bind(this)}
+							onReturn={onLogin.bind(this)}
 							ref={passwordRef}
 							leftIcon={
 								<div className="mt-1 p-10" onClick={goBackToEmail.bind(this)} css={onHoverBack}>

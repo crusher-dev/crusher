@@ -35,6 +35,12 @@ a {
 	}
 }
 
+@media only screen and (max-width: 1380px) {
+	html {
+		font-size: calc(1320 / 1544);
+	}
+}
+
 img {
 	display: unset;
 }

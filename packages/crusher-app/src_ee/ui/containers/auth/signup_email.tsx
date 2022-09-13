@@ -226,7 +226,7 @@ export default function Signup_email({ loginWithEmailHandler }) {
 }
 
 const overlayContainer = css(`
-	width: 372rem;
+	width: 368rem;
 `);
 
 const underLineonHover = css`

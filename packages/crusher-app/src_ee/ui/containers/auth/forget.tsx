@@ -171,7 +171,7 @@ width: 100vw;
 `);
 
 const overlayContainer = css(`
-	width: 372rem;
+	width: 368rem;
 `);
 
 const underLineonHover = css`

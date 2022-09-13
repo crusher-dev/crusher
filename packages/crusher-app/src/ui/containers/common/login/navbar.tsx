@@ -68,7 +68,7 @@ const logoCSS = css`
 
 const topBar = css`
 	margin: 0 auto;
-	width: 1002rem;
+	width: 980rem;
 	padding: 0 30px;
 	max-width: 100%;
 `;

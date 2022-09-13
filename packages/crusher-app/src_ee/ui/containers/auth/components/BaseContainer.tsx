@@ -1,18 +1,14 @@
 import { css } from "@emotion/react";
 import { LoginNavBar } from "@ui/containers/common/login/navbar";
-
 import { Heading } from "dyson/src/components/atoms/heading/Heading";
 import { Text } from "dyson/src/components/atoms/text/Text";
 import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
-import { useRouter } from "next/router";
-
 import React from "react";
 
 export default function BaseContainer({ children }) {
-
 	return (
 		<div css={containerCSS}>
-			<div className="pt-20">
+			<div className="pt-18">
 				<LoginNavBar />
 			</div>
 			<div className={"flex justify-center"}>
@@ -49,7 +45,7 @@ export default function BaseContainer({ children }) {
 						</span>
 						<Text fontSize={16}>🚀</Text>
 					</Heading>
-					<TextBlock fontSize={15} color={"#4D4D4D"} className={"mt-16"} leading={false}>
+					<TextBlock fontSize={15} color={"#4D4D4D"} className={"mt-14"} leading={false}>
 						Devs use crusher to test website fast, ship fast. Get started in seconds
 					</TextBlock>
 

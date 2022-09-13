@@ -34,7 +34,7 @@ export default function SignupInitial({ loginWithEmailHandler }) {
 	};
 	return (
 		<BaseContainer>
-			<div css={overlayContainer} className={"mt-58 pb-60"}>
+			<div css={overlayContainer} className={"mt-56 pb-60"}>
 				<div className={"mb-42"}>
 					<NewButton onClick={handleGithub} css={purpleButton} svg={<GithubSVG className="mr-12" />} text={"Continue with Github"} />
 					<Line />

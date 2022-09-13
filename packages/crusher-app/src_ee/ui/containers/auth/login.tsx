@@ -158,7 +158,7 @@ export default function Login() {
 
 	return (
 		<BaseContainer>
-			<div css={overlayContainer} className={"mt-58 pb-60"}>
+			<div css={overlayContainer} className={"mt-56 pb-60"}>
 				<div className={"mb-42"}>
 					<Link href={getGithubLoginURL(query?.inviteType?.toString(), query?.inviteCode?.toString(), null)}>
 						<NewButton svg={<GithubSVG className="mr-12" />} text={"Login with Github"} css={purpleButton} />

@@ -23,27 +23,13 @@ function Dashboard() {
 	}, [project, user]);
 
 	return (
-		<>
-			<SidebarTopBarLayout>
-				<div css={containerStyle} className=" pt-42 ">
-					<Conditional showIf={onboardingIndex !== -1}>
-						<div css={headingStyle} className={"font-cera text-16 font-bold"}>
-							Integrate and start testing
-						</div>
-						<div className="mt-8 text-12.5">It’ll hardly take 5 seconds</div>
-						<OnboardingSteps className={"mt-24 mb-56"} />
-					</Conditional>
-
-					{/*Note :- Move to conditional once integrated*/}
-					<OnBoardingTutorialVideo />
-					<div className={"flex flex-row items-center justify-center"} css={footerContainerStyle}>
-						<div className={"text-14"} css={footerPlaceholderStyle}>
-							We’ll fill this space soon with widgets.
-						</div>
-					</div>
-				</div>
-			</SidebarTopBarLayout>
-		</>
+		<SidebarTopBarLayout>
+			<div css={containerStyle} className=" pt-42 ">
+				<Conditional showIf={onboardingIndex !== -1}>
+					<div>ds</div>
+				</Conditional>
+			</div>
+		</SidebarTopBarLayout>
 	);
 }
 

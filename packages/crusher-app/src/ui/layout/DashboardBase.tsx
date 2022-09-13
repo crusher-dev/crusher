@@ -55,7 +55,14 @@ function ProjectList() {
 	}, []);
 
 	return (
-		<div css={css`max-height: 100%; overflow: hidden; display: flex; flex-direction: column;`}>
+		<div
+			css={css`
+				max-height: 100%;
+				overflow: hidden;
+				display: flex;
+				flex-direction: column;
+			`}
+		>
 			<div className={"flex pl-10 mr-2 mt- justify-between mt-36"} css={project}>
 				<div className={"flex items-center"}>
 					<span className={"text-12.5 leading-none mr-8 font-600"}>Projects</span>
@@ -76,40 +83,42 @@ function ProjectList() {
 				</div>
 			)}
 
-			<div css={css`overflow-y: overlay;`} className={"mt-6 fancy-scroll"}>
+			<div
+				css={css`
+					overflow-y: overlay;
+				`}
+				className={"mt-6 fancy-scroll"}
+			>
 				{projects.map(({ id, name }) => (
-					<MenuItemHorizontal
-						className={"mt-2"}
-						selected={appState.selectedProjectId === id}
-						onClick={handleProjectSelect.bind(this, id)}
-						key={id}
-					>
+					<MenuItemHorizontal className={"mt-2"} selected={appState.selectedProjectId === id} onClick={handleProjectSelect.bind(this, id)} key={id}>
 						<LayoutSVG />
 						<span className={"text-13 ml-16 font-500 mt-2 leading-none"}>{name}</span>
 					</MenuItemHorizontal>
 				))}
 			</div>
-			<Global styles={css`
-				.fancy-scroll::-webkit-scrollbar {
-					width: 9px;
-					left: -10px;
-				}
-				
-				.fancy-scroll::-webkit-scrollbar-track {
-					background-color: #0a0b0e;
-					box-shadow: none;
-				}
-				
-				.fancy-scroll::-webkit-scrollbar-thumb {
-					background-color: #1b1f23;
-					border-radius: 100px;
-				}
-				
-				.fancy-scroll::-webkit-scrollbar-thumb:hover {
-					background-color: #272b31;
-					border-radius: 100px;
-				}
-			`}/>
+			<Global
+				styles={css`
+					.fancy-scroll::-webkit-scrollbar {
+						width: 9px;
+						left: -10px;
+					}
+
+					.fancy-scroll::-webkit-scrollbar-track {
+						background-color: #0a0b0e;
+						box-shadow: none;
+					}
+
+					.fancy-scroll::-webkit-scrollbar-thumb {
+						background-color: #1b1f23;
+						border-radius: 100px;
+					}
+
+					.fancy-scroll::-webkit-scrollbar-thumb:hover {
+						background-color: #272b31;
+						border-radius: 100px;
+					}
+				`}
+			/>
 		</div>
 	);
 }
@@ -231,6 +240,64 @@ const helpDropdownCSS = css`
 	width: 372px;
 `;
 
+function Menu(props) {
+	return (
+		<svg width={11} height={12} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+			<path
+				fillRule="evenodd"
+				clipRule="evenodd"
+				d="M3.202.898a1.016 1.016 0 01.909 0L6.815 2.25a.207.207 0 00.182 0l2.096-1.048a1.016 1.016 0 011.47.908v6.763c0 .385-.218.737-.562.908l-2.64 1.32a1.016 1.016 0 01-.909 0L3.747 9.75a.203.203 0 00-.182 0L1.47 10.798A1.016 1.016 0 010 9.89V3.127c0-.385.217-.737.561-.909l2.64-1.32zm.454 1.852a.406.406 0 01.406.407v4.468a.406.406 0 01-.812 0V3.157a.406.406 0 01.406-.407zm3.656 1.625a.406.406 0 10-.812 0v4.47a.406.406 0 00.813 0v-4.47z"
+				fill="#BDBDBD"
+			/>
+		</svg>
+	);
+}
+
+function Icon2(props) {
+	return (
+		<svg width={14} height={14} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+			<path
+				fillRule="evenodd"
+				clipRule="evenodd"
+				d="M.875 5.735v1.046c0 .605.49 1.094 1.094 1.094H12.03c.604 0 1.094-.49 1.094-1.094V5.735c0-.417-.15-.821-.421-1.138L10.788 2.36a1.75 1.75 0 00-1.33-.611H4.542a1.75 1.75 0 00-1.329.611L1.296 4.597a1.75 1.75 0 00-.421 1.138zm3.666-3.11a.875.875 0 00-.664.306L2.264 4.812H4.11a1.75 1.75 0 011.456.78l.096.143a.875.875 0 00.728.39h1.22a.875.875 0 00.728-.39l.096-.143a1.75 1.75 0 011.456-.78h1.846l-1.613-1.881a.876.876 0 00-.664-.306H4.54z"
+				fill="#BDBDBD"
+			/>
+			<path
+				d="M1.64 8.75a.766.766 0 00-.765.766v.984a1.75 1.75 0 001.75 1.75h8.75a1.75 1.75 0 001.75-1.75v-.985a.766.766 0 00-.766-.765H9.89a1.75 1.75 0 00-1.455.78l-.096.143a.875.875 0 01-.728.39H6.39a.875.875 0 01-.728-.39l-.096-.144A1.75 1.75 0 004.11 8.75H1.64z"
+				fill="#BDBDBD"
+			/>
+		</svg>
+	);
+}
+
+function Icon3(props) {
+	return (
+		<svg width={13} height={13} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+			<path
+				fillRule="evenodd"
+				clipRule="evenodd"
+				d="M1.219 1.219a.406.406 0 100 .812h.406V7.72A1.625 1.625 0 003.25 9.344h.655l-.634 1.903a.406.406 0 00.77.256l.18-.534H8.78l.179.534a.406.406 0 00.77-.256l-.634-1.903h.655a1.625 1.625 0 001.625-1.625V2.03h.406a.406.406 0 100-.812H1.22zM4.76 9.344H8.24l.27.812H4.49l.271-.812zm4.38-4.873a.406.406 0 10-.407-.703A6.939 6.939 0 006.807 5.42l-.832-.832a.406.406 0 00-.575 0L3.775 6.213a.406.406 0 10.575.574L5.688 5.45l.875.877a.406.406 0 00.621-.056 6.127 6.127 0 011.957-1.799z"
+				fill="#BDBDBD"
+			/>
+		</svg>
+	);
+}
+
+const leftMenu = [
+	{
+		icon: <Menu />,
+		label: "projects",
+	},
+	{
+		icon: <Icon2 />,
+		label: "integrations",
+	},
+	{
+		icon: <Icon3 />,
+		label: "settings",
+	},
+];
+
 function HelpNSupport() {
 	return (
 		<Dropdown component={<HelpContent />} dropdownCSS={helpDropdownCSS}>
@@ -245,85 +312,54 @@ function LeftSection() {
 	const router = useRouter();
 	const [inviteTeammates, setInviteTeamMates] = useState(false);
 	return (
-		<div css={sidebar} className={"flex flex-col justify-between py-18 px-14"}>
-			<div>
-				<UserNTeam />
-
-				{/*<div>*/}
-				{/*	<div css={OutlinedButton} className={' mt-28 flex justify-between'}>*/}
-				{/*		<span className={'text-13'}>Upgrade to pro</span> <RightArrow/>*/}
-				{/*	</div>*/}
-				{/*</div>*/}
-
-				{/*<div className={"mt-24"}>*/}
-				{/*	{CURRENT_PROJECT_LIST.map(({ name, ICON }) => (*/}
-				{/*		<MenuItemHorizontal className={"mt-2"}>*/}
-				{/*			<ICON height={"12rem"} />*/}
-				{/*			<span className={"text-13 ml-16 font-500 mt-2 leading-none"}>{name}</span>*/}
-				{/*		</MenuItemHorizontal>*/}
-				{/*	))}*/}
-				{/*</div>*/}
-			</div>
-			<ProjectList />
-
-			<div css={css`margin-top: auto;`}>
-				<Conditional showIf={inviteTeammates}>
-					<InviteMembers onClose={setInviteTeamMates.bind(this, false)} />
-				</Conditional>
-				<div>
-					<Conditional showIf={getEdition() === EditionTypeEnum.OPEN_SOURCE}>
-						<div className={"text-12 font-600 leading-none mt-16 mb-8 ml-8"} id={"support-tagline"}>
-							Join community 💓
+		<div css={sidebar} className={"flex flex-col justify-between pb-18"}>
+			<UserNTeam />
+			<div className="px-14 pt-36">
+				{leftMenu.map((item) => {
+					const selected = item.label === "projects";
+					return (
+						<div className="flex items-center pl-8 mb-8" css={[menuItem, selected && selectedCSS]}>
+							<div css={iconCSS}>{item.icon}</div>
+							<span className="label">{item.label}</span>
 						</div>
-						<a target={"_blank"} href={"https://github.com/crusherdev/crusher"}>
-							<div css={navLink} className={"flex items-center text-12.5 mt-4 leading-none"}>
-								<GithubSVG className={"mr-12"} /> <span className={"mt-4 text-12.5"}>Star us on Github</span>
-							</div>
-						</a>
-						{/*<a href={"https://crusher.dev"}>*/}
-						{/*	<div css={navLink} className={"flex items-center text-13 mt-4 mb-12 leading-none"}>*/}
-						{/*		<GithubSVG className={"mr-12"} /> <span className={"mt-4 text-13"}>Join discord</span>*/}
-						{/*	</div>*/}
-						{/*</a>*/}
-					</Conditional>
-
-					<Conditional showIf={getEdition() !== EditionTypeEnum.OPEN_SOURCE}>
-						<div css={navLink} className={"flex items-center text-12.5 mt-4"} onClick={setInviteTeamMates.bind(this, true)}>
-							<AddSVG className={"mr-18 mb-2"} /> Invite teammates
-						</div>
-					</Conditional>
-
-					<HelpNSupport />
-					<div
-						css={navLink}
-						className={"flex items-center text-12.5 mt-4"}
-						onClick={() => {
-							window.UserLeap("track", "basic-nps");
-						}}
-					>
-						<HelpSVG className={"mr-16 mb-2"} /> Give feedback
-					</div>
-				</div>
-
-				<Conditional showIf={getEdition() === EditionTypeEnum.OPEN_SOURCE}>
-					<a href={"https://crusher.dev"}>
-						<BottomSection name={"Use Crusher Cloud"} description={"Get 50% more"} />
-					</a>
-				</Conditional>
-
-				{/* <Conditional showIf={getEdition() === EditionTypeEnum.EE}>
-					<BottomSection
-						name={"Free plan"}
-						description={"Get started"}
-						onClick={() => {
-							router.push("/settings/org/pricing");
-						}}
-					/>
-				</Conditional> */}
+					);
+				})}
 			</div>
 		</div>
 	);
 }
+
+const iconCSS = css`
+	width: 16rem;
+	height: 16rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+`;
+
+const selectedCSS = css`
+	background: rgba(255, 255, 255, 0.04);
+	border: 0.5px solid rgba(255, 255, 255, 0.08);
+
+	.label {
+		color: #d378fe;
+	}
+`;
+
+const menuItem = css`
+	height: 28rem;
+	gap: 8rem;
+	font-size: 13.5rem;
+	font-weight: 500;
+	border-radius: 8rem;
+	box-sizing: border-box;
+	border: 0.5px solid transparent;
+
+	:hover {
+		background: rgba(255, 255, 255, 0.04);
+		border: 0.5px solid rgba(255, 255, 255, 0.08);
+	}
+`;
 
 export const dropdDown = css`
 	bottom: -10px;
@@ -429,58 +465,25 @@ function RunTest() {
 	);
 }
 
-function TopNavbar() {
+function TopNavbar({ children }) {
 	const { pathname, query, asPath } = useRouter();
 	const [showCreateTest, setShowCreateTest] = useState(false);
 
 	return (
-		<div css={[nav]} className={""}>
-			<div css={[containerWidth]}>
-				<div className={"w-full flex px-8 pl-0 justify-between"}>
-					<div className={"flex"}>
-						{TOP_NAV_LINK.map(({ name, path, keyToCheck, queryParam }, i) => {
-							let isNavLinkSelected = false;
-
-							if (queryParam) {
-								const [key] = queryParam.split("=");
-								isNavLinkSelected = key && path === pathname && asPath.includes(queryParam);
-							} else {
-								isNavLinkSelected = path === pathname && query[keyToCheck] === undefined;
-							}
-							return (
-								<Link href={addQueryParamToPath(path, queryParam)} key={i}>
-									<div className={"pt-20 mr-6 relative"} css={navLinkSquare}>
-										<div className={"font-cera font-500 px-24 capitalize nav-top-link"}>{name}</div>
-
-										{isNavLinkSelected && <div className={"selected mt-19"}></div>}
-									</div>
-								</Link>
-							);
-						})}
-					</div>
-
-					<Conditional showIf={showCreateTest}>
-						<Download onClose={setShowCreateTest.bind(this, false)} />
-					</Conditional>
-
-					<div className={"flex items-center"}>
-						<RunTest />
-						<Button
-							className={"ml-20"}
-							css={css`
-								width: 108rem;
-							`}
-							onClick={setShowCreateTest.bind(this, true)}
-						>
-							New test
-						</Button>
-						{/*<span className={"ml-24 font-500 text-14 leading-none"} css={shareLink}>*/}
-						{/*	Share*/}
-						{/*</span>*/}
-					</div>
-				</div>
-			</div>
+		<div css={[nav]}>
+			<div css={[containerWidth]}>{children}</div>
 		</div>
+	);
+}
+
+function External(props) {
+	return (
+		<svg width={11} height={11} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+			<path
+				d="M10.5 1.625v8.25c0 .621-.504 1.125-1.125 1.125h-8.25A1.125 1.125 0 010 9.875v-8.25C0 1.004.504.5 1.125.5h8.25c.621 0 1.125.504 1.125 1.125zM8.437 2H5.813c-.5 0-.752.606-.398.96l.75.75-4.583 4.583a.281.281 0 000 .397l.728.728c.11.11.288.11.397 0L7.29 4.835l.75.75c.352.352.96.105.96-.398V2.562A.563.563 0 008.437 2z"
+				fill="#6b6565"
+			/>
+		</svg>
 	);
 }
 
@@ -492,7 +495,21 @@ export const SidebarTopBarLayout = ({ children, noContainerWidth = false, hideSi
 			</Conditional>
 
 			<div className={"w-full"}>
-				<TopNavbar />
+				<TopNavbar>
+					<div className="flex items-center h-full">
+						<div css={projectsLabel} className={"flex items-center w-full"}>
+							<span>Projects</span>
+							<span className="badge flex items-center justify-center">12</span>
+						</div>
+
+						<a href="https://docs.crusher.dev" target="_blank">
+							<TextBlock color={"#6b6565"} className={"flex"} css={textLink}>
+								<External className="mr-8" />
+								Docs
+							</TextBlock>
+						</a>
+					</div>
+				</TopNavbar>
 				<div
 					css={[
 						scrollContainer,
@@ -511,8 +528,38 @@ export const SidebarTopBarLayout = ({ children, noContainerWidth = false, hideSi
 	);
 };
 
+const textLink = css`
+	:hover {
+		color: #d378fe;
+		path {
+			fill: #d378fe;
+		}
+	}
+`;
+
+const projectsLabel = css`
+	gap: 10rem;
+	font-family: "Cera Pro";
+	font-weight: 400;
+	font-size: 15px;
+	color: #6b6565;
+	letter-spacing: 0.02em;
+
+	height: 56rem;
+
+	.badge {
+		width: 31px;
+		height: 21px;
+		background: rgba(78, 78, 78, 0.06);
+		border: 0.5px solid #c275ff;
+		border-radius: 16px;
+		font-weight: 500;
+		color: #aaaaaa;
+	}
+`;
+
 const navLinkSquare = css`
-	height: 68rem;
+	height: 56rem;
 
 	div {
 		color: #d0d0d0;
@@ -540,28 +587,29 @@ const navLinkSquare = css`
 `;
 
 const background = css`
-	background: #0a0b0e;
+	background: #080808;
 	min-height: 100vh;
 `;
 
 const sidebar = css`
-	width: 286rem;
+	width: 312rem;
 	height: 100vh;
-	border-right: 1px solid #171b20;
+	border-right: 0.5px solid #1b1b1b;
 	box-sizing: border-box;
+	background: #0b0b0c;
 	justify-content: flex-start;
 `;
 
 const nav = css`
 	width: 100%;
-	height: 68rem;
-	border-bottom: 1px solid #171b20;
+	border-bottom: 0.5px solid #1b1b1b;
+	height: 56rem;
 `;
 const containerWidth = css`
 	//width: calc(100vw - 250rem);
 	//max-width: 1100%;
 
-	width: 1468rem;
+	width: 1140rem;
 	max-width: calc(100vw - 352rem);
 	margin: 0 auto;
 	padding: 0 0;
@@ -569,7 +617,8 @@ const containerWidth = css`
 
 const scrollContainer = css`
 	overflow-y: scroll;
-	height: calc(100vh - 68rem);
+	height: calc(100vh - 56rem);
+	padding-left: 12px;
 `;
 
 const project = css`

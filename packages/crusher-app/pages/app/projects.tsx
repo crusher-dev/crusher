@@ -106,8 +106,8 @@ const projectItemContainer = css`
 
 const projectItem = css`
 	width: 100%;
-	height: 132rem;
-	width: 360rem;
+	height: 124rem;
+	width: 354rem;
 
 	border: 0.5px solid #1b1b1b;
 	border-radius: 14px;
@@ -205,14 +205,14 @@ function ProjectCard({ project }) {
 					<div className="flex items-center justify-between">
 						<div className="flex items-center">
 							<Dolphin height={20} width={20} />
-							<TextBlock fontSize={16} color="#B6B6B6" weight="600" className="ml-10">
+							<TextBlock fontSize={15} color="#B6B6B6" weight="600" className="ml-10">
 								{name}
 							</TextBlock>
 						</div>
 						<div className="open flex items-center justify-center">Open</div>
 					</div>
 
-					<TextBlock fontSize={12.6} color="#B6B6B6" className="mt-11">
+					<TextBlock fontSize={12.6} color="#4a4a4a" className="mt-11">
 						Add github action
 					</TextBlock>
 				</div>

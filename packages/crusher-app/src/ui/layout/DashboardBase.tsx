@@ -314,7 +314,7 @@ function LeftSection() {
 	return (
 		<div css={sidebar} className={"flex flex-col justify-between pb-18"}>
 			<UserNTeam />
-			<div className="flex-col justify-between h-full">
+			<div className="flex flex-col justify-between h-full">
 				<div className="px-14 pt-36">
 					{leftMenu.map((item) => {
 						const selected = item.label === "projects";

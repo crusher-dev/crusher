@@ -19,6 +19,7 @@ import { StatusBar } from "../ui/components/status-bar";
 import { sendSnackBarEvent } from "../ui/components/toast";
 import Toolbar from "../ui/components/toolbar";
 import historyInstance from "./utils/history";
+import Wrapper from "figma-design-scaler/dist/dist/main";
 
 const handleCompletion = async (store: Store, action: IDeepLinkAction) => {
 
@@ -280,6 +281,9 @@ const App = () => {
         }}
         steps={steps}
     >
+        <Wrapper figmaUrl={"https://www.figma.com/proto/MsJZCnY5NvrDF4kL1oczZq/Crusher-%7C-Aug?page-id=988%3A3439&node-id=988%3A3817&viewport=524%2C381%2C0.47&scaling=scale-down-width"}>
+
+       
         <div>
             <div css={dragableStyle} className={"drag"}></div>
             <div css={contentStyle}>
@@ -294,6 +298,7 @@ const App = () => {
             <Global styles={globalCss}/>
             <InfoOverLay />
         </div>
+        </Wrapper>
         </TourProvider>
     )
 };

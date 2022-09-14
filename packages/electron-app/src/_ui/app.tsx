@@ -87,13 +87,7 @@ const MoreStepsOnboarding = () => {
 	const store = useStore();
 	const [startingOffset, setStartingOffset] = React.useState(getSavedSteps(store.getState() as any).length);
 	const savedSteps = useSelector(getSavedSteps);
-	const { setCurrentStep } = useTour();
 
-	React.useEffect(() => {
-		if (savedSteps.length - startingOffset === 6) {
-			setCurrentStep(6);
-		}
-	}, [savedSteps]);
 
 	return (
 		<div>
@@ -260,27 +254,6 @@ const App = () => {
     const toolbarStyle = React.useMemo(() => { toolbarCss(recorderState.type === TRecorderState.CUSTOM_CODE_ON) }, [recorderState]);
 
     return (
-        <TourProvider
-        onClickMask={() => {}}
-        disableDotsNavigation={true}
-        disableKeyboardNavigation={true}
-        showPrevNextButtons={false}
-        disableFocusLock={true}
-        showBadge={false}
-        styles={{
-            popover: (base, state) => ({
-                ...base,
-                background: "linear-gradient(0deg, #111213, #111213), rgba(10, 11, 14, 0.4)",
-                border: "0.5px solid rgba(255, 255, 255, 0.1)",
-                borderRadius: "8rem",
-                color: "#fff",
-                fontSize: "14rem",
-                minWidth: "400rem",
-                ...doArrow(state.position, state.verticalAlign, state.horizontalAlign),
-            }),
-        }}
-        steps={steps}
-    >
         <Wrapper figmaUrl={"https://www.figma.com/proto/MsJZCnY5NvrDF4kL1oczZq/Crusher-%7C-Aug?page-id=988%3A3439&node-id=988%3A3817&viewport=524%2C381%2C0.47&scaling=scale-down-width"}>
 
        
@@ -299,7 +272,6 @@ const App = () => {
             <InfoOverLay />
         </div>
         </Wrapper>
-        </TourProvider>
     )
 };
 

@@ -69,7 +69,7 @@ enum ITestActionEnum {
 	UPDATE = "UPDATE"
 };
 const SAVE_TEST_ACTION_DROPDOWN_OPTIONS = [
-	{id: ITestActionEnum.VERIFY_SAVE, content: (<span>Verify & Save</span>)},
+	{id: ITestActionEnum.VERIFY_SAVE, content: (<span>Save</span>)},
 	{id: ITestActionEnum.SAVE, content: (<span>Save</span>)}
 ];
 const UPDATE_TEST_ACTION_DROPDOWN_OPTIONS = [
@@ -231,8 +231,9 @@ const buttonDropdownCss = css`
 	
 `;
 const buttonDropdownMainButtonCss = css`
-	width: 116rem;
+	width: 50rem;
 	height: 32rem;
+	padding: 0rem !important;
 `;
 
 SaveVerifyButton.whyDidYouRender = true;
@@ -552,7 +553,7 @@ enter to submit
 					</Button>
 				</Conditional>
 				<Conditional showIf={!isRecorderInInitialState}>
-					<div className={"ml-18 flex items-center"}>
+					{/* <div className={"ml-18 flex items-center"}>
 						<div
 							css={[
 								onlineDotStyle,
@@ -566,9 +567,9 @@ enter to submit
 						<Text id="recorder-status" css={recTextStyle} className={"ml-8"}>
 							{[TRecorderState.RECORDING_ACTIONS].includes(recorderState.type) ? "Rec." : "Waiting"}
 						</Text>
-					</div>
+					</div> */}
 
-					<div className={"ml-auto mr-22 flex items-center"}>
+					<div className={"ml-auto flex items-center"}>
 						<SettingsIcon onClick={setShowSettingsModal.bind(this, true)} css={settingsIconStyle} className={"ml-12"} />
 						<div id={"verify-save-test"} css={verifySaveTestContainerStyle}>
 							<SaveVerifyButton isTestVerificationComplete={isTestVerificationComplete} />
@@ -582,7 +583,7 @@ enter to submit
 };
 
 const verifySaveTestContainerStyle = css`
-	margin-left: 20rem;
+	margin-left: 13rem;
 `;
 
 StepActionMenu.whyDidYouRender = true;
@@ -679,8 +680,13 @@ const menuContainerStyle = css`
 `;
 const settingsIconStyle = css`
 	height: 14rem;
+	path {
+		fill: rgba(255, 255, 255, 0.2);
+	}
 	:hover {
-		opacity: 0.9;
+		path {
+			fill: #969696;
+		}
 	}
 `;
 

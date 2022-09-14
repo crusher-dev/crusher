@@ -136,8 +136,9 @@ const buttonCss = css`
 	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0) !important;
 
 	:hover {
-		background: #fff !important;
-		color: #202020;
+		background: transparent !important;
+		color: #cecece;
+		border: 0.5px solid #cecece !important;
 	}
 
 	:focus {

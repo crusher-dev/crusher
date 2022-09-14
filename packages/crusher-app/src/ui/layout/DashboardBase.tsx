@@ -364,7 +364,7 @@ function LeftSection() {
 
 					<div className="flex justify-between mt-20">
 						<div css={badgeStyle} className="flex">
-							<div className="test-count">2/3</div>
+							<div className="test-count pl-2">2/3</div>
 							<div className="hours-count">5 hrs</div>
 						</div>
 						<div className="flex items-center" css={feedbackCSS}>
@@ -423,7 +423,7 @@ const badgeStyle = css`
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		padding-top: 1rem;
+		padding-top: 2rem;
 
 		color: #b0b0b0;
 		font-size: 13rem;

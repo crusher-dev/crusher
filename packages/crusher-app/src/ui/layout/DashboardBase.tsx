@@ -354,7 +354,7 @@ function LeftSection() {
 						<NewPeople />
 						<div className="ml-6">
 							<TextBlock color="#BC66FF" fontSize={14} weight={600} id="invite">
-								Invite People
+								Invite
 							</TextBlock>
 							<TextBlock color="#3E3E3E" fontSize={12} className="mt-4">
 								Get +2 testing hrs
@@ -363,15 +363,17 @@ function LeftSection() {
 					</div>
 
 					<div className="flex justify-between mt-20">
-						<div css={badgeStyle} className="flex">
-							<div className="test-count pl-2">2/3</div>
-							<div className="hours-count">5 hrs</div>
-						</div>
+
 						<div className="flex items-center" css={feedbackCSS}>
 							<Chat className="mr-8" />
 							<TextBlock fontSize={13} color="#B0B0B0">
 								Give Feedback
 							</TextBlock>
+						</div>
+
+						<div css={badgeStyle} className="flex">
+							<div className="test-count pl-2">2/3</div>
+							<div className="hours-count">5 hrs</div>
 						</div>
 					</div>
 

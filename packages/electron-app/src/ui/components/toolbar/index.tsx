@@ -5,7 +5,7 @@ import { SelectBox } from "@dyson/components/molecules/Select/Select";
 import { Conditional } from "@dyson/components/layouts";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { Text } from "@dyson/components/atoms/text/Text";
-import { CrusherHammerIcon, DownIcon, LoadingIconV2, MoreIcon, NavigateBackIcon, NavigateRefreshIcon, SettingsIcon } from "../../icons";
+import { CrusherHammerIcon, DownIcon, DroppdownIconV2, LoadingIconV2, MoreIcon, NavigateBackIcon, NavigateRefreshIcon, RedDotIcon, SettingsIcon } from "../../icons";
 import { BrowserButton } from "../buttons/browser.button";
 import { useDispatch, batch, useSelector, useStore } from "react-redux";
 import { setDevice, setSiteUrl } from "electron-app/src/store/actions/recorder";
@@ -37,6 +37,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { MenuDropdown } from "../../layouts/modalContainer";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { ButtonDropdown } from "electron-app/src/_ui/components/buttonDropdown";
+import { DropdownIconSVG } from "@dyson/assets/icons";
 
 const DeviceItem = ({ label }) => {
 	return (
@@ -423,13 +424,18 @@ const Toolbar = (props: any) => {
 	);
 	const RightIconComponent = React.useMemo(
 		() => (
-			<SelectBox
-				selected={selectedDevice}
-				callback={handleChangeDevice}
-				className={"target-device-dropdown"}
-				css={selectBoxStyle}
-				values={recorderDevices}
-			/>
+			<div css={css`
+			font-family: Gilroy;
+			font-style: normal;
+			font-weight: 400;
+			font-size: 12.7rem;
+	
+			
+			color: #444444;
+			margin-right: 12rem;
+			`}>
+enter to submit
+			</div>
 		),
 		[selectedDevice, recorderDevices],
 	);
@@ -470,15 +476,27 @@ const Toolbar = (props: any) => {
 						disabled={false}
 					/>
 				</BrowserButton> */}
-				<MenuDropdown
-					isRecorder={true}
-					callback={handleMenuCallback}
-					css={css`
-						.crusher-hammer-icon {
-							margin-left: 20rem;
-						}
-					`}
-				/>
+				<div css={css`display: flex; align-items: center;`}>
+					<MenuDropdown
+						isRecorder={true}
+						callback={handleMenuCallback}
+						hideDropdown={true}
+						css={css`
+							.crusher-hammer-icon {
+								margin-left: 18rem;
+							}
+						`}
+					/>
+					<div css={css`display: flex; align-items: center; font-size: 13.5rem; color: #fff; margin-left: 9rem; font-family: Gilroy; font-weight: 400; margin-top: 2rem;`}>
+						<span css={css`font-size: 12rem; color: #606060;`}>tests/</span>
+						<div css={css`display: flex; align-items: center;`}>
+							<span css={css`margin-left: 5.75rem; color: #D2D2D2;`}>bunny-2012</span>
+							<DroppdownIconV2 css={css`width: 9rem; height: 6rem; margin-left: 7rem;`}/>
+						</div>
+						<RedDotIcon css={css`width: 6rem; height: 6rem; margin-left: 10rem;`}/>
+					</div>
+				</div>
+			
 				{/* <BrowserButton
 					className={"ml-24 go-back-button"}
 					css={css`
@@ -507,23 +525,26 @@ const Toolbar = (props: any) => {
 						disabled={false}
 					/>
 				</BrowserButton> */}
-				<div css={menuContainerStyle}>{showMenu}</div>
 				<div css={inputContainerStyle}>
-					<Input
-						placeholder="Enter URL to test"
-						id={"target-site-input"}
-						className={"target-site-input"}
-						css={inputStyle}
-						onReturn={handleUrlReturn}
-						isError={urlInputError.value}
-						initialValue={url}
-						ref={urlInputRef}
-						// leftIcon={LeftIconComponent}
-						rightIcon={RightIconComponent}
-					/>
-					<Conditional showIf={urlInputError.value}>
-						<span css={inputErrorMessageStyle}>{urlInputError.message}</span>
-					</Conditional>
+					<div css={css`	display: flex;
+	flex-direction: column;`}>
+						<Input
+										placeholder="Enter URL to test"
+										id={"target-site-input"}
+										className={"target-site-input"}
+										css={inputStyle}
+										onReturn={handleUrlReturn}
+										isError={urlInputError.value}
+										initialValue={url}
+										ref={urlInputRef}
+										// leftIcon={LeftIconComponent}
+										rightIcon={RightIconComponent}
+									/>
+									<Conditional showIf={urlInputError.value}>
+										<span css={inputErrorMessageStyle}>{urlInputError.message}</span>
+									</Conditional>
+					</div>
+			
 				</div>
 				<Conditional showIf={isRecorderInInitialState}>
 					<Button className={"ml-12"} onClick={handleUrlReturn.bind(this)} bgColor="tertiary-outline" css={buttonStyle}>
@@ -641,9 +662,10 @@ const hammerIconStyle = css`
 `;
 const inputContainerStyle = css`
 	position: relative;
+	margin-left: 7rem;
+	flex: 1;
 	display: flex;
-	flex-direction: column;
-	margin-left: 12rem;
+	justify-content: center;
 `;
 
 const inputErrorMessageStyle = css`
@@ -667,15 +689,16 @@ const containerStyle = css`
 	display: flex;
 	align-items: center;
 	padding: 8rem;
-	background-color: #111213;
+	background-color: #09090A;
 	padding: 5rem;
-	min-height: 60rem;
+	padding-left: 9rem;
+	min-height: 70rem;
 	position: relative;
 	z-index: 999;
 	padding-right: 24rem;
 `;
 const inputStyle = css`
-	height: 36rem;
+	height: 40rem;
 	.input__rightIconContainer {
 		right: 0px;
 
@@ -704,22 +727,26 @@ const inputStyle = css`
 		}
 	}
 	& > input {
-		width: 340rem;
-		font-family: Gilroy;
-		font-size: 14.6rem;
+		width: 359rem;
 		/* border: 1px solid #9462ff; */
 		outline-color: #9462ff;
 		outline-width: 1px;
 		box-sizing: border-box;
 		border-radius: 8rem 0px 0px 8rem;
-		color: rgba(255, 255, 255, 0.93);
 		height: 100%;
 		padding-left: 18rem;
 		padding-right: 110rem;
 
-		background: rgba(255, 255, 255, 0.02);
-		border: 1px solid #292929;
-		border-radius: 18px;
+		background: rgba(77, 77, 77, 0.2);
+		border: 0.5px solid rgba(55, 55, 55, 0.4);
+		border-radius: 10px;
+
+		font-family: Gilroy;
+		font-style: normal;
+		font-weight: 600;
+		font-size: 13rem;
+		color: rgba(255, 255, 255, 0.67);
+
 	}
 	}
 	.dropdown-box {

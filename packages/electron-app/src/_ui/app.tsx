@@ -254,24 +254,24 @@ const App = () => {
     const toolbarStyle = React.useMemo(() => { toolbarCss(recorderState.type === TRecorderState.CUSTOM_CODE_ON) }, [recorderState]);
 
     return (
-        <Wrapper figmaUrl={"https://www.figma.com/proto/MsJZCnY5NvrDF4kL1oczZq/Crusher-%7C-Aug?page-id=988%3A3439&node-id=988%3A3817&viewport=524%2C381%2C0.47&scaling=scale-down-width"}>
+        // <Wrapper figmaUrl={"https://www.figma.com/proto/MsJZCnY5NvrDF4kL1oczZq/Crusher-%7C-Aug?page-id=988%3A3439&node-id=988%3A3817&viewport=524%2C381%2C0.47&scaling=scale-down-width"}>
 
        
         <div>
             <div css={dragableStyle} className={"drag"}></div>
             <div css={contentStyle}>
-                {!!recorderInfo.device ? <Sidebar css={sidebarCss} /> : ""}
+               <Sidebar css={sidebarCss} />
                 <div css={bodyCss}>
                         <Toolbar css={toolbarStyle} />
                         <DeviceFrame css={deviceFrameContainerCss} />
-                        {isStatusBarVisible ? <StatusBar /> : ""}
+                        {/* {isStatusBarVisible ? <StatusBar /> : ""} */}
                 </div>
             </div>
 
             <Global styles={globalCss}/>
             <InfoOverLay />
         </div>
-        </Wrapper>
+        // </Wrapper>
     )
 };
 
@@ -324,7 +324,7 @@ const globalCss = css`
 `;
 const sidebarCss = css`
 	padding: 1rem;
-	width: 336rem;
+	width: 334rem;
 `;
 const bodyCss = css`
 	flex: 1;
@@ -336,9 +336,9 @@ const bodyCss = css`
 `;
 const toolbarCss = (isCUstomCodeOn: boolean) => {
     return css`
-        background-color: #111213;
+        background-color: #09090A;
         padding: 5rem;
-        min-height: 60rem;
+        min-height: 61rem;
         z-index: ${isCUstomCodeOn ? "-1" : "1"};
     `;
 }

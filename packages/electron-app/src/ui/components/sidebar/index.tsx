@@ -290,7 +290,7 @@ const containerStyle = css`
 	overflow: hidden;
 	position: relative;
 	z-index: 1000;
-	background-color: #111213;
+	background-color: #09090A;
 `;
 const gettingStartedContainerStyle = css`
 	background-color: #070709;

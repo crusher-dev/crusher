@@ -1,6 +1,6 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { BulbIcon, CrossIcon, CrusherHammerColorIcon, CrusherHammerIcon, InspectElementIcon, LoadingIconV2, MiniCrossIcon, SettingsIcon } from "../icons";
+import { BulbIcon, CrossIcon, CrusherHammerColorIcon, CrusherHammerIcon, InspectElementIcon, LoadingIconV2, LogoV2, MiniCrossIcon, SettingsIcon } from "../icons";
 import { shell } from "electron";
 import { DropdownIconSVG } from "@dyson/assets/icons";
 import { useNavigate } from "react-router-dom";
@@ -289,7 +289,7 @@ function ActionButtonDropdown({ setShowActionMenu, isRecorder, ...props }) {
 	);
 }
 
-export const MenuDropdown = ({ className, isRecorder, callback }) => {
+export const MenuDropdown = ({ className, isRecorder, hideDropdown, callback }) => {
 	const [showAppMenu, setShowAppMenu] = React.useState(false);
 
 	const handleCallback = React.useCallback(
@@ -315,8 +315,8 @@ export const MenuDropdown = ({ className, isRecorder, callback }) => {
 			`}
 		>
 			<div css={crusherDropdownContainerStyle}>
-				<CrusherHammerColorIcon className={"crusher-hammer-icon"} css={[logoStyle]} />
-				<DropdownIconSVG />
+				<LogoV2 className={"crusher-hammer-icon"} css={[logoStyle]} />
+				{ hideDropdown ? null : (<DropdownIconSVG />)}
 			</div>
 		</Dropdown>
 	);
@@ -446,10 +446,10 @@ const crusherDropdownContainerStyle = css`
 
 const logoStyle = css`
 	width: 23px;
-	height: 23px;
+	height: 24px;
 
 	rect {
-		fill: #5a5a5a !important;
+		fill: #292929 !important;
 	}
 `;
 

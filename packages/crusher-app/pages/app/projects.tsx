@@ -167,7 +167,7 @@ function ProjectCard({ project }) {
 					<div className="flex items-center justify-between">
 						<div className="flex items-center">
 							<Dolphin height={20} width={20} />
-							<TextBlock fontSize={17} color="#B6B6B6" weight="600" className="ml-10">
+							<TextBlock fontSize={16} color="#B6B6B6" weight="600" className="ml-10">
 								{name}
 							</TextBlock>
 						</div>

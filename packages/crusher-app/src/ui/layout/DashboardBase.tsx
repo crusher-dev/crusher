@@ -390,7 +390,7 @@ function Gear(props) {
 const menuItemCSS = css`
 	flex: 1;
 	:hover {
-		background: #000;
+		background: rgba(255, 255, 255, 0.05);
 		path {
 			fill: #bc66ff;
 		}

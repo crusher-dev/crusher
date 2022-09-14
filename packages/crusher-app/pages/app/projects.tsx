@@ -70,7 +70,7 @@ const projectItemContainer = css`
 
 const projectItem = css`
 	width: 100%;
-	height: 126rem;
+	height: 132rem;
 	width: 364rem;
 
 	border: 0.5px solid #1b1b1b;
@@ -162,7 +162,7 @@ function ProjectCard({ project }) {
 	const { id, name } = project;
 	return (
 		<Link href="/app/dashboard">
-			<div css={projectItem} className={"flex flex-col justify-between pr-18 px-24 py-16"}>
+			<div css={projectItem} className={"flex flex-col justify-between pr-18 pl-24 pt-16 pb-22"}>
 				<div>
 					<div className="flex items-center justify-between">
 						<div className="flex items-center">

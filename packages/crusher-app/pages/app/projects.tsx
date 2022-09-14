@@ -1,5 +1,5 @@
 import { css } from "@emotion/react";
-import React from "react";
+import React, { useMemo, useState } from "react";
 
 import { SidebarTopBarLayout } from "@ui/layout/DashboardBase";
 
@@ -13,6 +13,7 @@ import { Dolphin } from "@ui/containers/dashboard/icont";
 import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import { projectsAtom } from "@store/atoms/global/project";
 import Link from "next/link";
+import { Conditional } from "dyson/src/components/layouts";
 
 function GitIcon(props) {
 	return (
@@ -27,16 +28,61 @@ function GitIcon(props) {
 	);
 }
 
+function CloseIcon(props) {
+	return (
+		<svg width={18} height={18} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+			<path
+				fillRule="evenodd"
+				clipRule="evenodd"
+				d="M9 1.688a7.312 7.312 0 100 14.624A7.312 7.312 0 009 1.687zM7.71 6.915a.563.563 0 10-.795.795L8.205 9l-1.29 1.29a.563.563 0 10.795.795L9 9.795l1.29 1.29a.561.561 0 10.795-.795L9.795 9l1.29-1.29a.561.561 0 10-.795-.795L9 8.205l-1.29-1.29z"
+				fill="#B5B5B5"
+			/>
+		</svg>
+	);
+}
+
+const closeHover = css`
+	path {
+		fill: white;
+	}
+`;
+
 function Dashboard() {
 	usePageTitle("Dashboard");
 
 	const [projects] = useAtom(projectsAtom);
+	const [searchProject, setSearchProject] = useState("");
+
+	const onSearchChange = (e) => {
+		setSearchProject(e.target.value);
+	};
+
+	const filteredProject = useMemo(() => {
+		if (searchProject.length === 0) return projects;
+		return projects.filter(({ name }) => name.includes(searchProject));
+	}, [searchProject]);
 
 	return (
 		<SidebarTopBarLayout>
 			<div css={containerStyle} className=" pt-36 ">
 				<div className="flex items-center">
-					<Input css={newInputBoxCSS} size={"medium"} placeholder={"Search project"}></Input>
+					<Input
+						rightIcon={
+							<Conditional showIf={searchProject.length > 0}>
+								<CloseIcon
+									css={closeHover}
+									onClick={() => {
+										setSearchProject("");
+									}}
+								/>
+							</Conditional>
+						}
+						css={newInputBoxCSS}
+						value={searchProject}
+						onChange={onSearchChange.bind(this)}
+						size={"medium"}
+						placeholder={"Search project"}
+					></Input>
 					<Link href="/app/new-project">
 						<Button css={buttonCss} size="big-medium" className="ml-12">
 							+ new project
@@ -44,7 +90,7 @@ function Dashboard() {
 					</Link>
 				</div>
 				<div className="flex mt-36 flex-wrap" css={projectItemContainer}>
-					{projects.map((project) => (
+					{filteredProject.map((project) => (
 						<ProjectCard project={project} key={project?.id} />
 					))}
 				</div>
@@ -57,7 +103,7 @@ const projectItemContainer = css`
 	display: grid;
 	column-gap: 28px;
 	row-gap: 28px;
-	grid-template-columns: auto auto auto;
+	grid-template-columns: 1fr 1fr 1fr;
 `;
 
 const projectItem = css`

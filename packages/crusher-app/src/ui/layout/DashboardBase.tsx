@@ -362,15 +362,15 @@ function LeftSection() {
 							<TextBlock color="#BC66FF" fontSize={13} weight={600} id="invite" onClick={setInviteTeamMates.bind(this, true)}>
 								Invite
 							</TextBlock>
-							<TextBlock color="#3E3E3E" fontSize={12} className="mt-6">
-								Get +2 testing hrs
+							<TextBlock color="#3E3E3E" fontSize={12} className="mt-5">
+								get +2 testing hrs
 							</TextBlock>
 						</div>
 					</div>
 
 					<div className="flex justify-between mt-20">
 
-						<div className="flex items-center" css={feedbackCSS}>
+						<div className="flex items-center pt-1" css={feedbackCSS}>
 							<Chat className="mr-8" />
 							<TextBlock fontSize={12} color="#838383">
 								Give feedback
@@ -424,11 +424,14 @@ const inviteBoxCSS = css`
 `;
 
 const badgeStyle = css`
-	border: 0.5rem solid #414141;
+	border: 0.5rem solid #222225;
+	background: black;
 	.test-count,
 	.hours-count {
-		width: 44rem;
-		height: 24rem;
+
+		width: 48rem;
+		height: 28rem;
+	
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -439,7 +442,7 @@ const badgeStyle = css`
 		font-weight: 500;
 	}
 	.test-count {
-		border-right: 0.5rem solid #414141;
+		border-right: 0.5rem solid #222225;
 	}
 	// background: #171718;
 	:hover {

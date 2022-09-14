@@ -29,7 +29,6 @@ export const useLoadTempData = () => {
 	const queryString = asPath.split("?")?.[1];
 	const urlQuery = new URLSearchParams(queryString);
 	useEffect(() => {
-		console.log("URL query is", urlQuery.toString());
 		if (!urlQuery) return;
 		const tempTestId = urlQuery.get("temp_test_id");
 		const tempTestName = urlQuery.get("temp_test_name");
@@ -54,7 +53,7 @@ export const useLoadTempData = () => {
 				console.error("Request failed");
 			});
 		}
-		if(!!inviteCode) {
+		if (!!inviteCode) {
 			setInviteCode(inviteCode);
 		}
 		if (githubToken) {

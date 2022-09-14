@@ -5,8 +5,6 @@ import { SidebarTopBarLayout } from "@ui/layout/DashboardBase";
 
 import { usePageTitle } from "../../src/hooks/seo";
 import { useAtom } from "jotai";
-import { currentProjectSelector } from "../../src/store/selectors/getCurrentProject";
-import { userAtom } from "../../src/store/atoms/global/user";
 import Input from "dyson/src/components/atoms/input/Input";
 import { Button } from "dyson/src/components/atoms";
 import { Dolphin } from "@ui/containers/dashboard/icont";
@@ -47,7 +45,7 @@ const closeHover = css`
 	}
 `;
 
-function Dashboard() {
+export default function Dashboard() {
 	usePageTitle("Dashboard");
 
 	const [projects] = useAtom(projectsAtom);
@@ -81,7 +79,7 @@ function Dashboard() {
 						value={searchProject}
 						onChange={onSearchChange.bind(this)}
 						size={"medium"}
-						placeholder={"Search project"}
+						placeholder={"Search projects"}
 					></Input>
 					<Link href="/app/new-project">
 						<Button css={buttonCss} size="big-medium" className="ml-12">
@@ -196,7 +194,8 @@ const containerStyle = css`
 	color: #fff !important;
 `;
 
-export default Dashboard;
+
+
 function ProjectCard({ project }) {
 	const { id, name } = project;
 	return (

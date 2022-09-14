@@ -14,11 +14,9 @@ import { Dropdown } from "dyson/src/components/molecules/Dropdown";
 import { MenuItem } from "@components/molecules/MenuItem";
 import { EditionTypeEnum } from "@crusher-shared/types/common/general";
 import { AddSVG, HelpSVG, LayoutSVG, NewTabSVG, PlaySVG, TraySVG } from "@svg/dashboard";
-import { GithubSVG } from "@svg/social";
+
 import { MenuItemHorizontal, UserNTeam } from "@ui/containers/dashboard/UserNTeam";
-import { getEdition } from "@utils/helpers";
-import { loadCrisp, openChatBox } from "@utils/common/scriptUtils";
-import { addQueryParamToPath } from "@utils/common/url";
+
 
 import { appStateAtom, appStateItemMutator } from "../../store/atoms/global/appState";
 import { projectsAtom } from "../../store/atoms/global/project";
@@ -296,7 +294,7 @@ const leftMenu = [
 	{
 		icon: <Icon3 />,
 		label: "settings",
-		link: "/app/add_project",
+		link: "/app/add_project_1",
 	},
 ];
 
@@ -344,7 +342,7 @@ function LeftSection() {
 					{leftMenu.map((item) => {
 						const selected = item.link === route;
 						return (
-							<Link href={item.link}>
+							<Link href={item.link} key={item.link} >
 								<div className="flex items-center pl-8 mb-8" css={[menuItem, selected && selectedCSS]}>
 									<div css={iconCSS}>{item.icon}</div>
 									<span className="label">{item.label}</span>

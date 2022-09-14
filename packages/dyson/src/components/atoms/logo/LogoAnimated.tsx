@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { css, SerializedStyles } from "@emotion/react";
 
 export interface LogoProps {
@@ -17,9 +17,13 @@ const LogoDefaultProps = {};
 export const LogoAnimated: React.FC<LogoProps> = ({ ...props }) => {
 	const [showColor, setShowColour] = React.useState(false);
 
-	setTimeout(() => {
-		setShowColour(true);
-	}, 1500);
+	useEffect(() => {
+		const timer = setTimeout(() => {
+			setShowColour(true);
+		}, 1500);
+
+		return clearTimeout(timer)
+	}, [])
 	return (
 		<div css={animatedCSS} className="flex items-center justify-center flex-col">
 			<svg width={"150px"} height={"32px"} fill="none" className="logo-svg" xmlns="http://www.w3.org/2000/svg" {...props}>

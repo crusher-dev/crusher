@@ -287,14 +287,17 @@ const leftMenu = [
 	{
 		icon: <Menu />,
 		label: "projects",
+		link: "/app/projects",
 	},
 	{
 		icon: <Icon2 />,
 		label: "integrations",
+		link: "/app/add_project",
 	},
 	{
 		icon: <Icon3 />,
 		label: "settings",
+		link: "/app/add_project",
 	},
 ];
 
@@ -333,18 +336,21 @@ function NewPeople(props) {
 function LeftSection() {
 	const router = useRouter();
 	const [inviteTeammates, setInviteTeamMates] = useState(false);
+	const { route } = router;
 	return (
 		<div css={sidebar} className={"flex flex-col justify-between pb-18"}>
 			<UserNTeam />
 			<div className="flex flex-col justify-between h-full">
 				<div className="px-14 pt-36">
 					{leftMenu.map((item) => {
-						const selected = item.label === "projects";
+						const selected = item.link === route;
 						return (
-							<div className="flex items-center pl-8 mb-8" css={[menuItem, selected && selectedCSS]}>
-								<div css={iconCSS}>{item.icon}</div>
-								<span className="label">{item.label}</span>
-							</div>
+							<Link href={item.link}>
+								<div className="flex items-center pl-8 mb-8" css={[menuItem, selected && selectedCSS]}>
+									<div css={iconCSS}>{item.icon}</div>
+									<span className="label">{item.label}</span>
+								</div>
+							</Link>
 						);
 					})}
 				</div>
@@ -722,10 +728,10 @@ const projectsLabel = css`
 	height: 56rem;
 
 	.badge {
-		width: 31px;
-		height: 21px;
+		width: 32px;
+		height: 20px;
 		background: rgba(78, 78, 78, 0.06);
-		border: 0.5px solid #c275ff;
+		border: 1px solid #c275ff;
 		border-radius: 16px;
 		font-weight: 500;
 		color: #aaaaaa;

@@ -416,6 +416,7 @@ const inviteBoxCSS = css`
 `;
 
 const badgeStyle = css`
+	border: 0.5rem solid #414141;
 	.test-count,
 	.hours-count {
 		width: 44rem;
@@ -432,9 +433,9 @@ const badgeStyle = css`
 	.test-count {
 		border-right: 0.5rem solid #414141;
 	}
-	background: rgba(255, 255, 255, 0.08);
+	// background: #171718;
 	:hover {
-		background: rgba(255, 255, 255, 0.18);
+		background: #171718;
 	}
 	border-radius: 8px;
 	overflow: hidden;
@@ -729,34 +730,6 @@ const projectsLabel = css`
 		font-weight: 500;
 		color: #aaaaaa;
 		font-size: 12.5rem;
-	}
-`;
-
-const navLinkSquare = css`
-	height: 56rem;
-
-	div {
-		color: #d0d0d0;
-		font-size: 13.5rem;
-	}
-
-	.selected {
-		background: #23272e;
-		border-radius: 4px 4px 0 0;
-		height: 5px;
-		position: absolute;
-		width: 100%;
-		bottom: 0;
-	}
-
-	.nav-top-link {
-		padding-bottom: 4px;
-		border-radius: 4px;
-		padding-top: 4px;
-	}
-
-	.nav-top-link:hover {
-		background: rgba(255, 255, 255, 0.05);
 	}
 `;
 

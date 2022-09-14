@@ -164,7 +164,7 @@ const orgName = css`
 `;
 const userCard = css`
 	border-bottom: 0.5px solid #1b1b1b;
-	height: 56rem;
+	min-height: 56rem;
 `;
 
 const nameInitial = css`

@@ -314,21 +314,99 @@ function LeftSection() {
 	return (
 		<div css={sidebar} className={"flex flex-col justify-between pb-18"}>
 			<UserNTeam />
-			<div className="px-14 pt-36">
-				{leftMenu.map((item) => {
-					const selected = item.label === "projects";
-					return (
-						<div className="flex items-center pl-8 mb-8" css={[menuItem, selected && selectedCSS]}>
-							<div css={iconCSS}>{item.icon}</div>
-							<span className="label">{item.label}</span>
+			<div className="flex-col justify-between h-full">
+				<div className="px-14 pt-36">
+					{leftMenu.map((item) => {
+						const selected = item.label === "projects";
+						return (
+							<div className="flex items-center pl-8 mb-8" css={[menuItem, selected && selectedCSS]}>
+								<div css={iconCSS}>{item.icon}</div>
+								<span className="label">{item.label}</span>
+							</div>
+						);
+					})}
+				</div>
+
+				<div className="px-14">
+					<div css={leftBottomBar} className="w-full flex">
+						<div css={[menuItemCSS, border]} className="flex items-center justify-center">
+							<Gear />
 						</div>
-					);
-				})}
+						<div css={[menuItemCSS, border]} className="flex items-center justify-center">
+							<Book />
+						</div>
+						<div css={[menuItemCSS]} className="flex items-center justify-center">
+							<Slash />
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	);
 }
 
+function Slash(props) {
+	return (
+		<svg width={13} height={13} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+			<path d="M9.528 3.4a.722.722 0 00-1.022 0L3.4 8.506a.722.722 0 101.022 1.022L9.528 4.42a.722.722 0 000-1.021z" fill="#343336" />
+			<path
+				fillRule="evenodd"
+				clipRule="evenodd"
+				d="M0 2.167C0 .97.97 0 2.167 0h8.666C12.03 0 13 .97 13 2.167v8.666C13 12.03 12.03 13 10.833 13H2.167A2.167 2.167 0 010 10.833V2.167zm2.167-.723h8.666c.4 0 .723.324.723.723v8.666a.722.722 0 01-.723.723H2.167a.722.722 0 01-.723-.723V2.167c0-.4.324-.723.723-.723z"
+				fill="#343336"
+			/>
+		</svg>
+	);
+}
+
+function Book(props) {
+	return (
+		<svg width={9} height={14} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+			<path d="M1.418 11.137c-.784 0-1.418.498-1.418 1.1 0 .615.634 1.1 1.418 1.1h7.58c-.616-.656-.616-1.547 0-2.203h-7.58v.003z" fill="#222225" />
+			<path
+				d="M1.418 11.137c-.784 0-1.418.498-1.418 1.1 0 .615.634 1.1 1.418 1.1h7.58c-.616-.656-.616-1.547 0-2.203h-7.58v.003z"
+				fill="#FFFCFC"
+				fillOpacity={0.08}
+			/>
+			<path d="M1.102.052c-.634.19-1.1.89-1.1 1.737v9.315a2.08 2.08 0 011.1-.487V.052z" fill="#222225" />
+			<path d="M1.102.052c-.634.19-1.1.89-1.1 1.737v9.315a2.08 2.08 0 011.1-.487V.052z" fill="#FFFCFC" fillOpacity={0.08} />
+			<path d="M4.5 0v2.7l-1.092-.688L2.32 2.7V0h-.678v10.587H9V0H4.5z" fill="#222225" />
+			<path d="M4.5 0v2.7l-1.092-.688L2.32 2.7V0h-.678v10.587H9V0H4.5z" fill="#FFFCFC" fillOpacity={0.08} />
+		</svg>
+	);
+}
+
+function Gear(props) {
+	return (
+		<svg width={13} height={13} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+			<path
+				d="M.55 7.482l.851.005c.128.656.38 1.293.762 1.871l-.605.6a.553.553 0 00-.005.78l.653.662a.553.553 0 00.78.005l.605-.6c.573.388 1.208.65 1.863.783l-.005.852a.552.552 0 00.55.555l.928.005a.552.552 0 00.555-.55l.005-.851a5.183 5.183 0 001.871-.762l.6.605a.553.553 0 00.78.005l.662-.653a.553.553 0 00.005-.78l-.6-.605c.388-.573.65-1.208.783-1.863l.852.005a.552.552 0 00.555-.55L13 6.074a.552.552 0 00-.55-.555l-.851-.005a5.183 5.183 0 00-.762-1.871l.605-.6a.553.553 0 00.005-.78l-.653-.662a.553.553 0 00-.78-.005l-.605.6a5.153 5.153 0 00-1.863-.783L7.55.56a.552.552 0 00-.55-.555L6.074 0a.552.552 0 00-.555.55L5.51 1.4a5.145 5.145 0 00-1.871.762l-.6-.605a.553.553 0 00-.78-.005l-.659.653a.553.553 0 00-.005.78l.6.605a5.153 5.153 0 00-.783 1.863L.56 5.45a.552.552 0 00-.555.55L0 6.926a.553.553 0 00.55.555zM4.758 4.74a2.47 2.47 0 013.495.019 2.47 2.47 0 01-.018 3.495 2.47 2.47 0 01-3.496-.018A2.47 2.47 0 014.76 4.74z"
+				fill="#343336"
+			/>
+		</svg>
+	);
+}
+
+const menuItemCSS = css`
+	flex: 1;
+	:hover {
+		background: #000;
+		path {
+			fill: #bc66ff;
+		}
+	}
+`;
+
+const border = css`
+	border-right: 0.6px solid #222225;
+`;
+const leftBottomBar = css`
+	height: 28px;
+
+	border: 0.6px solid #222225;
+	border-radius: 8px;
+	overflow: hidden;
+`;
 const iconCSS = css`
 	width: 16rem;
 	height: 16rem;

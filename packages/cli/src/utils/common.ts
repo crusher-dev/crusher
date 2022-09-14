@@ -36,3 +36,10 @@ export const downloadFile = (url, path, bar): Promise<string> => {
       });
   });
 };
+
+const open = require('open');
+
+export const openUrl = async (url: string) => {
+  console.log("Opening this url: ", url);
+  await open(url);
+};

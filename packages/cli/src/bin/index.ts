@@ -1,10 +1,11 @@
 import chalk from 'chalk';
+import "../utils/inquirer-patch";
 import { execSync } from 'child_process';
 import EntryCommand from '../commands/index';
 import { loadUserInfoOnLoad } from '../utils/hooks';
 import { Message } from '../utils/messages';
 import { getProjectConfig, getProjectConfigPath } from '../utils/projectConfig';
-import { installCrusherRecorder, makeSureSetupIsCorrect } from '../utils/setup';
+import { askUserLogin, installCrusherRecorder, makeSureSetupIsCorrect } from '../utils/setup';
 import { getRecorderDistCommand } from '../utils/utils';
 const nodeVersion = process.version.match(/^v(\d+\.\d+)/)[1];
 
@@ -28,6 +29,7 @@ if (parseFloat(nodeVersion) >= 10.0) {
 	} else {
 		if (isDefaultCommand && !isHelpArg) {
 			new Promise(async () => {
+        const { token } = await askUserLogin();
 				// @Todo: Add support for flag token here
 				await loadUserInfoOnLoad({ token: undefined });
 				await installCrusherRecorder();

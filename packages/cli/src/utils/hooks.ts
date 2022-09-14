@@ -1,43 +1,60 @@
-import axios from 'axios';
-import chalk from 'chalk';
-import { isUserLoggedIn } from '.';
-import { getUserInfo, setUserInfo } from '../state/userInfo';
-import { resolveBackendServerUrl, resolveFrontendServerUrl } from '../utils/utils';
-import { getUserInfoFromToken } from './apiUtils';
-import { getAppConfig, initializeAppConfig, setAppConfig } from './appConfig';
+import { getUserInfoFromToken } from "./apiUtils";
+import { getAppConfig, initializeAppConfig, setAppConfig } from "./appConfig";
+import { getUserInfo, setUserInfo } from "../state/userInfo";
+import {
+	resolveBackendServerUrl,
+	resolveFrontendServerUrl,
+} from "../utils/utils";
+import axios from "axios";
+import chalk from "chalk";
+import { isUserLoggedIn } from ".";
+import yargs from "yargs";
+import { hideBin } from "yargs/helpers";
+
 const open = require('open');
 
 import ora from 'ora';
 
 /*
-    Crusher secret invite code. Don't share it with anyone🤫
+	Crusher secret invite code. Don't share it with anyone🤫
 */
 const secretInviteCode = 'crush';
+
+export const getDiscordInviteCode = () => {
+	const argv = yargs(hideBin(process.argv)).help(false).argv;
+	const commandsArr: Array<string> = argv["_"];
+
+	const shouldIgnoreParsing = argv["help"] || argv["h"] || commandsArr.some((cmd) => (["help", "login"].includes(cmd)));
+	if (shouldIgnoreParsing) return { shouldIgnore: true };
+	if (!argv["code"]) return;
+
+	return { code: argv["code"] };
+}
 
 /*
   Remove this after beta
 */
-const checkForDiscord = async () => {
-	const isCodeInCommandLine = process.argv.some((e) => {
-		return e.includes('--code=') && !['help', '--help', '-h'].includes(e);
-	});
-	const hasLoginFlag = process.argv.some((e) => e.includes('login'));
+export const checkForDiscord = async (shouldCheckForDiscord = true) => {
+	if (isUserLoggedIn()) return;
 
-	if (isUserLoggedIn() || isCodeInCommandLine) return;
+	const discordArgv = getDiscordInviteCode();
+	if (discordArgv?.shouldIgnore) return;
 
-	if (!isCodeInCommandLine && !hasLoginFlag) {
-		await console.log(chalk.green(`New to crusher?`));
+	if (!discordArgv?.code && shouldCheckForDiscord) {
+		await console.log(chalk.green(`New to crusher?`))
 
-		await console.log(`Get access code - ${chalk.green('https://discord.gg/dHZkSNXQrg')}`);
-		await console.log(`1.) Get access code on home screen`);
-		await console.log(`2.) Run command with access code`);
+		await console.log(`Get access code - ${chalk.green("https://discord.gg/dHZkSNXQrg")}`)
+		await console.log(`1.) Get access code on home screen`)
+		await console.log(`2.) Run command with access code`)
 
 		await console.log(`\n${chalk.yellow('Already have an account?')}
     run npx crusher-cli login \n`);
 
-		process.exit(0);
+		process.exit(0)
+	} else {
+		return discordArgv;
 	}
-};
+}
 
 const parseDiscordFlag = (flag: string) => {
 	if (!flag) return null;
@@ -49,42 +66,52 @@ const waitForUserLogin = async (): Promise<string> => {
 
 	// ask for discord code here?
 
-	const discordCode = parseDiscordFlag(
-		process.argv.find((i) => {
-			return i.includes('--code=');
-		}),
-	);
+	const discordCode = parseDiscordFlag(process.argv.find((i) => {
+		return i.includes("--code=");
+	}));
 
-	const loginKey = await axios.get(resolveBackendServerUrl('/cli/get.key')).then((res) => {
-		return res.data.loginKey;
-	});
+
+	const loginKey = await axios
+		.get(resolveBackendServerUrl("/cli/get.key"))
+		.then((res) => {
+			return res.data.loginKey;
+		});
 	const loginUrl = resolveFrontendServerUrl(`/login_sucessful?lK=${loginKey}&inviteCode=${discordCode}`);
+	await open(loginUrl)
+		.catch((err) => {
+			console.error(err);
+		});
 
-	await console.log('Login or create an account to create/sync tests⚡⚡. Opening a browser to sync test.\nOr open this link:');
+	const { token } = await waitForLogin(loginKey);
+	await console.log(
+		"Login or create an account to create/sync tests⚡⚡. Opening a browser to sync test.\nOr open this link:"
+	);
 	await console.log(`${loginUrl} \n`);
 
-	const spinner = ora('Waiting for login').start();
+	return token as string;
+};
 
-	await open(loginUrl).catch((err) => {
-		console.error(err);
-	});
+const waitForLogin = async (loginKey) => {
+	const spinner = ora('Waiting for login').start();
 
 	const token = await new Promise((resolve) => {
 		const interval = setInterval(async () => {
-			const loginKeyStatus = await axios.get(resolveBackendServerUrl(`/cli/status.key?loginKey=${loginKey}`)).then((res) => res.data);
-			if (loginKeyStatus.status === 'Validated') {
+			const loginKeyStatus = await axios
+				.get(resolveBackendServerUrl(`/cli/status.key?loginKey=${loginKey}`))
+				.then((res) => res.data);
+			if (loginKeyStatus.status === "Validated") {
 				clearInterval(interval);
 				resolve(loginKeyStatus.userToken);
 			}
 		}, 5000);
 	});
 
-	spinner.stop();
+	spinner.stop()
 
-	await console.log('\nLogin done!');
-	return token as string;
-};
+	await console.log("\nLogin completed! Let's ship high quality software fast⚡⚡");
 
+	return { token };
+}
 const loadUserInfoOnLoad = async function (options: { token?: string }) {
 	initializeAppConfig();
 
@@ -116,4 +143,4 @@ const loadUserInfoOnLoad = async function (options: { token?: string }) {
 	}
 };
 
-export { loadUserInfoOnLoad };
+export { loadUserInfoOnLoad, waitForLogin };

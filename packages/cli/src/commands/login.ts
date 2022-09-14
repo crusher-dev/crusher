@@ -1,7 +1,8 @@
-import chalk from 'chalk';
-import { Command } from 'commander';
-import { loadUserInfoOnLoad } from '../utils/hooks';
-import { getLoggedInUser, isUserLoggedIn } from '../utils/index';
+import { Command } from "commander";
+import { loadUserInfoOnLoad } from "../utils/hooks";
+import { getLoggedInUser } from "../utils/index";
+import { isUserLoggedIn } from "../utils/index";
+import { askUserLogin } from "../utils/setup";
 
 export default class CommandBase {
 	program: Command;
@@ -38,13 +39,13 @@ export default class CommandBase {
 
 		const loggedIn = isUserLoggedIn();
 		if (!loggedIn) {
+			if (!token)
+				await askUserLogin();
 			await loadUserInfoOnLoad({ token });
 		} else {
 			const loggedInUser = getLoggedInUser();
 			console.log(
-				`already logged in with ${chalk.cyan.bold(loggedInUser.email)}.\nuse another account, run ${chalk.magenta('logout')} and then ${chalk.magenta(
-					'login',
-				)}\n`,
+				`You're already logged in from ${loggedInUser.email}.\nTo login from different account, run crusher-cli logout and then crusher-cli login.`
 			);
 		}
 	}

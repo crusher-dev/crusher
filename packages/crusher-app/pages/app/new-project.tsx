@@ -1,5 +1,5 @@
 import { css } from "@emotion/react";
-import React from "react";
+import React, { useMemo } from "react";
 
 import { SidebarTopBarLayout } from "@ui/layout/DashboardBase";
 
@@ -7,12 +7,14 @@ import { usePageTitle } from "../../src/hooks/seo";
 import { useAtom } from "jotai";
 import { currentProjectSelector } from "../../src/store/selectors/getCurrentProject";
 import { userAtom } from "../../src/store/atoms/global/user";
+import { getOnboardingStepIndex } from "@utils/core/dashboard/onboardingUtils";
 import Input from "dyson/src/components/atoms/input/Input";
 import { Button } from "dyson/src/components/atoms";
 import { Dolphin } from "@ui/containers/dashboard/icont";
 import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import { projectsAtom } from "@store/atoms/global/project";
 import Link from "next/link";
+import NewProject from "@ui/containers/auth/newProject";
 
 function GitIcon(props) {
 	return (
@@ -30,27 +32,7 @@ function GitIcon(props) {
 function Dashboard() {
 	usePageTitle("Dashboard");
 
-	const [projects] = useAtom(projectsAtom);
-
-	return (
-		<SidebarTopBarLayout>
-			<div css={containerStyle} className=" pt-36 ">
-				<div className="flex items-center">
-					<Input css={newInputBoxCSS} size={"medium"} placeholder={"Search project"}></Input>
-					<Link href="/app/new-project">
-						<Button css={buttonCss} size="big-medium" className="ml-12">
-							+ new project
-						</Button>
-					</Link>
-				</div>
-				<div className="flex mt-36 flex-wrap" css={projectItemContainer}>
-					{projects.map((project) => (
-						<ProjectCard project={project} key={project?.id} />
-					))}
-				</div>
-			</div>
-		</SidebarTopBarLayout>
-	);
+	return <NewProject />;
 }
 
 const projectItemContainer = css`

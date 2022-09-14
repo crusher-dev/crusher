@@ -64,14 +64,14 @@ function App({ Component, pageProps }: AppProps<any>) {
 
 const preload = (
 	<React.Fragment>
-		<link rel="preload" as="font" href="/assets/fonts/CeraPro/Cera_Pro_Regular.woff2" as="font" crossorigin="anonymous" />
-		<link rel="preload" as="font" href="/assets/fonts/CeraPro/Cera_Pro_Black.woff2" as="font" crossorigin="anonymous" />
-		<link rel="preload" as="font" href="/assets/fonts/CeraPro/Cera_Pro_Bold.woff2" as="font" crossorigin="anonymous" />
-		<link rel="preload" as="font" href="/assets/fonts/Gilroy/Gilroy-Regular.woff2" as="font" crossorigin="anonymous" />
-		<link rel="preload" as="font" href="/assets/fonts/Gilroy/Gilroy-Medium.woff2" as="font" crossorigin="anonymous" />
-		<link rel="preload" as="font" href="/assets/fonts/Gilroy/Gilroy-SemiBold.woff2" as="font" crossorigin="anonymous" />
-		<link rel="preload" as="font" href="/assets/fonts/Gilroy/Gilroy-Bold.woff2" as="font" crossorigin="anonymous" />
-		<link rel="preload" as="font" href="/assets/fonts/Gilroy/Gilroy-ExtraBold.woff2" as="font" crossorigin="anonymous" />
+		<link rel="preload" as="font" href="/assets/fonts/CeraPro/Cera_Pro_Regular.woff2" as="font" crossOrigin="anonymous" />
+		<link rel="preload" as="font" href="/assets/fonts/CeraPro/Cera_Pro_Black.woff2" as="font" crossOrigin="anonymous" />
+		<link rel="preload" as="font" href="/assets/fonts/CeraPro/Cera_Pro_Bold.woff2" as="font" crossOrigin="anonymous" />
+		<link rel="preload" as="font" href="/assets/fonts/Gilroy/Gilroy-Regular.woff2" as="font" crossOrigin="anonymous" />
+		<link rel="preload" as="font" href="/assets/fonts/Gilroy/Gilroy-Medium.woff2" as="font" crossOrigin="anonymous" />
+		<link rel="preload" as="font" href="/assets/fonts/Gilroy/Gilroy-SemiBold.woff2" as="font" crossOrigin="anonymous" />
+		<link rel="preload" as="font" href="/assets/fonts/Gilroy/Gilroy-Bold.woff2" as="font" crossOrigin="anonymous" />
+		<link rel="preload" as="font" href="/assets/fonts/Gilroy/Gilroy-ExtraBold.woff2" as="font" crossOrigin="anonymous" />
 	</React.Fragment>
 );
 

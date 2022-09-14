@@ -488,6 +488,7 @@ function External(props) {
 }
 
 export const SidebarTopBarLayout = ({ children, noContainerWidth = false, hideSidebar = false, setContainerWidth = true }) => {
+	const [projects] = useAtom(projectsAtom);
 	return (
 		<div className={"flex"} css={background}>
 			<Conditional showIf={!hideSidebar}>
@@ -499,7 +500,7 @@ export const SidebarTopBarLayout = ({ children, noContainerWidth = false, hideSi
 					<div className="flex items-center h-full">
 						<div css={projectsLabel} className={"flex items-center w-full"}>
 							<span>Projects</span>
-							<span className="badge flex items-center justify-center pt-1">12</span>
+							<span className="badge flex items-center justify-center pt-1">{projects.length}</span>
 						</div>
 
 						<a href="https://docs.crusher.dev" target="_blank">
@@ -555,7 +556,7 @@ const projectsLabel = css`
 		border-radius: 16px;
 		font-weight: 500;
 		color: #aaaaaa;
-		font-size
+		font-size: 12.5rem;
 	}
 `;
 

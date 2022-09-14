@@ -313,7 +313,7 @@ function HelpNSupport() {
 
 function Chat(props) {
 	return (
-		<svg width={14} height={14} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+		<svg width={14} height={14} viewBox={"0 0 14 14"} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<path
 				d="M12.17 1H1.83c-.7 0-1.292.6-1.292 1.31v7.2c0 .709.592 1.308 1.293 1.308h3.135l1.874 2.11a.214.214 0 00.32 0l1.874-2.11h3.135c.7 0 1.292-.6 1.292-1.309v-7.2C13.461 1.6 12.87 1 12.17 1z"
 				fill="#838383"
@@ -324,7 +324,7 @@ function Chat(props) {
 
 function NewPeople(props) {
 	return (
-		<svg width={13} height={13} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+		<svg width={12} height={12} viewBox={"0 0 13 13"} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<path
 				d="M4.776 7.97c2.59 0 4.777.426 4.777 2.072 0 1.646-2.2 2.058-4.777 2.058C2.186 12.1 0 11.673 0 10.028 0 8.382 2.2 7.97 4.776 7.97zm6.05-4.786c.316 0 .572.261.572.58v.75h.766c.316 0 .573.26.573.58 0 .32-.257.581-.573.581h-.766v.75c0 .32-.256.58-.572.58a.578.578 0 01-.573-.58v-.75h-.765a.577.577 0 01-.572-.58c0-.32.256-.581.572-.581h.765v-.75c0-.319.257-.58.573-.58zM4.776 0c1.755 0 3.16 1.424 3.16 3.201 0 1.777-1.405 3.202-3.16 3.202-1.754 0-3.16-1.425-3.16-3.202S3.022 0 4.776 0z"
 				fill="#BC66FF"

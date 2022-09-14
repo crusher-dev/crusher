@@ -29,7 +29,7 @@ const ActionsList = ({
 				<ActionHeadingIcon  css={css`width: 12rem; height: 12rem; margin-top: 1rem; margin-left: -0.5rem; `} />
 				<div css={css`margin-left: 8.5rem; display: flex; flex: 1; flex-direction: column;`}>
 					<div css={actionTitleCss}>{title}</div>
-					<div css={actionDescriptionCss}>action for element</div>
+					<div css={actionDescriptionCss}>actions for element</div>
 				</div>
 				<PlayIconV3 css={playIconCss} />
 			</div>
@@ -37,7 +37,7 @@ const ActionsList = ({
 				{children &&
 					React.Children.map(children, (child: any, index) =>
 						React.cloneElement(child, {
-							style: { ...child.props.style, borderBottom: index < (children as any).length - 1 ? "1rem solid #323636" : "none" },
+							style: { ...child.props.style},
 						}),
 					)}
 			</div>
@@ -106,19 +106,22 @@ const moreStyle = css`
 	color: #af71ff;
 `;
 const actionItemContainer = css`
-	border: 1rem solid #292929;
 	margin: 8rem 0rem;
-	border-radius: 8rem;
-	background: #161818;
+	display: grid;
+	grid-template-columns: auto auto;
+	padding: 5rem 35rem;
+	row-gap: 13rem;
 `;
 const actionItem = css`
-	padding: 10rem 14rem 9rem 16rem;
-	font-family: Gilroy;
-	font-size: 13rem;
-
+	font-family: 'Gilroy';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 12rem;
+	color: #7C7C7C;
 	cursor: default;
+
 	:hover {
-		background-color: #32363678;
+		color: #fff;
 	}
 `;
 

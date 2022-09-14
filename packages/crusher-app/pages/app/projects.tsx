@@ -13,6 +13,8 @@ import Input from "dyson/src/components/atoms/input/Input";
 import { Button } from "dyson/src/components/atoms";
 import { Dolphin } from "@ui/containers/dashboard/icont";
 import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
+import { projectsAtom } from "@store/atoms/global/project";
+import Link from "next/link";
 
 function GitIcon(props) {
 	return (
@@ -30,12 +32,15 @@ function GitIcon(props) {
 function Dashboard() {
 	usePageTitle("Dashboard");
 
+	const [projects] = useAtom(projectsAtom);
 	const [project] = useAtom(currentProjectSelector);
 	const [user] = useAtom(userAtom);
 
 	const onboardingIndex = useMemo(() => {
 		return getOnboardingStepIndex(project, user);
 	}, [project, user]);
+
+	console.log(projects);
 
 	return (
 		<SidebarTopBarLayout>
@@ -47,8 +52,8 @@ function Dashboard() {
 					</Button>
 				</div>
 				<div className="flex mt-36 flex-wrap" css={projectItemContainer}>
-					{[...Array(10).keys()].map((i) => (
-						<ProjectCard />
+					{projects.map((project) => (
+						<ProjectCard project={project} key={project?.id} />
 					))}
 				</div>
 			</div>
@@ -66,12 +71,23 @@ const projectItemContainer = css`
 const projectItem = css`
 	width: 100%;
 	height: 126rem;
-	flex: 1;
+	width: 364rem;
 
 	border: 0.5px solid #1b1b1b;
 	border-radius: 14px;
 
+	.open {
+		visibility: hidden;
+		width: 46px;
+		height: 25px;
+
+		background: #212121;
+		border-radius: 7px;
+	}
 	:hover {
+		.open {
+			visibility: visible;
+		}
 		background: rgba(23, 23, 23, 0.42);
 	}
 `;
@@ -142,23 +158,30 @@ const containerStyle = css`
 `;
 
 export default Dashboard;
-function ProjectCard() {
+function ProjectCard({ project }) {
+	const { id, name } = project;
 	return (
-		<div css={projectItem} className={"flex flex-col justify-between py-16 px-24"}>
-			<div>
-				<div className="flex items-center">
-					<Dolphin height={20} width={20} />
-					<TextBlock fontSize={17} color="#B6B6B6" weight="700" className="ml-10">
-						Crusher
+		<Link href="/app/dashboard">
+			<div css={projectItem} className={"flex flex-col justify-between pr-18 px-24 py-16"}>
+				<div>
+					<div className="flex items-center justify-between">
+						<div className="flex items-center">
+							<Dolphin height={20} width={20} />
+							<TextBlock fontSize={17} color="#B6B6B6" weight="700" className="ml-10">
+								{name}
+							</TextBlock>
+						</div>
+						<div className="open flex items-center justify-center">Open</div>
+					</div>
+
+					<TextBlock fontSize={12.6} color="#B6B6B6" className="mt-11">
+						Add github action
 					</TextBlock>
 				</div>
-				<TextBlock fontSize={12.6} color="#B6B6B6" className="mt-11">
-					Add github action
-				</TextBlock>
+				<div className="flex items-center">
+					<GitIcon className="mr-8" /> git not linked
+				</div>
 			</div>
-			<div className="flex items-center">
-				<GitIcon className="mr-8" /> git not linked
-			</div>
-		</div>
+		</Link>
 	);
 }

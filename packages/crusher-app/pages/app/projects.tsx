@@ -63,15 +63,15 @@ function Dashboard() {
 
 const projectItemContainer = css`
 	display: grid;
-	column-gap: 20px;
-	row-gap: 26px;
+	column-gap: 28px;
+	row-gap: 28px;
 	grid-template-columns: auto auto auto;
 `;
 
 const projectItem = css`
 	width: 100%;
 	height: 132rem;
-	width: 364rem;
+	width: 360rem;
 
 	border: 0.5px solid #1b1b1b;
 	border-radius: 14px;

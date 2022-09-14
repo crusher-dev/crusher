@@ -26,11 +26,10 @@ import { buildFiltersAtom } from "../../store/atoms/pages/buildPage";
 import { updateMeta } from "../../store/mutators/metaData";
 import { PROJECT_META_KEYS, USER_META_KEYS } from "@constants/USER";
 import { handleTestRun } from "@utils/core/testUtils";
-import { Tooltip } from "dyson/src/components/atoms/tooltip/Tooltip";
+
 import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import { Global } from "@emotion/react";
 
-const Download = dynamic(() => import("@ui/containers/dashboard/Download"));
 const AddProject = dynamic(() => import("@ui/containers/dashboard/AddProject"));
 const InviteMembers = dynamic(() => import("@ui/containers/dashboard/InviteMember"));
 
@@ -287,14 +286,17 @@ const leftMenu = [
 	{
 		icon: <Menu />,
 		label: "projects",
+		link: "/app/projects",
 	},
 	{
 		icon: <Icon2 />,
 		label: "integrations",
+		link: "/app/add_project",
 	},
 	{
 		icon: <Icon3 />,
 		label: "settings",
+		link: "/app/add_project",
 	},
 ];
 
@@ -310,10 +312,10 @@ function HelpNSupport() {
 
 function Chat(props) {
 	return (
-		<svg width={14} height={14} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+		<svg width={14} height={14} viewBox={"0 0 14 14"} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<path
 				d="M12.17 1H1.83c-.7 0-1.292.6-1.292 1.31v7.2c0 .709.592 1.308 1.293 1.308h3.135l1.874 2.11a.214.214 0 00.32 0l1.874-2.11h3.135c.7 0 1.292-.6 1.292-1.309v-7.2C13.461 1.6 12.87 1 12.17 1z"
-				fill="#B0B0B0"
+				fill="#838383"
 			/>
 		</svg>
 	);
@@ -321,7 +323,7 @@ function Chat(props) {
 
 function NewPeople(props) {
 	return (
-		<svg width={13} height={13} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+		<svg width={12} height={12} viewBox={"0 0 13 13"} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<path
 				d="M4.776 7.97c2.59 0 4.777.426 4.777 2.072 0 1.646-2.2 2.058-4.777 2.058C2.186 12.1 0 11.673 0 10.028 0 8.382 2.2 7.97 4.776 7.97zm6.05-4.786c.316 0 .572.261.572.58v.75h.766c.316 0 .573.26.573.58 0 .32-.257.581-.573.581h-.766v.75c0 .32-.256.58-.572.58a.578.578 0 01-.573-.58v-.75h-.765a.577.577 0 01-.572-.58c0-.32.256-.581.572-.581h.765v-.75c0-.319.257-.58.573-.58zM4.776 0c1.755 0 3.16 1.424 3.16 3.201 0 1.777-1.405 3.202-3.16 3.202-1.754 0-3.16-1.425-3.16-3.202S3.022 0 4.776 0z"
 				fill="#BC66FF"
@@ -333,18 +335,21 @@ function NewPeople(props) {
 function LeftSection() {
 	const router = useRouter();
 	const [inviteTeammates, setInviteTeamMates] = useState(false);
+	const { route } = router;
 	return (
 		<div css={sidebar} className={"flex flex-col justify-between pb-18"}>
 			<UserNTeam />
 			<div className="flex flex-col justify-between h-full">
 				<div className="px-14 pt-36">
 					{leftMenu.map((item) => {
-						const selected = item.label === "projects";
+						const selected = item.link === route;
 						return (
-							<div className="flex items-center pl-8 mb-8" css={[menuItem, selected && selectedCSS]}>
-								<div css={iconCSS}>{item.icon}</div>
-								<span className="label">{item.label}</span>
-							</div>
+							<Link href={item.link}>
+								<div className="flex items-center pl-8 mb-8" css={[menuItem, selected && selectedCSS]}>
+									<div css={iconCSS}>{item.icon}</div>
+									<span className="label">{item.label}</span>
+								</div>
+							</Link>
 						);
 					})}
 				</div>
@@ -352,11 +357,14 @@ function LeftSection() {
 				<div className="px-16">
 					<div className="flex" css={inviteBoxCSS}>
 						<NewPeople />
+						<Conditional showIf={inviteTeammates}>
+							<InviteMembers onClose={setInviteTeamMates.bind(this, false)} />
+						</Conditional>
 						<div className="ml-6">
-							<TextBlock color="#BC66FF" fontSize={14} weight={600} id="invite">
+							<TextBlock color="#BC66FF" fontSize={13} weight={600} id="invite" onClick={setInviteTeamMates.bind(this, true)}>
 								Invite
 							</TextBlock>
-							<TextBlock color="#3E3E3E" fontSize={12} className="mt-4">
+							<TextBlock color="#3E3E3E" fontSize={12} className="mt-6">
 								Get +2 testing hrs
 							</TextBlock>
 						</div>
@@ -366,8 +374,8 @@ function LeftSection() {
 
 						<div className="flex items-center" css={feedbackCSS}>
 							<Chat className="mr-8" />
-							<TextBlock fontSize={13} color="#B0B0B0">
-								Give Feedback
+							<TextBlock fontSize={12} color="#838383">
+								Give feedback
 							</TextBlock>
 						</div>
 
@@ -724,10 +732,10 @@ const projectsLabel = css`
 	height: 56rem;
 
 	.badge {
-		width: 31px;
-		height: 21px;
+		width: 32px;
+		height: 20px;
 		background: rgba(78, 78, 78, 0.06);
-		border: 0.5px solid #c275ff;
+		border: 1px solid #c275ff;
 		border-radius: 16px;
 		font-weight: 500;
 		color: #aaaaaa;

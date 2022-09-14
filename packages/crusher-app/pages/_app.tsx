@@ -41,6 +41,8 @@ function App({ Component, pageProps }: AppProps<any>) {
 				<meta name="referrer" content="origin" />
 				<meta name="viewport" content="initial-scale=1.0, width=device-width" />
 				<style id="fonts">{fontCSS}</style>
+				{preload}
+				
 			</Head>
 			<SWRConfig
 				value={{
@@ -60,6 +62,18 @@ function App({ Component, pageProps }: AppProps<any>) {
 		</>
 	);
 }
+
+const preload = (
+	<React.Fragment>
+			<link rel="preload" as="font" href="/assets/fonts/CeraPro/Cera_Pro_Black.woff2"/>
+	<link rel="preload" as="font" href="/assets/fonts/CeraPro/Cera_Pro_Bold.woff2"/>
+    <link rel="preload" as="font" href="/assets/fonts/Gilroy/Gilroy-Regular.woff2"/>
+	<link rel="preload" as="font" href="/assets/fonts/Gilroy/Gilroy-Medium.woff2"/>
+	<link rel="preload" as="font" href="/assets/fonts/Gilroy/Gilroy-SemiBold.woff2"/>
+	<link rel="preload" as="font" href="/assets/fonts/Gilroy/Gilroy-Bold.woff2"/>
+	<link rel="preload" as="font" href="/assets/fonts/Gilroy/Gilroy-ExtraBold.woff2"/>
+		</React.Fragment>
+)
 
 const fontCSS = `
 @font-face {

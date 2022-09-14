@@ -43,9 +43,9 @@ export default function NewProject() {
 								</TextBlock>
 							</div>
 							<div className="wexdsf-frame420">
-								<span className="run-headline06 flex items-center">
+								<span className="run-headline06 flex items-center " css={commandBox}>
 									<span className="next-sign mr-8">&gt;</span>
-									<TextBlock color="#acec6d" weight={"700"} fontSize={17.5}>
+									<TextBlock color="#acec6d" weight={"700"} fontSize={17.5} className="command">
 										npx crusher-cli
 									</TextBlock>
 								</span>
@@ -246,6 +246,16 @@ export default function NewProject() {
 	);
 }
 
+const commandBox = css`
+	cursor: text;
+	.command {
+		-moz-user-select: text;
+		-khtml-user-select: text;
+		-webkit-user-select: text;
+		-ms-user-select: text;
+		user-select: text;
+	}
+`;
 const videoCSS = css`
 	:hover {
 		.video-name {

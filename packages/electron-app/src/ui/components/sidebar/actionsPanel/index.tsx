@@ -76,7 +76,7 @@ const ActionsPanel = ({ className, ...props }: { className?: any }) => {
 				<Conditional showIf={!selected}>
 					<Conditional showIf={!selectedElement}>
 						{/* Non-Element Actions */}
-						<InspectModeAction />
+						{/* <InspectModeAction /> */}
 						<PageActions />
 						<TemplateActions />
 					</Conditional>
@@ -116,7 +116,6 @@ const headerText = css`
 `;
 const actionScrollContainer = css`
 	height: 100%;
-	padding: 26rem;
 	padding-top: 0rem;
 	overflow-y: auto;
 `;

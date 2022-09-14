@@ -688,7 +688,39 @@ const RedDotIcon = (props) => (
 	>
 	  <rect x={0.851} y={0.5} width={5} height={5} rx={2.5} fill="#FF506F" />
 	</svg>
+);
+
+const ActionHeadingIcon = (props) => (
+	<svg
+	  viewBox={"0 0 12 10"}
+	  fill="none"
+	  xmlns="http://www.w3.org/2000/svg"
+	  {...props}
+	>
+	  <path
+		fillRule="evenodd"
+		clipRule="evenodd"
+		d="M1.125.125a.375.375 0 1 0 0 .75H1.5v5.25a1.5 1.5 0 0 0 1.5 1.5h.605l-.586 1.757a.375.375 0 0 0 .712.236l.165-.493h4.208l.166.493a.375.375 0 0 0 .71-.236l-.585-1.757H9a1.5 1.5 0 0 0 1.5-1.5V.875h.375a.375.375 0 0 0 0-.75h-9.75Zm3.27 7.5h3.21l.25.75h-3.71l.25-.75Zm4.043-4.498a.375.375 0 1 0-.376-.649 6.405 6.405 0 0 0-1.778 1.525l-.769-.768a.375.375 0 0 0-.53 0l-1.5 1.5a.375.375 0 1 0 .53.53L5.25 4.03l.809.809a.375.375 0 0 0 .572-.051 5.656 5.656 0 0 1 1.806-1.66Z"
+		fill="#838383"
+	  />
+	</svg>
+);
+
+
+const PlayIconV3 = (props) => (
+	<svg
+	  viewBox={"0 0 6 8"}
+	  fill="none"
+	  xmlns="http://www.w3.org/2000/svg"
+	  {...props}
+	>
+	  <path
+		d="M.667 7.726V.263c0-.21.289-.358.489-.19l4.71 3.647c.178.127.178.4 0 .527l-4.71 3.69c-.2.147-.49.02-.49-.211Z"
+		fill="#708AEC"
+	  />
+	</svg>
   )
+  
 
 export {
 	CrusherIcon,
@@ -732,5 +764,7 @@ export {
 	PlayIcon,
 	LogoV2,
 	DroppdownIconV2,
-	RedDotIcon
+	RedDotIcon,
+	ActionHeadingIcon,
+	PlayIconV3
 };

@@ -547,7 +547,7 @@ enter to submit
 			
 				</div>
 				<Conditional showIf={isRecorderInInitialState}>
-					<Button className={"ml-12"} onClick={handleUrlReturn.bind(this)} bgColor="tertiary-outline" css={buttonStyle}>
+					<Button onClick={handleUrlReturn.bind(this)} bgColor="tertiary-outline" css={buttonStyle}>
 						Start
 					</Button>
 				</Conditional>
@@ -662,7 +662,6 @@ const hammerIconStyle = css`
 `;
 const inputContainerStyle = css`
 	position: relative;
-	margin-left: 7rem;
 	flex: 1;
 	display: flex;
 	justify-content: center;
@@ -695,7 +694,7 @@ const containerStyle = css`
 	min-height: 70rem;
 	position: relative;
 	z-index: 999;
-	padding-right: 24rem;
+	padding-right: 18rem;
 `;
 const inputStyle = css`
 	height: 40rem;
@@ -761,7 +760,7 @@ const buttonStyle = css`
 	font-size: 14rem;
 	box-sizing: border-box;
 	border-radius: 4rem;
-	width: 93rem;
+    width: 77rem;
 	height: 36rem;
 `;
 

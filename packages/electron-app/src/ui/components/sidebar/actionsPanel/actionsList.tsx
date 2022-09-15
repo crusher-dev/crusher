@@ -29,7 +29,7 @@ const ActionsList = ({
 				<ActionHeadingIcon  css={css`width: 12rem; height: 12rem; margin-top: 1rem; margin-left: -0.5rem; `} />
 				<div css={css`margin-left: 8.5rem; display: flex; flex: 1; flex-direction: column;`}>
 					<div css={actionTitleCss}>{title}</div>
-					<div css={actionDescriptionCss}>actions for element</div>
+					<div css={actionDescriptionCss}>actions for page</div>
 				</div>
 				<PlayIconV3 css={playIconCss} />
 			</div>

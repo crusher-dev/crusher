@@ -14,7 +14,7 @@ import { IDeepLinkAction } from "../types";
 import { goFullScreen, performGetRecorderTestLogs, performReplayTest, performReplayTestUrlAction, performSaveLocalBuild, performSteps, resetStorage } from "../ui/commands/perform";
 import DeviceFrame from "../ui/components/device-frame";
 import { InfoOverLay } from "../ui/components/overlays/infoOverlay";
-import Sidebar from "../ui/components/sidebar";
+import {Sidebar} from "./screens/recorder/components/sidebar";
 import { StatusBar } from "../ui/components/status-bar";
 import { sendSnackBarEvent } from "../ui/components/toast";
 import Toolbar from "../ui/components/toolbar";

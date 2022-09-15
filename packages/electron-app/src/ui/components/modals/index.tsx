@@ -1,7 +1,7 @@
 import React from "react";
-import { TElementActionsEnum } from "../sidebar/actionsPanel/elementActions";
+import { TElementActionsEnum } from "../../../_ui/screens/recorder/components/sidebar/actionsPanel/elementActions";
 import { AssertElementModal } from "./element/assertElementModal";
-import { TTopLevelActionsEnum } from "../sidebar/actionsPanel/pageActions";
+import { TTopLevelActionsEnum } from "../../../_ui/screens/recorder/components/sidebar/actionsPanel/pageActions";
 import { CustomCodeModal } from "./page/customCodeModal";
 import { RunAfterTestModal } from "./page/runAfterTestModal";
 import { SeoModalContent } from "./page/seoModal";

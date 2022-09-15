@@ -14,9 +14,9 @@ import {
 } from "electron-app/src/ui/commands/perform";
 import { setSelectedElement } from "electron-app/src/store/actions/recorder";
 import { useTour } from "@reactour/tour";
-import { emitShowModal } from "../../modals";
+import { emitShowModal } from "../../../../../../ui/components/modals";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
-import { sendSnackBarEvent } from "../../toast";
+import { sendSnackBarEvent } from "../../../../../../ui/components/toast";
 
 export enum TElementActionsEnum {
 	CLICK = "CLICK",

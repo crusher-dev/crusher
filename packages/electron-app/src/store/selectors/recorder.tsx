@@ -1,5 +1,6 @@
 import { getDeviceFromId } from "../../devices";
 import { iReduxState } from "../reducers";
+import { TRecorderState } from "../reducers/recorder";
 
 export const getRecorderInfo = (state: iReduxState) => ({
 	url: state.recorder.currentUrl,
@@ -18,6 +19,12 @@ export const getSelectedElement = (state: iReduxState) => state.recorder.selecte
 export const getSavedSteps = (state: iReduxState) => state.recorder.savedSteps;
 
 export const getRecorderState = (state: iReduxState) => state.recorder.state;
+export const getIsInRecordingSession = (state: iReduxState) => {
+    return !!getRecorderInfo(state).device ;
+}
+export const getIsCustomCodeOn = (state: iReduxState) => {
+	return getRecorderState(state).type === TRecorderState.CUSTOM_CODE_ON;
+}
 
 export const isTestVerified = (state: iReduxState) => state.recorder.isVerified;
 

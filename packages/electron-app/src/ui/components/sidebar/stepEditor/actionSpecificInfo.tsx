@@ -10,8 +10,8 @@ import { sendSnackBarEvent } from "../../toast";
 import { SELECTOR_TYPE } from "unique-selector/src/constants";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { emitShowModal } from "../../modals";
-import { TTopLevelActionsEnum } from "../actionsPanel/pageActions";
-import { TElementActionsEnum } from "../actionsPanel/elementActions";
+import { TTopLevelActionsEnum } from "../../../../_ui/screens/recorder/components/sidebar/actionsPanel/pageActions";
+import { TElementActionsEnum } from "../../../../_ui/screens/recorder/components/sidebar/actionsPanel/elementActions";
 interface IActionSpecificInfoProps {
 	action: iAction;
 	actionIndex: number;

@@ -2,11 +2,11 @@ import React from "react";
 import { css } from "@emotion/react";
 import { ActionsList, ActionsListItem } from "./actionsList";
 import { performTakePageScreenshot } from "electron-app/src/ui/commands/perform";
-import { emitShowModal } from "../../modals";
+import { emitShowModal } from "../../../../../../ui/components/modals";
 import { getRecorderState } from "electron-app/src/store/selectors/recorder";
 import { useStore } from "react-redux";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
-import { sendSnackBarEvent } from "../../toast";
+import { sendSnackBarEvent } from "../../../../../../ui/components/toast";
 
 export enum TTopLevelActionsEnum {
 	VIEWPORT_SCREENSHOT = "TAKE_VIEWPORT_SCREENSHOT",

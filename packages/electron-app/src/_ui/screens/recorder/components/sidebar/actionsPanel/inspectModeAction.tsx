@@ -2,7 +2,7 @@ import { css } from "@emotion/react";
 import { MouseIcon } from "electron-app/src/ui/icons";
 import React from "react";
 import { ActionsList, ActionsListItem } from "./actionsList";
-import { turnOnInspectMode } from "../../../commands/perform";
+import { turnOnInspectMode } from "../../../../../../ui/commands/perform";
 import { useTour } from "@reactour/tour";
 
 const InspectModeAction = ({ className, ...prosp }: any) => {

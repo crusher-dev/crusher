@@ -9,8 +9,8 @@ import { ObjectInspector, TableInspector, chromeDark, ObjectRootLabel, ObjectLab
 import { BrowserButton } from "../buttons/browser.button";
 import { CustomCodeModal } from "../modals/page/customCodeModal";
 import { modalEmitter } from "../modals";
-import { TElementActionsEnum } from "../sidebar/actionsPanel/elementActions";
-import { TTopLevelActionsEnum } from "../sidebar/actionsPanel/pageActions";
+import { TElementActionsEnum } from "../../../_ui/screens/recorder/components/sidebar/actionsPanel/elementActions";
+import { TTopLevelActionsEnum } from "../../../_ui/screens/recorder/components/sidebar/actionsPanel/pageActions";
 import { getRecorderState, getSavedSteps } from "electron-app/src/store/selectors/recorder";
 import { updateRecorderState } from "electron-app/src/store/actions/recorder";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";

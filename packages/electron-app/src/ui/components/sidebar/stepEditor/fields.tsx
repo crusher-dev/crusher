@@ -221,7 +221,6 @@ const inputStyle = css`
 `;
 
 const toggleStyle = css`
-	zoom: 0.8;
 	margin-left: auto;
 `;
 

@@ -113,7 +113,7 @@ const projectItem = css`
 	border: 0.5px solid #252525;
 	border-radius: 14px;
 	
-	transition: all 0ms linear;
+	transition: all 0ms ease;
 
 	.open {
 		visibility: hidden;
@@ -128,7 +128,7 @@ const projectItem = css`
 		.open {
 			visibility: visible;
 		}
-		border-color: #c076ff;
+		border-color: #aa46ff;
 		//background: #c076ff0a;
 		background: #832ccc0a;
 	}

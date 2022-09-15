@@ -7,6 +7,7 @@ import { Button } from "@dyson/components/atoms/button/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { focusOnWindow, performRunAfterTest, saveAndGetUserInfo } from "electron-app/src/ui/commands/perform";
 import { Toggle } from "@dyson/components/atoms/toggle/toggle";
+import Switch from "@dyson/components/atoms/toggle/switch";
 import { getAppSettings, getUserAccountInfo } from "electron-app/src/store/selectors/app";
 import { setSettngs, setUserAccountInfo } from "electron-app/src/store/actions/app";
 import { iReduxState } from "electron-app/src/store/reducers";
@@ -30,7 +31,7 @@ enum ConnectToCloudStatusEnum {
 	CONNECTED = "CONNECTED",
 }
 
-const SettingsModalContent = ({className, ...props}: iStartupModalProps & { className?: string }) => {
+const SettingsModalContent = ({ className, ...props }: iStartupModalProps & { className?: string }) => {
 	const { isOpen } = props;
 	const appSettings = useSelector(getAppSettings);
 	const userAccountInfo = useSelector(getUserAccountInfo);
@@ -113,155 +114,156 @@ const SettingsModalContent = ({className, ...props}: iStartupModalProps & { clas
 
 	return (
 		<div css={formContainerStyle} className={`${className}`}>
-		<div
-			css={css`
+			<div
+				css={css`
 				font-size: 15rem;
 				font-weight: 600;
 				color: #fff;
 				font-family: Cera Pro;
 			`}
-		>
-			General
-		</div>
-		<hr
-			css={css`
+			>
+				General
+			</div>
+			<hr
+				css={css`
 				margin-top: 8rem;
 				border-color: rgb(255, 255, 255, 0.1);
 				height: 0.1rem;
 			`}
-		/>
-		<div
-			css={css`
+			/>
+			<div
+				css={css`
 				margin-top: 16rem;
 			`}
-		>
-			<div css={inputContainerStyle}>
-				<div
-					css={css`
+			>
+				<div css={inputContainerStyle}>
+					<div
+						css={css`
 						font-size: 13rem;
 						color: rgb(255, 255, 255, 0.7);
 						font-weight: 600;
 					`}
-				>
-					Backend endpoint
+					>
+						Backend endpoint
+					</div>
+					<Input
+						css={inputStyle}
+						placeholder={"Enter backend endpoint"}
+						pattern="[0-9]*"
+						size={"medium"}
+						initialValue={backendEndPoint}
+						autoFocus={true}
+						onReturn={saveAction}
+						onChange={handleBackendEndPointChange}
+					/>
 				</div>
-				<Input
-					css={inputStyle}
-					placeholder={"Enter backend endpoint"}
-					pattern="[0-9]*"
-					size={"medium"}
-					initialValue={backendEndPoint}
-					autoFocus={true}
-					onReturn={saveAction}
-					onChange={handleBackendEndPointChange}
-				/>
-			</div>
-			<div
-				css={[
-					inputContainerStyle,
-					css`
+				<div
+					css={[
+						inputContainerStyle,
+						css`
 						margin-top: 18rem;
 					`,
-				]}
-			>
-				<div
-					css={css`
+					]}
+				>
+					<div
+						css={css`
 						font-size: 13rem;
 						color: rgb(255, 255, 255, 0.7);
 						font-weight: 600;
 					`}
-				>
-					Frontend endpoint
+					>
+						Frontend endpoint
+					</div>
+					<Input
+						css={inputStyle}
+						placeholder={"Enter frontend endpoint"}
+						pattern="[0-9]*"
+						size={"medium"}
+						initialValue={frontendEndPoint}
+						autoFocus={true}
+						onReturn={saveAction}
+						onChange={handleFrontEndPointChange}
+					/>
 				</div>
-				<Input
-					css={inputStyle}
-					placeholder={"Enter frontend endpoint"}
-					pattern="[0-9]*"
-					size={"medium"}
-					initialValue={frontendEndPoint}
-					autoFocus={true}
-					onReturn={saveAction}
-					onChange={handleFrontEndPointChange}
-				/>
 			</div>
-		</div>
 
-		<div
-			css={css`
+			<div
+				css={css`
 				font-size: 15rem;
 				font-weight: 600;
 				color: #fff;
 				margin-top: 30rem;
 				font-family: Cera Pro;
 			`}
-		>
-			Recorder
-		</div>
-		<hr
-			css={css`
+			>
+				Recorder
+			</div>
+			<hr
+				css={css`
 				margin-top: 8rem;
 				border-color: rgb(255, 255, 255, 0.1);
 				height: 0.1rem;
 			`}
-		/>
-		<div
-			css={css`
+			/>
+			<div
+				css={css`
 				margin-top: 16rem;
 			`}
-		>
-			<div css={inputContainerStyle}>
-				<div
-					css={css`
+			>
+				<div css={inputContainerStyle}>
+					<div
+						css={css`
 						font-size: 13rem;
 						color: rgb(255, 255, 255, 0.7);
 						font-weight: 600;
 					`}
-				>
-					Auto-detect actions
-				</div>
+					>
+						Auto-detect actions
+					</div>
 
-				<Toggle
-					isOn={autoDetectActions}
-					callback={handleAutoDetectActionsCallback}
-					css={css`
+					<Switch
+						checked={autoDetectActions} onCheckedChange={autoDetectActions}
+						size={"small"}
+
+						css={css`
 						margin-left: auto;
 						zoom: 0.8;
 					`}
-				/>
-			</div>
-			<div
-				css={[
-					inputContainerStyle,
-					css`
+					/>
+				</div>
+				<div
+					css={[
+						inputContainerStyle,
+						css`
 						margin-top: 18rem;
 					`,
-				]}
-			>
-				<div
-					css={css`
+					]}
+				>
+					<div
+						css={css`
 						font-size: 13rem;
 						color: rgb(255, 255, 255, 0.7);
 						font-weight: 600;
 					`}
-				>
-					Enable mouse tracker
-				</div>
+					>
+						Enable mouse tracker
+					</div>
 
-				<Toggle
-					isOn={enableMouseTracker}
-					callback={handleEnableMouseTrackerCallback}
-					css={css`
+					<Toggle
+						isOn={enableMouseTracker}
+						callback={handleEnableMouseTrackerCallback}
+						css={css`
 						margin-left: auto;
 						zoom: 0.8;
 					`}
-				/>
+					/>
+				</div>
 			</div>
-		</div>
 
-		<div css={submitFormContainerStyle} className={"submit-action-button"}>
-			<div
-				onClick={handleConnectToCloud}
-				css={css`
+			<div css={submitFormContainerStyle} className={"submit-action-button"}>
+				<div
+					onClick={handleConnectToCloud}
+					css={css`
 					display: flex;
 					align-items: center;
 					color: #fff;
@@ -270,36 +272,36 @@ const SettingsModalContent = ({className, ...props}: iStartupModalProps & { clas
 						opacity: 0.9;
 					}
 				`}
-			>
-				<span>{connectWordMap[connectToCloudStatus]} to cloud</span>
-				<Conditional showIf={connectToCloudStatus === ConnectToCloudStatusEnum.WAITING}>
-					<LoadingIconV2
-						css={css`
+				>
+					<span>{connectWordMap[connectToCloudStatus]} to cloud</span>
+					<Conditional showIf={connectToCloudStatus === ConnectToCloudStatusEnum.WAITING}>
+						<LoadingIconV2
+							css={css`
 							height: 20rem;
 							margin-left: 6rem;
 						`}
-					/>
-				</Conditional>
-				<Conditional showIf={connectToCloudStatus === ConnectToCloudStatusEnum.CONNECTED}>
-					<img src={"./static/assets/icons/correct.svg"} style={{ marginLeft: "6rem", height: "14rem", marginTop: "-2rem" }} />
-				</Conditional>
+						/>
+					</Conditional>
+					<Conditional showIf={connectToCloudStatus === ConnectToCloudStatusEnum.CONNECTED}>
+						<img src={"./static/assets/icons/correct.svg"} style={{ marginLeft: "6rem", height: "14rem", marginTop: "-2rem" }} />
+					</Conditional>
+				</div>
+				<Button onClick={saveAction} css={buttonStyle}>
+					Save
+				</Button>
 			</div>
-			<Button onClick={saveAction} css={buttonStyle}>
-				Save
-			</Button>
 		</div>
-	</div>
 	);
 }
 
 const SettingsModal = (props: iStartupModalProps) => {
-	const {isOpen} = props;
+	const { isOpen } = props;
 	if (!isOpen) return null;
 
 	return (
 		<Modal modalStyle={modalStyle} onOutsideClick={props.handleClose}>
 			<ModalTopBar title={"Settings"} desc={"Configure app settings for more customization"} closeModal={props.handleClose} />
-			<SettingsModalContent {...props}/>
+			<SettingsModalContent {...props} />
 		</Modal>
 	);
 };

@@ -1,6 +1,6 @@
 import React from 'react';
 import { styled } from '@stitches/react';
-import { blackA} from '@radix-ui/colors';
+import { blackA } from '@radix-ui/colors';
 import * as SwitchPrimitive from '@radix-ui/react-switch';
 import { css } from "@emotion/react";
 
@@ -15,7 +15,7 @@ const StyledSwitch = styled(SwitchPrimitive.Root, {
   boxShadow: `0 2px 10px ${blackA.blackA7}`,
   WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)',
   '&:focus': { boxShadow: `0 0 0 2px black` },
-  '&[data-state="checked"]': { backgroundColor: 'red' },
+
 });
 
 const StyledThumb = styled(SwitchPrimitive.Thumb, {
@@ -37,14 +37,14 @@ export const SwitchThumb = StyledThumb;
 
 
 const SwitchComponent = (props: any) => {
-  const {disabled=false, size="small",css} = props;
+  const { disabled = false, size = "small", css } = props;
   const isSmall = size === "small";
-  
+
   return (
-    <Switch disabled={disabled} defaultChecked id="s1" css={[css, switchBackground,disabled && disabledCSS,
+    <Switch disabled={disabled} id="s1" css={[css, switchBackground, disabled && disabledCSS,
       isSmall && smallSize.switch
-      ]}>
-      <SwitchThumb css={[isSmall && smallSize.thumb]}/>
+    ]} {...props}>
+      <SwitchThumb css={[isSmall && smallSize.thumb]} />
     </Switch>
   );
 }
@@ -68,7 +68,7 @@ const smallSize = {
 
 const switchBackground = css`background: #343538;
       &[data-state="checked"]{
-          background: #A347FF;
+          background: #A843F6;
       }
 `
 
@@ -76,12 +76,12 @@ const disabledCSS = css`
       opacity: .8;
 `
 export type ToggleProps = {
-    checked?: boolean;
-    onCheckedChange?: (state: boolean) => void;
-    defaultChecked?: boolean;
+  checked?: boolean;
+  onCheckedChange?: (state: boolean) => void;
+  defaultChecked?: boolean;
 
-    size?: 'small' | 'medium';
-    disabled?: boolean;
-    name?: string;
-    className?: any;
+  size?: 'small' | 'medium';
+  disabled?: boolean;
+  name?: string;
+  className?: any;
 } & React.DetailedHTMLProps<any, any>;

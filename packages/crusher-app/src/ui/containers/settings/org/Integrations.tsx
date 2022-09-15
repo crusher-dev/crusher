@@ -10,6 +10,7 @@ import AddProjectModal from "@ui/containers/dashboard/AddProject";
 import { SettingsLayout } from "@ui/layout/SettingsBase";
 
 import Toggle from "dyson/src/components/atoms/toggle/toggle";
+import Switch from "dyson/src/components/atoms/toggle/switch";
 import { GithubSVG } from "@svg/social";
 import { Card } from "dyson/src/components/layouts/Card/Card";
 import { openPopup } from "@utils/common/domUtils";
@@ -33,10 +34,10 @@ import React from "react";
 const connectedToGitAtom = atomWithImmer<
 	| any
 	| {
-			token: string;
-			type: "github";
-			updateCount: number;
-	  }
+		token: string;
+		type: "github";
+		updateCount: number;
+	}
 >(null);
 
 const useGithubData = (gitInfo) => {
@@ -410,7 +411,7 @@ function CISection() {
 			<Heading type={1} fontSize={"16"} className={"mb-12 mt-16"}>
 				CI/CD
 			</Heading>
-			<TextBlock fontSize={12.4} className={""} color={"#c1c1c1"}>
+			<TextBlock fontSize={12.4} color={"#c1c1c1"}>
 				Easily integrate and trigger tests from your CI/CD workflow
 			</TextBlock>
 
@@ -457,7 +458,7 @@ function GitIntegration() {
 						<Heading type={2} fontSize={"14"} className={"mb-8"}>
 							Git Integration
 						</Heading>
-						<TextBlock fontSize={12.4} className={""} color={"#c1c1c1"}>
+						<TextBlock fontSize={12.4} color={"#c1c1c1"}>
 							Integrate with Github, Gitlab to get checks with each commit
 						</TextBlock>
 					</div>
@@ -537,8 +538,7 @@ function SlackIntegration() {
 	const handleSwitch = useCallback((toggleState: boolean) => {
 		if (toggleState) {
 			const windowRef = openPopup(
-				`https://slack.com/oauth/v2/authorize?scope=chat:write,chat:write.public,channels:read,groups:read&client_id=${
-					process.env.NEXT_PUBLIC_SLACK_CLIENT_ID
+				`https://slack.com/oauth/v2/authorize?scope=chat:write,chat:write.public,channels:read,groups:read&client_id=${process.env.NEXT_PUBLIC_SLACK_CLIENT_ID
 				}&redirect_uri=${escape(resolvePathToBackendURI("/integrations/slack/actions/add"))}&state=${encodeURIComponent(
 					JSON.stringify({ projectId: project.id, redirectUrl: resolvePathToFrontendURI("/settings/project/integrations") }),
 				)}`,
@@ -602,15 +602,15 @@ function SlackIntegration() {
 			payload: {
 				alertChannel: alertChannelInfo[0]
 					? {
-							name: alertChannelInfo[0].label,
-							value: alertChannelInfo[0].value,
-					  }
+						name: alertChannelInfo[0].label,
+						value: alertChannelInfo[0].value,
+					}
 					: null,
 				normalChannel: normalChannelInfo[0]
 					? {
-							name: normalChannelInfo[0].label,
-							value: normalChannelInfo[0].value,
-					  }
+						name: normalChannelInfo[0].label,
+						value: normalChannelInfo[0].value,
+					}
 					: null,
 			},
 		})
@@ -652,12 +652,17 @@ function SlackIntegration() {
 						<Heading type={2} fontSize={"14"} className={"mb-8"}>
 							Slack Integration
 						</Heading>
-						<TextBlock fontSize={12.4} className={""} color={"#c1c1c1"}>
-							We post notifications to Slack on event trigger.
+						<TextBlock fontSize={12.9} color={"#c1c1c1"}>
+							Get notifications  on build event
 						</TextBlock>
 					</div>
 				</div>
-				<Toggle disableInternalState={true} callback={handleSwitch} isOn={isConnected}></Toggle>
+				<Switch disable={true} checked={isConnected} onClick={() => {
+					if (!isConnected) {
+						handleSwitch(true)
+					}
+				}} />
+
 			</div>
 			<Conditional showIf={isConnected}>
 				<div

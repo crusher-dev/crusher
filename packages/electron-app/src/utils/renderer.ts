@@ -2,6 +2,7 @@ import { getStore } from "../store/configureStore";
 import { getCurrentSelectedProjct, getProxyState } from "../store/selectors/app";
 import { turnOnProxy } from "../ui/commands/perform";
 import {resolveToBackend, resolveToFrontend} from "./url";
+const words = require("./words.json");
 
 const waitForUserLogin = async (callback?: any): Promise<{ loginKey: string; interval }> => {
 	const axios = require("axios").default;
@@ -22,6 +23,14 @@ const waitForUserLogin = async (callback?: any): Promise<{ loginKey: string; int
 	return { loginKey: loginKey, interval };
 };
 
+function getRandArrIndex(arr) {
+	return Math.floor(Math.random()* arr.length);
+}
+
+export function generateRandomTestName() {
+	const  wordsArr = words.data;
+	return `${wordsArr[getRandArrIndex(wordsArr)]}-${wordsArr[getRandArrIndex(wordsArr)]}` 
+};
 export function setEndOfContenteditable(contentEditableElement)
 {
     var range,selection;

@@ -306,7 +306,6 @@ const Toolbar = (props: any) => {
 		const recorderInfo = getRecorderInfo(store.getState());
 		const isOnboardingOn = shouldShowOnboardingOverlay(store.getState());
 
-		setUrl(urlInputRef.current?.value);
 		if (urlInputRef.current?.value) {
 			const validUrl = addHttpToURLIfNotThere(urlInputRef.current?.value);
 			if (!isValidHttpUrl(validUrl)) {
@@ -474,8 +473,6 @@ enter to submit
 
 	}, []);
 
-	console.log("UU is", url);
-
 	return (
 		<div css={containerStyle} {...props}>
 			<Conditional showIf={isTestBeingVerified}>
@@ -575,9 +572,7 @@ enter to submit
 										placeholder="Enter URL to test"
 										id={"target-site-input"}
 										className={"target-site-input"}
-										css={[inputStyle, url?.length ? css` input { 		z-index: 13 !important;
-											position: relative !important;
-											background: rgb(22 22 23) !important; }`: null]}
+										css={inputStyle}
 										onReturn={handleUrlReturn}
 										isError={urlInputError.value}
 										initialValue={url}
@@ -776,9 +771,6 @@ const inputStyle = css`
 		}
 	}
 	& > input {
-		:focus {
-			z-index: 11 !important;
-		}
 		width: 359rem;
 		/* border: 1px solid #9462ff; */
 		outline-color: #9462ff;
@@ -789,6 +781,7 @@ const inputStyle = css`
 		padding-left: 18rem;
 		padding-right: 110rem;
 
+		background: rgba(77, 77, 77, 0.2);
 		border: 0.5px solid rgba(55, 55, 55, 0.4);
 		border-radius: 10px;
 
@@ -805,7 +798,7 @@ const inputStyle = css`
 	}
 	.input__rightIconContainer {
 		right: 1rem;
-		z-index: 12 !important;
+		z-index: 9999;
 	}
 `;
 const buttonStyle = css`

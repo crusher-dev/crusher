@@ -85,7 +85,7 @@ const PageActions = ({ className, ...props }: { className?: any }) => {
 
 	return (
 		<>
-			<ActionsList className={`${className}`} css={containerStyle} title="Page List">
+			<ActionsList className={`${className}`} css={containerStyle} title="common">
 				{items}
 			</ActionsList>
 		</>

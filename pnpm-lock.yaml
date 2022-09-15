@@ -683,6 +683,7 @@ importers:
       eslint-plugin-react: ^7.22.0
       eslint-plugin-react-hooks: ^4.2.0
       event-kit: ^2.5.3
+      figma-design-scaler: link:/home/utkarsh/crusher/figma-scale
       file-loader: ^6.2.0
       file-url: ^4.0.0
       history: ^5.3.0
@@ -712,8 +713,8 @@ importers:
       prettier: ^2.2.1
       pug-cli: ^1.0.0-alpha6
       pug-loader: ^2.4.0
-      react: ^17.0.1
-      react-dom: ^17.0.1
+      react: ^17.0.2
+      react-dom: ^17.0.2
       react-inspector: ^5.1.1
       react-intersection-observer: ^9.1.0
       react-is: ^17.0.1
@@ -793,6 +794,7 @@ importers:
       electron-updater: 4.6.1
       electron-window-state: 5.0.3
       event-kit: 2.5.3
+      figma-design-scaler: link:../../../figma-scale
       file-loader: 6.2.0_webpack@5.21.2
       file-url: 4.0.0
       history: 5.3.0

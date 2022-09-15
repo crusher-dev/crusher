@@ -13,12 +13,16 @@ import { enableJavascriptInDebugger, turnOffElementSelectorInspectMode, turnOffI
 import { useTour } from "@reactour/tour";
 import { BrowserButton } from "../../buttons/browser.button";
 import { setSelectedElement } from "electron-app/src/store/actions/recorder";
+import _ from "lodash";
+import { Input } from "@dyson/components/atoms";
 
 const ActionsPanel = ({ className, ...props }: { className?: any }) => {
 	const selected = useSelector(isInspectModeOn);
 	const elementSelectorInspectMode = useSelector(isInspectElementSelectorModeOn);
 	const selectedElement = useSelector(getSelectedElement);
 	const { isOpen, setCurrentStep } = useTour();
+	const actionsSearchRef = React.useRef();
+
 	const store = useStore();
 
 	const handleTurnOffInspectMode = () => {
@@ -39,7 +43,23 @@ const ActionsPanel = ({ className, ...props }: { className?: any }) => {
 		await enableJavascriptInDebugger();
 		store.dispatch(setSelectedElement(null));
 	};
-
+	const RightIconComponent = React.useMemo(
+		() => (
+			<div css={css`
+			font-family: Gilroy;
+			font-style: normal;
+			font-weight: 400;
+			font-size: 12.7rem;
+	
+			
+			color: #444444;
+			margin-right: 12rem;
+			`}>
+⌘ + k
+			</div>
+		),
+		[],
+	);
 	return (
 		<div className={`${className}`} css={containerStyle}>
 			<div css={headerContainerStyle}>
@@ -59,7 +79,19 @@ const ActionsPanel = ({ className, ...props }: { className?: any }) => {
 						/>
 					</BrowserButton>
 				</Conditional>
-				<Text css={headerText}>Actions</Text>
+				<div css={css`margin-top: 8rem`}>
+					<Input
+											placeholder="search actions"
+											id={"target-site-input"}
+											className={"target-site-input"}
+											css={inputStyle}
+											onReturn={() => {}}
+											initialValue={""}
+											ref={actionsSearchRef}
+											// leftIcon={LeftIconComponent}
+											rightIcon={RightIconComponent}
+										/>
+										</div>
 				{/* <SearchIcon css={[hoverEffectStyle, css`width: 13rem; height: 13rem;`]} /> */}
 			</div>
 			<div className="custom-scroll" css={actionScrollContainer}>
@@ -76,7 +108,7 @@ const ActionsPanel = ({ className, ...props }: { className?: any }) => {
 				<Conditional showIf={!selected}>
 					<Conditional showIf={!selectedElement}>
 						{/* Non-Element Actions */}
-						<InspectModeAction />
+						{/* <InspectModeAction /> */}
 						<PageActions />
 						<TemplateActions />
 					</Conditional>
@@ -90,6 +122,71 @@ const ActionsPanel = ({ className, ...props }: { className?: any }) => {
 	);
 };
 
+const inputStyle = css`
+	height: 36rem;
+	.input__rightIconContainer {
+		right: 0px;
+
+		:hover {
+			opacity: 0.8;
+		}
+	}
+	.input__leftIconContainer {
+		border-radius: 8rem 0px 0px 8rem;
+		height: 85%;
+		left: 1rem;
+		.outsideDiv,
+		.showOnClick {
+			height: 100%;
+		}
+		/* To stop border collision */
+		margin-left: 0.5rem;
+		margin-top: 0.5rem;
+		margin-bottom: 0.5rem;
+
+		.dropdown-box {
+			overflow: hidden;
+			width: 104rem;
+			margin-left: 12rem;
+			z-index: 99999;
+		}
+	}
+	& > input {
+		width: 247rem;
+		/* border: 1px solid #9462ff; */
+		outline-color: #9462ff;
+		outline-width: 1px;
+		box-sizing: border-box;
+		border-radius: 8rem 0px 0px 8rem;
+		height: 100%;
+		padding-left: 18rem;
+		padding-right: 110rem;
+
+		background: rgba(77, 77, 77, 0.2);
+		border: 0.5px solid rgba(55, 55, 55, 0.4);
+		border-radius: 10px;
+
+		font-family: Gilroy;
+		font-style: normal;
+		font-weight: 400;
+		font-size: 13rem;
+		letter-spacing: 0.02em;
+
+		color: rgba(255, 255, 255, 0.67);
+		::placeholder {
+			color: rgba(255, 255, 255, 0.4);
+		}
+		
+	}
+	}
+	.dropdown-box {
+		overflow: hidden;
+	}
+	.input__rightIconContainer {
+		right: 1rem;
+		z-index: 9999;
+	}
+`;
 const hoverEffectStyle = css`
 	:hover {
 		opacity: 0.8;
@@ -105,7 +202,7 @@ const containerStyle = css`
 const headerContainerStyle = css`
 	display: flex;
 	align-items: center;
-	padding: 18rem 26rem;
+	padding: 0rem 14rem;
 	justify-content: space-between;
 `;
 
@@ -116,7 +213,6 @@ const headerText = css`
 `;
 const actionScrollContainer = css`
 	height: 100%;
-	padding: 26rem;
 	padding-top: 0rem;
 	overflow-y: auto;
 `;

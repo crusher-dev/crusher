@@ -89,7 +89,7 @@ const dropdownCss = css`
 const saveButtonStyle = css`
     width: 92rem;
     height: 30rem;
-    background: #7353F5;
+    background: #8e58ff;
     border-radius: 6rem !important;
     font-family: Gilroy;
     font-style: normal;
@@ -108,15 +108,13 @@ const saveButtonStyle = css`
     }
 `;
 const downIconContainerCss = css`
-    background: #9461ff;
+    background: #7146CC;
     display: flex;
     align-items: center;
     padding: 0rem 9rem;
     border-top-right-radius: 6rem;
     border-bottom-right-radius: 6rem;
-    border-left-color: #00000036;
-    border-left-width: 2.5rem;
-    border-left-style: solid;
+
     :hover {
         opacity: 0.8;
     }

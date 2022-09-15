@@ -5,7 +5,7 @@ import { SelectBox } from "@dyson/components/molecules/Select/Select";
 import { Conditional } from "@dyson/components/layouts";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { Text } from "@dyson/components/atoms/text/Text";
-import { CrusherHammerIcon, DownIcon, LoadingIconV2, MoreIcon, NavigateBackIcon, NavigateRefreshIcon, SettingsIcon } from "../../icons";
+import { CrusherHammerIcon, DownIcon, DroppdownIconV2, LoadingIconV2, MoreIcon, NavigateBackIcon, NavigateRefreshIcon, RedDotIcon, SettingsIcon } from "../../icons";
 import { BrowserButton } from "../buttons/browser.button";
 import { useDispatch, batch, useSelector, useStore } from "react-redux";
 import { setDevice, setSiteUrl } from "electron-app/src/store/actions/recorder";
@@ -37,6 +37,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { MenuDropdown } from "../../layouts/modalContainer";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { ButtonDropdown } from "electron-app/src/_ui/components/buttonDropdown";
+import { DropdownIconSVG } from "@dyson/assets/icons";
 
 const DeviceItem = ({ label }) => {
 	return (
@@ -68,7 +69,7 @@ enum ITestActionEnum {
 	UPDATE = "UPDATE"
 };
 const SAVE_TEST_ACTION_DROPDOWN_OPTIONS = [
-	{id: ITestActionEnum.VERIFY_SAVE, content: (<span>Verify & Save</span>)},
+	{id: ITestActionEnum.VERIFY_SAVE, content: (<span>Save</span>)},
 	{id: ITestActionEnum.SAVE, content: (<span>Save</span>)}
 ];
 const UPDATE_TEST_ACTION_DROPDOWN_OPTIONS = [
@@ -230,8 +231,9 @@ const buttonDropdownCss = css`
 	
 `;
 const buttonDropdownMainButtonCss = css`
-	width: 116rem;
+	width: 50rem;
 	height: 32rem;
+	padding: 0rem !important;
 `;
 
 SaveVerifyButton.whyDidYouRender = true;
@@ -423,13 +425,18 @@ const Toolbar = (props: any) => {
 	);
 	const RightIconComponent = React.useMemo(
 		() => (
-			<SelectBox
-				selected={selectedDevice}
-				callback={handleChangeDevice}
-				className={"target-device-dropdown"}
-				css={selectBoxStyle}
-				values={recorderDevices}
-			/>
+			<div css={css`
+			font-family: Gilroy;
+			font-style: normal;
+			font-weight: 400;
+			font-size: 12.7rem;
+	
+			
+			color: #444444;
+			margin-right: 12rem;
+			`}>
+enter to submit
+			</div>
 		),
 		[selectedDevice, recorderDevices],
 	);
@@ -470,15 +477,27 @@ const Toolbar = (props: any) => {
 						disabled={false}
 					/>
 				</BrowserButton> */}
-				<MenuDropdown
-					isRecorder={true}
-					callback={handleMenuCallback}
-					css={css`
-						.crusher-hammer-icon {
-							margin-left: 20rem;
-						}
-					`}
-				/>
+				<div css={css`display: flex; align-items: center;`}>
+					<MenuDropdown
+						isRecorder={true}
+						callback={handleMenuCallback}
+						hideDropdown={true}
+						css={css`
+							.crusher-hammer-icon {
+								margin-left: 18rem;
+							}
+						`}
+					/>
+					<div css={css`display: flex; align-items: center; font-size: 13.5rem; color: #fff; margin-left: 9rem; font-family: Gilroy; font-weight: 400; margin-top: 2rem;`}>
+						<span css={css`font-size: 12rem; color: #606060;`}>tests/</span>
+						<div css={css`display: flex; align-items: center;`}>
+							<span css={css`margin-left: 5.75rem; color: #D2D2D2;`}>bunny-2012</span>
+							<DroppdownIconV2 css={css`width: 9rem; height: 6rem; margin-left: 7rem;`}/>
+						</div>
+						<RedDotIcon css={css`width: 6rem; height: 6rem; margin-left: 10rem;`}/>
+					</div>
+				</div>
+			
 				{/* <BrowserButton
 					className={"ml-24 go-back-button"}
 					css={css`
@@ -507,31 +526,34 @@ const Toolbar = (props: any) => {
 						disabled={false}
 					/>
 				</BrowserButton> */}
-				<div css={menuContainerStyle}>{showMenu}</div>
 				<div css={inputContainerStyle}>
-					<Input
-						placeholder="Enter URL to test"
-						id={"target-site-input"}
-						className={"target-site-input"}
-						css={inputStyle}
-						onReturn={handleUrlReturn}
-						isError={urlInputError.value}
-						initialValue={url}
-						ref={urlInputRef}
-						// leftIcon={LeftIconComponent}
-						rightIcon={RightIconComponent}
-					/>
-					<Conditional showIf={urlInputError.value}>
-						<span css={inputErrorMessageStyle}>{urlInputError.message}</span>
-					</Conditional>
+					<div css={css`	display: flex;
+	flex-direction: column;`}>
+						<Input
+										placeholder="Enter URL to test"
+										id={"target-site-input"}
+										className={"target-site-input"}
+										css={inputStyle}
+										onReturn={handleUrlReturn}
+										isError={urlInputError.value}
+										initialValue={url}
+										ref={urlInputRef}
+										// leftIcon={LeftIconComponent}
+										rightIcon={RightIconComponent}
+									/>
+									<Conditional showIf={urlInputError.value}>
+										<span css={inputErrorMessageStyle}>{urlInputError.message}</span>
+									</Conditional>
+					</div>
+			
 				</div>
 				<Conditional showIf={isRecorderInInitialState}>
-					<Button className={"ml-12"} onClick={handleUrlReturn.bind(this)} bgColor="tertiary-outline" css={buttonStyle}>
+					<Button onClick={handleUrlReturn.bind(this)} bgColor="tertiary-outline" css={buttonStyle}>
 						Start
 					</Button>
 				</Conditional>
 				<Conditional showIf={!isRecorderInInitialState}>
-					<div className={"ml-18 flex items-center"}>
+					{/* <div className={"ml-18 flex items-center"}>
 						<div
 							css={[
 								onlineDotStyle,
@@ -545,9 +567,9 @@ const Toolbar = (props: any) => {
 						<Text id="recorder-status" css={recTextStyle} className={"ml-8"}>
 							{[TRecorderState.RECORDING_ACTIONS].includes(recorderState.type) ? "Rec." : "Waiting"}
 						</Text>
-					</div>
+					</div> */}
 
-					<div className={"ml-auto mr-22 flex items-center"}>
+					<div className={"ml-auto flex items-center"}>
 						<SettingsIcon onClick={setShowSettingsModal.bind(this, true)} css={settingsIconStyle} className={"ml-12"} />
 						<div id={"verify-save-test"} css={verifySaveTestContainerStyle}>
 							<SaveVerifyButton isTestVerificationComplete={isTestVerificationComplete} />
@@ -561,7 +583,7 @@ const Toolbar = (props: any) => {
 };
 
 const verifySaveTestContainerStyle = css`
-	margin-left: 20rem;
+	margin-left: 13rem;
 `;
 
 StepActionMenu.whyDidYouRender = true;
@@ -641,9 +663,9 @@ const hammerIconStyle = css`
 `;
 const inputContainerStyle = css`
 	position: relative;
+	flex: 1;
 	display: flex;
-	flex-direction: column;
-	margin-left: 12rem;
+	justify-content: center;
 `;
 
 const inputErrorMessageStyle = css`
@@ -658,8 +680,13 @@ const menuContainerStyle = css`
 `;
 const settingsIconStyle = css`
 	height: 14rem;
+	path {
+		fill: rgba(255, 255, 255, 0.2);
+	}
 	:hover {
-		opacity: 0.9;
+		path {
+			fill: #969696;
+		}
 	}
 `;
 
@@ -667,15 +694,16 @@ const containerStyle = css`
 	display: flex;
 	align-items: center;
 	padding: 8rem;
-	background-color: #111213;
+	background-color: #09090A;
 	padding: 5rem;
-	min-height: 60rem;
+	padding-left: 9rem;
+	min-height: 70rem;
 	position: relative;
 	z-index: 999;
-	padding-right: 24rem;
+	padding-right: 18rem;
 `;
 const inputStyle = css`
-	height: 36rem;
+	height: 40rem;
 	.input__rightIconContainer {
 		right: 0px;
 
@@ -704,22 +732,26 @@ const inputStyle = css`
 		}
 	}
 	& > input {
-		width: 340rem;
-		font-family: Gilroy;
-		font-size: 14.6rem;
+		width: 359rem;
 		/* border: 1px solid #9462ff; */
 		outline-color: #9462ff;
 		outline-width: 1px;
 		box-sizing: border-box;
 		border-radius: 8rem 0px 0px 8rem;
-		color: rgba(255, 255, 255, 0.93);
 		height: 100%;
 		padding-left: 18rem;
 		padding-right: 110rem;
 
-		background: rgba(255, 255, 255, 0.02);
-		border: 1px solid #292929;
-		border-radius: 18px;
+		background: rgba(77, 77, 77, 0.2);
+		border: 0.5px solid rgba(55, 55, 55, 0.4);
+		border-radius: 10px;
+
+		font-family: Gilroy;
+		font-style: normal;
+		font-weight: 600;
+		font-size: 13rem;
+		color: rgba(255, 255, 255, 0.67);
+
 	}
 	}
 	.dropdown-box {
@@ -734,7 +766,7 @@ const buttonStyle = css`
 	font-size: 14rem;
 	box-sizing: border-box;
 	border-radius: 4rem;
-	width: 93rem;
+    width: 77rem;
 	height: 36rem;
 `;
 

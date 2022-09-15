@@ -19,9 +19,7 @@ function Dashboard() {
 		});
 	}, []);
 	return (
-		<>
-			<ProjectSettings />
-		</>
+		<ProjectSettings />
 	);
 }
 

@@ -353,7 +353,7 @@ const containerStyle = css`
 	background: linear-gradient(
 		0deg
 		, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), #09090A;
-    border: 1.5rem solid #141414;
+    border: 1rem solid #141414;
     border-right: none;
     border-bottom: none;
 }`;

@@ -559,7 +559,7 @@ const StepsPanel = ({ className, ...props }: any) => {
 
 const containerStyle = css`
 	border-radius: 4px 4px 0px 0px;
-	border-top: 0.5rem solid #303235;
+	border-top: 0.5rem solid #141414;
 	height: 369rem;
 	padding-bottom: 0rem;
 	display: flex;

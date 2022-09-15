@@ -168,10 +168,15 @@ const inputStyle = css`
 
 		font-family: Gilroy;
 		font-style: normal;
-		font-weight: 600;
+		font-weight: 400;
 		font-size: 13rem;
-		color: rgba(255, 255, 255, 0.67);
+		letter-spacing: 0.02em;
 
+		color: rgba(255, 255, 255, 0.67);
+		::placeholder {
+			color: rgba(255, 255, 255, 0.4);
+		}
+		
 	}
 	}
 	.dropdown-box {

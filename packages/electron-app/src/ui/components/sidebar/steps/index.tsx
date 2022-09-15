@@ -483,9 +483,11 @@ const StepsPanel = ({ className, ...props }: any) => {
 	return (
 		<div className={`${className}`} id="steps-pane" css={containerStyle}>
 			<div css={stepsHeaderStyle}>
-				<Checkbox isSelected={recordedSteps.length === checkedSteps.size} callback={toggleAllSteps} />
+				{/* <Checkbox isSelected={recordedSteps.length === checkedSteps.size} callback={toggleAllSteps} /> */}
 				<Text css={stepsTextStyle}>{recordedSteps.length} Steps</Text>
-				{/* <ConsoleIcon onClick={handleConsoleIconClick} css={[css`width: 14rem; height: 14rem; :hover { opacity: 0.7 }; path {fill: rgba(255, 255, 255, 1);}`, isStatusBarVisible ? css`path {fill: rgba(255, 255, 255, 0.35);}` : null]} /> */}
+				<div css={css`margin-left: auto;`}>
+					<ConsoleIcon onClick={handleConsoleIconClick} css={[css`width: 11.7rem; height: 12.3rem; :hover { opacity: 0.7 }; path {fill: rgba(255, 255, 255, 1);}`, isStatusBarVisible ? css`path {fill: rgba(255, 255, 255, 0.35);}` : null]} />
+				</div>
 				<Conditional showIf={!!checkedSteps.size}>
 					<div css={stepDropdownStyle}>
 						<Dropdown
@@ -558,7 +560,7 @@ const StepsPanel = ({ className, ...props }: any) => {
 
 const containerStyle = css`
 	border-top: 1rem solid #303235;
-	height: 340rem;
+	height: 369rem;
 	padding-bottom: 0rem;
 	display: flex;
 	flex-direction: column;
@@ -566,14 +568,15 @@ const containerStyle = css`
 const stepsHeaderStyle = css`
 	display: flex;
 	align-items: center;
-	padding: 14rem 16rem;
-	padding-top: 21rem;
+    padding: 14rem 18rem;
+    padding-top: 19rem;
 `;
 const stepsTextStyle = css`
-	font-family: Cera Pro;
-	font-size: 14rem;
-	flex-grow: 1;
-	margin: 0rem 12rem;
+	font-family: Gilroy;
+	font-style: normal;
+	font-weight: 500;
+	font-size: 12rem;
+	color: #FFFFFF;
 `;
 const stepDropdownStyle = css`
 	box-sizing: border-box;

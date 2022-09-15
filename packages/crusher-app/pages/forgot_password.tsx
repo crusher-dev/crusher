@@ -4,14 +4,10 @@ import Container from "@ui/containers/auth/forget";
 
 import { usePageTitle } from "../src/hooks/seo";
 
-function LoginPage() {
+function ForgotPassword() {
 	usePageTitle("Forgot Password");
 
-	return (
-		<div>
-			<Container />
-		</div>
-	);
+	return <Container />;
 }
 
-export default LoginPage;
+export default ForgotPassword;

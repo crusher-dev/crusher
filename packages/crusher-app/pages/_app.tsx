@@ -11,12 +11,12 @@ import { Snackbar } from "@ui/containers/common/Snackbar";
 import { LoadingScreen } from "@ui/layout/LoadingScreen";
 import { loadGTM, loadCrisp, loadGA, loadSegment, loadUserLeap } from "@utils/common/scriptUtils";
 
-import { useBasicSEO } from "../src/hooks/seo";
-import { usePageSegmentAnalytics } from "../src/hooks/analytics";
-import { useLoadTempData } from "../src/hooks/tempTest";
-import { loadUserDataAndRedirect } from "../src/hooks/user";
-import { rootGlobalAtom } from "../src/store/atoms/global/rootAtom";
-import "../src/tailwind.css";
+import { useBasicSEO } from "/src/hooks/seo";
+import { usePageSegmentAnalytics } from "/src/hooks/analytics";
+import { useLoadTempData } from "/src/hooks/tempTest";
+import { loadUserDataAndRedirect } from "/src/hooks/user";
+import { rootGlobalAtom } from "/src/store/atoms/global/rootAtom";
+import "/src/tailwind.css";
 
 function App({ Component, pageProps }: AppProps<any>) {
 	useLoadTempData();
@@ -40,6 +40,8 @@ function App({ Component, pageProps }: AppProps<any>) {
 			<Head>
 				<meta name="referrer" content="origin" />
 				<meta name="viewport" content="initial-scale=1.0, width=device-width" />
+				<style id="fonts">{fontCSS}</style>
+				{preload}
 			</Head>
 			<SWRConfig
 				value={{
@@ -59,5 +61,168 @@ function App({ Component, pageProps }: AppProps<any>) {
 		</>
 	);
 }
+
+const preload = (
+	<React.Fragment>
+		<link rel="preload" as="font" href="/assets/fonts/CeraPro/Cera_Pro_Regular.woff2" as="font" crossOrigin="anonymous" />
+		<link rel="preload" as="font" href="/assets/fonts/CeraPro/Cera_Pro_Black.woff2" as="font" crossOrigin="anonymous" />
+		<link rel="preload" as="font" href="/assets/fonts/CeraPro/Cera_Pro_Bold.woff2" as="font" crossOrigin="anonymous" />
+		<link rel="preload" as="font" href="/assets/fonts/Gilroy/Gilroy-Regular.woff2" as="font" crossOrigin="anonymous" />
+		<link rel="preload" as="font" href="/assets/fonts/Gilroy/Gilroy-Medium.woff2" as="font" crossOrigin="anonymous" />
+		<link rel="preload" as="font" href="/assets/fonts/Gilroy/Gilroy-SemiBold.woff2" as="font" crossOrigin="anonymous" />
+		<link rel="preload" as="font" href="/assets/fonts/Gilroy/Gilroy-Bold.woff2" as="font" crossOrigin="anonymous" />
+		<link rel="preload" as="font" href="/assets/fonts/Gilroy/Gilroy-ExtraBold.woff2" as="font" crossOrigin="anonymous" />
+	</React.Fragment>
+);
+
+const fontCSS = `
+@font-face {
+	font-family: "Cera Pro";
+	src: url("/assets/fonts/CeraPro/Cera_Pro_Thin.woff2") format("woff2");
+	font-weight: 200;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Cera Pro";
+	src: url("/assets/fonts/CeraPro/Cera_Pro_Thin_Italic.woff2") format("woff2");
+	font-weight: 200;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Cera Pro";
+	src: url("/assets/fonts/CeraPro/Cera_Pro_Light.woff2") format("woff2");
+	font-weight: 300;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Cera Pro";
+	src: url("/assets/fonts/CeraPro/Cera_Pro_Light_Italic.woff2") format("woff2");
+	font-weight: 300;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Cera Pro";
+	src: url("/assets/fonts/CeraPro/Cera_Pro_Regular.woff2") format("woff2");
+	font-weight: 400;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Cera Pro";
+	src: url("/assets/fonts/CeraPro/Cera_Pro_Regular_Italic.woff2") format("woff2");
+	font-weight: 400;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Cera Pro";
+	src: url("/assets/fonts/CeraPro/Cera_Pro_Medium.woff2") format("woff2");
+	font-weight: 500;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Cera Pro";
+	src: url("/assets/fonts/CeraPro/Cera_Pro_Medium_Italic.woff2") format("woff2");
+	font-weight: 500;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Cera Pro";
+	src: url("/assets/fonts/CeraPro/Cera_Pro_Bold.woff2") format("woff2");
+	font-weight: 700;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Cera Pro";
+	src: url("/assets/fonts/CeraPro/Cera_Pro_Bold_Italic.woff2") format("woff2");
+	font-weight: 700;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Cera Pro";
+	src: url("/assets/fonts/CeraPro/Cera_Pro_Black.woff2") format("woff2");
+	font-weight: 900;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Cera Pro";
+	src: url("/assets/fonts/CeraPro/Cera_Pro_Black_Italic.woff2") format("woff2");
+	font-weight: 900;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Gilroy";
+	src: url("/assets/fonts/Gilroy/Gilroy-Regular.woff2") format("woff2");
+	font-weight: 400;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Gilroy";
+	src: url("/assets/fonts/Gilroy/Gilroy-RegularItalic.woff2") format("woff2");
+	font-weight: 400;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Gilroy";
+	src: url("/assets/fonts/Gilroy/Gilroy-Medium.woff2") format("woff2");
+	font-weight: 500;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Gilroy";
+	src: url("/assets/fonts/Gilroy/Gilroy-MediumItalic.woff2") format("woff2");
+	font-weight: 500;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Gilroy";
+	src: url("/assets/fonts/Gilroy/Gilroy-SemiBold.woff2") format("woff2");
+	font-weight: 600;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Gilroy";
+	src: url("/assets/fonts/Gilroy/Gilroy-SemiBoldItalic.woff2") format("woff2");
+	font-weight: 600;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Gilroy";
+	src: url("/assets/fonts/Gilroy/Gilroy-Bold.woff2") format("woff2");
+	font-weight: 700;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Gilroy";
+	src: url("/assets/fonts/Gilroy/Gilroy-ExtraBold.woff2") format("woff2");
+	font-weight: 800;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Gilroy";
+	src: url("/assets/fonts/Gilroy/Gilroy-Black.woff2") format("woff2");
+	font-weight: 900;
+	font-style: normal;
+}
+
+`;
 
 export default App;

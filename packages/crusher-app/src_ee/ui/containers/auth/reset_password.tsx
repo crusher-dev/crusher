@@ -18,6 +18,8 @@ import React from "react";
 import { Conditional } from "dyson/src/components/layouts/Conditional/Conditional";
 import { LoadingSVG } from "@svg/dashboard";
 import { RequestMethod } from "@types/RequestOptions";
+import BaseContainer from "./components/BaseContainer";
+import { NewButton, newInputBoxCSS } from "./login";
 
 const resetPasswordRequest = (token: string, password: string) => {
 	return backendRequest("/users/actions/reset_password", {
@@ -98,167 +100,88 @@ export default function Signup() {
 
 	loadUserDataAndRedirect({ fetchData: false, userAndSystemData: data });
 	return (
-		<div css={containerCSS}>
-			<div className="pt-28">
-				<LoginNavBar />
-			</div>
-			<div className={"flex justify-center"}>
-				<div
-					className={"flex flex-col items-center"}
-					css={css`
-						margin-top: 144rem;
-					`}
-				>
-					<Heading type={1} fontSize={22} weight={900}>
-						Get superpowers to{" "}
-						<span
-							css={css`
-								color: #d4eb79;
-							`}
-						>
-							ship fast
-						</span>{" "}
-						and{" "}
-						<span
-							css={css`
-								color: #8c67f5;
-								margin-right: 12px;
-							`}
-						>
-							better
-						</span>
-						🚀
-					</Heading>
-					<TextBlock
-						fontSize={14.2}
-						color={"#606060"}
-						className={"mt-16"}
-						css={css`
-							letter-spacing: 0.2px;
-						`}
-						leading={false}
-					>
-						Devs use crusher to test & ship fast with confidence. Get started in seconds
-					</TextBlock>
+		<BaseContainer>
+			<div css={overlayContainer} className={"mt-32"}>
+				<div className={"mb-42"}>
+					<Conditional showIf={!query?.token}>
+						<div className="text-18 font-extrabold my-50 font-700 text-center">Invalid Token</div>
+					</Conditional>
+					<Conditional showIf={Boolean(query?.token)}>
+						<div css={overlayContainer} className={"mt-32"}>
+							<TextBlock fontSize={14} color={"#E7E7E7"} className={"mb-24"} weight={600}>
+								Reset your password
+							</TextBlock>
 
-					<div css={overlayContainer} className={"mt-32"}>
-						<div className={" mb-42"}>
-							<Conditional showIf={!query?.token}>
-								<div className="text-32 font-extrabold my-50">Invalid Token</div>;
-							</Conditional>
-							<Conditional showIf={Boolean(query?.token)}>
-								<div css={overlayContainer} className={"mt-32"}>
-									<TextBlock fontSize={14} color={"#E7E7E7"} className={"mb-24"} weight={600}>
-										Reset your password
-									</TextBlock>
-
-									<div className={" mb-72"}>
-										<div className="mt-20">
-											<Input
-												className="md-20 bg"
-												value={password.value}
-												placeholder={"Enter your password"}
-												type={"password"}
-												onChange={passwordChange}
-												isError={password.error}
-												onBlur={verifyInfo}
-											/>
-											<Conditional showIf={getBoolean(password.error)}>
-												<div className={"mt-8 text-12"} css={errorState}>
-													{password.error}
-												</div>
-											</Conditional>
+							<div className={" mb-72"}>
+								<div className="mt-20">
+									<Input
+										className="md-20 bg"
+										value={password.value}
+										placeholder={"Enter new password"}
+										type={"password"}
+										onChange={passwordChange}
+										isError={password.error}
+										onBlur={verifyInfo}
+										css={newInputBoxCSS}
+									/>
+									<Conditional showIf={getBoolean(password.error)}>
+										<div className={"mt-8 text-12"} css={errorState}>
+											{password.error}
 										</div>
-										<div className="mt-20">
-											<Input
-												className="md-20 bg"
-												value={confirmPassword.value}
-												placeholder={"Confirm your password"}
-												type={"password"}
-												onChange={confirmPasswordChange}
-												onKeyDown={onEnter}
-												isError={confirmPassword.error}
-												onBlur={verifyInfo}
-											/>
-											<Conditional showIf={getBoolean(confirmPassword.error)}>
-												<div className={"mt-8 text-12"} css={errorState}>
-													{confirmPassword.error}
-												</div>
-											</Conditional>
-										</div>
-										<Button
-											className={"flex items-center justify-center mt-30"}
-											css={css(`
-									width: 100%;
-									height: 38px;
-									font-weight: 400;
-                                    background:#905CFF;
-								`)}
-											onClick={submitForm}
-										>
-											<div className={"flex justify-center items-center"}>
-												<Conditional showIf={!loading}>
-													<Text fontSize={14} weight={900}>
-														Change Password
-													</Text>
-												</Conditional>
-												<Conditional showIf={loading}>
-													<span>
-														{" "}
-														<LoadingSVG color={"#fff"} height={"16rem"} width={"16rem"} />
-													</span>
-													<span className={"mt-2 ml-8"}>Processing</span>
-												</Conditional>
-											</div>
-										</Button>
-									</div>
+									</Conditional>
 								</div>
-							</Conditional>
+								<div className="mt-20">
+									<Input
+										className="md-20 bg"
+										value={confirmPassword.value}
+										placeholder={"Confirm new password"}
+										type={"password"}
+										onChange={confirmPasswordChange}
+										onKeyDown={onEnter}
+										isError={confirmPassword.error}
+										onBlur={verifyInfo}
+										css={newInputBoxCSS}
+									/>
+									<Conditional showIf={getBoolean(confirmPassword.error)}>
+										<div className={"mt-8 text-12"} css={errorState}>
+											{confirmPassword.error}
+										</div>
+									</Conditional>
+								</div>
+								<NewButton className={"flex items-center justify-center mt-30"} onClick={submitForm}>
+									<div className={"flex justify-center items-center"}>
+										<Conditional showIf={!loading}>Change Password</Conditional>
+										<Conditional showIf={loading}>
+											<span>
+												{" "}
+												<LoadingSVG color={"#fff"} height={"16rem"} width={"16rem"} />
+											</span>
+											<span className={"mt-2 ml-8"}>Processing</span>
+										</Conditional>
+									</div>
+								</NewButton>
+							</div>
 						</div>
-						<div className="flex w-full justify-center">
-							<Text css={[underLineonHover, helpCSS]} fontSize={14}>
-								Need help?
-							</Text>
-						</div>
-					</div>
-					<div onClick={() => router.push("/signup")} className="flex w-full justify-center mt-40">
-						<Text
-							color={"#565657"}
-							fontSize={14}
-							css={css`
-								font-size: 14.5rem;
-								:hover {
-									text-decoration: underline;
-								}
-							`}
-						>
-							Already registered?{" "}
-							<span
-								css={css`
-									color: #855aff;
-								`}
-							>
-								Signup
-							</span>
-						</Text>
-					</div>
+					</Conditional>
+				</div>
+				<div className="flex w-full justify-center">
+					<Text css={[underLineonHover, helpCSS]} fontSize={14}>
+						Need help?
+					</Text>
 				</div>
 			</div>
-		</div>
+		</BaseContainer>
 	);
 }
+
+const errorState = css``;
 
 const helpCSS = css`
 	color: #565657;
 `;
-const containerCSS = css(`
-height: 100vh;
-background: #0C0C0D;
-width: 100vw;
-`);
 
 const overlayContainer = css(`
-	width: 372rem;
+	width: 368rem;
 `);
 
 const underLineonHover = css`

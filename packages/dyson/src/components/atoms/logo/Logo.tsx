@@ -32,6 +32,7 @@ export const Logo: React.FC<LogoProps> = ({ showOnlyIcon=false, isMonochrome, wi
 		width={showOnlyIcon ? (width) : (113)}
 		height={height}
 		fill="none"
+		viewBox="0 0 113 23"
 		xmlns="http://www.w3.org/2000/svg"
 		{...props}
 	  >

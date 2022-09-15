@@ -1,10 +1,38 @@
-import { css } from "@emotion/react";
-import { Logo } from "dyson/src/components/atoms";
-import { ClickableText } from "dyson/src/components/atoms/clickacbleLink/Text";
-import { Conditional } from "dyson/src/components/layouts";
-import Link from "next/link";
-import { useRouter } from "next/router";
 import React from "react";
+
+import { css } from "@emotion/react";
+import { Logo, Text } from "dyson/src/components/atoms";
+import { ClickableText } from "dyson/src/components/atoms/clickacbleLink/Text";
+
+import Link from "next/link";
+
+export default function NewProjectContainer({ children }) {
+	return (
+		<div css={containerCSS}>
+			<div className="pt-18">
+				<TopBar />
+			</div>
+			<div className={"flex justify-center"}>
+				<div
+					className={"flex flex-col items-center"}
+					css={css`
+						margin-top: 95rem;
+					`}
+				>
+					{children}
+				</div>
+			</div>
+		</div>
+	);
+}
+
+const containerCSS = css(`
+height: 100vh;
+// background: linear-gradient(180deg, #0A0A0A 0%, #0A0A0A 100%);
+// background: linear-gradient(180deg,#0c0c0c 0%,#0A0A0A 100%);
+background: #080808;
+width: 100vw;
+`);
 
 function ExternalLink(props: any) {
 	return (
@@ -25,11 +53,13 @@ function ExternalLink(props: any) {
 	);
 }
 
-export const LoginNavBar = () => {
-	const { route } = useRouter();
-	const loginPage = route === "/login";
+export const TopBar = () => {
 	return (
 		<div className="flex justify-between items-center" css={topBar}>
+			<Link href={"/app/projects"}>
+				<Text css={hoverUnderline}>← Go back</Text>
+			</Link>
+
 			<a href="https://crusher.dev" css={logoCSS}>
 				<Logo height={20} />
 			</a>
@@ -40,25 +70,17 @@ export const LoginNavBar = () => {
 						<span className="mr-4">Docs</span> <ExternalLink />{" "}
 					</ClickableText>
 				</a>
-				<Conditional showIf={loginPage}>
-					<Link className="text-14" href="/signup">
-						<ClickableText paddingY={4} className="text-14">
-							Signup
-						</ClickableText>
-					</Link>
-				</Conditional>
-
-				<Conditional showIf={!loginPage}>
-					<Link className="text-14" href="/login">
-						<ClickableText paddingY={4} className="text-14">
-							Login
-						</ClickableText>
-					</Link>
-				</Conditional>
 			</div>
 		</div>
 	);
 };
+
+const hoverUnderline = css`
+	:hover {
+		text-decoration: underline !important;
+		color: #ae47ff;
+	}
+`;
 
 const logoCSS = css`
 	:hover {
@@ -68,7 +90,7 @@ const logoCSS = css`
 
 const topBar = css`
 	margin: 0 auto;
-	width: 980rem;
+	width: 800rem;
 	padding: 0 30px;
 	max-width: 100%;
 `;

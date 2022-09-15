@@ -64,6 +64,7 @@ export const getProjectConfig = (verbose: boolean = true) => {
 	if (!hasLoggedProjectConfig) {
 		hasLoggedProjectConfig = true;
 		const relativePath = path.relative(process.cwd(), configPath);
+
 		Message(chalk.bgCyan, ' config ', `${chalk.white(relativePath)}`);
 		BlankMessage(`${chalk.gray('Using config')}\n`);
 	}

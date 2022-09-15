@@ -28,7 +28,7 @@ export default function Custom404() {
 		>
 			<BlankBase
 				css={css`
-					background: #0a0b0e;
+					background: #080808;
 				`}
 			>
 				<CenterLayout>

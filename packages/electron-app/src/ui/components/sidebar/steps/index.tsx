@@ -8,7 +8,7 @@ import { Button } from "@dyson/components/atoms/button/Button";
 import { Conditional } from "@dyson/components/layouts";
 import { useDispatch, useSelector, useStore } from "react-redux";
 import { getIsStatusBarVisible, getRecorderState, getSavedSteps } from "electron-app/src/store/selectors/recorder";
-import { ConsoleIcon, MoreIcon, MuteIcon } from "../../../icons";
+import { ConsoleIcon, GreenCheckboxIcon, MoreIcon, MuteIcon, PointerArrowIcon } from "../../../icons";
 import { LoadingIcon, WarningIcon } from "electron-app/src/ui/icons";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
 import {
@@ -135,8 +135,9 @@ const Step = ({
 	subtitle,
 	isRunning,
 	isFailed,
+	isCompleted,
 	...props
-}: CheckboxProps & { action: iAction; stepIndex: string | number; title: string; subtitle: string; isRunning?: boolean; isFailed?: boolean }): JSX.Element => {
+}: CheckboxProps & { action: iAction; isCompleted: boolean; stepIndex: string | number; title: string; subtitle: string; isRunning?: boolean; isFailed?: boolean }): JSX.Element => {
 	const [isHover, setIsHover] = React.useState(false);
 	const [showStepActionDropdown, setShowStepActionDropdown] = React.useState(false);
 	const [isPinned, setIsPinned] = React.useState(false);
@@ -222,25 +223,19 @@ const Step = ({
 			data-type={action.type}
 			data-status={action.status}
 		>
-			<div css={[stepStyle, isHover && hoverStepStyle, finalIsRunning && runningStepStyle, isFailed && failedStyle]}>
+			<div css={[stepStyle, isHover && hoverStepStyle, isFailed && failedStyle]}>
+				{finalIsRunning ? (
+					<PointerArrowIcon css={css`    width: 6rem;
+					height: 9rem;
+					position: absolute;
+					left: 8rem;
+					top: 8rem;`}/>
+				): ``}
 				<div className="flex flex-col" css={css``}>
-					<Checkbox
-						{...props}
-						css={css`
-							padding-top: 4rem;
-						`}
-					/>
-					<Conditional showIf={action.payload.isOptional}>
-						<MuteIcon
-							css={css`
-								height: 9rem;
-								margin-top: 6rem;
-							`}
-						/>
-					</Conditional>
+					
 				</div>
 				<div css={stepTextStyle}>
-					<TextBlock css={[stepTitleStyle, isFailed ? failedStepTitleStyle : null]}>{titleTag}</TextBlock>
+					<TextBlock css={[stepTitleStyle, isFailed ? failedStepTitleStyle : null, finalIsRunning ? css`color: #A056FF !important;` : null]}>{titleTag}</TextBlock>
 					<TextBlock css={stepSubtitleStyle}>{subtitle}</TextBlock>
 				</div>
 				<Conditional showIf={finalIsRunning}>
@@ -251,7 +246,10 @@ const Step = ({
 						`}
 					/>
 				</Conditional>
-				<Conditional showIf={isHover && !finalIsRunning}>
+				<Conditional showIf={isCompleted}>
+					<GreenCheckboxIcon css={css`width: 14rem; height: 14rem;`}/>
+				</Conditional>
+				{/* <Conditional showIf={isHover && !finalIsRunning}>
 					<div
 						css={css`
 							align-self: stretch;
@@ -279,7 +277,7 @@ const Step = ({
 							/>
 						</Dropdown>
 					</div>
-				</Conditional>
+				</Conditional> */}
 
 				<Conditional showIf={isFailed}>
 					<TextBlock css={stepWarningStyle}>
@@ -521,6 +519,7 @@ const StepsPanel = ({ className, ...props }: any) => {
 						action={step.action}
 						stepIndex={step.id}
 						isRunning={step.status === ActionStatusEnum.STARTED}
+						isCompleted={step.status === ActionStatusEnum.COMPLETED}
 						isFailed={step.status === ActionStatusEnum.FAILED}
 						isSelected={checkedSteps.has(step.id)}
 						callback={() => toggleStep(step.id)}
@@ -621,8 +620,10 @@ const stepStyle = css`
 	border: 1.5rem solid rgba(255, 255, 255, 0);
 	border-left: none;
 	border-right: none;
-	padding: 3rem 15rem;
-	margin: 10rem 0rem;
+	padding: 7rem 15rem;
+	margin: 6rem 0rem;
+	padding-right: 5rem;
+	position: relative;
 `;
 const hoverStepStyle = css`
 	border: 1.5rem solid rgba(255, 255, 255, 0.1);
@@ -635,28 +636,27 @@ const failedStyle = css`
 	background: #0f1011;
 `;
 const stepTextStyle = css`
-	margin: 5rem;
-	margin-left: 13rem;
+	margin-left: 6rem;
 	flex: 1 0 50%;
 	word-break: break-all;
 `;
 const stepTitleStyle = css`
 	font-family: Gilroy !important;
-	font-style: 600 !important;
-	font-weight: normal !important;
-	font-size: 12.6rem !important;
+	font-style: normal !important;
+	font-weight: 500 !important;
+	font-size: 12rem !important;
 	line-height: 13rem !important;
-	color: rgba(215, 223, 225, 0.6) !important;
+	color: #FFFFFF !important;
 	user-select: none !important;
 	margin-bottom: 2rem !important;
 `;
 const stepSubtitleStyle = css`
 	font-family: Gilroy !important;
 	font-style: normal !important;
-	font-weight: normal !important;
-	font-size: 10.5rem !important;
+	font-weight: 400;
+	font-size: 10rem !important;
 	line-height: 10rem !important;
-	margin-top: 6.2rem !important;
+	margin-top: 4.9rem !important;
 	color: #79929a !important;
 	user-select: none !important;
 `;

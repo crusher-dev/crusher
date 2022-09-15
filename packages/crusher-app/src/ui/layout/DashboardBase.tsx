@@ -120,26 +120,6 @@ function ProjectList() {
 	);
 }
 
-function BottomSection({ name, description, ...props }) {
-	return (
-		<div className={"flex justify-between py-8 px-12 pb-6 mt-20"} css={upgradeCard} {...props}>
-			<div>
-				<div className={"label font-700"}>{name}</div>
-				<div className={"description text-12"}>{description}</div>
-			</div>
-			<div>
-				<div>
-					<TraySVG
-						css={css`
-							margin-left: auto;
-						`}
-					/>
-				</div>
-				<div className={"upgrade text-12 mt-6 font-600"}>Upgrade</div>
-			</div>
-		</div>
-	);
-}
 
 function HelpContent() {
 	return (

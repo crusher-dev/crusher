@@ -255,22 +255,20 @@ const App = () => {
 
     return (
         // <Wrapper figmaUrl={"https://www.figma.com/proto/MsJZCnY5NvrDF4kL1oczZq/Crusher-%7C-Aug?page-id=988%3A3439&node-id=988%3A3817&viewport=524%2C381%2C0.47&scaling=scale-down-width"}>
+			<div>
+				<div css={dragableStyle} className={"drag"}></div>
+				<div css={contentStyle}>
+				<Sidebar css={sidebarCss} />
+					<div css={bodyCss}>
+							<Toolbar css={toolbarStyle} />
+							<DeviceFrame css={deviceFrameContainerCss} />
+							{isStatusBarVisible ? <StatusBar /> : ""}
+					</div>
+				</div>
 
-       
-        <div>
-            <div css={dragableStyle} className={"drag"}></div>
-            <div css={contentStyle}>
-               <Sidebar css={sidebarCss} />
-                <div css={bodyCss}>
-                        <Toolbar css={toolbarStyle} />
-                        <DeviceFrame css={deviceFrameContainerCss} />
-                        {isStatusBarVisible ? <StatusBar /> : ""}
-                </div>
-            </div>
-
-            <Global styles={globalCss}/>
-            <InfoOverLay />
-        </div>
+				<Global styles={globalCss}/>
+				<InfoOverLay />
+			</div>
         // </Wrapper>
     )
 };
@@ -323,7 +321,6 @@ const globalCss = css`
         }
 `;
 const sidebarCss = css`
-	padding: 1rem;
 	width: 334rem;
 `;
 const bodyCss = css`

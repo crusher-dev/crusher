@@ -110,6 +110,7 @@ const projectItem = css`
 	width: 354rem;
 
 	border: 0.5px solid #1b1b1b;
+	border: 0.5px solid #252525;
 	border-radius: 14px;
 
 	.open {
@@ -119,12 +120,15 @@ const projectItem = css`
 
 		background: #212121;
 		border-radius: 7px;
+		font-size: 12px;
 	}
 	:hover {
 		.open {
 			visibility: visible;
 		}
-		background: rgba(23, 23, 23, 0.42);
+		border-color: #c076ff;
+		//background: #c076ff0a;
+		background: #832ccc0a;
 	}
 `;
 
@@ -200,7 +204,7 @@ function ProjectCard({ project }) {
 	const { id, name } = project;
 	return (
 		<Link href="/app/dashboard">
-			<div css={projectItem} className={"flex flex-col justify-between pr-18 pl-24 pt-16 pb-22"}>
+			<div css={projectItem} className={"flex flex-col justify-between pr-16 pl-20 pt-16 pb-22"}>
 				<div>
 					<div className="flex items-center justify-between">
 						<div className="flex items-center">

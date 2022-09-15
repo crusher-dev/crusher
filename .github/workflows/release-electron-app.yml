@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-      - ft-ea-v2
+      - baseBranch
   release:
     types: [published]
 

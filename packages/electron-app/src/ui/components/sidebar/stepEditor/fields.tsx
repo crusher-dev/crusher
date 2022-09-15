@@ -1,5 +1,6 @@
 import React from "react";
-import { Toggle, ToggleProps } from "@dyson/components/atoms/toggle/toggle";
+import { Toggle } from "@dyson/components/atoms/toggle/toggle";
+import Switch, { ToggleProps } from "@dyson/components/atoms/toggle/switch";
 import { Input } from "@dyson/components/atoms";
 import { InputProps } from "@dyson/components/atoms/input/Input";
 import { css } from "@emotion/react";
@@ -67,7 +68,7 @@ const FieldToggle = (props: IToggleProps) => {
 	return (
 		<div className={`flex ${className}`} css={fieldContainerStyle}>
 			<span>{props.label}</span>
-			<Toggle css={toggleStyle} {...toggleProps} />
+			<Switch css={toggleStyle} {...toggleProps} />
 		</div>
 	);
 };

@@ -210,7 +210,7 @@ const SettingsModalContent = ({ className, ...props }: iStartupModalProps & { cl
 				margin-top: 16rem;
 			`}
 			>
-				<div css={inputContainerStyle}>
+				<div css={inputContainerStyle} className="flex justify-between">
 					<div
 						css={css`
 						font-size: 13rem;
@@ -222,16 +222,12 @@ const SettingsModalContent = ({ className, ...props }: iStartupModalProps & { cl
 					</div>
 
 					<Switch
-						checked={autoDetectActions} onCheckedChange={autoDetectActions}
+						checked={autoDetectActions} onCheckedChange={setAutoDetctActions}
 						size={"small"}
-
-						css={css`
-						margin-left: auto;
-						zoom: 0.8;
-					`}
 					/>
 				</div>
 				<div
+					className="flex justify-between"
 					css={[
 						inputContainerStyle,
 						css`
@@ -249,13 +245,9 @@ const SettingsModalContent = ({ className, ...props }: iStartupModalProps & { cl
 						Enable mouse tracker
 					</div>
 
-					<Toggle
-						isOn={enableMouseTracker}
-						callback={handleEnableMouseTrackerCallback}
-						css={css`
-						margin-left: auto;
-						zoom: 0.8;
-					`}
+					<Switch
+						checked={enableMouseTracker} onCheckedChange={handleEnableMouseTrackerCallback}
+						size={"small"}
 					/>
 				</div>
 			</div>

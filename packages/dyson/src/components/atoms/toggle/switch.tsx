@@ -4,7 +4,6 @@ import { blackA } from '@radix-ui/colors';
 import * as SwitchPrimitive from '@radix-ui/react-switch';
 import { css } from "@emotion/react";
 
-
 const StyledSwitch = styled(SwitchPrimitive.Root, {
   all: 'unset',
   width: 42,
@@ -36,7 +35,7 @@ export const Switch = StyledSwitch;
 export const SwitchThumb = StyledThumb;
 
 
-const SwitchComponent = (props: any) => {
+const SwitchComponent = (props: ToggleProps) => {
   const { disabled = false, size = "small", css } = props;
   const isSmall = size === "small";
 
@@ -84,4 +83,5 @@ export type ToggleProps = {
   disabled?: boolean;
   name?: string;
   className?: any;
+
 } & React.DetailedHTMLProps<any, any>;

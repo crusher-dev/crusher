@@ -13,6 +13,7 @@ import { iReduxState } from "electron-app/src/store/reducers";
 import { sendSnackBarEvent } from "../../toast";
 import { AddIcon, DownIcon, UpIcon } from "electron-app/src/ui/icons";
 import { Conditional } from "@dyson/components/layouts";
+import { Switch } from "@dyson/components/atoms/toggle/switch";
 
 interface iStartupModalProps {
 	isOpen: boolean;
@@ -202,9 +203,9 @@ const TemplatesModal = (props: iStartupModalProps) => {
 									Auto-detect actions
 								</div>
 
-								<Toggle
-									isOn={autoDetectActions}
-									callback={handleAutoDetectActionsCallback}
+								<Switch
+									checked={autoDetectActions}
+									onCheckedChange={handleAutoDetectActionsCallback}
 									css={css`
 										margin-left: auto;
 									`}
@@ -229,8 +230,8 @@ const TemplatesModal = (props: iStartupModalProps) => {
 								</div>
 
 								<Toggle
-									isOn={enableMouseTracker}
-									callback={handleEnableMouseTrackerCallback}
+									checked={enableMouseTracker}
+									onCheckedChange={handleEnableMouseTrackerCallback}
 									css={css`
 										margin-left: auto;
 									`}

@@ -162,7 +162,7 @@ const ActionSpecificInfo = (props: IActionSpecificInfoProps) => {
 					onBlur={handleTimeoutBlur}
 					onReturn={updateTimeout}
 				/>
-				<FieldToggle className={"mt-12"} label={"Mark as optional"} isOn={!!isOptional} callback={handleOptionalToggle} />
+				<FieldToggle className={"mt-12"} label={"Mark as optional"} checked={!!isOptional} onCheckedChange={handleOptionalToggle} />
 			</div>
 		</div>
 	);

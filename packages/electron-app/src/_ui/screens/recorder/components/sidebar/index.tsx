@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { css } from "@emotion/react";
 import { ActionsPanel } from "./actionsPanel";
 import { CustomCodeBanner } from "./customCodeBanner";
-import { StepsPanel } from "electron-app/src/ui/components/sidebar/steps";
+import { StepsPanel } from "./stepsPanel/index";
 import { ModalManager } from "electron-app/src/ui/components/modals";
 import { TemplatesModal } from "electron-app/src/ui/components/sidebar/steps/templatesModal";
 

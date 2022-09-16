@@ -9,8 +9,6 @@ import { ObjectInspector, TableInspector, chromeDark, ObjectRootLabel, ObjectLab
 import { BrowserButton } from "../buttons/browser.button";
 import { CustomCodeModal } from "../modals/page/customCodeModal";
 import { modalEmitter } from "../modals";
-import { TElementActionsEnum } from "../../../_ui/screens/recorder/components/sidebar/actionsPanel/elementActions";
-import { TTopLevelActionsEnum } from "../../../_ui/screens/recorder/components/sidebar/actionsPanel/pageActions";
 import { getRecorderState, getSavedSteps } from "electron-app/src/store/selectors/recorder";
 import { updateRecorderState } from "electron-app/src/store/actions/recorder";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
@@ -143,8 +141,8 @@ const StatusBar = (props: any) => {
 		}
 	}, [clicked]);
 	React.useEffect(() => {
-		modalEmitter.on("show-modal", ({ type, stepIndex }: { type: TElementActionsEnum | TTopLevelActionsEnum; stepIndex?: number }) => {
-			if (type === TTopLevelActionsEnum.CUSTOM_CODE) {
+		modalEmitter.on("show-modal", ({ type, stepIndex }: { type: any; stepIndex?: number }) => {
+			if (type === "CUSTOM_CODE") {
 				const recorderState = getRecorderState(store.getState());
 				if (recorderState.payload && !(recorderState.payload as any).previousState) {
 					store.dispatch(
@@ -279,14 +277,14 @@ const StatusBar = (props: any) => {
 					display: flex;
 					flex-direction: column;
 				`,
-				currentModal && currentModal.type === TTopLevelActionsEnum.CUSTOM_CODE
+				currentModal && currentModal.type === "CUSTOM_CODE"
 					? css`
 							height: 100%;
 					  `
 					: undefined,
 			]}
 		>
-			{currentModal && currentModal.type === TTopLevelActionsEnum.CUSTOM_CODE ? (
+			{currentModal && currentModal.type === "CUSTOM_CODE" ? (
 				<div
 					css={css`
 						flex: 1;
@@ -301,7 +299,7 @@ const StatusBar = (props: any) => {
 					<CustomCodeModal
 						stepAction={stepAction as any}
 						stepIndex={currentModal.stepIndex}
-						isOpen={currentModal.type === TTopLevelActionsEnum.CUSTOM_CODE}
+						isOpen={currentModal.type === "CUSTOM_CODE"}
 						handleClose={closeModal}
 					/>
 					{/* <div css={css`height: 100%; width: 100%; background :red;`}></div> */}

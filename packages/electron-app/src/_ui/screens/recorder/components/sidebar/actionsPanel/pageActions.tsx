@@ -1,96 +1,50 @@
 import React from "react";
-import { css } from "@emotion/react";
-import { ActionsList, ActionsListItem } from "./actionsList";
 import { performTakePageScreenshot } from "electron-app/src/ui/commands/perform";
-import { emitShowModal } from "../../../../../../ui/components/modals";
-import { getRecorderState } from "electron-app/src/store/selectors/recorder";
-import { useStore } from "react-redux";
-import { TRecorderState } from "electron-app/src/store/reducers/recorder";
-import { sendSnackBarEvent } from "../../../../../../ui/components/toast";
+import { emitShowModal } from "electron-app/src/ui/components/modals";
+import { ActionsList } from "./actionsList";
+import { getItemsFromActionsData } from "./helper";
 
-export enum TTopLevelActionsEnum {
-	VIEWPORT_SCREENSHOT = "TAKE_VIEWPORT_SCREENSHOT",
-	WAIT = "WAIT",
-	SHOW_SEO_MODAL = "SHOW_SEO_MODAL",
-	CUSTOM_CODE = "CUSTOM_CODE",
-	RUN_AFTER_TEST = "RUN_AFTER_TEST",
-}
+const actionsData = require("./actions.json");
+interface IProps {
+    className?: string;
+}; 
 
-const topActionsList = [
-	{
-		id: TTopLevelActionsEnum.VIEWPORT_SCREENSHOT,
-		title: "Take viewport screenshot",
-	},
-	{
-		id: TTopLevelActionsEnum.WAIT,
-		title: "Wait for seconds",
-	},
-	{
-		id: TTopLevelActionsEnum.SHOW_SEO_MODAL,
-		title: "Add SEO checks",
-	},
-	{
-		id: TTopLevelActionsEnum.CUSTOM_CODE,
-		title: "Custom Code",
-	},
-	{
-		id: TTopLevelActionsEnum.RUN_AFTER_TEST,
-		title: "Run after test",
-	},
-];
-
-const PageActions = ({ className, ...props }: { className?: any }) => {
-	const [currentModal, setCurrentModal] = React.useState(null);
-	const store = useStore();
-
-	const handleActionSelected = (id: TTopLevelActionsEnum) => {
-		const recorderState = getRecorderState(store.getState());
-		if (recorderState.type !== TRecorderState.RECORDING_ACTIONS) {
-			sendSnackBarEvent({ type: "error", message: "A action is in progress. Wait and retry again" });
-			return;
-		}
-
-		switch (id) {
-			case TTopLevelActionsEnum.VIEWPORT_SCREENSHOT:
+const PageActions = ({className, ...props}: IProps) => {
+    const handleCallback = React.useCallback((id) => {
+        switch (id) {
+			case "TAKE_VIEWPORT_SCREENSHOT":
 				performTakePageScreenshot();
 				break;
-			case TTopLevelActionsEnum.WAIT:
-				emitShowModal({ type: TTopLevelActionsEnum.WAIT });
+			case "WAIT":
+				emitShowModal({ type: "WAIT" });
 				break;
-			case TTopLevelActionsEnum.SHOW_SEO_MODAL:
-				emitShowModal({ type: TTopLevelActionsEnum.SHOW_SEO_MODAL });
+			case "SHOW_SEO_MODAL":
+				emitShowModal({ type: "SHOW_SEO_MODAL" });
 				break;
-			case TTopLevelActionsEnum.CUSTOM_CODE:
-				emitShowModal({ type: TTopLevelActionsEnum.CUSTOM_CODE });
+			case "CUSTOM_CODE":
+				emitShowModal({ type: "CUSTOM_CODE" });
 				break;
-			case TTopLevelActionsEnum.RUN_AFTER_TEST:
-				emitShowModal({ type: TTopLevelActionsEnum.RUN_AFTER_TEST });
+			case "RUN_AFTER_TEST":
+				emitShowModal({ type: "RUN_AFTER_TEST" });
 				break;
 			default:
 				break;
 		}
-	};
+    }, []);
 
-	const items = topActionsList.map((action) => {
-		return (
-			<ActionsListItem key={action.id} onClick={handleActionSelected.bind(this, action.id)}>
-				{action.title}
-			</ActionsListItem>
-		);
-	});
+    const items = React.useMemo(() => {
+        return getItemsFromActionsData(actionsData["PAGE"])
+    }, []);
 
-	const closeModal = (completed?: boolean) => {
-		setCurrentModal(null);
-	};
-
-	return (
-		<>
-			<ActionsList className={`${className}`} css={containerStyle} title="common">
-				{items}
-			</ActionsList>
-		</>
-	);
+    return (
+        <ActionsList
+            className={`${className}`}
+            title={"common"}
+            description={"actions for page"}
+            items={items}
+            callback={handleCallback}
+        />
+    )
 };
 
-const containerStyle = css``;
 export { PageActions };

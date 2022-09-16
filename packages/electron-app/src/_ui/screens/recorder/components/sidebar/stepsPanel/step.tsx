@@ -21,7 +21,7 @@ const Step = ({className, ...props}: IProps) => {
 
     return (
         <div css={containerCss}>
-            <div css={contentCss}>
+            <div className={"card"} css={contentCss}>
                 {stepInfo.isRunning ? (
                     <PointerArrowIcon css={runningPointerIconCss}/>
                 ) : ""}
@@ -55,7 +55,13 @@ const Step = ({className, ...props}: IProps) => {
         </div>
     )
 };
-const containerCss = css``;
+const containerCss = css`
+    padding-right: 11rem;
+    border-radius: 2rem;
+    :hover {
+        background: rgb(25 30 49);
+    }
+`;
 const contentCss = css`
     display: flex;
     flex-wrap: wrap;

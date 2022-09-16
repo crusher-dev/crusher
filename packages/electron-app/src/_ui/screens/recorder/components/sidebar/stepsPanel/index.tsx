@@ -81,7 +81,7 @@ const consoleActiveIconCss = css`
     }
 `;
 const contentCss = css`
-    overflow-y: scroll;
+    overflow-y: overlay;
     padding-top: 0rem;
     height: 100%;
     padding-bottom: 0rem;

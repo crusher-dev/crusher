@@ -10,49 +10,83 @@ import { useStore, useSelector } from "react-redux";
 import { ActionStatusEnum } from "@shared/types/action";
 import { GreenCheckboxIcon, LoadingIcon, PointerArrowIcon, WarningIcon } from "electron-app/src/ui/icons";
 import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
+import { RightClickMenu } from "@dyson/components/molecules/RightClick/RightClick";
 
 interface IProps {
     className?: string;
     stepId?: string;
 };
+
+const menuItems = [
+    {id: "rename", label: "Rename", shortcut: <div>Enter</div>},
+    {id: "delete", label: 'Delete', shortcut: <div>⌘+D</div>}
+];
+
 const Step = ({className, ...props}: IProps) => {
     const { stepId } = props;
     const stepInfo = useSelector(getStepInfo(stepId));
+    const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+    const store = useStore();
+
+    const handleCallback = React.useCallback((id) => {
+        switch(id) {
+            case "delete":
+                store.dispatch(deleteRecordedSteps([stepId]));
+                break;
+        }
+    }, []);
+
+    const menuItemsComponent = React.useMemo(() => {
+        return menuItems.map((item) => {
+            return {
+                type: "menuItem",
+                value: item.label,
+                rightItem: item.shortcut,
+                onClick: handleCallback.bind(this, item.id)
+            }
+        });
+    }, []);
+
+    const handleMenuOpenChange = React.useCallback((isOpen) => {
+        setIsMenuOpen(isOpen);
+    }, []);
 
     return (
-        <div css={containerCss}>
-            <div className={"card"} css={contentCss}>
-                {stepInfo.isRunning ? (
-                    <PointerArrowIcon css={runningPointerIconCss}/>
-                ) : ""}
-                <div css={stepTextCss}>
-                    <TextBlock
-                        css={[
-                            stepNameCss,
-                            stepInfo.isFailed ? failedTextNameCss : null,
-                            stepInfo.isRunning ? runningTextNameCss : null
-                    ]}>
-                        {stepInfo.name}
-                    </TextBlock>
-					<TextBlock css={stepDescriptionCss}>{stepInfo.description}</TextBlock>
+        <RightClickMenu onOpenChange={handleMenuOpenChange} menuItems={menuItemsComponent}>
+            <div css={[containerCss, isMenuOpen ? activeItemCss : null]}>
+                <div className={"card"} css={contentCss}>
+                    {stepInfo.isRunning ? (
+                        <PointerArrowIcon css={runningPointerIconCss}/>
+                    ) : ""}
+                    <div css={stepTextCss}>
+                        <TextBlock
+                            css={[
+                                stepNameCss,
+                                stepInfo.isFailed ? failedTextNameCss : null,
+                                stepInfo.isRunning ? runningTextNameCss : null
+                        ]}>
+                            {stepInfo.name}
+                        </TextBlock>
+                        <TextBlock css={stepDescriptionCss}>{stepInfo.description}</TextBlock>
+                    </div>
+                    {stepInfo.isRunning ? (
+                        <LoadingIcon style={{}} css={runningIconCss}/>
+                    ) : ""}
+                    {stepInfo.isCompleted ? (
+                        <GreenCheckboxIcon css={completedIconCss}/>
+                    ): ""}
+                    {stepInfo.isFailed ? (
+                        <TextBlock css={failedStepTaglineCss}>
+                            <WarningIcon css={failedIconCss}/>
+                            <span css={failedWarningTextCss}>&nbsp; This step failed</span>
+                        </TextBlock>
+                    ): ""}
                 </div>
-                {stepInfo.isRunning ? (
-                    <LoadingIcon style={{}} css={runningIconCss}/>
-                ) : ""}
-                {stepInfo.isCompleted ? (
-					<GreenCheckboxIcon css={completedIconCss}/>
-                ): ""}
                 {stepInfo.isFailed ? (
-                    <TextBlock css={failedStepTaglineCss}>
-                        <WarningIcon css={failedIconCss}/>
-                        <span css={failedWarningTextCss}>&nbsp; This step failed</span>
-                    </TextBlock>
-                ): ""}
+                    <FailedStepCard stepId={stepId}/>
+                ) : ""}
             </div>
-            {stepInfo.isFailed ? (
-                <FailedStepCard stepId={stepId}/>
-            ) : ""}
-        </div>
+        </RightClickMenu>
     )
 };
 const containerCss = css`
@@ -61,6 +95,9 @@ const containerCss = css`
     :hover {
         background: rgb(25 30 49);
     }
+`;
+const activeItemCss = css`
+    background: rgb(25 30 49);
 `;
 const contentCss = css`
     display: flex;

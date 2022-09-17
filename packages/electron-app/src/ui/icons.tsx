@@ -768,8 +768,21 @@ const FailedCheckboxIcon = (props) => (
 		fill="#202020"
 	  />
 	</svg>
-  )
+  );
 
+  const AddIconV3 = (props) => (
+	<svg
+	  viewBox={"0 0 12 12"}
+	  fill="none"
+	  xmlns="http://www.w3.org/2000/svg"
+	  {...props}
+	>
+	  <path
+		d="M10.825 4.608h-3.7V1.175a1.175 1.175 0 1 0-2.349 0v3.433H1.175a1.175 1.175 0 0 0 0 2.35h3.601v3.867a1.174 1.174 0 1 0 2.35 0V6.957h3.7a1.175 1.175 0 1 0 0-2.349Z"
+		fill="#fff"
+	  />
+	</svg>
+  )
 export {
 	CrusherIcon,
 	GithubIcon,
@@ -817,5 +830,6 @@ export {
 	PlayIconV3,
 	GreenCheckboxIcon,
 	FailedCheckboxIcon,
-	PointerArrowIcon
+	PointerArrowIcon,
+	AddIconV3
 };

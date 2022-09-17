@@ -15,6 +15,10 @@ import useRequest from "../../utils/useRequest";
 import { CreateFirstTest } from "./createFirstTest";
 import { DashboardFooter } from "./footer";
 import { TestList } from "./testsList";
+import Wrapper from "figma-design-scaler/dist/dist/main";
+import { ButtonDropdown } from "../../components/buttonDropdown";
+import { AddIconV3 } from "electron-app/src/ui/icons";
+import { goFullScreen } from "electron-app/src/ui/commands/perform";
 
 const TitleComponent = ({ projectName }) => {
     const proxyIsInitializing = useSelector(getIsProxyInitializing);
@@ -153,6 +157,38 @@ const DashboardScreen = () => {
         };
     }, [projects]);
 
+    const handleCreateTest = React.useCallback(() => {
+        navigate("/recorder");
+		goFullScreen();
+    }, []);
+
+    const headerComponent = React.useMemo(() => {
+        return (
+            <div css={headerComponentCss}>
+                    <ButtonDropdown
+                        dropdownCss={buttonDropdownCss}
+                        css={[buttonDropdownMainButtonCss, css`background: transparent !important; width: auto !important; border: none !important;`]}
+                        options={[
+                            {id: "SAVE", content: (<span css={createTestCss}>
+                                <AddIconV3 css={createIconCss}/> <span>test</span>
+                            </span>)},
+                        ]}
+                        primaryOption={"SAVE"}
+                        callback={handleCreateTest}
+                    />
+                   <ButtonDropdown
+                        dropdownCss={buttonDropdownCss}
+                        css={buttonDropdownMainButtonCss}
+                        options={[
+                            {id: "SAVE", content: (<span>Run test</span>)},
+                        ]}
+                        primaryOption={"SAVE"}
+                        callback={() => {}}
+                    />
+            </div>
+         
+        );
+    }, []);
     const isLoading = React.useMemo(() => (!tests), [tests]);
     // To make delete experience fast
     const testContent = tests && tests.list && tests.list.length ? (<TestList deleteTest={handleTestDelete} tests={tests.list.filter(test => { return !((window as any).deletedTest || []).includes(test.id); })} />) : (<CreateFirstTest />);
@@ -160,14 +196,56 @@ const DashboardScreen = () => {
 
     const hasNotLoaded = isLoading || !animationComplete;
     return (
-        <CompactAppLayout showHeader={!hasNotLoaded} css={loadingCSS(hasNotLoaded)} title={selectedProject && !hasNotLoaded ? <TitleComponent projectName={selectedProject.name} /> : null} footer={!hasNotLoaded && <DashboardFooter tests={tests ? tests.list : undefined || []} />}>
-            {hasNotLoaded ? (<LoadingProgressBar inAppLoading={false} />) : content}
-        </CompactAppLayout>
+        // <Wrapper figmaUrl={"https://www.figma.com/proto/MsJZCnY5NvrDF4kL1oczZq/Crusher-%7C-Aug?node-id=1638%3A5550&scaling=min-zoom&page-id=988%3A3439&starting-point-node-id=988%3A3817"}>
+            <CompactAppLayout headerRightSection={headerComponent} showHeader={!hasNotLoaded} css={loadingCSS(hasNotLoaded)} title={selectedProject && !hasNotLoaded ? <TitleComponent projectName={selectedProject.name} /> : null} footer={!hasNotLoaded && <DashboardFooter tests={tests ? tests.list : undefined || []} />}>
+                {hasNotLoaded ? (<LoadingProgressBar inAppLoading={false} />) : content}
+            </CompactAppLayout>
+        // </Wrapper>
     );
 };
 
+const headerComponentCss = css`
+    display: flex;
+`;
 const loadingCSS = (hasNotLoaded) => css`
     background: ${hasNotLoaded ? "#0C0C0C" : "#0C0C0C"};
-`
+    .dropdown-icon {
+        background: transparent !important;
+    }
+`;
+const buttonDropdownCss = css`
+	left: 0rem !important;
+	height: max-content !important;
+	top: calc(100% + 4rem) !important;
+`;
+const buttonDropdownMainButtonCss = css`
+	width: 76rem;
+	height: 30rem;
+	padding: 0rem !important;
+    border-radius: 6rem !important;
+    background: hsla(268, 100%, 60%, 1) !important;
+
+    font-family: 'Gilroy' !important;
+    font-style: normal !important;
+    font-weight: 600 !important;
+    font-size: 14rem !important;
+
+    color: #FFFFFF !important;
+`;
+const createIconCss = css`
+    width: 11rem;
+    height: 11rem;
+`;
+const createTestCss = css`
+    display: flex;
+    gap: 7rem;
+    align-items: center;
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 13.6rem;
+
+    color: #FFFFFF;
+`;
 
 export { DashboardScreen };

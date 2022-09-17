@@ -59,8 +59,8 @@ export class AppWindow {
 	private _loadTime: number | null = null;
 	private _rendererReadyTime: number | null = null;
 
-	private minWidth = 1025;
-	private minHeight = 620;
+	private minWidth = 1027;
+	private minHeight = 659;
 	private savedWindowState: any = null;
 
 	private shouldMaximizeOnShow = true;
@@ -121,7 +121,7 @@ export class AppWindow {
 
 		this.window.show();
 		this.window.setFullScreenable(false);
-		this.window.setResizable(false);
+		// this.window.setResizable(false);
 
 		const cleanExit = () => {
 			if (this.proxyManager) {

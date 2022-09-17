@@ -6,7 +6,15 @@ import { shell } from "electron";
 import { MenuDropdown } from "electron-app/src/ui/layouts/modalContainer";
 import { Conditional } from "@dyson/components/layouts";
 
-const CompactAppLayout = ({ className, title, showHeader=true, footer, children, ...props } : { showHeader: boolean; className?: any; title?: any; footer?: any; children: any}) => {
+interface IProps {
+    showHeader: boolean;
+    headerRightSection?: any;
+    title?: any;
+    footer?: any;
+    className?: any;
+    children: any
+};
+const CompactAppLayout = ({ className, title, headerRightSection, showHeader=true, footer, children, ...props } : IProps) => {
     React.useEffect(() => {
 		document.querySelector("html").style.fontSize = "1px";
 	}, []);
@@ -17,21 +25,24 @@ const CompactAppLayout = ({ className, title, showHeader=true, footer, children,
     return (
         <div className={`${className}`} css={containerCss} {...props}>
             <div css={dragCss} className={"drag"}></div>
-            <Conditional showIf={showHeader}>
+            {showHeader ? (
                 <div css={headerCss} className={"header"}>
-                    <div css={headerLeftSectionCss}>
-                        <MenuDropdown isRecorder={false} css={menuDropdownCss} />
-                    </div>
-                    <div css={titleCss} className={"header-title"}>{title}</div>
-                    <div css={headerRightSectionCss}>
-                        <Link css={linkCss} onClick={handleOpenDocs}>Docs</Link>
-                        <Link onClick={handleOpenApp} css={[linkCss, openAppLinkCss]}>
-                            Open app {" "}
-                            <ExternalLinkIcon css={externalLinkIconCss}/>
-                        </Link>
-                    </div>
+                <div css={headerLeftSectionCss}>
+                    <MenuDropdown isRecorder={false} css={menuDropdownCss} />
                 </div>
-            </Conditional>
+                <div css={titleCss} className={"header-title"}>{title}</div>
+                {headerRightSection ? headerRightSection : (
+                    <div css={headerRightSectionCss}>
+                    <Link css={linkCss} onClick={handleOpenDocs}>Docs</Link>
+                    <Link onClick={handleOpenApp} css={[linkCss, openAppLinkCss]}>
+                        Open app {" "}
+                        <ExternalLinkIcon css={externalLinkIconCss}/>
+                    </Link>
+                </div>
+                )}
+     
+                </div>
+            ): ""}
 
             <div css={contentCss} className={"content-section"}>
                 {children}
@@ -89,7 +100,6 @@ const headerCss = css`
     display: flex;
     padding: 12px 28px;
     align-items: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     position: relative;
     z-index: 23424234324234234;
 `;

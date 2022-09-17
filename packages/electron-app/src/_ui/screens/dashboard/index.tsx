@@ -26,7 +26,7 @@ const TitleComponent = ({ projectName }) => {
 
     const isProxyWorking = Object.keys(proxyState).length;
     return (
-        <div css={titleStyle}>¯
+        <div css={titleStyle}>
             <span>
                 <span css={rocketIconStyle}>🚀</span>
                 &nbsp;
@@ -196,22 +196,22 @@ const DashboardScreen = () => {
 
     const hasNotLoaded = isLoading || !animationComplete;
     return (
-        // <Wrapper figmaUrl={"https://www.figma.com/proto/MsJZCnY5NvrDF4kL1oczZq/Crusher-%7C-Aug?node-id=1638%3A5550&scaling=min-zoom&page-id=988%3A3439&starting-point-node-id=988%3A3817"}>
+        <Wrapper figmaUrl={"https://www.figma.com/proto/MsJZCnY5NvrDF4kL1oczZq/Crusher-%7C-Aug?node-id=1638%3A5550&scaling=min-zoom&page-id=988%3A3439&starting-point-node-id=988%3A3817"}>
             <CompactAppLayout headerRightSection={headerComponent} showHeader={!hasNotLoaded} css={loadingCSS(hasNotLoaded)} title={selectedProject && !hasNotLoaded ? <TitleComponent projectName={selectedProject.name} /> : null} footer={!hasNotLoaded && <DashboardFooter tests={tests ? tests.list : undefined || []} />}>
                 {hasNotLoaded ? (<LoadingProgressBar inAppLoading={false} />) : content}
             </CompactAppLayout>
-        // </Wrapper>
+        </Wrapper>
     );
 };
 
 const headerComponentCss = css`
     display: flex;
-`;
-const loadingCSS = (hasNotLoaded) => css`
-    background: ${hasNotLoaded ? "#0C0C0C" : "#0C0C0C"};
     .dropdown-icon {
         background: transparent !important;
     }
+`;
+const loadingCSS = (hasNotLoaded) => css`
+    background: #080809;
 `;
 const buttonDropdownCss = css`
 	left: 0rem !important;

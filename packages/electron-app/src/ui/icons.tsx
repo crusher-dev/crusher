@@ -782,7 +782,8 @@ const FailedCheckboxIcon = (props) => (
 		fill="#fff"
 	  />
 	</svg>
-  )
+  );
+
 export {
 	CrusherIcon,
 	GithubIcon,

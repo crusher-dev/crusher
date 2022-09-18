@@ -373,7 +373,7 @@ function LeftSection() {
 							</div>
 						</Tooltip>
 
-						<TooltipWithoutArrow content={<HelpContent />} placement="top" type="click">
+						<TooltipWithoutArrow content={<HelpContent />} placement="top" type="hover" padding={8} offset={0}>
 
 							<div css={[menuItemCSS]} className="flex items-center justify-center">
 								<Book />

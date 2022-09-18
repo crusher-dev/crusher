@@ -1,6 +1,7 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { EditIcon, LoadingIconV2, PlayIcon } from "electron-app/src/ui/icons";
+import { LoadingIconV2, PlayIcon } from "electron-app/src/ui/icons";
+import { EditIcon } from "../../icons";
 import { min } from "lodash";
 import { useNavigate } from "react-router-dom";
 import { goFullScreen, performReplayTestUrlAction } from "electron-app/src/ui/commands/perform";
@@ -11,7 +12,7 @@ import { resolveToFrontend } from "electron-app/src/utils/url";
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
 import { CloudCrusher } from "electron-app/src/lib/cloud";
 
-const TestListNameInput = ({ testName, testId, isEditing, setIsEditing }) => {
+const TestListNameInput = ({ testName, testId, isActive, isEditing, setIsEditing }) => {
     const [name, setName] = React.useState(testName);
     const inputRef = React.useRef<HTMLInputElement>(null);
     const handleDoubleClick = React.useCallback(() => {
@@ -42,7 +43,7 @@ const TestListNameInput = ({ testName, testId, isEditing, setIsEditing }) => {
         handleSubmit();
     }, []);
 
-    const testInputStyle = React.useMemo(() => testInputCss(isEditing, name), [isEditing, name]);
+    const testInputStyle = React.useMemo(() => testInputCss(isActive, isEditing, name), [isEditing, name, isActive]);
 
     return (
         <OnOutsideClick disable={!isEditing} onOutsideClick={handleOutsideClick}>
@@ -63,7 +64,7 @@ const TestListNameInput = ({ testName, testId, isEditing, setIsEditing }) => {
 };
 
 const testInputContainerCss = css``;
-const testInputCss = (isEditing, name) => {
+const testInputCss = (isActive, isEditing, name) => {
     return css`
         background: transparent;
         padding: 5px 8px;
@@ -77,7 +78,7 @@ const testInputCss = (isEditing, name) => {
         font-weight: 500;
         font-size: 13.25px;
         letter-spacing: 0.05em;
-        color: #FFFFFF;
+        color: ${isActive ? `#FFFFFF` : `#A6A6A6`};
 
     `;
 };
@@ -207,7 +208,7 @@ const TestListItem = ({ test, deleteTest, lock }) => {
 
     return (
         <li ref={containerRef} css={itemStyle} onContextMenu={handleRightClick} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-            <TestListNameInput testId={test.id} isEditing={isEditingName} setIsEditing={setIsEditingName} testName={test.testName}/>
+            <TestListNameInput isActive={isActive} testId={test.id} isEditing={isEditingName} setIsEditing={setIsEditingName} testName={test.testName}/>
             {!test.firstRunCompleted ? (
 				<LoadingIconV2 css={loadingIconCss}/>
 			) : (
@@ -288,7 +289,7 @@ const editContainerCss = css`
     }
 `;
 const playIconCss = css`
-    width: 10rem;
+    width: 10.25rem;
 	height: 12rem;
 `;
 const listItemActionsCss = (isActive: boolean) => {
@@ -297,7 +298,7 @@ const listItemActionsCss = (isActive: boolean) => {
             color: #9f87ff;
             margin-left: auto;
             align-items: center;
-            gap: 18rem;
+            gap: 16rem;
      `;
 }
 const loadingIconCss = css`
@@ -308,8 +309,12 @@ const loadingIconCss = css`
 const itemCss = (isActive: boolean) => {
     return css`
         position: relative;
-        background: ${isActive ? "rgba(217, 217, 217, 0.04)": "none"};
-        color: ${isActive ? "#9f87ff" : "auto"};
+        background: ${isActive ? "linear-gradient(0deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.03)), rgba(54, 54, 54, 0.2)": "none"};
+        color: ${isActive ? "#fff" : "#A6A6A6"};
+        border-width: 1px 0px;
+        border-top-width: 0px;
+        border-style: solid;
+        border-color: rgba(153, 153, 153, 0.18);
     `;
 }
 
@@ -364,7 +369,7 @@ const listCss = css`
 
     li {
         padding: 6px 46px;
-        padding-right: 37px;
+        padding-right: 40px;
         position: relative;
         display: flex;
         align-items: center;

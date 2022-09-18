@@ -164,10 +164,10 @@ const tooltipBox = css`
 
 	background: #0D0E0E;
 border: 0.6px solid #222225;
-// box-shadow: hsl(206 22% 7% / 35%) 0px 10px 38px -10px, hsl(206 22% 7% / 20%) 0px 10px 20px -15px;
+
 box-shadow: 0px 0px 0px 5px rgba(0, 0, 0, 0.34);
 	color: #D1D5DB;
-	padding: 7rem 10rem;
+	padding: 8rem 10rem;
 	font-size: 13.4rem;
 	letter-spacing: .2px;
 

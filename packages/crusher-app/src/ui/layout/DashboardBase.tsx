@@ -182,8 +182,8 @@ function HelpContent() {
 const linkCSS = css`
 display: flex;
 align-items: center;
-padding-left: 7rem;
-padding-right: 7rem;
+padding-left: 8rem;
+padding-right: 8rem;
 path{
 	fill: #D1D5DB;
 }
@@ -277,15 +277,6 @@ const leftMenu = [
 	},
 ];
 
-function HelpNSupport() {
-	return (
-		<Dropdown component={<HelpContent />} dropdownCSS={helpDropdownCSS}>
-			<div css={navLink} className={"flex items-center pr text-12.5 mt-4"}>
-				<NewTabSVG className={"mr-14 mb-2"} /> Help & Support
-			</div>
-		</Dropdown>
-	);
-}
 
 function Chat(props) {
 	return (

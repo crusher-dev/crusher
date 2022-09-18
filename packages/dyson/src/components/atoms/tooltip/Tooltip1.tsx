@@ -164,7 +164,7 @@ const tooltipBox = css`
 
 
 	color: #D1D5DB;
-	padding: 7rem 10rem;
+	padding: 8rem;
 	font-size: 13.4rem;
 	letter-spacing: .2px;
 

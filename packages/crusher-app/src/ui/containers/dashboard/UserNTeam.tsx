@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 
 import { useAtom } from "jotai";
 
-import { Dropdown } from "../../../../../dyson/src/components/molecules/Dropdown";
 import { UserIcon, UserImage } from "dyson/src/components/atoms/userimage/UserImage";
 
 import { MenuItem } from "@components/molecules/MenuItem";
@@ -14,6 +13,7 @@ import { teamAtom } from "../../../store/atoms/global/team";
 import { userAtom } from "../../../store/atoms/global/user";
 import { backendRequest } from "@utils/common/backendRequest";
 import { Dolphin } from "./icont";
+import { HoverCard } from "dyson/src/components/atoms/tooltip/Tooltip1";
 
 const userDropdownItems = [
 	{
@@ -41,6 +41,27 @@ const userDropdownItems = [
 		target: "_blank",
 	},
 ];
+
+function Logout(props) {
+	return (
+		<svg
+			width={14}
+			height={14}
+			fill="none"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
+			<path
+				d="M9.188 5.25V3.062A1.313 1.313 0 007.875 1.75h-3.5a1.313 1.313 0 00-1.313 1.313v7.874a1.313 1.313 0 001.313 1.313h3.5a1.313 1.313 0 001.313-1.313V8.75M7 5.25L5.25 7m0 0L7 8.75M5.25 7h7.438"
+				stroke="#868686"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+			/>
+		</svg>
+	);
+}
+
+
 function DropdownContent() {
 	const router = useRouter();
 	return (
@@ -55,19 +76,22 @@ function DropdownContent() {
 				))}
 			</div>
 
-			<div className={"mt-16"}>
+			<div className={"mt-66	"}>
 				<hr
 					css={css`
 						color: #1a1d26;
 					`}
 				/>
 				<MenuItem
-					showHighlighted={true}
 					onClick={async () => {
 						await backendRequest(resolvePathToBackendURI("/users/actions/logout"));
 						router.push("/login");
 					}}
-					label={"Logout"}
+					label={(
+						<div className="flex items-center">
+							<Logout className="mr-6" /><span>Logout</span>
+						</div>
+					)}
 					rightLabel={""}
 				/>
 			</div>
@@ -108,19 +132,21 @@ export function UserNTeam() {
 				</div>
 			</div>
 
-			<Dropdown
-				component={<DropdownContent />}
-				dropdownCSS={css`
-					height: 256rem;
-				`}
-			>
+
+			<HoverCard wrapperCSS={userDropdownCSS} content={<DropdownContent />} placement="bottom" type="click" padding={8} offset={0}>
+
 				<div className={"flex items-center pr"}>
 					<UserIcon initial={user.name[0]} />
 				</div>
-			</Dropdown>
+			</HoverCard>
+
 		</div>
 	);
 }
+
+const userDropdownCSS = css`
+	min-height: 400rem;
+`
 
 export function MenuItemHorizontal({ children, selected, ...props }) {
 	return (

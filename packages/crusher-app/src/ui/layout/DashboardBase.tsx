@@ -355,7 +355,7 @@ function LeftSection() {
 
 					<div css={leftBottomBar} className="w-full flex mt-20">
 						<Tooltip content={"settings"} placement="top" type="hover">
-							<div css={[menuItemCSS, border]} className="">
+							<div css={[menuItemCSS, border]}>
 								<Link href="/settings/project/basic">
 									<div className="h-full w-full flex items-center justify-center">
 										<Gear />

@@ -1,18 +1,11 @@
 import { css } from "@emotion/react";
 import React, { useMemo } from "react";
 
-import { SidebarTopBarLayout } from "@ui/layout/DashboardBase";
 
 import { usePageTitle } from "../../src/hooks/seo";
-import { useAtom } from "jotai";
-import { currentProjectSelector } from "../../src/store/selectors/getCurrentProject";
-import { userAtom } from "../../src/store/atoms/global/user";
-import { getOnboardingStepIndex } from "@utils/core/dashboard/onboardingUtils";
-import Input from "dyson/src/components/atoms/input/Input";
-import { Button } from "dyson/src/components/atoms";
+
 import { Dolphin } from "@ui/containers/dashboard/icont";
-import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
-import { projectsAtom } from "@store/atoms/global/project";
+
 import Link from "next/link";
 import NewProject from "@ui/containers/auth/newProject";
 
@@ -35,12 +28,6 @@ function Dashboard() {
 	return <NewProject />;
 }
 
-const projectItemContainer = css`
-	display: grid;
-	column-gap: 28px;
-	row-gap: 28px;
-	grid-template-columns: auto auto auto;
-`;
 
 const projectItem = css`
 	width: 100%;
@@ -129,35 +116,6 @@ const buttonCss = css`
 	}
 `;
 
-const containerStyle = css`
-	color: #fff !important;
-`;
+
 
 export default Dashboard;
-function ProjectCard({ project }) {
-	const { id, name } = project;
-	return (
-		<Link href="/app/dashboard">
-			<div css={projectItem} className={"flex flex-col justify-between pr-18 pl-24 pt-16 pb-22"}>
-				<div>
-					<div className="flex items-center justify-between">
-						<div className="flex items-center">
-							<Dolphin height={20} width={20} />
-							<TextBlock fontSize={16} color="#B6B6B6" weight="600" className="ml-10">
-								{name}
-							</TextBlock>
-						</div>
-						<div className="open flex items-center justify-center">Open</div>
-					</div>
-
-					<TextBlock fontSize={12.6} color="#B6B6B6" className="mt-11">
-						Add github action
-					</TextBlock>
-				</div>
-				<div className="flex items-center">
-					<GitIcon className="mr-8" /> git not linked
-				</div>
-			</div>
-		</Link>
-	);
-}

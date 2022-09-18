@@ -3,7 +3,7 @@ import React, { useMemo, useState } from "react";
 
 import { SidebarTopBarLayout } from "@ui/layout/DashboardBase";
 
-import { usePageTitle } from "../../src/hooks/seo";
+import { usePageTitle } from "../src/hooks/seo";
 import { useAtom } from "jotai";
 import Input from "dyson/src/components/atoms/input/Input";
 import { Button } from "dyson/src/components/atoms";

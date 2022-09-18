@@ -28,6 +28,7 @@ import { Tooltip } from "dyson/src/components/atoms/tooltip/Tooltip";
 import { HoverCard } from "dyson/src/components/atoms/tooltip/Tooltip1";
 import { DiscordSVG } from "@svg/onboarding";
 import { GithubSVG } from "@ui/containers/auth/signup";
+import { currentProjectSelector } from "@store/selectors/getCurrentProject";
 const AddProject = dynamic(() => import("@ui/containers/dashboard/AddProject"));
 const InviteMembers = dynamic(() => import("@ui/containers/dashboard/InviteMember"));
 
@@ -269,6 +270,31 @@ const leftMenu = [
 ];
 
 
+
+const projectMenu = [
+	{
+		icon: <Menu />,
+		label: "tests",
+		link: "/app/tests",
+	},
+	{
+		icon: <Icon2 />,
+		label: "builds",
+		link: "/app/builds",
+	},
+	{
+		icon: <Icon3 />,
+		label: "monitoring",
+		link: "/app/builds?trigger=CRON",
+	},
+	{
+		icon: <Icon3 />,
+		label: "Settings",
+		link: "/settings/project/basic",
+	},
+];
+
+
 function Chat(props) {
 	return (
 		<svg width={14} height={14} viewBox={"0 0 14 14"} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
@@ -295,12 +321,15 @@ function LeftSection() {
 	const router = useRouter();
 	const [inviteTeammates, setInviteTeamMates] = useState(false);
 	const { route } = router;
+	const [project] = useAtom(currentProjectSelector);
+
+	const menuItems = !!project ? projectMenu : leftMenu;
 	return (
 		<div css={sidebar} className={"flex flex-col justify-between pb-18"}>
 			<UserNTeam />
 			<div className="flex flex-col justify-between h-full">
 				<div className="px-14 pt-36">
-					{leftMenu.map((item) => {
+					{menuItems.map((item) => {
 						const selected = item.link === route;
 						return (
 							<Link href={item.link} key={item.link} >
@@ -338,10 +367,12 @@ function LeftSection() {
 							</TextBlock>
 						</div>
 
-						<div css={badgeStyle} className="flex">
-							<div className="test-count pl-2">2/3</div>
-							<div className="hours-count">5 hrs</div>
-						</div>
+						<Tooltip content={"You have 2 more tests and 5 hr limit. contact support@crusher.dev"} placement="top-end" type="hover">
+							<div css={badgeStyle} className="flex">
+								<div className="test-count pl-2">2/3</div>
+								<div className="hours-count">5 hrs</div>
+							</div>
+						</Tooltip>
 					</div>
 
 					<div css={leftBottomBar} className="w-full flex mt-20">
@@ -588,6 +619,28 @@ function External(props) {
 	);
 }
 
+const ProjectSection = () => {
+	const [project] = useAtom(currentProjectSelector);
+	const [projects] = useAtom(projectsAtom);
+	const isCurrentProject = !!project;
+
+	console.log(project)
+	if (isCurrentProject) {
+		return (
+			<div css={projectsLabel} className={"flex items-center w-full"}>
+				<span>{project.name}</span>
+				<span className="badge flex items-center justify-center pt-1">{projects.length}</span>
+			</div>
+		)
+	}
+	return (
+		<div css={projectsLabel} className={"flex items-center w-full"}>
+			<span>Projects</span>
+			<span className="badge flex items-center justify-center pt-1">{projects.length}</span>
+		</div>
+	)
+}
+
 export const SidebarTopBarLayout = ({ children, noContainerWidth = false, hideSidebar = false, setContainerWidth = true }) => {
 	const [projects] = useAtom(projectsAtom);
 	return (
@@ -599,10 +652,7 @@ export const SidebarTopBarLayout = ({ children, noContainerWidth = false, hideSi
 			<div className={"w-full"}>
 				<TopNavbar>
 					<div className="flex items-center h-full">
-						<div css={projectsLabel} className={"flex items-center w-full"}>
-							<span>Projects</span>
-							<span className="badge flex items-center justify-center pt-1">{projects.length}</span>
-						</div>
+						<ProjectSection />
 
 						<a href="https://docs.crusher.dev" target="_blank">
 							<TextBlock color={"#6b6565"} className={"flex"} css={textLink}>

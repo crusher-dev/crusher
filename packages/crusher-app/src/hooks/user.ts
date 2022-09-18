@@ -23,7 +23,6 @@ import { RequestMethod } from "@types/RequestOptions";
 export function loadUserDataAndRedirect({ fetchData = true, userAndSystemData = null }) {
 	const router = useRouter();
 	const [, updateInitialData] = useAtom(updateInitialDataMutator);
-	const [, selectInitialProject] = useAtom(selectInitialProjectMutator);
 
 	const [dataLoaded, setDataLoaded] = useState(false);
 	const [loginKey, setLoginKey] = useAtom(cliLoginUserKeyAtom);
@@ -39,16 +38,12 @@ export function loadUserDataAndRedirect({ fetchData = true, userAndSystemData = 
 			}
 			updateInitialData(dataToConsider);
 
-			if (!!dataToConsider?.userData) {
-				selectInitialProject(dataToConsider);
-			}
-
 			if (loginKey && loginKey !== "null" && dataToConsider.isUserLoggedIn) {
 				backendRequest(resolvePathToBackendURI("/cli/actions/login.user"), { method: RequestMethod.POST, payload: { loginKey } }).then((res) => {
 					setLoginKey(null);
 					window.location.href = "/login_sucessful";
 				}).catch((err) => {
-					if(err.message.includes("Invalid login key")) {
+					if (err.message.includes("Invalid login key")) {
 						setLoginKey(null);
 						redirectUserOnMount(dataToConsider, router, setDataLoaded.bind(this, true));
 					}
@@ -56,7 +51,7 @@ export function loadUserDataAndRedirect({ fetchData = true, userAndSystemData = 
 			} else {
 				await redirectUserOnMount(dataToConsider, router, setDataLoaded.bind(this, true));
 			}
-			
+
 		})();
 	}, [userAndSystemData]);
 

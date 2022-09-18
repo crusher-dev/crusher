@@ -141,7 +141,7 @@ export default function Login() {
 		try {
 			const { systemInfo } = await emailLogin(email.value, password.value);
 			setData(systemInfo);
-			router.push("/app/dashboard");
+			router.push("/projects");
 		} catch (e: any) {
 			setPassword({ ...password, error: "Please enter valid email and password" });
 		}

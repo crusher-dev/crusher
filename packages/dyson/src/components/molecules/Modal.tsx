@@ -3,7 +3,7 @@ import { CenterLayout, Conditional } from "../layouts";
 import { css, SerializedStyles } from "@emotion/react";
 import { OnOutsideClick } from "../layouts/onOutsideClick/onOutsideClick";
 import { CloseSVG } from "../icons/CloseSVG";
-import React, { ReactElement } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import { HTMLAttributes } from "react";
 
 type TModalProps = {
@@ -44,20 +44,16 @@ const primaryModalStyle = css`
 	min-width: 612rem;
 	min-height: 271rem;
 
-	// background: #111213 !important;
-	// border: 1px solid #1a1d26 !important;
+
 	box-sizing: border-box;
-	// border-radius: 10rem;
 	margin-top: -200rem;
 
-	background: #0D0E0E;
-    border: 1px solid #1C1C1C;
+background: #0D0E0E;
+	// background: #080808;
+    border: 0.5px solid #1e1e1e;
     box-shadow: 0px -1px 9px #000000;
     border-radius: 14px;
 
-	/*
-	Horizontal modal style
-	*/
 	padding: 28rem 36rem 44rem;
 `;
 

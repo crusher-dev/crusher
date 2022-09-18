@@ -19,7 +19,7 @@ export const handleOpenSourceMounting = async (data: IUserAndSystemInfoResponse,
 			if (isTempTestPending()) {
 				await router.push("/app/tests");
 			} else {
-				await router.push("/app/dashboard");
+				await router.push("/projects");
 			}
 		}
 
@@ -41,7 +41,7 @@ export const handleEERouting = async (data: IUserAndSystemInfoResponse, router: 
 			if (isTempTestPending()) {
 				await router.push("/app/tests");
 			} else {
-				await router.push("/app/dashboard");
+				await router.push("/projects");
 			}
 		}
 	} else {

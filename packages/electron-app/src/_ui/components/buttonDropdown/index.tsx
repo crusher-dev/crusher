@@ -96,10 +96,7 @@ const saveButtonStyle = css`
     font-weight: 600;
     font-size: 14rem;
     line-height: 17rem;
-    border: 1px solid #7353F5;
-    border-right-width: 0rem !important;
-    border-top-right-radius: 0rem !important;
-    border-bottom-right-radius: 0rem !important;
+    border: none !important;
     color: #ffffff;
     :hover {
         background: #6749de;

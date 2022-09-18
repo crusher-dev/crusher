@@ -311,10 +311,7 @@ const itemCss = (isActive: boolean) => {
         position: relative;
         background: ${isActive ? "linear-gradient(0deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.03)), rgba(54, 54, 54, 0.2)": "none"};
         color: ${isActive ? "#fff" : "#A6A6A6"};
-        border-width: 1px 0px;
-        border-top-width: 0px;
-        border-style: solid;
-        border-color: rgba(153, 153, 153, 0.18);
+        border-bottom: 1px solid rgba(153, 153, 153, 0.09);
     `;
 }
 
@@ -354,9 +351,12 @@ const testsCountCss = css`
 
     color: rgba(255, 255, 255, 0.67);
     padding: 0px 46px;
+    border-bottom: 1px solid rgba(153, 153, 153, 0.09);
+    padding-bottom: 6rem;
 `;
 
 const listCss = css`
+    height: 100%;
     font-family: "Gilroy";
     font-style: normal;
     font-weight: 400;
@@ -365,7 +365,6 @@ const listCss = css`
 
     color: #ffffff;
     height: 38rem;
-    margin-top: 13rem;
 
     li {
         padding: 6px 46px;

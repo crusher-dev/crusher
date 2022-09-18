@@ -206,15 +206,6 @@ path, *{
 `
 
 
-const helpDropdownCSS = css`
-	box-shadow: 0 0px 6px rgb(0 0 0 / 33%) !important;
-	bottom: -20rem;
-	top: unset !important;
-	left: 4rem !important;
-	height: fit-content;
-	border-radius: 10rem !important;
-	width: 372px;
-`;
 
 function Menu(props) {
 	return (
@@ -764,32 +755,7 @@ const navLink = css`
 	}
 `;
 
-const upgradeCard = css`
-	background: #1a1d21;
-	border: 1px solid #212529;
-	border-radius: 6rem;
 
-	path {
-		fill: #929dff;
-	}
-	.label {
-		color: rgba(255, 255, 255, 0.88);
-		font-size: 13.5rem;
-	}
-
-	.description {
-		color: rgba(255, 255, 255, 0.3);
-	}
-
-	.upgrade {
-		color: #929dff;
-	}
-
-	:hover {
-		background: #24282d;
-		border: 1px solid #30353b;
-	}
-`;
 
 const smallInputBox = css`
 	width: calc(100% - 14px);

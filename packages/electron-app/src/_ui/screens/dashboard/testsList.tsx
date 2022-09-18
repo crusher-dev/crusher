@@ -217,10 +217,13 @@ const TestListItem = ({ test, deleteTest, lock }) => {
             {contextMenu}
 
             <div className={"action-buttons"} css={listItemActionsStyle}>
-					<EditIcon css={editIconCss} onClick={handleEdit}/>
+                    <div onClick={handleEdit} css={editContainerCss}>
+					    <EditIcon css={editIconCss} />
+                        <span css={editTextCss}>edit</span>
+                    </div>
 					<div onClick={handleRunTest} css={playIconContainerCss}>
 						<PlayIcon css={playIconCss}/>
-						<span css={runTextCss}>Run</span>
+						<span css={runTextCss}>run</span>
 					</div>
 			</div>
         </li>
@@ -252,6 +255,15 @@ const runTextCss = css`
 
     color: #b061ff;
 `;
+const editTextCss = css`
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 13px;
+    letter-spacing: 0.03em;
+    margin-left: 6px;
+    color: #BDBDBD;
+`;
 
 const editIconCss = css`
     width: 13rem;
@@ -266,6 +278,13 @@ const playIconContainerCss = css`
 	gap: 6rem;
 	:hover {
 		opacity: 0.8;
+    }
+`;
+const editContainerCss = css`
+    display: flex;
+    align-items: center;
+    :hover {
+        opacity: 0.8;
     }
 `;
 const playIconCss = css`
@@ -345,7 +364,7 @@ const listCss = css`
 
     li {
         padding: 6px 46px;
-        padding-right: 28px;
+        padding-right: 37px;
         position: relative;
         display: flex;
         align-items: center;

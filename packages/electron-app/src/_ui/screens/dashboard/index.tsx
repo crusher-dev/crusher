@@ -19,6 +19,9 @@ import Wrapper from "figma-design-scaler/dist/dist/main";
 import { ButtonDropdown } from "../../components/buttonDropdown";
 import { AddIconV3 } from "electron-app/src/ui/icons";
 import { goFullScreen } from "electron-app/src/ui/commands/perform";
+import { CloudIcon } from "../../icons";
+import { StickyFooter } from "../../components/stickyFooter";
+import { Footer } from "../../components/footer";
 
 const TitleComponent = ({ projectName }) => {
     const proxyIsInitializing = useSelector(getIsProxyInitializing);
@@ -48,33 +51,6 @@ const TitleComponent = ({ projectName }) => {
                 ]}
             />
         </div>
-    );
-};
-
-const CloudIcon = ({ shouldAnimateGreen, ...props }) => {
-    return (
-        <svg viewBox={"0 0 16 11"} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-            {shouldAnimateGreen ? (
-                <linearGradient id="lg" x1="0.5" y1="1" x2="0.5" y2="0">
-                    <stop offset="0%" stop-opacity="1" stop-color="#A5ED6D" />
-                    <stop offset="40%" stop-opacity="1" stop-color="#A5ED6D">
-                        <animate attributeName="offset" values="0;1" repeatCount="indefinite" dur="0.8s" begin="0s" />
-                    </stop>
-                    <stop offset="40%" stop-opacity="0" stop-color="#A5ED6D">
-                        <animate attributeName="offset" values="0;1" repeatCount="indefinite" dur="0.8s" begin="0s" />
-                    </stop>
-                    <stop offset="100%" stop-opacity="0" stop-color="#A5ED6D" />
-                </linearGradient>
-            ) : (
-                ""
-            )}
-            <path
-                d="M12.854 4.47C12.566 1.953 10.504 0 8 0 5.497 0 3.433 1.953 3.147 4.47 1.409 4.47 0 5.932 0 7.735 0 9.538 1.409 11 3.146 11h9.708C14.59 11 16 9.538 16 7.735c0-1.803-1.409-3.265-3.146-3.265Z"
-                fill={shouldAnimateGreen ? "url(#lg)" : "#A5ED6D"}
-                stroke={"#fff"}
-                strokeWidth="0.75"
-            />
-        </svg>
     );
 };
 
@@ -196,11 +172,11 @@ const DashboardScreen = () => {
 
     const hasNotLoaded = isLoading || !animationComplete;
     return (
-        <Wrapper figmaUrl={"https://www.figma.com/proto/MsJZCnY5NvrDF4kL1oczZq/Crusher-%7C-Aug?node-id=1638%3A5550&scaling=min-zoom&page-id=988%3A3439&starting-point-node-id=988%3A3817"}>
-            <CompactAppLayout headerRightSection={headerComponent} showHeader={!hasNotLoaded} css={loadingCSS(hasNotLoaded)} title={selectedProject && !hasNotLoaded ? <TitleComponent projectName={selectedProject.name} /> : null} footer={!hasNotLoaded && <DashboardFooter tests={tests ? tests.list : undefined || []} />}>
+        // <Wrapper figmaUrl={"https://www.figma.com/proto/MsJZCnY5NvrDF4kL1oczZq/Crusher-%7C-Aug?node-id=1638%3A5550&scaling=min-zoom&page-id=988%3A3439&starting-point-node-id=988%3A3817"}>
+            <CompactAppLayout footer={<><Footer/><StickyFooter/></>} headerRightSection={headerComponent} showHeader={!hasNotLoaded} css={loadingCSS(hasNotLoaded)} title={selectedProject && !hasNotLoaded ? <TitleComponent projectName={selectedProject.name} /> : null}>
                 {hasNotLoaded ? (<LoadingProgressBar inAppLoading={false} />) : content}
             </CompactAppLayout>
-        </Wrapper>
+        // </Wrapper>
     );
 };
 

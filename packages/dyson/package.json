@@ -11,6 +11,7 @@
 		"@radix-ui/react-context-menu": "^1.0.0",
 		"@radix-ui/react-icons": "^1.1.1",
 		"@radix-ui/react-switch": "^1.0.0",
+		"@radix-ui/react-tooltip": "^1.0.0",
 		"@stitches/react": "^1.2.8",
 		"@storybook/addon-info": "^5.3.21",
 		"@testing-library/jest-dom": "^5.11.4",

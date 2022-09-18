@@ -27,6 +27,7 @@ import { handleTestRun } from "@utils/core/testUtils";
 
 import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import { Global } from "@emotion/react";
+import { Tooltip } from "dyson/src/components/atoms/tooltip/Tooltip";
 
 const AddProject = dynamic(() => import("@ui/containers/dashboard/AddProject"));
 const InviteMembers = dynamic(() => import("@ui/containers/dashboard/InviteMember"));
@@ -364,9 +365,15 @@ function LeftSection() {
 					</div>
 
 					<div css={leftBottomBar} className="w-full flex mt-20">
-						<div css={[menuItemCSS, border]} className="flex items-center justify-center">
-							<Gear />
-						</div>
+						<Tooltip content={"settings"} placement="top" type="click">
+							<div css={[menuItemCSS, border]} className="">
+								<Link href="/settings/project/basic">
+									<div className="h-full w-full flex items-center justify-center">
+										<Gear />
+									</div>
+								</Link>
+							</div>
+						</Tooltip>
 						<div css={[menuItemCSS, border]} className="flex items-center justify-center">
 							<Book />
 						</div>

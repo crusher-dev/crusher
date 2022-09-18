@@ -48,6 +48,7 @@ const projectItem = css`
 	width: 360rem;
 
 	border: 0.5px solid #1b1b1b;
+	border: .5px solid #BC66FF;
 	border-radius: 14px;
 
 	.open {
@@ -62,7 +63,8 @@ const projectItem = css`
 		.open {
 			visibility: visible;
 		}
-		background: rgba(23, 23, 23, 0.42);
+		// background: rgba(23, 23, 23, 0.42);
+		background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), rgba(188, 102, 255, 0.1);
 	}
 `;
 

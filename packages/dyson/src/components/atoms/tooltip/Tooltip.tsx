@@ -1,23 +1,24 @@
 import ReactDOM from "react-dom";
 import { css, SerializedStyles } from "@emotion/react";
-import { useFloating, shift, autoPlacement, offset } from "@floating-ui/react-dom";
+import { useFloating, shift, offset } from "@floating-ui/react-dom";
 import React, { ReactElement, useState, useEffect, useMemo, useRef, SyntheticEvent, useCallback } from "react";
+
 
 export type TooltipWrapperProps = {
 	type?: "click" | "hover";
 	placement:
-		| "top-start"
-		| "top-end"
-		| "right-start"
-		| "right-end"
-		| "bottom-start"
-		| "bottom-end"
-		| "left-start"
-		| "left-end"
-		| "left"
-		| "bottom"
-		| "top"
-		| "right";
+	| "top-start"
+	| "top-end"
+	| "right-start"
+	| "right-end"
+	| "bottom-start"
+	| "bottom-end"
+	| "left-start"
+	| "left-end"
+	| "left"
+	| "bottom"
+	| "top"
+	| "right";
 	autoHide?: boolean;
 	callback?: Function;
 	content: ReactElement;
@@ -51,7 +52,7 @@ export const TooltipBox = ({ children, className = "tooltip-box", el = "div" }) 
 export const Tooltip: React.FC<TooltipWrapperProps> = ({ children, autoHide = "true", timer = 0, placement, type, content, padding = 0, ...props }) => {
 	const [show, setShow] = useState(false);
 	const [computedStyle] = useState(null);
-	const { offset: offsetWrapper = 5 } = props;
+	const { offset: offsetWrapper = 8 } = props;
 	const { x, y, reference, floating, update, strategy, refs } = useFloating({
 		placement,
 		strategy: "fixed",
@@ -158,10 +159,31 @@ const tooltipWrapper = (padding) => css`
 `;
 
 const tooltipBox = css`
+
+	 border-radius: 8rem;
+
+	background: #0D0E0E;
+border: 0.6px solid #222225;
+// box-shadow: hsl(206 22% 7% / 35%) 0px 10px 38px -10px, hsl(206 22% 7% / 20%) 0px 10px 20px -15px;
+box-shadow: 0px 0px 0px 5px rgba(0, 0, 0, 0.34);
+	color: #D1D5DB;
+	padding: 7rem 10rem;
+	font-size: 13.4rem;
+	letter-spacing: .2px;
+
 	background: #161719;
-	border: 0.5px solid rgba(255, 255, 255, 0.06);
-	box-shadow: 0px 4px 9px -1px rgba(44, 40, 40, 0.12);
-	border-radius: 4px;
-	padding: 4rem 8rem;
-	font-size: 13rem;
+	position: relative;
+
+	::after {
+		content: " ";
+		position: absolute;
+		top: calc(100% - 1px);
+		left: 50%;
+		transform: translateX(-30%);
+		margin-left: -5px;
+		border-width: 8px;
+		border-style: solid;
+		border-color: #161717 transparent transparent transparent;
+	  }
+
 `;

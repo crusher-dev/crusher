@@ -10,8 +10,6 @@ import { sendSnackBarEvent } from "../../toast";
 import { SELECTOR_TYPE } from "unique-selector/src/constants";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { emitShowModal } from "../../modals";
-import { TTopLevelActionsEnum } from "../actionsPanel/pageActions";
-import { TElementActionsEnum } from "../actionsPanel/elementActions";
 interface IActionSpecificInfoProps {
 	action: iAction;
 	actionIndex: number;
@@ -20,12 +18,12 @@ interface IActionSpecificInfoProps {
 
 // Actions map with modal types
 const EDIT_MODE_MAP = {
-	[ActionsInTestEnum.WAIT]: TTopLevelActionsEnum.WAIT,
-	[ActionsInTestEnum.VALIDATE_SEO]: TTopLevelActionsEnum.SHOW_SEO_MODAL,
-	[ActionsInTestEnum.CUSTOM_CODE]: TTopLevelActionsEnum.CUSTOM_CODE,
-	[ActionsInTestEnum.RUN_AFTER_TEST]: TTopLevelActionsEnum.RUN_AFTER_TEST,
-	[ActionsInTestEnum.ASSERT_ELEMENT]: TElementActionsEnum.SHOW_ASSERT_MODAL,
-	[ActionsInTestEnum.CUSTOM_ELEMENT_SCRIPT]: TElementActionsEnum.SHOW_CUSTOM_SCRIPT_MODAL,
+	[ActionsInTestEnum.WAIT]: "WAIT",
+	[ActionsInTestEnum.VALIDATE_SEO]: "SHOW_SEO_MODAL",
+	[ActionsInTestEnum.CUSTOM_CODE]: "CUSTOM_CODE",
+	[ActionsInTestEnum.RUN_AFTER_TEST]: "RUN_AFTER_TEST",
+	[ActionsInTestEnum.ASSERT_ELEMENT]: "SHOW_ASSERT_MODAL",
+	[ActionsInTestEnum.CUSTOM_ELEMENT_SCRIPT]: "SHOW_CUSTOM_SCRIPT_MODAL",
 };
 
 const ActionSpecificInfo = (props: IActionSpecificInfoProps) => {

@@ -66,10 +66,19 @@ const testInputContainerCss = css``;
 const testInputCss = (isEditing, name) => {
     return css`
         background: transparent;
-        padding: 6px 8px;
+        padding: 5px 8px;
+        padding-left: 0px;
         border: ${isEditing ? "1px solid rgba(255, 255, 255, 0.25)" : "1px solid transparent"};
         border-radius: ${isEditing ? "4px" : "0px"};
         width: ${isEditing ? Math.max(7.5*name.length, 120) + "rem" : "100%"};
+
+        font-family: Gilroy;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 13.25px;
+        letter-spacing: 0.05em;
+        color: #FFFFFF;
+
     `;
 };
 
@@ -304,11 +313,24 @@ const TestList = ({tests, deleteTest}) => {
     }, [tests]);
 
     return (
-		<ul css={listCss}>
-			{ items }
-		</ul>
+        <div>
+            <div css={testsCountCss}>{items.length} tests</div>
+            <ul css={listCss}>
+                { items }
+            </ul>
+        </div>
 	);
 };
+
+const testsCountCss = css`
+    font-family: Gilroy;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12rem;
+
+    color: rgba(255, 255, 255, 0.67);
+    padding: 0px 46px;
+`;
 
 const listCss = css`
     font-family: "Gilroy";
@@ -319,9 +341,10 @@ const listCss = css`
 
     color: #ffffff;
     height: 38rem;
+    margin-top: 13rem;
 
     li {
-        padding: 6px 24px;
+        padding: 6px 46px;
         padding-right: 28px;
         position: relative;
         display: flex;

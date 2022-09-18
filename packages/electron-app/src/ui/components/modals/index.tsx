@@ -1,8 +1,5 @@
 import React from "react";
-import { TElementActionsEnum } from "../sidebar/actionsPanel/elementActions";
 import { AssertElementModal } from "./element/assertElementModal";
-import { TTopLevelActionsEnum } from "../sidebar/actionsPanel/pageActions";
-import { CustomCodeModal } from "./page/customCodeModal";
 import { RunAfterTestModal } from "./page/runAfterTestModal";
 import { SeoModalContent } from "./page/seoModal";
 import { WaitModal } from "./page/waitModal";
@@ -21,7 +18,7 @@ const ModalManager = () => {
 	const store = useStore();
 
 	React.useEffect(() => {
-		modalEmitter.on("show-modal", ({ type, stepIndex }: { type: TElementActionsEnum | TTopLevelActionsEnum; stepIndex?: number }) => {
+		modalEmitter.on("show-modal", ({ type, stepIndex }: { type: any; stepIndex?: number }) => {
 			setCurrentModal({ type, stepIndex });
 		});
 		return () => {
@@ -46,25 +43,25 @@ const ModalManager = () => {
 			<AssertElementModal
 				stepAction={stepAction as any}
 				stepIndex={currentModal.stepIndex}
-				isOpen={currentModal.type === TElementActionsEnum.SHOW_ASSERT_MODAL}
+				isOpen={currentModal.type === "SHOW_ASSERT_MODAL"}
 				handleClose={closeModal}
 			/>
 			<WaitModal
 				stepIndex={currentModal.stepIndex}
 				stepAction={stepAction as any}
-				isOpen={currentModal.type === TTopLevelActionsEnum.WAIT}
+				isOpen={currentModal.type === "WAIT"}
 				handleClose={closeModal}
 			/>
 			<RunAfterTestModal
 				stepAction={stepAction as any}
 				stepIndex={currentModal.stepIndex}
-				isOpen={currentModal.type === TTopLevelActionsEnum.RUN_AFTER_TEST}
+				isOpen={currentModal.type === "RUN_AFTER_TEST"}
 				handleClose={closeModal}
 			/>
 			<SeoModalContent
 				stepAction={stepAction as any}
 				stepIndex={currentModal.stepIndex}
-				isOpen={currentModal.type === TTopLevelActionsEnum.SHOW_SEO_MODAL}
+				isOpen={currentModal.type === "SHOW_SEO_MODAL"}
 				handleClose={closeModal}
 			/>
 		</>

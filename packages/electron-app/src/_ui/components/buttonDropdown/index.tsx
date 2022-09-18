@@ -73,7 +73,7 @@ const ButtonDropdown = ({options, id, primaryOption, className, callback, ...pro
     >
 		<ActionButton id={id} className={className} title={primaryOptionsObject.content} onClick={handleCallback.bind(this, primaryOptionsObject.id)} css={saveButtonStyle} />
 
-        <div css={downIconContainerCss}>
+        <div className={"dropdown-icon"} css={downIconContainerCss}>
             <DownIcon fill={"#fff"} css={downIconCss} />
         </div>
     </Dropdown>

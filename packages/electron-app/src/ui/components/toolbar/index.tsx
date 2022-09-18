@@ -39,7 +39,7 @@ import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { ButtonDropdown } from "electron-app/src/_ui/components/buttonDropdown";
 import { DropdownIconSVG } from "@dyson/assets/icons";
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
-import { setEndOfContenteditable } from "electron-app/src/utils/renderer";
+import { generateRandomTestName, setEndOfContenteditable } from "electron-app/src/utils/renderer";
 
 const DeviceItem = ({ label }) => {
 	return (
@@ -279,6 +279,7 @@ const Toolbar = (props: any) => {
 	const [urlInputError, setUrlInputError] = React.useState({ value: false, message: "" });
 	const [showMenu, setShowMenu] = React.useState(false);
 	const [isEditingTestName, setIsEditingTestName] = React.useState(false);
+	const [testName, setTestName] = React.useState(generateRandomTestName());
 
 	const urlInputRef = React.useRef<HTMLInputElement>(null);
 	const recorderInfoUrl = useSelector(getRecorderInfoUrl);
@@ -451,12 +452,14 @@ enter to submit
 	}, []);
 
 	const handleOutsideClick = React.useCallback(() => {
+			setTestName((document.querySelector(".testName") as HTMLInputElement).value);
 			setIsEditingTestName(false);
 			// Save the new test name somewhere
 	}, [isEditingTestName]);
 
 	const handleKeyPress = React.useCallback((e) => {
 		if(e.keyCode === 13) {
+			setTestName((document.querySelector(".testName") as HTMLInputElement).value);
 			setIsEditingTestName(false);
 		}
 	});
@@ -517,14 +520,14 @@ enter to submit
 						<div css={css`display: flex; align-items: center;`}>
 							<OnOutsideClick onOutsideClick={handleOutsideClick}>
 								{isEditingTestName ? (
-									<input onKeyDown={handleKeyPress} className={"testName"} css={[isEditingTestName ? css`margin-left: 5.75rem;  padding-top: 2rem; width: 90rem; height: 28rem; padding: 0rem; border-radius: 8px; padding-left: 8rem;  background: linear-gradient(0deg, rgba(176, 74, 255, 0.02), rgba(176, 74, 255, 0.02)), #0D0D0E;  border: 0.5px solid rgba(176, 74, 255, 0.54);` : null]} defaultValue={"bunny-2012"} />
+									<input onKeyDown={handleKeyPress} className={"testName"} css={[isEditingTestName ? css`margin-left: 5.75rem;  padding-top: 2rem; width: 90rem; height: 28rem; padding: 0rem; border-radius: 8px; padding-left: 8rem; padding-right: 8rem;  background: linear-gradient(0deg, rgba(176, 74, 255, 0.02), rgba(176, 74, 255, 0.02)), #0D0D0E;  border: 0.5px solid rgba(176, 74, 255, 0.54);` : null]} defaultValue={testName} />
 								) : (
 									<span css={css`margin-left: 5.75rem; color: #D2D2D2;
 									border-radius: 8px;
 									padding: 0rem;
-									width: 90rem;
+									width: 94rem;
 									height: 28rem;
-								   background: transparent;`} onClick={handleTestNameClick}>bunny-2022</span>
+								   background: transparent;`} onClick={handleTestNameClick}>{testName}</span>
 								)}
 
 							</OnOutsideClick>

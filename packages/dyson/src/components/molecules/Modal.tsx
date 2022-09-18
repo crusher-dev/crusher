@@ -44,11 +44,16 @@ const primaryModalStyle = css`
 	min-width: 612rem;
 	min-height: 271rem;
 
-	background: #111213 !important;
-	border: 1px solid #1a1d26 !important;
+	// background: #111213 !important;
+	// border: 1px solid #1a1d26 !important;
 	box-sizing: border-box;
-	border-radius: 10rem;
+	// border-radius: 10rem;
 	margin-top: -200rem;
+
+	background: #0D0E0E;
+    border: 1px solid #1C1C1C;
+    box-shadow: 0px -1px 9px #000000;
+    border-radius: 14px;
 
 	/*
 	Horizontal modal style

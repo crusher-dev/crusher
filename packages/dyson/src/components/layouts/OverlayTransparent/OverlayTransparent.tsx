@@ -37,10 +37,13 @@ const overlay = css`
 	z-index: 100000;
 	top: 0;
 	left: 0;
+	backdrop-filter: blur(2px);
 `;
 
 const lightOverlayStyle = css`
-	background: rgba(0, 0, 0, 0.88);
+
+	background: rgb(0 0 0 / 64%);
+    backdrop-filter: blur(2px);
 `;
 
 const closeIcon = css`

@@ -2,7 +2,7 @@ import { css } from "@emotion/react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 
 import { useAtom } from "jotai";
 
@@ -10,7 +10,7 @@ import { Button } from "dyson/src/components/atoms";
 import { Input } from "dyson/src/components/atoms";
 import { Conditional } from "dyson/src/components/layouts";
 
-import { AddSVG, HelpSVG, LayoutSVG, NewTabSVG, PlaySVG, TraySVG } from "@svg/dashboard";
+import { AddSVG, LayoutSVG, PlaySVG } from "@svg/dashboard";
 
 import { MenuItemHorizontal, UserNTeam } from "@ui/containers/dashboard/UserNTeam";
 
@@ -371,33 +371,6 @@ function LeftSection() {
 	);
 }
 
-const userDropdownItems = [
-	{
-		leftLabel: "Settings",
-		rightLabel: "",
-		link: "/settings/project/basic",
-		target: "",
-	},
-	{
-		leftLabel: "Changelog",
-		rightLabel: "",
-		link: "https://github.com/crusherdev/crusher/releases",
-		target: "_blank",
-	},
-	{
-		leftLabel: "Help & Support",
-		rightLabel: "",
-		link: "https://docs.crusher.dev/docs/references/contact-us",
-		target: "_blank",
-	},
-	{
-		leftLabel: "Github",
-		rightLabel: "",
-		link: "https://github.com/crusherdev/crusher",
-		target: "_blank",
-	},
-];
-
 
 const feedbackCSS = css`
 	:hover {
@@ -443,7 +416,6 @@ const badgeStyle = css`
 	.test-count {
 		border-right: 0.5rem solid #222225;
 	}
-	// background: #171718;
 	:hover {
 		background: #171718;
 	}
@@ -597,8 +569,6 @@ function RunTest() {
 }
 
 function TopNavbar({ children }) {
-	const { pathname, query, asPath } = useRouter();
-	const [showCreateTest, setShowCreateTest] = useState(false);
 
 	return (
 		<div css={[nav]}>

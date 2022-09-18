@@ -9,10 +9,7 @@ import { useAtom } from "jotai";
 import { Button } from "dyson/src/components/atoms";
 import { Input } from "dyson/src/components/atoms";
 import { Conditional } from "dyson/src/components/layouts";
-import { Dropdown } from "dyson/src/components/molecules/Dropdown";
 
-import { MenuItem } from "@components/molecules/MenuItem";
-import { EditionTypeEnum } from "@crusher-shared/types/common/general";
 import { AddSVG, HelpSVG, LayoutSVG, NewTabSVG, PlaySVG, TraySVG } from "@svg/dashboard";
 
 import { MenuItemHorizontal, UserNTeam } from "@ui/containers/dashboard/UserNTeam";
@@ -152,8 +149,7 @@ function ExternalIcon(props) {
 
 function HelpContent() {
 	return (
-
-		<div className=" pt-3 pb-8">
+		<div className=" pt-3 pb-6">
 
 			<a href="https://docs.crusher.dev" target="_blank">
 				<TextBlock fontSize={13.4} color={"#8F8F8F"} css={linkCSS}>
@@ -162,22 +158,22 @@ function HelpContent() {
 			</a>
 			<a href="https://github.com/crusher-dev/crusher" target="_blank">
 				<TextBlock fontSize={13.4} color={"#8F8F8F"} className={"mt-1"} css={linkCSS}>
-					<GithubSVG height={11} width={11} className={"mr-6"} /> <span className="mt-1">Github</span><ExternalIcon className="ml-4" />
+					<GithubSVG height={11} width={11} className={"mr-6"} /> <span className="mt-2">Github</span><ExternalIcon className="ml-4" />
 				</TextBlock>
 			</a>
 			<a href="https://discord.com/invite/dHZkSNXQrg" target="_blank">
 				<TextBlock fontSize={13.4} color={"#8F8F8F"} className={"mt-1"} css={linkCSS}>
-					<DiscordSVG height={12} width={13} className={"mr-6"} css={css`
-						margin-left: -1rem;
-					`} /> <span className="mt-1">Discord</span><ExternalIcon className="ml-3" />
+					<DiscordSVG height={12} width={13} className={"mr-6"} css={discordIcons} /> <span className="mt-1">Discord</span><ExternalIcon className="ml-3" />
 				</TextBlock>
 			</a>
-
-
 		</div>
-
 	);
 }
+
+
+const discordIcons = css`
+margin-left: -1rem;
+`
 
 const linkCSS = css`
 display: flex;
@@ -201,6 +197,10 @@ border-radius: 6px;
 padding-top:1rem;
 
 transition: all 0ms;
+
+path{
+	transition: all 0ms;
+}
 
 
 `
@@ -406,39 +406,6 @@ const userDropdownItems = [
 		target: "_blank",
 	},
 ];
-function DropdownContent() {
-	const router = useRouter();
-	return (
-		<div className={"flex flex-col justify-between h-full"}>
-			<div>
-				{userDropdownItems.map(({ leftLabel, rightLabel, link, target }) => (
-					<Link href={link}>
-						<a href={link} target={target} className={"close-on-click"}>
-							<MenuItem label={leftLabel} rightLabel={rightLabel} />
-						</a>
-					</Link>
-				))}
-			</div>
-
-			<div className={"mt-16"}>
-				<hr
-					css={css`
-						color: #1a1d26;
-					`}
-				/>
-				<MenuItem
-					showHighlighted={true}
-					onClick={async () => {
-						await backendRequest(resolvePathToBackendURI("/users/actions/logout"));
-						router.push("/login");
-					}}
-					label={"Logout"}
-					rightLabel={""}
-				/>
-			</div>
-		</div>
-	);
-}
 
 
 const feedbackCSS = css`

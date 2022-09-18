@@ -7,13 +7,12 @@ interface IProps {
     children?: any;
     onClick?: any;
 }
-const PointerLink =  ({children, className, ...props}: IProps) => {
+const PointerLink = ({ children, className, ...props }: IProps) => {
     const { onClick } = props;
-
     return (
         <div className={`${className}`} onClick={onClick} css={containerCss}>
             {children}
-            <PointerIcon css={pointerIconCss}/>
+            <PointerIcon css={pointerIconCss} />
         </div>
     )
 };

@@ -280,7 +280,7 @@ function TestListItem({ test, isActive, deleteItem, setLockState, projectId, onM
 								opacity: 0.8;
 							}
 						`}
-						//  onClick={() => { navigate("/recorder"); goFullScreen(); setTimeout(() => {performReplayTestUrlAction(test.id);}, 500); }}
+					//  onClick={() => { navigate("/recorder"); goFullScreen(); setTimeout(() => {performReplayTestUrlAction(test.id);}, 500); }}
 					>
 						<PlayIcon
 							css={css`
@@ -317,18 +317,18 @@ function TestList({ userTests, deleteTest, projectId }) {
 		<ul css={testItemStyle}>
 			{userTests
 				? userTests.map((test, index) => {
-						return (
-							<TestListItem
-								key={test.id}
-								deleteItem={deleteTest}
-								projectId={projectId}
-								test={test}
-								isActive={lastHoverItem === index}
-								setLockState={handleSetLockState}
-								onMouseEnterCallback={onMouseEnterCallback.bind(this, index)}
-							/>
-						);
-				  })
+					return (
+						<TestListItem
+							key={test.id}
+							deleteItem={deleteTest}
+							projectId={projectId}
+							test={test}
+							isActive={lastHoverItem === index}
+							setLockState={handleSetLockState}
+							onMouseEnterCallback={onMouseEnterCallback.bind(this, index)}
+						/>
+					);
+				})
 				: ""}
 		</ul>
 	);
@@ -543,7 +543,7 @@ const DashboardFooter = ({ userTests, projectId }) => {
 							bgColor="tertiary-outline"
 							css={saveButtonStyle}
 						>
-							<span>Run tests</span>
+							Run test
 						</Button>
 
 						<div
@@ -580,7 +580,7 @@ function DashboardScreen() {
 	const selectedProject = useSelector(getCurrentSelectedProjct);
 	const store = useStore();
 	const [userInfo, setUserInfo] = React.useState({});
-	const [showProxyWarning, setShowProxyWarning] = React.useState({show: false, testId: null, startUrl: null});
+	const [showProxyWarning, setShowProxyWarning] = React.useState({ show: false, testId: null, startUrl: null });
 	const proxyState = useSelector(getProxyState);
 	const userAccountInfo = useSelector(getUserAccountInfo);
 	const proxyIsInitializing = useSelector(getIsProxyInitializing);
@@ -589,7 +589,7 @@ function DashboardScreen() {
 
 	React.useEffect(() => {
 		const loggedIn = checkIfLoggedIn();
-		if(loggedIn) {
+		if (loggedIn) {
 			getUserAccountProjects().then((userInfo) => {
 				setUserInfo(userInfo);
 			});
@@ -619,7 +619,7 @@ function DashboardScreen() {
 		}
 
 		if (window["showProxyWarning"] && !Object.keys(proxyState).length) {
-			setShowProxyWarning({show: true, testId: window["showProxyWarning"].testId, startUrl: window["showProxyWarning"].startUrl});
+			setShowProxyWarning({ show: true, testId: window["showProxyWarning"].testId, startUrl: window["showProxyWarning"].startUrl });
 
 			window["showProxyWarning"] = false;
 		}
@@ -688,7 +688,7 @@ function DashboardScreen() {
 	const handleTestDelete = React.useCallback(
 		(id) => {
 			setUserTests(userTests.filter((a) => a.id != id));
-			if(!(window as any).deletedTest) {
+			if (!(window as any).deletedTest) {
 				(window as any).deletedTest = [];
 			}
 			(window as any).deletedTest.push(id);
@@ -725,8 +725,8 @@ function DashboardScreen() {
 						proxyIsInitializing
 							? css``
 							: isProxyWorking
-							? undefined
-							: css`
+								? undefined
+								: css`
 									path {
 										fill: rgba(0, 0, 0, 0.8);
 									}
@@ -823,16 +823,9 @@ const saveButtonStyle = css`
 	font-weight: 600;
 	font-size: 14rem;
 	line-height: 17rem;
-	border: 0.5px solid transparent;
-	border-right-width: 0rem;
-	border-top-right-radius: 0rem;
-	border-bottom-right-radius: 0rem;
 	color: #ffffff;
 	:hover {
-		border: 0.5px solid #8860de;
-		border-right-width: 0rem;
-		border-top-right-radius: 0rem;
-		border-bottom-right-radius: 0rem;
+		filter: brightness(.8)
 	}
 `;
 const infoTextStyle = css`

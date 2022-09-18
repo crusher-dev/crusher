@@ -196,9 +196,9 @@ width: 148rem;
 border-radius: 6px;
 padding-top:1rem;
 
-transition: all 0ms;
+transition: all 0ms linear;
 
-path{
+path, *{
 	transition: all 0ms;
 }
 

@@ -255,7 +255,7 @@ const leftMenu = [
 	{
 		icon: <Menu />,
 		label: "projects",
-		link: "/app/projects",
+		link: "/projects",
 	},
 	{
 		icon: <Icon2 />,
@@ -628,18 +628,32 @@ const ProjectSection = () => {
 	if (isCurrentProject) {
 		return (
 			<div css={projectsLabel} className={"flex items-center w-full"}>
-				<span>{project.name}</span>
-				<span className="badge flex items-center justify-center pt-1">{projects.length}</span>
+				<Link href="/projects">
+					<span css={projectIcon}>Projects</span>
+				</Link>
+				<span>/ {project.name}</span>
 			</div>
 		)
 	}
 	return (
 		<div css={projectsLabel} className={"flex items-center w-full"}>
 			<span>Projects</span>
-			<span className="badge flex items-center justify-center pt-1">{projects.length}</span>
+			<span className="badge flex items-center justify-center pt-1 ml-8">{projects.length}</span>
 		</div>
 	)
 }
+
+const projectIcon = css`
+
+font-size: 12.5px;
+margin-right: 3px;
+:hover{
+	text-decoration: underline;
+	color: #db54ff;
+	transition: all 0ms linear;
+	// cursor: pointer;
+}
+`
 
 export const SidebarTopBarLayout = ({ children, noContainerWidth = false, hideSidebar = false, setContainerWidth = true }) => {
 	const [projects] = useAtom(projectsAtom);
@@ -690,10 +704,10 @@ const textLink = css`
 `;
 
 const projectsLabel = css`
-	gap: 10rem;
+	gap: 2rem;
 	font-family: "Cera Pro";
 	font-weight: 400;
-	font-size: 15px;
+	font-size: 12.5px;
 	color: #6b6565;
 	letter-spacing: 0.02em;
 

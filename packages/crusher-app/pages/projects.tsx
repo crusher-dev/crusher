@@ -12,6 +12,9 @@ import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import { projectsAtom } from "@store/atoms/global/project";
 import Link from "next/link";
 import { Conditional } from "dyson/src/components/layouts";
+import { appStateItemMutator } from "@store/atoms/global/appState";
+import { useRouter } from "next/router";
+import { getIdentifier } from "@utils/routing";
 
 function GitIcon(props) {
 	return (
@@ -204,28 +207,36 @@ const containerStyle = css`
 
 function ProjectCard({ project }) {
 	const { id, name } = project;
-	return (
-		<Link href="/app/dashboard">
-			<div css={projectItem} className={"flex flex-col justify-between pr-16 pl-20 pt-16 pb-22"}>
-				<div>
-					<div className="flex items-center justify-between">
-						<div className="flex items-center">
-							<Dolphin height={20} width={20} />
-							<TextBlock fontSize={15} color="#B6B6B6" weight="600" className="ml-10">
-								{name}
-							</TextBlock>
-						</div>
-						<div className="open flex items-center justify-center">Open</div>
-					</div>
+	const router = useRouter();
+	const [_, setAppStateItem] = useAtom(appStateItemMutator);
 
-					<TextBlock fontSize={12.6} color="#4a4a4a" className="mt-11">
-						Add github action
-					</TextBlock>
+	const selectProject = () => {
+		const getAlias = getIdentifier(name, id)
+		router.push(`/${getAlias}/dashboard`);
+		setAppStateItem({ key: "selectedProjectId", value: id });
+	}
+	return (
+
+		<div css={projectItem} onClick={selectProject.bind(this)} className={"flex flex-col justify-between pr-16 pl-20 pt-16 pb-22"}>
+			<div>
+				<div className="flex items-center justify-between">
+					<div className="flex items-center">
+						<Dolphin height={20} width={20} />
+						<TextBlock fontSize={15} color="#B6B6B6" weight="600" className="ml-10">
+							{name}
+						</TextBlock>
+					</div>
+					<div className="open flex items-center justify-center">Open</div>
 				</div>
-				<div className="flex items-center">
-					<GitIcon className="mr-8" /> git not linked
-				</div>
+
+				<TextBlock fontSize={12.6} color="#4a4a4a" className="mt-11">
+					Add github action
+				</TextBlock>
 			</div>
-		</Link>
+			<div className="flex items-center">
+				<GitIcon className="mr-8" /> git not linked
+			</div>
+		</div>
+
 	);
 }

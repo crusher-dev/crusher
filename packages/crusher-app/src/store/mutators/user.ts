@@ -3,10 +3,7 @@ import { userAtom } from "@store/atoms/global/user";
 import { teamAtom } from "@store/atoms/global/team";
 import { systemConfigAtom } from "@store/atoms/global/systemConfig";
 import { projectsAtom } from "@store/atoms/global/project";
-import { USER_META_KEYS } from "@constants/USER";
-import { appStateAtom, appStateItemMutator } from "@store/atoms/global/appState";
 import { Analytics } from "@utils/core/analytics";
-import { tempProjectAtom } from "@store/atoms/global/temp/tempTestId";
 
 interface UserInitialData {
 	userData: any;

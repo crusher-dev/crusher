@@ -80,3 +80,8 @@ export const getGoogleAuthUrl = (query: any): string => {
 
 	return finalURL.toString();
 };
+
+
+export const getIdentifier = (name, id) => {
+	return `${id}`
+}

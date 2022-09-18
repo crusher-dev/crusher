@@ -56,7 +56,7 @@ function ExternalLink(props: any) {
 export const TopBar = () => {
 	return (
 		<div className="flex justify-between items-center" css={topBar}>
-			<Link href={"/app/projects"}>
+			<Link href={"/projects"}>
 				<Text css={hoverUnderline}>← Go back</Text>
 			</Link>
 

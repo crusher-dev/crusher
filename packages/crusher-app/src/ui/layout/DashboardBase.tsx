@@ -25,7 +25,7 @@ import { handleTestRun } from "@utils/core/testUtils";
 import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import { Global } from "@emotion/react";
 import { Tooltip } from "dyson/src/components/atoms/tooltip/Tooltip";
-import { TooltipWithoutArrow } from "dyson/src/components/atoms/tooltip/Tooltip1";
+import { HoverCard } from "dyson/src/components/atoms/tooltip/Tooltip1";
 import { DiscordSVG } from "@svg/onboarding";
 import { GithubSVG } from "@ui/containers/auth/signup";
 const AddProject = dynamic(() => import("@ui/containers/dashboard/AddProject"));
@@ -364,12 +364,12 @@ function LeftSection() {
 							</div>
 						</Tooltip>
 
-						<TooltipWithoutArrow content={<HelpContent />} placement="top" type="hover" padding={8} offset={0}>
+						<HoverCard content={<HelpContent />} placement="top" type="hover" padding={8} offset={0}>
 
 							<div css={[menuItemCSS]} className="flex items-center justify-center">
 								<Book />
 							</div>
-						</TooltipWithoutArrow>
+						</HoverCard>
 						{/* <div css={[menuItemCSS]} className="flex items-center justify-center">
 							<Slash />
 						</div> */}

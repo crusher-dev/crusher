@@ -28,7 +28,9 @@ import { handleTestRun } from "@utils/core/testUtils";
 import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import { Global } from "@emotion/react";
 import { Tooltip } from "dyson/src/components/atoms/tooltip/Tooltip";
-
+import { TooltipWithoutArrow } from "dyson/src/components/atoms/tooltip/Tooltip1";
+import { DiscordSVG } from "@svg/onboarding";
+import { GithubSVG } from "@ui/containers/auth/signup";
 const AddProject = dynamic(() => import("@ui/containers/dashboard/AddProject"));
 const InviteMembers = dynamic(() => import("@ui/containers/dashboard/InviteMember"));
 
@@ -121,92 +123,88 @@ function ProjectList() {
 	);
 }
 
-
-function HelpContent() {
+function ExternalIcon(props) {
 	return (
-		<div>
-			<div className={"px-24 py-20 pt-14"}>
-				<TextBlock
-					fontSize={16}
-					weight={600}
-					color={"#CFCFD0"}
-					css={css`
-						font-family: "Cera Pro";
-					`}
-				>
-					Need help with your project?
-				</TextBlock>
-				<TextBlock fontSize={12.8} color={"#8F8F8F"} className={"mt-10"}>
-					For issues with crusher, other enquiries.
-				</TextBlock>
-				<div className={"flex mt-20 mb-12"}>
-					<a href={"https://docs.crusher.dev"} target={"_blank"}>
-						<Button
-							size={"x-small"}
-							css={css`
-								width: 148rem;
-							`}
-							bgColor={"blue"}
-						>
-							Setup call
-						</Button>
-					</a>
-					<a href={"https://docs.crusher.dev"} target={"_blank"}>
-						<Button
-							size={"x-small"}
-							className={"ml-12"}
-							css={css`
-								width: 120rem;
-							`}
-							bgColor={"tertiary-white-outline"}
-						>
-							Read docs
-						</Button>
-					</a>
-				</div>
-				<TextBlock className={"mt-24"} fontSize={13} color={"#8F8F8F"} showLineHeight={true}>
-					{" "}
-					A dev will pair to help you adopt crusher.
-				</TextBlock>
-			</div>
-			<hr
-				css={css`
-					height: 1px;
-					background: #1c1f22;
-					border: none;
-				`}
-				className={"mt-0 mb-8"}
+		<svg
+			width={8}
+			height={8}
+			fill="none"
+			viewBox="0 0 8 8"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
+			<path
+				fillRule="evenodd"
+				clipRule="evenodd"
+				d="M7.32.487c.24.216.26.584.044.824L1.67 7.486c-.216.239-.76.215-1 0-.24-.216-.216-.761 0-1L6.497.53A.583.583 0 017.32.487z"
+				fill="#3C3C3D"
 			/>
-
-			<div className={"px-20 py-16"}>
-				<TextBlock
-					fontSize={16}
-					weight={600}
-					color={"#CFCFD0"}
-					css={css`
-						font-family: "Cera Pro";
-					`}
-				>
-					Discuss with community
-				</TextBlock>
-				<TextBlock className={"mt-10 mb-16 "} fontSize={12.8} color={"#8F8F8F"}>
-					For feature request, question or discussion
-				</TextBlock>
-
-				<a href={"https://github.com/crusherdev/crusher"} target={"_blank"}>
-					<img src={"/github_support.png"} className={"mb-16 "} css={banner} />
-				</a>
-				{/*<img src={"/github_support.png"} css={banner}/>*/}
-			</div>
-		</div>
+			<path
+				fillRule="evenodd"
+				clipRule="evenodd"
+				d="M.522 1.256a.583.583 0 01.552-.613L6.9.338a.583.583 0 01.613.552l.305 5.825a.583.583 0 01-1.165.061l-.275-5.242-5.242.274a.583.583 0 01-.614-.552z"
+				fill="#3C3C3D"
+			/>
+		</svg>
 	);
 }
 
-const banner = css`
-	:hover {
-		filter: sepia(100%) hue-rotate(203deg) saturate(1500%);
+
+function HelpContent() {
+	return (
+
+		<div className=" pt-3 pb-8">
+
+			<a href="https://docs.crusher.dev" target="_blank">
+				<TextBlock fontSize={13.4} color={"#8F8F8F"} css={linkCSS}>
+					Documentation <ExternalIcon className="ml-3" />
+				</TextBlock>
+			</a>
+			<a href="https://github.com/crusher-dev/crusher" target="_blank">
+				<TextBlock fontSize={13.4} color={"#8F8F8F"} className={"mt-1"} css={linkCSS}>
+					<GithubSVG height={11} width={11} className={"mr-6"} /> <span className="mt-1">Github</span><ExternalIcon className="ml-4" />
+				</TextBlock>
+			</a>
+			<a href="https://discord.com/invite/dHZkSNXQrg" target="_blank">
+				<TextBlock fontSize={13.4} color={"#8F8F8F"} className={"mt-1"} css={linkCSS}>
+					<DiscordSVG height={12} width={13} className={"mr-6"} css={css`
+						margin-left: -1rem;
+					`} /> <span className="mt-1">Discord</span><ExternalIcon className="ml-3" />
+				</TextBlock>
+			</a>
+
+
+		</div>
+
+	);
+}
+
+const linkCSS = css`
+display: flex;
+align-items: center;
+padding-left: 7rem;
+padding-right: 7rem;
+path{
+	fill: #D1D5DB;
+}
+color: #D1D5DB;
+:hover{
+	background: rgba(43, 43, 43, 0.4);
+	color: #BC66FF;
+	path{
+		fill: #BC66FF;
 	}
-`;
+}
+height:28rem;
+width: 148rem;
+border-radius: 6px;
+padding-top:1rem;
+
+transition: all 0ms;
+
+
+`
+
 
 const helpDropdownCSS = css`
 	box-shadow: 0 0px 6px rgb(0 0 0 / 33%) !important;
@@ -365,7 +363,7 @@ function LeftSection() {
 					</div>
 
 					<div css={leftBottomBar} className="w-full flex mt-20">
-						<Tooltip content={"settings"} placement="top" type="click">
+						<Tooltip content={"settings"} placement="top" type="hover">
 							<div css={[menuItemCSS, border]} className="">
 								<Link href="/settings/project/basic">
 									<div className="h-full w-full flex items-center justify-center">
@@ -374,18 +372,83 @@ function LeftSection() {
 								</Link>
 							</div>
 						</Tooltip>
-						<div css={[menuItemCSS, border]} className="flex items-center justify-center">
-							<Book />
-						</div>
-						<div css={[menuItemCSS]} className="flex items-center justify-center">
+
+						<TooltipWithoutArrow content={<HelpContent />} placement="top" type="click">
+
+							<div css={[menuItemCSS]} className="flex items-center justify-center">
+								<Book />
+							</div>
+						</TooltipWithoutArrow>
+						{/* <div css={[menuItemCSS]} className="flex items-center justify-center">
 							<Slash />
-						</div>
+						</div> */}
 					</div>
 				</div>
 			</div>
 		</div>
 	);
 }
+
+const userDropdownItems = [
+	{
+		leftLabel: "Settings",
+		rightLabel: "",
+		link: "/settings/project/basic",
+		target: "",
+	},
+	{
+		leftLabel: "Changelog",
+		rightLabel: "",
+		link: "https://github.com/crusherdev/crusher/releases",
+		target: "_blank",
+	},
+	{
+		leftLabel: "Help & Support",
+		rightLabel: "",
+		link: "https://docs.crusher.dev/docs/references/contact-us",
+		target: "_blank",
+	},
+	{
+		leftLabel: "Github",
+		rightLabel: "",
+		link: "https://github.com/crusherdev/crusher",
+		target: "_blank",
+	},
+];
+function DropdownContent() {
+	const router = useRouter();
+	return (
+		<div className={"flex flex-col justify-between h-full"}>
+			<div>
+				{userDropdownItems.map(({ leftLabel, rightLabel, link, target }) => (
+					<Link href={link}>
+						<a href={link} target={target} className={"close-on-click"}>
+							<MenuItem label={leftLabel} rightLabel={rightLabel} />
+						</a>
+					</Link>
+				))}
+			</div>
+
+			<div className={"mt-16"}>
+				<hr
+					css={css`
+						color: #1a1d26;
+					`}
+				/>
+				<MenuItem
+					showHighlighted={true}
+					onClick={async () => {
+						await backendRequest(resolvePathToBackendURI("/users/actions/logout"));
+						router.push("/login");
+					}}
+					label={"Logout"}
+					rightLabel={""}
+				/>
+			</div>
+		</div>
+	);
+}
+
 
 const feedbackCSS = css`
 	:hover {
@@ -546,60 +609,8 @@ export const dropdDown = css`
 	z-index: 1;
 `;
 
-function DropdownContent() {
-	return (
-		<div className={"flex flex-col justify-between"}>
-			<div>
-				<MenuItem
-					selected={true}
-					label={"Request a feature"}
-					onClick={() => {
-						window.open("https://github.com/crusherdev/crusher/issues", "_blank").focus();
-					}}
-				></MenuItem>
 
-				<MenuItem
-					label={"Report Issue"}
-					onClick={() => {
-						window.open("https://github.com/crusherdev/crusher/issues", "_blank").focus();
-					}}
-				></MenuItem>
 
-				<MenuItem
-					label={"View docs"}
-					onClick={() => {
-						window.open("https://docs.crusher.dev", "_blank").focus();
-					}}
-				></MenuItem>
-			</div>
-		</div>
-	);
-}
-
-const TOP_NAV_LINK = [
-	{
-		name: "overview",
-		path: "/app/dashboard",
-	},
-	{
-		name: "Tests",
-		path: "/app/tests",
-	},
-	{
-		name: "Monitoring",
-		path: "/app/builds",
-		queryParam: "trigger=CRON",
-	},
-	{
-		name: "Builds",
-		path: "/app/builds",
-		keyToCheck: "trigger",
-	},
-	{
-		name: "Settings",
-		path: "/settings/project/basic",
-	},
-];
 
 function RunTest() {
 	const router = useRouter();

@@ -233,7 +233,7 @@ const ResourceBar = () => {
 	return (
 		<React.Fragment>
 			<div className="flex justify-between mb-8 item-center px-6">
-				<TextBlock color="#4770FF" fontSize={12.6} weight={500} className="mt-2">Free plan</TextBlock>
+				<TextBlock color="#597eff" fontSize={12.6} weight={500} className="mt-2">Free plan</TextBlock>
 
 				<LinkBlock color="#" type="plain" paddingX={0} paddingY={0} css={linkCSSBlock} external={false}>upgrade</LinkBlock>
 			</div>

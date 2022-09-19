@@ -26,6 +26,13 @@ const StepsPanel = ({ className, ...props}: IProps) => {
             )
         })
     }, [recordedSteps]);
+
+    React.useEffect(() => {
+		const testListContainer: any = document.querySelector("#steps-list-container");
+		const elementHeight = testListContainer.scrollHeight;
+		testListContainer.scrollBy(0, elementHeight);
+	}, [recordedSteps.length]);
+
     return (
         <div css={containerCss} className={`${className}`}>
             <div css={headerCss}>
@@ -34,7 +41,7 @@ const StepsPanel = ({ className, ...props}: IProps) => {
                     <ConsoleIcon onClick={toggleStatusBar} css={[consoleIconCss, isStatusBarVisible ? consoleActiveIconCss : null]} />
                 </div>
             </div>
-            <div className={`custom-scroll`} css={contentCss}>
+            <div id={"steps-list-container"} className={`custom-scroll`} css={contentCss}>
                     {steps}
             </div>
         </div>

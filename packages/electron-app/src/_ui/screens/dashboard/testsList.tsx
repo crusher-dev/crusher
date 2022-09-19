@@ -336,8 +336,9 @@ const TestList = ({ tests, deleteTest }) => {
 
     const handleRightCallback = React.useCallback((id, selectedList) => {
         if(id === "delete") {
-            // console.log("Selected list ", selectedList);
             deleteTest(selectedList);
+        } else if(id === "run") {
+            triggerLocalBuild(selectedList);
         }
     }, []);
 

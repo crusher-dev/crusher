@@ -84,7 +84,7 @@ export default function Dashboard() {
 						size={"medium"}
 						placeholder={"Search projects"}
 					></Input>
-					<Link href="/app/new-project">
+					<Link href="/new-project">
 						<Button css={buttonCss} size="big-medium" className="ml-12">
 							+ new project
 						</Button>

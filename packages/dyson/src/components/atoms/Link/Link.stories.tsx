@@ -1,13 +1,13 @@
 import React from "react";
 import { Story, Meta } from "@storybook/react/types-6-0";
 
-import { Text, TextProps } from "./Link";
+import { LinkBlock, TextProps } from "./Link";
 export default {
-	title: "Atoms/Text",
-	component: Text,
+	title: "Atoms/Link",
+	component: LinkBlock,
 } as Meta;
 
-const Template: Story<TextProps> = (args) => <Text {...args}>Heading</Text>;
+const Template: Story<TextProps> = (args) => <LinkBlock {...args}>Heading</LinkBlock>;
 
 Template.parameters = {
 	status: "beta",

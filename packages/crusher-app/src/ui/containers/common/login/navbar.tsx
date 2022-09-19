@@ -1,6 +1,6 @@
 import { css } from "@emotion/react";
 import { Logo } from "dyson/src/components/atoms";
-import { ClickableText } from "dyson/src/components/atoms/clickacbleLink/Text";
+import { LinkBlock } from "dyson/src/components/atoms/Link/Link";
 import { Conditional } from "dyson/src/components/layouts";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -36,23 +36,23 @@ export const LoginNavBar = () => {
 
 			<div css={linkSection} className="flex">
 				<a className="text-14" href="https://docs.crusher.dev" target="_blank">
-					<ClickableText paddingY={4} className="flex items-center text-14">
+					<LinkBlock paddingY={4} className="flex items-center text-14">
 						<span className="mr-4">Docs</span> <ExternalLink />{" "}
-					</ClickableText>
+					</LinkBlock>
 				</a>
 				<Conditional showIf={loginPage}>
 					<Link className="text-14" href="/signup">
-						<ClickableText paddingY={4} className="text-14">
+						<LinkBlock paddingY={4} className="text-14">
 							Signup
-						</ClickableText>
+						</LinkBlock>
 					</Link>
 				</Conditional>
 
 				<Conditional showIf={!loginPage}>
 					<Link className="text-14" href="/login">
-						<ClickableText paddingY={4} className="text-14">
+						<LinkBlock paddingY={4} className="text-14">
 							Login
-						</ClickableText>
+						</LinkBlock>
 					</Link>
 				</Conditional>
 			</div>

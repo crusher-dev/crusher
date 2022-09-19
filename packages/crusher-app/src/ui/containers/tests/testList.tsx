@@ -29,7 +29,7 @@ import { tempTestUpdateIdAtom } from "@store/atoms/global/temp/tempTestUpdateId"
 import { EditIcon, Folder, TestIcon } from "@svg/tests";
 import { PlaySVG } from "@svg/dashboard";
 
-import { ClickableText } from "dyson/src/components/atoms/clickacbleLink/Text";
+import { LinkBlock } from "dyson/src/components/atoms/Link/Link";
 import { updateMeta } from "@store/mutators/metaData";
 import { handleTestRun } from "@utils/core/testUtils";
 import { PROJECT_META_KEYS, USER_META_KEYS } from "@constants/USER";
@@ -511,12 +511,12 @@ function TestTopBar(props: { totalTests: any; onClick: () => Promise<void> }) {
 						</span>
 					</Tooltip>
 				</div>
-				<ClickableText className={"ml-8"} paddingY={6} paddingX={8} onClick={runProjectTest.bind(this)}>
+				<LinkBlock className={"ml-8"} paddingY={6} paddingX={8} onClick={runProjectTest.bind(this)}>
 					<div className={"text-12 flex items-center "}>
 						<PlaySVG height={14} width={14} />
 						<span className={"ml-8 text-13 mt-4 font-500"}>Run tests</span>
 					</div>
-				</ClickableText>
+				</LinkBlock>
 			</div>
 		</div>
 	);

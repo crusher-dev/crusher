@@ -2,8 +2,7 @@ import React from "react";
 
 import { css } from "@emotion/react";
 import { Logo, Text } from "dyson/src/components/atoms";
-import { ClickableText } from "dyson/src/components/atoms/clickacbleLink/Text";
-
+import { LinkBlock } from "dyson/src/components/atoms/Link/Link";
 import Link from "next/link";
 
 export default function NewProjectContainer({ children }) {
@@ -66,9 +65,9 @@ export const TopBar = () => {
 
 			<div css={linkSection} className="flex">
 				<a className="text-14" href="https://docs.crusher.dev" target="_blank">
-					<ClickableText paddingY={4} className="flex items-center text-14">
+					<LinkBlock paddingY={4} className="flex items-center text-14">
 						<span className="mr-4">Docs</span> <ExternalLink />{" "}
-					</ClickableText>
+					</LinkBlock>
 				</a>
 			</div>
 		</div>

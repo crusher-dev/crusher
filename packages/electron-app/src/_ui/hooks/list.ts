@@ -5,7 +5,7 @@ const useSelectableList = () => {
   const [keyPressed, setKeyPressed] = useState<any>(null);
   const [selectedList, setSelectedList] = useState([]);
 
-  const isItemSelected = (index) => selectedList.includes(index);
+  const isItemSelected = React.useCallback((index) => selectedList.includes(index), [selectedList]);
 
   const toggleSelectAll = (items) => {
       if (selectedList.length === items) {

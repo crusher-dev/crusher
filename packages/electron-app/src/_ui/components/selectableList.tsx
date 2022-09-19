@@ -15,11 +15,11 @@ const ListBox = ({className, items, ...props}: IProps) => {
         return items.map((item, index) => {
             return (
                 <ListItem onClick={toggleSelectItem.bind(this, index)} isActive={isItemSelected(index)} key={index}>
-                    {item.content}
+                    {item.content(isItemSelected)}
                 </ListItem>
             )
         });
-    }, [selectedList, toggleSelectItem, items]);
+    }, [selectedList, isItemSelected, toggleSelectItem, items]);
 
     const handleOutSideClick = React.useCallback(() => {
         resetSelected();

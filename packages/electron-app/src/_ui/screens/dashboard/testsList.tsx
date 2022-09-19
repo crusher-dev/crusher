@@ -12,6 +12,7 @@ import { resolveToFrontend } from "electron-app/src/utils/url";
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
 import { CloudCrusher } from "electron-app/src/lib/cloud";
 import { ListBox } from "../../components/selectableList";
+import { useSelectableList } from "../../hooks/list";
 const TestListNameInput = ({ testName, testId, isActive, isEditing, setIsEditing }) => {
     const [name, setName] = React.useState(testName);
     const inputRef = React.useRef<HTMLInputElement>(null);
@@ -130,13 +131,14 @@ const contextMenuItemCss = css`
         background: #687ef2 !important;
     }
 `;
-const TestListItem = ({ test, deleteTest, lock }) => {
-    const [isActive, setIsActive] = React.useState(false);
+const TestListItem = ({ test, isItemSelected, index, deleteTest, lock }) => {
+
+    const [isHover, setIsHover] = React.useState(false);
     const [isEditingName, setIsEditingName] = React.useState(false);
     
     const navigate = useNavigate();
 
-    const listItemActionsStyle = React.useMemo(() => listItemActionsCss(isActive), [isActive]);
+    const listItemActionsStyle = React.useMemo(() => listItemActionsCss(isHover), [isHover]);
 
     const handleEdit = React.useCallback(() => {
 		navigate("/recorder");
@@ -149,8 +151,8 @@ const TestListItem = ({ test, deleteTest, lock }) => {
     }, [test]);
 
     return (
-        <>
-            <TestListNameInput isActive={isActive} testId={test.id} isEditing={isEditingName} setIsEditing={setIsEditingName} testName={test.testName}/>
+        <div css={css`display: flex; flex: 1; align-items: center; :hover { & > .action-buttons { display: flex !important; } }`}>
+            <TestListNameInput isActive={isHover} testId={test.id} isEditing={isEditingName} setIsEditing={setIsEditingName} testName={test.testName}/>
             {!test.firstRunCompleted ? (
 				<LoadingIconV2 css={loadingIconCss}/>
 			) : (
@@ -168,7 +170,7 @@ const TestListItem = ({ test, deleteTest, lock }) => {
 						<span css={runTextCss}>run</span>
 					</div>
 			</div>
-        </>
+        </div>
     )
 };
 
@@ -263,9 +265,11 @@ const TestList = ({tests, deleteTest}) => {
         const lockMechanism = { isAcquired: () => isAcquired, acquire: () => { if(!isAcquired) { isAcquired = true; return true; } return false }, release: () =>  { isAcquired = false; return true;} };
 
         return tests.map((test, index) => {
-            return { content: (
+            return { content: (isItemSelected) => (
                 <TestListItem
                     key={test.id}
+                    index={index}
+                    isItemSelected={isItemSelected}
                     lock={lockMechanism}
                     test={test}
                     deleteTest={deleteTest}

@@ -2,23 +2,27 @@ import React from "react";
 import { css, SerializedStyles } from "@emotion/react";
 
 export type ClickableProps = {
+	type: 'box' | 'plain';
+	useATag: false;
 	paddingX: number;
 	paddingY: number;
+	external?: boolean;
+	underline?: boolean;
 	/**
 	 * Emotion CSS style if any
 	 */
 	css?: SerializedStyles;
 } & React.DetailedHTMLProps<any, any>;
 
-const ClickableLinkProps = {
+const LinkBlockProps = {
 	paddingY: 6,
 	paddingX: 12,
-	weight: 700,
+	weight: 500,
 };
 /**
- * Crusher Clickable Text component.
+ * Crusher Link Block component.
  */
-export const ClickableText: React.FC<ClickableProps> = (props: ClickableProps) => {
+export const LinkBlock: React.FC<ClickableProps> = (props: ClickableProps) => {
 	const { paddingY, paddingX, children, css, ...otherProps } = props;
 	return (
 		<div css={[hightlLinkCSS(paddingY, paddingX), css]} {...otherProps}>
@@ -27,7 +31,7 @@ export const ClickableText: React.FC<ClickableProps> = (props: ClickableProps) =
 	);
 };
 
-ClickableText.defaultProps = ClickableLinkProps;
+LinkBlock.defaultProps = LinkBlockProps;
 
 const hightlLinkCSS = (paddingY: number, paddingX: number) => css`
 	padding: ${paddingY}rem ${paddingX}rem;

@@ -156,7 +156,7 @@ const TestListItem = ({ test, isItemSelected, index, deleteTest, lock }) => {
     }, [test]);
 
     return (
-        <div css={css`display: flex; flex: 1; align-items: center; :hover { & > .action-buttons { display: flex !important; } }`}>
+        <div css={css`padding: 6px 46px; padding-right: 40px; display: flex; flex: 1; align-items: center; :hover { & > .action-buttons { display: flex !important; } }`}>
             <TestListNameInput isActive={isHover} testId={test.id} isEditing={isEditingName} setIsEditing={setIsEditingName} testName={test.testName} />
             {!test.firstRunCompleted ? (
                 <LoadingIconV2 css={loadingIconCss} />

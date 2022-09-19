@@ -8,6 +8,9 @@ import { setSelectedProject } from "electron-app/src/store/actions/app";
 import { getUserAccountProjects } from "electron-app/src/utils";
 import { LoadingScreen } from "../loading";
 import { useUser } from "../../api/user/user";
+import { ListBox } from "../../components/selectableList";
+import { NormalList } from "../../components/NormalList";
+import Wrapper from "figma-design-scaler/dist/dist/main";
 
 const ProjectsListScreen = () => {
     const { projects, userInfo, error } = useUser();
@@ -20,11 +23,17 @@ const ProjectsListScreen = () => {
 	}, [projects]);
 	if(!projects) return (<LoadingScreen />);
     return (
-        <CompactAppLayout title={<div css={titleCss}>Select project</div>} footer={<Footer/>}>
-            <ProjectList projects={projects} />
-        </CompactAppLayout>
+		// <Wrapper figmaUrl={"https://www.figma.com/proto/MsJZCnY5NvrDF4kL1oczZq/Crusher-%7C-Aug?node-id=1638%3A5550&scaling=min-zoom&page-id=988%3A3439&starting-point-node-id=988%3A3817"}>
+			<CompactAppLayout css={containerCss} title={<div css={titleCss}>Select project</div>} footer={<Footer/>}>
+				<ProjectList projects={projects} />
+			</CompactAppLayout>
+		// </Wrapper>
     );
 }
+const containerCss = css`
+background: #080809;
+padding-top: 8px;
+`;
 
 const titleCss = css`
 	font-family: Cera Pro;
@@ -44,22 +53,23 @@ const ProjectList = ({ projects }) => {
         store.dispatch(setSelectedProject(projectId))
         setTimeout(() => navigate("/"), 50);
     }, []);
-
-    const projectItems = React.useMemo(() => {
-        return projects.map((project) => {
-            return (
-                <li onClick={handleProjectItemClick.bind(this, project.id)}>
-                    <span>{project.name}</span>
-                </li>
-            );
+	    
+    const items: Array<any> = React.useMemo(() => {
+        return projects.map((project, index) => {
+            return {
+                id: project.id,
+                content: (
+							<div css={css`width: 100%; height: 100%; padding: 14px 46px; padding-right: 40px;`}>{project.name}</div>
+                )
+            };
         });
     }, [projects]);
 
 	return (
-		<ul css={testItemStyle}>
-			{projectItems}
-		</ul>
+		<NormalList onClick={handleProjectItemClick} css={testItemStyle} items={items} />
 	);
+
+
 }
 
 const testItemStyle = css`
@@ -72,7 +82,6 @@ const testItemStyle = css`
 	color: #ffffff;
 
 	li {
-		padding: 14px 24px;
 		position: relative;
 		.action-buttons {
 			display: none;

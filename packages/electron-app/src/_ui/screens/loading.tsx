@@ -2,6 +2,7 @@ import React from "react";
 import { CompactAppLayout } from "../layout/CompactAppLayout";
 import { Footer } from "../layout/Footer";
 import { LoadingProgressBar } from "../components/LoadingProgressBar";
+import { css } from "@emotion/react";
 
 function LoadingScreen() {
 	React.useEffect(() => {
@@ -9,11 +10,14 @@ function LoadingScreen() {
 	}, []);
 
 	return (
-		<CompactAppLayout showHeader={true} footer={<Footer />}>
+		<CompactAppLayout css={containerCss} showHeader={true} footer={<Footer />}>
 			<LoadingProgressBar />
 		</CompactAppLayout>
 	);
 }
-
+const containerCss = css`
+background: #080809;
+padding-top: 8px;
+`;
 
 export { LoadingScreen };

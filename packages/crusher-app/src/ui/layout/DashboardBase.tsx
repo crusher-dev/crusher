@@ -230,9 +230,9 @@ function NewPeople(props) {
 
 const ResourceBar = () => {
 	return (
-		<div className="mt-24">
-			<div className="flex justify-between mb-8 item-center">
-				<TextBlock color="#4770FF" fontSize={12.6} fontWeight={500} className="mt-2">Free plan</TextBlock>
+		<div>
+			<div className="flex justify-between mb-8 item-center px-6">
+				<TextBlock color="#4770FF" fontSize={12.6} weight={500} className="mt-2">Free plan</TextBlock>
 
 				<LinkBlock color="#" type="plain" paddingX={0} paddingY={0} css={linkCSSBlock} external={false}>upgrade</LinkBlock>
 			</div>
@@ -268,18 +268,23 @@ function LeftSection() {
 		<div css={sidebar} className={"flex flex-col justify-between pb-18"}>
 			<UserNTeam />
 			<div className="flex flex-col justify-between h-full">
-				<div className="px-14 pt-36">
-					{menuItems.map((item) => {
-						const selected = item.link === route;
-						return (
-							<Link href={item.link} key={item.link} >
-								<div className="flex items-center pl-8 mb-8" css={[menuItem, selected && selectedCSS]}>
-									<div css={iconCSS}>{item.icon}</div>
-									<span className="label">{item.label}</span>
-								</div>
-							</Link>
-						);
-					})}
+				<div>
+					<div className="px-14 mt-38 mb-16">
+						<ResourceBar />
+					</div>
+					<div className="px-14">
+						{menuItems.map((item) => {
+							const selected = item.link === route;
+							return (
+								<Link href={item.link} key={item.link} >
+									<div className="flex items-center pl-8 mb-8" css={[menuItem, selected && selectedCSS]}>
+										<div css={iconCSS}>{item.icon}</div>
+										<span className="label">{item.label}</span>
+									</div>
+								</Link>
+							);
+						})}
+					</div>
 				</div>
 
 				<div className="px-16">
@@ -298,7 +303,6 @@ function LeftSection() {
 						</div>
 					</div>
 
-					<ResourceBar />
 					<div className="flex justify-between mt-20">
 
 						<div className="flex items-center pt-1" css={feedbackCSS}>

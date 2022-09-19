@@ -149,8 +149,9 @@ const RenderMenuItems = ({menuItems,isSubItem=false})=>{
   }))
 }
 
-export const RightClickMenu = ({children, onOpenChange, menuItems})=>{
-	return (
+export const RightClickMenu = ({children, disabled, onOpenChange, menuItems})=>{
+  if(disabled) return children;
+  return (
 		<ContextMenu onOpenChange={onOpenChange}>
         <ContextMenuTrigger>
         {children}

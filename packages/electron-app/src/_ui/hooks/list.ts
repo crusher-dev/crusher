@@ -32,6 +32,21 @@ const useSelectableList = () => {
     }
   }, [keyPressed, selectedList]);
 
+  const selectItem = React.useCallback((index) => {
+    const isControlKey = keyPressed == 17 || keyPressed === 91;
+    const isShiftKey = keyPressed == 17;
+    const isElementAlreadySelected = selectedList.includes(index);
+    if (isControlKey) {
+      if (!isElementAlreadySelected) {{
+        setSelectedList([...selectedList, index])
+      }
+    } else {
+      //If no key
+      setSelectedList([index]);
+    }
+  }
+  }, [keyPressed, selectedList]);
+
 
   useEffect(() => {
     const keyDownCallback = function (event) {
@@ -61,6 +76,7 @@ const useSelectableList = () => {
     toggleSelectAll,
     toggleSelectItem,
     resetSelected,
+    selectItem
   }
 }
 

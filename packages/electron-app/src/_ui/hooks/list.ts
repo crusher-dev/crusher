@@ -49,14 +49,18 @@ const useSelectableList = () => {
             window.removeEventListener("keydown", keyDownCallback, false);
             window.removeEventListener("keyup", keyUpCallback, false);
       };
-  }, [])
+  }, []);
 
+  const resetSelected = React.useCallback(() => {
+    setSelectedList([]);
+  }, []);
 
   return {
-        selectedList,
+      selectedList,
       isItemSelected,
       toggleSelectAll,
       toggleSelectItem,
+      resetSelected,
   }
 }
 

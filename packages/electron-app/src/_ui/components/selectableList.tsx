@@ -2,13 +2,14 @@ import React from "react";
 import { useStore } from "react-redux";
 import { css } from "@emotion/core";
 import { useSelectableList } from "../hooks/list";
+import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
 
 interface IProps {
     className?: string;
     items?: Array<{content: any}>;
 }
 const ListBox = ({className, items, ...props}: IProps) => {
-    const {selectedList, isItemSelected, toggleSelectAll, toggleSelectItem} = useSelectableList();
+    const {selectedList, isItemSelected, resetSelected, toggleSelectAll, toggleSelectItem} = useSelectableList();
     const listItems = React.useMemo(() => {
         if(!items) return null;
         return items.map((item, index) => {
@@ -20,13 +21,16 @@ const ListBox = ({className, items, ...props}: IProps) => {
         });
     }, [selectedList, items]);
 
+    const handleOutSideClick = React.useCallback(() => {
+        resetSelected();
+    }, [resetSelected]);
     return (
-        <div>
+        <OnOutsideClick onOutsideClick={handleOutSideClick}>
             <div css={testsCountCss}>{items.length} tests</div>
             <ul css={listCss}>
                 { listItems }
             </ul>
-        </div>
+        </OnOutsideClick>
 	);
 };
 

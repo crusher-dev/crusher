@@ -230,7 +230,7 @@ function NewPeople(props) {
 
 const ResourceBar = () => {
 	return (
-		<div>
+		<React.Fragment>
 			<div className="flex justify-between mb-8 item-center px-6">
 				<TextBlock color="#4770FF" fontSize={12.6} weight={500} className="mt-2">Free plan</TextBlock>
 
@@ -242,7 +242,7 @@ const ResourceBar = () => {
 					<div className="hours-count">5 hrs</div>
 				</div>
 			</Tooltip>
-		</div>
+		</React.Fragment>
 	)
 };
 
@@ -269,7 +269,7 @@ function LeftSection() {
 			<UserNTeam />
 			<div className="flex flex-col justify-between h-full">
 				<div>
-					<div className="px-14 mt-38 mb-16">
+					<div className="px-14 mt-38 mb-24">
 						<ResourceBar />
 					</div>
 					<div className="px-14">
@@ -390,7 +390,7 @@ const badgeStyle = css`
 	:hover {
 		background: #171718;
 	}
-	border-radius: 8px;
+	border-radius: 10rem;
 	overflow: hidden;
 `;
 function Slash(props) {

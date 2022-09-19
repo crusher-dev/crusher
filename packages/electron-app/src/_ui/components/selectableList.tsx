@@ -15,7 +15,7 @@ const ListBox = ({ className, selectedHeaderActions: SelectedHeaderActions, item
         if (!items) return null;
         return items.map((item, index) => {
             return (
-                <ListItem onClick={toggleSelectItem.bind(this, item.id)} isActive={isItemSelected(item.id)} key={index}>
+                <ListItem key={item.id} onClick={toggleSelectItem.bind(this, item.id)} isActive={isItemSelected(item.id)}>
                     {item.content(isItemSelected)}
                 </ListItem>
             )
@@ -30,9 +30,7 @@ const ListBox = ({ className, selectedHeaderActions: SelectedHeaderActions, item
         <OnOutsideClick onOutsideClick={handleOutSideClick}>
             <div css={headerCss}>
                 <div css={testsCountCss}>{items.length} tests</div>
-                {selectedList.length ? (
-                    <SelectedHeaderActions items={items} selectedList={selectedList} />
-                ) : ""}
+                <SelectedHeaderActions toggleSelectAll={toggleSelectAll} items={items} selectedList={selectedList} />
             </div>
             <ul css={listCss}>
                 {listItems}
@@ -44,6 +42,9 @@ const ListBox = ({ className, selectedHeaderActions: SelectedHeaderActions, item
 const headerCss = css`
     display: flex;
     padding-right: 41px;
+    border-bottom: 1px solid rgba(153, 153, 153, 0.09);
+    padding-bottom: 12rem;
+    height: 30px;
 `;
 const testsCountCss = css`
     font-family: Gilroy;
@@ -53,8 +54,6 @@ const testsCountCss = css`
 
     color: rgba(255, 255, 255, 0.67);
     padding: 0px 46px;
-    border-bottom: 1px solid rgba(153, 153, 153, 0.09);
-    padding-bottom: 6rem;
 `;
 const listCss = css`
     height: 100%;

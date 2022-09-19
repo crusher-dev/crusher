@@ -28,6 +28,7 @@ import { DiscordSVG } from "@svg/onboarding";
 import { GithubSVG } from "@ui/containers/auth/signup";
 import { currentProjectSelector } from "@store/selectors/getCurrentProject";
 import { LinkBlock } from "dyson/src/components/atoms/Link/Link";
+import { useCurrentProject, useProjectDetails } from "@hooks/common";
 // const AddProject = dynamic(() => import("@ui/containers/dashboard/AddProject"));
 const InviteMembers = dynamic(() => import("@ui/containers/dashboard/InviteMember"));
 
@@ -560,18 +561,16 @@ function External(props) {
 }
 
 const ProjectSection = () => {
-	const [project] = useAtom(currentProjectSelector);
+	const { currentProject } = useProjectDetails()
 	const [projects] = useAtom(projectsAtom);
-	const isCurrentProject = !!project;
-
-	console.log(project)
+	const isCurrentProject = !!currentProject;
 	if (isCurrentProject) {
 		return (
 			<div css={projectsLabel} className={"flex items-center w-full"}>
 				<Link href="/projects">
 					<span css={projectIcon}>projects</span>
 				</Link>
-				<span>/ {project.name}</span>
+				<span>/ {currentProject.name}</span>
 			</div>
 		)
 	}
@@ -585,7 +584,7 @@ const ProjectSection = () => {
 
 const projectIcon = css`
 
-font-size: 12.5px;
+font-size: 13rex;
 margin-right: 3px;
 :hover{
 	text-decoration: underline;
@@ -596,7 +595,6 @@ margin-right: 3px;
 `
 
 export const SidebarTopBarLayout = ({ children, noContainerWidth = false, hideSidebar = false, setContainerWidth = true }) => {
-	const [projects] = useAtom(projectsAtom);
 	return (
 		<div className={"flex"} css={background}>
 			<Conditional showIf={!hideSidebar}>

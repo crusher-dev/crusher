@@ -8,7 +8,7 @@ import { IUserAndSystemInfoResponse } from "@crusher-shared/types/response/IUser
 import { backendRequest } from "@utils/common/backendRequest";
 import { redirectUserOnMount } from "@utils/routing";
 
-import { selectInitialProjectMutator, updateInitialDataMutator } from "@store/mutators/user";
+import { updateInitialDataMutator } from "@store/mutators/user";
 import { cliLoginUserKeyAtom } from "@store/atoms/global/cliToken";
 import { resolvePathToBackendURI } from "@utils/common/url";
 import { RequestMethod } from "@types/RequestOptions";

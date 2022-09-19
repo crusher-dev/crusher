@@ -66,7 +66,7 @@ export const TopBar = () => {
 			<div css={linkSection} className="flex">
 				<a className="text-14" href="https://docs.crusher.dev" target="_blank">
 					<LinkBlock paddingY={4} className="flex items-center text-14">
-						<span className="mr-4">Docs</span> <ExternalLink />{" "}
+						<span className="mr-4">Docs</span> <ExternalLink />
 					</LinkBlock>
 				</a>
 			</div>

@@ -227,6 +227,22 @@ function NewPeople(props) {
 	);
 }
 
+const ResourceBar = () => {
+	return (
+		<div className="mt-24">
+			<div className="flex justify-between mb-4">
+				<TextBlock color="#4770FF">Free plan</TextBlock>
+				<TextBlock color="#5F5F5F">more</TextBlock>
+			</div>
+			<Tooltip content={"You have 2 more tests and 5 hr limit. contact support@crusher.dev"} placement="top-end" type="hover">
+				<div css={badgeStyle} className="flex">
+					<div className="test-count pl-2">2/3</div>
+					<div className="hours-count">5 hrs</div>
+				</div>
+			</Tooltip>
+		</div>
+	)
+};
 function LeftSection() {
 	const router = useRouter();
 	const [inviteTeammates, setInviteTeamMates] = useState(false);
@@ -268,6 +284,7 @@ function LeftSection() {
 						</div>
 					</div>
 
+					<ResourceBar />
 					<div className="flex justify-between mt-20">
 
 						<div className="flex items-center pt-1" css={feedbackCSS}>
@@ -277,12 +294,7 @@ function LeftSection() {
 							</TextBlock>
 						</div>
 
-						<Tooltip content={"You have 2 more tests and 5 hr limit. contact support@crusher.dev"} placement="top-end" type="hover">
-							<div css={badgeStyle} className="flex">
-								<div className="test-count pl-2">2/3</div>
-								<div className="hours-count">5 hrs</div>
-							</div>
-						</Tooltip>
+
 					</div>
 
 					<div css={leftBottomBar} className="w-full flex mt-20">
@@ -342,7 +354,7 @@ const badgeStyle = css`
 	.test-count,
 	.hours-count {
 
-		width: 48rem;
+		width: 50%;
 		height: 28rem;
 	
 		display: flex;

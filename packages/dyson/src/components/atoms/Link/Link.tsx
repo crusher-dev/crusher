@@ -15,6 +15,7 @@ export type ClickableProps = {
 } & React.DetailedHTMLProps<any, any>;
 
 const LinkBlockProps = {
+	type: 'box',
 	paddingY: 6,
 	paddingX: 12,
 	weight: 500,
@@ -23,12 +24,12 @@ const LinkBlockProps = {
  * Crusher Link Block component.
  */
 export const LinkBlock: React.FC<ClickableProps> = (props: ClickableProps) => {
-	const { paddingY, paddingX, children, css, external, href, ...otherProps } = props;
+	const { paddingY, paddingX, children, css, external, type, href, ...otherProps } = props;
 	const base = (
-		<div css={[hightlLinkCSS(paddingY, paddingX), css]} {...otherProps}>
+		<div css={[hightlLinkCSS(paddingY, paddingX), typeCSS(type), css]} {...otherProps}>
 			{children}
 			<Conditional showIf={external}>
-				<ExternalIcon />
+				<ExternalIcon height={8} width={8} />
 			</Conditional>
 		</div>
 	);
@@ -46,12 +47,38 @@ LinkBlock.defaultProps = LinkBlockProps;
 const hightlLinkCSS = (paddingY: number, paddingX: number) => css`
 	padding: ${paddingY}rem ${paddingX}rem;
 
+
+`;
+
+const typeCSS = (type) => css`
+display: flex;
+align-items:center;
+gap: 4rem;
+	${type === "box" && (
+		`
 	:hover {
 		background: rgba(255, 255, 255, 0.06);
 	}
 
 	border-radius: 4rem;
-`;
+	`
+	)}
+
+	${type === "plain" && (
+		`
+	:hover {
+		color: #b351ff;
+		path{
+			fill:  #b351ff;
+		}
+		text-decoration: underline;
+	}
+
+	border-radius: 4rem;
+	`
+	)}
+
+`
 
 
 const ExternalIcon = (props) => (

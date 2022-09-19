@@ -27,6 +27,7 @@ import { HoverCard } from "dyson/src/components/atoms/tooltip/Tooltip1";
 import { DiscordSVG } from "@svg/onboarding";
 import { GithubSVG } from "@ui/containers/auth/signup";
 import { currentProjectSelector } from "@store/selectors/getCurrentProject";
+import { LinkBlock } from "dyson/src/components/atoms/Link/Link";
 // const AddProject = dynamic(() => import("@ui/containers/dashboard/AddProject"));
 const InviteMembers = dynamic(() => import("@ui/containers/dashboard/InviteMember"));
 
@@ -230,9 +231,10 @@ function NewPeople(props) {
 const ResourceBar = () => {
 	return (
 		<div className="mt-24">
-			<div className="flex justify-between mb-4">
-				<TextBlock color="#4770FF">Free plan</TextBlock>
-				<TextBlock color="#5F5F5F">more</TextBlock>
+			<div className="flex justify-between mb-8 item-center">
+				<TextBlock color="#4770FF" fontSize={12.6} fontWeight={500} className="mt-2">Free plan</TextBlock>
+
+				<LinkBlock color="#" type="plain" paddingX={0} paddingY={0} css={linkCSSBlock} external={false}>upgrade</LinkBlock>
 			</div>
 			<Tooltip content={"You have 2 more tests and 5 hr limit. contact support@crusher.dev"} placement="top-end" type="hover">
 				<div css={badgeStyle} className="flex">
@@ -243,6 +245,18 @@ const ResourceBar = () => {
 		</div>
 	)
 };
+
+const linkCSSBlock = css`
+	color: #5F5F5F;
+	font-size: 12.6rem;
+	:hover{
+		color: #ffffff;
+		path{
+			fill:  #ffffff;
+		}
+	}
+	transition: all 0ms linear;
+`
 function LeftSection() {
 	const router = useRouter();
 	const [inviteTeammates, setInviteTeamMates] = useState(false);

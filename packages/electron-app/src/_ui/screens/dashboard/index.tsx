@@ -135,34 +135,36 @@ const DashboardScreen = () => {
 
     const handleCreateTest = React.useCallback(() => {
         navigate("/recorder");
-		goFullScreen();
+        goFullScreen();
     }, []);
 
     const headerComponent = React.useMemo(() => {
         return (
             <div css={headerComponentCss}>
-                    <ButtonDropdown
-                        dropdownCss={buttonDropdownCss}
-                        css={[buttonDropdownMainButtonCss, css`background: transparent !important; width: auto !important; border: none !important;`]}
-                        options={[
-                            {id: "SAVE", content: (<span css={createTestCss}>
-                                <AddIconV3 css={createIconCss}/> <span>test</span>
-                            </span>)},
-                        ]}
-                        primaryOption={"SAVE"}
-                        callback={handleCreateTest}
-                    />
-                   <ButtonDropdown
-                        dropdownCss={buttonDropdownCss}
-                        css={buttonDropdownMainButtonCss}
-                        options={[
-                            {id: "SAVE", content: (<span>Run test</span>)},
-                        ]}
-                        primaryOption={"SAVE"}
-                        callback={() => {}}
-                    />
+                <ButtonDropdown
+                    dropdownCss={buttonDropdownCss}
+                    css={[buttonDropdownMainButtonCss, css`background: transparent !important; width: auto !important; border: none !important;`]}
+                    options={[
+                        {
+                            id: "SAVE", content: (<span css={createTestCss}>
+                                <AddIconV3 css={createIconCss} /> <span>test</span>
+                            </span>)
+                        },
+                    ]}
+                    primaryOption={"SAVE"}
+                    callback={handleCreateTest}
+                />
+                <ButtonDropdown
+                    dropdownCss={buttonDropdownCss}
+                    css={buttonDropdownMainButtonCss}
+                    options={[
+                        { id: "SAVE", content: (<span>Run test</span>) },
+                    ]}
+                    primaryOption={"SAVE"}
+                    callback={() => { }}
+                />
             </div>
-         
+
         );
     }, []);
     const isLoading = React.useMemo(() => (!tests), [tests]);
@@ -173,9 +175,9 @@ const DashboardScreen = () => {
     const hasNotLoaded = isLoading || !animationComplete;
     return (
         // <Wrapper figmaUrl={"https://www.figma.com/proto/MsJZCnY5NvrDF4kL1oczZq/Crusher-%7C-Aug?node-id=1638%3A5550&scaling=min-zoom&page-id=988%3A3439&starting-point-node-id=988%3A3817"}>
-            <CompactAppLayout footer={<><Footer/><StickyFooter/></>} headerRightSection={headerComponent} showHeader={!hasNotLoaded} css={loadingCSS(hasNotLoaded)} title={selectedProject && !hasNotLoaded ? <TitleComponent projectName={selectedProject.name} /> : null}>
-                {hasNotLoaded ? (<LoadingProgressBar inAppLoading={false} />) : content}
-            </CompactAppLayout>
+        <CompactAppLayout footer={<><Footer /><StickyFooter /></>} headerRightSection={headerComponent} showHeader={!hasNotLoaded} css={loadingCSS(hasNotLoaded)} title={selectedProject && !hasNotLoaded ? <TitleComponent projectName={selectedProject.name} /> : null}>
+            {hasNotLoaded ? (<LoadingProgressBar inAppLoading={false} />) : content}
+        </CompactAppLayout>
         // </Wrapper>
     );
 };

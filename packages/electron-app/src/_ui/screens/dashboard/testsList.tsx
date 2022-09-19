@@ -19,9 +19,9 @@ const TestListNameInput = ({ testName, testId, isActive, isEditing, setIsEditing
     const handleDoubleClick = React.useCallback(() => {
         setIsEditing(true);
         setTimeout(() => {
-			inputRef.current.focus();
-			inputRef.current.setSelectionRange(inputRef.current.value.length, inputRef.current.value.length);
-		});
+            inputRef.current.focus();
+            inputRef.current.setSelectionRange(inputRef.current.value.length, inputRef.current.value.length);
+        });
     }, []);
 
     const handleOnChange = React.useCallback((event) => {
@@ -29,11 +29,11 @@ const TestListNameInput = ({ testName, testId, isActive, isEditing, setIsEditing
     }, []);
 
     const handleSubmit = React.useCallback(() => {
-		CloudCrusher.updateTestName(testId, inputRef.current.value);
+        CloudCrusher.updateTestName(testId, inputRef.current.value);
     }, [name]);
 
     const handleKeyDown = React.useCallback((event) => {
-        if(event.key === "Enter") {
+        if (event.key === "Enter") {
             setIsEditing(false);
             handleSubmit();
         }
@@ -48,17 +48,17 @@ const TestListNameInput = ({ testName, testId, isActive, isEditing, setIsEditing
 
     return (
         <OnOutsideClick disable={!isEditing} onOutsideClick={handleOutsideClick}>
-    <span css={testInputContainerCss} onDoubleClick={handleDoubleClick}>
-        <input
-            size={testName.length}
-            ref={inputRef}
-            css={testInputStyle}
-            onKeyDown={handleKeyDown}
-            onChange={handleOnChange}
-            value={name}
-            disabled={!isEditing}
-        />
-    </span>
+            <span css={testInputContainerCss} onDoubleClick={handleDoubleClick}>
+                <input
+                    size={testName.length}
+                    ref={inputRef}
+                    css={testInputStyle}
+                    onKeyDown={handleKeyDown}
+                    onChange={handleOnChange}
+                    value={name}
+                    disabled={!isEditing}
+                />
+            </span>
         </OnOutsideClick>
 
     );
@@ -72,7 +72,7 @@ const testInputCss = (isActive, isEditing, name) => {
         padding-left: 0px;
         border: ${isEditing ? "1px solid rgba(255, 255, 255, 0.25)" : "1px solid transparent"};
         border-radius: ${isEditing ? "4px" : "0px"};
-        width: ${isEditing ? Math.max(7.5*name.length, 120) + "rem" : "100%"};
+        width: ${isEditing ? Math.max(7.5 * name.length, 120) + "rem" : "100%"};
 
         font-family: Gilroy;
         font-style: normal;
@@ -85,13 +85,13 @@ const testInputCss = (isActive, isEditing, name) => {
 };
 
 function ContextMenuItemDropdown({ test, closeDropdown, renameTest, deleteTest, ...props }) {
-	const MenuItem = ({ label, onClick, ...props }) => {
-		return (
-			<div css={contextMenuItemCss} onClick={onClick}>
-				{label}
-			</div>
-		);
-	};
+    const MenuItem = ({ label, onClick, ...props }) => {
+        return (
+            <div css={contextMenuItemCss} onClick={onClick}>
+                {label}
+            </div>
+        );
+    };
 
     const handleViewReport = React.useCallback(() => {
         shell.openExternal(resolveToFrontend(`/app/build/${test.draftBuildId}`));
@@ -107,18 +107,18 @@ function ContextMenuItemDropdown({ test, closeDropdown, renameTest, deleteTest, 
         closeDropdown();
     }, []);
 
-	return (
-		<div
-			className={"flex flex-col justify-between h-full"}
-			css={contextMenuDropdownListContainerCss}
-		>
-			<div>
-				<MenuItem onClick={handleViewReport} label={"View Report"} className={"close-on-click"} />
-				<MenuItem onClick={handleRename} label={"Rename"} className={"close-on-click"} />
-				<MenuItem onClick={handleDelete} label={"Delete"} className={"close-on-click"} />
-			</div>
-		</div>
-	);
+    return (
+        <div
+            className={"flex flex-col justify-between h-full"}
+            css={contextMenuDropdownListContainerCss}
+        >
+            <div>
+                <MenuItem onClick={handleViewReport} label={"View Report"} className={"close-on-click"} />
+                <MenuItem onClick={handleRename} label={"Rename"} className={"close-on-click"} />
+                <MenuItem onClick={handleDelete} label={"Delete"} className={"close-on-click"} />
+            </div>
+        </div>
+    );
 }
 
 const contextMenuDropdownListContainerCss = css`
@@ -135,15 +135,15 @@ const TestListItem = ({ test, isItemSelected, index, deleteTest, lock }) => {
 
     const [isHover, setIsHover] = React.useState(false);
     const [isEditingName, setIsEditingName] = React.useState(false);
-    
+
     const navigate = useNavigate();
 
     const listItemActionsStyle = React.useMemo(() => listItemActionsCss(isHover), [isHover]);
 
     const handleEdit = React.useCallback(() => {
-		navigate("/recorder");
-		goFullScreen();
-		performReplayTestUrlAction(test.id);
+        navigate("/recorder");
+        goFullScreen();
+        performReplayTestUrlAction(test.id);
     }, [test]);
 
     const handleRunTest = React.useCallback(() => {
@@ -152,24 +152,24 @@ const TestListItem = ({ test, isItemSelected, index, deleteTest, lock }) => {
 
     return (
         <div css={css`display: flex; flex: 1; align-items: center; :hover { & > .action-buttons { display: flex !important; } }`}>
-            <TestListNameInput isActive={isHover} testId={test.id} isEditing={isEditingName} setIsEditing={setIsEditingName} testName={test.testName}/>
+            <TestListNameInput isActive={isHover} testId={test.id} isEditing={isEditingName} setIsEditing={setIsEditingName} testName={test.testName} />
             {!test.firstRunCompleted ? (
-				<LoadingIconV2 css={loadingIconCss}/>
-			) : (
-				""
-			)}
+                <LoadingIconV2 css={loadingIconCss} />
+            ) : (
+                ""
+            )}
 
 
             <div className={"action-buttons"} css={listItemActionsStyle}>
-                    <div onClick={handleEdit} css={editContainerCss}>
-					    <EditIcon css={editIconCss} />
-                        <span css={editTextCss}>edit</span>
-                    </div>
-					<div onClick={handleRunTest} css={playIconContainerCss}>
-						<PlayIcon css={playIconCss}/>
-						<span css={runTextCss}>run</span>
-					</div>
-			</div>
+                <div onClick={handleEdit} css={editContainerCss}>
+                    <EditIcon css={editIconCss} />
+                    <span css={editTextCss}>edit</span>
+                </div>
+                <div onClick={handleRunTest} css={playIconContainerCss}>
+                    <PlayIcon css={playIconCss} />
+                    <span css={runTextCss}>run</span>
+                </div>
+            </div>
         </div>
     )
 };
@@ -220,6 +220,8 @@ const playIconContainerCss = css`
     display: flex;
     align-items: center;
 	gap: 6rem;
+    position: relative;
+    top: -2px;
 	:hover {
 		opacity: 0.8;
     }
@@ -252,35 +254,63 @@ const loadingIconCss = css`
 const itemCss = (isActive: boolean) => {
     return css`
         position: relative;
-        background: ${isActive ? "linear-gradient(0deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.03)), rgba(54, 54, 54, 0.2)": "none"};
+        background: ${isActive ? "linear-gradient(0deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.03)), rgba(54, 54, 54, 0.2)" : "none"};
         color: ${isActive ? "#fff" : "#A6A6A6"};
         border-bottom: 1px solid rgba(153, 153, 153, 0.09);
     `;
 }
 
-const TestList = ({tests, deleteTest}) => {
+const TestList = ({ tests, deleteTest }) => {
     const items: Array<any> = React.useMemo(() => {
-        if(!tests) return null;
+        if (!tests) return null;
         let isAcquired = false;
-        const lockMechanism = { isAcquired: () => isAcquired, acquire: () => { if(!isAcquired) { isAcquired = true; return true; } return false }, release: () =>  { isAcquired = false; return true;} };
+        const lockMechanism = { isAcquired: () => isAcquired, acquire: () => { if (!isAcquired) { isAcquired = true; return true; } return false }, release: () => { isAcquired = false; return true; } };
 
         return tests.map((test, index) => {
-            return { content: (isItemSelected) => (
-                <TestListItem
-                    key={test.id}
-                    index={index}
-                    isItemSelected={isItemSelected}
-                    lock={lockMechanism}
-                    test={test}
-                    deleteTest={deleteTest}
-                />
-            )};
+            return {
+                id: test.id,
+                content: (isItemSelected) => (
+                    <TestListItem
+                        key={test.id}
+                        index={index}
+                        isItemSelected={isItemSelected}
+                        lock={lockMechanism}
+                        test={test}
+                        deleteTest={deleteTest}
+                    />
+                )
+            };
         });
     }, [tests]);
 
+
+    const SelectedTestActions = React.useMemo(() => ({ items, selectedList }) => {
+        const handleRun = React.useCallback(() => {
+            triggerLocalBuild(selectedList);
+        }, [items, selectedList]);
+
+        const handleDelete = React.useCallback(() => {
+            for (let testId of selectedList)
+                deleteTest(testId);
+        }, [items, selectedList]);
+
+        return (
+            <div className={"action-buttons"} css={[listItemActionsCss, css`display: flex`]}>
+                <div onClick={handleDelete} css={editContainerCss}>
+                    <EditIcon css={editIconCss} />
+                    <span css={editTextCss}>delete</span>
+                </div>
+                <div onClick={handleRun} css={playIconContainerCss}>
+                    <PlayIcon css={playIconCss} />
+                    <span css={runTextCss}>run</span>
+                </div>
+            </div>
+        )
+    }, [deleteTest]);
+
     return (
-        <ListBox items={items}/>
-	);
+        <ListBox selectedHeaderActions={SelectedTestActions} items={items} />
+    );
 };
 
 const testsCountCss = css`

@@ -6,15 +6,16 @@ import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsi
 
 interface IProps {
     className?: string;
-    items?: Array<{content: any}>;
+    selectedHeaderActions: any;
+    items?: Array<{ content: any; id: any; }>;
 }
-const ListBox = ({className, items, ...props}: IProps) => {
-    const {selectedList, isItemSelected, resetSelected, toggleSelectAll, toggleSelectItem} = useSelectableList();
+const ListBox = ({ className, selectedHeaderActions: SelectedHeaderActions, items, ...props }: IProps) => {
+    const { selectedList, isItemSelected, resetSelected, toggleSelectAll, toggleSelectItem } = useSelectableList();
     const listItems = React.useMemo(() => {
-        if(!items) return null;
+        if (!items) return null;
         return items.map((item, index) => {
             return (
-                <ListItem onClick={toggleSelectItem.bind(this, index)} isActive={isItemSelected(index)} key={index}>
+                <ListItem onClick={toggleSelectItem.bind(this, item.id)} isActive={isItemSelected(item.id)} key={index}>
                     {item.content(isItemSelected)}
                 </ListItem>
             )
@@ -24,16 +25,26 @@ const ListBox = ({className, items, ...props}: IProps) => {
     const handleOutSideClick = React.useCallback(() => {
         resetSelected();
     }, [resetSelected]);
+
     return (
         <OnOutsideClick onOutsideClick={handleOutSideClick}>
-            <div css={testsCountCss}>{items.length} tests</div>
+            <div css={headerCss}>
+                <div css={testsCountCss}>{items.length} tests</div>
+                {selectedList.length ? (
+                    <SelectedHeaderActions items={items} selectedList={selectedList} />
+                ) : ""}
+            </div>
             <ul css={listCss}>
-                { listItems }
+                {listItems}
             </ul>
         </OnOutsideClick>
-	);
+    );
 };
 
+const headerCss = css`
+    display: flex;
+    padding-right: 41px;
+`;
 const testsCountCss = css`
     font-family: Gilroy;
     font-style: normal;
@@ -64,7 +75,7 @@ const listCss = css`
         align-items: center;
     }
 `;
-const ListItem = ({ isActive, children, onClick, ...props }) => {    
+const ListItem = ({ isActive, children, onClick, ...props }) => {
     const itemStyle = React.useMemo(() => itemCss(isActive), [isActive]);
     const handleOnClick = React.useCallback((e) => {
         onClick(e);
@@ -78,7 +89,7 @@ const ListItem = ({ isActive, children, onClick, ...props }) => {
 
 const itemCss = (isActive) => css`
     position: relative;
-    background: ${isActive ? "rgba(199, 81, 255, 0.14)": "none"};
+    background: ${isActive ? "rgba(199, 81, 255, 0.14)" : "none"};
     color: ${isActive ? "#fff" : "#A6A6A6"};
     border-bottom: 1px solid rgba(153, 153, 153, 0.09);
 

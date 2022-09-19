@@ -11,6 +11,7 @@ import { ActionStatusEnum } from "@shared/types/action";
 import { GreenCheckboxIcon, LoadingIcon, PointerArrowIcon, WarningIcon } from "electron-app/src/ui/icons";
 import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
 import { RightClickMenu } from "@dyson/components/molecules/RightClick/RightClick";
+import { TextHighlighter } from "./helper";
 
 interface IProps {
     className?: string;
@@ -51,6 +52,8 @@ const Step = ({className, ...props}: IProps) => {
         setIsMenuOpen(isOpen);
     }, []);
 
+    const title = TextHighlighter({text: stepInfo.name});
+
     return (
         <RightClickMenu onOpenChange={handleMenuOpenChange} menuItems={menuItemsComponent}>
             <div css={[containerCss, isMenuOpen ? activeItemCss : null]}>
@@ -65,7 +68,7 @@ const Step = ({className, ...props}: IProps) => {
                                 stepInfo.isFailed ? failedTextNameCss : null,
                                 stepInfo.isRunning ? runningTextNameCss : null
                         ]}>
-                            {stepInfo.name}
+                            {title}
                         </TextBlock>
                         <TextBlock css={stepDescriptionCss}>{stepInfo.description}</TextBlock>
                     </div>

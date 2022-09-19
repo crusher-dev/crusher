@@ -629,7 +629,7 @@ const ProjectSection = () => {
 		return (
 			<div css={projectsLabel} className={"flex items-center w-full"}>
 				<Link href="/projects">
-					<span css={projectIcon}>Projects</span>
+					<span css={projectIcon}>projects</span>
 				</Link>
 				<span>/ {project.name}</span>
 			</div>
@@ -637,7 +637,7 @@ const ProjectSection = () => {
 	}
 	return (
 		<div css={projectsLabel} className={"flex items-center w-full"}>
-			<span>Projects</span>
+			<span>projects</span>
 			<span className="badge flex items-center justify-center pt-1 ml-8">{projects.length}</span>
 		</div>
 	)
@@ -649,7 +649,7 @@ font-size: 12.5px;
 margin-right: 3px;
 :hover{
 	text-decoration: underline;
-	color: #db54ff;
+	color: #fff;
 	transition: all 0ms linear;
 	// cursor: pointer;
 }
@@ -707,7 +707,7 @@ const projectsLabel = css`
 	gap: 2rem;
 	font-family: "Cera Pro";
 	font-weight: 400;
-	font-size: 12.5px;
+	font-size: 13px;
 	color: #6b6565;
 	letter-spacing: 0.02em;
 

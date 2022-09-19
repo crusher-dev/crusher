@@ -13,6 +13,10 @@ import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsi
 import { CloudCrusher } from "electron-app/src/lib/cloud";
 import { ListBox } from "../../components/selectableList";
 import { useSelectableList } from "../../hooks/list";
+import { RightClickMenu } from "@dyson/components/molecules/RightClick/RightClick";
+import { deleteRecordedSteps } from "electron-app/src/store/actions/recorder";
+import { useStore } from "react-redux";
+
 const TestListNameInput = ({ testName, testId, isActive, isEditing, setIsEditing }) => {
     const [name, setName] = React.useState(testName);
     const inputRef = React.useRef<HTMLInputElement>(null);
@@ -260,7 +264,14 @@ const itemCss = (isActive: boolean) => {
     `;
 }
 
+const SELECTED_TESTS_MENU = [
+    {id: "run", label: "Run", shortcut: null},
+    {id: "delete", label: 'Delete', shortcut: <div>Delete</div>}
+];
+
 const TestList = ({ tests, deleteTest }) => {
+    const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+    
     const items: Array<any> = React.useMemo(() => {
         if (!tests) return null;
         let isAcquired = false;
@@ -284,6 +295,8 @@ const TestList = ({ tests, deleteTest }) => {
     }, [tests]);
 
     const SelectedTestActions = React.useMemo(() => ({ items, toggleSelectAll, selectedList }) => {
+        const store =useStore();
+
         const handleRun = React.useCallback(() => {
             triggerLocalBuild(selectedList);
         }, [items, selectedList]);
@@ -321,8 +334,16 @@ const TestList = ({ tests, deleteTest }) => {
         )
     }, [deleteTest]);
 
+    const handleRightCallback = React.useCallback((id, selectedList) => {
+        if(id === "delete") {
+            // console.log("Selected list ", selectedList);
+            deleteTest(selectedList);
+        }
+    }, []);
+
+
     return (
-        <ListBox selectedHeaderActions={SelectedTestActions} items={items} />
+            <ListBox contextMenu={{callback: handleRightCallback, menuItems: SELECTED_TESTS_MENU}} selectedHeaderActions={SelectedTestActions} items={items} />
     );
 };
 

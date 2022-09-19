@@ -3,28 +3,46 @@ import { useStore } from "react-redux";
 import { css } from "@emotion/core";
 import { useSelectableList } from "../hooks/list";
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
+import { RightClickMenu } from "@dyson/components/molecules/RightClick/RightClick";
 
 interface IProps {
     className?: string;
     selectedHeaderActions: any;
     items?: Array<{ content: any; id: any; }>;
+    contextMenu?: {callback?: any; menuItems?: any};
 }
-const ListBox = ({ className, selectedHeaderActions: SelectedHeaderActions, items, ...props }: IProps) => {
-    const { selectedList, isItemSelected, resetSelected, toggleSelectAll, toggleSelectItem } = useSelectableList();
+const ListBox = ({ className, contextMenu, selectedHeaderActions: SelectedHeaderActions, items, ...props }: IProps) => {
+    const { selectedList, selectItem, isItemSelected, resetSelected, toggleSelectAll, toggleSelectItem } = useSelectableList();
     const listItems = React.useMemo(() => {
         if (!items) return null;
         return items.map((item, index) => {
             return (
-                <ListItem key={item.id} onClick={toggleSelectItem.bind(this, item.id)} isActive={isItemSelected(item.id)}>
+                <ListItem key={item.id} onContextMenu={selectItem.bind(this, item.id)} onClick={toggleSelectItem.bind(this, item.id)} isActive={isItemSelected(item.id)}>
                     {item.content(isItemSelected)}
                 </ListItem>
             )
         });
-    }, [selectedList, isItemSelected, toggleSelectItem, items]);
+    }, [selectedList, isItemSelected, toggleSelectItem, selectItem, items]);
 
     const handleOutSideClick = React.useCallback(() => {
-        resetSelected();
+        // @Note: setTimeOut is here as an hack, to
+        // allow selectedList to be sent to contextMenu onClick
+        setTimeout(() => {
+            resetSelected();
+        }, 100);
     }, [resetSelected]);
+
+    const menuItemsComponent = React.useMemo(() => {
+        if(!contextMenu?.menuItems) return null;
+        return contextMenu.menuItems.map((item) => {
+            return {
+                type: "menuItem",
+                value: item.label,
+                rightItem: item.shortcut,
+                onClick: contextMenu.callback.bind(this, item.id, selectedList)
+            }
+        });
+    }, [selectedList, contextMenu.callback, contextMenu.menuItems]);
 
     return (
         <OnOutsideClick onOutsideClick={handleOutSideClick}>
@@ -32,10 +50,14 @@ const ListBox = ({ className, selectedHeaderActions: SelectedHeaderActions, item
                 <div css={testsCountCss}>{items.length} tests</div>
                 <SelectedHeaderActions toggleSelectAll={toggleSelectAll} items={items} selectedList={selectedList} />
             </div>
-            <ul css={listCss}>
-                {listItems}
-            </ul>
+
+            <RightClickMenu menuItems={menuItemsComponent}>
+                <ul css={listCss}>
+                    {listItems}
+                </ul>
+            </RightClickMenu>
         </OnOutsideClick>
+
     );
 };
 
@@ -80,7 +102,7 @@ const ListItem = ({ isActive, children, onClick, ...props }) => {
         onClick(e);
     }, [onClick]);
     return (
-        <li css={itemStyle} onClick={handleOnClick}>
+        <li css={itemStyle} onClick={handleOnClick} {...props}>
             {children}
         </li>
     )

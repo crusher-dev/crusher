@@ -33,18 +33,10 @@ const useSelectableList = () => {
   }, [keyPressed, selectedList]);
 
   const selectItem = React.useCallback((index) => {
-    const isControlKey = keyPressed == 17 || keyPressed === 91;
-    const isShiftKey = keyPressed == 17;
     const isElementAlreadySelected = selectedList.includes(index);
-    if (isControlKey) {
-      if (!isElementAlreadySelected) {{
-        setSelectedList([...selectedList, index])
-      }
-    } else {
-      //If no key
-      setSelectedList([index]);
+    if (!isElementAlreadySelected) {
+      setSelectedList([...selectedList, index])
     }
-  }
   }, [keyPressed, selectedList]);
 
 

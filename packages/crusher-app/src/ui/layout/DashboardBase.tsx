@@ -262,11 +262,8 @@ function LeftSection() {
 	const router = useRouter();
 	const [inviteTeammates, setInviteTeamMates] = useState(false);
 	const { route } = router;
-
-
 	const { currentProject: project } = useProjectDetails()
-	const [projects] = useAtom(projectsAtom);
-	const isCurrentProject = !!project;
+
 
 	const menuItems = !!project ? projectMenu : leftMenu;
 	return (

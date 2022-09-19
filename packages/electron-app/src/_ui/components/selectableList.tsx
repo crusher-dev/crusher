@@ -9,7 +9,7 @@ interface IProps {
     className?: string;
     selectedHeaderActions: any;
     items?: Array<{ content: any; id: any; }>;
-    contextMenu?: {callback?: any; menuItems?: any};
+    contextMenu?: { callback?: any; menuItems?: any };
 }
 const ListBox = ({ className, contextMenu, selectedHeaderActions: SelectedHeaderActions, items, ...props }: IProps) => {
     const { selectedList, selectItem, isItemSelected, resetSelected, toggleSelectAll, toggleSelectItem } = useSelectableList();
@@ -33,7 +33,7 @@ const ListBox = ({ className, contextMenu, selectedHeaderActions: SelectedHeader
     }, [resetSelected]);
 
     const menuItemsComponent = React.useMemo(() => {
-        if(!contextMenu?.menuItems) return null;
+        if (!contextMenu?.menuItems) return null;
         return contextMenu.menuItems.map((item) => {
             return {
                 type: "menuItem",
@@ -64,7 +64,7 @@ const ListBox = ({ className, contextMenu, selectedHeaderActions: SelectedHeader
 const headerCss = css`
     display: flex;
     padding-right: 41px;
-    border-bottom: 1px solid rgba(153, 153, 153, 0.09);
+    border-bottom: .5rem solid rgba(153, 153, 153, 0.09);
     padding-bottom: 12rem;
     height: 30px;
 `;
@@ -111,10 +111,10 @@ const itemCss = (isActive) => css`
     position: relative;
     background: ${isActive ? "rgba(199, 81, 255, 0.14)" : "none"};
     color: ${isActive ? "#fff" : "#A6A6A6"};
-    border-bottom: 1px solid rgba(153, 153, 153, 0.09);
+    border-bottom: .5rem solid rgba(153, 153, 153, 0.09);
 
     :hover {
-        background: ${isActive ? `rgba(199, 81, 255, 0.14)` : `linear-gradient(0deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.03)), rgba(54, 54, 54, 0.2)`} !important;
+        background: ${isActive ? `rgba(199, 81, 255, 0.14)` : `rgba(255, 255, 255, 0.02)`} !important;
     }
 `;
 export { ListBox };

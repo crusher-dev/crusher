@@ -72,8 +72,9 @@ const testInputContainerCss = css``;
 const testInputCss = (isActive, isEditing, name) => {
     return css`
         background: transparent;
-        padding: 5px 8px;
-        padding-left: 0px;
+        padding: 5px 12px;
+        margin-left: -8px !important;
+        padding-left: 8px !important;
         border: ${isEditing ? "1px solid rgba(255, 255, 255, 0.25)" : "1px solid transparent"};
         border-radius: ${isEditing ? "4px" : "0px"};
         width: ${isEditing ? Math.max(7.5 * name.length, 120) + "rem" : "100%"};
@@ -165,7 +166,7 @@ const TestListItem = ({ test, isItemSelected, index, deleteTest, lock }) => {
             )}
 
 
-            <div className={"action-buttons"} css={listItemActionsStyle}>
+            <div className={"action-buttons pt-2"} css={listItemActionsStyle}>
                 <div onClick={handleEdit} css={editContainerCss}>
                     <EditIcon css={editIconCss} />
                     <span css={editTextCss}>edit</span>
@@ -266,13 +267,13 @@ const itemCss = (isActive: boolean) => {
 }
 
 const SELECTED_TESTS_MENU = [
-    {id: "run", label: "Run", shortcut: null},
-    {id: "delete", label: 'Delete', shortcut: <div>Delete</div>}
+    { id: "run", label: "Run", shortcut: null },
+    { id: "delete", label: 'Delete', shortcut: <div>Delete</div> }
 ];
 
 const TestList = ({ tests, deleteTest }) => {
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-    
+
     const items: Array<any> = React.useMemo(() => {
         if (!tests) return null;
         let isAcquired = false;
@@ -296,7 +297,7 @@ const TestList = ({ tests, deleteTest }) => {
     }, [tests]);
 
     const SelectedTestActions = React.useMemo(() => ({ items, toggleSelectAll, selectedList }) => {
-        const store =useStore();
+        const store = useStore();
 
         const handleRun = React.useCallback(() => {
             triggerLocalBuild(selectedList);
@@ -308,11 +309,11 @@ const TestList = ({ tests, deleteTest }) => {
 
         React.useEffect(() => {
             const keyPressListener = function (e: Event) {
-                if(e.key === "Delete"){
+                if (e.key === "Delete") {
                     deleteTest(selectedList);
-                 } else if(e.key === "a" && e.ctrlKey) {
+                } else if (e.key === "a" && e.ctrlKey) {
                     toggleSelectAll(items.map((item) => item.id));
-                 }
+                }
             };
             window.addEventListener("keyup", keyPressListener, false);
             return () => {
@@ -320,7 +321,7 @@ const TestList = ({ tests, deleteTest }) => {
             }
         }, [items, selectedList]);
 
-        if(selectedList.length < 2) return null;
+        if (selectedList.length < 2) return null;
         return (
             <div className={"action-buttons"} css={[listItemActionsCss, css`display: flex`]}>
                 <div onClick={handleDelete} css={editContainerCss}>
@@ -336,16 +337,16 @@ const TestList = ({ tests, deleteTest }) => {
     }, [deleteTest]);
 
     const handleRightCallback = React.useCallback((id, selectedList) => {
-        if(id === "delete") {
+        if (id === "delete") {
             deleteTest(selectedList);
-        } else if(id === "run") {
+        } else if (id === "run") {
             triggerLocalBuild(selectedList);
         }
     }, []);
 
 
     return (
-            <ListBox contextMenu={{callback: handleRightCallback, menuItems: SELECTED_TESTS_MENU}} selectedHeaderActions={SelectedTestActions} items={items} />
+        <ListBox contextMenu={{ callback: handleRightCallback, menuItems: SELECTED_TESTS_MENU }} selectedHeaderActions={SelectedTestActions} items={items} />
     );
 };
 

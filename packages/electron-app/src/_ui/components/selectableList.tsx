@@ -78,6 +78,7 @@ const testsCountCss = css`
     padding: 0px 46px;
 `;
 const listCss = css`
+user-select: none;
     height: 100%;
     font-family: "Gilroy";
     font-style: normal;

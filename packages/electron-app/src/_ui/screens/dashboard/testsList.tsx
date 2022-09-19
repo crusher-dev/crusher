@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { goFullScreen, performReplayTestUrlAction } from "electron-app/src/ui/commands/perform";
 import { triggerLocalBuild } from "../../utils/recorder";
 import { Dropdown } from "@dyson/components/molecules/Dropdown";
-import { shell } from "electron";
+import { KeyboardInputEvent, shell } from "electron";
 import { resolveToFrontend } from "electron-app/src/utils/url";
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
 import { CloudCrusher } from "electron-app/src/lib/cloud";
@@ -283,17 +283,30 @@ const TestList = ({ tests, deleteTest }) => {
         });
     }, [tests]);
 
-
-    const SelectedTestActions = React.useMemo(() => ({ items, selectedList }) => {
+    const SelectedTestActions = React.useMemo(() => ({ items, toggleSelectAll, selectedList }) => {
         const handleRun = React.useCallback(() => {
             triggerLocalBuild(selectedList);
         }, [items, selectedList]);
 
         const handleDelete = React.useCallback(() => {
-            for (let testId of selectedList)
-                deleteTest(testId);
+            deleteTest(selectedList);
         }, [items, selectedList]);
 
+        React.useEffect(() => {
+            const keyPressListener = function (e: Event) {
+                if(e.key === "Delete"){
+                    deleteTest(selectedList);
+                 } else if(e.key === "a" && e.ctrlKey) {
+                    toggleSelectAll(items.map((item) => item.id));
+                 }
+            };
+            window.addEventListener("keyup", keyPressListener, false);
+            return () => {
+                window.removeEventListener("keyup", keyPressListener, false);
+            }
+        }, [items, selectedList]);
+
+        if(selectedList.length < 2) return null;
         return (
             <div className={"action-buttons"} css={[listItemActionsCss, css`display: flex`]}>
                 <div onClick={handleDelete} css={editContainerCss}>

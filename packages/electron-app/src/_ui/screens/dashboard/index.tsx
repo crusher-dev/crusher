@@ -99,16 +99,19 @@ const DashboardScreen = () => {
     }, [])
 
     const handleTestDelete = React.useCallback(
-        (id) => {
+        (idArr: Array<any>) => {
             // setTests(tests.filter((a) => a.id != id));
             if (!(window as any).deletedTest) {
                 (window as any).deletedTest = [];
             }
-            (window as any).deletedTest.push(id);
-            mutate({ ...tests, list: tests.list.filter(test => { return !((window as any).deletedTest || []).includes(test.id) }) })
-            CloudCrusher.deleteTest(id).catch((err) => {
-                sendSnackBarEvent({ message: "Error deleting test", type: "error" });
-            });
+            (window as any).deletedTest.push(...idArr);
+            console.log("Id arr", idArr);
+            mutate({ ...tests, list: tests.list.filter(test => { return !((window as any).deletedTest || []).includes(test.id) }) });
+            for(let id of idArr) {
+                // CloudCrusher.deleteTest(id).catch((err) => {
+                //     sendSnackBarEvent({ message: "Error deleting test", type: "error" });
+                // });
+            }
         },
         [tests],
     );
@@ -169,7 +172,9 @@ const DashboardScreen = () => {
     }, []);
     const isLoading = React.useMemo(() => (!tests), [tests]);
     // To make delete experience fast
-    const testContent = tests && tests.list && tests.list.length ? (<TestList deleteTest={handleTestDelete} tests={tests.list.filter(test => { return !((window as any).deletedTest || []).includes(test.id); })} />) : (<CreateFirstTest />);
+    const filteredTests = tests && tests.list && tests.list.length ? tests.list.filter(test => { return !((window as any).deletedTest || []).includes(test.id)}) : [];
+
+    const testContent = filteredTests.length ? (<TestList deleteTest={handleTestDelete} tests={filteredTests} />) : (<CreateFirstTest />);
     const content = showProxyWarning.show ? <ProxyWarningContainer testId={showProxyWarning.testId} exitCallback={setShowProxyWarning.bind(this, false)} startUrl={showProxyWarning.startUrl} /> : testContent;
 
     const hasNotLoaded = isLoading || !animationComplete;

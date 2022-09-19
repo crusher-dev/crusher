@@ -77,6 +77,7 @@ const testInputCss = (isActive, isEditing, name) => {
         border: ${isEditing ? "1px solid rgba(255, 255, 255, 0.25)" : "1px solid transparent"};
         border-radius: ${isEditing ? "4px" : "0px"};
         width: ${isEditing ? Math.max(7.5 * name.length, 120) + "rem" : "100%"};
+        user-select: ${isEditing ? "auto" : "none"};
 
         font-family: Gilroy;
         font-style: normal;
@@ -155,7 +156,7 @@ const TestListItem = ({ test, isItemSelected, index, deleteTest, lock }) => {
     }, [test]);
 
     return (
-        <div css={css`display: flex; flex: 1; align-items: center; :hover { & > .action-buttons { display: flex !important; } }`}>
+        <div css={css`padding: 6px 46px; padding-right: 40px; display: flex; flex: 1; align-items: center; :hover { & > .action-buttons { display: flex !important; } }`}>
             <TestListNameInput isActive={isHover} testId={test.id} isEditing={isEditingName} setIsEditing={setIsEditingName} testName={test.testName} />
             {!test.firstRunCompleted ? (
                 <LoadingIconV2 css={loadingIconCss} />

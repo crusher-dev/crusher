@@ -48,11 +48,11 @@ const ListBox = ({ className, contextMenu, selectedHeaderActions: SelectedHeader
         <OnOutsideClick onOutsideClick={handleOutSideClick}>
             <div css={headerCss}>
                 <div css={testsCountCss}>{items.length} tests</div>
-                <SelectedHeaderActions toggleSelectAll={toggleSelectAll} items={items} selectedList={selectedList} />
+                {SelectedHeaderActions ? <SelectedHeaderActions toggleSelectAll={toggleSelectAll} items={items} selectedList={selectedList} /> : ""}
             </div>
 
             <RightClickMenu menuItems={menuItemsComponent}>
-                <ul css={listCss}>
+                <ul className={`${className}`} css={listCss} {...props}>
                     {listItems}
                 </ul>
             </RightClickMenu>
@@ -78,6 +78,7 @@ const testsCountCss = css`
     padding: 0px 46px;
 `;
 const listCss = css`
+user-select: none;
     height: 100%;
     font-family: "Gilroy";
     font-style: normal;
@@ -89,8 +90,6 @@ const listCss = css`
     height: 38rem;
 
     li {
-        padding: 6px 46px;
-        padding-right: 40px;
         position: relative;
         display: flex;
         align-items: center;

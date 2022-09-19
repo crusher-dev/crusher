@@ -187,17 +187,17 @@ const projectMenu = [
 	{
 		icon: <Menu />,
 		label: "tests",
-		link: "/app/tests",
+		link: "/tests",
 	},
 	{
 		icon: <Icon2 />,
 		label: "builds",
-		link: "/app/builds",
+		link: "/builds",
 	},
 	{
 		icon: <Icon3 />,
 		label: "monitoring",
-		link: "/app/builds?trigger=CRON",
+		link: "/builds?trigger=CRON",
 	},
 	{
 		icon: <Icon3 />,
@@ -262,7 +262,11 @@ function LeftSection() {
 	const router = useRouter();
 	const [inviteTeammates, setInviteTeamMates] = useState(false);
 	const { route } = router;
-	const [project] = useAtom(currentProjectSelector);
+
+
+	const { currentProject: project } = useProjectDetails()
+	const [projects] = useAtom(projectsAtom);
+	const isCurrentProject = !!project;
 
 	const menuItems = !!project ? projectMenu : leftMenu;
 	return (
@@ -277,7 +281,7 @@ function LeftSection() {
 						{menuItems.map((item) => {
 							const selected = item.link === route;
 							return (
-								<Link href={item.link} key={item.link} >
+								<Link href={`/${project?.id}/${item.link}`} key={item.link} >
 									<div className="flex items-center pl-8 mb-8" css={[menuItem, selected && selectedCSS]}>
 										<div css={iconCSS}>{item.icon}</div>
 										<span className="label">{item.label}</span>

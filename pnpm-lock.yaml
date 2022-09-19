@@ -220,7 +220,7 @@ importers:
       http: ^0.0.1-security
       immer: ^9.0.5
       jest: ^27.4.3
-      jotai: ^1.1.3
+      jotai: ^1.8.3
       js-cookie: ^2.2.1
       lodash: ^4.17.21
       mitt: ^3.0.0
@@ -272,7 +272,7 @@ importers:
       global: 4.4.0
       http: 0.0.1-security
       immer: 9.0.5
-      jotai: 1.4.7_taaswbfv5gpjqrwqwdhq6newyu
+      jotai: 1.8.4_taaswbfv5gpjqrwqwdhq6newyu
       js-cookie: 2.2.1
       lodash: 4.17.21
       mitt: 3.0.0
@@ -797,7 +797,7 @@ importers:
       electron-updater: 4.6.1
       electron-window-state: 5.0.3
       event-kit: 2.5.3
-      figma-design-scaler: link:../../../figma-scale
+      figma-design-scaler: link:../../../../../../../home/utkarsh/crusher/figma-scale
       file-loader: 6.2.0_webpack@5.21.2
       file-url: 4.0.0
       history: 5.3.0
@@ -11050,7 +11050,7 @@ packages:
       webpack-cli: 4.x.x
     dependencies:
       envinfo: 7.8.1
-      webpack-cli: 4.10.0_webpack@5.21.2
+      webpack-cli: 4.10.0_ptzbz4bao7we2onwdcwwuffqhy
 
   /@webpack-cli/serve/1.5.1_r5jz6ab5h5z5ui7vgheqnt6cae:
     resolution: {integrity: sha512-4vSVUiOPJLmr45S8rMGy7WDvpWxfFxfP/Qx/cxZFCfvoypTYpPPL1X8VIZMe0WTA+Jr7blUxwUSEZNkjoMTgSw==}
@@ -11074,7 +11074,7 @@ packages:
       webpack-dev-server:
         optional: true
     dependencies:
-      webpack-cli: 4.10.0_webpack@5.21.2
+      webpack-cli: 4.10.0_webpack@5.39.1
 
   /@webpack-cli/serve/1.7.0_xcsigq56yu4htn6anmcckynncu:
     resolution: {integrity: sha512-oxnCNGj88fL+xzV+dacXs44HcDwf1ovs3AuEzvP7mqXw7fQntqIhQ1BRmynh4qEKQSSSRSWVyXRjmTbZIX9V2Q==}
@@ -13265,7 +13265,7 @@ packages:
       mississippi: 3.0.0
       mkdirp: 0.5.5
       move-concurrently: 1.0.1
-      promise-inflight: 1.0.1_bluebird@3.7.2
+      promise-inflight: 1.0.1
       rimraf: 2.7.1
       ssri: 6.0.2
       unique-filename: 1.1.1
@@ -21266,45 +21266,6 @@ packages:
       '@discoveryjs/natural-compare': 1.0.0
     dev: true
 
-  /jotai/1.4.7_taaswbfv5gpjqrwqwdhq6newyu:
-    resolution: {integrity: sha512-EZFmhovnufIVoH0OAW6kuOv8RLjCX2HvHEqzwRG79l/LDeyp1BI+85vrEpR/fQmqh3jUhY4SyjhboEItd4+reQ==}
-    engines: {node: '>=12.7.0'}
-    peerDependencies:
-      '@babel/core': '*'
-      '@babel/template': '*'
-      '@urql/core': '*'
-      immer: '*'
-      optics-ts: '*'
-      react: '>=16.8'
-      react-query: '*'
-      valtio: '*'
-      wonka: '*'
-      xstate: '*'
-    peerDependenciesMeta:
-      '@babel/core':
-        optional: true
-      '@babel/template':
-        optional: true
-      '@urql/core':
-        optional: true
-      immer:
-        optional: true
-      optics-ts:
-        optional: true
-      react-query:
-        optional: true
-      valtio:
-        optional: true
-      wonka:
-        optional: true
-      xstate:
-        optional: true
-    dependencies:
-      '@babel/core': 7.16.7
-      immer: 9.0.5
-      react: 17.0.2
-    dev: false
-
   /jotai/1.4.7_zifznmxqg6awlpuv2gb3k3voc4:
     resolution: {integrity: sha512-EZFmhovnufIVoH0OAW6kuOv8RLjCX2HvHEqzwRG79l/LDeyp1BI+85vrEpR/fQmqh3jUhY4SyjhboEItd4+reQ==}
     engines: {node: '>=12.7.0'}
@@ -21340,6 +21301,45 @@ packages:
         optional: true
     dependencies:
       '@babel/core': 7.16.7
+      react: 17.0.2
+    dev: false
+
+  /jotai/1.8.4_taaswbfv5gpjqrwqwdhq6newyu:
+    resolution: {integrity: sha512-bkHDHNxm7bU4+bJL4z96fTlJYN34UDRTu3ghEajJrDepayON9YEaxPrXr7xhLnIRntoFC6eDYYhMNA/ilbj2RQ==}
+    engines: {node: '>=12.7.0'}
+    peerDependencies:
+      '@babel/core': '*'
+      '@babel/template': '*'
+      '@tanstack/query-core': '*'
+      '@urql/core': '*'
+      immer: '*'
+      optics-ts: '*'
+      react: '>=16.8'
+      valtio: '*'
+      wonka: '*'
+      xstate: '*'
+    peerDependenciesMeta:
+      '@babel/core':
+        optional: true
+      '@babel/template':
+        optional: true
+      '@tanstack/query-core':
+        optional: true
+      '@urql/core':
+        optional: true
+      immer:
+        optional: true
+      optics-ts:
+        optional: true
+      valtio:
+        optional: true
+      wonka:
+        optional: true
+      xstate:
+        optional: true
+    dependencies:
+      '@babel/core': 7.16.7
+      immer: 9.0.5
       react: 17.0.2
     dev: false
 
@@ -26364,16 +26364,6 @@ packages:
       bluebird:
         optional: true
 
-  /promise-inflight/1.0.1_bluebird@3.7.2:
-    resolution: {integrity: sha512-6zWPyEOFaQBJYcGMHBKTKJ3u6TBsnMFOIZSa6ce1e/ZrrsOlnHRHbabMjLiBYKp+n44X9eUI6VUPaukCXHuG4g==}
-    peerDependencies:
-      bluebird: '*'
-    peerDependenciesMeta:
-      bluebird:
-        optional: true
-    dependencies:
-      bluebird: 3.7.2
-
   /promise.allsettled/1.0.4:
     resolution: {integrity: sha512-o73CbvQh/OnPFShxHcHxk0baXR2a1m4ozb85ha0H14VEoi/EJJLa9mnPfEWJx9RjA9MLfhdjZ8I6HhWtBa64Ag==}
     engines: {node: '>= 0.4'}
@@ -30823,7 +30813,7 @@ packages:
       serialize-javascript: 6.0.0
       source-map: 0.6.1
       terser: 5.13.1
-      webpack: 5.73.0
+      webpack: 5.73.0_webpack-cli@4.10.0
     dev: true
 
   /terser-webpack-plugin/5.3.1_zjtckeea76d3oit4tw4tcptpni:

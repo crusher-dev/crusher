@@ -37,6 +37,7 @@ import { buildFiltersAtom } from "@store/atoms/pages/buildPage";
 import { BuildTriggerEnum } from "@crusher-shared/types/response/iProjectBuildListResponse";
 import { Tooltip } from "dyson/src/components/atoms/tooltip/Tooltip";
 import CreateTestPrompt from "@ui/containers/tests/CreateTestPrompt";
+import { useProjectDetails } from "@hooks/common";
 
 interface IBuildItemCardProps {
 	id: number;
@@ -281,13 +282,14 @@ const itemImageStyle = css`
 function FolderItem(props: { folder: any; id: number }) {
 	const [isOpen, setIsOpen] = useState(false);
 	const [showEditBox, setShowEditBox] = useState(false);
-	const [project] = useAtom(currentProject);
+	const { currentProject: project } = useProjectDetails()
 	const router = useRouter();
 	const [{ selectedProjectId }] = useAtom(appStateAtom);
 	const [, updateMetaData] = useAtom(updateMeta);
 
 	const [filters] = useAtom(testFiltersAtom);
 	const [newTestCreated] = useState(false);
+
 	const { data } = useSWR<IProjectTestsListResponse>(getTestListAPI(project.id, filters), {
 		suspense: true,
 		refreshInterval: newTestCreated ? 4000 : 200000,
@@ -424,7 +426,7 @@ const folderBlock = css`
 	}
 `;
 function FolderList() {
-	const [project] = useAtom(currentProject);
+	const { currentProject: project } = useProjectDetails()
 	const [filters] = useAtom(testFiltersAtom);
 	const [newTestCreated] = useState(false);
 	const { data } = useSWR<IProjectTestsListResponse>(getTestListAPI(project.id, filters), {
@@ -550,7 +552,7 @@ const wrapperCSS = css`
 `;
 
 function TestSearchableList() {
-	const [project] = useAtom(currentProject);
+	const { currentProject: project } = useProjectDetails()
 	const [{ selectedProjectId }] = useAtom(appStateAtom);
 	const [tempTestId, setTempTest] = useAtom(tempTestAtom);
 	const [tempTestName, setTempTestName] = useAtom(tempTestNameAtom);

@@ -21,6 +21,7 @@ import { buildFiltersAtom } from "../../../store/atoms/pages/buildPage";
 import { SearchFilterBar } from "../common/searchFilterBar";
 
 const EmptyList = dynamic(() => import("@ui/components/common/EmptyList"));
+import { useProjectDetails } from "@hooks/common";
 
 interface IBuildItemCardProps {
 	info: IProjectBuildListItem;
@@ -98,7 +99,8 @@ const noCommentsStyle = css`
 `;
 
 function BuildSearchableList() {
-	const [project] = useAtom(currentProject);
+
+	const { currentProject: project } = useProjectDetails()
 	const { query } = useRouter();
 	const [filters, setFilters] = useAtom(buildFiltersAtom);
 	const { data } = useSWR<IProjectBuildListResponse>(getBuildsList(project.id, query.trigger, filters), { suspense: true, refreshInterval: 10000 });

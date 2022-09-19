@@ -17,7 +17,6 @@ const useSelectableList = () => {
   const toggleSelectItem = React.useCallback((index, items) => {
       const isControlKey = keyPressed == 17;
       const isShiftKey = keyPressed == 17;
-      console.log("Key pressed", keyPressed);
       const isElementAlreadySelected = selectedList.includes(index);
       if (isControlKey) {
           if (isElementAlreadySelected) {
@@ -36,12 +35,10 @@ const useSelectableList = () => {
 
   useEffect(() => {
       const keyDownCallback = function (event) {
-        console.log("Setting keyPressed to" + event.keyCode);
         setKeyPressed(event.keyCode);
       };
 
       const keyUpCallback = function (event) {
-        console.log("Setting keyPressed to null");
         setKeyPressed(null);
       };
 

@@ -7,7 +7,6 @@ import React, { useCallback, useState } from "react";
 import { useAtom } from "jotai";
 
 import { Button } from "dyson/src/components/atoms";
-import { Input } from "dyson/src/components/atoms";
 import { Conditional } from "dyson/src/components/layouts";
 
 import { AddSVG, LayoutSVG, PlaySVG } from "@svg/dashboard";
@@ -15,7 +14,7 @@ import { AddSVG, LayoutSVG, PlaySVG } from "@svg/dashboard";
 import { MenuItemHorizontal, UserNTeam } from "@ui/containers/dashboard/UserNTeam";
 
 
-import { appStateAtom, appStateItemMutator } from "../../store/atoms/global/appState";
+import { appStateAtom } from "../../store/atoms/global/appState";
 import { projectsAtom } from "../../store/atoms/global/project";
 import { buildFiltersAtom } from "../../store/atoms/pages/buildPage";
 import { updateMeta } from "../../store/mutators/metaData";
@@ -23,103 +22,14 @@ import { PROJECT_META_KEYS, USER_META_KEYS } from "@constants/USER";
 import { handleTestRun } from "@utils/core/testUtils";
 
 import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
-import { Global } from "@emotion/react";
 import { Tooltip } from "dyson/src/components/atoms/tooltip/Tooltip";
 import { HoverCard } from "dyson/src/components/atoms/tooltip/Tooltip1";
 import { DiscordSVG } from "@svg/onboarding";
 import { GithubSVG } from "@ui/containers/auth/signup";
 import { currentProjectSelector } from "@store/selectors/getCurrentProject";
-const AddProject = dynamic(() => import("@ui/containers/dashboard/AddProject"));
+// const AddProject = dynamic(() => import("@ui/containers/dashboard/AddProject"));
 const InviteMembers = dynamic(() => import("@ui/containers/dashboard/InviteMember"));
 
-function ProjectList() {
-	const router = useRouter();
-	const [search] = useState(false);
-
-	const [projects] = useAtom(projectsAtom);
-	const [appState] = useAtom(appStateAtom);
-	const [, setAppStateItem] = useAtom(appStateItemMutator);
-	const [, updateOnboarding] = useAtom(updateMeta);
-
-	const [showAddProject, setShowAddProject] = useState(false);
-	const handleProjectSelect = React.useCallback((id) => {
-		updateOnboarding({
-			type: "user",
-			key: USER_META_KEYS.SELECTED_PROJECT_ID,
-			value: id,
-		});
-		setAppStateItem({ key: "selectedProjectId", value: id });
-		router.push("/app/dashboard");
-	}, []);
-
-	return (
-		<div
-			css={css`
-				max-height: 100%;
-				overflow: hidden;
-				display: flex;
-				flex-direction: column;
-			`}
-		>
-			<div className={"flex pl-10 mr-2 mt- justify-between mt-36"} css={project}>
-				<div className={"flex items-center"}>
-					<span className={"text-12.5 leading-none mr-8 font-600"}>Projects</span>
-				</div>
-
-				<Conditional showIf={showAddProject}>
-					<AddProject onClose={setShowAddProject.bind(this, false)} />
-				</Conditional>
-				<div className={"flex items-center"} css={hoverCSS} onClick={setShowAddProject.bind(this, true)}>
-					<AddSVG />
-					<div className={"text-12.5 leading-none ml-8 leading-none mt-2"}>Add</div>
-				</div>
-			</div>
-
-			{search && (
-				<div>
-					<Input placeholder={"enter name"} css={smallInputBox} />
-				</div>
-			)}
-
-			<div
-				css={css`
-					overflow-y: overlay;
-				`}
-				className={"mt-6 fancy-scroll"}
-			>
-				{projects.map(({ id, name }) => (
-					<MenuItemHorizontal className={"mt-2"} selected={appState.selectedProjectId === id} onClick={handleProjectSelect.bind(this, id)} key={id}>
-						<LayoutSVG />
-						<span className={"text-13 ml-16 font-500 mt-2 leading-none"}>{name}</span>
-					</MenuItemHorizontal>
-				))}
-			</div>
-			<Global
-				styles={css`
-					.fancy-scroll::-webkit-scrollbar {
-						width: 9px;
-						left: -10px;
-					}
-
-					.fancy-scroll::-webkit-scrollbar-track {
-						background-color: #0a0b0e;
-						box-shadow: none;
-					}
-
-					.fancy-scroll::-webkit-scrollbar-thumb {
-						background-color: #1b1f23;
-						border-radius: 100px;
-					}
-
-					.fancy-scroll::-webkit-scrollbar-thumb:hover {
-						background-color: #272b31;
-						border-radius: 100px;
-					}
-				`}
-			/>
-		</div>
-	);
-}
 
 function ExternalIcon(props) {
 	return (
@@ -758,49 +668,4 @@ const scrollContainer = css`
 	overflow-y: scroll;
 	height: calc(100vh - 56rem);
 	padding-left: 12px;
-`;
-
-const project = css`
-	color: rgba(255, 255, 255, 0.9);
-	font-size: 12rem;
-`;
-
-const hoverCSS = css`
-	padding: 6px 10px 6px 10px;
-	:hover {
-		background: #202429;
-		border-radius: 4px;
-	}
-`;
-
-const navLink = css`
-	box-sizing: border-box;
-	line-height: 13rem;
-	height: 31rem;
-	color: rgba(189, 189, 189, 0.8);
-	font-weight: 500;
-	letter-spacing: 0.3px;
-
-	margin-left: 6px;
-	margin-right: 6px;
-
-	:hover {
-		color: rgb(231, 231, 231);
-	}
-`;
-
-
-
-const smallInputBox = css`
-	width: calc(100% - 14px);
-	background: linear-gradient(0deg, #0e1012, #0e1012);
-	border: 1px solid #2a2e38;
-	box-sizing: border-box;
-	border-radius: 4px;
-	height: 30rem;
-	font-size: 14rem;
-	padding-left: 16rem;
-	color: #fff;
-	margin: 7px 7px;
-	padding-top: 2rem;
 `;

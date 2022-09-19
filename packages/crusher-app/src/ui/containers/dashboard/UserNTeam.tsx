@@ -129,7 +129,7 @@ export function UserNTeam() {
 			</div>
 
 
-			<HoverCard wrapperCSS={userDropdownCSS} content={<DropdownContent />} placement="bottom" type="click" padding={8} offset={0}>
+			<HoverCard wrapperCSS={userDropdownCSS} content={<DropdownContent />} placement="bottom-start" type="click" padding={2} offset={0}>
 
 				<div className={"flex items-center pr"}>
 					<UserIcon initial={user.name[0]} />
@@ -142,6 +142,7 @@ export function UserNTeam() {
 
 const userDropdownCSS = css`
 	min-height: 400rem;
+	margin-left: -12px;
 `
 
 export function MenuItemHorizontal({ children, selected, ...props }) {

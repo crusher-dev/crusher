@@ -189,6 +189,22 @@ const buttonCSS = css`
 	font-weight: 600;
 	height: 32rem;
 	padding: 0 12rem;
+
+	// border-radius: 10rem;
+
+	// background: #191919;
+	// border: 0.5px solid rgba(56, 56, 56, 0.35);
+	// box-shadow: 0px 4px 4px rgba(0, 0, 0, 0) !important;
+
+	// :hover {
+	// 	background: #202020;
+	// 	border: 0.5px solid rgba(56, 56, 56, 0.35);
+	// 	filter: brightness(100%);
+	// }
+
+	// :focus {
+	// 	outline: 1px solid #ae47ff;
+	// }
 `;
 
 const getColorCSS = (color: string, impact: string, disabled: boolean) => css`

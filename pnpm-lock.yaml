@@ -641,7 +641,7 @@ importers:
       '@types/event-kit': ^2.4.1
       '@types/html2canvas': ^0.0.36
       '@types/jest': ^27.4.0
-      '@types/lodash': ^4.14.168
+      '@types/lodash': ^4.14.170
       '@types/node': ^17.0.2
       '@types/react-inspector': ^4.0.2
       '@types/react-modal': ^3.10.6
@@ -696,7 +696,8 @@ importers:
       jest: ^27.4.7
       jest-serial-runner: ^1.2.0
       jotai: ^1.4.7
-      lodash: ^4.17.20
+      loadash: ^1.0.0
+      lodash: ^4.17.21
       mini-css-extract-plugin: 2.6.0
       mitt: ^3.0.0
       mkdirp: ^1.0.4
@@ -805,6 +806,7 @@ importers:
       html2canvas: 1.0.0-rc.7
       jest: 27.4.7_ts-node@9.1.1
       jotai: 1.4.7_zifznmxqg6awlpuv2gb3k3voc4
+      loadash: 1.0.0
       mini-css-extract-plugin: 2.6.0_webpack@5.21.2
       mitt: 3.0.0
       mkdirp: 1.0.4
@@ -11048,7 +11050,7 @@ packages:
       webpack-cli: 4.x.x
     dependencies:
       envinfo: 7.8.1
-      webpack-cli: 4.10.0_ptzbz4bao7we2onwdcwwuffqhy
+      webpack-cli: 4.10.0_webpack@5.21.2
 
   /@webpack-cli/serve/1.5.1_r5jz6ab5h5z5ui7vgheqnt6cae:
     resolution: {integrity: sha512-4vSVUiOPJLmr45S8rMGy7WDvpWxfFxfP/Qx/cxZFCfvoypTYpPPL1X8VIZMe0WTA+Jr7blUxwUSEZNkjoMTgSw==}
@@ -11072,7 +11074,7 @@ packages:
       webpack-dev-server:
         optional: true
     dependencies:
-      webpack-cli: 4.10.0_webpack@5.39.1
+      webpack-cli: 4.10.0_webpack@5.21.2
 
   /@webpack-cli/serve/1.7.0_xcsigq56yu4htn6anmcckynncu:
     resolution: {integrity: sha512-oxnCNGj88fL+xzV+dacXs44HcDwf1ovs3AuEzvP7mqXw7fQntqIhQ1BRmynh4qEKQSSSRSWVyXRjmTbZIX9V2Q==}

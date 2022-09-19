@@ -11,7 +11,7 @@ import { shell } from "electron";
 import { resolveToFrontend } from "electron-app/src/utils/url";
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
 import { CloudCrusher } from "electron-app/src/lib/cloud";
-
+import { ListBox } from "../../components/selectableList";
 const TestListNameInput = ({ testName, testId, isActive, isEditing, setIsEditing }) => {
     const [name, setName] = React.useState(testName);
     const inputRef = React.useRef<HTMLInputElement>(null);
@@ -78,7 +78,7 @@ const testInputCss = (isActive, isEditing, name) => {
         font-weight: 500;
         font-size: 13.25px;
         letter-spacing: 0.05em;
-        color: ${isActive ? `#FFFFFF` : `#A6A6A6`};
+        color: auto;
 
     `;
 };
@@ -133,32 +133,8 @@ const contextMenuItemCss = css`
 const TestListItem = ({ test, deleteTest, lock }) => {
     const [isActive, setIsActive] = React.useState(false);
     const [isEditingName, setIsEditingName] = React.useState(false);
-    const [showContextMenu, setShowContextMenu] = React.useState({ shouldShow: false, pos: null });
-    const containerRef = React.useRef<HTMLLIElement>();
-
-    const itemStyle = React.useMemo(() => itemCss(isActive), [isActive]);
+    
     const navigate = useNavigate();
-
-    const handleRightClick = React.useCallback((event) => {
-        lock.acquire();
-		const pos = { x: event.clientX, y: event.clientY };
-		const constainerRects = containerRef.current.getBoundingClientRect();
-        
-        const dropdownPos = { x: pos.x - constainerRects.left, y: pos.y - constainerRects.top };
-		setShowContextMenu({ shouldShow: true, pos: dropdownPos });
-    }, []);
-
-    const handleMouseEnter = React.useCallback(()=> {
-        if(!lock.isAcquired()) {
-            setIsActive(true);
-        }
-    }, []);
-
-    const handleMouseLeave = React.useCallback(() => {
-        if(!lock.isAcquired()) {
-            setIsActive(false);
-        }
-    }, []);
 
     const listItemActionsStyle = React.useMemo(() => listItemActionsCss(isActive), [isActive]);
 
@@ -172,42 +148,8 @@ const TestListItem = ({ test, deleteTest, lock }) => {
         triggerLocalBuild([test.id]);
     }, [test]);
 
-    const closeContextMenu = React.useCallback((shouldShowDropdown) => {
-        if(!shouldShowDropdown) {
-            setIsActive(false);
-            setShowContextMenu({ shouldShow: false, pos: null});
-            lock.release();
-        }
-    }, []);
-
-    const handleRenameTest = React.useCallback(() => {
-        setIsEditingName(true);
-    }, []);
-
-    const handleDeleteTest = React.useCallback(() => {
-        deleteTest(test.id);
-    }, [deleteTest, test]);
-
-    const contextMenu = React.useMemo(() => {
-        const shouldShowContextMenu = showContextMenu.shouldShow && showContextMenu.pos;
-        if(!shouldShowContextMenu) return null;
-
-        const contextMenuDropdownStyle = contextMenuDropdownCss(showContextMenu.pos);
-        return (
-            <Dropdown
-					initialState={true}
-					css={contextMenuDropdownStyle}
-					component={<ContextMenuItemDropdown deleteTest={handleDeleteTest} renameTest={handleRenameTest} closeDropdown={closeContextMenu.bind(this, false)} test={test}/>}
-					callback={closeContextMenu.bind(this)}
-					dropdownCSS={contextMenuDropdownBoxCss}
-				>
-					{" "}
-				</Dropdown>
-        );
-    }, [showContextMenu]);
-
     return (
-        <li ref={containerRef} css={itemStyle} onContextMenu={handleRightClick} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+        <>
             <TestListNameInput isActive={isActive} testId={test.id} isEditing={isEditingName} setIsEditing={setIsEditingName} testName={test.testName}/>
             {!test.firstRunCompleted ? (
 				<LoadingIconV2 css={loadingIconCss}/>
@@ -215,7 +157,6 @@ const TestListItem = ({ test, deleteTest, lock }) => {
 				""
 			)}
 
-            {contextMenu}
 
             <div className={"action-buttons"} css={listItemActionsStyle}>
                     <div onClick={handleEdit} css={editContainerCss}>
@@ -227,7 +168,7 @@ const TestListItem = ({ test, deleteTest, lock }) => {
 						<span css={runTextCss}>run</span>
 					</div>
 			</div>
-        </li>
+        </>
     )
 };
 
@@ -316,30 +257,25 @@ const itemCss = (isActive: boolean) => {
 }
 
 const TestList = ({tests, deleteTest}) => {
-    const items = React.useMemo(() => {
+    const items: Array<any> = React.useMemo(() => {
         if(!tests) return null;
         let isAcquired = false;
         const lockMechanism = { isAcquired: () => isAcquired, acquire: () => { if(!isAcquired) { isAcquired = true; return true; } return false }, release: () =>  { isAcquired = false; return true;} };
 
         return tests.map((test, index) => {
-            return (
+            return { content: (
                 <TestListItem
                     key={test.id}
                     lock={lockMechanism}
                     test={test}
                     deleteTest={deleteTest}
                 />
-            )
+            )};
         });
     }, [tests]);
 
     return (
-        <div>
-            <div css={testsCountCss}>{items.length} tests</div>
-            <ul css={listCss}>
-                { items }
-            </ul>
-        </div>
+        <ListBox items={items}/>
 	);
 };
 

@@ -4,7 +4,6 @@ import { Conditional } from "../../layouts";
 
 export type ClickableProps = {
 	type: 'box' | 'plain';
-	useATag: false;
 	paddingX: number;
 	paddingY: number;
 	external?: boolean;
@@ -24,7 +23,7 @@ const LinkBlockProps = {
  * Crusher Link Block component.
  */
 export const LinkBlock: React.FC<ClickableProps> = (props: ClickableProps) => {
-	const { paddingY, paddingX, children, css, external, useATag, ...otherProps } = props;
+	const { paddingY, paddingX, children, css, external, href, ...otherProps } = props;
 	const base = (
 		<div css={[hightlLinkCSS(paddingY, paddingX), css]} {...otherProps}>
 			{children}
@@ -34,9 +33,9 @@ export const LinkBlock: React.FC<ClickableProps> = (props: ClickableProps) => {
 		</div>
 	);
 
-	if (!useATag) return base
+	if (!href) return base
 
-	const { href, target = "_blank" } = props
+	const { target = "_blank" } = props
 	return (<a href={href} target={target}>
 		{base}
 	</a>)

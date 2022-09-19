@@ -40,19 +40,21 @@ export const UserIcon: React.FC<UserImageProps> = ({ initial }: any) => {
 UserImage.defaultProps = UserDefaultProps;
 
 const userInitialCSS = css`
-	background-color: #212122;
+
 	border-radius: 8rem;
-	height: 28rem;
-	width: 28rem;
+	height: 32rem;
+	width: 32rem;
+
+    border: 0.6px solid rgba(255,255,255,0.10	);
 	font-weight: 700;
 	color: #efefef;
 	:hover {
-		background: #171718;
+		background: rgba(255, 255, 255, 0.07);
 	}
 `;
 
 const userImage = css`
-	padding: 6rem 16rem 5rem;
+
 	:hover {
 		background: #202429;
 		border-radius: 4px;

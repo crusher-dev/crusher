@@ -12,7 +12,7 @@ import { resolvePathToBackendURI } from "@utils/common/url";
 import { teamAtom } from "../../../store/atoms/global/team";
 import { userAtom } from "../../../store/atoms/global/user";
 import { backendRequest } from "@utils/common/backendRequest";
-import { Dolphin } from "./icont";
+import { Dolphin, TopDown } from "./icont";
 import { HoverCard } from "dyson/src/components/atoms/tooltip/Tooltip1";
 
 const userDropdownItems = [
@@ -117,17 +117,13 @@ export function UserNTeam() {
 	return (
 		<div className={"flex justify-between leading-none relative items-center px-12 pl-8"} css={userCard}>
 			<div className={"flex"} css={orgName}>
-				<div css={nameInitial} className={"flex items-center justify-center uppercase font-700 mr-4"}>
-					<Dolphin height={16} width={16} css={icon} />
+				<div css={nameInitial} className={"flex items-center justify-center uppercase font-700 mr-10"}>
+					<Dolphin height={20} width={20} css={icon} />
 				</div>
-				<div>
-					<div className={"font-cera mb-4 font-600 flex items-center"} css={name}>
+				<div className="flex items-center pb-2">
+					<div className={"font-cera mb-1 font-600 flex items-center"} css={name}>
 						<span className="mr-6">{team.name.substr(0, 8)}</span>
-
-						<DropdownIcon className="mb-1" />
-					</div>
-					<div css={description} className={"font-400 leading-none"}>
-						{team.plan.toLowerCase()} plan
+						<TopDown className="mb-1" />
 					</div>
 				</div>
 			</div>
@@ -184,8 +180,11 @@ const orgName = css`
 	padding: 8rem 12rem 6rem 8rem;
 	border-radius: 6px;
 	:hover {
-		background: rgba(255, 255, 255, 0.05);
-		border-radius: 6px;
+		background: rgba(255, 255, 255, 0.07);
+		border-radius: 8px;
+		.expand{
+			fill: #fff;
+		}
 	}
 `;
 const userCard = css`
@@ -204,8 +203,9 @@ const nameInitial = css`
 `;
 
 const name = css`
-	font-size: 14rem;
-	color: #cecece;
+letter-spacing: 0.02em;
+
+color: #CECECE;
 `;
 
 const description = css`

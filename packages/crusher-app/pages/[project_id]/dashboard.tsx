@@ -1,66 +1,132 @@
 import { css } from "@emotion/react";
-import React, { useMemo } from "react";
+import React, { useState } from "react";
 
-import { OnboardingSteps } from "@ui/containers/dashboard/onboardingSteps";
-import { OnBoardingTutorialVideo } from "@ui/containers/dashboard/tutorials";
-import { SidebarTopBarLayout } from "@ui/layout/DashboardBase";
+import { contentContainerScroll, SidebarTopBarLayout } from "@ui/layout/DashboardBase";
 
 import { usePageTitle } from "../../src/hooks/seo";
+
+import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
+import { LinkBlock } from "dyson/src/components/atoms/Link/Link";
+import { EditTestSVG, IntegrationSVG, PlayIconCircleSVG } from "@svg/dashboard";
 import { Conditional } from "dyson/src/components/layouts";
-import { useAtom } from "jotai";
-import { currentProjectSelector } from "../../src/store/selectors/getCurrentProject";
-import { userAtom } from "../../src/store/atoms/global/user";
-import { getOnboardingStepIndex } from "@utils/core/dashboard/onboardingUtils";
+import { TutorialContent } from "../../src/ui/containers/dashboard/TutorialContent";
 
 function Dashboard() {
 	usePageTitle("Dashboard");
 
-	const [project] = useAtom(currentProjectSelector);
-	const [user] = useAtom(userAtom);
-
-	const onboardingIndex = useMemo(() => {
-		return getOnboardingStepIndex(project, user);
-	}, [project, user]);
+	const [lessonIndex, setLessionIndex] = useState(null)
 
 	return (
-		<>
-			<SidebarTopBarLayout>
-				<div css={containerStyle} className=" pt-42 ">
-					<Conditional showIf={onboardingIndex !== -1}>
-						<div css={headingStyle} className={"font-cera text-16 font-bold"}>
-							Integrate and start testing
-						</div>
-						<div className="mt-8 text-12.5">It’ll hardly take 5 seconds</div>
-						<OnboardingSteps className={"mt-24 mb-56"} />
-					</Conditional>
+		<SidebarTopBarLayout>
+			<div css={[containerStyle]} className=" ">
 
-					{/*Note :- Move to conditional once integrated*/}
-					<OnBoardingTutorialVideo />
-					<div className={"flex flex-row items-center justify-center"} css={footerContainerStyle}>
-						<div className={"text-14"} css={footerPlaceholderStyle}>
-							We’ll fill this space soon with widgets.
+
+				<div className={"flex flex-row items-center justify-center"} css={onboardingLesson}>
+					<div css={contentContainerScroll}>
+						<div className="flex justify-between items-center">
+							<TextBlock weight={600} fontSize={19} color="#898989">Get started with short videos</TextBlock>
+
+							<div className="flex">
+								<LinkBlock type="plain" css={topLink}>guide</LinkBlock>
+								<LinkBlock type="plain" css={topLink} href="https://docs.crusher.dev">view docs</LinkBlock>
+							</div>
+						</div>
+						<div className={"text-14 mt-20 flex items-center"} css={footerPlaceholderStyle}>
+							{links.map((link, index) => {
+								const { icon, text } = link;
+								const selected = index + 1 === lessonIndex;
+								return (
+									<div className="flex items-center" css={[linkCSS, selected && selectedCSS]} onClick={setLessionIndex.bind(this, index + 1)}>
+										{icon}
+										<TextBlock className="ml-8 mt-1" fontSize={14} color="#5E5E5E">{text}</TextBlock>
+									</div>
+								)
+							})}
 						</div>
 					</div>
 				</div>
-			</SidebarTopBarLayout>
-		</>
+
+				<Conditional showIf={!!lessonIndex}>
+					<TutorialContent lessonIndex={lessonIndex} setLessionIndex={setLessionIndex}></TutorialContent>
+				</Conditional>
+
+			</div>
+		</SidebarTopBarLayout>
 	);
 }
+
+const selectedCSS = css`
+
+
+	color: #D378FE;
+	div{
+		color: #D378FE;
+		text-decoration: underline;
+	}
+	path{
+		fill: #D378FE;
+	}
+
+	:hover{
+		color: #D378FE;
+	div{
+		color: #D378FE;
+		text-decoration: underline;
+	}
+	path{
+		fill: #D378FE;
+	}
+	}
+
+`
+
+const topLink = css`
+	color: #5E5E5E;
+	font-size: 14rem;
+`
+
+const linkCSS = css`
+
+	:hover{
+		color: #fff;
+		div{
+			color: #fff;
+			text-decoration: underline;
+		}
+		path{
+			fill: #fff;
+		}
+	}
+`
+const links = [
+	{
+		text: "Create first test",
+		icon: <EditTestSVG />
+	}, {
+		text: "Run test",
+		icon: <PlayIconCircleSVG />
+	}
+	, {
+		text: "integrationg in project",
+		icon: <IntegrationSVG />
+	}
+
+]
 
 const containerStyle = css`
 	color: #fff !important;
 `;
-const headingStyle = css`
-	color: #d0d0d0 !important;
-	font-weight: bold;
-`;
-const footerContainerStyle = css`
-	border: 1rem solid #191e25;
-	height: 280rem;
-	border-radius: 6rem;
+
+const onboardingLesson = css`
+	border-bottom: 1rem solid #191e25;
+	height: 148rem;
+	background: rgba(0, 0, 0, 0.87);
+
 `;
 const footerPlaceholderStyle = css`
 	color: rgba(255, 255, 255, 0.5);
+	gap: 40rem;
 `;
 
 export default Dashboard;
+

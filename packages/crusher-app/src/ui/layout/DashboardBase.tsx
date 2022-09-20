@@ -513,7 +513,7 @@ function TopNavbar({ children }) {
 
 	return (
 		<div css={[nav]}>
-			<div css={[containerWidth]}>{children}</div>
+			<div css={[containerWidth, contentContainer]}>{children}</div>
 		</div>
 	);
 }
@@ -648,19 +648,23 @@ const nav = css`
 	height: 56rem;
 `;
 const containerWidth = css`
-	//width: calc(100vw - 250rem);
-	//max-width: 1100%;
-
-	width: 1140rem;
-	max-width: calc(100vw - 352rem);
 	margin: 0 auto;
-	padding: 0 0;
 `;
 
+
+export const contentContainer = css`
+ width: 1280rem;
+max-width: calc(100vw - 352rem);
+`
+
+export const contentContainerScroll = css`
+width: 1280rem;
+max-width: calc(100vw - 328rem);
+padding-left: 20rem;
+`
 const scrollContainer = css`
 	overflow-y: scroll;
 	height: calc(100vh - 56rem);
-	padding-left: 12px;
 `;
 function NavBarLeft() {
 	const { currentProject } = useProjectDetails()

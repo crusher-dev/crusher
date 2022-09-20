@@ -433,7 +433,7 @@ function CreateTest() {
 			<div className={"flex items-center"}>
 				<PlusCircle className={"mr-6"} />
 				<span className="mt-1">
-					New test
+					new test
 				</span>
 			</div>
 		</Button>
@@ -487,7 +487,7 @@ font-size: 13px;
 
 color: #FFFFFF;
 
-width: 100rem;
+width: max-content;
 
 
 background: #A742F7;
@@ -496,7 +496,8 @@ border-radius: 8px;
 
 :hover{
 	background: #A742F7;
-	filter: brighntess(1.2);
+	filter: brighntess(.7);
+	border: 1px solid #7D41AD;
 }
 `
 
@@ -509,14 +510,14 @@ font-size: 13px;
 
 color: #FFFFFF;
 
-width: 100rem;
+width: max-content;
 
 background: #0D0D0D;
 border: 0.5px solid rgba(219, 222, 255, 0.16);
 border-radius: 8px;
 
 :hover{
-	background: #0D0D0D;
+	background: #313131;
 	filter: brighntess(.8);
 }
 `
@@ -675,12 +676,14 @@ const scrollContainer = css`
 	padding-left: 12px;
 `;
 function NavBarLeft() {
+	const { currentProject } = useProjectDetails()
 	return <div className="flex items-center" css={rightNavbar}>
-
-		<RunTest />
-		<CreateTest />
+		<Conditional showIf={!!currentProject}>
+			<RunTest />
+			<CreateTest />
+		</Conditional>
 		<a href="https://docs.crusher.dev" target="_blank">
-			<TextBlock color={"#6b6565"} className={"flex ml-10"} css={textLink}>
+			<TextBlock color={"#6b6565"} className={"flex ml-4	"} css={textLink}>
 				<External className="mr-8" />
 				Docs
 			</TextBlock>

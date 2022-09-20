@@ -28,7 +28,7 @@ import { DiscordSVG } from "@svg/onboarding";
 import { GithubSVG } from "@ui/containers/auth/signup";
 
 import { LinkBlock } from "dyson/src/components/atoms/Link/Link";
-import { useCurrentProject, useProjectDetails } from "@hooks/common";
+import { useProjectDetails } from "@hooks/common";
 // const AddProject = dynamic(() => import("@ui/containers/dashboard/AddProject"));
 const InviteMembers = dynamic(() => import("@ui/containers/dashboard/InviteMember"));
 
@@ -403,6 +403,41 @@ export const dropdDown = css`
 
 
 
+function CreateTest() {
+	const router = useRouter();
+	const [{ selectedProjectId }] = useAtom(appStateAtom);
+	const { query } = router;
+	const [filters] = useAtom(buildFiltersAtom);
+	const [, updateMetaData] = useAtom(updateMeta);
+
+	const runProjectTest = useCallback(() => {
+		(async () => {
+			await handleTestRun(selectedProjectId, query, filters, router, updateMetaData);
+
+			updateMetaData({
+				type: "user",
+				key: USER_META_KEYS.RAN_TEST,
+				value: true,
+			});
+
+			updateMetaData({
+				type: "project",
+				key: PROJECT_META_KEYS.RAN_TEST,
+				value: true,
+			});
+		})();
+	}, []);
+
+	return (
+		<Button bgColor={"tertiary"} onClick={runProjectTest}>
+			<div className={"flex items-center"}>
+				<PlaySVG className={"mr-12"} />
+				Run tests
+			</div>
+		</Button>
+	);
+}
+
 function RunTest() {
 	const router = useRouter();
 	const [{ selectedProjectId }] = useAtom(appStateAtom);
@@ -469,6 +504,7 @@ const ProjectSection = () => {
 					<span css={projectIcon}>projects</span>
 				</Link>
 				<span>/ {currentProject.name}</span>
+
 			</div>
 		)
 	}
@@ -504,12 +540,7 @@ export const SidebarTopBarLayout = ({ children, noContainerWidth = false, hideSi
 					<div className="flex items-center h-full">
 						<ProjectSection />
 
-						<a href="https://docs.crusher.dev" target="_blank">
-							<TextBlock color={"#6b6565"} className={"flex"} css={textLink}>
-								<External className="mr-8" />
-								Docs
-							</TextBlock>
-						</a>
+						<NavBarLeft />
 					</div>
 				</TopNavbar>
 				<div
@@ -595,3 +626,23 @@ const scrollContainer = css`
 	height: calc(100vh - 56rem);
 	padding-left: 12px;
 `;
+function NavBarLeft() {
+	const { currentProject } = useProjectDetails()
+	const [projects] = useAtom(projectsAtom);
+	const isCurrentProject = !!currentProject;
+	return <div className="flex items-center" css={rightNavbar}>
+		<a href="https://docs.crusher.dev" target="_blank">
+			<TextBlock color={"#6b6565"} className={"flex"} css={textLink}>
+				<External className="mr-8" />
+				Docs
+			</TextBlock>
+		</a>
+		<RunTest />
+		<CreateTest />
+	</div>;
+}
+
+
+const rightNavbar = css`
+	gap: 6px;
+`

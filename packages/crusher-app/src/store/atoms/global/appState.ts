@@ -12,7 +12,7 @@ type TAppState = {
 // @ts-ignore
 const initialAppStage = { currentURL: "", lastPing: Date.now(), selectedProjectId: null };
 export const appStateAtom = atomWithImmer<TAppState>(initialAppStage);
-appStateAtom.debugLabel = "appState";
+appStateAtom.debugLabel = "app.appState";
 
 /*
 	Mutator and selector for these atom

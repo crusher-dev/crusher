@@ -405,14 +405,14 @@ export const dropdDown = css`
 
 function CreateTest() {
 	const router = useRouter();
-	const [{ selectedProjectId }] = useAtom(appStateAtom);
+	const { currentProject } = useProjectDetails()
 	const { query } = router;
 	const [filters] = useAtom(buildFiltersAtom);
 	const [, updateMetaData] = useAtom(updateMeta);
 
 	const runProjectTest = useCallback(() => {
 		(async () => {
-			await handleTestRun(selectedProjectId, query, filters, router, updateMetaData);
+			await handleTestRun(currentProject.id, query, filters, router, updateMetaData);
 
 			updateMetaData({
 				type: "user",
@@ -442,14 +442,14 @@ function CreateTest() {
 
 function RunTest() {
 	const router = useRouter();
-	const [{ selectedProjectId }] = useAtom(appStateAtom);
+	const { currentProject } = useProjectDetails()
 	const { query } = router;
 	const [filters] = useAtom(buildFiltersAtom);
 	const [, updateMetaData] = useAtom(updateMeta);
 
 	const runProjectTest = useCallback(() => {
 		(async () => {
-			await handleTestRun(selectedProjectId, query, filters, router, updateMetaData);
+			await handleTestRun(currentProject?.id, query, filters, router, updateMetaData);
 
 			updateMetaData({
 				type: "user",

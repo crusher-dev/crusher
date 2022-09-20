@@ -36,7 +36,7 @@ export function handleTestRun(selectedProjectId: number | null, query: any, filt
 
 			await mutate(buildAPI);
 			// @ts-ignore
-			await router.push("/app/builds");
+			await router.push(`/${selectedProjectId}/builds`);
 		} catch (e) {
 			if (e.toString() === "Error: No tests available to run") {
 				sendSnackBarEvent({ type: "error", message: "You don't have any test to run" });

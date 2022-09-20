@@ -28,6 +28,7 @@ import { HoverCard } from "dyson/src/components/atoms/tooltip/Tooltip1";
 
 import { useProjectDetails } from "@hooks/common";
 import { LinkBlock } from "dyson/src/components/atoms/Link/Link";
+import Download from "@ui/containers/dashboard/Download";
 // const AddProject = dynamic(() => import("@ui/containers/dashboard/AddProject"));
 const InviteMembers = dynamic(() => import("@ui/containers/dashboard/InviteMember"));
 
@@ -403,39 +404,26 @@ export const dropdDown = css`
 
 
 function CreateTest() {
-	const router = useRouter();
-	const { currentProject } = useProjectDetails()
-	const { query } = router;
-	const [filters] = useAtom(buildFiltersAtom);
-	const [, updateMetaData] = useAtom(updateMeta);
+	const [showCreateTest, setShowCreateTest] = useState(false)
 
 	const runProjectTest = useCallback(() => {
-		(async () => {
-			await handleTestRun(currentProject.id, query, filters, router, updateMetaData);
-
-			updateMetaData({
-				type: "user",
-				key: USER_META_KEYS.RAN_TEST,
-				value: true,
-			});
-
-			updateMetaData({
-				type: "project",
-				key: PROJECT_META_KEYS.RAN_TEST,
-				value: true,
-			});
-		})();
+		setShowCreateTest(true)
 	}, []);
 
 	return (
-		<Button bgColor={"tertiary"} onClick={runProjectTest} css={creatTestCSS}>
-			<div className={"flex items-center"}>
-				<PlusCircle className={"mr-6"} />
-				<span className="mt-1">
-					new test
-				</span>
-			</div>
-		</Button>
+		<React.Fragment>
+			<Conditional showIf={showCreateTest}>
+				<Download onClose={setShowCreateTest.bind(this, false)} />
+			</Conditional>
+			<Button bgColor={"tertiary"} onClick={runProjectTest} css={creatTestCSS}>
+				<div className={"flex items-center"}>
+					<PlusCircle className={"mr-6"} />
+					<span className="mt-1">
+						new test
+					</span>
+				</div>
+			</Button>
+		</React.Fragment>
 	);
 }
 

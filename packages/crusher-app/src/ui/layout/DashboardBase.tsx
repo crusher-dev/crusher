@@ -9,26 +9,26 @@ import { useAtom } from "jotai";
 import { Button } from "dyson/src/components/atoms";
 import { Conditional } from "dyson/src/components/layouts";
 
-import { Slash, Book, Gear, PlaySVG, HomeIcon, ClockIcon, TestIcon, BuildIcon, MapSVG, IntegrationSVG, Chat, NewPeople, ExternalIcon } from "@svg/dashboard";
+import { Book, BuildIcon, Chat, ClockIcon, ExternalIcon, Gear, HomeIcon, IntegrationSVG, MapSVG, NewPeople, PlayIcon, PlusCircle, TestIcon } from "@svg/dashboard";
 
 import { UserNTeam } from "@ui/containers/dashboard/UserNTeam";
 
 
+import { PROJECT_META_KEYS, USER_META_KEYS } from "@constants/USER";
+import { handleTestRun } from "@utils/core/testUtils";
 import { appStateAtom } from "../../store/atoms/global/appState";
 import { projectsAtom } from "../../store/atoms/global/project";
 import { buildFiltersAtom } from "../../store/atoms/pages/buildPage";
 import { updateMeta } from "../../store/mutators/metaData";
-import { PROJECT_META_KEYS, USER_META_KEYS } from "@constants/USER";
-import { handleTestRun } from "@utils/core/testUtils";
 
+import { DiscordSVG } from "@svg/onboarding";
+import { GithubSVG } from "@ui/containers/auth/signup";
 import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import { Tooltip } from "dyson/src/components/atoms/tooltip/Tooltip";
 import { HoverCard } from "dyson/src/components/atoms/tooltip/Tooltip1";
-import { DiscordSVG } from "@svg/onboarding";
-import { GithubSVG } from "@ui/containers/auth/signup";
 
-import { LinkBlock } from "dyson/src/components/atoms/Link/Link";
 import { useProjectDetails } from "@hooks/common";
+import { LinkBlock } from "dyson/src/components/atoms/Link/Link";
 // const AddProject = dynamic(() => import("@ui/containers/dashboard/AddProject"));
 const InviteMembers = dynamic(() => import("@ui/containers/dashboard/InviteMember"));
 
@@ -429,10 +429,12 @@ function CreateTest() {
 	}, []);
 
 	return (
-		<Button bgColor={"tertiary"} onClick={runProjectTest}>
+		<Button bgColor={"tertiary"} onClick={runProjectTest} css={creatTestCSS}>
 			<div className={"flex items-center"}>
-				<PlaySVG className={"mr-12"} />
-				Run tests
+				<PlusCircle className={"mr-6"} />
+				<span className="mt-1">
+					New test
+				</span>
 			</div>
 		</Button>
 	);
@@ -464,14 +466,60 @@ function RunTest() {
 	}, []);
 
 	return (
-		<Button bgColor={"tertiary"} onClick={runProjectTest}>
+		<Button bgColor={"tertiary"} onClick={runProjectTest} css={runTestCSS}>
 			<div className={"flex items-center"}>
-				<PlaySVG className={"mr-12"} />
-				Run tests
+				<PlayIcon className={"mr-6"} />
+				<span className="mt-1">
+					Run tests
+				</span>
 			</div>
 		</Button>
 	);
 }
+
+const runTestCSS = css`
+	padding: 0 10rem;
+
+	font-family: 'Gilroy';
+font-style: normal;
+font-weight: 600;
+font-size: 13px;
+
+color: #FFFFFF;
+
+width: 100rem;
+
+
+background: #A742F7;
+border: 1px solid #7D41AD;
+border-radius: 8px;
+
+:hover{
+	background: #A742F7;
+	filter: brighntess(1.2);
+}
+`
+
+const creatTestCSS = css`
+padding: 0 10rem;
+font-family: 'Gilroy';
+font-style: normal;
+font-weight: 600;
+font-size: 13px;
+
+color: #FFFFFF;
+
+width: 100rem;
+
+background: #0D0D0D;
+border: 0.5px solid rgba(219, 222, 255, 0.16);
+border-radius: 8px;
+
+:hover{
+	background: #0D0D0D;
+	filter: brighntess(.8);
+}
+`
 
 function TopNavbar({ children }) {
 
@@ -627,22 +675,20 @@ const scrollContainer = css`
 	padding-left: 12px;
 `;
 function NavBarLeft() {
-	const { currentProject } = useProjectDetails()
-	const [projects] = useAtom(projectsAtom);
-	const isCurrentProject = !!currentProject;
 	return <div className="flex items-center" css={rightNavbar}>
+
+		<RunTest />
+		<CreateTest />
 		<a href="https://docs.crusher.dev" target="_blank">
-			<TextBlock color={"#6b6565"} className={"flex"} css={textLink}>
+			<TextBlock color={"#6b6565"} className={"flex ml-10"} css={textLink}>
 				<External className="mr-8" />
 				Docs
 			</TextBlock>
 		</a>
-		<RunTest />
-		<CreateTest />
 	</div>;
 }
 
 
 const rightNavbar = css`
-	gap: 6px;
+	gap: 8px;
 `

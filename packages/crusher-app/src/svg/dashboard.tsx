@@ -388,3 +388,42 @@ export function ExternalIcon(props) {
 		</svg>
 	);
 }
+
+
+export function PlayIcon(props) {
+	return (
+		<svg
+			width={14}
+			height={14}
+			fill="none"
+			viewBox="0 0 14 14"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
+			<path
+				d="M3.266.787C2.094.114 1.143.665 1.143 2.016v9.967c0 1.352.95 1.902 2.123 1.23l8.712-4.996c1.172-.672 1.172-1.762 0-2.434L3.266.787z"
+				fill="#fff"
+			/>
+		</svg>
+	);
+}
+
+export function PlusCircle(props) {
+	return (
+		<svg
+			width={14}
+			height={14}
+			fill="none"
+			viewBox="0 0 14 14"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
+			<path
+				fillRule="evenodd"
+				clipRule="evenodd"
+				d="M7 .5a6.5 6.5 0 100 13 6.5 6.5 0 000-13zM7.5 5a.5.5 0 00-1 0v1.5H5a.5.5 0 000 1h1.5V9a.5.5 0 101 0V7.5H9a.5.5 0 100-1H7.5V5z"
+				fill="#fff"
+			/>
+		</svg>
+	);
+}

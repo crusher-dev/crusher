@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 
 import { useAtom } from "jotai";
 
-import { UserIcon, UserImage } from "dyson/src/components/atoms/userimage/UserImage";
+import { UserIcon } from "dyson/src/components/atoms/userimage/UserImage";
 
 import { MenuItem } from "@components/molecules/MenuItem";
 import { resolvePathToBackendURI } from "@utils/common/url";
@@ -17,9 +17,9 @@ import { HoverCard } from "dyson/src/components/atoms/tooltip/Tooltip1";
 
 const userDropdownItems = [
 	{
-		leftLabel: "Settings",
+		leftLabel: "Org settings",
 		rightLabel: "",
-		link: "/settings/project/basic",
+		link: "/settings/org/team-members",
 		target: "",
 	},
 	{
@@ -199,8 +199,7 @@ const nameInitial = css`
 	width: 22rem;
 	height: 22rem;
 	border-radius: 4px;
-	// background: #e6ff9d;
-	// color: #46551b;
+
 `;
 
 const name = css`
@@ -209,7 +208,3 @@ letter-spacing: 0.02em;
 color: #CECECE;
 `;
 
-const description = css`
-	font-size: 13rem;
-	color: rgba(255, 255, 255, 0.32);
-`;

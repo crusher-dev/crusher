@@ -16,7 +16,6 @@ import { UserNTeam } from "@ui/containers/dashboard/UserNTeam";
 
 import { PROJECT_META_KEYS, USER_META_KEYS } from "@constants/USER";
 import { handleTestRun } from "@utils/core/testUtils";
-import { appStateAtom } from "../../store/atoms/global/appState";
 import { projectsAtom } from "../../store/atoms/global/project";
 import { buildFiltersAtom } from "../../store/atoms/pages/buildPage";
 import { updateMeta } from "../../store/mutators/metaData";
@@ -137,7 +136,7 @@ const projectMenu = [
 	{
 		icon: <Gear />,
 		label: "settings",
-		link: "/settings/project/basic",
+		link: "/settings/basic",
 		isProject: true
 	},
 ];
@@ -246,9 +245,9 @@ function LeftSection() {
 					</div>
 
 					<div css={leftBottomBar} className="w-full flex mt-20">
-						<Tooltip content={"settings"} placement="top" type="hover">
+						<Tooltip content={"Org settings"} placement="top" type="hover">
 							<div css={[menuItemCSS, border]}>
-								<Link href="/settings/project/basic">
+								<Link href="/settings/org/team-members">
 									<div className="h-full w-full flex items-center justify-center">
 										<Gear />
 									</div>

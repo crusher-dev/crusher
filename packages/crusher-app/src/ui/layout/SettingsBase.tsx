@@ -74,19 +74,19 @@ export const CompressibleMenu = ({ name, children, initialState = true }) => {
 const projectLinks = [
 	{
 		label: "General",
-		link: "/settings/project/basic",
+		link: "/settings/basic",
 	},
 	{
 		label: "Environments",
-		link: "/settings/project/environments",
+		link: "/settings/environments",
 	},
 	{
 		label: "Monitoring",
-		link: "/settings/project/monitoring",
+		link: "/settings/monitoring",
 	},
 	{
 		label: "Integrations",
-		link: "/settings/project/integrations",
+		link: "/settings/integrations",
 	},
 ];
 

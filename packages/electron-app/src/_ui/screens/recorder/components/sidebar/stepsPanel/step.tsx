@@ -16,6 +16,9 @@ import { TextHighlighter } from "./helper";
 interface IProps {
     className?: string;
     stepId?: string;
+    isActive: boolean;
+    setIsActive: any;
+    onClick?: any;
 };
 
 const menuItems = [
@@ -23,7 +26,7 @@ const menuItems = [
     {id: "delete", label: 'Delete', shortcut: <div>⌘+D</div>}
 ];
 
-const Step = ({className, ...props}: IProps) => {
+const Step = ({className, isActive, onClick, setIsActive, ...props}: IProps) => {
     const { stepId } = props;
     const stepInfo = useSelector(getStepInfo(stepId));
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -49,14 +52,14 @@ const Step = ({className, ...props}: IProps) => {
     }, []);
 
     const handleMenuOpenChange = React.useCallback((isOpen) => {
-        setIsMenuOpen(isOpen);
-    }, []);
+        setIsActive(isOpen);
+    }, [setIsActive]);
 
     const title = TextHighlighter({text: stepInfo.name});
 
     return (
         <RightClickMenu onOpenChange={handleMenuOpenChange} menuItems={menuItemsComponent}>
-            <div css={[containerCss, isMenuOpen ? activeItemCss : null]}>
+            <div onClick={onClick} css={[containerCss, isActive ? activeItemCss : null]}>
                 <div className={"card"} css={contentCss}>
                     {stepInfo.isRunning ? (
                         <PointerArrowIcon css={runningPointerIconCss}/>
@@ -110,8 +113,7 @@ const contentCss = css`
     border: 1.5rem solid rgba(255, 255, 255, 0);
     border-left: none;
     border-right: none;
-    padding: 7rem 15rem;
-    margin: 6rem 0rem;
+    padding: 10rem 15rem;
     padding-right: 5rem;
     position: relative;
 `;

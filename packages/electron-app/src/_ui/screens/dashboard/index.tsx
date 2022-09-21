@@ -24,32 +24,12 @@ import { StickyFooter } from "../../components/stickyFooter";
 import { Footer } from "../../components/footer";
 
 const TitleComponent = ({ projectName }) => {
-    const proxyIsInitializing = useSelector(getIsProxyInitializing);
-    const proxyState = useSelector(getProxyState);
 
-    const isProxyWorking = Object.keys(proxyState).length;
     return (
         <div css={titleStyle}>
             <span>
-                <span css={rocketIconStyle}>🚀</span>
-                &nbsp;
                 <b css={titleBoldStyle}>{projectName}</b>
             </span>
-            <CloudIcon
-                shouldAnimateGreen={proxyIsInitializing}
-                css={[
-                    titleCloudIconStyle,
-                    proxyIsInitializing
-                        ? css``
-                        : isProxyWorking
-                            ? undefined
-                            : css`
-                                path {
-                                    fill: rgba(0, 0, 0, 0.8);
-                                }
-                          `,
-                ]}
-            />
         </div>
     );
 };
@@ -179,7 +159,7 @@ const DashboardScreen = () => {
 
     const hasNotLoaded = isLoading || !animationComplete;
     return (
-        // <Wrapper figmaUrl={"https://www.figma.com/proto/MsJZCnY5NvrDF4kL1oczZq/Crusher-%7C-Aug?node-id=1638%3A5550&scaling=min-zoom&page-id=988%3A3439&starting-point-node-id=988%3A3817"}>
+        // <Wrapper figmaUrl=`{"https://www.figma.com/proto/MsJZCnY5NvrDF4kL1oczZq/Crusher-%7C-Aug?node-id=1638%3A5550&scaling=min-zoom&page-id=988%3A3439&starting-point-node-id=988%3A3817"}>
             <CompactAppLayout footer={<><Footer /><StickyFooter /></>} headerRightSection={headerComponent} showHeader={!hasNotLoaded} css={loadingCSS(hasNotLoaded)} title={selectedProject && !hasNotLoaded ? <TitleComponent projectName={selectedProject.name} /> : null}>
                 {hasNotLoaded ? (<LoadingProgressBar inAppLoading={false} />) : content}
             </CompactAppLayout>

@@ -54,6 +54,7 @@
 		"electron-redux": "^1.5.4",
 		"electron-updater": "^4.6.1",
 		"electron-window-state": "^5.0.3",
+		"emoji-mart": "^5.2.2",
 		"event-kit": "^2.5.3",
 		"figma-design-scaler": "link:/home/utkarsh/crusher/figma-scale",
 		"file-loader": "^6.2.0",

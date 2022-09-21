@@ -7,8 +7,9 @@ interface IProps {
     className?: string;
     onClick?: any;
     items?: Array<{ content: any; id: any; }>;
+    selectAllCallback?: any;
 }
-const NormalList = ({ className, onClick, items, ...props }: IProps) => {
+const NormalList = ({ className, selectAllCallback, onClick, items, ...props }: IProps) => {
     const [shouldSelectAll, setShouldSelectAll] = React.useState(false);
 
     const listItems = React.useMemo(() => {
@@ -22,9 +23,20 @@ const NormalList = ({ className, onClick, items, ...props }: IProps) => {
         });
     }, [onClick, items]);
 
+    const handleSelectAll = React.useCallback((shouldSelect) => {
+        setShouldSelectAll(shouldSelect);
+        if(shouldSelect) {
+            var ctrlEvent = new KeyboardEvent("keydown", {bubbles : true, cancelable : true, keyCode : 17, char : 17, shiftKey : true});
+            var aEvent = new KeyboardEvent("keydown", {bubbles : true, cancelable : true, keyCode : 65, char : 65, shiftKey : true});
+
+            document.dispatchEvent(ctrlEvent);
+            document.dispatchEvent(aEvent);
+        }
+    }, [selectAllCallback]);
+
     return (<>
                 <div css={headerCss}>
-                    <Checkbox css={checkboxCss} callback={setShouldSelectAll.bind(this)} isSelectAllType={false} isSelected={shouldSelectAll}/>
+                    <Checkbox css={checkboxCss} callback={handleSelectAll} isSelectAllType={false} isSelected={shouldSelectAll}/>
                     <div css={testsCountCss}>{items.length} projects</div>
                 </div>
                 <ul className={`${className}`} css={listCss} {...props}>

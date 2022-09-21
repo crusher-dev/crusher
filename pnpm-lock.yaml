@@ -677,6 +677,7 @@ importers:
       electron-redux: ^1.5.4
       electron-updater: ^4.6.1
       electron-window-state: ^5.0.3
+      emoji-mart: ^5.2.2
       eslint: ^7.18.0
       eslint-config-airbnb-base: ^14.2.0
       eslint-config-prettier: ^7.2.0
@@ -796,6 +797,7 @@ importers:
       electron-redux: 1.5.4
       electron-updater: 4.6.1
       electron-window-state: 5.0.3
+      emoji-mart: 5.2.2
       event-kit: 2.5.3
       figma-design-scaler: link:../../../../../../../home/utkarsh/crusher/figma-scale
       file-loader: 6.2.0_webpack@5.21.2
@@ -11050,7 +11052,7 @@ packages:
       webpack-cli: 4.x.x
     dependencies:
       envinfo: 7.8.1
-      webpack-cli: 4.10.0_ptzbz4bao7we2onwdcwwuffqhy
+      webpack-cli: 4.10.0_webpack@5.21.2
 
   /@webpack-cli/serve/1.5.1_r5jz6ab5h5z5ui7vgheqnt6cae:
     resolution: {integrity: sha512-4vSVUiOPJLmr45S8rMGy7WDvpWxfFxfP/Qx/cxZFCfvoypTYpPPL1X8VIZMe0WTA+Jr7blUxwUSEZNkjoMTgSw==}
@@ -11074,7 +11076,7 @@ packages:
       webpack-dev-server:
         optional: true
     dependencies:
-      webpack-cli: 4.10.0_webpack@5.39.1
+      webpack-cli: 4.10.0_webpack@5.21.2
 
   /@webpack-cli/serve/1.7.0_xcsigq56yu4htn6anmcckynncu:
     resolution: {integrity: sha512-oxnCNGj88fL+xzV+dacXs44HcDwf1ovs3AuEzvP7mqXw7fQntqIhQ1BRmynh4qEKQSSSRSWVyXRjmTbZIX9V2Q==}
@@ -16164,6 +16166,10 @@ packages:
   /emittery/0.8.1:
     resolution: {integrity: sha512-uDfvUjVrfGJJhymx/kz6prltenw1u7WrCg1oa94zYY8xxVpLLUu045LAT0dhDZdXG58/EpPL/5kA180fQ/qudg==}
     engines: {node: '>=10'}
+
+  /emoji-mart/5.2.2:
+    resolution: {integrity: sha512-BvcrX+Ps9MxSVEjnvxupclU3MBD6WVC4WZOY26csfC6oFdaWpFhdrzeVNVBmCLPOmzY1SE0aAsqZJRNVbZ1yhQ==}
+    dev: false
 
   /emoji-regex/6.1.1:
     resolution: {integrity: sha512-WfVwM9e+M9B/4Qjh9SRnPX2A74Tom3WlVfWF9QWJ8f2BPa1u+/q4aEp1tizZ3vBKAZTg7B6yxn3t9iMjT+dv4w==}

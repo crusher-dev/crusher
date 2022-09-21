@@ -139,7 +139,7 @@ const ProjectsListScreen = () => {
         // <Wrapper figmaUrl={"https://www.figma.com/proto/lK8wsCW8hLzssu5Z987lky/Crusher-%7C-Aug-(Copy)?node-id=2201%3A3868&scaling=scale-down-width&page-id=988%3A3439&starting-point-node-id=988%3A3817"}>
 			<CompactAppLayout css={containerCss} title={<div css={titleCss}>Select project</div>} footer={<Footer/>}>
 				<ProjectList projects={projects} />
-				{projects.length === 0 ? (<CreateProjectBanner  css={createProjectBannerCss}/>): ""}
+				{projects.length ? (<CreateProjectBanner  css={createProjectBannerCss}/>): ""}
 			</CompactAppLayout>
 		// </Wrapper>
     );

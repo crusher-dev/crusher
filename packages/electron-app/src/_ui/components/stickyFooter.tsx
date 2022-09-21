@@ -1,6 +1,6 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { CloudIcon, ConsoleIcon, DocsIcon, NotepadIcon } from "../icons";
+import { CloudIcon, ConsoleIcon, DisabledCloudIcon, DocsIcon, NotepadIcon } from "../icons";
 import { Link } from "./Link";
 import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import { HoverCard } from "@dyson/components/atoms/tooltip/Tooltip1";
@@ -8,11 +8,13 @@ import { HoverCard } from "@dyson/components/atoms/tooltip/Tooltip1";
 import { linkOpen } from "electron-app/src/utils/url";
 import { getIsProxyInitializing, getProxyState } from "electron-app/src/store/selectors/app";
 import { useSelector } from "react-redux";
+import { useBuildNotifications } from "../hooks/tests";
 
 interface IProps {
     className?: string;
 };
 const StickyFooter = ({ className, ...props }: IProps) => {
+    const { notifications } = useBuildNotifications();
     const proxyIsInitializing = useSelector(getIsProxyInitializing);
     const proxyState = useSelector(getProxyState);
 
@@ -21,18 +23,21 @@ const StickyFooter = ({ className, ...props }: IProps) => {
     return (
         <div css={containerCss} className={`${className}`}>
             <div css={contentCss}>
-                <div css={notificationContainerCss}>
-                    <div css={notificationContentCss}>
-                        <ConsoleIcon css={consoleIconCss} />
-                        <span css={notificationTextCss}>2: Last build has passed</span>
-                    </div>
-                    <div css={notificationActionCss}>
-                        <Link css={linkCss}>view report</Link>
-                    </div>
-                </div>
+                {notifications.length ? (
+                                    <div css={notificationContainerCss}>
+                                    <div css={notificationContentCss}>
+                                        <ConsoleIcon css={consoleIconCss} />
+                                        <span css={notificationTextCss}>2: Last build has passed</span>
+                                    </div>
+                                    <div css={notificationActionCss}>
+                                        <Link css={linkCss}>view report</Link>
+                                    </div>
+                                </div>
+                ) : ""}
+
                 <div css={contextContainerCss}>
                     {!proxyIsInitializing && !isProxyWorking ? (
-                        <CloudIcon css={[cloudIconCss, clickableCss, css`path {fill: rgba(0, 0, 0, 0.8);}`]} shouldAnimateGreen={false} />
+                        <DisabledCloudIcon css={[cloudIconCss, css`width: 22px; height: 16px`, clickableCss]} shouldAnimateGreen={false} />
                     ) : (
                         <CloudIcon css={[cloudIconCss, clickableCss]} shouldAnimateGreen={proxyIsInitializing} />
                     )}

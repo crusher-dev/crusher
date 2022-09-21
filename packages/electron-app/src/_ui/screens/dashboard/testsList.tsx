@@ -18,6 +18,7 @@ import { deleteRecordedSteps } from "electron-app/src/store/actions/recorder";
 import { useStore } from "react-redux";
 import { EmojiPicker } from "../../components/emojiPicker";
 import Checkbox from "@dyson/components/atoms/checkbox/checkbox";
+import { useBuildNotifications } from "../../hooks/tests";
 
 const TestListNameInput = ({ testName, testId, isActive, isEditing, setIsEditing, className }) => {
     const [name, setName] = React.useState(testName);
@@ -144,6 +145,7 @@ const TestListItem = ({ test, isItemSelected, index, deleteTest, lock }) => {
     const [isHover, setIsHover] = React.useState(false);
     const [isEditingName, setIsEditingName] = React.useState(false);
 	const [emoji, setEmoji] = React.useState(null);
+	const { addNotification } = useBuildNotifications();
 
     const navigate = useNavigate();
 

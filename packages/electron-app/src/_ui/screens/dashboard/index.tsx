@@ -18,10 +18,12 @@ import { TestList } from "./testsList";
 import Wrapper from "figma-design-scaler/dist/dist/main";
 import { ButtonDropdown } from "../../components/buttonDropdown";
 import { AddIconV3 } from "electron-app/src/ui/icons";
-import { goFullScreen } from "electron-app/src/ui/commands/perform";
+import { goFullScreen, performRunTests } from "electron-app/src/ui/commands/perform";
 import { CloudIcon } from "../../icons";
 import { StickyFooter } from "../../components/stickyFooter";
 import { Footer } from "../../components/footer";
+import { useBuildNotifications } from "../../hooks/tests";
+import { triggerLocalBuild } from "../../utils/recorder";
 
 const TitleComponent = ({ projectName }) => {
 
@@ -70,6 +72,7 @@ const DashboardScreen = () => {
     const { data: tests, isValidating, mutate } = useRequest(userInfo && userInfo.isUserLoggedIn ? getSelectedProjectTestsRequest : () => null, { refreshInterval: 5000 })
     const [selectedProject, setSelectedProject] = React.useState(null);
     const [showProxyWarning, setShowProxyWarning] = React.useState({ show: false, testId: null, startUrl: null });
+    const { addNotification } = useBuildNotifications();
 
     const navigate = useNavigate();
     const store = useStore();
@@ -121,6 +124,16 @@ const DashboardScreen = () => {
         goFullScreen();
     }, []);
 
+    const handleRunCallback = (id) => {
+        if(id === "RUN_CLOUD") {
+            performRunTests(null).then((buildRes) => {
+                addNotification({id: buildRes.buildId});
+				// sendSnackBarEvent({ type: "success", message: "Test started successfully!" });
+			});
+        } else if( id === "RUN_LOCAL") {
+            triggerLocalBuild(tests.list.map(test => test.id));
+        }
+    };
     const headerComponent = React.useMemo(() => {
         return (
             <div css={headerComponentCss}>
@@ -142,15 +155,17 @@ const DashboardScreen = () => {
                     dropdownCss={buttonDropdownCss}
                     css={buttonDropdownMainButtonCss}
                     options={[
-                        { id: "SAVE", content: (<span>Run test</span>) },
+                        { id: "RUN_LOCAL", content: (<span>Run tests</span>) },
+                        { id: "RUN_CLOUD", content: (<span>Run tests (cloud)</span>) },
+
                     ]}
-                    primaryOption={"SAVE"}
-                    callback={() => { }}
+                    primaryOption={"RUN_LOCAL"}
+                    callback={handleRunCallback}
                 />
             </div>
 
         );
-    }, []);
+    }, [handleRunCallback]);
     const isLoading = React.useMemo(() => (!tests), [tests]);
     // To make delete experience fast
     const filteredTests = tests && tests.list && tests.list.length ? tests.list.filter(test => { return !((window as any).deletedTest || []).includes(test.id)}) : [];

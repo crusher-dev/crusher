@@ -46,10 +46,11 @@ interface IProps {
     callback?: any;
     className?: any;
     id?: any;
+    hideDropdown?: boolean;
     dropdownCss?: any;
 };
 
-const ButtonDropdown = ({options, id, primaryOption, className, callback, ...props}: IProps) => {
+const ButtonDropdown = ({options, id, hideDropdown, primaryOption, className, callback, ...props}: IProps) => {
     const [showActionDropdown, setShowActionDropdown] = React.useState(false);
 
     const handleCallback = React.useCallback((id: string) => {
@@ -73,9 +74,12 @@ const ButtonDropdown = ({options, id, primaryOption, className, callback, ...pro
     >
 		<ActionButton id={id} className={className} title={primaryOptionsObject.content} onClick={handleCallback.bind(this, primaryOptionsObject.id)} css={saveButtonStyle} />
 
-        <div className={"dropdown-icon"} css={downIconContainerCss}>
+        {!hideDropdown ? (
+            <div className={"dropdown-icon"} css={downIconContainerCss}>
             <DownIcon fill={"#fff"} css={downIconCss} />
-        </div>
+            </div>
+        ): ""}
+     
     </Dropdown>
     );
 };

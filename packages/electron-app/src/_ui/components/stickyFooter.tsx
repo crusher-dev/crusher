@@ -6,12 +6,18 @@ import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import { HoverCard } from "@dyson/components/atoms/tooltip/Tooltip1";
 
 import { linkOpen } from "electron-app/src/utils/url";
-
+import { getIsProxyInitializing, getProxyState } from "electron-app/src/store/selectors/app";
+import { useSelector } from "react-redux";
 
 interface IProps {
     className?: string;
 };
 const StickyFooter = ({ className, ...props }: IProps) => {
+    const proxyIsInitializing = useSelector(getIsProxyInitializing);
+    const proxyState = useSelector(getProxyState);
+
+    const isProxyWorking = Object.keys(proxyState).length;
+    
     return (
         <div css={containerCss} className={`${className}`}>
             <div css={contentCss}>
@@ -25,7 +31,11 @@ const StickyFooter = ({ className, ...props }: IProps) => {
                     </div>
                 </div>
                 <div css={contextContainerCss}>
-                    <CloudIcon css={[cloudIconCss, clickableCss]} shouldAnimateGreen={true} />
+                    {!proxyIsInitializing && !isProxyWorking ? (
+                        <CloudIcon css={[cloudIconCss, clickableCss, css`path {fill: rgba(0, 0, 0, 0.8);}`]} shouldAnimateGreen={false} />
+                    ) : (
+                        <CloudIcon css={[cloudIconCss, clickableCss]} shouldAnimateGreen={proxyIsInitializing} />
+                    )}
                     {/* <NotepadIcon css={[notepadIconCss, clickableCss]} /> */}
                 </div>
             </div>

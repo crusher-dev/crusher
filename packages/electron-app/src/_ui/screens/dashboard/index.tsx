@@ -126,7 +126,8 @@ const DashboardScreen = () => {
             <div css={headerComponentCss}>
                 <ButtonDropdown
                     dropdownCss={buttonDropdownCss}
-                    css={[buttonDropdownMainButtonCss, css`background: transparent !important; width: auto !important; border: none !important;`]}
+                    hideDropdown={true}
+                    css={[buttonDropdownMainButtonCss, css`background: transparent !important; width: auto !important; border: none !important; margin-right: 18px;`]}
                     options={[
                         {
                             id: "SAVE", content: (<span css={createTestCss}>

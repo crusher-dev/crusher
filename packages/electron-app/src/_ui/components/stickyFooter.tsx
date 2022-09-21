@@ -4,7 +4,9 @@ import { CloudIcon, ConsoleIcon, DocsIcon, NotepadIcon } from "../icons";
 import { Link } from "./Link";
 import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import { HoverCard } from "@dyson/components/atoms/tooltip/Tooltip1";
-import { editor } from "monaco-editor";
+
+import { linkOpen } from "electron-app/src/utils/url";
+
 
 interface IProps {
     className?: string;
@@ -146,17 +148,17 @@ function HelpContent() {
     return (
         <div className=" pt-3 pb-6">
 
-            <a href="https://docs.crusher.dev" target="_blank">
+            <a onClick={linkOpen.bind(this, "https://docs.crusher.dev")} target="_blank">
                 <TextBlock fontSize={13.4} color={"#8F8F8F"} css={linkCSS}>
                     Documentation <ExternalIcon className="ml-3" />
                 </TextBlock>
             </a>
-            <a href="https://github.com/crusher-dev/crusher" target="_blank">
+            <a onClick={linkOpen.bind(this, "https://github.com/crusher-dev/crusher")} target="_blank">
                 <TextBlock fontSize={13.4} color={"#8F8F8F"} className={"mt-1"} css={linkCSS}>
                     <GithubSVG height={11} width={11} className={"mr-6"} /> <span className="mt-2">Github</span><ExternalIcon className="ml-4" />
                 </TextBlock>
             </a>
-            <a href="https://discord.com/invite/dHZkSNXQrg" target="_blank">
+            <a onClick={linkOpen.bind(this, "https://discord.com/invite/dHZkSNXQrg")} target="_blank">
                 <TextBlock fontSize={13.4} color={"#8F8F8F"} className={"mt-1"} css={linkCSS}>
                     <DiscordSVG height={12} width={13} className={"mr-6"} css={discordIcons} /> <span className="mt-1">Discord</span><ExternalIcon className="ml-3" />
                 </TextBlock>

@@ -90,7 +90,7 @@ export const HoverCard: React.FC<TooltipWrapperProps> = ({ children, state, onSt
             ref: reference,
             ...eventListener(),
         });
-    }, []);
+    }, [children]);
 
     // Show/Hide if props is updated
     useEffect(() => {

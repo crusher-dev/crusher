@@ -169,9 +169,20 @@ const titleCss = css`
 
 const ProjectItem  = ({project}) => {
 	const [isOpen, setIsOpen] = React.useState(false);
+	const [emoji, setEmoji] = React.useState(null);
+
+	const handleEmojiSelected = React.useCallback((emoji) => {
+		if(emoji){
+			setEmoji(emoji.native);
+		}
+	}, []);
 	return (
 		<div css={css`width: 100%; height: 100%; padding: 14px 17px; padding-right: 40px; display: flex; align-items: center;`}>
-			<EmojiPicker isOpen={isOpen}><BasketBallIcon css={css`width: 18px; height: 18px; :hover { opacity: 0.8; }`}/></EmojiPicker>
+			<EmojiPicker onEmojiSelected={handleEmojiSelected} isOpen={isOpen}>
+				{emoji ? (
+					<span>{emoji}</span>
+				) : ( <BasketBallIcon css={css`width: 18px; height: 18px; :hover { opacity: 0.8; }`}/>)}
+			</EmojiPicker>
 			<span css={css`margin-left: 13px;`}>{project.name}</span>
 		</div>
 	);

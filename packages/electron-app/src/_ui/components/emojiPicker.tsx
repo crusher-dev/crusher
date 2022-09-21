@@ -8,10 +8,12 @@ import { HoverCard } from "dyson/src/components/atoms/tooltip/Tooltip1";
 const EmojiPicker = ({onEmojiSelected, children, isOpen, ...props}) => {
     const [show, setShow] = React.useState(false);
 
-    const handleEmojiSelect = (emoji) => {
+    const handleEmojiSelect = React.useCallback((emoji) => {
         setShow(false);
-        console.log("Selected emoji is", emoji);
-    };
+        if(onEmojiSelected) {
+            onEmojiSelected(emoji);
+        }
+    }, [onEmojiSelected]);
     const onStateChange = (isShowing) => {
         setShow(isShowing);
     }
@@ -28,6 +30,7 @@ const EmojiPicker = ({onEmojiSelected, children, isOpen, ...props}) => {
             noCountryFlags={true}
         />
     );
+
     return (
         <>
             <HoverCard state={show} callback={onStateChange} css={userDropdownCSS} content={dropdown} placement="right" type="click" padding={2} offset={0}>

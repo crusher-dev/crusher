@@ -5,12 +5,12 @@ import { HoverCard } from "dyson/src/components/atoms/tooltip/Tooltip1";
 
 
 
-const EmojiPicker = ({onEmojiSelected, children, isOpen, ...props}) => {
+const EmojiPicker = ({ onEmojiSelected, children, isOpen, ...props }) => {
     const [show, setShow] = React.useState(false);
 
     const handleEmojiSelect = React.useCallback((emoji) => {
         setShow(false);
-        if(onEmojiSelected) {
+        if (onEmojiSelected) {
             onEmojiSelected(emoji);
         }
     }, [onEmojiSelected]);
@@ -22,12 +22,18 @@ const EmojiPicker = ({onEmojiSelected, children, isOpen, ...props}) => {
         <Picker
             onEmojiSelect={handleEmojiSelect}
             previewPosition={'none'}
-            // searchPosition={'none'}
+            searchPosition={'none'}
+            // skinTonePosition={'none'}
+            // perLine={8}
+            // emojiSize={16}
+            // emojiButtonSize={30}
+            // noCountryFlags={true}
             skinTonePosition={'none'}
-            perLine={8}
+            perLine={10}
             emojiSize={16}
             emojiButtonSize={30}
             noCountryFlags={true}
+            theme={"dark"}
         />
     );
 
@@ -36,7 +42,7 @@ const EmojiPicker = ({onEmojiSelected, children, isOpen, ...props}) => {
             <HoverCard state={show} callback={onStateChange} css={userDropdownCSS} content={dropdown} placement="right" type="click" padding={2} offset={0}>
                 {children}
             </HoverCard>
-            <Global styles={globalCss}/>
+            <Global styles={globalCss} />
         </>
     )
 }
@@ -57,8 +63,12 @@ const globalCss = css`
     --rgb-input: 255, 235, 235;
   
     border: 1px solid #202020;
-    min-height: 260px;
-    max-height: 260px;
+    min-height: 240px;
+    max-height: 300px;
+
+    input:focus{
+        background-color: transparent !important;
+    }
   }
 `;
 

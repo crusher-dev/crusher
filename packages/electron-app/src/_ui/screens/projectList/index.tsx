@@ -210,14 +210,13 @@ border-radius: 6px;
 const emojiCSS = css`
 font-family: 'EmojiMart';
     display: block;
-    min-height: 18px;
-    min-width: 18px;
     font-size: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
     padding-top: 2px;
-    line-height: 15px;
+	padding-left: 2px;
+    line-height: 13px;
 `
 const ProjectList = ({ projects }) => {
 	const navigate = useNavigate();

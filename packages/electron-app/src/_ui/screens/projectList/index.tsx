@@ -179,7 +179,7 @@ const ProjectItem = ({ project }) => {
 	return (
 		<div css={css`width: 100%; height: 100%; padding: 12px 17px; padding-right: 40px; display: flex; align-items: center;`}>
 			<EmojiPicker onEmojiSelected={handleEmojiSelected} isOpen={isOpen}>
-				<div css={emojiBlock}>
+				<div className={"emoji-block"} css={emojiBlock}>
 					{emoji ? (
 						<span css={emojiCSS}>{emoji}</span>
 					) : (<BasketBallIcon css={css`width: 18px; height: 18px; :hover { opacity: 0.8; }`} />)}
@@ -222,9 +222,14 @@ const ProjectList = ({ projects }) => {
 	const navigate = useNavigate();
 	const store = useStore();
 
-	const handleProjectItemClick = React.useCallback((projectId) => {
-		// store.dispatch(setSelectedProject(projectId))
-		// setTimeout(() => navigate("/"), 50);
+	const handleProjectItemClick = React.useCallback((projectId, event) => {
+		console.log("Evt", event);
+		const paths = event.nativeEvent.path;
+		const isEmojiClicked = paths.some((path) => path.classList && path.classList.contains("emoji-block"));
+		if(isEmojiClicked) return;
+
+		store.dispatch(setSelectedProject(projectId))
+		setTimeout(() => navigate("/"), 50);
 	}, []);
 
 	const items: Array<any> = React.useMemo(() => {

@@ -20,8 +20,9 @@ import { sendSnackBarEvent } from "../ui/components/toast";
 import Toolbar from "../ui/components/toolbar";
 import historyInstance from "./utils/history";
 import Wrapper from "figma-design-scaler/dist/dist/main";
+import { useBuildNotifications } from "./hooks/tests";
 
-const handleCompletion = async (store: Store, action: IDeepLinkAction) => {
+const handleCompletion = async (store: Store, action: IDeepLinkAction, addNotification) => {
 
     // @TODO: Change `redirectAfterSuccess` to `isLocalBuild`
     console.log("Action args", action, window["testsToRun"]);
@@ -45,6 +46,7 @@ const handleCompletion = async (store: Store, action: IDeepLinkAction) => {
             window["localRunCache"] = undefined;
             // steps: Array<any>; id: number; name: string; status: "FINISHED" | "FAILED"
             window["localBuildReportId"] = localBuild.build.id;
+			addNotification({id: localBuild.build.id });
 
             historyInstance.push("/", {});
 
@@ -55,7 +57,7 @@ const handleCompletion = async (store: Store, action: IDeepLinkAction) => {
 };
 
 
-const handleUrlAction = (store: Store, event: Electron.IpcRendererEvent, { action }: { action: IDeepLinkAction }) => {
+const handleUrlAction = (store: Store, addNotification, event: Electron.IpcRendererEvent, { action }: { action: IDeepLinkAction },) => {
     switch(action.commandName) {
         case "replay-test":
 			const sessionInfoMeta = getAppSessionMeta(store.getState() as any);
@@ -68,7 +70,7 @@ const handleUrlAction = (store: Store, event: Electron.IpcRendererEvent, { actio
 				}),
 			);
             
-            performReplayTest(action.args.testId).finally(handleCompletion.bind(this, store, action))
+            performReplayTest(action.args.testId).finally(handleCompletion.bind(this, store, action, addNotification))
             break;
         case "restore":
             if (window.localStorage.getItem("saved-steps")) {
@@ -217,7 +219,7 @@ function doArrow(position, verticalAlign, horizontalAlign) {
 
 const App = () => {
     let navigate = useNavigate();
-    
+	const {addNotification} = useBuildNotifications();
     const store = useStore();
     const recorderInfo = useSelector(getRecorderInfo);
     const isStatusBarVisible = useSelector(getIsStatusBarVisible);
@@ -232,7 +234,7 @@ const App = () => {
 			store.dispatch(setIsWebViewInitialized(true));
 		});
 
-        ipcRenderer.on("url-action", handleUrlAction.bind(this, store));
+        ipcRenderer.on("url-action", handleUrlAction.bind(this, store, addNotification));
 
         return () => {
             ipcRenderer.removeAllListeners("url-action");

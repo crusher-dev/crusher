@@ -9,7 +9,7 @@ const triggerLocalBuild = (testsList: Array<number> = undefined) => {
 
     historyInstance.push("/recorder", "");
     goFullScreen();
-    performReplayTestUrlAction(window["testsToRun"].list[0], true);
+    return performReplayTestUrlAction(window["testsToRun"].list[0], true);
 };
 
 export { triggerLocalBuild };

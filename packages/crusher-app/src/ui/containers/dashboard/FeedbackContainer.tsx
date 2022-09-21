@@ -109,14 +109,17 @@ padding: 14rem;
 
 const submit = css`
 
-background: #A742F7;
-border: 1rem solid #7D41AD;
+background: #eee;
+color: #000;
+
 border-radius: 8rem;
 
 :hover{
-	background: #A742F7;
+    background: #eee;
+    color: #000;
+    border: 1rem solid #7D41AD;
 	filter: brighntess(.7);
-	border: 1rem solid #7D41AD;
+
 }
 `
 

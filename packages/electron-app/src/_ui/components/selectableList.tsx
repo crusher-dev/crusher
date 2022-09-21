@@ -19,7 +19,7 @@ const ListBox = ({ className, contextMenu, selectedHeaderActions: SelectedHeader
         return items.map((item, index) => {
             return (
                 <ListItem key={item.id} onContextMenu={selectItem.bind(this, item.id)} onClick={toggleSelectItem.bind(this, item.id)} isActive={isItemSelected(item.id)}>
-                    {item.content(isItemSelected)}
+                    {item.content(isItemSelected(item.id))}
                 </ListItem>
             )
         });

@@ -1,7 +1,7 @@
 import React from "react";
 import { css } from "@emotion/react";
 import { LoadingIconV2, PlayIcon } from "electron-app/src/ui/icons";
-import { EditIcon } from "../../icons";
+import { BasketBallIcon, EditIcon } from "../../icons";
 import { min } from "lodash";
 import { useNavigate } from "react-router-dom";
 import { goFullScreen, performReplayTestUrlAction } from "electron-app/src/ui/commands/perform";
@@ -16,8 +16,10 @@ import { useSelectableList } from "../../hooks/list";
 import { RightClickMenu } from "@dyson/components/molecules/RightClick/RightClick";
 import { deleteRecordedSteps } from "electron-app/src/store/actions/recorder";
 import { useStore } from "react-redux";
+import { EmojiPicker } from "../../components/emojiPicker";
+import Checkbox from "@dyson/components/atoms/checkbox/checkbox";
 
-const TestListNameInput = ({ testName, testId, isActive, isEditing, setIsEditing }) => {
+const TestListNameInput = ({ testName, testId, isActive, isEditing, setIsEditing, className }) => {
     const [name, setName] = React.useState(testName);
     const inputRef = React.useRef<HTMLInputElement>(null);
     const handleDoubleClick = React.useCallback(() => {
@@ -51,7 +53,7 @@ const TestListNameInput = ({ testName, testId, isActive, isEditing, setIsEditing
     const testInputStyle = React.useMemo(() => testInputCss(isActive, isEditing, name), [isEditing, name, isActive]);
 
     return (
-        <OnOutsideClick disable={!isEditing} onOutsideClick={handleOutsideClick}>
+        <OnOutsideClick className={`${className}`} disable={!isEditing} onOutsideClick={handleOutsideClick}>
             <span css={testInputContainerCss} onDoubleClick={handleDoubleClick}>
                 <input
                     size={testName.length}
@@ -141,6 +143,7 @@ const TestListItem = ({ test, isItemSelected, index, deleteTest, lock }) => {
 
     const [isHover, setIsHover] = React.useState(false);
     const [isEditingName, setIsEditingName] = React.useState(false);
+	const [emoji, setEmoji] = React.useState(null);
 
     const navigate = useNavigate();
 
@@ -156,9 +159,29 @@ const TestListItem = ({ test, isItemSelected, index, deleteTest, lock }) => {
         triggerLocalBuild([test.id]);
     }, [test]);
 
+	const handleEmojiSelected = React.useCallback((emoji) => {
+		if (emoji) {
+			setEmoji(emoji.native);
+		}
+	}, []);
+
+    const handleSelectAll = React.useCallback((shouldSelect) => {
+
+    }, []);
+
     return (
-        <div css={css`padding: 6px 46px; padding-right: 40px; display: flex; flex: 1; align-items: center; :hover { & > .action-buttons { display: flex !important; } }`}>
-            <TestListNameInput isActive={isHover} testId={test.id} isEditing={isEditingName} setIsEditing={setIsEditingName} testName={test.testName} />
+        <div css={css`padding: 6px 18px; padding-right: 40px; display: flex; flex: 1; align-items: center; :hover { & > .action-buttons { display: flex !important; } }`}>
+           	<Checkbox css={checkboxCss} callback={handleSelectAll} isSelectAllType={false} isSelected={isItemSelected}/>
+
+            <EmojiPicker onEmojiSelected={handleEmojiSelected}>
+				<div className={"emoji-block"} css={emojiBlock}>
+					{emoji ? (
+						<span css={emojiCSS}>{emoji}</span>
+					) : (<BasketBallIcon css={css`width: 18px; height: 18px; :hover { opacity: 0.8; }`} />)}
+				</div>
+			</EmojiPicker>
+            
+            <TestListNameInput css={testNameInputCss} isActive={isHover} testId={test.id} isEditing={isEditingName} setIsEditing={setIsEditingName} testName={test.testName} />
             {!test.firstRunCompleted ? (
                 <LoadingIconV2 css={loadingIconCss} />
             ) : (
@@ -179,7 +202,43 @@ const TestListItem = ({ test, isItemSelected, index, deleteTest, lock }) => {
         </div>
     )
 };
+const checkboxCss = css`
+.checkbox-container {
+    border-radius: 6rem;
+}
+margin-right: 14px;
+`;
+const testNameInputCss = css`
+    margin-left: 8px;
+`;
+const emojiBlock = css`
+display: flex;
+min-height: 22px;
+min-width: 22px;
+align-items: center;
+justify-content:center;
 
+
+border-radius: 6px;
+:hover{
+	background: rgba(217, 217, 217, 0.12);
+	cursor: pointer;
+	path{
+		stroke: #fff;
+	}
+}
+`
+const emojiCSS = css`
+font-family: 'EmojiMart';
+    display: block;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 2px;
+	padding-left: 2px;
+    line-height: 13px;
+`
 const contextMenuDropdownCss = (pos) => {
     return css`
         position: absolute;

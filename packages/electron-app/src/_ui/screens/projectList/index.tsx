@@ -13,6 +13,7 @@ import { NormalList } from "../../components/NormalList";
 import Wrapper from "figma-design-scaler/dist/dist/main";
 import { BasketBallIcon, ConsoleIconV3, RocketIcon } from "../../icons";
 import { EmojiPicker } from "../../components/emojiPicker";
+import Checkbox from "@dyson/components/atoms/checkbox/checkbox";
 
 const CreateProjectBanner = ({ className, ...props }) => {
 	return (
@@ -178,7 +179,7 @@ const ProjectItem = ({ project }) => {
 	}, []);
 	return (
 		<div css={css`width: 100%; height: 100%; padding: 12px 17px; padding-right: 40px; display: flex; align-items: center;`}>
-			<EmojiPicker onEmojiSelected={handleEmojiSelected} isOpen={isOpen}>
+			<EmojiPicker onEmojiSelected={handleEmojiSelected}>
 				<div className={"emoji-block"} css={emojiBlock}>
 					{emoji ? (
 						<span css={emojiCSS}>{emoji}</span>

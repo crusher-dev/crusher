@@ -5,7 +5,7 @@ import { HoverCard } from "dyson/src/components/atoms/tooltip/Tooltip1";
 
 
 
-const EmojiPicker = ({ onEmojiSelected, children, isOpen, ...props }) => {
+const EmojiPicker = ({ onEmojiSelected, children, ...props }) => {
     const [show, setShow] = React.useState(false);
 
     const handleEmojiSelect = React.useCallback((emoji) => {

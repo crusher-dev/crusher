@@ -622,6 +622,7 @@ importers:
       '@babel/preset-env': ^7.11.0
       '@babel/preset-react': ^7.16.5
       '@babel/preset-typescript': ^7.10.4
+      '@emoji-mart/react': ^1.0.1
       '@emotion/babel-plugin': ^11.1.2
       '@emotion/babel-preset-css-prop': ^10.0.27
       '@emotion/core': ^10.0.35
@@ -759,6 +760,7 @@ importers:
       worker-dom: ^0.1.0
     dependencies:
       '@babel/preset-react': 7.16.5_@babel+core@7.16.7
+      '@emoji-mart/react': 1.0.1_abo25pi5hgnx46pdpieehqcskm
       '@emotion/babel-plugin': 11.3.0_@babel+core@7.16.7
       '@emotion/babel-preset-css-prop': 10.2.1_@babel+core@7.16.7
       '@emotion/core': 10.1.1_react@17.0.2
@@ -799,7 +801,7 @@ importers:
       electron-window-state: 5.0.3
       emoji-mart: 5.2.2
       event-kit: 2.5.3
-      figma-design-scaler: link:../../../../../../../home/utkarsh/crusher/figma-scale
+      figma-design-scaler: link:../../../figma-scale
       file-loader: 6.2.0_webpack@5.21.2
       file-url: 4.0.0
       history: 5.3.0
@@ -3972,6 +3974,16 @@ packages:
       plist: 3.0.6
     transitivePeerDependencies:
       - supports-color
+    dev: false
+
+  /@emoji-mart/react/1.0.1_abo25pi5hgnx46pdpieehqcskm:
+    resolution: {integrity: sha512-ALhLD96BOL5w+a4NI5NpmfqfF1aVjjj2qJE0dLst/OhjBfVmpteWNgn/h8LZy9ulU6AnbeS+13KnPFzDjCvRRw==}
+    peerDependencies:
+      emoji-mart: ^5.2
+      react: ^16.8 || ^17 || ^18
+    dependencies:
+      emoji-mart: 5.2.2
+      react: 17.0.2
     dev: false
 
   /@emotion/babel-plugin-jsx-pragmatic/0.1.5_@babel+core@7.16.7:

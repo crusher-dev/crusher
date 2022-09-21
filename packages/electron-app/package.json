@@ -16,6 +16,7 @@
 	},
 	"dependencies": {
 		"@babel/preset-react": "^7.16.5",
+		"@emoji-mart/react": "^1.0.1",
 		"@emotion/babel-plugin": "^11.1.2",
 		"@emotion/babel-preset-css-prop": "^10.0.27",
 		"@emotion/core": "^10.0.35",

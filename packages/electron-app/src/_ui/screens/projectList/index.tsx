@@ -12,6 +12,7 @@ import { ListBox } from "../../components/selectableList";
 import { NormalList } from "../../components/NormalList";
 import Wrapper from "figma-design-scaler/dist/dist/main";
 import { BasketBallIcon, ConsoleIconV3, RocketIcon } from "../../icons";
+import { EmojiPicker } from "../../components/emojiPicker";
 
 const CreateProjectBanner = ({className, ...props}) => {
 	return (
@@ -166,25 +167,30 @@ const titleCss = css`
 `;
 
 
+const ProjectItem  = ({project}) => {
+	const [isOpen, setIsOpen] = React.useState(false);
+	return (
+		<div css={css`width: 100%; height: 100%; padding: 14px 17px; padding-right: 40px; display: flex; align-items: center;`}>
+			<EmojiPicker isOpen={isOpen}><BasketBallIcon css={css`width: 18px; height: 18px; :hover { opacity: 0.8; }`}/></EmojiPicker>
+			<span css={css`margin-left: 13px;`}>{project.name}</span>
+		</div>
+	);
+};
+
 const ProjectList = ({ projects }) => {
 	const navigate = useNavigate();
 	const store = useStore();
 
     const handleProjectItemClick = React.useCallback((projectId) => {
-        store.dispatch(setSelectedProject(projectId))
-        setTimeout(() => navigate("/"), 50);
+        // store.dispatch(setSelectedProject(projectId))
+        // setTimeout(() => navigate("/"), 50);
     }, []);
 	    
     const items: Array<any> = React.useMemo(() => {
         return projects.map((project, index) => {
             return {
                 id: project.id,
-                content: (
-							<div css={css`width: 100%; height: 100%; padding: 14px 17px; padding-right: 40px; display: flex; align-items: center;`}>
-								<BasketBallIcon css={css`width: 16px; height: 16px;`}/>
-								<span css={css`margin-left: 13px;`}>{project.name}</span>
-							</div>
-                )
+                content: <ProjectItem project={project}/>
             };
         });
     }, [projects]);

@@ -4,6 +4,7 @@ import { css } from "@emotion/core";
 import { useSelectableList } from "../hooks/list";
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
 import { RightClickMenu } from "@dyson/components/molecules/RightClick/RightClick";
+import Checkbox from "@dyson/components/atoms/checkbox/checkbox";
 
 interface IProps {
     className?: string;
@@ -44,10 +45,13 @@ const ListBox = ({ className, contextMenu, selectedHeaderActions: SelectedHeader
         });
     }, [selectedList, contextMenu.callback, contextMenu.menuItems]);
 
+    const allSelected = selectedList.length === items.length;
+
     return (
         <OnOutsideClick onOutsideClick={handleOutSideClick}>
             <div css={headerCss}>
-                <div css={testsCountCss}>{items.length} tests</div>
+                    <Checkbox css={checkboxCss} callback={toggleSelectAll.bind(this, items.map((a) => a.id))} isSelectAllType={false} isSelected={allSelected}/>
+                    <div css={testsCountCss}>{items.length} tests</div>
                 {SelectedHeaderActions ? <SelectedHeaderActions toggleSelectAll={toggleSelectAll} items={items} selectedList={selectedList} /> : ""}
             </div>
 
@@ -61,9 +65,17 @@ const ListBox = ({ className, contextMenu, selectedHeaderActions: SelectedHeader
     );
 };
 
+const checkboxCss = css`
+.checkbox-container {
+    border-radius: 6rem;
+}
+`;
+
 const headerCss = css`
     display: flex;
+    align-items: center;
     padding-right: 41px;
+    padding-left: 18px;
     border-bottom: .5rem solid rgba(153, 153, 153, 0.09);
     padding-bottom: 12rem;
     height: 30px;
@@ -75,7 +87,7 @@ const testsCountCss = css`
     font-size: 12rem;
 
     color: rgba(255, 255, 255, 0.67);
-    padding: 0px 46px;
+    padding: 0px 13px;
 `;
 const listCss = css`
 user-select: none;

@@ -8,8 +8,9 @@ const useSelectableList = () => {
   const isItemSelected = React.useCallback((index) => selectedList.includes(index), [selectedList]);
 
   const toggleSelectAll = (items) => {
-    if (selectedList.length === items) {
-      setSelectedList([])
+    if (selectedList.length === items.length) {
+      setSelectedList([]);
+      return;
     }
     setSelectedList([...items])
   }

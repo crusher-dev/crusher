@@ -25,13 +25,7 @@ const NormalList = ({ className, selectAllCallback, onClick, items, ...props }: 
 
     const handleSelectAll = React.useCallback((shouldSelect) => {
         setShouldSelectAll(shouldSelect);
-        if(shouldSelect) {
-            var ctrlEvent = new KeyboardEvent("keydown", {bubbles : true, cancelable : true, keyCode : 17, char : 17, shiftKey : true});
-            var aEvent = new KeyboardEvent("keydown", {bubbles : true, cancelable : true, keyCode : 65, char : 65, shiftKey : true});
-
-            document.dispatchEvent(ctrlEvent);
-            document.dispatchEvent(aEvent);
-        }
+        selectAllCallback(shouldSelect);
     }, [selectAllCallback]);
 
     return (<>

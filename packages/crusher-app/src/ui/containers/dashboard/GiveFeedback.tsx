@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { AngryFace, Chat, CryFace, ExcitedFace, HappyFace } from "@svg/dashboard";
 import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import { feedbackCSS } from "../../layout/DashboardBase";
@@ -30,12 +30,22 @@ const emojiMap = [
 function DropdownContent() {
 
     const [selectedEmoji, setSelectedEmoji] = useState(null)
+    const ref = useRef()
+
+    useEffect(() => {
+        requestAnimationFrame(() => {
+            ref?.current?.focus()
+        })
+    }, [])
     return (
         <div className={"flex flex-col justify-between h-full"}>
 
             <div>
-                <div className="flex justify-between">
-                    <TextBlock color="#454545" showLineHeight={true}>
+                <TextBlock color="#939393" showLineHeight={true} weight={500}>
+                    share feedback for this page
+                </TextBlock>
+                <div className="flex justify-between items-center mt-16">
+                    <TextBlock color="#939393" showLineHeight={true}>
                         your current mood?
                     </TextBlock>
                     <div className="flex" css={emojiBox}>
@@ -50,7 +60,7 @@ function DropdownContent() {
                     </div>
 
                 </div>
-                <textarea css={textareaCSS} className={"mt-20 mb-20"} placeholder="what’s your feedback? 🥪" />
+                <textarea ref={ref} css={textareaCSS} className={"mt-16 mb-12"} placeholder="what’s your feedback? 🥪" />
                 <div className="flex justify-between">
                     <Button bgColor={"tertiary"} css={cancel}>
                         <div className={"flex items-center"}>
@@ -65,7 +75,7 @@ function DropdownContent() {
                         <div className={"flex items-center"}>
 
                             <span className="mt-1">
-                                submit
+                                send
                             </span>
                         </div>
                     </Button>
@@ -84,11 +94,12 @@ const emojiBox = css`
 `
 const selectedEmojiCSS = css`
 opacity: 1;
+
 `
 
 const emojiCSS = css`
     zoom: 1.2;
-    opacity: .65;
+    opacity: .5;
     :hover{
         opacity: 1;
     }

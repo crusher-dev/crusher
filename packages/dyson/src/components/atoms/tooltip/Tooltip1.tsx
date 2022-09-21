@@ -99,7 +99,7 @@ export const HoverCard: React.FC<TooltipWrapperProps> = ({ children, autoHide = 
         const handleClick = (e: SyntheticEvent) => {
             const isChildrenClick = refs.reference?.current?.contains(e.target) || refs.reference.current === e.target;
             const isTooltipClick = refs.floating?.current?.contains(e.target) || refs.floating.current === e.target;
-            debugger;
+
             if (isChildrenClick || isTooltipClick) {
                 return
             }

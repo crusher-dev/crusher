@@ -1613,7 +1613,7 @@ export function CryFace(props) {
 			xmlns="http://www.w3.org/2000/svg"
 			{...props}
 		>
-			<g opacity={0.55} clipPath="url(#prefix__clip0_981_3349)">
+			<g opacity={1} clipPath="url(#prefix__clip0_981_3349)">
 				<path
 					d="M10 18.749c5.833 0 8.749-3.918 8.749-8.75S15.833 1.25 9.999 1.25 1.25 5.167 1.25 10c0 4.831 2.915 8.749 8.75 8.749z"
 					fill="url(#prefix__paint0_radial_981_3349)"

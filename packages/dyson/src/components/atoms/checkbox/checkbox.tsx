@@ -96,13 +96,13 @@ export function Checkbox(props: CheckboxProps): ReactElement {
 	return (
 		<div className={`flex items-center ${className}`} onClick={handleClick}>
 			<Conditional showIf={isSelectAllType}>
-				<div css={[checkBox(), selectAll(isSelected), disabled && disabledCSS]}>
+				<div className={"checkbox-container"} css={[checkBox(), selectAll(isSelected), disabled && disabledCSS]}>
 					<div id={"tick"}></div>
 				</div>
 			</Conditional>
 
 			<Conditional showIf={!isSelectAllType}>
-				<div css={[checkBox(), normalSelect(isSelected), disabled && disabledCSS]}>
+				<div  className={"checkbox-container"} css={[checkBox(), normalSelect(isSelected), disabled && disabledCSS]}>
 					<TickSVG height={8} width={8} />
 				</div>
 			</Conditional>

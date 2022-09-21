@@ -1,5 +1,6 @@
 import React from "react";
 import { css } from "@emotion/react";
+import Checkbox from "@dyson/components/atoms/checkbox/checkbox";
 
 
 interface IProps {
@@ -8,6 +9,8 @@ interface IProps {
     items?: Array<{ content: any; id: any; }>;
 }
 const NormalList = ({ className, onClick, items, ...props }: IProps) => {
+    const [shouldSelectAll, setShouldSelectAll] = React.useState(false);
+
     const listItems = React.useMemo(() => {
         if (!items) return null;
         return items.map((item, index) => {
@@ -19,10 +22,9 @@ const NormalList = ({ className, onClick, items, ...props }: IProps) => {
         });
     }, [onClick, items]);
 
-    console.log("List items", listItems);
-
     return (<>
                 <div css={headerCss}>
+                    <Checkbox css={checkboxCss} callback={setShouldSelectAll.bind(this)} isSelectAllType={false} isSelected={shouldSelectAll}/>
                     <div css={testsCountCss}>{items.length} projects</div>
                 </div>
                 <ul className={`${className}`} css={listCss} {...props}>
@@ -32,12 +34,20 @@ const NormalList = ({ className, onClick, items, ...props }: IProps) => {
     );
 };
 
+const checkboxCss = css`
+.checkbox-container {
+    border-radius: 6rem;
+}
+`;
+
 const headerCss = css`
     display: flex;
     padding-right: 41px;
+    padding-left: 18px;
     border-bottom: 1px solid rgba(153, 153, 153, 0.09);
     padding-bottom: 12rem;
     height: 30px;
+    align-items: center;
 `;
 const testsCountCss = css`
     font-family: Gilroy;
@@ -46,7 +56,7 @@ const testsCountCss = css`
     font-size: 12rem;
 
     color: rgba(255, 255, 255, 0.67);
-    padding: 0px 46px;
+    padding: 0px 13px;
 `;
 const listCss = css`
 user-select: none;

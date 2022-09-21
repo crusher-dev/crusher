@@ -11,7 +11,7 @@ import { useUser } from "../../api/user/user";
 import { ListBox } from "../../components/selectableList";
 import { NormalList } from "../../components/NormalList";
 import Wrapper from "figma-design-scaler/dist/dist/main";
-import { ConsoleIconV3, RocketIcon } from "../../icons";
+import { BasketBallIcon, ConsoleIconV3, RocketIcon } from "../../icons";
 
 const CreateProjectBanner = ({className, ...props}) => {
 	return (
@@ -150,6 +150,7 @@ const createProjectBannerCss = css`
 	bottom: 0;
 `;
 const containerCss = css`
+height: 100%;
 background: #080809;
 padding-top: 8px;
 position: relative;
@@ -179,7 +180,10 @@ const ProjectList = ({ projects }) => {
             return {
                 id: project.id,
                 content: (
-							<div css={css`width: 100%; height: 100%; padding: 14px 46px; padding-right: 40px;`}>{project.name}</div>
+							<div css={css`width: 100%; height: 100%; padding: 14px 17px; padding-right: 40px; display: flex; align-items: center;`}>
+								<BasketBallIcon css={css`width: 16px; height: 16px;`}/>
+								<span css={css`margin-left: 13px;`}>{project.name}</span>
+							</div>
                 )
             };
         });

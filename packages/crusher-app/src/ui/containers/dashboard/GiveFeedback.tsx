@@ -5,6 +5,10 @@ import { feedbackCSS } from "../../layout/DashboardBase";
 import { HoverCard } from "dyson/src/components/atoms/tooltip/Tooltip1";
 import { css } from "@emotion/react";
 import { Button } from "dyson/src/components/atoms";
+import dynamic from 'next/dynamic'
+const DropdownContent = dynamic(() => import('./FeedbackContainer'), {
+    ssr: false,
+})
 
 export function GiveFeedback() {
     return (
@@ -27,67 +31,6 @@ const emojiMap = [
     { label: 'cry', emoji: CryFace },
 ]
 
-function DropdownContent() {
-
-    const [selectedEmoji, setSelectedEmoji] = useState(null)
-    const ref = useRef()
-
-    useEffect(() => {
-        requestAnimationFrame(() => {
-            ref?.current?.focus()
-        })
-    }, [])
-    return (
-        <div className={"flex flex-col justify-between h-full"}>
-
-            <div>
-                <TextBlock color="#939393" showLineHeight={true} weight={500}>
-                    share feedback for this page
-                </TextBlock>
-                <div className="flex justify-between items-center mt-16">
-                    <TextBlock color="#939393" showLineHeight={true}>
-                        your current mood?
-                    </TextBlock>
-                    <div className="flex" css={emojiBox}>
-                        {emojiMap.map(({ emoji, label }) => {
-                            const Emoji = emoji;
-                            const isSelected = label === selectedEmoji;
-                            return (
-                                <Emoji css={[emojiCSS, isSelected && selectedEmojiCSS]} onClick={setSelectedEmoji.bind(this, label)} />
-                            )
-                        })}
-
-                    </div>
-
-                </div>
-                <textarea ref={ref} css={textareaCSS} className={"mt-16 mb-12"} placeholder="what’s your feedback? 🥪" />
-                <div className="flex justify-between">
-                    <Button bgColor={"tertiary"} css={cancel}>
-                        <div className={"flex items-center"}>
-
-                            <span className="mt-1">
-                                cancel
-                            </span>
-                        </div>
-                    </Button>
-
-                    <Button bgColor={"tertiary"} css={[cancel, submit]}>
-                        <div className={"flex items-center"}>
-
-                            <span className="mt-1">
-                                send
-                            </span>
-                        </div>
-                    </Button>
-                </div>
-            </div>
-            <TextBlock color="#454545" showLineHeight={true} className="mt-20">
-                for expedited response, <br />
-                join #support on discord, github
-            </TextBlock>
-        </div >
-    );
-}
 
 const emojiBox = css`
     gap: 12rem;
@@ -100,6 +43,7 @@ opacity: 1;
 const emojiCSS = css`
     zoom: 1.2;
     opacity: .5;
+    cursor: pointer;
     :hover{
         opacity: 1;
     }
@@ -158,6 +102,8 @@ border-radius: 8rem;
 const wrapperCSS = css`
     padding-bottom: 10rem;
     padding-left: 20rem;
+    min-height:320rem;
+    
 `
 
 const userDropdownCSS = css`

@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useState } from "react";
 
 import { Button } from "dyson/src/components/atoms";
-import { ClickableText } from "dyson/src/components/atoms/clickacbleLink/Text";
+
 import { VideoComponent } from "dyson/src/components/atoms/video/video";
 import { Conditional } from "dyson/src/components/layouts";
 import { Dropdown } from "dyson/src/components/molecules/Dropdown";
@@ -29,12 +29,13 @@ import {
 
 import { useBuildReport } from "../../../store/serverState/buildReports";
 
-import { sentenceCase } from "@utils/common/textUtils";
+
 import { getAssetPath, getCollapsedTestSteps } from "@utils/helpers";
 import { atomWithImmer } from "jotai/immer";
 import { useAtom } from "jotai";
 import { FullImageView, ShowSidebySide } from "@svg/builds";
 import { ActionStatusEnum } from "@crusher-shared/lib/runnerLog/interface";
+import { LinkBlock } from "dyson/src/components/atoms/Link/Link";
 const ReviewButtonContent = dynamic(() => import("./components/reviewBuild"));
 const CompareImage = dynamic(() => import("./components/compareImages"));
 
@@ -191,7 +192,7 @@ function ReportSection() {
 								}
 								onClick={setSelectedTest.bind(this, i)}
 							>
-								<TestStatusSVG type={getStatusFromTestInstances(testData?.testInstances)} height={"20rem"} width={"20rem"}  css={css`min-width: 20rem;`}/>
+								<TestStatusSVG type={getStatusFromTestInstances(testData?.testInstances)} height={"20rem"} width={"20rem"} css={css`min-width: 20rem;`} />
 								<span css={css`white-space: nowrap; overflow: hidden;`}>{testData!.name}</span>
 							</li>
 						))}
@@ -541,11 +542,11 @@ function RenderStep({ data, testInstanceData, setIsShowingVideo, testId }) {
 
 			<div className={"px-34 mt-12"}>
 				{[ActionsInTestEnum.ASSERT_ELEMENT].includes(actionType) &&
-				data.meta &&
-				data.meta.meta &&
-				data.meta.meta.meta &&
-				data.meta.meta.meta.logs &&
-				status === "FAILED" ? (
+					data.meta &&
+					data.meta.meta &&
+					data.meta.meta.meta &&
+					data.meta.meta.meta.logs &&
+					status === "FAILED" ? (
 					<RenderAssertElement logs={data.meta.meta.meta.logs} />
 				) : (
 					""
@@ -630,7 +631,7 @@ const errorBox = css`
 
 function Browsers({ browsers, setConfig }) {
 	return (
-		<div className={"flex flex-col justify-between h-full"} onClick={() => {}}>
+		<div className={"flex flex-col justify-between h-full"} onClick={() => { }}>
 			<div>
 				{browsers.map((name: string) => (
 					<MenuItem
@@ -691,7 +692,7 @@ function TestConfigSection({ expand, videoUrl, allCofiguration, setTestCardConfi
 				) : ""}
 
 				<Dropdown component={<Browsers setConfig={setConfig} browsers={allCofiguration.browser} />} dropdownCSS={dropDownSelectionCSS}>
-					<ClickableText paddingY={4} paddingX={"12rem"}>
+					<LinkBlock paddingY={4} paddingX={"12rem"}>
 						<div className={"flex items-center "}>
 							<div className={" flex items-center  mr-8 text-13"}>
 								<img src={`/assets/img/build/browser/${browserInLowerCase}.png`} width={"16rem"} className={"mr-8"} />
@@ -699,7 +700,7 @@ function TestConfigSection({ expand, videoUrl, allCofiguration, setTestCardConfi
 							</div>
 							<ChevronDown width={"12rem"} />
 						</div>
-					</ClickableText>
+					</LinkBlock>
 				</Dropdown>
 			</div>
 

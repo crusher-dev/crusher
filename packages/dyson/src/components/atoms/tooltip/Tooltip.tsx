@@ -98,7 +98,12 @@ export const Tooltip: React.FC<TooltipWrapperProps> = ({ children, autoHide = "t
 		const handleClick = (e: SyntheticEvent) => {
 			const isChildrenClick = refs.reference?.current?.contains(e.target) || refs.reference.current === e.target;
 			const isTooltipClick = refs.floating?.current?.contains(e.target) || refs.floating.current === e.target;
-			if (!isChildrenClick || !isTooltipClick) setShow(false);
+			if (isChildrenClick || isTooltipClick) {
+				return
+			}
+			else {
+				setShow(false)
+			}
 		};
 		window.addEventListener("click", handleClick, { capture: true });
 

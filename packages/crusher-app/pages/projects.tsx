@@ -1,7 +1,7 @@
 import { css } from "@emotion/react";
 import React, { useMemo, useState } from "react";
 
-import { SidebarTopBarLayout } from "@ui/layout/DashboardBase";
+import { contentContainer, contentContainerScroll, SidebarTopBarLayout } from "@ui/layout/DashboardBase";
 
 import { usePageTitle } from "../src/hooks/seo";
 import { useAtom } from "jotai";
@@ -65,7 +65,7 @@ export default function Dashboard() {
 
 	return (
 		<SidebarTopBarLayout>
-			<div css={containerStyle} className=" pt-36 ">
+			<div css={[containerStyle, contentContainer]} className=" pt-36 ">
 				<div className="flex items-center">
 					<Input
 						rightIcon={

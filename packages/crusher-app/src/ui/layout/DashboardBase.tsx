@@ -9,7 +9,7 @@ import { useAtom } from "jotai";
 import { Button } from "dyson/src/components/atoms";
 import { Conditional } from "dyson/src/components/layouts";
 
-import { Book, BuildIcon, Chat, ClockIcon, ExternalIcon, Gear, HomeIcon, IntegrationSVG, MapSVG, NewPeople, PlayIcon, PlusCircle, TestIcon } from "@svg/dashboard";
+import { Book, BuildIcon, ClockIcon, ExternalIcon, Gear, HomeIcon, IntegrationSVG, MapSVG, NewPeople, PlayIcon, PlusCircle, TestIcon, UpgradeIcon } from "@svg/dashboard";
 
 import { UserNTeam } from "@ui/containers/dashboard/UserNTeam";
 
@@ -29,6 +29,7 @@ import { HoverCard } from "dyson/src/components/atoms/tooltip/Tooltip1";
 import { useProjectDetails } from "@hooks/common";
 import { LinkBlock } from "dyson/src/components/atoms/Link/Link";
 import Download from "@ui/containers/dashboard/Download";
+import { GiveFeedback } from "../containers/dashboard/GiveFeedback";
 // const AddProject = dynamic(() => import("@ui/containers/dashboard/AddProject"));
 const InviteMembers = dynamic(() => import("@ui/containers/dashboard/InviteMember"));
 
@@ -147,15 +148,21 @@ const projectMenu = [
 const ResourceBar = () => {
 	return (
 		<React.Fragment>
-			<div className="flex justify-between mb-8 item-center px-6">
-				<TextBlock color="#597eff" fontSize={12.6} weight={500} className="mt-2">Free plan</TextBlock>
 
-				<LinkBlock color="#" type="plain" paddingX={0} paddingY={0} css={linkCSSBlock} external={false}>upgrade</LinkBlock>
-			</div>
-			<Tooltip content={"You have 2 more tests and 5 hr limit. contact support@crusher.dev"} placement="top-end" type="hover">
-				<div css={badgeStyle} className="flex">
-					<div className="test-count pl-2">2/3</div>
-					<div className="hours-count">5 hrs</div>
+			<Tooltip content={"You have 2 more tests and 5 hr limit\ncontact support@crusher.dev"} placement="top-end" type="hover">
+				<div>
+					<div css={badgeStyle} className="flex">
+						<div className="test-count pl-2">2/3</div>
+						<div className="hours-count">5 hrs</div>
+					</div>
+					<div className="flex justify-center mt-8 item-center px-6">
+						<TextBlock color="#597eff" fontSize={12.6} weight={500} className="mt-3 lowercase mr-8">Free plan</TextBlock>
+
+						<div className="flex">
+							<UpgradeIcon className="mr-4" />
+							<LinkBlock color="#" type="plain" paddingX={0} paddingY={0} css={linkCSSBlock} external={false}>upgrade</LinkBlock>
+						</div>
+					</div>
 				</div>
 			</Tooltip>
 		</React.Fragment>
@@ -234,13 +241,7 @@ function LeftSection() {
 					</div>
 
 					<div className="flex justify-between mt-20">
-
-						<div className="flex items-center pt-1" css={feedbackCSS}>
-							<Chat className="mr-8" />
-							<TextBlock fontSize={12} color="#838383">
-								Give feedback
-							</TextBlock>
-						</div>
+						<GiveFeedback />
 
 
 					</div>
@@ -273,7 +274,7 @@ function LeftSection() {
 }
 
 
-const feedbackCSS = css`
+export const feedbackCSS = css`
 	:hover {
 		div,
 		span {
@@ -655,6 +656,7 @@ const containerWidth = css`
 export const contentContainer = css`
  width: 1280rem;
 max-width: calc(100vw - 352rem);
+margin: 0 auto;
 `
 
 export const contentContainerScroll = css`

@@ -2,6 +2,7 @@ import ReactDOM from "react-dom";
 import { css, SerializedStyles } from "@emotion/react";
 import { useFloating, shift, offset } from "@floating-ui/react-dom";
 import React, { ReactElement, useState, useEffect, useMemo, useRef, SyntheticEvent, useCallback } from "react";
+import { Conditional } from "../../layouts";
 
 
 export type TooltipWrapperProps = {
@@ -49,7 +50,7 @@ export const TooltipBox = ({ children, className = "tooltip-box", el = "div" }) 
 /**
  * Unified tolltip component for Dyson UI system
  */
-export const HoverCard: React.FC<TooltipWrapperProps> = ({ children, autoHide = "true", timer = 0, placement, type, content, padding = 0, ...props }) => {
+export const HoverCard: React.FC<TooltipWrapperProps> = ({ children, autoHide = "true", timer = 0, placement, type, content, padding = 0, className, ...props }) => {
     const [show, setShow] = useState(false);
     const [computedStyle] = useState(null);
     const { offset: offsetWrapper = 8 } = props;
@@ -98,7 +99,14 @@ export const HoverCard: React.FC<TooltipWrapperProps> = ({ children, autoHide = 
         const handleClick = (e: SyntheticEvent) => {
             const isChildrenClick = refs.reference?.current?.contains(e.target) || refs.reference.current === e.target;
             const isTooltipClick = refs.floating?.current?.contains(e.target) || refs.floating.current === e.target;
-            if (!isChildrenClick || !isTooltipClick) setShow(false);
+            debugger;
+            if (isChildrenClick || isTooltipClick) {
+                return
+            }
+            else {
+                setShow(false)
+            }
+
         };
         window.addEventListener("click", handleClick, { capture: true });
 
@@ -106,6 +114,8 @@ export const HoverCard: React.FC<TooltipWrapperProps> = ({ children, autoHide = 
             window.removeEventListener("click", handleClick, { capture: true });
         };
     }, [show]);
+
+
 
     return (
         <React.Fragment>
@@ -123,7 +133,7 @@ export const HoverCard: React.FC<TooltipWrapperProps> = ({ children, autoHide = 
                         onMouseOver={eventListener().onMouseOver}
                         onMouseLeave={eventListener().onMouseLeave}
                     >
-                        <div css={[tooltipBox, props.css]} className={props.className}>
+                        <div css={[tooltipBox, props.css]} className={className}>
                             {content}
                         </div>
                     </div>

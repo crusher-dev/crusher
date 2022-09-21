@@ -10,7 +10,7 @@ export function TutorialContent({ setLessionIndex, lessonIndex }: any): JSX.Elem
 
             <Content
                 setLessionIndex={setLessionIndex}
-                heading="Get started with short videos"
+                heading="Creating first test"
                 desc=" Crusher required apps to create and run test locally. It’s made primarily for devs, althoug people familiar with devterm like HTML, basic JS can also use it"
             />
 
@@ -23,11 +23,11 @@ function Content(props) {
     return <div className="flex">
         <div css={videoBlock} className={"mr-44"}>
 
-            <iframe width="100%" height="360" src="https://www.loom.com/embed/c6bad79bd3e74d64ad522550c04f97f8" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+            <iframe width="100%" height="360" src="https://www.loom.com/embed/c6bad79bd3e74d64ad522550c04f97f8?hide_owner=true&hide_share=true&hide_title=true&hideEmbedTopBar=true" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
         </div>
         <div>
             <LinkBlock type="plain" css={tutorialBack} onClick={setLessionIndex.bind(this, null)}>go back</LinkBlock>
-            <TextBlock weight={600} fontSize={19} color="#898989" className="mb-20">{heading}</TextBlock>
+            <TextBlock weight={600} fontSize={18} color="#898989" className="mb-20">{heading}</TextBlock>
             <TextBlock weight={400} fontSize={13} color="#464646" showLineHeight={true} className="mb-70">
                 {desc}
             </TextBlock>
@@ -51,6 +51,7 @@ export const videoBlock = css`
 width: 570px;
 height: 360px;
 
+overflow:hidden;
 
 background: rgba(0, 0, 0, 0.19);
 border: 1px solid #1F1F1F;

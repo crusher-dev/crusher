@@ -428,7 +428,9 @@ const Toolbar = (props: any) => {
 		[showMenu],
 	);
 	const RightIconComponent = React.useMemo(
-		() => (
+		() => {
+
+			return (
 			<div css={css`
 			font-family: Gilroy;
 			font-style: normal;
@@ -440,8 +442,8 @@ const Toolbar = (props: any) => {
 			margin-right: 12rem;
 			`}>
 enter to submit
-			</div>
-		),
+			</div>);
+		},
 		[selectedDevice, recorderDevices],
 	);
 

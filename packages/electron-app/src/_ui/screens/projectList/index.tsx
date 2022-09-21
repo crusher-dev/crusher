@@ -11,6 +11,119 @@ import { useUser } from "../../api/user/user";
 import { ListBox } from "../../components/selectableList";
 import { NormalList } from "../../components/NormalList";
 import Wrapper from "figma-design-scaler/dist/dist/main";
+import { ConsoleIconV3, RocketIcon } from "../../icons";
+
+const CreateProjectBanner = ({className, ...props}) => {
+	return (
+		<div css={createProjectBannerContainerCss} className={`${className}`} {...props}>
+			<div css={createProjecTitleCss}>
+				<RocketIcon css={rocketIconCss}/>
+				<span css={createProjectTitleTextCss}>Create new project</span>
+			</div>
+			<div css={createProjectDescriptionCss}>running command in git repo is faster way</div>
+			<div css={createProjectActionsCss}>
+				<div css={[chooseDirButtonCss, hoverButtonCss]}>Choose dir</div>
+				<div css={[runCommandButtonCss, hoverButtonCss]}>
+					<ConsoleIconV3 css={consoleIconCss}/>
+					<span>run command</span>
+				</div>
+			</div>
+		</div>
+	);
+}
+
+const chooseDirButtonCss = css`
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 92px;
+	height: 32px;
+	font-family: 'Gilroy';
+	font-style: normal;
+	font-weight: 600;
+	font-size: 14px;
+	text-align: center;
+	color: #FFFFFF;
+
+	background: rgba(53, 53, 53, 0.5);
+	border: 0.5px solid rgba(219, 222, 255, 0.16);
+	border-radius: 8px;
+`;
+
+const runCommandButtonCss = css`
+	height: 32px;
+	width: 140px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 4px;
+	background: #B12AF0;
+
+	font-family: 'Gilroy';
+	font-style: normal;
+	font-weight: 600;
+	font-size: 14px;
+	text-align: center;
+
+	color: #FFFFFF;
+	border-radius: 8px;
+`;
+
+const hoverButtonCss =css`
+	:hover { 
+		opacity: 0.8;
+	}
+`;
+const createProjectActionsCss = css`
+	display: flex;
+	gap: 8px;
+	margin-top: 24px;
+	padding-bottom: 36px;
+`;
+const consoleIconCss = css`
+	width: 17px;
+	height: 16px;
+`;
+const createProjectBannerContainerCss  = css`
+	position: relative;
+	z-index: 999;
+	background: rgba(12, 12, 12, 1);
+	border: 0.5px solid #151515;
+	border-radius: 12px;
+	width: 100%;
+	height: 100%;
+	height: 197px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+`;
+const createProjecTitleCss = css`
+	display: flex;
+	align-items: center;
+	margin-right: 12px;
+`;
+const rocketIconCss = css`width: 20px; height:20px;`;
+const createProjectTitleTextCss  = css`
+	font-family: 'Gilroy';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 17px;
+
+	color: #FFFFFF;
+	margin-left: 8px;
+	margin-bottom: 1px;
+`;
+const createProjectDescriptionCss =css`
+	font-family: 'Gilroy';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 12px;
+
+	letter-spacing: 0.03em;
+	color: #C5C5C5;
+	margin-top: 13px;
+`;
 
 const ProjectsListScreen = () => {
     const { projects, userInfo, error } = useUser();
@@ -23,16 +136,23 @@ const ProjectsListScreen = () => {
 	}, [projects]);
 	if(!projects) return (<LoadingScreen />);
     return (
-		// <Wrapper figmaUrl={"https://www.figma.com/proto/MsJZCnY5NvrDF4kL1oczZq/Crusher-%7C-Aug?node-id=1638%3A5550&scaling=min-zoom&page-id=988%3A3439&starting-point-node-id=988%3A3817"}>
+        // <Wrapper figmaUrl={"https://www.figma.com/proto/lK8wsCW8hLzssu5Z987lky/Crusher-%7C-Aug-(Copy)?node-id=2201%3A3868&scaling=scale-down-width&page-id=988%3A3439&starting-point-node-id=988%3A3817"}>
 			<CompactAppLayout css={containerCss} title={<div css={titleCss}>Select project</div>} footer={<Footer/>}>
 				<ProjectList projects={projects} />
+				{projects.length === 0 ? (<CreateProjectBanner  css={createProjectBannerCss}/>): ""}
 			</CompactAppLayout>
 		// </Wrapper>
     );
 }
+
+const createProjectBannerCss = css`
+	position: absolute;
+	bottom: 0;
+`;
 const containerCss = css`
 background: #080809;
 padding-top: 8px;
+position: relative;
 `;
 
 const titleCss = css`

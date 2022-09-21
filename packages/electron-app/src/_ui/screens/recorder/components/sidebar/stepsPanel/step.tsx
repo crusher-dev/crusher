@@ -19,6 +19,7 @@ interface IProps {
     isActive: boolean;
     setIsActive: any;
     onClick?: any;
+    onContextMenu?: any;
 };
 
 const menuItems = [
@@ -26,30 +27,11 @@ const menuItems = [
     {id: "delete", label: 'Delete', shortcut: <div>⌘+D</div>}
 ];
 
-const Step = ({className, isActive, onClick, setIsActive, ...props}: IProps) => {
+const Step = ({className, isActive, onContextMenu, onClick, setIsActive, ...props}: IProps) => {
     const { stepId } = props;
     const stepInfo = useSelector(getStepInfo(stepId));
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
     const store = useStore();
-
-    const handleCallback = React.useCallback((id) => {
-        switch(id) {
-            case "delete":
-                store.dispatch(deleteRecordedSteps([stepId]));
-                break;
-        }
-    }, []);
-
-    const menuItemsComponent = React.useMemo(() => {
-        return menuItems.map((item) => {
-            return {
-                type: "menuItem",
-                value: item.label,
-                rightItem: item.shortcut,
-                onClick: handleCallback.bind(this, item.id)
-            }
-        });
-    }, []);
 
     const handleMenuOpenChange = React.useCallback((isOpen) => {
         setIsActive(isOpen);
@@ -58,8 +40,7 @@ const Step = ({className, isActive, onClick, setIsActive, ...props}: IProps) => 
     const title = TextHighlighter({text: stepInfo.name});
 
     return (
-        <RightClickMenu onOpenChange={handleMenuOpenChange} menuItems={menuItemsComponent}>
-            <div onClick={onClick} css={[containerCss, isActive ? activeItemCss : null]}>
+            <div onContextMenu={onContextMenu} onClick={onClick} css={[containerCss, isActive ? activeItemCss : null]}>
                 <div className={"card"} css={contentCss}>
                     {stepInfo.isRunning ? (
                         <PointerArrowIcon css={runningPointerIconCss}/>
@@ -92,7 +73,6 @@ const Step = ({className, isActive, onClick, setIsActive, ...props}: IProps) => 
                     <FailedStepCard stepId={stepId}/>
                 ) : ""}
             </div>
-        </RightClickMenu>
     )
 };
 const containerCss = css`

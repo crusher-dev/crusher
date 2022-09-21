@@ -12,7 +12,7 @@ export const isChildOfOnCloseClass = (element, root) => {
 };
 
 /* @Todo: Find better inexpensive approach for blackListingClassNames */
-export const OnOutsideClick = ({ onOutsideClick, disable, blackListClassNames = [], children, className }) => {
+export const OnOutsideClick = ({ onOutsideClick, disable, blackListClassNames = [], children, className, ...props }) => {
 	const ref = useRef();
 	useEffect(() => {
 		if(!disable) {
@@ -35,7 +35,7 @@ export const OnOutsideClick = ({ onOutsideClick, disable, blackListClassNames = 
 	}, [disable]);
 
 	return (
-		<div className={className ? `${className} outsideDiv` : "outsideDiv"} ref={ref}>
+		<div className={className ? `${className} outsideDiv` : "outsideDiv"} ref={ref} {...props}>
 			{children}
 		</div>
 	);

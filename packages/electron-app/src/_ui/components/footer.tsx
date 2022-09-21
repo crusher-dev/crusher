@@ -13,10 +13,10 @@ const Footer = () => {
                 <PointerLink css={resourcesCss} onClick={linkOpen.bind(this, "https://docs.crusher.dev")}>docs</PointerLink>
             </div>
             <div css={rightSectionCss}>
-                <Link css={socialIcon} href="https://github.com/crusher-dev/crusher">
+                <Link css={socialIcon} href="https://github.com/crusher-dev/crusher" title="Github">
                     <GithubSVG height={14} width={14} />
                 </Link>
-                <Link css={socialIcon} href="https://discord.com/invite/dHZkSNXQrg">
+                <Link css={socialIcon} href="https://discord.com/invite/dHZkSNXQrg" title="Discord">
                     <DiscordSVG height={16} width={16} />
                 </Link>
             </div>

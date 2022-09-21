@@ -22,7 +22,10 @@ export const LogoAnimated: React.FC<LogoProps> = ({ ...props }) => {
 			setShowColour(true);
 		}, 1500);
 
-		return clearTimeout(timer)
+
+		return () => {
+			clearTimeout(timer)
+		}
 	}, [])
 	return (
 		<div css={animatedCSS} className="flex items-center justify-center flex-col">

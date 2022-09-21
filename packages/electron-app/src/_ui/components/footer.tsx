@@ -2,21 +2,29 @@ import React from "react";
 import { css } from "@emotion/react";
 import { Link } from "./Link";
 import { PointerLink } from "./PointerLink";
+import { DiscordSVG, GithubSVG } from "./stickyFooter";
+import { linkOpen } from "electron-app/src/utils/url";
 
 const Footer = () => {
     return (
         <div css={containerCss}>
-           <div css={leftSectionCss}>
-                <PointerLink css={resourcesCss}>tutorials</PointerLink>
-                <PointerLink css={resourcesCss}>docs</PointerLink>
-           </div>
-           <div css={rightSectionCss}>
-                <Link css={socialLinkCss}>github</Link>
-                <Link css={socialLinkCss}>Discord</Link>
-           </div>
+            <div css={leftSectionCss}>
+                <PointerLink css={resourcesCss} onClick={linkOpen.bind(this, "https://docs.crusher.dev")}>tutorials</PointerLink>
+                <PointerLink css={resourcesCss} onClick={linkOpen.bind(this, "https://docs.crusher.dev")}>docs</PointerLink>
+            </div>
+            <div css={rightSectionCss}>
+                <Link css={socialIcon} href="https://github.com/crusher-dev/crusher">
+                    <GithubSVG height={14} width={14} />
+                </Link>
+                <Link css={socialIcon} href="https://discord.com/invite/dHZkSNXQrg">
+                    <DiscordSVG height={16} width={16} />
+                </Link>
+            </div>
         </div>
     );
 };
+
+
 
 const containerCss = css`
     display: flex;
@@ -33,10 +41,10 @@ const leftSectionCss = css`
 const rightSectionCss = css`
     margin-left: auto;
     display: flex;
-    gap: 20px;
+    gap: 12px;
     align-items: center;
 `;
-const socialLinkCss = css`
+const socialIcon = css`
     font-family: 'Gilroy';
     font-style: normal;
     font-weight: 400;
@@ -44,6 +52,18 @@ const socialLinkCss = css`
 
     text-decoration-line: underline;
     color: rgba(255, 255, 255, 0.54);
+
+    path{
+        fill: #D1D5DB;
+    }
+    color: #D1D5DB;
+    :hover{
+        color: #BC66FF;
+        opacity: 1;
+        path{
+            fill: #BC66FF;
+        }
+    }
 `;
 const resourcesCss = css`
 font-family: 'Gilroy';

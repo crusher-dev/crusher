@@ -1,9 +1,10 @@
 import React from "react";
 import { css } from "@emotion/react";
+import { linkOpen } from "electron-app/src/utils/url";
 
-export function Link({ children, ...props }) {
+export function Link({ children, href, ...props }) {
 	return (
-		<span css={[linkStyle]} {...props}>
+		<span css={[linkStyle]} {...props} onClick={linkOpen.bind(this, href)}>
 			{children}
 		</span>
 	);

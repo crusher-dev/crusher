@@ -144,3 +144,30 @@
 	font-weight: 900;
 	font-style: normal;
 }
+
+
+@font-face {
+	font-family: 'EmojiMart';
+	src: url('https://missiveapp.com/open/emoji-mart/seguiemj.0221cf01.ttf') format('truetype');
+}
+
+/* em-emoji-picker {
+	--background-rgb: #101010;
+	font-family: 'Gilroy', 'sans-serif';
+	--font-size: 12px;
+	--border-radius: 20px;
+	--category-icon-size: 14px;
+	--color-border-over: rgba(0, 0, 0, 0.1);
+	--color-border: rgb(61 61 61 / 30%);
+
+	--rgb-accent: 233, 96, 255;
+	--rgb-background: 0, 0, 0;
+	--rgb-color: 255, 255, 255;
+	--rgb-input: 255, 235, 235;
+
+	border: 1px solid #202020;
+	height: 30vh;
+	min-height: 350px;
+	max-height: 400px;
+	width: 200px;
+} */

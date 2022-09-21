@@ -14,18 +14,18 @@ import Wrapper from "figma-design-scaler/dist/dist/main";
 import { BasketBallIcon, ConsoleIconV3, RocketIcon } from "../../icons";
 import { EmojiPicker } from "../../components/emojiPicker";
 
-const CreateProjectBanner = ({className, ...props}) => {
+const CreateProjectBanner = ({ className, ...props }) => {
 	return (
 		<div css={createProjectBannerContainerCss} className={`${className}`} {...props}>
 			<div css={createProjecTitleCss}>
-				<RocketIcon css={rocketIconCss}/>
+				<RocketIcon css={rocketIconCss} />
 				<span css={createProjectTitleTextCss}>Create new project</span>
 			</div>
 			<div css={createProjectDescriptionCss}>running command in git repo is faster way</div>
 			<div css={createProjectActionsCss}>
 				<div css={[chooseDirButtonCss, hoverButtonCss]}>Choose dir</div>
 				<div css={[runCommandButtonCss, hoverButtonCss]}>
-					<ConsoleIconV3 css={consoleIconCss}/>
+					<ConsoleIconV3 css={consoleIconCss} />
 					<span>run command</span>
 				</div>
 			</div>
@@ -70,7 +70,7 @@ const runCommandButtonCss = css`
 	border-radius: 8px;
 `;
 
-const hoverButtonCss =css`
+const hoverButtonCss = css`
 	:hover { 
 		opacity: 0.8;
 	}
@@ -85,7 +85,7 @@ const consoleIconCss = css`
 	width: 17px;
 	height: 16px;
 `;
-const createProjectBannerContainerCss  = css`
+const createProjectBannerContainerCss = css`
 	position: relative;
 	z-index: 999;
 	background: rgba(12, 12, 12, 1);
@@ -105,7 +105,7 @@ const createProjecTitleCss = css`
 	margin-right: 12px;
 `;
 const rocketIconCss = css`width: 20px; height:20px;`;
-const createProjectTitleTextCss  = css`
+const createProjectTitleTextCss = css`
 	font-family: 'Gilroy';
 	font-style: normal;
 	font-weight: 700;
@@ -115,7 +115,7 @@ const createProjectTitleTextCss  = css`
 	margin-left: 8px;
 	margin-bottom: 1px;
 `;
-const createProjectDescriptionCss =css`
+const createProjectDescriptionCss = css`
 	font-family: 'Gilroy';
 	font-style: normal;
 	font-weight: 400;
@@ -127,23 +127,23 @@ const createProjectDescriptionCss =css`
 `;
 
 const ProjectsListScreen = () => {
-    const { projects, userInfo, error } = useUser();
-    const navigate = useNavigate();
+	const { projects, userInfo, error } = useUser();
+	const navigate = useNavigate();
 
 	React.useEffect(() => {
-		if(projects && !projects.length){
+		if (projects && !projects.length) {
 			navigate("/onboarding");
 		}
 	}, [projects]);
-	if(!projects) return (<LoadingScreen />);
-    return (
-        // <Wrapper figmaUrl={"https://www.figma.com/proto/lK8wsCW8hLzssu5Z987lky/Crusher-%7C-Aug-(Copy)?node-id=2201%3A3868&scaling=scale-down-width&page-id=988%3A3439&starting-point-node-id=988%3A3817"}>
-			<CompactAppLayout css={containerCss} title={<div css={titleCss}>Select project</div>} footer={<Footer/>}>
-				<ProjectList projects={projects} />
-				{projects.length ? (<CreateProjectBanner  css={createProjectBannerCss}/>): ""}
-			</CompactAppLayout>
+	if (!projects) return (<LoadingScreen />);
+	return (
+		// <Wrapper figmaUrl={"https://www.figma.com/proto/lK8wsCW8hLzssu5Z987lky/Crusher-%7C-Aug-(Copy)?node-id=2201%3A3868&scaling=scale-down-width&page-id=988%3A3439&starting-point-node-id=988%3A3817"}>
+		<CompactAppLayout css={containerCss} title={<div css={titleCss}>Select project</div>} footer={<Footer />}>
+			<ProjectList projects={projects} />
+			{projects.length < 3 ? (<CreateProjectBanner css={createProjectBannerCss} />) : ""}
+		</CompactAppLayout>
 		// </Wrapper>
-    );
+	);
 }
 
 const createProjectBannerCss = css`
@@ -167,44 +167,75 @@ const titleCss = css`
 `;
 
 
-const ProjectItem  = ({project}) => {
+const ProjectItem = ({ project }) => {
 	const [isOpen, setIsOpen] = React.useState(false);
 	const [emoji, setEmoji] = React.useState(null);
 
 	const handleEmojiSelected = React.useCallback((emoji) => {
-		if(emoji){
+		if (emoji) {
 			setEmoji(emoji.native);
 		}
 	}, []);
 	return (
-		<div css={css`width: 100%; height: 100%; padding: 14px 17px; padding-right: 40px; display: flex; align-items: center;`}>
+		<div css={css`width: 100%; height: 100%; padding: 12px 17px; padding-right: 40px; display: flex; align-items: center;`}>
 			<EmojiPicker onEmojiSelected={handleEmojiSelected} isOpen={isOpen}>
-				{emoji ? (
-					<span>{emoji}</span>
-				) : ( <BasketBallIcon css={css`width: 18px; height: 18px; :hover { opacity: 0.8; }`}/>)}
+				<div css={emojiBlock}>
+					{emoji ? (
+						<span css={emojiCSS}>{emoji}</span>
+					) : (<BasketBallIcon css={css`width: 18px; height: 18px; :hover { opacity: 0.8; }`} />)}
+				</div>
 			</EmojiPicker>
 			<span css={css`margin-left: 13px;`}>{project.name}</span>
 		</div>
 	);
 };
 
+const emojiBlock = css`
+display: flex;
+min-height: 22px;
+min-width: 22px;
+align-items: center;
+justify-content:center;
+
+
+border-radius: 6px;
+:hover{
+	background: rgba(217, 217, 217, 0.12);
+	cursor: pointer;
+	path{
+		stroke: #fff;
+	}
+}
+`
+const emojiCSS = css`
+font-family: 'EmojiMart';
+    display: block;
+    min-height: 18px;
+    min-width: 18px;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 2px;
+    line-height: 15px;
+`
 const ProjectList = ({ projects }) => {
 	const navigate = useNavigate();
 	const store = useStore();
 
-    const handleProjectItemClick = React.useCallback((projectId) => {
-        // store.dispatch(setSelectedProject(projectId))
-        // setTimeout(() => navigate("/"), 50);
-    }, []);
-	    
-    const items: Array<any> = React.useMemo(() => {
-        return projects.map((project, index) => {
-            return {
-                id: project.id,
-                content: <ProjectItem project={project}/>
-            };
-        });
-    }, [projects]);
+	const handleProjectItemClick = React.useCallback((projectId) => {
+		// store.dispatch(setSelectedProject(projectId))
+		// setTimeout(() => navigate("/"), 50);
+	}, []);
+
+	const items: Array<any> = React.useMemo(() => {
+		return projects.map((project, index) => {
+			return {
+				id: project.id,
+				content: <ProjectItem project={project} />
+			};
+		});
+	}, [projects]);
 
 	return (
 		<NormalList onClick={handleProjectItemClick} css={testItemStyle} items={items} />

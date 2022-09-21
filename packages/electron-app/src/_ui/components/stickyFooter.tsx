@@ -26,7 +26,7 @@ const StickyFooter = ({ className, ...props }: IProps) => {
                 </div>
                 <div css={contextContainerCss}>
                     <CloudIcon css={[cloudIconCss, clickableCss]} shouldAnimateGreen={true} />
-                    <NotepadIcon css={[notepadIconCss, clickableCss]} />
+                    {/* <NotepadIcon css={[notepadIconCss, clickableCss]} /> */}
                 </div>
             </div>
             <HoverCard content={<HelpContent />} placement="top" type="hover" padding={8} offset={0}>

@@ -273,8 +273,8 @@ const contextMenuDropdownBoxCss = css`
 const runTextCss = css`
     font-family: "Gilroy";
     font-style: normal;
-    font-weight: 600;
-    font-size: 13rem;
+    font-weight: 500;
+    font-size: 12rem;
 
     letter-spacing: 0.03em;
     position: relative;
@@ -286,7 +286,7 @@ const editTextCss = css`
     font-family: 'Gilroy';
     font-style: normal;
     font-weight: 500;
-    font-size: 13px;
+    font-size: 12rem;
     letter-spacing: 0.03em;
     margin-left: 4px;
     color: #BDBDBD;

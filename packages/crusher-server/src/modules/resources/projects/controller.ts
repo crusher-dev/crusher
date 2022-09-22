@@ -39,6 +39,14 @@ class ProjectsController {
 	}
 
 	@Authorized()
+	@Post("/projects/:project_id/actions/update.emoji")
+	async updateEmoji(@Param("project_id") projectId: number, @Body() body: { emoji: string }) {
+		if (!body.emoji) throw new BadRequestError("No emoji provided");
+		await this.projectsService.updateEmoji(projectId, body.emoji);
+		return "Successful";
+	}
+
+	@Authorized()
 	@Get("/projects/:project_id")
 	async getProject(@Param("project_id") projectId: number) {
 		const project = await this.projectsService.getProject(projectId);

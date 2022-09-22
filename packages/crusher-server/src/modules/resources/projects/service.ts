@@ -23,6 +23,9 @@ class ProjectsService {
 		]);
 	}
 
+	async updateEmoji(projectId: number, emoji: string) {
+		return this.dbManager.update("UPDATE public.projects SET emoji = ? WHERE id = ?", [emoji, projectId]);
+	}
 
 	@CamelizeResponse()
 	async getProject(projectId: number): Promise<KeysToCamelCase<IProjectTable>> {

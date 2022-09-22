@@ -14,6 +14,7 @@ import Wrapper from "figma-design-scaler/dist/dist/main";
 import { BasketBallIcon, ConsoleIconV3, RocketIcon } from "../../icons";
 import { EmojiPicker } from "../../components/emojiPicker";
 import Checkbox from "@dyson/components/atoms/checkbox/checkbox";
+import { CloudCrusher } from "electron-app/src/lib/cloud";
 
 const CreateProjectBanner = ({ className, ...props }) => {
 	return (
@@ -168,13 +169,14 @@ const titleCss = css`
 `;
 
 
-const ProjectItem = ({ project }) => {
+const ProjectItem = ({ project, defaultEmoji }) => {
 	const [isOpen, setIsOpen] = React.useState(false);
-	const [emoji, setEmoji] = React.useState(null);
+	const [emoji, setEmoji] = React.useState(defaultEmoji);
 
 	const handleEmojiSelected = React.useCallback((emoji) => {
 		if (emoji) {
 			setEmoji(emoji.native);
+			CloudCrusher.updateProjectEmoji(project.id, emoji.native);
 		}
 	}, []);
 	return (
@@ -237,7 +239,7 @@ const ProjectList = ({ projects }) => {
 		return projects.map((project, index) => {
 			return {
 				id: project.id,
-				content: <ProjectItem project={project} />
+				content: <ProjectItem defaultEmoji={project.emoji} project={project} />
 			};
 		});
 	}, [projects]);

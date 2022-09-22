@@ -45,6 +45,10 @@ class TestService {
 		return { events: JSON.parse(result) };
 	}
 
+	async updateEmoji(testId: number, emoji: string) {
+		return this.dbManager.update("UPDATE public.tests SET emoji = ? WHERE id = ?", [emoji, testId]);
+	}
+
 	// Modifies the events actions object directly
 	private async handleTemplateActions(templateActions: Array<iAction>, projectId: number, userId: number) {
 		const promiseArr = [];

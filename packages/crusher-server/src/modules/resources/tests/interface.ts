@@ -13,6 +13,7 @@ export interface ITestTable extends BaseRowInterface {
 	draft_job_id?: number;
 	deleted: boolean;
 	meta?: string;
+	emoji?: string;
 }
 
 export interface ITemplatesTable extends BaseRowInterface {

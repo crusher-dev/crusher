@@ -7,6 +7,7 @@ export interface IProjectTable extends BaseRowInterface {
 	meta?: string;
 	baseline_job_id: number;
 	visual_baseline?: number; // Defaults to 5
+	emoji?: string;
 }
 
 // Create Project Payload, everything except id

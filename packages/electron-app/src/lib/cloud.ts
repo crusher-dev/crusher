@@ -22,6 +22,18 @@ class CloudCrusher {
 		}).then((res) => res.data);
 	})
 
+	public static updateProjectEmoji: (projectId: number, emoji: string) => Promise<any> = createAuthorizedRequestFunc((authorizationOptions, projectId, emoji) => {
+		return axios.post(resolveToBackend(`/projects/${projectId}/actions/update.emoji`), { emoji: emoji }, {
+			...authorizationOptions,
+		});
+	});
+
+	public static updateTestEmoji: (testId: number, emoji: string) => Promise<any> = createAuthorizedRequestFunc((authorizationOptions, testId, emoji) => {
+		return axios.post(resolveToBackend(`/tests/${testId}/actions/update.emoji`), { emoji: emoji }, {
+			...authorizationOptions,
+		});
+	});
+
 	public static updateTestName: (testId: string, newName: string) => Promise<any> = createAuthorizedRequestFunc((authorizationOptions, testId, newName) => {
 		return axios.post(resolveToBackend(`/tests/${testId}/actions/edit`), {
 			name: newName

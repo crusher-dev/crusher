@@ -144,9 +144,10 @@ const TestListItem = ({ test, isItemSelected, index, deleteTest, lock }) => {
 
     const [isHover, setIsHover] = React.useState(false);
     const [isEditingName, setIsEditingName] = React.useState(false);
-	const [emoji, setEmoji] = React.useState(null);
+	const [emoji, setEmoji] = React.useState(test.emoji);
 	const { addNotification } = useBuildNotifications();
 
+    console.log("Test is", test);
     const navigate = useNavigate();
 
     const listItemActionsStyle = React.useMemo(() => listItemActionsCss(isHover), [isHover]);
@@ -164,6 +165,7 @@ const TestListItem = ({ test, isItemSelected, index, deleteTest, lock }) => {
 	const handleEmojiSelected = React.useCallback((emoji) => {
 		if (emoji) {
 			setEmoji(emoji.native);
+            CloudCrusher.updateTestEmoji(test.id, emoji.native);
 		}
 	}, []);
 

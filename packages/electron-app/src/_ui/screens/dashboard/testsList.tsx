@@ -393,7 +393,7 @@ const TestList = ({ tests, deleteTest }) => {
             }
         }, [items, selectedList]);
 
-        if (selectedList.length < 2) return null;
+        if (selectedList.length < 1) return null;
         return (
             <div className={"action-buttons"} css={[listItemActionsCss, css`display: flex`]}>
                 <div onClick={handleDelete} css={editContainerCss}>

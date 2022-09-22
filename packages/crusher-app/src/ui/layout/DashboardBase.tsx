@@ -457,7 +457,7 @@ function RunTest() {
 		<Button bgColor={"tertiary"} onClick={runProjectTest} css={runTestCSS}>
 			<div className={"flex items-center"}>
 				<PlayIcon className={"mr-6"} />
-				<span className="mt-1">
+				<span className="mt-2">
 					Run tests
 				</span>
 			</div>
@@ -467,6 +467,7 @@ function RunTest() {
 
 const runTestCSS = css`
 	padding: 0 10rem;
+	height: 30rpx;
 
 	font-family: 'Gilroy';
 font-style: normal;

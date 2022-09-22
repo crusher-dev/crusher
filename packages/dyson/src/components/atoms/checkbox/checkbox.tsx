@@ -34,7 +34,7 @@ const RadioDefaultProps = {
 const checkBox = () => css`
 	height: 16rem;
 	width: 16rem;
-	border: 1rem solid #383a41;
+	border: 1rem solid #9F9F9F;
 	border-radius: 4rem;
 	display: flex;
 	align-items: center;
@@ -55,10 +55,10 @@ const normalSelect = (isSelected: boolean) => css`
 			display: block;
 		}
 	}
-	background: ${isSelected ? "#9462FF" : "none"};
+	background: ${isSelected ? "#A742F7" : "none"};
 
 	:hover {
-		background: ${isSelected ? "#8a5ee8" : "#9462FF"};
+		background: ${isSelected ? "#A742F7" : "#A742F7"};
 	}
 `;
 
@@ -67,11 +67,11 @@ const selectAll = (isSelected: boolean) => css`
 		height: 8rem;
 		width: 8rem;
 		border-radius: 2rem;
-		background: ${isSelected ? "#0a0b0e" : "#9462FF"};
+		background: ${isSelected ? "#0a0b0e" : "#A742F7"};
 		display: ${isSelected ? "block" : "none"};
 	}
 
-	background: ${isSelected ? "#9462FF" : "none"};
+	background: ${isSelected ? "#A742F7" : "none"};
 
 	:hover {
 		#tick {

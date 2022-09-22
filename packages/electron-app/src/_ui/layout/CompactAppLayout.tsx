@@ -87,7 +87,7 @@ const containerCss = css`
 `;
 
 const dragCss = css`
-    height: 18px;
+    height: 36px;
     width: 100%;
     background: transparent;
     display: flex;

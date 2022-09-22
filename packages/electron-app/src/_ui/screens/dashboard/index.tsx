@@ -62,7 +62,7 @@ const titleStyle = css`
 	display: flex;
 	align-items: center;
     position: absolute;
-    top: 50%;
+    top: 65%;
     left: 50%;
     transform: translate(-50%, -50%);
 `;
@@ -175,16 +175,18 @@ const DashboardScreen = () => {
 
     const hasNotLoaded = isLoading || !animationComplete;
     return (
-
-        <CompactAppLayout footer={<><Footer /><StickyFooter /></>} headerRightSection={headerComponent} showHeader={!hasNotLoaded} css={loadingCSS(hasNotLoaded)} title={selectedProject && !hasNotLoaded ? <TitleComponent projectName={selectedProject.name} /> : null}>
-            {hasNotLoaded ? (<LoadingProgressBar inAppLoading={false} />) : content}
-        </CompactAppLayout>
-
+        // <Wrapper figmaUrl={"https://www.figma.com/proto/MsJZCnY5NvrDF4kL1oczZq/Crusher-%7C-Aug?node-id=2239%3A5646&scaling=min-zoom&page-id=988%3A3439&starting-point-node-id=988%3A3817"}>
+            <CompactAppLayout footer={<><Footer /><StickyFooter /></>} headerRightSection={headerComponent} showHeader={!hasNotLoaded} css={loadingCSS(hasNotLoaded)} title={selectedProject && !hasNotLoaded ? <TitleComponent projectName={selectedProject.name} /> : null}>
+                {hasNotLoaded ? (<LoadingProgressBar inAppLoading={false} />) : content}
+            </CompactAppLayout>
+        // </Wrapper>
     );
 };
 
 const headerComponentCss = css`
     display: flex;
+    position: relative;
+    top: 22%;
     .dropdown-icon {
         background: transparent !important;
     }

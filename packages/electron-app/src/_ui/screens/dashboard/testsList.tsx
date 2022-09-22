@@ -176,8 +176,8 @@ const TestListItem = ({ test, isItemSelected, isEditingName, setIsEditingName, i
     }, []);
 
     return (
-        <div css={css`padding: 6px 18px; padding-right: 16px; display: flex; flex: 1; align-items: center; :hover { & > .action-buttons { display: flex !important; } }`}>
-            <Checkbox css={checkboxCss} callback={handleSelectAll} isSelectAllType={false} isSelected={isItemSelected} />
+        <div css={testItem(isItemSelected)} title={`Run test - ${test.testName}`}>
+            <Checkbox id="checkbox" css={checkboxCss} callback={handleSelectAll} isSelectAllType={false} isSelected={isItemSelected} />
 
             <EmojiPicker onEmojiSelected={handleEmojiSelected}>
                 <div className={"emoji-block"} css={emojiBlock}>
@@ -211,6 +211,17 @@ const TestListItem = ({ test, isItemSelected, isEditingName, setIsEditingName, i
         </div>
     )
 };
+
+const testItem = (isItemSelected) => css`
+#checkbox{
+    visibility: ${isItemSelected ? 'visible' : 'hidden'};
+}
+:hover{
+    #checkbox{
+        visibility: visible;
+    }
+}
+padding: 6px 18px; padding-right: 16px; display: flex; flex: 1; align-items: center; :hover { & > .action-buttons { display: flex !important; } }`
 
 const loadingContainerCss = css`
     display: flex;

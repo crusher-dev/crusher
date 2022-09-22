@@ -87,14 +87,14 @@ const disabledCSS = css`
 `;
 
 export function Checkbox(props: CheckboxProps): ReactElement {
-	const { callback, disabled, label, isSelected, isSelectAllType, className } = props;
+	const { callback, disabled, label, isSelected, isSelectAllType, className, id } = props;
 
 	const handleClick = () => {
 		callback && callback(!isSelected);
 	};
 
 	return (
-		<div className={`flex items-center ${className}`} onClick={handleClick}>
+		<div className={`flex items-center ${className}`} onClick={handleClick} id={id}>
 			<Conditional showIf={isSelectAllType}>
 				<div className={"checkbox-container"} css={[checkBox(), selectAll(isSelected), disabled && disabledCSS]}>
 					<div id={"tick"}></div>
@@ -102,7 +102,7 @@ export function Checkbox(props: CheckboxProps): ReactElement {
 			</Conditional>
 
 			<Conditional showIf={!isSelectAllType}>
-				<div  className={"checkbox-container"} css={[checkBox(), normalSelect(isSelected), disabled && disabledCSS]}>
+				<div className={"checkbox-container"} css={[checkBox(), normalSelect(isSelected), disabled && disabledCSS]}>
 					<TickSVG height={8} width={8} />
 				</div>
 			</Conditional>

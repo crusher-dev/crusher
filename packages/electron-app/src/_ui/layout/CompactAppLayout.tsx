@@ -99,6 +99,7 @@ const dragCss = css`
 const headerCss = css`
     display: flex;
     padding: 2px 28px;
+    padding-right: 8px;
     align-items: center;
     position: relative;
     z-index: 23424234324234234;
@@ -121,7 +122,7 @@ const headerRightSectionCss = css`
     top: 50%;
     transform: translateY(-50%);
     padding-bottom: 1rem;
-
+    padding-right: 8px;
     font-size: 13rem;
     gap: 18px;
     display: flex;

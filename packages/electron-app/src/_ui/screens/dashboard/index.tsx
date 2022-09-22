@@ -62,7 +62,7 @@ const titleStyle = css`
 	display: flex;
 	align-items: center;
     position: absolute;
-    top: 50%;
+    top: 65%;
     left: 50%;
     transform: translate(-50%, -50%);
 `;
@@ -175,16 +175,16 @@ const DashboardScreen = () => {
 
     const hasNotLoaded = isLoading || !animationComplete;
     return (
-
         <CompactAppLayout footer={hasNotLoaded ? null : (<><Footer /><StickyFooter /></>)} headerRightSection={headerComponent} showHeader={!hasNotLoaded} css={loadingCSS(hasNotLoaded)} title={selectedProject && !hasNotLoaded ? <TitleComponent projectName={selectedProject.name} /> : null}>
             {hasNotLoaded ? (<LoadingProgressBar inAppLoading={false} />) : content}
         </CompactAppLayout>
-
     );
 };
 
 const headerComponentCss = css`
     display: flex;
+    position: relative;
+    top: 22%;
     .dropdown-icon {
         background: transparent !important;
     }

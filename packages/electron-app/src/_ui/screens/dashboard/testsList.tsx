@@ -185,7 +185,9 @@ const TestListItem = ({ test, isItemSelected, index, deleteTest, lock }) => {
 
             <TestListNameInput css={testNameInputCss} isActive={isHover} testId={test.id} isEditing={isEditingName} setIsEditing={setIsEditingName} testName={test.testName} />
             {!test.firstRunCompleted ? (
-                <LoadingIconV2 css={loadingIconCss} />
+                <div title={"verifying..."}>
+                    <LoadingIconV2 css={loadingIconCss} />
+                </div>
             ) : (
                 ""
             )}
@@ -393,7 +395,7 @@ const TestList = ({ tests, deleteTest }) => {
             }
         }, [items, selectedList]);
 
-        if (selectedList.length < 2) return null;
+        if (selectedList.length < 1) return null;
         return (
             <div className={"action-buttons"} css={[listItemActionsCss, css`display: flex`]}>
                 <div onClick={handleDelete} css={editContainerCss}>

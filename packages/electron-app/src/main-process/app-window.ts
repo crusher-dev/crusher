@@ -915,7 +915,7 @@ export class AppWindow {
 
 			this.window.setFullScreenable(true);
 			this.window.setResizable(true);
-			this.window.setSize(1543, 927, false);
+			this.window.setSize(screenSize.bounds.width, screenSize.bounds.height, false);
 			this.window.setPosition(screenSize.bounds.x, screenSize.bounds.y, false);
 		} else {
 			return new Promise((resolve) => {

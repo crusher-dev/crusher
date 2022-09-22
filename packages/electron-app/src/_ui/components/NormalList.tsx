@@ -8,8 +8,9 @@ interface IProps {
     onClick?: any;
     items?: Array<{ content: any; id: any; }>;
     selectAllCallback?: any;
+    hideCheckBoxTop?: boolean;
 }
-const NormalList = ({ className, selectAllCallback, onClick, items, ...props }: IProps) => {
+const NormalList = ({ className, hideCheckBoxTop = false, selectAllCallback, onClick, items, ...props }: IProps) => {
     const [shouldSelectAll, setShouldSelectAll] = React.useState(false);
 
     const listItems = React.useMemo(() => {
@@ -29,16 +30,20 @@ const NormalList = ({ className, selectAllCallback, onClick, items, ...props }: 
     }, [selectAllCallback]);
 
     return (<>
-                <div css={headerCss}>
-                    <Checkbox css={checkboxCss} callback={handleSelectAll} isSelectAllType={false} isSelected={shouldSelectAll}/>
-                    <div css={testsCountCss}>{items.length} projects</div>
-                </div>
-                <ul className={`${className}`} css={listCss} {...props}>
-                    {listItems}
-                </ul>
-            </>
+        <div css={headerCss}>
+            <Checkbox css={[checkboxCss, hideCheckBoxTop && hideCheckbox]} callback={handleSelectAll} isSelectAllType={false} isSelected={shouldSelectAll} />
+            <div css={testsCountCss}>{items.length} projects</div>
+        </div>
+        <ul className={`${className}`} css={listCss} {...props}>
+            {listItems}
+        </ul>
+    </>
     );
 };
+
+const hideCheckbox = css`
+	visibility: hidden;
+`
 
 const checkboxCss = css`
 .checkbox-container {

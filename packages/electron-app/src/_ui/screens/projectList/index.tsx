@@ -226,10 +226,9 @@ const ProjectList = ({ projects }) => {
 	const store = useStore();
 
 	const handleProjectItemClick = React.useCallback((projectId, event) => {
-		console.log("Evt", event);
 		const paths = event.nativeEvent.path;
 		const isEmojiClicked = paths.some((path) => path.classList && path.classList.contains("emoji-block"));
-		if(isEmojiClicked) return;
+		if (isEmojiClicked) return;
 
 		store.dispatch(setSelectedProject(projectId))
 		setTimeout(() => navigate("/"), 50);
@@ -245,11 +244,13 @@ const ProjectList = ({ projects }) => {
 	}, [projects]);
 
 	return (
-		<NormalList onClick={handleProjectItemClick} css={testItemStyle} items={items} />
+		<NormalList hideCheckBoxTop={true} onClick={handleProjectItemClick} css={testItemStyle} items={items} />
 	);
 
 
 }
+
+
 
 const testItemStyle = css`
 	font-family: "Gilroy";

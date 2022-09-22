@@ -53,7 +53,7 @@ const checkboxCss = css`
 
 const headerCss = css`
     display: flex;
-    padding-right: 41px;
+    padding-right: 16px;
     padding-left: 18px;
     border-bottom: 1px solid rgba(153, 153, 153, 0.09);
     padding-bottom: 12rem;

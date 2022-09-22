@@ -14,7 +14,7 @@ interface IProps {
     className?: string;
     selectedHeaderActions: any;
     items?: Array<{ content: any; id: any; }>;
-    contextMenu?: { [type: string]: {callback?: any; menuItems?: any }};
+    contextMenu?: { [type: string]: { callback?: any; menuItems?: any } };
 }
 const ListBox = ({ className, contextMenu, selectedHeaderActions: SelectedHeaderActions, items, ...props }: IProps) => {
     const { selectedList, selectItem, isItemSelected, resetSelected, toggleSelectAll, toggleSelectItem } = useSelectableList();
@@ -41,7 +41,7 @@ const ListBox = ({ className, contextMenu, selectedHeaderActions: SelectedHeader
 
     const menuItemsComponent = React.useMemo(() => {
         if (!contextMenu) return null;
-        const {menuItems, callback}  = contextMenu[useSingularContextMenu ? ContextMenuTypeEnum.SINGLE : ContextMenuTypeEnum.MULTI];
+        const { menuItems, callback } = contextMenu[useSingularContextMenu ? ContextMenuTypeEnum.SINGLE : ContextMenuTypeEnum.MULTI];
 
         return menuItems.map((item) => {
             return {
@@ -51,15 +51,15 @@ const ListBox = ({ className, contextMenu, selectedHeaderActions: SelectedHeader
                 onClick: callback.bind(this, item.id, selectedList)
             }
         });
-    }, [selectedList, useSingularContextMenu ]);
+    }, [selectedList, useSingularContextMenu]);
 
     const allSelected = selectedList.length === items.length;
-    
+
     return (
         <OnOutsideClick onOutsideClick={handleOutSideClick}>
             <div css={headerCss}>
-                    <Checkbox css={checkboxCss} callback={toggleSelectAll.bind(this, items.map((a) => a.id))} isSelectAllType={false} isSelected={allSelected}/>
-                    <div css={testsCountCss}>{items.length} tests</div>
+                <Checkbox css={checkboxCss} callback={toggleSelectAll.bind(this, items.map((a) => a.id))} isSelectAllType={false} isSelected={allSelected} />
+                <div css={testsCountCss}>{items.length} tests</div>
                 {SelectedHeaderActions ? <SelectedHeaderActions toggleSelectAll={toggleSelectAll} items={items} selectedList={selectedList} /> : ""}
             </div>
 
@@ -82,7 +82,7 @@ const checkboxCss = css`
 const headerCss = css`
     display: flex;
     align-items: center;
-    padding-right: 41px;
+    padding-right: 16px;
     padding-left: 18px;
     border-bottom: .5rem solid rgba(153, 153, 153, 0.09);
     padding-bottom: 12rem;

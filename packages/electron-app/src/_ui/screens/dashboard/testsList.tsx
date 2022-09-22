@@ -1,6 +1,6 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { LoadingIconV2, PlayIcon } from "electron-app/src/ui/icons";
+import { DeleteIcon, GarbageIcon, LoadingIconV2, PlayIcon } from "electron-app/src/ui/icons";
 import { BasketBallIcon, EditIcon } from "../../icons";
 import { min } from "lodash";
 import { useNavigate } from "react-router-dom";
@@ -177,7 +177,7 @@ const TestListItem = ({ test, isItemSelected, isEditingName, setIsEditingName, i
     }, []);
 
     return (
-        <div css={css`padding: 6px 18px; padding-right: 40px; display: flex; flex: 1; align-items: center; :hover { & > .action-buttons { display: flex !important; } }`}>
+        <div css={css`padding: 6px 18px; padding-right: 16px; display: flex; flex: 1; align-items: center; :hover { & > .action-buttons { display: flex !important; } }`}>
             <Checkbox css={checkboxCss} callback={handleSelectAll} isSelectAllType={false} isSelected={isItemSelected} />
 
             <EmojiPicker onEmojiSelected={handleEmojiSelected}>
@@ -202,7 +202,7 @@ const TestListItem = ({ test, isItemSelected, isEditingName, setIsEditingName, i
             <div className={"action-buttons"} css={listItemActionsStyle}>
                 <div onClick={handleEdit} css={editContainerCss} title="edit this test">
                     <EditIcon css={editIconCss} />
-                    <span css={editTextCss}>edit</span>
+                    <span css={editTextCss} className="mt-2">edit</span>
                 </div>
                 <div onClick={handleRunTest} css={runTestsCSS} title="run this test">
                     <PlayIcon css={playIconCss} />
@@ -213,7 +213,7 @@ const TestListItem = ({ test, isItemSelected, isEditingName, setIsEditingName, i
     )
 };
 
-const loadingContainerCss =css`
+const loadingContainerCss = css`
     display: flex;
     align-items: center;
     gap: 10px;
@@ -304,7 +304,7 @@ const runTestsCSS = css`
     align-items: center;
 	gap: 4rem;
     position: relative;
-    top: -2px;
+
     padding: 6px 6px;
     :hover {
         color: #fff;
@@ -356,7 +356,7 @@ const itemCss = (isActive: boolean) => {
 
 const SELECTED_TESTS_MENU = [
     { id: "edit", label: "Edit", shortcut: null },
-    { id: "rename", label: "Rename", shortcut: (<div>Enter</div>)},
+    { id: "rename", label: "Rename", shortcut: (<div>Enter</div>) },
     { id: "delete", label: 'Delete', shortcut: <div>Delete</div> }
 ];
 
@@ -371,7 +371,7 @@ const TestList = ({ tests, deleteTest }) => {
     const navigate = useNavigate();
 
     const setRename = React.useCallback((testId, value) => {
-        if(value === null || !value) {
+        if (value === null || !value) {
             return setIsRename(null);
         }
         setIsRename(testId);
@@ -402,7 +402,7 @@ const TestList = ({ tests, deleteTest }) => {
 
     const SelectedTestActions = React.useMemo(() => ({ items, toggleSelectAll, selectedList }) => {
         const store = useStore();
-        
+
         const handleRun = React.useCallback(() => {
             triggerLocalBuild(selectedList);
         }, [items, selectedList]);
@@ -427,10 +427,10 @@ const TestList = ({ tests, deleteTest }) => {
 
         if (selectedList.length < 1) return null;
         return (
-            <div className={"action-buttons"} css={[listItemActionsCss, css`display: flex`]}>
+            <div className={"action-buttons pt-2"} css={[listItemActionsCss, css`display: flex`]}>
                 <div onClick={handleDelete} css={editContainerCss}>
-                    <EditIcon css={editIconCss} />
-                    <span css={editTextCss}>delete</span>
+                    <GarbageIcon css={editIconCss} />
+                    <span css={editTextCss} className="mt-2">delete</span>
                 </div>
                 <div onClick={handleRun} css={runTestsCSS}>
                     <PlayIcon css={playIconCss} />
@@ -441,7 +441,7 @@ const TestList = ({ tests, deleteTest }) => {
     }, [deleteTest]);
 
     const handleRightCallback = React.useCallback((id, selectedList) => {
-        if (id === "delete" || id==="delete-all") {
+        if (id === "delete" || id === "delete-all") {
             deleteTest(selectedList);
         } else if (id === "run" || id === "run-all") {
             triggerLocalBuild(selectedList);
@@ -456,7 +456,7 @@ const TestList = ({ tests, deleteTest }) => {
 
 
     return (
-        <ListBox contextMenu={{ [ContextMenuTypeEnum.SINGLE]: { callback: handleRightCallback, menuItems: SELECTED_TESTS_MENU }, [ContextMenuTypeEnum.MULTI]:  { callback: handleRightCallback, menuItems: MULTI_SELECTED_MENU } }} selectedHeaderActions={SelectedTestActions} items={items} />
+        <ListBox contextMenu={{ [ContextMenuTypeEnum.SINGLE]: { callback: handleRightCallback, menuItems: SELECTED_TESTS_MENU }, [ContextMenuTypeEnum.MULTI]: { callback: handleRightCallback, menuItems: MULTI_SELECTED_MENU } }} selectedHeaderActions={SelectedTestActions} items={items} />
     );
 };
 
@@ -472,24 +472,5 @@ const testsCountCss = css`
     padding-bottom: 6rem;
 `;
 
-const listCss = css`
-    height: 100%;
-    font-family: "Gilroy";
-    font-style: normal;
-    font-weight: 400;
-    font-size: 14px;
-    letter-spacing: 0.03em;
-
-    color: #ffffff;
-    height: 38rem;
-
-    li {
-        padding: 6px 46px;
-        padding-right: 40px;
-        position: relative;
-        display: flex;
-        align-items: center;
-    }
-`;
 
 export { TestList };

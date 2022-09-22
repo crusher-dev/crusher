@@ -176,7 +176,7 @@ const DashboardScreen = () => {
     const hasNotLoaded = isLoading || !animationComplete;
     return (
 
-        <CompactAppLayout footer={<><Footer /><StickyFooter /></>} headerRightSection={headerComponent} showHeader={!hasNotLoaded} css={loadingCSS(hasNotLoaded)} title={selectedProject && !hasNotLoaded ? <TitleComponent projectName={selectedProject.name} /> : null}>
+        <CompactAppLayout footer={hasNotLoaded ? null : (<><Footer /><StickyFooter /></>)} headerRightSection={headerComponent} showHeader={!hasNotLoaded} css={loadingCSS(hasNotLoaded)} title={selectedProject && !hasNotLoaded ? <TitleComponent projectName={selectedProject.name} /> : null}>
             {hasNotLoaded ? (<LoadingProgressBar inAppLoading={false} />) : content}
         </CompactAppLayout>
 

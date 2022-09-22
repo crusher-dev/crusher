@@ -19,6 +19,7 @@ import { useStore } from "react-redux";
 import { EmojiPicker } from "../../components/emojiPicker";
 import Checkbox from "@dyson/components/atoms/checkbox/checkbox";
 import { useBuildNotifications } from "../../hooks/tests";
+import { ResizableInput } from "../../components/ResizableInput";
 
 const TestListNameInput = ({ testName, testId, isActive, isEditing, setIsEditing, className }) => {
     const [name, setName] = React.useState(testName);
@@ -62,8 +63,7 @@ const TestListNameInput = ({ testName, testId, isActive, isEditing, setIsEditing
     return (
         <OnOutsideClick className={`${className}`} disable={!isEditing} onOutsideClick={handleOutsideClick}>
             <span css={testInputContainerCss} onDoubleClick={handleDoubleClick}>
-                <input
-                    size={testName.length}
+                <ResizableInput
                     ref={inputRef}
                     css={testInputStyle}
                     onKeyDown={handleKeyDown}

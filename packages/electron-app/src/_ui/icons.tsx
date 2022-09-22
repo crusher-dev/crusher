@@ -25,7 +25,7 @@ const CloudIcon = React.forwardRef(({ shouldAnimateGreen, ...props }, ref) => {
       />
     </svg>
   );
-};
+});
 
 
 const DisabledCloudIcon = React.forwardRef(({ shouldAnimateGreen, ...props }, ref) => (
@@ -67,7 +67,7 @@ const DisabledCloudIcon = React.forwardRef(({ shouldAnimateGreen, ...props }, re
       fill="#fff"
     />
   </svg>
-)
+));
 
 
 export function DocsIcon(props: any) {

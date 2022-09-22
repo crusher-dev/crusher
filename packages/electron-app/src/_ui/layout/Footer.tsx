@@ -1,20 +1,20 @@
 import React from "react";
 import { css } from "@emotion/react";
 import { shell } from "electron";
-import { Link } from "../components/Link";
 import { useNavigate } from "react-router-dom";
+import { LinkPointer } from "../components/LinkPointer";
 
 function Footer() {
 	const navigate = useNavigate();
-    const handleOpenDocs = React.useCallback(() => shell.openExternal("https://docs.crusher.dev"), []);
-    const handleOpenSettings = React.useCallback(() => {
+	const handleOpenDocs = React.useCallback(() => shell.openExternal("https://docs.crusher.dev"), []);
+	const handleOpenSettings = React.useCallback(() => {
 		navigate("/settings");
 	}, []);
 
 	return (
 		<div css={navBarCss}>
-			<Link onClick={handleOpenDocs}>Docs</Link>
-            <Link onClick={handleOpenSettings} css={settingsCss}>Settings</Link>
+			<LinkPointer showExternalIcon={false} onClick={handleOpenDocs}>Docs</LinkPointer>
+			<LinkPointer showExternalIcon={false} onClick={handleOpenSettings} css={settingsCss}>Settings</LinkPointer>
 		</div>
 	);
 }
@@ -28,7 +28,9 @@ const navBarCss = css`
 	z-index: 99;
 	width: 100%;
 	color: rgba(255, 255, 255, 0.67);
-	padding: 12rem 24rem;
+	padding: 8rem 20rem;
+	border-top: 0.5px solid rgba(255, 255, 255, 0.08);
+	background:  #0D0D0E;
 `;
 const settingsCss = css`
     margin-left: auto;

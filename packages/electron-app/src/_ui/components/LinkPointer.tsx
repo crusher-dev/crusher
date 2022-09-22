@@ -1,18 +1,22 @@
 import React from "react";
 import { css } from "@emotion/react";
 import { PointerIcon } from "../icons";
+import { Conditional } from "@dyson/components/layouts";
 
 interface IProps {
     className?: any;
     children?: any;
+    showExternalIcon?: boolean;
     onClick?: any;
 }
-const PointerLink = ({ children, className, ...props }: IProps) => {
+const LinkPointer = ({ children, showExternalIcon = true, className, ...props }: IProps) => {
     const { onClick } = props;
     return (
         <div className={`${className}`} onClick={onClick} css={containerCss}>
             {children}
-            <PointerIcon css={pointerIconCss} />
+            <Conditional showIf={showExternalIcon}>
+                <PointerIcon css={pointerIconCss} />
+            </Conditional>
         </div>
     )
 };
@@ -32,4 +36,4 @@ const pointerIconCss = css`
     margin-left: 5.25px;
 `;
 
-export { PointerLink };
+export { LinkPointer };

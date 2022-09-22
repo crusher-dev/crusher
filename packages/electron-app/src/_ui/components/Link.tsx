@@ -13,13 +13,23 @@ export function Link({ children, href, ...props }) {
 const linkStyle = css`
 	font-family: "Gilroy";
 	font-style: normal;
-	font-weight: 600;
+	font-weight: 400;
 	font-size: 14px;
 	color: #ffffff;
 	:hover {
 		opacity: 0.8;
 	}
 
-	font-weight: 500;
 	font-size: 13px;
+    path{
+        fill: #D1D5DB;
+    }
+    color: #D1D5DB;
+    :hover{
+        color: #BC66FF;
+        opacity: 1;
+        path{
+            fill: #BC66FF;
+        }
+    }
 `;

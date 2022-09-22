@@ -1,7 +1,7 @@
 import React from "react";
 import { css } from "@emotion/react";
 import { Link } from "./Link";
-import { PointerLink } from "./PointerLink";
+import { LinkPointer } from "./LinkPointer";
 import { DiscordSVG, GithubSVG } from "./stickyFooter";
 import { linkOpen } from "electron-app/src/utils/url";
 import { Tooltip } from "@dyson/components/atoms/tooltip/Tooltip";
@@ -10,11 +10,11 @@ const Footer = () => {
     return (
         <div css={containerCss}>
             <div css={leftSectionCss}>
-                <Tooltip content={"small videos"} placement="top" type="hover">
-                    <div> <PointerLink css={resourcesCss} onClick={linkOpen.bind(this, "https://docs.crusher.dev")}>tutorials</PointerLink></div>
+                <Tooltip content={"walkthru"} placement="top" type="hover">
+                    <div> <LinkPointer css={resourcesCss} onClick={linkOpen.bind(this, "https://docs.crusher.dev")}>tutorials</LinkPointer></div>
                 </Tooltip>
                 <Tooltip content={"crusher docs"} placement="top" type="hover">
-                    <div><PointerLink css={resourcesCss} onClick={linkOpen.bind(this, "https://docs.crusher.dev")}>docs</PointerLink></div>
+                    <div><LinkPointer css={resourcesCss} onClick={linkOpen.bind(this, "https://docs.crusher.dev")}>docs</LinkPointer></div>
                 </Tooltip>
 
             </div>
@@ -36,8 +36,14 @@ const containerCss = css`
     display: flex;
     align-items: center;
     height: 46px;
-    padding: 0px 27px;
+    padding: 0px 24px;
     padding-left: 22px;
+
+    background:  #0D0D0E;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-top: 0.5px solid rgba(255, 255, 255, 0.08);
 `;
 const leftSectionCss = css`
     display: flex;

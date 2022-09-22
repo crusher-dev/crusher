@@ -5,6 +5,7 @@ import { ExternalLinkIcon } from "electron-app/src/ui/icons";
 import { shell } from "electron";
 import { MenuDropdown } from "electron-app/src/ui/layouts/modalContainer";
 import { Conditional } from "@dyson/components/layouts";
+import { LinkPointer } from "../components/LinkPointer";
 
 interface IProps {
     showHeader: boolean;
@@ -33,11 +34,10 @@ const CompactAppLayout = ({ className, title, headerRightSection, showHeader = t
                     <div css={titleCss} className={"header-title"}>{title}</div>
                     {headerRightSection ? headerRightSection : (
                         <div css={headerRightSectionCss}>
-                            <Link css={linkCss} onClick={handleOpenDocs}>Docs</Link>
-                            <Link onClick={handleOpenApp} css={[linkCss, openAppLinkCss]}>
-                                Open app {" "}
-                                <ExternalLinkIcon css={externalLinkIconCss} />
-                            </Link>
+                            <LinkPointer css={linkCss} onClick={handleOpenDocs}>Docs</LinkPointer>
+                            <LinkPointer onClick={handleOpenApp} css={[linkCss, openAppLinkCss]}>
+                                Open app
+                            </LinkPointer>
                         </div>
                     )}
 
@@ -124,7 +124,7 @@ const headerRightSectionCss = css`
     padding-bottom: 1rem;
     padding-right: 8px;
     font-size: 13rem;
-    gap: 18px;
+    gap: 8px;
     display: flex;
     align-items: center;
 `;
@@ -148,7 +148,7 @@ const contentCss = css`
 `;
 const footerCss = css`
 	margin-top: auto;
-	border-top: 1px solid rgba(255, 255, 255, 0.08);
+	border-top: .5x solid rgba(255, 255, 255, 0.08);
 `;
 
 export { CompactAppLayout };

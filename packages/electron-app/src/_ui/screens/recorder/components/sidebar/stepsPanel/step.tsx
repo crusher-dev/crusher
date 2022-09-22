@@ -79,11 +79,11 @@ const containerCss = css`
     padding-right: 11rem;
     border-radius: 2rem;
     :hover {
-        background: rgb(25 30 49);
+        background:  rgba(199, 81, 255, 0.14);
     }
 `;
 const activeItemCss = css`
-    background: rgb(25 30 49);
+    background:  rgba(199, 81, 255, 0.14);
 `;
 const contentCss = css`
     display: flex;

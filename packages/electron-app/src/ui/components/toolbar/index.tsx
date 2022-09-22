@@ -218,6 +218,7 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 	) : (
 		<ButtonDropdown
 			dropdownCss={buttonDropdownCss}
+			wrapperCss={css`background: #B341F9; border-radius: 8rem; .dropdown-icon { background: rgba(0, 0, 0, 0.2) !important; }`}
 			css={buttonDropdownMainButtonCss}
 			options={SAVE_TEST_ACTION_DROPDOWN_OPTIONS}
 			primaryOption={isTestVerificationComplete ? ITestActionEnum.SAVE : ITestActionEnum.VERIFY_SAVE}
@@ -236,6 +237,10 @@ const buttonDropdownMainButtonCss = css`
 	width: 50rem;
 	height: 32rem;
 	padding: 0rem !important;
+	background: #B341F9 !important;
+	border-radius: 8rem !important;
+	border-top-right-radius: 0rem !important;
+    border-bottom-right-radius: 0rem !important;
 `;
 
 SaveVerifyButton.whyDidYouRender = true;

@@ -144,8 +144,8 @@ const TestListItem = ({ test, isItemSelected, index, deleteTest, lock }) => {
 
     const [isHover, setIsHover] = React.useState(false);
     const [isEditingName, setIsEditingName] = React.useState(false);
-	const [emoji, setEmoji] = React.useState(test.emoji);
-	const { addNotification } = useBuildNotifications();
+    const [emoji, setEmoji] = React.useState(test.emoji);
+    const { addNotification } = useBuildNotifications();
 
     console.log("Test is", test);
     const navigate = useNavigate();
@@ -162,12 +162,12 @@ const TestListItem = ({ test, isItemSelected, index, deleteTest, lock }) => {
         triggerLocalBuild([test.id]);
     }, [test]);
 
-	const handleEmojiSelected = React.useCallback((emoji) => {
-		if (emoji) {
-			setEmoji(emoji.native);
+    const handleEmojiSelected = React.useCallback((emoji) => {
+        if (emoji) {
+            setEmoji(emoji.native);
             CloudCrusher.updateTestEmoji(test.id, emoji.native);
-		}
-	}, []);
+        }
+    }, []);
 
     const handleSelectAll = React.useCallback((shouldSelect) => {
 
@@ -175,16 +175,16 @@ const TestListItem = ({ test, isItemSelected, index, deleteTest, lock }) => {
 
     return (
         <div css={css`padding: 6px 18px; padding-right: 40px; display: flex; flex: 1; align-items: center; :hover { & > .action-buttons { display: flex !important; } }`}>
-           	<Checkbox css={checkboxCss} callback={handleSelectAll} isSelectAllType={false} isSelected={isItemSelected}/>
+            <Checkbox css={checkboxCss} callback={handleSelectAll} isSelectAllType={false} isSelected={isItemSelected} />
 
             <EmojiPicker onEmojiSelected={handleEmojiSelected}>
-				<div className={"emoji-block"} css={emojiBlock}>
-					{emoji ? (
-						<span css={emojiCSS}>{emoji}</span>
-					) : (<BasketBallIcon css={css`width: 18px; height: 18px; :hover { opacity: 0.8; }`} />)}
-				</div>
-			</EmojiPicker>
-            
+                <div className={"emoji-block"} css={emojiBlock}>
+                    {emoji ? (
+                        <span css={emojiCSS}>{emoji}</span>
+                    ) : (<BasketBallIcon css={css`width: 18px; height: 18px; :hover { opacity: 0.8; }`} />)}
+                </div>
+            </EmojiPicker>
+
             <TestListNameInput css={testNameInputCss} isActive={isHover} testId={test.id} isEditing={isEditingName} setIsEditing={setIsEditingName} testName={test.testName} />
             {!test.firstRunCompleted ? (
                 <LoadingIconV2 css={loadingIconCss} />
@@ -194,11 +194,11 @@ const TestListItem = ({ test, isItemSelected, index, deleteTest, lock }) => {
 
 
             <div className={"action-buttons pt-2"} css={listItemActionsStyle}>
-                <div onClick={handleEdit} css={editContainerCss}>
+                <div onClick={handleEdit} css={editContainerCss} title="edit this test">
                     <EditIcon css={editIconCss} />
                     <span css={editTextCss}>edit</span>
                 </div>
-                <div onClick={handleRunTest} css={playIconContainerCss}>
+                <div onClick={handleRunTest} css={playIconContainerCss} title="run this test">
                     <PlayIcon css={playIconCss} />
                     <span css={runTextCss}>run</span>
                 </div>

@@ -14,11 +14,11 @@ interface IProps {
     className?: any;
     children: any
 };
-const CompactAppLayout = ({ className, title, headerRightSection, showHeader=true, footer, children, ...props } : IProps) => {
+const CompactAppLayout = ({ className, title, headerRightSection, showHeader = true, footer, children, ...props }: IProps) => {
     React.useEffect(() => {
-		document.querySelector("html").style.fontSize = "1px";
-	}, []);
-    
+        document.querySelector("html").style.fontSize = "1px";
+    }, []);
+
     const handleOpenDocs = React.useCallback(() => shell.openExternal("https://docs.crusher.dev"), []);
     const handleOpenApp = React.useCallback(() => shell.openExternal("https://app.crusher.dev"), []);
 
@@ -27,22 +27,22 @@ const CompactAppLayout = ({ className, title, headerRightSection, showHeader=tru
             <div css={dragCss} className={"drag"}></div>
             {showHeader ? (
                 <div css={headerCss} className={"header"}>
-                <div css={headerLeftSectionCss}>
-                    <MenuDropdown isRecorder={false} css={menuDropdownCss} />
+                    <div css={headerLeftSectionCss}>
+                        <MenuDropdown isRecorder={false} css={menuDropdownCss} />
+                    </div>
+                    <div css={titleCss} className={"header-title"}>{title}</div>
+                    {headerRightSection ? headerRightSection : (
+                        <div css={headerRightSectionCss}>
+                            <Link css={linkCss} onClick={handleOpenDocs}>Docs</Link>
+                            <Link onClick={handleOpenApp} css={[linkCss, openAppLinkCss]}>
+                                Open app {" "}
+                                <ExternalLinkIcon css={externalLinkIconCss} />
+                            </Link>
+                        </div>
+                    )}
+
                 </div>
-                <div css={titleCss} className={"header-title"}>{title}</div>
-                {headerRightSection ? headerRightSection : (
-                    <div css={headerRightSectionCss}>
-                    <Link css={linkCss} onClick={handleOpenDocs}>Docs</Link>
-                    <Link onClick={handleOpenApp} css={[linkCss, openAppLinkCss]}>
-                        Open app {" "}
-                        <ExternalLinkIcon css={externalLinkIconCss}/>
-                    </Link>
-                </div>
-                )}
-     
-                </div>
-            ): ""}
+            ) : ""}
 
             <div css={contentCss} className={"content-section"}>
                 {children}
@@ -98,7 +98,7 @@ const dragCss = css`
 
 const headerCss = css`
     display: flex;
-    padding: 12px 28px;
+    padding: 2px 28px;
     align-items: center;
     position: relative;
     z-index: 23424234324234234;

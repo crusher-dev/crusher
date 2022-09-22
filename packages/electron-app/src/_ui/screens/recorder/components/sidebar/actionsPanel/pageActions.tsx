@@ -39,7 +39,7 @@ const PageActions = ({className, ...props}: IProps) => {
     return (
         <ActionsList
             className={`${className}`}
-            title={"common"}
+            title={"page"}
             description={"actions for page"}
             items={items}
             callback={handleCallback}

@@ -17,16 +17,12 @@ const ActionsPanel = ({className, ...props}: IProps) => {
 
     const selectedElement = useSelector(getSelectedElement);
     const content = React.useMemo(() => {
-        if(selectedElement) {
             return (<>
+                            <PageActions />
+
                 <ElementActions />
             </>)
-        } else {
-            return (<>
-                <PageActions />
-            </>)
-        }
-    }, [selectedElement]);
+    }, []);
 
     return (
         <div className={`${className}`} css={containerCss}>

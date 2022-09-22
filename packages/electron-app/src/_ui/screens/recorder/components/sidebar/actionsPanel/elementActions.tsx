@@ -1,5 +1,5 @@
 import React from "react";
-import { enableJavascriptInDebugger, peformTakeElementScreenshot, performAssertElementVisibility, performClick, performHover, performTakePageScreenshot } from "electron-app/src/ui/commands/perform";
+import { enableJavascriptInDebugger, peformTakeElementScreenshot, performAssertElementVisibility, performClick, performHover, performTakePageScreenshot, turnOnInspectMode } from "electron-app/src/ui/commands/perform";
 import { emitShowModal } from "electron-app/src/ui/components/modals";
 import { ActionsList } from "./actionsList";
 import { getItemsFromActionsData } from "./helper";
@@ -15,33 +15,58 @@ interface IProps {
 const ElementActions = ({className, ...props}: IProps) => {
     const store = useStore();
     const handleCallback = React.useCallback(async (id) => {
-        const selectedElement = getSelectedElement(store.getState());
+		turnOnInspectMode({action: id});
+
         switch (id) {
 			case "CLICK":
-				await enableJavascriptInDebugger();
-				performClick(selectedElement);
-				store.dispatch(setSelectedElement(null));
+				window["elementActionsCallback"] = async () => {
+					const selectedElement = getSelectedElement(store.getState());
+
+					await enableJavascriptInDebugger();
+					performClick(selectedElement);
+					store.dispatch(setSelectedElement(null));
+				};
+
 				break;
 			case "HOVER":
-				await enableJavascriptInDebugger();
-				performHover(selectedElement, store);
-				store.dispatch(setSelectedElement(null));
+				window["elementActionsCallback"] = async () => {
+					const selectedElement = getSelectedElement(store.getState());
+
+					await enableJavascriptInDebugger();
+					performHover(selectedElement, store);
+					store.dispatch(setSelectedElement(null));
+				};
+
 				break;
 			case "SCREENSHOT":
-				await enableJavascriptInDebugger();
-				peformTakeElementScreenshot(selectedElement, store);
-				store.dispatch(setSelectedElement(null));
+				window["elementActionsCallback"] = async () => {
+					const selectedElement = getSelectedElement(store.getState());
+
+					await enableJavascriptInDebugger();
+					peformTakeElementScreenshot(selectedElement, store);
+					store.dispatch(setSelectedElement(null));
+				};
+
 				break;
 			case "SHOW_ASSERT_MODAL":
-				emitShowModal({ type: "SHOW_ASSERT_MODAL" });
+				window["elementActionsCallback"] = async () => {
+					emitShowModal({ type: "SHOW_ASSERT_MODAL" });
+				};
 				break;
 			case "SHOW_CUSTOM_SCRIPT_MODAL":
-				emitShowModal({ type: "SHOW_ASSERT_MODAL" });
+				window["elementActionsCallback"] = async () => {
+					emitShowModal({ type: "SHOW_ASSERT_MODAL" });
+				};
 				break;
 			case "ASSERT_VISIBILITY":
-				await enableJavascriptInDebugger();
-				performAssertElementVisibility(selectedElement, store);
-				store.dispatch(setSelectedElement(null));
+				window["elementActionsCallback"] = async () => {
+					const selectedElement = getSelectedElement(store.getState());
+
+					await enableJavascriptInDebugger();
+					performAssertElementVisibility(selectedElement, store);
+					store.dispatch(setSelectedElement(null));
+				};
+
 				break;
 		}
     }, []);

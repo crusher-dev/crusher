@@ -90,7 +90,7 @@ const DashboardScreen = () => {
             (window as any).deletedTest.push(...idArr);
             console.log("Id arr", idArr);
             mutate({ ...tests, list: tests.list.filter(test => { return !((window as any).deletedTest || []).includes(test.id) }) });
-            for(let id of idArr) {
+            for (let id of idArr) {
                 // CloudCrusher.deleteTest(id).catch((err) => {
                 //     sendSnackBarEvent({ message: "Error deleting test", type: "error" });
                 // });
@@ -125,12 +125,12 @@ const DashboardScreen = () => {
     }, []);
 
     const handleRunCallback = (id) => {
-        if(id === "RUN_CLOUD") {
+        if (id === "RUN_CLOUD") {
             performRunTests(null).then((buildRes) => {
-                addNotification({id: buildRes.buildId});
-				// sendSnackBarEvent({ type: "success", message: "Test started successfully!" });
-			});
-        } else if( id === "RUN_LOCAL") {
+                addNotification({ id: buildRes.buildId });
+                // sendSnackBarEvent({ type: "success", message: "Test started successfully!" });
+            });
+        } else if (id === "RUN_LOCAL") {
             triggerLocalBuild(tests.list.map(test => test.id));
         }
     };
@@ -168,18 +168,18 @@ const DashboardScreen = () => {
     }, [handleRunCallback]);
     const isLoading = React.useMemo(() => (!tests), [tests]);
     // To make delete experience fast
-    const filteredTests = tests && tests.list && tests.list.length ? tests.list.filter(test => { return !((window as any).deletedTest || []).includes(test.id)}) : [];
+    const filteredTests = tests && tests.list && tests.list.length ? tests.list.filter(test => { return !((window as any).deletedTest || []).includes(test.id) }) : [];
 
     const testContent = filteredTests.length ? (<TestList deleteTest={handleTestDelete} tests={filteredTests} />) : (<CreateFirstTest />);
     const content = showProxyWarning.show ? <ProxyWarningContainer testId={showProxyWarning.testId} exitCallback={setShowProxyWarning.bind(this, false)} startUrl={showProxyWarning.startUrl} /> : testContent;
 
     const hasNotLoaded = isLoading || !animationComplete;
     return (
-        <Wrapper figmaUrl={"https://www.figma.com/proto/MsJZCnY5NvrDF4kL1oczZq/Crusher-%7C-Aug?node-id=2239%3A5646&scaling=min-zoom&page-id=988%3A3439&starting-point-node-id=988%3A3817"}>
-            <CompactAppLayout footer={<><Footer /><StickyFooter /></>} headerRightSection={headerComponent} showHeader={!hasNotLoaded} css={loadingCSS(hasNotLoaded)} title={selectedProject && !hasNotLoaded ? <TitleComponent projectName={selectedProject.name} /> : null}>
-                {hasNotLoaded ? (<LoadingProgressBar inAppLoading={false} />) : content}
-            </CompactAppLayout>
-        </Wrapper>
+
+        <CompactAppLayout footer={<><Footer /><StickyFooter /></>} headerRightSection={headerComponent} showHeader={!hasNotLoaded} css={loadingCSS(hasNotLoaded)} title={selectedProject && !hasNotLoaded ? <TitleComponent projectName={selectedProject.name} /> : null}>
+            {hasNotLoaded ? (<LoadingProgressBar inAppLoading={false} />) : content}
+        </CompactAppLayout>
+
     );
 };
 

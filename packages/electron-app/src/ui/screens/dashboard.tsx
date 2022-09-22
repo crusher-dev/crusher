@@ -791,14 +791,14 @@ const CloudIcon = ({ shouldAnimateGreen, ...props }) => {
 		<svg viewBox={"0 0 16 11"} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			{shouldAnimateGreen ? (
 				<linearGradient id="lg" x1="0.5" y1="1" x2="0.5" y2="0">
-					<stop offset="0%" stop-opacity="1" stop-color="#A5ED6D" />
-					<stop offset="40%" stop-opacity="1" stop-color="#A5ED6D">
+					<stop offset="0%" stopOpacity="1" stopColor="#A5ED6D" />
+					<stop offset="40%" stopOpacity="1" stopColor="#A5ED6D">
 						<animate attributeName="offset" values="0;1" repeatCount="indefinite" dur="0.8s" begin="0s" />
 					</stop>
-					<stop offset="40%" stop-opacity="0" stop-color="#A5ED6D">
+					<stop offset="40%" stopOpacity="0" stopColor="#A5ED6D">
 						<animate attributeName="offset" values="0;1" repeatCount="indefinite" dur="0.8s" begin="0s" />
 					</stop>
-					<stop offset="100%" stop-opacity="0" stop-color="#A5ED6D" />
+					<stop offset="100%" stopOpacity="0" stopColor="#A5ED6D" />
 				</linearGradient>
 			) : (
 				""

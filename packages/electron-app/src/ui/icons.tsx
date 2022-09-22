@@ -774,6 +774,7 @@ const FailedCheckboxIcon = (props) => (
 	<svg
 	  viewBox={"0 0 12 12"}
 	  fill="none"
+	  className={"add-icon"}
 	  xmlns="http://www.w3.org/2000/svg"
 	  {...props}
 	>

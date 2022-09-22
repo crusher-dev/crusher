@@ -153,7 +153,7 @@ const DashboardScreen = () => {
                 />
                 <ButtonDropdown
                     dropdownCss={buttonDropdownCss}
-                    css={buttonDropdownMainButtonCss}
+                    css={[buttonDropdownMainButtonCss, css` background: #B341F9 !important;`]}
                     options={[
                         { id: "RUN_LOCAL", content: (<span>Run tests</span>) },
                         { id: "RUN_CLOUD", content: (<span>Run tests (cloud)</span>) },
@@ -225,6 +225,13 @@ const createTestCss = css`
     font-size: 13.6rem;
 
     color: #FFFFFF;
+
+    :hover {
+        color: #BC66FF !important;
+        svg path {
+            fill: #BC66FF !important;
+        }
+    }
 `;
 
 export { DashboardScreen };

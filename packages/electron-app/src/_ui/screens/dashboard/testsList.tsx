@@ -185,7 +185,8 @@ const TestListItem = ({ test, isItemSelected, index, deleteTest, lock }) => {
 
             <TestListNameInput css={testNameInputCss} isActive={isHover} testId={test.id} isEditing={isEditingName} setIsEditing={setIsEditingName} testName={test.testName} />
             {!test.firstRunCompleted ? (
-                <div title={"verifying..."}>
+                <div css={loadingContainerCss} itle={"verifying..."}>
+                    <span>Verifying</span>
                     <LoadingIconV2 css={loadingIconCss} />
                 </div>
             ) : (
@@ -206,11 +207,19 @@ const TestListItem = ({ test, isItemSelected, index, deleteTest, lock }) => {
         </div>
     )
 };
+
+const loadingContainerCss =css`
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 11px;
+`;
+
 const checkboxCss = css`
-.checkbox-container {
-    border-radius: 6rem;
-}
-margin-right: 14px;
+    .checkbox-container {
+        border-radius: 6rem;
+    }
+    margin-right: 14px;
 `;
 const testNameInputCss = css`
     margin-left: 8px;

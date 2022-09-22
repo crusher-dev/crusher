@@ -811,7 +811,7 @@ const inputStyle = css`
 const buttonStyle = css`
 	font-size: 14rem;
 	box-sizing: border-box;
-	border-radius: 4rem;
+	border-radius: 8rem !important;
     width: 77rem;
 	height: 36rem;
 `;

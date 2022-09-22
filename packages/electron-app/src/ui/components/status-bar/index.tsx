@@ -13,6 +13,9 @@ import { getRecorderState, getSavedSteps } from "electron-app/src/store/selector
 import { updateRecorderState } from "electron-app/src/store/actions/recorder";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 import { now } from "electron-app/src/main-process/now";
+import { HoverCard } from "@dyson/components/atoms/tooltip/Tooltip1";
+import { DocsIcon } from "electron-app/src/_ui/icons";
+import { HelpContent } from "electron-app/src/_ui/components/stickyFooter";
 
 function formatLogs(logs: Array<ILoggerReducer["logs"][0]>): Array<ILoggerReducer["logs"][0]> {
 	logs = logs.map((log, index) => {
@@ -324,8 +327,9 @@ const StatusBar = (props: any) => {
 						display: flex;
 						align-items: center;
 						height: 100%;
-						max-height: 32rem;
+						max-height: 38rem;
 						padding: 0rem 14rem;
+						padding-right: 0rem;
 						:hover {
 							background: #1d1e1f;
 						}
@@ -351,7 +355,10 @@ const StatusBar = (props: any) => {
 					<Conditional showIf={clicked}>
 						<div
 							css={css`
-								margin-left: auto;
+								flex: 1;
+								display: flex;
+								justify-content: flex-end;
+								margin-right: 8rem;
 							`}
 						>
 							<div
@@ -377,8 +384,16 @@ const StatusBar = (props: any) => {
 							</div>
 						</div>
 					</Conditional>
+					<HoverCard content={<HelpContent/>} placement="top" type="hover" padding={8} offset={0}>
+                <div css={docsButtonCss}>
+                    <DocsIcon css={docsIconCss} />
+                    <span css={docsButtonTextCss}>Docs & help</span>
+                </div>
+            </HoverCard>
 				</div>
 
+		
+			
 				<Conditional showIf={clicked}>
 					<Conditional showIf={selectedTab === TabsEnum.LOGS}>
 						<div
@@ -388,7 +403,7 @@ const StatusBar = (props: any) => {
 								font-size: 14rem;
 								padding: 0rem 14rem;
 								padding-bottom: 8rem;
-								height: calc(100% - 32rem);
+								height: calc(100% - 38rem);
 								overflow-y: auto;
 							`}
 							className={"custom-scroll"}
@@ -415,7 +430,7 @@ const StatusBar = (props: any) => {
 									padding: 0rem 16rem;
 									padding-top: 12rem;
 									padding-bottom: 8rem;
-									height: calc(100% - 32rem);
+									height: calc(100% - 38rem);
 									overflow-y: auto;
 								`}
 								className={"custom-scroll"}
@@ -462,7 +477,6 @@ const StatusBar = (props: any) => {
 					</Conditional>
 				</Conditional>
 			</div>
-
 			<style>
 				{`
 			.expandBar {
@@ -473,7 +487,35 @@ const StatusBar = (props: any) => {
 		</div>
 	);
 };
+const docsButtonCss = css`
+background: #0F1010;
+border-left: 0.5px solid #242424;
+    font-family: 'Cera Pro';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
 
+
+    color: #FFFFFF;
+    width: 124px;
+    height: 38rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;
+    border-left: 1px solid #242424;
+
+    :hover {
+        opacity: 0.8;
+    }
+`;
+const docsIconCss = css`
+    width: 16px;
+    height: 16px;
+`;
+const docsButtonTextCss = css`
+    margin-left: 7px;
+`;
 const logTextStyle = css`
 	color: #717171;
 	font-size: 13.5rem;
@@ -499,12 +541,13 @@ const statusBarTabStyle = css`
 	}
 `;
 const statusBarContainerStyle = css`
-	background: #0f1010;
+	background: rgb(12, 12, 13);
 	border: 1px solid #272d2d;
 	border-left: 0;
 	border-right: 0;
+	border-bottom: 0;
 	width: 100%;
-	height: 32rem;
+	height: 38rem;
 	transition: max-height 0.1s, height 0.1s;
 	z-index: 999;
 	margin-top: auto;

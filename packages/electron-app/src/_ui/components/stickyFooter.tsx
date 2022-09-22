@@ -177,7 +177,7 @@ export { StickyFooter };
 
 
 //  🔴🔴 Do not edit, this is copy of DashboardBase help section
-function HelpContent() {
+export function HelpContent() {
     return (
         <div className=" pt-3 pb-6">
 

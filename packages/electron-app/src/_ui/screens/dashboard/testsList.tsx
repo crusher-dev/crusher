@@ -185,7 +185,9 @@ const TestListItem = ({ test, isItemSelected, index, deleteTest, lock }) => {
 
             <TestListNameInput css={testNameInputCss} isActive={isHover} testId={test.id} isEditing={isEditingName} setIsEditing={setIsEditingName} testName={test.testName} />
             {!test.firstRunCompleted ? (
-                <LoadingIconV2 css={loadingIconCss} />
+                <div title={"verifying..."}>
+                    <LoadingIconV2 css={loadingIconCss} />
+                </div>
             ) : (
                 ""
             )}

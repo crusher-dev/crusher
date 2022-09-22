@@ -4,13 +4,19 @@ import { Link } from "./Link";
 import { PointerLink } from "./PointerLink";
 import { DiscordSVG, GithubSVG } from "./stickyFooter";
 import { linkOpen } from "electron-app/src/utils/url";
+import { Tooltip } from "@dyson/components/atoms/tooltip/Tooltip";
 
 const Footer = () => {
     return (
         <div css={containerCss}>
             <div css={leftSectionCss}>
-                <PointerLink css={resourcesCss} onClick={linkOpen.bind(this, "https://docs.crusher.dev")}>tutorials</PointerLink>
-                <PointerLink css={resourcesCss} onClick={linkOpen.bind(this, "https://docs.crusher.dev")}>docs</PointerLink>
+                <Tooltip content={"small videos"} placement="top" type="hover">
+                    <div> <PointerLink css={resourcesCss} onClick={linkOpen.bind(this, "https://docs.crusher.dev")}>tutorials</PointerLink></div>
+                </Tooltip>
+                <Tooltip content={"crusher docs"} placement="top" type="hover">
+                    <div><PointerLink css={resourcesCss} onClick={linkOpen.bind(this, "https://docs.crusher.dev")}>docs</PointerLink></div>
+                </Tooltip>
+
             </div>
             <div css={rightSectionCss}>
                 <Link css={socialIcon} href="https://github.com/crusher-dev/crusher" title="Github">

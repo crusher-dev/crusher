@@ -6,11 +6,15 @@ import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsi
 import { RightClickMenu } from "@dyson/components/molecules/RightClick/RightClick";
 import Checkbox from "@dyson/components/atoms/checkbox/checkbox";
 
+export enum ContextMenuTypeEnum {
+    SINGLE = "single",
+    MULTI = "multi",
+};
 interface IProps {
     className?: string;
     selectedHeaderActions: any;
     items?: Array<{ content: any; id: any; }>;
-    contextMenu?: { callback?: any; menuItems?: any };
+    contextMenu?: { [type: string]: {callback?: any; menuItems?: any }};
 }
 const ListBox = ({ className, contextMenu, selectedHeaderActions: SelectedHeaderActions, items, ...props }: IProps) => {
     const { selectedList, selectItem, isItemSelected, resetSelected, toggleSelectAll, toggleSelectItem } = useSelectableList();
@@ -33,20 +37,24 @@ const ListBox = ({ className, contextMenu, selectedHeaderActions: SelectedHeader
         }, 100);
     }, [resetSelected]);
 
+    const useSingularContextMenu = selectedList.length <= 1;
+
     const menuItemsComponent = React.useMemo(() => {
-        if (!contextMenu?.menuItems) return null;
-        return contextMenu.menuItems.map((item) => {
+        if (!contextMenu) return null;
+        const {menuItems, callback}  = contextMenu[useSingularContextMenu ? ContextMenuTypeEnum.SINGLE : ContextMenuTypeEnum.MULTI];
+
+        return menuItems.map((item) => {
             return {
                 type: "menuItem",
                 value: item.label,
                 rightItem: item.shortcut,
-                onClick: contextMenu.callback.bind(this, item.id, selectedList)
+                onClick: callback.bind(this, item.id, selectedList)
             }
         });
-    }, [selectedList, contextMenu.callback, contextMenu.menuItems]);
+    }, [selectedList, useSingularContextMenu ]);
 
     const allSelected = selectedList.length === items.length;
-
+    
     return (
         <OnOutsideClick onOutsideClick={handleOutSideClick}>
             <div css={headerCss}>

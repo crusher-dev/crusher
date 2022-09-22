@@ -11,7 +11,7 @@ import { KeyboardInputEvent, shell } from "electron";
 import { resolveToFrontend } from "electron-app/src/utils/url";
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
 import { CloudCrusher } from "electron-app/src/lib/cloud";
-import { ListBox } from "../../components/selectableList";
+import { ContextMenuTypeEnum, ListBox } from "../../components/selectableList";
 import { useSelectableList } from "../../hooks/list";
 import { RightClickMenu } from "@dyson/components/molecules/RightClick/RightClick";
 import { deleteRecordedSteps } from "electron-app/src/store/actions/recorder";
@@ -25,11 +25,17 @@ const TestListNameInput = ({ testName, testId, isActive, isEditing, setIsEditing
     const inputRef = React.useRef<HTMLInputElement>(null);
     const handleDoubleClick = React.useCallback(() => {
         setIsEditing(true);
-        setTimeout(() => {
-            inputRef.current.focus();
-            inputRef.current.setSelectionRange(inputRef.current.value.length, inputRef.current.value.length);
-        });
     }, []);
+
+    React.useEffect(() => {
+        if (isEditing) {
+            setTimeout(() => {
+                inputRef.current.focus();
+                inputRef.current.setSelectionRange(inputRef.current.value.length, inputRef.current.value.length);
+
+            });
+        }
+    }, [isEditing]);
 
     const handleOnChange = React.useCallback((event) => {
         setName(event.target.value);
@@ -140,10 +146,9 @@ const contextMenuItemCss = css`
         background: #687ef2 !important;
     }
 `;
-const TestListItem = ({ test, isItemSelected, index, deleteTest, lock }) => {
+const TestListItem = ({ test, isItemSelected, isEditingName, setIsEditingName, index, deleteTest, lock }) => {
 
     const [isHover, setIsHover] = React.useState(false);
-    const [isEditingName, setIsEditingName] = React.useState(false);
     const [emoji, setEmoji] = React.useState(test.emoji);
     const { addNotification } = useBuildNotifications();
     const navigate = useNavigate();
@@ -185,7 +190,7 @@ const TestListItem = ({ test, isItemSelected, index, deleteTest, lock }) => {
 
             <TestListNameInput css={testNameInputCss} isActive={isHover} testId={test.id} isEditing={isEditingName} setIsEditing={setIsEditingName} testName={test.testName} />
             {!test.firstRunCompleted ? (
-                <div css={loadingContainerCss} itle={"verifying..."}>
+                <div css={loadingContainerCss} title={"verifying..."}>
                     <span>Verifying</span>
                     <LoadingIconV2 css={loadingIconCss} />
                 </div>
@@ -350,13 +355,27 @@ const itemCss = (isActive: boolean) => {
 }
 
 const SELECTED_TESTS_MENU = [
-    { id: "run", label: "Run", shortcut: null },
+    { id: "edit", label: "Edit", shortcut: null },
+    { id: "rename", label: "Rename", shortcut: (<div>Enter</div>)},
     { id: "delete", label: 'Delete', shortcut: <div>Delete</div> }
+];
+
+const MULTI_SELECTED_MENU = [
+    { id: "run", label: "Run all", shortcut: null },
+    { id: "delete-all", label: 'Delete all', shortcut: <div>Delete</div> }
 ];
 
 const TestList = ({ tests, deleteTest }) => {
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+    const [isRenaming, setIsRename] = React.useState(null);
+    const navigate = useNavigate();
 
+    const setRename = React.useCallback((testId, value) => {
+        if(value === null || !value) {
+            return setIsRename(null);
+        }
+        setIsRename(testId);
+    }, []);
     const items: Array<any> = React.useMemo(() => {
         if (!tests) return null;
         let isAcquired = false;
@@ -369,6 +388,8 @@ const TestList = ({ tests, deleteTest }) => {
                     <TestListItem
                         key={test.id}
                         index={index}
+                        isEditingName={isRenaming === test.id}
+                        setIsEditingName={setRename.bind(this, test.id)}
                         isItemSelected={isItemSelected}
                         lock={lockMechanism}
                         test={test}
@@ -377,11 +398,11 @@ const TestList = ({ tests, deleteTest }) => {
                 )
             };
         });
-    }, [tests]);
+    }, [isRenaming, tests]);
 
     const SelectedTestActions = React.useMemo(() => ({ items, toggleSelectAll, selectedList }) => {
         const store = useStore();
-
+        
         const handleRun = React.useCallback(() => {
             triggerLocalBuild(selectedList);
         }, [items, selectedList]);
@@ -420,16 +441,22 @@ const TestList = ({ tests, deleteTest }) => {
     }, [deleteTest]);
 
     const handleRightCallback = React.useCallback((id, selectedList) => {
-        if (id === "delete") {
+        if (id === "delete" || id==="delete-all") {
             deleteTest(selectedList);
-        } else if (id === "run") {
+        } else if (id === "run" || id === "run-all") {
             triggerLocalBuild(selectedList);
+        } else if (id === "edit") {
+            navigate("/recorder");
+            goFullScreen();
+            performReplayTestUrlAction(selectedList[0]);
+        } else if (id === "rename") {
+            setIsRename(selectedList[0]);
         }
     }, []);
 
 
     return (
-        <ListBox contextMenu={{ callback: handleRightCallback, menuItems: SELECTED_TESTS_MENU }} selectedHeaderActions={SelectedTestActions} items={items} />
+        <ListBox contextMenu={{ [ContextMenuTypeEnum.SINGLE]: { callback: handleRightCallback, menuItems: SELECTED_TESTS_MENU }, [ContextMenuTypeEnum.MULTI]:  { callback: handleRightCallback, menuItems: MULTI_SELECTED_MENU } }} selectedHeaderActions={SelectedTestActions} items={items} />
     );
 };
 

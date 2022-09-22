@@ -152,11 +152,11 @@ const DashboardScreen = () => {
                 <ButtonDropdown
                     dropdownCss={buttonDropdownCss}
                     hideDropdown={true}
-                    css={[buttonDropdownMainButtonCss, css`background: transparent !important; width: auto !important; border: none !important; margin-right: 18px;`]}
+                    css={[buttonDropdownMainButtonCss, css`background: transparent !important; width: auto !important; border: none !important; margin-right: 12px;`]}
                     options={[
                         {
                             id: "SAVE", content: (<span css={createTestCss}>
-                                <AddIconV3 css={createIconCss} /> <span>test</span>
+                                <AddIconV3 css={createIconCss} /> <span>new test</span>
                             </span>)
                         },
                     ]}
@@ -229,7 +229,7 @@ const createIconCss = css`
 `;
 const createTestCss = css`
     display: flex;
-    gap: 7rem;
+    gap: 4rem;
     align-items: center;
     font-family: 'Gilroy';
     font-style: normal;

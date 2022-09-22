@@ -83,7 +83,7 @@ export class AppWindow {
 		const windowOptions: Electron.BrowserWindowConstructorOptions = {
 			title: APP_NAME,
 			titleBarStyle: "hidden",
-			trafficLightPosition: { x: 10, y: 15 },
+			trafficLightPosition: { x: 14, y: 25 },
 			width: this.minWidth,
 			height: this.minHeight,
 			minWidth: this.minWidth,
@@ -115,7 +115,7 @@ export class AppWindow {
 
 		this.window = new BrowserWindow(windowOptions);
 
-		if(app.commandLine.hasSwitch("open-recorder")) {
+		if (app.commandLine.hasSwitch("open-recorder")) {
 			this.window.maximize();
 		}
 
@@ -159,7 +159,7 @@ export class AppWindow {
 		});
 
 		// Disable zoom-in/zoom-out
-		this.window.webContents.on("did-finish-load", () => {});
+		this.window.webContents.on("did-finish-load", () => { });
 
 		this.window.webContents.on("did-fail-load", () => {
 			this.window.webContents.openDevTools();
@@ -239,7 +239,7 @@ export class AppWindow {
 		ipcMain.handle("get-user-tests", this.handleGetUserTests.bind(this));
 		ipcMain.handle("get-build-report", this.handleGetBuildReport.bind(this));
 		ipcMain.handle("update-cloud-test-name", this.handleUpdateCloudTestName.bind(this));
-		ipcMain.handle("jump-to-step", this.handleJumpToStep.bind(this)); 
+		ipcMain.handle("jump-to-step", this.handleJumpToStep.bind(this));
 		ipcMain.handle("login-with-github", this.handleLoginWithGithub.bind(this));
 		ipcMain.handle("login-with-gitlab", this.handleLoginWithGitlab.bind(this));
 		ipcMain.handle("go-full-screen", this.handleGoFullScreen.bind(this));
@@ -309,7 +309,7 @@ export class AppWindow {
 		return this.proxyManager.initializeProxy(payload.configFilePath);
 	}
 
-	private async handleUndockCode(event: Electron.IpcMainEvent, payload: { code: string }) {	
+	private async handleUndockCode(event: Electron.IpcMainEvent, payload: { code: string }) {
 		this.codeWindow = new BrowserWindow({
 			title: APP_NAME,
 			titleBarStyle: "hidden",
@@ -439,27 +439,27 @@ export class AppWindow {
 			});
 	}
 
-	private async handleGotoUrl(event, payload: {url: string}) {
+	private async handleGotoUrl(event, payload: { url: string }) {
 		let finalUrl = payload.url;
-		if(finalUrl[0] == '/') { 
-			finalUrl = encodePathAsUrl(__dirname, "index.html") + ( finalUrl[1] ? "#/" + payload.url.substring(1) + `?test=${Date.now()}` : "");
-			
+		if (finalUrl[0] == '/') {
+			finalUrl = encodePathAsUrl(__dirname, "index.html") + (finalUrl[1] ? "#/" + payload.url.substring(1) + `?test=${Date.now()}` : "");
+
 		}
 		return this.window.webContents.loadURL(finalUrl);
 	}
 
 	private async handleGetRecorderTestLogs() {
-		if(this.webView && this.webView.playwrightInstance) {
+		if (this.webView && this.webView.playwrightInstance) {
 			return this.webView.playwrightInstance.getTestLogs();
 		}
 		return null;
 	}
 
-	private async handleSaveLocalBuild(event, payload: { tests: Array<any>}) {
+	private async handleSaveLocalBuild(event, payload: { tests: Array<any> }) {
 		return CloudCrusher.saveLocalBuildReport(payload.tests);
 	}
 
-	private async handleCreateCloudProject(event, payload: {name: string}) {
+	private async handleCreateCloudProject(event, payload: { name: string }) {
 		return CloudCrusher.createProject(payload.name);
 	}
 
@@ -522,7 +522,7 @@ export class AppWindow {
 		event.returnValue = ![TRecorderState.PERFORMING_ACTIONS, TRecorderState.CUSTOM_CODE_ON].includes(recorderState.type);
 	}
 
-	private async handleGetUserTests(event: Electron.IpcMainEvent, payload: { }) {
+	private async handleGetUserTests(event: Electron.IpcMainEvent, payload: {}) {
 		return getSelectedProjectTests();
 	}
 
@@ -562,8 +562,8 @@ export class AppWindow {
 
 	recordLog(log: ILog) {
 		const logs = new Map(getLogs(this.store.getState() as any));
-		
-		if(!log.parent) {
+
+		if (!log.parent) {
 			logs.set("_", [...(logs.get("_") as Array<any>), log]);
 		} else {
 			logs.set(log.parent, [...(logs.get(log.parent) || []), log]);
@@ -801,13 +801,13 @@ export class AppWindow {
 		const accountInfo = getUserAccountInfo(this.store.getState() as any);
 
 		return CloudCrusher.updateTestDirectly(
-				editingSessionMeta.testId,
-				{ events: recordedSteps as any,	}
+			editingSessionMeta.testId,
+			{ events: recordedSteps as any, }
 		);
 	}
 
 	private async handleGetBuildReport(event: Electron.IpcMainEvent, payload: { buildId: string }) {
-		return CloudCrusher.getBuildReport( payload.buildId );
+		return CloudCrusher.getBuildReport(payload.buildId);
 	}
 
 	private async handleUpdateCloudTestName(event: Electron.IpcMainEvent, payload: { testId: string; testName: string }) {
@@ -871,10 +871,10 @@ export class AppWindow {
 
 		const isSuccessful = await this.handleReplayTestSteps(recordedSteps as any);
 		this.store.dispatch(setIsTestVerified(true));
-		if(isSuccessful) { 
+		if (isSuccessful) {
 			if (shouldAlsoSave && autoSaveType === "SAVE") {
 				return this.handleSaveTest(!!payload.shouldNotRunTest);
-			} else if(shouldAlsoSave && autoSaveType === "UPDATE") {
+			} else if (shouldAlsoSave && autoSaveType === "UPDATE") {
 				return this.handleUpdateTest(null);
 			}
 		} else {
@@ -919,8 +919,8 @@ export class AppWindow {
 			this.window.setPosition(screenSize.bounds.x, screenSize.bounds.y, false);
 		} else {
 			return new Promise((resolve) => {
-				if(this.window.isMaximized) {
-				 this.window.unmaximize();
+				if (this.window.isMaximized) {
+					this.window.unmaximize();
 				}
 				this.window.setFullScreen(false);
 				setImmediate(async () => {
@@ -967,19 +967,19 @@ export class AppWindow {
 				if (browserAction.type === ActionsInTestEnum.SET_DEVICE) {
 					await this.store.dispatch(setDevice(browserAction.payload.meta.device.id));
 					await this.handlePerformAction(null, { action: browserAction, shouldNotSave: !!(browserAction as any).shouldNotRecord });
-					if(reaminingSteps.length) { 
+					if (reaminingSteps.length) {
 						await new Promise((resolve, reject) => {
 							const intervalFun = () => {
-								if(this.webView && this.webView.playwrightInstance && this.webView.playwrightInstance.page) {
+								if (this.webView && this.webView.playwrightInstance && this.webView.playwrightInstance.page) {
 									resolve(true);
 									return true;
 								}
 								return false
 							}
 							const result = intervalFun();
-							if(!result){
+							if (!result) {
 								const _interval = setInterval(() => {
-									if(intervalFun()) {
+									if (intervalFun()) {
 										clearInterval(_interval);
 									}
 								}, 250);
@@ -1079,9 +1079,9 @@ export class AppWindow {
 		event: Electron.IpcMainInvokeEvent,
 		payload: { action: iAction; shouldNotSave?: boolean; isRecording?: boolean; shouldNotSleep?: boolean },
 	) {
-		if(this.webView && this.webView.playwrightInstance) {
-			console.log("Starting action",  this.webView.playwrightInstance.actionDescriptor.describeAction(payload.action));
-		} else { 
+		if (this.webView && this.webView.playwrightInstance) {
+			console.log("Starting action", this.webView.playwrightInstance.actionDescriptor.describeAction(payload.action));
+		} else {
 			console.log("Starting action", payload.action.type);
 		}
 
@@ -1169,7 +1169,7 @@ export class AppWindow {
 		// 	this.webView.dispose();
 		// 	this.webView = undefined;
 		// }
-		if(this.webView && this.webView.playwrightInstance) {
+		if (this.webView && this.webView.playwrightInstance) {
 			this.webView.playwrightInstance.clear();
 		}
 		this.store.dispatch(resetRecorderState(state));

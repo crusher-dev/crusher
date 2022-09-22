@@ -29,11 +29,10 @@ import { linkOpen } from "electron-app/src/utils/url";
 import { resolveToFrontEndPath } from "@shared/utils/url";
 
 const TitleComponent = ({ projectName }) => {
-
     return (
         <div css={titleStyle}>
-                <b css={titleBoldStyle}>{projectName}</b>
-                <LinkPointer onClick={linkOpen.bind(this, resolveToFrontEndPath("/"))} css={openAppCss}>open app</LinkPointer>
+            <b css={titleBoldStyle}>{projectName}</b>
+            <LinkPointer onClick={linkOpen.bind(this, resolveToFrontEndPath("/"))} css={openAppCss}>app</LinkPointer>
         </div>
     );
 };

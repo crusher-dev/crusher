@@ -146,8 +146,6 @@ const TestListItem = ({ test, isItemSelected, index, deleteTest, lock }) => {
     const [isEditingName, setIsEditingName] = React.useState(false);
     const [emoji, setEmoji] = React.useState(test.emoji);
     const { addNotification } = useBuildNotifications();
-
-    console.log("Test is", test);
     const navigate = useNavigate();
 
     const listItemActionsStyle = React.useMemo(() => listItemActionsCss(isHover), [isHover]);
@@ -198,7 +196,7 @@ const TestListItem = ({ test, isItemSelected, index, deleteTest, lock }) => {
                     <EditIcon css={editIconCss} />
                     <span css={editTextCss}>edit</span>
                 </div>
-                <div onClick={handleRunTest} css={playIconContainerCss} title="run this test">
+                <div onClick={handleRunTest} css={runTestsCSS} title="run this test">
                     <PlayIcon css={playIconCss} />
                     <span css={runTextCss}>run</span>
                 </div>
@@ -285,7 +283,7 @@ const editIconCss = css`
         opacity: 0.8;
     }
 `;
-const playIconContainerCss = css`
+const runTestsCSS = css`
     display: flex;
     align-items: center;
 	gap: 4rem;
@@ -293,6 +291,7 @@ const playIconContainerCss = css`
     top: -2px;
     padding: 6px 6px;
     :hover {
+        color: #fff;
         background: linear-gradient(
             0deg
             , rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.06)),#131314;
@@ -305,6 +304,7 @@ const editContainerCss = css`
 
     padding: 6px 6px;
     :hover {
+        color: #fff;
         background: linear-gradient(
             0deg
             , rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.06)),#131314;
@@ -400,7 +400,7 @@ const TestList = ({ tests, deleteTest }) => {
                     <EditIcon css={editIconCss} />
                     <span css={editTextCss}>delete</span>
                 </div>
-                <div onClick={handleRun} css={playIconContainerCss}>
+                <div onClick={handleRun} css={runTestsCSS}>
                     <PlayIcon css={playIconCss} />
                     <span css={runTextCss}>run</span>
                 </div>

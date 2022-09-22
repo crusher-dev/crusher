@@ -13,7 +13,6 @@ import { css } from "@emotion/react";
 import { App } from "./app";
 import "../../static/assets/styles/tailwind.css";
 import { LoginScreen } from "./screens/auth/login";
-import { CreateTestScreen } from "../ui/screens/createTest";
 import { DashboardScreen } from "./screens/dashboard";
 import { SelectProjectScreen } from "../ui/screens/selectProject";
 import { UnDockCodeScreen } from "../ui/screens/undockCode";
@@ -70,7 +69,6 @@ function InsideRouter() {
                 <Route path="/onboarding" element={<AuthOnboardingScreen />} />
                 <Route path="/" element={<DashboardScreen />} />
                 <Route path="/select-project" element={<ProjectsListScreen />} />
-                <Route path="/create-test" element={<CreateTestScreen />} />
                 <Route path="/code-editor" element={<UnDockCodeScreen />} />
                 <Route path="/settings" element={<SettingsScreen />} />
                 <Route path="/recorder" element={<App/>} />

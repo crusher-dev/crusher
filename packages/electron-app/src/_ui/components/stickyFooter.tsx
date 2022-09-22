@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import { useBuildNotifications } from "../hooks/tests";
 import { LinkPointer } from "./LinkPointer";
 import { Tooltip } from "@dyson/components/atoms/tooltip/Tooltip";
+import { Conditional } from "@dyson/components/layouts";
 
 interface IProps {
     className?: string;
@@ -21,23 +22,28 @@ const StickyFooter = ({ className, ...props }: IProps) => {
     const proxyState = useSelector(getProxyState);
 
     const isProxyWorking = Object.keys(proxyState).length;
-    
+
     const isProxyDisabled = !proxyIsInitializing && !isProxyWorking;
 
     return (
         <div css={containerCss} className={`${className}`}>
             <div css={contentCss}>
-                {notifications.length ? (
-                                    <div css={notificationContainerCss}>
-                                    <div css={notificationContentCss}>
-                                        <ConsoleIcon css={consoleIconCss} />
-                                        <span css={notificationTextCss}>2: Last build has passed</span>
-                                    </div>
-                                    <div css={notificationActionCss}>
-                                        <Link css={linkCss}>view report</Link>
-                                    </div>
-                                </div>
-                ) : ""}
+                <Conditional showIf={notifications.length}>
+                    <div css={notificationContainerCss}>
+                        <div css={notificationContentCss}>
+                            <ConsoleIcon css={consoleIconCss} />
+                            <span css={notificationTextCss}>2: Last build has passed</span>
+                        </div>
+                        <div css={notificationActionCss}>
+                            <Link css={linkCss}>view report</Link>
+                        </div>
+                    </div>
+                </Conditional>
+
+                <Conditional showIf={!notifications.length}>
+                    <span css={footerBottomLabel}>test page</span>
+                </Conditional>
+
 
                 <div css={contextContainerCss}>
                     <Tooltip content={isProxyDisabled ? "disabled" : (proxyIsInitializing ? "initializng" : "active")} placement="top" type="hover">
@@ -139,21 +145,27 @@ const notificationContentCss = css`
     align-items: center;
 `;
 const notificationTextCss = css`
-    font-family: 'Gilroy';
-    font-style: normal;
+
     font-weight: 400;
     font-size: 13px;
     letter-spacing: 0.027em;
     margin-left: 8px;
     color: rgba(255, 255, 255, 0.69);
 `;
+
+const footerBottomLabel = css`
+
+    font-size: 13px;
+    letter-spacing: 0.027em;
+    color: #828282;
+`;
+
 const notificationActionCss = css`
     margin-left: auto;
     padding-right: 12px;
 `;
 const linkCss = css`
-    font-family: 'Gilroy';
-    font-style: normal;
+
     font-weight: 400;
     font-size: 12px;
     letter-spacing: 0.03em;

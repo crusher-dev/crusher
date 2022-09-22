@@ -86,7 +86,7 @@ const testInputCss = (isActive, isEditing, name) => {
         padding-left: 8px !important;
         border: ${isEditing ? "1px solid rgba(255, 255, 255, 0.25)" : "1px solid transparent"};
         border-radius: ${isEditing ? "4px" : "0px"};
-        width: ${isEditing ? Math.max(7.5 * name.length, 120) + "rem" : "100%"};
+        width: ${isEditing ? Math.max(7.5 * name.length, 120) + "rem" : "fit-content"};
         user-select: ${isEditing ? "auto" : "none"};
 
         font-family: Gilroy;

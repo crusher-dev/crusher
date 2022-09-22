@@ -193,7 +193,7 @@ const TestListItem = ({ test, isItemSelected, index, deleteTest, lock }) => {
             )}
 
 
-            <div className={"action-buttons pt-2"} css={listItemActionsStyle}>
+            <div className={"action-buttons"} css={listItemActionsStyle}>
                 <div onClick={handleEdit} css={editContainerCss} title="edit this test">
                     <EditIcon css={editIconCss} />
                     <span css={editTextCss}>edit</span>
@@ -264,7 +264,7 @@ const runTextCss = css`
 
     letter-spacing: 0.03em;
     position: relative;
-    top: 2rem;
+    top: 1rem;
 
     color: #b061ff;
 `;
@@ -274,7 +274,7 @@ const editTextCss = css`
     font-weight: 500;
     font-size: 13px;
     letter-spacing: 0.03em;
-    margin-left: 6px;
+    margin-left: 4px;
     color: #BDBDBD;
 `;
 
@@ -288,18 +288,27 @@ const editIconCss = css`
 const playIconContainerCss = css`
     display: flex;
     align-items: center;
-	gap: 6rem;
+	gap: 4rem;
     position: relative;
     top: -2px;
-	:hover {
-		opacity: 0.8;
+    padding: 6px 6px;
+    :hover {
+        background: linear-gradient(
+            0deg
+            , rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.06)),#131314;
+                border-radius: 6px;
     }
 `;
 const editContainerCss = css`
     display: flex;
     align-items: center;
+
+    padding: 6px 6px;
     :hover {
-        opacity: 0.8;
+        background: linear-gradient(
+            0deg
+            , rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.06)),#131314;
+                border-radius: 6px;
     }
 `;
 const playIconCss = css`
@@ -312,7 +321,7 @@ const listItemActionsCss = (isActive: boolean) => {
             color: #9f87ff;
             margin-left: auto;
             align-items: center;
-            gap: 16rem;
+            gap: 4rem;
      `;
 }
 const loadingIconCss = css`

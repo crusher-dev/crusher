@@ -24,19 +24,28 @@ import { StickyFooter } from "../../components/stickyFooter";
 import { Footer } from "../../components/footer";
 import { useBuildNotifications } from "../../hooks/tests";
 import { triggerLocalBuild } from "../../utils/recorder";
+import { LinkPointer } from "../../components/LinkPointer";
+import { linkOpen } from "electron-app/src/utils/url";
+import { resolveToFrontEndPath } from "@shared/utils/url";
 
 const TitleComponent = ({ projectName }) => {
 
     return (
         <div css={titleStyle}>
-            <span>
                 <b css={titleBoldStyle}>{projectName}</b>
-            </span>
+                <LinkPointer onClick={linkOpen.bind(this, resolveToFrontEndPath("/"))} css={openAppCss}>open app</LinkPointer>
         </div>
     );
 };
 
 
+const openAppCss = css`
+    font-family: Gilroy;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 13px;
+    color: #828282;
+`;
 const rocketIconStyle = css`
 	font-size: 12px;
 	color: #ffffff;
@@ -65,6 +74,10 @@ const titleStyle = css`
     top: 65%;
     left: 50%;
     transform: translate(-50%, -50%);
+
+    display: flex;
+    align-items: center;
+    gap: 5px;
 `;
 const DashboardScreen = () => {
     const [animationComplete, setAnimationComplete] = React.useState(false);

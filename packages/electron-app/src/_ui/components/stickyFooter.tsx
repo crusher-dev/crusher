@@ -9,6 +9,8 @@ import { linkOpen } from "electron-app/src/utils/url";
 import { getIsProxyInitializing, getProxyState } from "electron-app/src/store/selectors/app";
 import { useSelector } from "react-redux";
 import { useBuildNotifications } from "../hooks/tests";
+import { LinkPointer } from "./LinkPointer";
+import { Tooltip } from "@dyson/components/atoms/tooltip/Tooltip";
 
 interface IProps {
     className?: string;
@@ -20,6 +22,8 @@ const StickyFooter = ({ className, ...props }: IProps) => {
 
     const isProxyWorking = Object.keys(proxyState).length;
     
+    const isProxyDisabled = !proxyIsInitializing && !isProxyWorking;
+
     return (
         <div css={containerCss} className={`${className}`}>
             <div css={contentCss}>
@@ -36,11 +40,13 @@ const StickyFooter = ({ className, ...props }: IProps) => {
                 ) : ""}
 
                 <div css={contextContainerCss}>
-                    {!proxyIsInitializing && !isProxyWorking ? (
-                        <DisabledCloudIcon css={[cloudIconCss, css`width: 22px; height: 16px`, clickableCss]} shouldAnimateGreen={false} />
-                    ) : (
-                        <CloudIcon css={[cloudIconCss, clickableCss]} shouldAnimateGreen={proxyIsInitializing} />
-                    )}
+                    <Tooltip content={isProxyDisabled ? "disabled" : (proxyIsInitializing ? "initializng" : "active")} placement="top" type="hover">
+                        {!proxyIsInitializing && !isProxyWorking ? (
+                            <DisabledCloudIcon css={[cloudIconCss, css`width: 22px; height: 16px`, clickableCss]} shouldAnimateGreen={false} />
+                        ) : (
+                            <CloudIcon css={[cloudIconCss, clickableCss]} shouldAnimateGreen={proxyIsInitializing} />
+                        )}
+                    </Tooltip>
                     {/* <NotepadIcon css={[notepadIconCss, clickableCss]} /> */}
                 </div>
             </div>

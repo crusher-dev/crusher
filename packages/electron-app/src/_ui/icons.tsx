@@ -1,8 +1,8 @@
 import React from "react";
 
-const CloudIcon = ({ shouldAnimateGreen, ...props }) => {
+const CloudIcon = React.forwardRef(({ shouldAnimateGreen, ...props }, ref) => {
   return (
-    <svg viewBox={"0 0 16 11"} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <svg viewBox={"0 0 16 11"} fill="none" xmlns="http://www.w3.org/2000/svg" ref={ref} {...props}>
       {shouldAnimateGreen ? (
         <linearGradient id="lg" x1="0.5" y1="1" x2="0.5" y2="0">
           <stop offset="0%" stopOpacity="1" stopColor="#E42475" />
@@ -28,11 +28,12 @@ const CloudIcon = ({ shouldAnimateGreen, ...props }) => {
 };
 
 
-const DisabledCloudIcon = ({ shouldAnimateGreen, ...props }) => (
+const DisabledCloudIcon = React.forwardRef(({ shouldAnimateGreen, ...props }, ref) => (
   <svg
     viewBox="0 0 25 19"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
+    ref={ref}
     {...props}
   >
     <path

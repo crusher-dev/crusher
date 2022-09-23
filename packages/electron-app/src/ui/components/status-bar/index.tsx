@@ -344,7 +344,7 @@ const StatusBar = (props: any) => {
 
 					{lastLogMessage ? (
 						<Conditional showIf={!clicked}>
-						<div css={logTextStyle} className={"ml-10 mt-4"}>
+						<div css={logTextStyle} className={"ml-10 mt-2"}>
 							{lastLogMessage ? getFormattedMessage(lastLogMessage) : ""}
 						</div>
 						</Conditional>

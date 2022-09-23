@@ -4,6 +4,7 @@ import * as path from "path";
 import { Disposer } from "../lib/disposable";
 import { PlaywrightInstance } from "../lib/playwright";
 import { TRecorderCrashState, TRecorderState } from "../store/reducers/recorder";
+import { isInspectModeOn } from "../store/selectors/recorder";
 import { AppWindow } from "./app-window";
 import { now } from "./now";
 
@@ -110,10 +111,16 @@ export class WebView {
 	async handleDebuggerEvents(event, method, params) {
 		if (method === "Overlay.inspectNodeRequested") {
 			const nodeObject = await this.webContents.debugger.sendCommand("DOM.resolveNode", { backendNodeId: params.backendNodeId });
-			await this.webContents.debugger.sendCommand("Runtime.callFunctionOn", {
-				functionDeclaration: "function(){const event = new CustomEvent('elementSelected', {detail:{element: this}}); window.dispatchEvent(event);}",
-				objectId: nodeObject.object.objectId,
-			});
+			const payload = isInspectModeOn(this.appWindow.store.getState() as any);
+				await this.webContents.debugger.sendCommand("Runtime.callFunctionOn", {
+					functionDeclaration: "function(){const event = new CustomEvent('elementSelected', {detail:{element: this}}); window.dispatchEvent(event);}",
+					objectId: nodeObject.object.objectId,
+				});
+				if(payload && payload.meta && payload.meta.action) {
+					// @TODO: Remove this timeout hack
+					setTimeout(() => { this.appWindow.getWebContents().executeJavaScript(`window["elementActionsCallback"]()`) }, 100);
+				}
+				
 			await this.webContents.debugger.sendCommand("Overlay.setInspectMode", {
 				mode: "none",
 				highlightConfig: highlighterStyle,

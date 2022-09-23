@@ -6,6 +6,7 @@ import { InputFocusHint } from "electron-app/src/_ui/components/inputs/inputFocu
 import { InspectModeBanner } from "../inspectModeBanner";
 import { ElementActions } from "./elementActions";
 import { PageActions } from "./pageActions";
+import { CodeAction } from "./codeAction";
 
 interface IProps {
     className?: string;
@@ -17,16 +18,12 @@ const ActionsPanel = ({className, ...props}: IProps) => {
 
     const selectedElement = useSelector(getSelectedElement);
     const content = React.useMemo(() => {
-        if(selectedElement) {
             return (<>
+                <PageActions defaultExpanded={true} css={topBorderCss} />
                 <ElementActions />
+                <CodeAction/>
             </>)
-        } else {
-            return (<>
-                <PageActions />
-            </>)
-        }
-    }, [selectedElement]);
+    }, []);
 
     return (
         <div className={`${className}`} css={containerCss}>
@@ -42,6 +39,12 @@ const ActionsPanel = ({className, ...props}: IProps) => {
     );
 };
 
+
+const topBorderCss = css`
+    border-top-width: 0.5px;
+    border-top-style: solid;
+    border-top-color: #1B1B1B;
+`;
 const containerCss = css`
 	flex: 1;
 	display: grid;
@@ -57,7 +60,7 @@ const headerCss = css`
 
 const contentCss = css`
 	height: 100%;
-	padding-top: 0rem;
+	padding-top: 10rem;
 	overflow-y: auto;
 `;
 

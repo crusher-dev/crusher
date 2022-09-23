@@ -50,7 +50,7 @@ interface IProps {
     dropdownCss?: any;
 };
 
-const ButtonDropdown = ({options, id, hideDropdown, primaryOption, className, callback, ...props}: IProps) => {
+const ButtonDropdown = ({options, id, hideDropdown, primaryOption, wrapperCss, className, callback, ...props}: IProps) => {
     const [showActionDropdown, setShowActionDropdown] = React.useState(false);
 
     const handleCallback = React.useCallback((id: string) => {
@@ -67,6 +67,7 @@ const ButtonDropdown = ({options, id, hideDropdown, primaryOption, className, ca
 
     return (
     <Dropdown
+        css={wrapperCss}
         initialState={showActionDropdown}
         component={<ActionButtonDropdown options={dropdownOptions} callback={handleCallback} />}
         callback={setShowActionDropdown.bind(this)}

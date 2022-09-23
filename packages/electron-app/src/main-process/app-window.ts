@@ -54,7 +54,7 @@ export class AppWindow {
 	private webView: WebView;
 	private emitter = new Emitter();
 
-	private store: Store<unknown, AnyAction>;
+	public store: Store<unknown, AnyAction>;
 
 	private _loadTime: number | null = null;
 	private _rendererReadyTime: number | null = null;
@@ -1014,8 +1014,10 @@ export class AppWindow {
 		}
 	}
 
-	private turnOnInspectMode() {
-		this.store.dispatch(setInspectMode(true));
+	private turnOnInspectMode(event, payload) {
+		const { meta } = payload;
+
+		this.store.dispatch(setInspectMode(payload));
 		this.webView.turnOnInspectMode();
 		// this.webView.webContents.focus();
 	}

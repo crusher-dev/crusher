@@ -191,8 +191,8 @@ const performReplayTestUrlAction = async (testId, redirectAfterSuccess = false) 
 	return ipcRenderer.invoke("replay-test-url-action", { testId, redirectAfterSuccess });
 };
 
-const turnOnInspectMode = () => {
-	ipcRenderer.invoke("turn-on-recorder-inspect-mode");
+const turnOnInspectMode = (meta) => {
+	ipcRenderer.invoke("turn-on-recorder-inspect-mode", { meta });
 };
 
 const turnOnElementSelectorInspectMode = () => {

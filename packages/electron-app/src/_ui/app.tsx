@@ -340,8 +340,8 @@ const bodyCss = css`
 	display: flex;
 	flex-direction: column;
 	position: relative;
-	position: relative;
 	z-index: 201;
+	overflow: hidden;
 `;
 const toolbarCss = (isCUstomCodeOn: boolean) => {
     return css`

@@ -47,10 +47,10 @@ export const updateRecorderCrashState = (stateMeta: { state: TRecorderState; pay
 	};
 };
 
-export const setInspectMode = (isOn: boolean) => {
+export const setInspectMode = (payload: any) => {
 	return {
 		type: SET_INSPECT_MODE,
-		payload: { isOn },
+		payload: payload,
 	};
 };
 

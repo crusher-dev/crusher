@@ -90,7 +90,7 @@ interface IRecorderReducer {
 		payload: INavigatingStatePayload | IRecordingActionStatePayload | IReplayingStatePayload | iActionRequiredStatePayload | null;
 	};
 	crashState: { type: TRecorderCrashState; payload: any } | null;
-	isInspectModeOn: boolean;
+	isInspectModeOn: any;
 	isInspectElementSelectorModeOn: boolean;
 
 	selectedElement: iElementInfo | null;
@@ -142,7 +142,7 @@ const recorderReducer = (state: IRecorderReducer = initialState, action: AnyActi
 		case SET_INSPECT_MODE:
 			return {
 				...state,
-				isInspectModeOn: action.payload.isOn,
+				isInspectModeOn: action.payload,
 			};
 		case SET_INSPECT_ELEMENT_SELECTOR_MODE:
 			return {

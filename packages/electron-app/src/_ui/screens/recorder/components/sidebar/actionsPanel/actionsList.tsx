@@ -8,14 +8,19 @@ import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 
 interface IProps {
     title: string;
-    description: string;
-    items: Array<{id: string; content: any}>;
+    description?: string;
+    items?: Array<{id: string; content: any}>;
+    icon?: any;
     className?: string;
     callback?: any;
+
+    defaultExpanded?: boolean;
 }
 
 const ActionsList = ({className, ...props}: IProps) => {
-    const { title, description, callback, items } = props;
+    const { title, description, defaultExpanded, callback, icon, items } = props;
+
+    const [isExpanded, setIsExpanded] = React.useState(defaultExpanded);
     const store = useStore();
     
     const handleClick = React.useCallback((id: any) => {
@@ -29,6 +34,9 @@ const ActionsList = ({className, ...props}: IProps) => {
     }, [callback]);
 
     const itemsContent = React.useMemo(() => {
+        if (!items) {
+            return null;
+        }
         return items.map((item) => (
             <div onClick={handleClick.bind(this, item.id)} css={actionItemCss}>
                 {item.content}
@@ -37,34 +45,46 @@ const ActionsList = ({className, ...props}: IProps) => {
     }, [items]);
 
     return (
-        <div css={containerCss} className={`${className}`} {...props}>
-            <div css={headingCss}>
-                <ActionHeadingIcon css={headingIconCss} />
+        <div css={[containerCss, bottomSeperatorCss]} className={`${className}`} {...props}>
+            <div onClick={setIsExpanded.bind(this, !isExpanded)} css={[headingCss, bottomSeperatorCss]}>
+                {icon ? (
+                    <div css={headingIconCss}>
+                        {icon}
+                    </div>
+                ) : ""}
                 <div css={headingContentCss}>
                     <div css={headingTitleCss}>{title}</div>
-                    <div css={headingDescriptionCss}>{description}</div>
+                    {description ? (
+                        <div css={headingDescriptionCss}>{description}</div>
+                    ) : ""}
                 </div>
-                <PlayIconV3 css={playIconCss} />
+                {itemsContent ? (<PlayIconV3 css={playIconCss} />) : ""};
             </div>
-            <div css={contentCss}>
-                {itemsContent}
-            </div>
+            {isExpanded && itemsContent ? (
+                <div css={contentCss}>
+                    {itemsContent}
+                </div>
+            ) : ""}
         </div>
     );
 };
 
+const bottomSeperatorCss = css`
+    border-bottom-width: 0.5px;
+    border-bottom-style: solid;
+    border-bottom-color: #1B1B1B;
+`;
 const containerCss = css`
-    padding: 10rem 0rem;
 `;
 
 const headingCss = css`
-    background: linear-gradient(0deg, rgba(48, 60, 102, 0.42), rgba(48, 60, 102, 0.42)), #09090A;
     padding: 7rem 15rem;
     display: flex;
+    :hover {
+        background: rgba(85, 85, 85, 0.1);
+    }
 `;
 const headingIconCss = css`
-    width: 12rem;
-    height: 12rem;
     margin-top: 1rem;
     margin-left: -0.5rem;
 `;

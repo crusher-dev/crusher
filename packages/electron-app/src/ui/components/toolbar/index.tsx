@@ -482,21 +482,6 @@ enter to submit
 
 	return (
 		<div css={containerStyle} {...props}>
-			<Conditional showIf={isTestBeingVerified}>
-				<div css={testBeingVerifiedContainerStyle}>
-					{/* <span
-						css={drinkCupTextStyle}
-					>
-						Drink a cup of coffee meanwhile
-					</span> */}
-					<div css={verifyStatusIconStyle}>
-						<LoadingIconV2 css={loadingIconStyle} />
-						<span css={loadingTextStyle}>Crusher is verifying your test. </span>
-					</div>
-				</div>
-			</Conditional>
-			{/* Go Back button */}
-			<Conditional showIf={!isTestBeingVerified}>
 				{/* <BrowserButton
 					className={"ml-24 go-back-button"}
 					css={css`
@@ -593,6 +578,21 @@ enter to submit
 					</div>
 			
 				</div>
+
+				<Conditional showIf={isTestBeingVerified}>
+				<div css={testBeingVerifiedContainerStyle}>
+					{/* <span
+						css={drinkCupTextStyle}
+					>
+						Drink a cup of coffee meanwhile
+					</span> */}
+					<div css={verifyStatusIconStyle}>
+						<LoadingIconV2 css={loadingIconStyle} />
+						<span css={loadingTextStyle}>Crusher is verifying your test. </span>
+					</div>
+				</div>
+			</Conditional>
+			<Conditional showIf={!isTestBeingVerified}>
 				<Conditional showIf={isRecorderInInitialState}>
 					<Button onClick={handleUrlReturn.bind(this)} bgColor="tertiary-outline" css={buttonStyle}>
 						Start
@@ -622,7 +622,7 @@ enter to submit
 						</div>
 					</div>
 				</Conditional>
-			</Conditional>
+				</Conditional>
 			<SettingsModal isOpen={showSettingsModal} handleClose={handleCloseSettingsModal} />
 		</div>
 	);
@@ -699,7 +699,6 @@ const drinkCupTextStyle = css`
 const testBeingVerifiedContainerStyle = css`
 	display: flex;
 	align-items: flex-end;
-	width: 100%;
 `;
 const hammerIconStyle = css`
 	width: 19rem;
@@ -788,8 +787,8 @@ const inputStyle = css`
 		padding-left: 18rem;
 		padding-right: 110rem;
 
-		background: rgba(77, 77, 77, 0.2);
-		border: 0.5px solid rgba(55, 55, 55, 0.4);
+		background: rgba(77, 77, 77, 0.25) !important;
+		border: 0.5px solid rgba(55, 55, 55, 0.23) !important;
 		border-radius: 10px;
 
 		font-family: Gilroy;

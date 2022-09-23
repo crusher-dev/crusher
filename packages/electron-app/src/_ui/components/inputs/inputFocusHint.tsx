@@ -71,8 +71,8 @@ const inputCss = css`
 		padding-left: 18rem;
 		padding-right: 110rem;
 
-		background: rgba(77, 77, 77, 0.2);
-		border: 0.5px solid rgba(55, 55, 55, 0.4);
+		background: rgba(77, 77, 77, 0.25) !important;
+		border: 0.5px solid rgba(55, 55, 55, 0.23) !important;
 		border-radius: 10px;
 
 		font-family: Gilroy;

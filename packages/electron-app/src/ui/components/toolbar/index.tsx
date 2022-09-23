@@ -40,6 +40,7 @@ import { ButtonDropdown } from "electron-app/src/_ui/components/buttonDropdown";
 import { DropdownIconSVG } from "@dyson/assets/icons";
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
 import { generateRandomTestName, setEndOfContenteditable } from "electron-app/src/utils/renderer";
+import { NormalInput } from "electron-app/src/_ui/components/inputs/normalInput";
 
 const DeviceItem = ({ label }) => {
 	return (
@@ -318,6 +319,7 @@ const Toolbar = (props: any) => {
 				urlInputRef.current.blur();
 				return;
 			}
+			urlInputRef.current.value = validUrl;
 			setUrlInputError({ value: false, message: "" });
 			// setCurrentStep(1);
 			batch(() => {
@@ -560,18 +562,14 @@ enter to submit
 				<div css={inputContainerStyle}>
 					<div css={css`	display: flex;
 	flex-direction: column; position: absolute; left: calc(50% + 36rem); top: 50%; transform: translate(-50%, -50%);`}>
-						<Input
-										placeholder="Enter URL to test"
-										id={"target-site-input"}
-										className={"target-site-input"}
-										css={inputStyle}
-										onReturn={handleUrlReturn}
-										isError={urlInputError.value}
-										initialValue={url}
-										ref={urlInputRef}
-										// leftIcon={LeftIconComponent}
-										rightIcon={RightIconComponent}
-									/>
+						<NormalInput
+							placeholder={"Enter URL to test"}
+							onReturn={handleUrlReturn}
+							isError={urlInputError.value}
+							initialValue={url}
+							ref={urlInputRef}
+							rightIcon={RightIconComponent}
+						/>
 									<Conditional showIf={urlInputError.value}>
 										<span css={inputErrorMessageStyle}>{urlInputError.message}</span>
 									</Conditional>

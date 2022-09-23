@@ -26,13 +26,6 @@ const InfoOverLay = () => {
 		dispatch(setShowShouldOnboardingOverlay(false));
 	};
 
-	React.useEffect(() => {
-		if (showOnboardingOverlay) {
-			(document.querySelector("#target-site-input") as any).focus();
-			setIsOpen(true);
-		}
-	}, []);
-
 	if (!showOnboardingOverlay) return null;
 
 	return (

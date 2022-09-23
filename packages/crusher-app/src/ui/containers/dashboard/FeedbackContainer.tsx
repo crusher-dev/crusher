@@ -2,13 +2,25 @@
 import React, { useEffect, useRef, useState } from "react";
 
 import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
-import { AngryFace, Chat, CryFace, ExcitedFace, HappyFace } from "@svg/dashboard";
+import { AngryFace, Chat, CryFace, ExcitedFace, HappyFace, LoadingSVG } from "@svg/dashboard";
 import { css } from "@emotion/react";
 import { Button } from "dyson/src/components/atoms";
+import { sendDataToAirtable } from "@utils/external";
+import { useAtom } from "jotai";
+import { userAtom } from "@store/atoms/global/user";
+import { useRouter } from "next/router";
+import { Conditional } from "dyson/src/components/layouts";
 
 export default function DropdownContent() {
+    const [user] = useAtom(userAtom)
+    const router = useRouter()
 
-    const [selectedEmoji, setSelectedEmoji] = useState(null)
+    const [selectedEmoji, setSelectedEmoji] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [submitted, setSubmitted] = useState(false);
+
+    const [feedback, setFeedback] = useState(null)
+
     const ref = useRef()
 
     useEffect(() => {
@@ -16,6 +28,21 @@ export default function DropdownContent() {
             ref?.current?.focus()
         })
     }, [])
+
+    const data = async () => {
+        setLoading(true)
+        await sendDataToAirtable([{
+            "fields": {
+                userId: `${user.userId | user.email | user.name}`,
+                mood: selectedEmoji,
+                feedback: feedback,
+                page: router.asPath
+            }
+        }])
+        setLoading(false)
+    }
+
+
     return (
         <div className={"flex flex-col justify-between h-full"}>
 
@@ -39,7 +66,11 @@ export default function DropdownContent() {
                     </div>
 
                 </div>
-                <textarea ref={ref} css={textareaCSS} className={"mt-16 mb-12"} placeholder="what’s your feedback? 🥪" />
+                <textarea ref={ref} css={textareaCSS}
+                    value={feedback}
+                    onChange={(e) => {
+                        setFeedback(e.target.value)
+                    }} className={"mt-16 mb-12"} placeholder="what’s your feedback? 🥪" />
                 <div className="flex justify-between">
                     <Button bgColor={"tertiary"} css={cancel}>
                         <div className={"flex items-center"}>
@@ -50,9 +81,11 @@ export default function DropdownContent() {
                         </div>
                     </Button>
 
-                    <Button bgColor={"tertiary"} css={[cancel, submit]}>
+                    <Button disabled={loading} bgColor={"tertiary"} css={[cancel, submit]} onClick={data.bind(this)}>
                         <div className={"flex items-center"}>
-
+                            <Conditional showIf={loading}>
+                                <LoadingSVG className={"mr-4"} />
+                            </Conditional>
                             <span className="mt-1">
                                 send
                             </span>

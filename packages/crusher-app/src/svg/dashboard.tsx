@@ -104,7 +104,7 @@ export function RightArrow(props: any) {
 
 export function LoadingSVG(props: any) {
 	return (
-		<svg xmlns="http://www.w3.org/2000/svg" width={200} height={200} viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" display="block" {...props}>
+		<svg xmlns="http://www.w3.org/2000/svg" width={16} height={16} viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" display="block" {...props}>
 			<circle cx={50} cy={50} fill="none" stroke={props.color || "#85a2b6"} strokeWidth={"10rem"} r={35} strokeDasharray="164.93361431346415 56.97787143782138">
 				<animateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur=".61s" values="0 50 50;360 50 50" keyTimes="0;1" />
 			</circle>

@@ -26,9 +26,9 @@ export default function configureStore(intialState: any, scope = "main", isTempo
 	let middlewares: Array<any> = [];
 
 	if(!isTemporary) {
-		if (!isProduction()) {
-		middlewares.push(loggerMiddleware);
-		}
+		// if (!isProduction()) {
+		// middlewares.push(loggerMiddleware);
+		// }
 
 		if (scope === "renderer") {
 			middlewares = [forwardToMain, ...middlewares];

@@ -11,6 +11,7 @@ import { RightClickMenu } from '@dyson/components/molecules/RightClick/RightClic
 import { useStore } from "react-redux";
 import { deleteRecordedSteps } from 'electron-app/src/store/actions/recorder';
 import { performVerifyTest } from 'electron-app/src/ui/commands/perform';
+import { ResetIcon } from 'electron-app/src/_ui/icons';
 
 interface IProps {
     className?: string;
@@ -98,11 +99,16 @@ const StepsPanel = ({ className, ...props}: IProps) => {
         }
     }, [recordedSteps, selectedList]);
 
+    const resetTest = React.useCallback(() => {
+        performVerifyTest(false);
+    }, []);
+
     return (
         <div css={containerCss} className={`${className}`}>
             <div css={headerCss}>
                 <Text css={sectionHeadingCss}>{recordedSteps.length} Steps</Text>
                 <div css={sectionActionsCss}>
+                    <ResetIcon onClick={resetTest} css={[resetIconCss]}/>
                     <ConsoleIcon onClick={toggleStatusBar} css={[consoleIconCss, isStatusBarVisible ? consoleActiveIconCss : null]} />
                 </div>
             </div>
@@ -117,6 +123,14 @@ const StepsPanel = ({ className, ...props}: IProps) => {
     )
 }
 
+const resetIconCss  = css`
+    width: 12rem;
+    height: 12rem;
+    margin-right: 12rem;
+    :hover {
+        opacity: 0.8;
+    }
+`;
 const containerCss = css`
     border-radius: 4px 4px 0px 0px;
     border-top: 0.5rem solid #141414;
@@ -140,6 +154,8 @@ const sectionHeadingCss =  css`
 `;
 const sectionActionsCss = css`
     margin-left: auto;
+    display: flex;
+    align-items: center;
 `;
 const consoleIconCss = css`
     width: 11.7rem;

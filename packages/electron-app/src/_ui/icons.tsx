@@ -240,6 +240,28 @@ const BasketBallIcon = React.forwardRef((props, ref) => (
   </svg>
 ));
 
+const ResetIcon = React.forwardRef((props, ref) => (
+  <svg
+    viewBox="0 0 12 12"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    ref={ref}
+    {...props}
+  >
+    <g clipPath="url(#a)">
+      <path
+        d="M6.574 11.966a5.25 5.25 0 0 0 4.61-4.6 5.253 5.253 0 0 0-5.152-5.862V.092c0-.078-.098-.12-.164-.07L2.96 2.155a.09.09 0 0 0 0 .145l2.907 2.135c.066.049.164.005.164-.071v-1.41a3.806 3.806 0 0 1 3.733 4.06 3.82 3.82 0 0 1-3.547 3.535 3.807 3.807 0 0 1-4-3.187.724.724 0 0 0-1.43.218 5.256 5.256 0 0 0 5.786 4.385Z"
+        fill="#fff"
+      />
+    </g>
+    <defs>
+      <clipPath id="a">
+        <path fill="#fff" d="M0 0h12v12H0z" />
+      </clipPath>
+    </defs>
+  </svg>
+));
+
 export {
   DisabledCloudIcon,
   CloudIcon,
@@ -250,5 +272,6 @@ export {
   EditIcon,
   RocketIcon,
   ConsoleIconV3,
-  BasketBallIcon
+  BasketBallIcon,
+  ResetIcon
 }

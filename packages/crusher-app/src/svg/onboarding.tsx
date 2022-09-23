@@ -40,4 +40,30 @@ const DiscordSVG = (props) => (
 	</svg>
 );
 
+
+export function ShowSidebar(props) {
+	return (
+		<svg
+			width={12}
+			height={12}
+			fill="none"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
+			<path
+				fillRule="evenodd"
+				clipRule="evenodd"
+				d="M10.2 10.8a.6.6 0 00.6-.6V1.8a.6.6 0 00-.6-.6H1.8a.6.6 0 00-.6.6v8.4a.6.6 0 00.6.6h8.4zm1.8-.6a1.8 1.8 0 01-1.8 1.8H1.8A1.8 1.8 0 010 10.2V1.8A1.8 1.8 0 011.8 0h8.4A1.8 1.8 0 0112 1.8v8.4z"
+				fill="#ADADAD"
+			/>
+			<path
+				fillRule="evenodd"
+				clipRule="evenodd"
+				d="M7.8 12a.6.6 0 01-.6-.6V.6a.6.6 0 011.2 0v10.8a.6.6 0 01-.6.6zM2.576 8.224a.6.6 0 010-.848L4.55 5.4 2.576 3.424a.6.6 0 11.848-.848l2.4 2.4a.6.6 0 010 .848l-2.4 2.4a.6.6 0 01-.848 0z"
+				fill="#ADADAD"
+			/>
+		</svg>
+	);
+}
+
 export { CopyIconSVG, GitSVG, DiscordSVG };

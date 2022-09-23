@@ -24,7 +24,7 @@ function Dashboard() {
 				<div className={"flex flex-row items-center justify-center"} css={onboardingLesson}>
 					<div css={contentContainerScroll}>
 						<div className="flex justify-between items-center">
-							<TextBlock weight={600} fontSize={19} color="#898989">Get started with short videos</TextBlock>
+							<TextBlock weight={600} fontSize={19} color="#b0b0b0">Get started with short videos</TextBlock>
 
 							<div className="flex">
 								<LinkBlock type="plain" css={topLink}>guide</LinkBlock>

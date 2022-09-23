@@ -20,7 +20,7 @@ import { projectsAtom } from "../../store/atoms/global/project";
 import { buildFiltersAtom } from "../../store/atoms/pages/buildPage";
 import { updateMeta } from "../../store/mutators/metaData";
 
-import { DiscordSVG } from "@svg/onboarding";
+import { DiscordSVG, ShowSidebar } from "@svg/onboarding";
 import { GithubSVG } from "@ui/containers/auth/signup";
 import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import { Tooltip } from "dyson/src/components/atoms/tooltip/Tooltip";
@@ -566,18 +566,46 @@ margin-right: 3px;
 }
 `
 
+const sidebarIconCSS = css`
+position: absolute;
+    top: 18px;
+    left: 20px;
+    cursor: pointer;
+    z-index: 20;
+    /* padding: 8px 12px; */
+    height: 20px;
+    width: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+	border-radius: 6px;
+	:hover{
+		background: #323232;
+	}
+
+`
+
 export const SidebarTopBarLayout = ({ children, noContainerWidth = false, hideSidebar = false, setContainerWidth = true }) => {
+	const [showSidebar, setShowSidebar] = useState(hideSidebar);
 	return (
 		<div className={"flex"} css={background}>
-			<Conditional showIf={!hideSidebar}>
+			<Conditional showIf={!showSidebar}>
 				<LeftSection />
 			</Conditional>
 
-			<div className={"w-full"}>
+
+			<div className={"w-full relative"}>
 				<TopNavbar>
+					<Conditional showIf={showSidebar}>
+						<div css={sidebarIconCSS} onClick={setShowSidebar.bind(this, !showSidebar)}>
+							<ShowSidebar />
+						</div>
+
+					</Conditional>
+
 					<div className="flex items-center h-full">
 						<ProjectSection />
-
 						<NavBarLeft />
 					</div>
 				</TopNavbar>

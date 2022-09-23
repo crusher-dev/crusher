@@ -137,7 +137,9 @@ const actionItemCss = css`
     cursor: default;
 
     :hover {
-        color: #fff;
+        text-decoration-line: underline;
+
+        color: #B55BFF;
     }
 `;
 

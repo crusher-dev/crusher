@@ -1,6 +1,6 @@
 {
     "PAGE": {
-        "TAKE_VIEWPORT_SCREENSHOT": "Take viewport screenshot",
+        "TAKE_VIEWPORT_SCREENSHOT": "Screenshot",
         "WAIT": "Wait for seconds",
         "SHOW_SEO_MODAL": "Add SEO checks",
         "RUN_AFTER_TEST": "Run after Test"

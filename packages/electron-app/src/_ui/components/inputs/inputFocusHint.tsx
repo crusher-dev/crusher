@@ -68,7 +68,7 @@ const inputCss = css`
 		box-sizing: border-box;
 		border-radius: 8rem 0px 0px 8rem;
 		height: 100%;
-		padding-left: 18rem;
+		padding-left: 12rem;
 		padding-right: 110rem;
 
 		background: rgba(77, 77, 77, 0.25) !important;

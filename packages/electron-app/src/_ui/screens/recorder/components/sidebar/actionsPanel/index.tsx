@@ -58,9 +58,10 @@ const topBorderCss = css`
 `;
 const containerCss = css`
 	flex: 1;
-	display: grid;
 	overflow: hidden;
-	grid-template-rows: 60rem;
+    display: flex;
+    flex-direction: column;
+    padding-top: 18rem;
 `;
 const headerCss = css`
 	display: flex;
@@ -71,8 +72,8 @@ const headerCss = css`
 
 const contentCss = css`
 	height: 100%;
-	padding-top: 10rem;
-	overflow-y: auto;
+    padding-top: 16rem;
+    overflow-y: auto;
 `;
 
 export { ActionsPanel };

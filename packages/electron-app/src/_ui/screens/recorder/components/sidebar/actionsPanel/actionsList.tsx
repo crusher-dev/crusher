@@ -46,7 +46,7 @@ const ActionsList = ({className, ...props}: IProps) => {
 
     return (
         <div css={[containerCss, bottomSeperatorCss]} className={`${className}`} {...props}>
-            <div onClick={setIsExpanded.bind(this, !isExpanded)} css={[headingCss, bottomSeperatorCss]}>
+            <div onClick={setIsExpanded.bind(this, !isExpanded)} css={[headingCss, bottomSeperatorCss, isExpanded ? activeSectionCss : null]}>
                 {icon ? (
                     <div css={headingIconCss}>
                         {icon}
@@ -78,18 +78,21 @@ const containerCss = css`
 `;
 
 const headingCss = css`
-    padding: 7rem 15rem;
+    padding: 10rem 15rem;
     display: flex;
     :hover {
         background: rgba(85, 85, 85, 0.1);
     }
+`;
+const activeSectionCss = css`
+    background: rgba(85, 85, 85, 0.1);
 `;
 const headingIconCss = css`
     margin-top: 1rem;
     margin-left: -0.5rem;
 `;
 const headingContentCss = css`
-    margin-left: 8.5rem;
+    margin-left: 9.5rem;
     display: flex;
     flex: 1;
     flex-direction: column;
@@ -123,8 +126,8 @@ const playIconCss = css`
 const contentCss = css`
     margin: 8rem 0rem;
     display: grid;
-    grid-template-columns: auto auto;
-    padding: 5rem 35rem;
+    grid-template-columns: auto 125rem;
+    padding: 7rem 35rem;
     row-gap: 13rem;
 `;
 

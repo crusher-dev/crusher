@@ -110,7 +110,6 @@ const projectItemContainer = css`
 const projectItem = css`
 	width: 100%;
 	height: 124rem;
-	width: 354rem;
 
 	border: 0.5px solid #1b1b1b;
 	border: 0.5px solid #252525;

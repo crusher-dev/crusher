@@ -31,7 +31,7 @@ const ActionsPanel = ({className, ...props}: IProps) => {
     return (
         <div className={`${className}`} css={containerCss}>
             <div css={headerCss}>
-                <InputFocusHint hint={"⌘ + k"} placeholder={"search actions"}/>
+                <InputFocusHint hint={`⌘ + k`} placeholder={"search actions"}/>
                 <ResetIcon onClick={handleResetTest} css={[resetIconCss]}/>
             </div>
             <div css={contentCss} className="custom-scroll">

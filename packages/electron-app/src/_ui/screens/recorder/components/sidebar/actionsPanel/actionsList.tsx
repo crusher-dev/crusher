@@ -58,7 +58,7 @@ const ActionsList = ({className, ...props}: IProps) => {
                         <div css={headingDescriptionCss}>{description}</div>
                     ) : ""}
                 </div>
-                {itemsContent ? (<PlayIconV3 css={playIconCss} />) : ""};
+                {itemsContent ? (<PlayIconV3 css={[playIconCss, isExpanded ? pointerDownCss : undefined]} />) : ""};
             </div>
             {isExpanded && itemsContent ? (
                 <div css={contentCss}>
@@ -69,6 +69,9 @@ const ActionsList = ({className, ...props}: IProps) => {
     );
 };
 
+const pointerDownCss = css`
+    transform: rotate(90deg);
+`;
 const bottomSeperatorCss = css`
     border-bottom-width: 0.5px;
     border-bottom-style: solid;
@@ -119,6 +122,9 @@ const playIconCss = css`
 	margin-left: auto;
 	margin-right: 5rem;
 	margin-top: 3rem;
+    path {
+        fill: #797979;
+    }
 	:hover {
 		opacity: 0.8;
 	}

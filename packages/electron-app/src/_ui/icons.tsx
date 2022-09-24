@@ -316,6 +316,21 @@ const CodeIcon = React.forwardRef((props, ref) => (
   </svg>
 ));
 
+const UnCollapseIcon = (props) => (
+  <svg
+    viewBox={'0 0 8 7'}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path
+      d="M.274.833h7.463c.21 0 .358.29.19.49L4.28 6.032a.327.327 0 0 1-.527 0l-3.69-4.71c-.147-.2-.02-.49.211-.49Z"
+      fill="#2D2D2D"
+    />
+  </svg>
+)
+
+
 export {
   DisabledCloudIcon,
   CloudIcon,
@@ -330,5 +345,6 @@ export {
   ResetIcon,
   PageIcon,
   ElementIcon,
-  CodeIcon
+  CodeIcon,
+  UnCollapseIcon
 }

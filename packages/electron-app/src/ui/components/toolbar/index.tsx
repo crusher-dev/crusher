@@ -509,14 +509,14 @@ enter to submit
 							}
 						`}
 					/>
-					<div css={css`display: flex; align-items: center; font-size: 13.5rem; color: #fff; margin-left: 9rem; font-family: Gilroy; font-weight: 400; margin-top: 2rem;`}>
+					<div className={"mt-6 ml-10"} css={css`display: flex; align-items: center; font-size: 13.5rem; color: #fff; font-family: Gilroy; font-weight: 400;`}>
 						<span css={css`font-size: 12rem; color: #606060;`}>tests/</span>
 						<div css={css`display: flex; align-items: center;`}>
 							<OnOutsideClick onOutsideClick={handleOutsideClick}>
 								{isEditingTestName ? (
 									<input onKeyDown={handleKeyPress} className={"testName"} css={[isEditingTestName ? css`margin-left: 5.75rem;  padding-top: 2rem; width: 90rem; height: 28rem; padding: 0rem; border-radius: 8px; padding-left: 8rem; padding-right: 8rem;  background: linear-gradient(0deg, rgba(176, 74, 255, 0.02), rgba(176, 74, 255, 0.02)), #0D0D0E;  border: 0.5px solid rgba(176, 74, 255, 0.54);` : null]} defaultValue={testName} />
 								) : (
-									<span css={css`margin-left: 5.75rem; color: #D2D2D2;
+									<span css={css`margin-left: 4.25rem; color: #D2D2D2;
 									border-radius: 8px;
 									padding: 0rem;
 									width: 94rem;
@@ -739,7 +739,7 @@ const containerStyle = css`
 	padding: 8rem;
 	background-color: #09090A;
 	padding: 5rem;
-	padding-left: 9rem;
+	padding-left: 11rem;
 	min-height: 70rem;
 	position: relative;
 	z-index: 999;

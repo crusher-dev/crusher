@@ -29,7 +29,8 @@ function getRandArrIndex(arr) {
 
 export function generateRandomTestName() {
 	const  wordsArr = words.data;
-	return `${wordsArr[getRandArrIndex(wordsArr)]}-${wordsArr[getRandArrIndex(wordsArr)]}` 
+	const currentDate = new Date();
+	return `${wordsArr[getRandArrIndex(wordsArr)]}-${("0" + currentDate.getHours()).slice(-2) + "" + currentDate.getMinutes()}` 
 };
 export function setEndOfContenteditable(contentEditableElement)
 {

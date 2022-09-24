@@ -20,6 +20,7 @@ interface IProps {
     setIsActive: any;
     onClick?: any;
     onContextMenu?: any;
+    isLast: boolean;
 };
 
 const menuItems = [
@@ -27,7 +28,7 @@ const menuItems = [
     {id: "delete", label: 'Delete', shortcut: <div>⌘+D</div>}
 ];
 
-const Step = ({className, isActive, onContextMenu, onClick, setIsActive, ...props}: IProps) => {
+const Step = ({className, isActive, onContextMenu, onClick, setIsActive, isLast, ...props}: IProps) => {
     const { stepId } = props;
     const stepInfo = useSelector(getStepInfo(stepId));
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -60,7 +61,7 @@ const Step = ({className, isActive, onContextMenu, onClick, setIsActive, ...prop
                         <LoadingIcon style={{}} css={runningIconCss}/>
                     ) : ""}
                     {stepInfo.isCompleted ? (
-                        <GreenCheckboxIcon css={completedIconCss}/>
+                        <GreenCheckboxIcon css={[completedIconCss, !isLast ? inActiveIconCss : null]}/>
                     ): ""}
                     {stepInfo.isFailed ? (
                         <TextBlock css={failedStepTaglineCss}>
@@ -75,9 +76,21 @@ const Step = ({className, isActive, onContextMenu, onClick, setIsActive, ...prop
             </div>
     )
 };
+
+const inActiveIconCss = css`
+    path {
+        fill: rgba(99, 99, 99, 0.91);
+    }
+`;
 const containerCss = css`
     padding-right: 11rem;
     border-radius: 2rem;
+    border-width: 0.5px 0px;
+    border-style: solid;
+    border-color: #1C1B1B;
+    &:not(:first-child){
+        border-top: none;
+    }
     :hover {
         background:  rgba(199, 81, 255, 0.14);
     }

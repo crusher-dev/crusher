@@ -76,7 +76,9 @@ const inputCss = css`
 		font-weight: 600;
 		font-size: 13rem;
 		color: rgba(255, 255, 255, 0.67);
-
+        :focus {
+            border-color: #D660FF !important;
+        }
 	}
 	}
 

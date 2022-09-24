@@ -9,15 +9,16 @@ interface IProps {
 };
 const InputFocusHint = ({ hint, placeholder, className, ...props }: IProps) => {
     const ref = React.useRef(null);
+	const [isFocused, setIsFocused] = React.useState(false);
 
     const HintComponent = React.useMemo(() => {
         if(!hint) return null;
         return (
-            <div css={hintCss}>
+            <div css={[hintCss, isFocused ? focusedHintCss : undefined]}>
                 {hint}
             </div>
         );
-    }, [hint]);
+    }, [isFocused, hint]);
 
     return (
         <Input
@@ -26,6 +27,8 @@ const InputFocusHint = ({ hint, placeholder, className, ...props }: IProps) => {
             initialValue={""}
             ref={ref}
             rightIcon={HintComponent}
+			onFocus={() => setIsFocused(true)}
+			onBlur={() => setIsFocused(false)}
         />
     );
 }
@@ -85,6 +88,9 @@ const inputCss = css`
 		::placeholder {
 			color: rgba(255, 255, 255, 0.4);
 		}
+		:focus {
+            border-color: #D660FF !important;
+        }
 		
 	}
 	}
@@ -103,8 +109,10 @@ const hintCss = css`
     font-weight: 400;
     font-size: 12.7rem;
 
-
-    color: #444444;
+	color: #242424;
     margin-right: 12rem;
+`;
+const focusedHintCss = css`
+	color: #444444;
 `;
 export { InputFocusHint };

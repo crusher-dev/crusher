@@ -44,9 +44,9 @@ const ActionsPanel = ({className, ...props}: IProps) => {
 };
 
 const resetIconCss  = css`
-    width: 12rem;
-    height: 12rem;
-    margin-right: 12rem;
+    width: 13rem;
+    height: 13rem;
+    margin-left: 12rem;
     :hover {
         opacity: 0.8;
     }
@@ -67,7 +67,6 @@ const headerCss = css`
 	display: flex;
 	align-items: center;
 	padding: 0rem 14rem;
-	justify-content: space-between;
 `;
 
 const contentCss = css`

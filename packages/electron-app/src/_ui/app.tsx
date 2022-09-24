@@ -256,7 +256,7 @@ const App = () => {
     const toolbarStyle = React.useMemo(() => { toolbarCss(recorderState.type === TRecorderState.CUSTOM_CODE_ON) }, [recorderState]);
 
     return (
-        <Wrapper figmaUrl={"https://www.figma.com/proto/MsJZCnY5NvrDF4kL1oczZq/Crusher-%7C-Aug?node-id=2305%3A6102&scaling=min-zoom&page-id=2305%3A5930"}>
+        // <Wrapper figmaUrl={"https://www.figma.com/proto/MsJZCnY5NvrDF4kL1oczZq/Crusher-%7C-Aug?node-id=2305%3A6102&scaling=min-zoom&page-id=2305%3A5930"}>
 			<div>
 				<div css={dragableStyle} className={"drag"}></div>
 				<div css={contentStyle}>
@@ -271,7 +271,7 @@ const App = () => {
 				<Global styles={globalCss}/>
 				<InfoOverLay />
 			</div>
-        </Wrapper>
+        // </Wrapper>
     )
 };
 

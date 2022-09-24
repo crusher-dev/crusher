@@ -76,7 +76,7 @@ const SAVE_TEST_ACTION_DROPDOWN_OPTIONS = [
 	{id: ITestActionEnum.SAVE, content: (<span>Save</span>)}
 ];
 const UPDATE_TEST_ACTION_DROPDOWN_OPTIONS = [
-	{id: ITestActionEnum.VERIFY_UPDATE, content: (<span>Verify & Update</span>)},
+	{id: ITestActionEnum.VERIFY_UPDATE, content: (<span>Update</span>)},
 	{id: ITestActionEnum.UPDATE, content: (<span>Update</span>)}
 ];
 
@@ -211,7 +211,8 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 	return editingSessionMeta ? (
 		<ButtonDropdown
 			dropdownCss={buttonDropdownCss}
-			css={[buttonDropdownMainButtonCss, css`width: 132rem;`]}
+			wrapperCss={css`background: #B341F9; border-radius: 8rem; .dropdown-icon { background: rgba(0, 0, 0, 0.2) !important; }`}
+			css={[buttonDropdownMainButtonCss, css`width: 66rem;`]}
 			options={UPDATE_TEST_ACTION_DROPDOWN_OPTIONS}
 			primaryOption={isTestVerificationComplete ? ITestActionEnum.UPDATE : ITestActionEnum.VERIFY_UPDATE}
 			callback={handleCallback}
@@ -627,7 +628,7 @@ enter to submit
 };
 
 const verifySaveTestContainerStyle = css`
-	margin-left: 13rem;
+	margin-left: 11rem;
 `;
 
 StepActionMenu.whyDidYouRender = true;
@@ -722,7 +723,7 @@ const menuContainerStyle = css`
 	color: #fff;
 `;
 const settingsIconStyle = css`
-	height: 14rem;
+	height: 15rem;
 	path {
 		fill: rgba(255, 255, 255, 0.2);
 	}
@@ -743,7 +744,7 @@ const containerStyle = css`
 	min-height: 70rem;
 	position: relative;
 	z-index: 999;
-	padding-right: 18rem;
+	padding-right: 16rem;
 `;
 const inputStyle = css`
 	height: 40rem;
@@ -806,6 +807,7 @@ const inputStyle = css`
 	}
 `;
 const buttonStyle = css`
+	background: #B341F9!important;
 	font-size: 14rem;
 	box-sizing: border-box;
 	border-radius: 8rem !important;

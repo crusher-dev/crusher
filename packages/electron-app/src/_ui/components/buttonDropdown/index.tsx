@@ -3,6 +3,7 @@ import { css } from "@emotion/react";
 import { Dropdown } from "@dyson/components/molecules/Dropdown";
 import { ActionButton } from "electron-app/src/ui/components/buttons/action.button";
 import { DownIcon } from "electron-app/src/ui/icons";
+import { SaveButtonDownIcon } from "../../icons";
 
 const ActionButtonDropdown = ({options, callback}) => {
     const handleClick = React.useCallback((optionId: string) => {
@@ -77,7 +78,7 @@ const ButtonDropdown = ({options, id, hideDropdown, primaryOption, wrapperCss, c
 
         {!hideDropdown ? (
             <div className={"dropdown-icon"} css={downIconContainerCss}>
-            <DownIcon fill={"#fff"} css={downIconCss} />
+            <SaveButtonDownIcon css={downIconCss} />
             </div>
         ): ""}
      
@@ -113,7 +114,7 @@ const downIconContainerCss = css`
     background: #7146CC;
     display: flex;
     align-items: center;
-    padding: 0rem 9rem;
+    padding: 0rem 7rem;
     border-top-right-radius: 6rem;
     border-bottom-right-radius: 6rem;
 
@@ -122,7 +123,8 @@ const downIconContainerCss = css`
     }
 `;
 const downIconCss = css`
-    width: 9rem;
+    width: 13rem;
+    height: 7rem;
 `;
 
 export { ButtonDropdown };

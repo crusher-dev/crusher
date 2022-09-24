@@ -330,6 +330,22 @@ const UnCollapseIcon = (props) => (
   </svg>
 )
 
+const SaveButtonDownIcon = (props) => (
+  <svg
+    viewBox="0 0 13 7"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path
+      d="m11.653 1.227-5 4.546-5-4.546"
+      stroke="#fff"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+)
 
 export {
   DisabledCloudIcon,
@@ -346,5 +362,6 @@ export {
   PageIcon,
   ElementIcon,
   CodeIcon,
-  UnCollapseIcon
+  UnCollapseIcon,
+  SaveButtonDownIcon
 }

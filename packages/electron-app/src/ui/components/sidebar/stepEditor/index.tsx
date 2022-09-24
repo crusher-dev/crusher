@@ -72,7 +72,7 @@ const StepInfoEditor = ({ action, isPinned, setIsPinned, actionIndex, ...props }
 			onClick={setIsPinned!.bind(this, true)}
 			css={[containerStyle, scrollBarStyle, isPinned ? pinnedContainerStyle : null]}
 		>
-			<div className={"font-600 text-15 flex p-12 pt-8 pb-8 pl-8 mt-6"}>
+			<div className={"font-600 text-15 flex"}>
 				<div onDoubleClick={handleNameDoubleClick.bind(this)}>
 					<input
 						ref={stepNameRef}
@@ -100,13 +100,11 @@ const StepInfoEditor = ({ action, isPinned, setIsPinned, actionIndex, ...props }
 	);
 };
 const containerStyle = css`
-	min-width: 325rem;
-	padding-bottom: 8rem;
-	position: fixed;
+	min-width: 412rem;
+	padding: 24rem 20rem;
 	border-radius: 8rem;
-	background: #111213;
-	border: 1px solid #272727;
-	transform: translateX(100%);
+	border-bottom: 0.5px solid rgba(255, 255, 255, 0.06);
+	border-radius: 16px 16px 0px 0px;
 	font-family: Cera Pro;
 	bottom: 0%;
 	min-height: 274rem;

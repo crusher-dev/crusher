@@ -38,6 +38,7 @@ const StepsPanel = ({ className, ...props}: IProps) => {
         return recordedSteps.map((step, index) => {
             return (
                 <Step
+                    step={step}
                     onContextMenu={selectItem.bind(this, index)}
                     onClick={handleStepClick.bind(this, index)}
                     isActive={isItemSelected(index)}

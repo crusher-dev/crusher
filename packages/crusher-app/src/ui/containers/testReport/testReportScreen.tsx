@@ -27,6 +27,7 @@ import { CorrentSVG } from "@svg/builds";
 import { GithubSquare, GithubSVG } from "@svg/social";
 import { CommentIcon, PlayIcon, PlusCircle, ReloadIcon } from "@svg/dashboard";
 import Download from "../dashboard/Download";
+import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 
 const ReportSection = dynamic(() => import("./testList"));
 function BuildInfoTop() {
@@ -122,6 +123,7 @@ function ReportInfoTOp() {
 					<BuildInfoTop />
 					<BuildInfoButtons />
 				</div>
+				<BuildMainInfo />
 			</div>
 		</div>
 	);
@@ -129,8 +131,36 @@ function ReportInfoTOp() {
 
 
 
+function BuildMainInfo() {
+	return <React.Fragment>
+		<div className="mt-32">
+			<TextBlock color="#696969" fontSize={13}>Failed for few configuration</TextBlock>
+		</div>
+		<div className="flex justify-between items-start mt-80">
+			<div className="flex" css={flexGapInfo}>
+				<div>
+					<TextBlock color="#696969" fontSize={13}>host</TextBlock>
+					<TextBlock color="#D0D0D0" fontSize={13} className="mt-8">crusher.dev</TextBlock>
+				</div>
+				<div>
+					<TextBlock color="#696969" fontSize={13}>host</TextBlock>
+					<TextBlock color="#D0D0D0" fontSize={13} className="mt-8">crusher.dev</TextBlock>
+				</div>
+			</div>
+			<div className="flex items-center">
+				<GithubSquare className="mr-12" />
+				<Text color="#696969" fontSize={13}>by himanshu</Text>
+			</div>
+		</div>
+	</React.Fragment>;
+}
+
+const flexGapInfo = css`
+	gap: 40rem;
+`
+
 function BuildInfoButtons() {
-	return <div className="flex items-center" css={btnGap}>
+	return <div className="flex items-start" css={btnGap}>
 
 		<Reload />
 		<Review />
@@ -150,7 +180,7 @@ function Reload() {
 
 	return (
 		<React.Fragment>
-			<Button bgColor={"tertiary"} title="Rerun this build" onClick={runProjectTest.bind(this)} css={creatTestCSS}>
+			<Button size="medium" bgColor={"tertiary"} title="Rerun this build" onClick={runProjectTest.bind(this)} css={creatTestCSS}>
 				<div className={"flex items-center"}>
 					<ReloadIcon />
 				</div>
@@ -171,7 +201,7 @@ function Review() {
 			<Conditional showIf={showCreateTest}>
 				<Download onClose={setShowCreateTest.bind(this, false)} />
 			</Conditional>
-			<Button title="leave a comment/review" bgColor={"tertiary"} onClick={runProjectTest} css={creatTestCSS}>
+			<Button size="medium" title="leave a comment/review" bgColor={"tertiary"} onClick={runProjectTest} css={creatTestCSS}>
 				<div className={"flex items-center"}>
 					<CommentIcon className={"mr-6"} />
 					<span className="mt-1">
@@ -209,7 +239,7 @@ function RunLocally() {
 	}, []);
 
 	return (
-		<Button bgColor={"tertiary"} title="run test locally" onClick={runProjectTest} css={runTestCSS}>
+		<Button size="medium" bgColor={"tertiary"} title="run test locally" onClick={runProjectTest} css={runTestCSS}>
 			<div className={"flex items-center"}>
 				<PlayIcon className={"mr-6"} />
 				<span className="mt-2">

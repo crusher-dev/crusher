@@ -8,8 +8,7 @@ import { atom, useAtom } from "jotai";
 import { Button } from "dyson/src/components/atoms";
 import { Conditional } from "dyson/src/components/layouts";
 
-import { BackSVG } from "@svg/builds";
-import { LayoutSVG, ReportSVG } from "@svg/dashboard";
+
 import { CalendarSVG, FailedSVG, InitiatedSVG, PassedSVG, RerunSVG, ReviewRequiredSVG, RunningSVG, TestStatusSVG, ThreeEllipsisSVG, ThunderSVG } from "@svg/testReport";
 import { backendRequest } from "@utils/common/backendRequest";
 import { timeSince } from "@utils/common/dateTimeUtils";
@@ -84,7 +83,8 @@ function NameNStatusSection() {
 	usePageTitle(title);
 	return (
 		<div className={"flex items-center justify-between"}>
-			<div className={"flex items-center"}>
+			<div className={"flex "}>
+				<ImageSection />
 				<TitleSection />
 				<Button
 					size={"small"}
@@ -116,15 +116,15 @@ const section = [
 		icon: null,
 		key: "reports",
 	},
-	// {
-	// 	name: "Insights & Alert",
-	// 	icon: null,
-	// 	key: "insights"
-	// }
-	// {
-	// 	name: "History",
-	// 	icon: null,
-	// },
+	{
+		name: "Insights & Alert",
+		icon: null,
+		key: "insights"
+	},
+	{
+		name: "History",
+		icon: null,
+	},
 ];
 
 const selectedTabAtom = atom(0);
@@ -137,13 +137,28 @@ export const rerunBuild = async (buildId) => {
 	sendSnackBarEvent({ type: "normal", message: "We've started new build" });
 };
 
+function ImageSection() {
+	return <div className="mr-46">
+		<img src="https://i.imgur.com/GT2hLO9.png" css={previewImgCss} />
+	</div>;
+}
+
+const previewImgCss = css`
+
+width: 304rem;
+height: 220rem;
+
+
+border: 0.5px solid rgba(255, 255, 255, 0.1);
+border-radius: 15px;
+`
 function TabBar() {
 	const [selectedTabIndex, setSelectedTabIndex] = useAtom(selectedTabAtom);
 	return (
 		<div css={Tab} className={"flex mt-74 "}>
 			{section.map(({ name, icon, key }, i) => (
 				<div onClick={setSelectedTabIndex.bind(this, i)} key={key}>
-					<div css={[TabItem, selectedTabIndex === i && selected]} className={`flex items-center justify-center text-15`}>
+					<div css={[TabItem, selectedTabIndex === i && selected]} className={`flex items-center justify-center text-14`}>
 						<Conditional showIf={icon}>
 							<span className={"mr-8"}>{icon}</span>
 						</Conditional>
@@ -187,7 +202,7 @@ function TestOverviewTab() {
 	}, [data]);
 
 	return (
-		<div className={"flex px-16 mt-48 justify-between"} css={buildContainerWidth}>
+		<div className={"flex  mt-48 justify-between"} css={buildContainerWidth}>
 			<div css={leftSection}>
 				<div css={overviewCard} className={"flex flex-col items-center justify-center pt-120"}>
 					<div className={"flex flex-col items-center"}>
@@ -318,8 +333,8 @@ export const TestReportScreen = () => {
 		// if (query.view_draft) setSelectedTabIndex(0);
 	}, [query.view_draft]);
 	return (
-		<div className={"mt-56"}>
-			<div className="px-16" css={buildContainerWidth}>
+		<div className={"pt-46"} css={css`background: #0C0C0C;`}>
+			<div css={buildContainerWidth}>
 				<NameNStatusSection />
 				<div className={"flex items-center leading-none mt-16 text-12"}>
 					<CalendarSVG className={"mr-8"} />
@@ -419,22 +434,21 @@ const waiting = css`
 const Tab = css``;
 
 const TabItem = css`
-	top: 1px;
 	position: relative;
-	height: 28px;
-	padding: 0 24px;
+	height: 28rem;
+	padding: 0 16rem;
 	padding-top: 1rem !important;
 
-	margin-right: 2px;
-	border-radius: 6px;
+	margin-right: 4rem;
+	border-radius: 6rem;
 	:hover {
-		background: #17181b;
+		background: rgba(255, 255, 255, 0.12);
 	}
 `;
 
 const selected = css`
 	border-radius: 6px;
 	color: #fff;
-	font-weight: 600;
-	background: #17181b;
+	font-weight: 500;
+	background: rgba(255, 255, 255, 0.12);
 `;

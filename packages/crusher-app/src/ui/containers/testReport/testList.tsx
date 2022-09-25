@@ -102,114 +102,64 @@ const getStatusFromTestInstances = (testInstances) => {
 	return "PASSED";
 };
 function ReportSection() {
-	const [stickyOverviewSection, setStickOverviewSection] = useState(false);
 	const [selectedTest, setSelectedTest] = React.useState(0);
 	const { query } = useRouter();
 	const { data } = useBuildReport(query.id);
 
-	useEffect(() => {
-		const heading = document.querySelector("#review-section");
-	}, []);
-
 	return (
-		<div className={"mt-40"}>
-			{/* <div css={containerWidth} className={"flex justify-between items-center"} id={"review-section"}>
-				<div className={"text-14"}>Jump to</div>
-				<div className={"flex items-center"}> */}
-			{/* Disabled for now*/}
-			{/* <div className={"mr-32 leading-none text-14 font-600"}>0/12 test viewed</div>
-			<ReviewSection />
-				</div>
-			</div> */}
-
-			{/* <Conditional showIf={stickyOverviewSection}>
-				<div className={"fixed"} css={stickyBar} id={"sticky-overview-bar"}>
-					<div css={containerCSS} className={"px-42 pt-10"}>
-						<div>
-							<div className={"flex justify-between items-center"}>
-								<div className={"text-14"}>
-									<span className={"text-16 font-cera font-600 mr-38"}>#{query.id}</span> */}
-			{/* <span className={"text-12 mr-16"}>12 june baseline</span> */}
-			{/* <span className={"text-12"}>Jump to</span> */}
-			{/* </div> */}
-			{/* <div className={"flex items-center pt-4"}> */}
-			{/* Disabled for now*/}
-			{/*<div className={"mr-32 leading-none text-14 font-600"}>-/12 test viewed</div>*/}
-			{/* <Button */}
-			{/* css={css` */}
-			{/* width: 144px; */}
-			{/* `} */}
-			{/* > */}
-			{/* Review */}
-			{/* </Button> */}
-			{/* </div> */}
-			{/* </div> */}
-			{/* </div> */}
-			{/*<div className={"mt-6"}>*/}
-			{/*	<FilterBar />*/}
-			{/*</div>*/}
-			{/* </div> */}
-			{/* </div> */}
-			{/* </Conditional> */}
-
-			{/*<div css={filterSection} className={"flex items-center mt-32  px-24"} id={"filter-section"}>*/}
-			{/*	<FilterBar />*/}
-			{/*</div>*/}
-
-			<div
-				className={"mt-40"}
-				css={css`
+		<div
+			className={"mt-28"}
+			css={css`
 					width: 100%;
-					background: #0E0F12;
+					background: #0A0A0A;
 					min-height: 100vh;
 					display: flex;
-					border-top-color: rgba(196,196,196,0.08);
-					border-top-width: 1rem;
+					border-top-color: rgba(255,255,255,0.04);
+					border-top-width: .5rem;
 					border-top-style: solid;
 				`}
-			>
-				<div
-					css={css`
+		>
+			<div
+				css={css`
 						width: 300rem;
 						border-right-style: solid;
 						border-right-width: 1rem;
 						border-right-color: rgba(196, 196, 196, 0.08);
 					`}
-				>
-					<div className="px-32 pt-32" css={testListHeadingStyle}>
-						Test list
-					</div>
-					<ul css={testListStyle}>
-						{data?.tests.map((testData, i) => (
-							<li
-								className="px-32 py-12"
-								css={
-									i === selectedTest
-										? css`
+			>
+				<div className="px-32 pt-32" css={testListHeadingStyle}>
+					Test list
+				</div>
+				<ul css={testListStyle}>
+					{data?.tests.map((testData, i) => (
+						<li
+							className="px-32 py-12"
+							css={
+								i === selectedTest
+									? css`
 												color: #c071ff;
 										  `
-										: undefined
-								}
-								onClick={setSelectedTest.bind(this, i)}
-							>
-								<TestStatusSVG type={getStatusFromTestInstances(testData?.testInstances)} height={"20rem"} width={"20rem"} css={css`min-width: 20rem;`} />
-								<span css={css`white-space: nowrap; overflow: hidden;`}>{testData!.name}</span>
-							</li>
-						))}
-					</ul>
-				</div>
-				<div
-					className={"px-24 py-4"}
-					css={css`
+									: undefined
+							}
+							onClick={setSelectedTest.bind(this, i)}
+						>
+							<TestStatusSVG type={getStatusFromTestInstances(testData?.testInstances)} height={"20rem"} width={"20rem"} css={css`min-width: 20rem;`} />
+							<span css={css`white-space: nowrap; overflow: hidden;`}>{testData!.name}</span>
+						</li>
+					))}
+				</ul>
+			</div>
+			<div
+				className={"px-24 py-4"}
+				css={css`
 						flex: 1;
 					`}
-				>
-					{data?.tests.length ? <TestCard key={selectedTest} id={selectedTest} testData={data.tests[selectedTest]} /> : ""}
-				</div>
-				{/* {data?.tests.map((testData, i) => (
+			>
+				{data?.tests.length ? <TestCard key={selectedTest} id={selectedTest} testData={data.tests[selectedTest]} /> : ""}
+			</div>
+			{/* {data?.tests.map((testData, i) => (
 					<TestCard key={i} id={i} testData={testData} />
 				))} */}
-			</div>
 		</div>
 	);
 }

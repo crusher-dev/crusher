@@ -15,6 +15,7 @@ import { TextHighlighter } from "./helper";
 import { HoverCard } from "@dyson/components/atoms/tooltip/Tooltip1";
 import { HelpContent } from "electron-app/src/_ui/components/stickyFooter";
 import { StepInfoEditor } from "electron-app/src/ui/components/sidebar/stepEditor";
+import { StepEditor } from "./stepEditor";
 
 interface IProps {
     className?: string;
@@ -36,6 +37,7 @@ const menuItems = [
 
 const Step = ({className, isActive, onContextMenu, step, onClick, setIsActive, isLast, ...props}: IProps) => {
     const { stepId } = props;
+    const [isEditorCardOpen, setIsEditorCardOpen] = React.useState(false);
     const stepInfo = useSelector(getStepInfo(stepId));
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
     const store = useStore();
@@ -47,40 +49,40 @@ const Step = ({className, isActive, onContextMenu, step, onClick, setIsActive, i
     const title = TextHighlighter({text: stepInfo.name});
     
     return (
-        <HoverCard autoHide={false} state={stepId as any === 0} css={css`padding: 0rem !important; background: rgb(5, 5, 5) !important; margin-left: -22rem !important;`} content={<StepInfoEditor  isPinned={true} setIsPinned={() => {}} a action={step} actionIndex={stepId} />} placement="right" type="hover" padding={8} offset={0}>
-        <div onContextMenu={onContextMenu} onClick={onClick} css={[containerCss, isActive ? activeItemCss : null]}>
-                <div className={"card"} css={contentCss}>
-                    {stepInfo.isRunning ? (
-                        <PointerArrowIcon css={runningPointerIconCss}/>
-                    ) : ""}
-                    <div css={stepTextCss}>
-                        <TextBlock
-                            css={[
-                                stepNameCss,
-                                stepInfo.isFailed ? failedTextNameCss : null,
-                                stepInfo.isRunning ? runningTextNameCss : null
-                        ]}>
-                            {title}
-                        </TextBlock>
-                        <TextBlock css={stepDescriptionCss}>{stepInfo.description}</TextBlock>
+        <HoverCard callback={setIsEditorCardOpen.bind(this)} wrapperCss={css`z-index: 123123123 !important;`} css={css`padding: 0rem !important; background: rgb(5, 5, 5) !important; margin-left: -22rem !important;`} content={<StepEditor stepId={stepId} />} placement="right" type="hover" padding={8} offset={0}>
+            <div onContextMenu={onContextMenu} onClick={onClick} css={[containerCss, isActive  || isEditorCardOpen ? activeItemCss : null]}>
+                    <div className={"card"} css={contentCss}>
+                        {stepInfo.isRunning ? (
+                            <PointerArrowIcon css={runningPointerIconCss}/>
+                        ) : ""}
+                        <div css={stepTextCss}>
+                            <TextBlock
+                                css={[
+                                    stepNameCss,
+                                    stepInfo.isFailed ? failedTextNameCss : null,
+                                    stepInfo.isRunning ? runningTextNameCss : null
+                            ]}>
+                                {title}
+                            </TextBlock>
+                            <TextBlock css={stepDescriptionCss}>{stepInfo.description}</TextBlock>
+                        </div>
+                        {stepInfo.isRunning ? (
+                            <LoadingIcon style={{}} css={runningIconCss}/>
+                        ) : ""}
+                        {stepInfo.isCompleted ? (
+                            <GreenCheckboxIcon css={[completedIconCss, !isLast ? inActiveIconCss : null]}/>
+                        ): ""}
+                        {stepInfo.isFailed ? (
+                            <TextBlock css={failedStepTaglineCss}>
+                                <WarningIcon css={failedIconCss}/>
+                                <span css={failedWarningTextCss}>&nbsp; This step failed</span>
+                            </TextBlock>
+                        ): ""}
                     </div>
-                    {stepInfo.isRunning ? (
-                        <LoadingIcon style={{}} css={runningIconCss}/>
-                    ) : ""}
-                    {stepInfo.isCompleted ? (
-                        <GreenCheckboxIcon css={[completedIconCss, !isLast ? inActiveIconCss : null]}/>
-                    ): ""}
                     {stepInfo.isFailed ? (
-                        <TextBlock css={failedStepTaglineCss}>
-                            <WarningIcon css={failedIconCss}/>
-                            <span css={failedWarningTextCss}>&nbsp; This step failed</span>
-                        </TextBlock>
-                    ): ""}
+                        <FailedStepCard stepId={stepId}/>
+                    ) : ""}
                 </div>
-                {stepInfo.isFailed ? (
-                    <FailedStepCard stepId={stepId}/>
-                ) : ""}
-            </div>
             </HoverCard>
     )
 };

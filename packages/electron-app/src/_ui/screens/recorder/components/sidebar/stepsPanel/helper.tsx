@@ -1,4 +1,3 @@
-
 /*
 	A function to replace text within outer brackets, counting the number of brackets
 	e.g.
@@ -39,11 +38,11 @@ let parseStepNameText = (text: string): Array<{ type: "normal" | "highlight"; va
 	return finalArr;
 };
 
-const TextHighlighter = ({text}) => {
+const TextHighlighter = ({text}, shouldStyle = false) => {
     return parseStepNameText(text).map((a) => {
         if (a.type === "highlight") {
             return (
-                <span className="highlight-box" title={a.value}>
+                <span className="highlight-box" style={{color: shouldStyle ? `rgba(121, 207, 255, 1)` : "auto"}} title={a.value}>
                     {a.value.length > 15 ? `${a.value.substring(0, 15)}...` : a.value}
                 </span>
             );

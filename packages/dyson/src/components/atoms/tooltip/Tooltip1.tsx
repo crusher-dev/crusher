@@ -52,7 +52,6 @@ export const TooltipBox = ({ children, className = "tooltip-box", el = "div" }) 
  */
 export const HoverCard: React.FC<TooltipWrapperProps> = ({ children, state, onStateChange, autoHide = "true", timer = 0, placement, type, content, padding = 0, className, ...props }) => {
     const [show, setShow] = useState(false);
-    const [computedStyle] = useState(null);
     const { offset: offsetWrapper = 8 } = props;
     const { x, y, reference, floating, update, strategy, refs } = useFloating({
         placement,
@@ -130,7 +129,7 @@ export const HoverCard: React.FC<TooltipWrapperProps> = ({ children, state, onSt
             {show && (
                 <TooltipBox>
                     <div
-                        css={[tooltipWrapper(padding), computedStyle, wrapperCSS]}
+                        css={[tooltipWrapper(padding), wrapperCSS]}
                         ref={floating}
                         style={{
                             position: strategy,
@@ -152,7 +151,7 @@ export const HoverCard: React.FC<TooltipWrapperProps> = ({ children, state, onSt
 
 const tooltipWrapper = (padding) => css`
 	position: fixed;
-	z-index: 400;
+	z-index: 123123123;
 	padding: 0px;
 	-webkit-animation: fadeIn 1s;
 	animation: fadeIn 0.25s;

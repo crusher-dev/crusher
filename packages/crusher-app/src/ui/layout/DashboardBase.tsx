@@ -23,6 +23,7 @@ import { useProjectDetails } from "@hooks/common";
 import Download from "@ui/containers/dashboard/Download";
 import { BackSVG, CorrentSVG } from "@svg/builds";
 import { LeftSection } from "./LeftSection";
+import { buildContainerWidth } from "@ui/containers/testReport/testReportScreen";
 
 
 export const iconCSS = css`
@@ -47,7 +48,7 @@ export const selectedCSS = css`
 `;
 
 
-export const dropdDown = css`
+export const dropDown = css`
 	bottom: -10px;
 	left: calc(100% - 4px);
 	position: absolute;
@@ -172,14 +173,19 @@ border-radius: 8px;
 `
 
 function TopNavbar({ children }) {
+	const { currentProject } = useProjectDetails()
+	const isCurrentProject = !!currentProject;
+	const { asPath } = useRouter()
+
+	const isBuildReport = isCurrentProject && asPath.includes('build/');
 	return (
 		<div css={[nav]}>
-			<div css={[containerWidth, contentContainer]}>{children}</div>
+			<div css={[containerWidth, isBuildReport && buildContainerWidth, contentContainer]}>{children}</div>
 		</div>
 	);
 }
 
-const NavbarLeft = () => {
+function NavbarLeft() {
 	const { currentProject } = useProjectDetails()
 	const [projects] = useAtom(projectsAtom);
 	const isCurrentProject = !!currentProject;
@@ -228,7 +234,6 @@ margin-right: 3px;
 	text-decoration: underline;
 	color: #fff;
 	transition: all 0ms linear;
-	// cursor: pointer;
 }
 `
 
@@ -252,7 +257,7 @@ position: absolute;
 
 `
 
-export const SidebarTopBarLayout = ({ children, noContainerWidth = false, hideSidebar = false, setContainerWidth = true }) => {
+export const SidebarTopBarLayout = ({ children, noContainerWidth = false, hideSidebar = false, setContainerWidth = true }): JSX.Element => {
 	const [showSidebar, setShowSidebar] = useState(hideSidebar);
 	return (
 		<div className={"flex"} css={background}>
@@ -352,8 +357,8 @@ const containerWidth = css`
 
 
 export const contentContainer = css`
- width: 1280rem;
-max-width: calc(100vw - 352rem);
+ max-width: 1280rem;
+width: calc(100vw - 352rem);
 margin: 0 auto;
 `
 
@@ -366,7 +371,7 @@ const scrollContainer = css`
 	overflow-y: scroll;
 	height: calc(100vh - 56rem);
 `;
-function NavbarRight() {
+function NavbarRight(): JSX.Element {
 	const { asPath } = useRouter()
 	const { currentProject } = useProjectDetails()
 	const isCurrentProject = !!currentProject;

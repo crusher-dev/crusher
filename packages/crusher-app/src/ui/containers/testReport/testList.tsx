@@ -213,12 +213,7 @@ function ReportSection() {
 		</div>
 	);
 }
-const containerWidth = css`
-	width: 1468rem;
-	max-width: calc(100vw - 352rem);
-	margin: 0 auto;
-	padding: 0 0;
-`;
+
 const testListStyle = css`
 	margin-top: 24rem;
 

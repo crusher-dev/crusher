@@ -152,7 +152,7 @@ function TabBar() {
 				</div>
 			))}
 			<div css={css`margin-left: auto;`}>
-				<ReviewSection/>
+				<ReviewSection />
 			</div>
 		</div>
 	);
@@ -187,7 +187,7 @@ function TestOverviewTab() {
 	}, [data]);
 
 	return (
-		<div className={"flex px-16 mt-48 justify-between"} css={containerWidth}>
+		<div className={"flex px-16 mt-48 justify-between"} css={buildContainerWidth}>
 			<div css={leftSection}>
 				<div css={overviewCard} className={"flex flex-col items-center justify-center pt-120"}>
 					<div className={"flex flex-col items-center"}>
@@ -299,7 +299,7 @@ export const TestReportScreen = () => {
 	const { query } = useRouter();
 	const { data } = useBuildReport(query.id);
 	const [, updateMetaData] = useAtom(updateMeta);
-	
+
 	const testsCount = data.tests.length;
 
 	useEffect(() => {
@@ -319,11 +319,11 @@ export const TestReportScreen = () => {
 	}, [query.view_draft]);
 	return (
 		<div className={"mt-56"}>
-			<div className="px-16" css={containerWidth}>
+			<div className="px-16" css={buildContainerWidth}>
 				<NameNStatusSection />
 				<div className={"flex items-center leading-none mt-16 text-12"}>
 					<CalendarSVG className={"mr-8"} />
-					<span style={{position: "relative", top: 1}}>{timeSince(new Date(data.startedAt))}</span>
+					<span style={{ position: "relative", top: 1 }}>{timeSince(new Date(data.startedAt))}</span>
 				</div>
 				<Conditional showIf={selectedTabIndex === 1}>
 					<div className={"flex leading-none mt-56 mb-52  items-center invisible"}>
@@ -361,11 +361,11 @@ export const TestReportScreen = () => {
 	);
 };
 
-const containerWidth = css`
-	width: 1468rem;
-	max-width: calc(100vw - 352rem);
+export const buildContainerWidth = css`
+max-width: 1300rem;
+width: calc(100vw - 296rem) !important;
+// width: calc(100vw - 352rem) !important;
 	margin: 0 auto;
-	padding: 0 0;
 `;
 const timeLine = css`
 	height: 2px;

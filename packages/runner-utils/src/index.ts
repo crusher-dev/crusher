@@ -154,7 +154,7 @@ class CrusherRunnerActions {
 				);
 
 				try {
-					startingScreenshot = await this._getCurrentScreenshot(page);
+					// startingScreenshot = await this._getCurrentScreenshot(page);
 				} catch (ex) {}
 			}
 
@@ -247,7 +247,7 @@ class CrusherRunnerActions {
 				if (shouldLog) {
 					let endingScreenshot = null;
 					try {
-						endingScreenshot = await this._getCurrentScreenshot(page);
+						// endingScreenshot = await this._getCurrentScreenshot(page);
 					} catch (ex) {}
 					console.error(err);
 					await this.handleActionExecutionStatus(

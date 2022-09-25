@@ -149,7 +149,7 @@ const StepEditor = ({stepId}) => {
     const steps = useSelector(getSavedSteps);
     const dispatch = useDispatch();
     const title = TextHighlighter({text: stepInfo.name}, true);
-    const showPreview = steps[stepId].type !== ActionsInTestEnum.SET_DEVICE;
+    const showPreview = ![ActionsInTestEnum.SET_DEVICE, ActionsInTestEnum.RUN_AFTER_TEST].includes(steps[stepId].type);
 
     const handleDelete = () => {
         dispatch(deleteRecordedSteps([stepId]));

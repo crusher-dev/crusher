@@ -42,7 +42,6 @@ const handleCompletion = async (store: Store, action: IDeepLinkAction, addNotifi
 			} as any));
             performReplayTestUrlAction(window["testsToRun"].list[0], true);
           } else {
-            return;
 			store.dispatch(clearCurrentLocalBuild());
 			// Time to redirect to dashboard
             const totalTestsInBuild = window["testsToRun"].count;

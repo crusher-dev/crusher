@@ -8,6 +8,9 @@ import { deleteRecordedSteps } from "electron-app/src/store/actions/recorder";
 import { FieldInput, FieldSelectorPicker } from "electron-app/src/ui/components/sidebar/stepEditor/fields";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { NormalInput } from "electron-app/src/_ui/components/inputs/normalInput";
+import { emitShowModal } from "electron-app/src/ui/components/modals";
+import { BrowserButton } from "electron-app/src/ui/components/buttons/browser.button";
+import { Button } from "@dyson/components/atoms";
 
 const SelectorInfo = ({stepId}) => {
     const stepInfo = useSelector(getStepInfo(stepId));
@@ -57,6 +60,39 @@ color: rgba(255, 255, 255, 0.54);
 
 const pencilIconCss = css`width: 10.5rem; height: 10.5rem; margin-top: -2rem; :hover { opacity: 0.8; } `;
 
+const InputValueEditor = ({step}) => {
+    const getInfo = (step) => {
+        if(step.type === ActionsInTestEnum.ADD_INPUT) {
+            const inputValue = step.payload.meta?.value?.value || "";
+            return { label: "Value:", value: inputValue, placeholder: "Enter value" };
+        }
+        if([ActionsInTestEnum.NAVIGATE_URL, ActionsInTestEnum.WAIT_FOR_NAVIGATION].includes(step.type)) {
+            const navigationUrlValue = step.payload.meta?.value || "";
+            return { label: "URL:", value: navigationUrlValue, placeholder: "Enter url"};
+        }
+
+        return null;
+    };
+
+    const fieldInfo = getInfo(step);
+    if(!fieldInfo) return null;
+
+    return (
+        <div className={'flex items-center mt-20'}>
+        <div css={labelCss} className={"mr-7 mt-3"}>{ fieldInfo.label }</div>
+        <NormalInput
+            placeholder={fieldInfo.placeholder}
+            size={"small"}
+            initialValue={fieldInfo.value}
+            inputWrapperCss={css`height: unset !important;`}
+            inputCss={inputCss}
+        />
+
+        <EditPencilIcon className={"ml-10"} css={editUrlIconCss} />
+    </div>
+    )
+};
+
 const StepMetaInfo = ({stepId}) => {
     const steps = useSelector(getSavedSteps);
     const stepInfo = useSelector(getStepInfo(stepId));
@@ -64,7 +100,7 @@ const StepMetaInfo = ({stepId}) => {
 
 
     const hasSelectors = steps[stepId].type.startsWith("ELEMENT");
-    const isUrlType =[ActionsInTestEnum.NAVIGATE_URL, ActionsInTestEnum.WAIT_FOR_NAVIGATION].includes(steps[stepId].type);
+    const showFieldInput =[ActionsInTestEnum.NAVIGATE_URL, ActionsInTestEnum.WAIT_FOR_NAVIGATION, ActionsInTestEnum.ADD_INPUT].includes(steps[stepId].type);
 
     return (
         <div css={stepMetaInfoContainerCss} className={"px-20 py-24"}>
@@ -72,20 +108,8 @@ const StepMetaInfo = ({stepId}) => {
                 { title }
             </div>
 
-            {isUrlType ? (
-                <div className={'flex items-center mt-20'}>
-                    <div css={labelCss} className={"mr-7 mt-3"}>URL:</div>
-                    <NormalInput
-                        placeholder={"Enter url"}
-                        size={"small"}
-                        initialValue={"https://google.com"}
-                        inputWrapperCss={css`height: unset !important;`}
-                        inputCss={inputCss}
-                    />
-
-                    <EditPencilIcon className={"ml-10"} css={editUrlIconCss} />
-                </div>
-                
+            {showFieldInput ? (
+               <InputValueEditor step={steps[stepId]}/>
             ) : ""}
 
             {hasSelectors ? (
@@ -96,11 +120,10 @@ const StepMetaInfo = ({stepId}) => {
                    </div> */}
                </div>
             ): ""}
-         
 
-            <div css={metaInfoFooterCss} className={`flex ${hasSelectors || isUrlType ? "mt-52" : "mt-30"}`}>
+            <div css={metaInfoFooterCss} className={`flex ${hasSelectors || showFieldInput ? "mt-52" : "mt-30"}`}>
                 <div>took 1.9 sec</div>
-                <div className={"ml-auto"}>view logs</div>
+                {/* <div className={"ml-auto"}>view logs</div> */}
             </div>
         </div>
     )
@@ -153,6 +176,16 @@ const stepMetaInfoContainerCss = css`
     background: rgb(5, 5, 5);
 `;
 
+// Actions map with modal types
+const EDIT_MODE_MAP = {
+	[ActionsInTestEnum.WAIT]: "WAIT",
+	[ActionsInTestEnum.VALIDATE_SEO]: "SHOW_SEO_MODAL",
+	[ActionsInTestEnum.CUSTOM_CODE]: "CUSTOM_CODE",
+	[ActionsInTestEnum.RUN_AFTER_TEST]: "RUN_AFTER_TEST",
+	[ActionsInTestEnum.ASSERT_ELEMENT]: "SHOW_ASSERT_MODAL",
+	[ActionsInTestEnum.CUSTOM_ELEMENT_SCRIPT]: "SHOW_CUSTOM_SCRIPT_MODAL",
+};
+
 const StepEditor = ({stepId}) => {
     const stepInfo = useSelector(getStepInfo(stepId));
     const steps = useSelector(getSavedSteps);
@@ -160,9 +193,18 @@ const StepEditor = ({stepId}) => {
     const title = TextHighlighter({text: stepInfo.name}, true);
     const showPreview = ![ActionsInTestEnum.SET_DEVICE, ActionsInTestEnum.RUN_AFTER_TEST].includes(steps[stepId].type);
 
+    const step = steps[stepId];
+    const shouldShowEditButton = Object.keys(EDIT_MODE_MAP).includes(step.type);
+
     const handleDelete = () => {
         dispatch(deleteRecordedSteps([stepId]));
     };
+	const handleEditModeClick = () => {
+		emitShowModal({
+			type: EDIT_MODE_MAP[step.type],
+			stepIndex: stepId,
+		});
+	};
 
     return (
         <div css={containerCss}>
@@ -181,6 +223,15 @@ const StepEditor = ({stepId}) => {
                     </div>
                 ) :""}
     
+                {
+                    shouldShowEditButton ? 
+                        (
+                            <Button onClick={handleEditModeClick.bind(this)} bgColor="tertiary-outline" css={buttonCss}>
+                                Open edit
+                            </Button>
+                        )
+                    : ""
+                }
                 <div className={"mt-28 flex justify-end"}>
                     <div onClick={handleDelete} css={deleteCss}>delete</div>
                 </div>
@@ -188,7 +239,17 @@ const StepEditor = ({stepId}) => {
         </div>
     )
 };
-
+const buttonCss = css`
+	background: #B341F9!important;
+	font-size: 14rem;
+	box-sizing: border-box;
+	border-radius: 8rem !important;
+	height: 36rem;
+    width: 114rem;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+`;
 const deleteCss = css`
     font-family: 'Gilroy';
     font-style: normal;

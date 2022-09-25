@@ -256,7 +256,7 @@ const App = () => {
     const toolbarStyle = React.useMemo(() => { toolbarCss(recorderState.type === TRecorderState.CUSTOM_CODE_ON) }, [recorderState]);
 
     return (
-        // <Wrapper figmaUrl={"https://www.figma.com/proto/MsJZCnY5NvrDF4kL1oczZq/Crusher-%7C-Aug?page-id=988%3A3439&node-id=988%3A3817&viewport=524%2C381%2C0.47&scaling=scale-down-width"}>
+        <Wrapper figmaUrl={"https://www.figma.com/proto/MsJZCnY5NvrDF4kL1oczZq/Crusher-%7C-Aug?node-id=2305%3A6559&scaling=min-zoom&page-id=2305%3A5930"}>
 			<div>
 				<div css={dragableStyle} className={"drag"}></div>
 				<div css={contentStyle}>
@@ -271,7 +271,7 @@ const App = () => {
 				<Global styles={globalCss}/>
 				<InfoOverLay />
 			</div>
-        // </Wrapper>
+        </Wrapper>
     )
 };
 
@@ -333,7 +333,7 @@ const globalCss = css`
 		}
 `;
 const sidebarCss = css`
-	width: 334rem;
+	width: 332rem;
 `;
 const bodyCss = css`
 	flex: 1;

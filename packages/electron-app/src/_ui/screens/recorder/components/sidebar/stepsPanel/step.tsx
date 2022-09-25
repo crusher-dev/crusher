@@ -12,6 +12,9 @@ import { GreenCheckboxIcon, LoadingIcon, PointerArrowIcon, WarningIcon } from "e
 import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
 import { RightClickMenu } from "@dyson/components/molecules/RightClick/RightClick";
 import { TextHighlighter } from "./helper";
+import { HoverCard } from "@dyson/components/atoms/tooltip/Tooltip1";
+import { HelpContent } from "electron-app/src/_ui/components/stickyFooter";
+import { StepInfoEditor } from "electron-app/src/ui/components/sidebar/stepEditor";
 
 interface IProps {
     className?: string;
@@ -20,6 +23,9 @@ interface IProps {
     setIsActive: any;
     onClick?: any;
     onContextMenu?: any;
+    isLast: boolean;
+
+    step?: any;
 };
 
 const menuItems = [
@@ -27,7 +33,8 @@ const menuItems = [
     {id: "delete", label: 'Delete', shortcut: <div>⌘+D</div>}
 ];
 
-const Step = ({className, isActive, onContextMenu, onClick, setIsActive, ...props}: IProps) => {
+
+const Step = ({className, isActive, onContextMenu, step, onClick, setIsActive, isLast, ...props}: IProps) => {
     const { stepId } = props;
     const stepInfo = useSelector(getStepInfo(stepId));
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -38,9 +45,10 @@ const Step = ({className, isActive, onContextMenu, onClick, setIsActive, ...prop
     }, [setIsActive]);
 
     const title = TextHighlighter({text: stepInfo.name});
-
+    
     return (
-            <div onContextMenu={onContextMenu} onClick={onClick} css={[containerCss, isActive ? activeItemCss : null]}>
+        <HoverCard autoHide={false} state={stepId as any === 0} css={css`padding: 0rem !important; background: rgb(5, 5, 5) !important; margin-left: -22rem !important;`} content={<StepInfoEditor  isPinned={true} setIsPinned={() => {}} a action={step} actionIndex={stepId} />} placement="right" type="hover" padding={8} offset={0}>
+        <div onContextMenu={onContextMenu} onClick={onClick} css={[containerCss, isActive ? activeItemCss : null]}>
                 <div className={"card"} css={contentCss}>
                     {stepInfo.isRunning ? (
                         <PointerArrowIcon css={runningPointerIconCss}/>
@@ -60,7 +68,7 @@ const Step = ({className, isActive, onContextMenu, onClick, setIsActive, ...prop
                         <LoadingIcon style={{}} css={runningIconCss}/>
                     ) : ""}
                     {stepInfo.isCompleted ? (
-                        <GreenCheckboxIcon css={completedIconCss}/>
+                        <GreenCheckboxIcon css={[completedIconCss, !isLast ? inActiveIconCss : null]}/>
                     ): ""}
                     {stepInfo.isFailed ? (
                         <TextBlock css={failedStepTaglineCss}>
@@ -73,11 +81,24 @@ const Step = ({className, isActive, onContextMenu, onClick, setIsActive, ...prop
                     <FailedStepCard stepId={stepId}/>
                 ) : ""}
             </div>
+            </HoverCard>
     )
 };
+
+const inActiveIconCss = css`
+    path {
+        fill: rgba(99, 99, 99, 0.91);
+    }
+`;
 const containerCss = css`
     padding-right: 11rem;
     border-radius: 2rem;
+    border-width: 0.5px 0px;
+    border-style: solid;
+    border-color: #1C1B1B;
+    &:not(:first-child){
+        border-top: none;
+    }
     :hover {
         background:  rgba(199, 81, 255, 0.14);
     }

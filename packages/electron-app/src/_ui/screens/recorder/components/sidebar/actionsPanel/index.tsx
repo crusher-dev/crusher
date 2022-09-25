@@ -7,6 +7,8 @@ import { InspectModeBanner } from "../inspectModeBanner";
 import { ElementActions } from "./elementActions";
 import { PageActions } from "./pageActions";
 import { CodeAction } from "./codeAction";
+import { ResetIcon } from "electron-app/src/_ui/icons";
+import { performVerifyTest } from "electron-app/src/ui/commands/perform";
 
 interface IProps {
     className?: string;
@@ -25,10 +27,12 @@ const ActionsPanel = ({className, ...props}: IProps) => {
             </>)
     }, []);
 
+    const handleResetTest = () => performVerifyTest(false);
     return (
         <div className={`${className}`} css={containerCss}>
             <div css={headerCss}>
-                <InputFocusHint hint={"⌘ + k"} placeholder={"search actions"}/>
+                <InputFocusHint hint={`⌘ + k`} placeholder={"search actions"}/>
+                <ResetIcon onClick={handleResetTest} css={[resetIconCss]}/>
             </div>
             <div css={contentCss} className="custom-scroll">
                 {isInspectModeOn || isElementSelectorInspectModeOn ? (
@@ -39,7 +43,14 @@ const ActionsPanel = ({className, ...props}: IProps) => {
     );
 };
 
-
+const resetIconCss  = css`
+    width: 13rem;
+    height: 13rem;
+    margin-left: 12rem;
+    :hover {
+        opacity: 0.8;
+    }
+`;
 const topBorderCss = css`
     border-top-width: 0.5px;
     border-top-style: solid;
@@ -47,21 +58,21 @@ const topBorderCss = css`
 `;
 const containerCss = css`
 	flex: 1;
-	display: grid;
 	overflow: hidden;
-	grid-template-rows: 60rem;
+    display: flex;
+    flex-direction: column;
+    padding-top: 18rem;
 `;
 const headerCss = css`
 	display: flex;
 	align-items: center;
 	padding: 0rem 14rem;
-	justify-content: space-between;
 `;
 
 const contentCss = css`
 	height: 100%;
-	padding-top: 10rem;
-	overflow-y: auto;
+    padding-top: 16rem;
+    overflow-y: auto;
 `;
 
 export { ActionsPanel };

@@ -316,6 +316,52 @@ const CodeIcon = React.forwardRef((props, ref) => (
   </svg>
 ));
 
+const UnCollapseIcon = (props) => (
+  <svg
+    viewBox={'0 0 8 7'}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path
+      d="M.274.833h7.463c.21 0 .358.29.19.49L4.28 6.032a.327.327 0 0 1-.527 0l-3.69-4.71c-.147-.2-.02-.49.211-.49Z"
+      fill="#2D2D2D"
+    />
+  </svg>
+)
+
+const SaveButtonDownIcon = (props) => (
+  <svg
+    viewBox="0 0 13 7"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path
+      d="m11.653 1.227-5 4.546-5-4.546"
+      stroke="#fff"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+)
+
+
+const EditPencilIcon = (props) => (
+  <svg
+    viewBox={"0 0 12 12"}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path
+      d="M10.866 1.135a1.312 1.312 0 0 0-1.857 0l-.578.578 1.856 1.856.579-.578a1.312 1.312 0 0 0 0-1.856ZM9.756 4.1 7.902 2.244 1.826 8.319a2.625 2.625 0 0 0-.66 1.107l-.4 1.342a.375.375 0 0 0 .466.467l1.343-.4a2.625 2.625 0 0 0 1.107-.66L9.757 4.1Z"
+      fill="#686868"
+    />
+  </svg>
+);
+
 export {
   DisabledCloudIcon,
   CloudIcon,
@@ -330,5 +376,8 @@ export {
   ResetIcon,
   PageIcon,
   ElementIcon,
-  CodeIcon
+  CodeIcon,
+  UnCollapseIcon,
+  SaveButtonDownIcon,
+  EditPencilIcon
 }

@@ -38,11 +38,13 @@ const StepsPanel = ({ className, ...props}: IProps) => {
         return recordedSteps.map((step, index) => {
             return (
                 <Step
+                    step={step}
                     onContextMenu={selectItem.bind(this, index)}
                     onClick={handleStepClick.bind(this, index)}
                     isActive={isItemSelected(index)}
                     setIsActive={selectItem.bind(this, index)}
                     stepId={index}
+                    isLast={index === recordedSteps.length - 1}
                 />
             )
         })
@@ -154,6 +156,8 @@ const sectionHeadingCss =  css`
 `;
 const sectionActionsCss = css`
     margin-left: auto;
+    margin-top: -3rem;
+    margin-right: -1rem;
     display: flex;
     align-items: center;
 `;

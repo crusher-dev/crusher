@@ -36,7 +36,7 @@ interface ITabButtonProps {
 }
 const TabButton = (props: ITabButtonProps) => {
 	const { title, className, selected, callback, count } = props;
-
+	if(count === 0) return null;
 	return (
 		<div
 			className={className || ""}
@@ -50,23 +50,6 @@ const TabButton = (props: ITabButtonProps) => {
 					: null,
 			]}
 		>
-			<UpMaximiseIcon
-				css={css`
-					width: 10rem;
-					height: 12rem;
-					margin-left: auto;
-					:hover {
-						opacity: 0.7;
-					}
-				`}
-			/>
-			<span
-				css={css`
-					margin-left: 8rem;
-				`}
-			>
-				{title}
-			</span>
 			<div>
 				<Conditional showIf={count != null}>
 					<span className="ml-4" css={logsCountStyle}>
@@ -261,7 +244,7 @@ const StatusBar = (props: any) => {
 		setClicked(true);
 	};
 
-	const lastLogMessage = logs && logs.get("_").length ? logs.get("_")[logs.get("_").length - 1].message : "";
+	const lastLogMessage = logs && logs.get("_").length ? logs.get("_")[logs.get("_").length - 1] : null;
 	const stepAction = React.useMemo(() => {
 		if (currentModal && typeof currentModal.stepIndex !== "undefined") {
 			const savedSteps = getSavedSteps(store.getState() as any);
@@ -269,6 +252,21 @@ const StatusBar = (props: any) => {
 		}
 		return null;
 	}, [currentModal]);
+
+
+	const getFormattedMessage = (logMessage) => {
+		const upperCase = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+		const isInfo = logMessage.type === "info";
+
+		return <div css={css`display: flex; align-items: center; font-family: 'Gilroy';
+		font-style: normal;
+		font-weight: 400;
+		font-size: 13.4rem;
+		`}>
+				<span css={css`color: rgba(90, 196, 255, 1); font-weight: 600;`}>{upperCase(logMessage.type)}:</span>
+				<span className={"ml-4"}>{(logMessage.message.length > 100 ? logMessage.message.substr(0, 100) + "..." : logMessage.message)}</span>
+			</div>;
+	};
 
 	return (
 		<div
@@ -330,9 +328,7 @@ const StatusBar = (props: any) => {
 						max-height: 38rem;
 						padding: 0rem 14rem;
 						padding-right: 0rem;
-						:hover {
-							background: #1d1e1f;
-						}
+	
 					`}
 				>
 					<TabButton
@@ -346,11 +342,14 @@ const StatusBar = (props: any) => {
 						}}
 					/>
 
-					<Conditional showIf={!clicked}>
-						<div css={logTextStyle} className={"ml-20"}>
-							{lastLogMessage.length > 100 ? lastLogMessage.substr(0, 100) + "..." : lastLogMessage}
+					{lastLogMessage ? (
+						<Conditional showIf={!clicked}>
+						<div css={logTextStyle} className={"ml-10 mt-2"}>
+							{lastLogMessage ? getFormattedMessage(lastLogMessage) : ""}
 						</div>
-					</Conditional>
+						</Conditional>
+					) : ""}
+		
 
 					<Conditional showIf={clicked}>
 						<div
@@ -522,12 +521,15 @@ const logTextStyle = css`
 	font-family: Gilroy;
 `;
 const logsCountStyle = css`
-	background: rgba(196, 196, 196, 0.1);
-	border-radius: 6rem;
-	font-size: 12rem;
-	font-family: Cera Pro;
-	color: rgba(255, 255, 255, 0.7);
-	padding: 4rem 6rem;
+	padding: 3rem 5rem;
+	font-family: 'Cera Pro';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    text-align: center;
+    color: #58575A;
+    background: rgba(196, 196, 196, 0.1);
+    border-radius: 4rem;
 `;
 
 const statusBarTabStyle = css`
@@ -541,16 +543,15 @@ const statusBarTabStyle = css`
 	}
 `;
 const statusBarContainerStyle = css`
-	background: rgb(12, 12, 13);
-	border: 1px solid #272d2d;
-	border-left: 0;
-	border-right: 0;
-	border-bottom: 0;
+	background: rgba(12, 12, 13);
 	width: 100%;
 	height: 38rem;
 	transition: max-height 0.1s, height 0.1s;
 	z-index: 999;
 	margin-top: auto;
+	border-top: 0.5px solid rgba(255, 255, 255, 0.17);
+	border-right: 0;
+	border-bottom: 0;
 `;
 
 export { StatusBar };

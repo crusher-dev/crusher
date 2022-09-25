@@ -40,6 +40,7 @@ import { ButtonDropdown } from "electron-app/src/_ui/components/buttonDropdown";
 import { DropdownIconSVG } from "@dyson/assets/icons";
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
 import { generateRandomTestName, setEndOfContenteditable } from "electron-app/src/utils/renderer";
+import { NormalInput } from "electron-app/src/_ui/components/inputs/normalInput";
 
 const DeviceItem = ({ label }) => {
 	return (
@@ -75,7 +76,7 @@ const SAVE_TEST_ACTION_DROPDOWN_OPTIONS = [
 	{id: ITestActionEnum.SAVE, content: (<span>Save</span>)}
 ];
 const UPDATE_TEST_ACTION_DROPDOWN_OPTIONS = [
-	{id: ITestActionEnum.VERIFY_UPDATE, content: (<span>Verify & Update</span>)},
+	{id: ITestActionEnum.VERIFY_UPDATE, content: (<span>Update</span>)},
 	{id: ITestActionEnum.UPDATE, content: (<span>Update</span>)}
 ];
 
@@ -210,7 +211,8 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 	return editingSessionMeta ? (
 		<ButtonDropdown
 			dropdownCss={buttonDropdownCss}
-			css={[buttonDropdownMainButtonCss, css`width: 132rem;`]}
+			wrapperCss={css`background: #B341F9; border-radius: 8rem; .dropdown-icon { background: rgba(0, 0, 0, 0.2) !important; }`}
+			css={[buttonDropdownMainButtonCss, css`width: 66rem;`]}
 			options={UPDATE_TEST_ACTION_DROPDOWN_OPTIONS}
 			primaryOption={isTestVerificationComplete ? ITestActionEnum.UPDATE : ITestActionEnum.VERIFY_UPDATE}
 			callback={handleCallback}
@@ -318,6 +320,7 @@ const Toolbar = (props: any) => {
 				urlInputRef.current.blur();
 				return;
 			}
+			urlInputRef.current.value = validUrl;
 			setUrlInputError({ value: false, message: "" });
 			// setCurrentStep(1);
 			batch(() => {
@@ -482,21 +485,6 @@ enter to submit
 
 	return (
 		<div css={containerStyle} {...props}>
-			<Conditional showIf={isTestBeingVerified}>
-				<div css={testBeingVerifiedContainerStyle}>
-					{/* <span
-						css={drinkCupTextStyle}
-					>
-						Drink a cup of coffee meanwhile
-					</span> */}
-					<div css={verifyStatusIconStyle}>
-						<LoadingIconV2 css={loadingIconStyle} />
-						<span css={loadingTextStyle}>Crusher is verifying your test. </span>
-					</div>
-				</div>
-			</Conditional>
-			{/* Go Back button */}
-			<Conditional showIf={!isTestBeingVerified}>
 				{/* <BrowserButton
 					className={"ml-24 go-back-button"}
 					css={css`
@@ -522,14 +510,14 @@ enter to submit
 							}
 						`}
 					/>
-					<div css={css`display: flex; align-items: center; font-size: 13.5rem; color: #fff; margin-left: 9rem; font-family: Gilroy; font-weight: 400; margin-top: 2rem;`}>
+					<div className={"mt-6 ml-10"} css={css`display: flex; align-items: center; font-size: 13.5rem; color: #fff; font-family: Gilroy; font-weight: 400;`}>
 						<span css={css`font-size: 12rem; color: #606060;`}>tests/</span>
 						<div css={css`display: flex; align-items: center;`}>
 							<OnOutsideClick onOutsideClick={handleOutsideClick}>
 								{isEditingTestName ? (
 									<input onKeyDown={handleKeyPress} className={"testName"} css={[isEditingTestName ? css`margin-left: 5.75rem;  padding-top: 2rem; width: 90rem; height: 28rem; padding: 0rem; border-radius: 8px; padding-left: 8rem; padding-right: 8rem;  background: linear-gradient(0deg, rgba(176, 74, 255, 0.02), rgba(176, 74, 255, 0.02)), #0D0D0E;  border: 0.5px solid rgba(176, 74, 255, 0.54);` : null]} defaultValue={testName} />
 								) : (
-									<span css={css`margin-left: 5.75rem; color: #D2D2D2;
+									<span css={css`margin-left: 4.25rem; color: #D2D2D2;
 									border-radius: 8px;
 									padding: 0rem;
 									width: 94rem;
@@ -575,24 +563,35 @@ enter to submit
 				<div css={inputContainerStyle}>
 					<div css={css`	display: flex;
 	flex-direction: column; position: absolute; left: calc(50% + 36rem); top: 50%; transform: translate(-50%, -50%);`}>
-						<Input
-										placeholder="Enter URL to test"
-										id={"target-site-input"}
-										className={"target-site-input"}
-										css={inputStyle}
-										onReturn={handleUrlReturn}
-										isError={urlInputError.value}
-										initialValue={url}
-										ref={urlInputRef}
-										// leftIcon={LeftIconComponent}
-										rightIcon={RightIconComponent}
-									/>
+						<NormalInput
+							placeholder={"Enter URL to test"}
+							onReturn={handleUrlReturn}
+							isError={urlInputError.value}
+							initialValue={url}
+							ref={urlInputRef}
+							rightIcon={RightIconComponent}
+						/>
 									<Conditional showIf={urlInputError.value}>
 										<span css={inputErrorMessageStyle}>{urlInputError.message}</span>
 									</Conditional>
 					</div>
 			
 				</div>
+
+				<Conditional showIf={isTestBeingVerified}>
+				<div css={testBeingVerifiedContainerStyle}>
+					{/* <span
+						css={drinkCupTextStyle}
+					>
+						Drink a cup of coffee meanwhile
+					</span> */}
+					<div css={verifyStatusIconStyle}>
+						<LoadingIconV2 css={loadingIconStyle} />
+						<span css={loadingTextStyle}>Crusher is verifying your test. </span>
+					</div>
+				</div>
+			</Conditional>
+			<Conditional showIf={!isTestBeingVerified}>
 				<Conditional showIf={isRecorderInInitialState}>
 					<Button onClick={handleUrlReturn.bind(this)} bgColor="tertiary-outline" css={buttonStyle}>
 						Start
@@ -622,14 +621,14 @@ enter to submit
 						</div>
 					</div>
 				</Conditional>
-			</Conditional>
+				</Conditional>
 			<SettingsModal isOpen={showSettingsModal} handleClose={handleCloseSettingsModal} />
 		</div>
 	);
 };
 
 const verifySaveTestContainerStyle = css`
-	margin-left: 13rem;
+	margin-left: 11rem;
 `;
 
 StepActionMenu.whyDidYouRender = true;
@@ -699,7 +698,6 @@ const drinkCupTextStyle = css`
 const testBeingVerifiedContainerStyle = css`
 	display: flex;
 	align-items: flex-end;
-	width: 100%;
 `;
 const hammerIconStyle = css`
 	width: 19rem;
@@ -725,7 +723,7 @@ const menuContainerStyle = css`
 	color: #fff;
 `;
 const settingsIconStyle = css`
-	height: 14rem;
+	height: 15rem;
 	path {
 		fill: rgba(255, 255, 255, 0.2);
 	}
@@ -742,11 +740,11 @@ const containerStyle = css`
 	padding: 8rem;
 	background-color: #09090A;
 	padding: 5rem;
-	padding-left: 9rem;
+	padding-left: 11rem;
 	min-height: 70rem;
 	position: relative;
 	z-index: 999;
-	padding-right: 18rem;
+	padding-right: 16rem;
 `;
 const inputStyle = css`
 	height: 40rem;
@@ -788,8 +786,8 @@ const inputStyle = css`
 		padding-left: 18rem;
 		padding-right: 110rem;
 
-		background: rgba(77, 77, 77, 0.2);
-		border: 0.5px solid rgba(55, 55, 55, 0.4);
+		background: rgba(77, 77, 77, 0.25) !important;
+		border: 0.5px solid rgba(55, 55, 55, 0.23) !important;
 		border-radius: 10px;
 
 		font-family: Gilroy;
@@ -809,6 +807,7 @@ const inputStyle = css`
 	}
 `;
 const buttonStyle = css`
+	background: #B341F9!important;
 	font-size: 14rem;
 	box-sizing: border-box;
 	border-radius: 8rem !important;

@@ -1,41 +1,34 @@
-import React from "react";
+import Input from "@dyson/components/atoms/input/Input";
 import { css } from "@emotion/react";
-import { Input } from "@dyson/components/atoms";
+import React, {useState, useCallback} from "react";
 
-interface IProps {
-    hint?: string;
-    placeholder?: string;
-    className?: string;
-};
-const InputFocusHint = ({ hint, placeholder, className, ...props }: IProps) => {
-    const ref = React.useRef(null);
-	const [isFocused, setIsFocused] = React.useState(false);
+const NormalInput = React.forwardRef(({ placeholder, handleUrlReturn, initialValue, rightIcon, ...props}, ref) => {
+    const [isInFocus, setIsInFocus] = useState(false);
+    const [url, setIsUrl] = useState(initialValue);
+    
+    const handleOnChange = useCallback((event) => {
+        setIsUrl(event.target.value);
+    }, []);
 
-    const HintComponent = React.useMemo(() => {
-        if(!hint) return null;
-        return (
-            <div css={[hintCss, isFocused ? focusedHintCss : undefined]}>
-                {hint}
-            </div>
-        );
-    }, [isFocused, hint]);
+    const shouldShowRightIcon = isInFocus || !url?.length;
 
     return (
         <Input
             placeholder={placeholder}
             css={inputCss}
-            initialValue={""}
+            onReturn={handleUrlReturn}
             ref={ref}
-            rightIcon={HintComponent}
-			onFocus={() => setIsFocused(true)}
-			onBlur={() => setIsFocused(false)}
+            rightIcon={shouldShowRightIcon ? rightIcon : null}
+            onBlur={setIsInFocus.bind(this, false)}
+            onFocus={setIsInFocus.bind(this, true)}
+            onChange={handleOnChange}
+            {...props}
         />
     );
-}
-
+});
 
 const inputCss = css`
-	height: 36rem;
+	height: 40rem;
 	.input__rightIconContainer {
 		right: 0px;
 
@@ -64,14 +57,14 @@ const inputCss = css`
 		}
 	}
 	& > input {
-		width: 247rem;
+		width: 359rem;
 		/* border: 1px solid #9462ff; */
 		outline-color: #9462ff;
 		outline-width: 1px;
 		box-sizing: border-box;
 		border-radius: 8rem 0px 0px 8rem;
 		height: 100%;
-		padding-left: 12rem;
+		padding-left: 18rem;
 		padding-right: 110rem;
 
 		background: rgba(77, 77, 77, 0.25) !important;
@@ -80,39 +73,19 @@ const inputCss = css`
 
 		font-family: Gilroy;
 		font-style: normal;
-		font-weight: 400;
+		font-weight: 600;
 		font-size: 13rem;
-		letter-spacing: 0.02em;
-
 		color: rgba(255, 255, 255, 0.67);
-		::placeholder {
-			color: rgba(255, 255, 255, 0.4);
-		}
-		:focus {
+        :focus {
             border-color: #D660FF !important;
         }
-		
 	}
 	}
-	.dropdown-box {
-		overflow: hidden;
-	}
+
 	.input__rightIconContainer {
 		right: 1rem;
 		z-index: 9999;
 	}
 `;
 
-const hintCss = css`
-    font-family: Gilroy;
-    font-style: normal;
-    font-weight: 400;
-    font-size: 12.7rem;
-
-	color: #242424;
-    margin-right: 12rem;
-`;
-const focusedHintCss = css`
-	color: #444444;
-`;
-export { InputFocusHint };
+export { NormalInput };

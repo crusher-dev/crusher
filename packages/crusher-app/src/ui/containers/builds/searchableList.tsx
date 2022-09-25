@@ -128,7 +128,7 @@ function BuildSearchableList() {
 
 	const hasNoBuildsOverall = isZeroBuild && !isFilterEnabled;
 	return (
-		<div>
+		<React.Fragment>
 			<Conditional showIf={!hasNoBuildsOverall}>
 				<SearchFilterBar data={data} placeholder={"Search builds"} />
 			</Conditional>
@@ -155,7 +155,7 @@ function BuildSearchableList() {
 					/>
 				</div>
 			</Conditional>
-		</div>
+		</React.Fragment>
 	);
 }
 

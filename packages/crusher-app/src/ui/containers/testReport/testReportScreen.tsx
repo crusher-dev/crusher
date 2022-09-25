@@ -1,11 +1,11 @@
 import { css } from "@emotion/react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { atom, useAtom } from "jotai";
 
-import { Button } from "dyson/src/components/atoms";
+import { Button, Text } from "dyson/src/components/atoms";
 import { Conditional } from "dyson/src/components/layouts";
 
 
@@ -23,25 +23,52 @@ import { PROJECT_META_KEYS, USER_META_KEYS } from "@constants/USER";
 import { useMemo } from "react";
 import { TestTypeLabel } from "@constants/test";
 import { ReviewSection } from "./testList";
+import { CorrentSVG } from "@svg/builds";
+import { GithubSquare, GithubSVG } from "@svg/social";
+import { CommentIcon, PlayIcon, PlusCircle, ReloadIcon } from "@svg/dashboard";
+import Download from "../dashboard/Download";
 
 const ReportSection = dynamic(() => import("./testList"));
-function TopContentSection() {
+function BuildInfoTop() {
 	const router = useRouter();
 	const { query } = router;
 	const { data } = useBuildReport(query.id);
 
+	const name = "feats: integrated test GTM #517";
+
 	return (
 		<div>
-			<div className={"font-cera text-19 font-700 leading-none flex items-center"} id={"title"}>
-				{data?.name} #{data?.id}
+			<div className={"font-cera text-18 font-700 leading-none flex pt-8"} id={"title"}>
+				{name || `${data?.name} #${data?.id}`} <CorrentSVG height={18} width={18} className="ml-16" />
 			</div>
-			<div className={"flex items-center leading-none mt-16 text-12"}>
-				<CalendarSVG className={"mr-8"} />
-				<span style={{ position: "relative", top: 1 }}>{timeSince(new Date(data.startedAt))}</span>
+			<div className="flex items-center mt-16" css={flexGap}>
+				<div className="flex items-center">
+					<Text color="#696969" fontSize={13}>Status : </Text>
+					<Text color="#E7E7E7" fontSize={13}>All passed</Text>
+				</div>
+				<div className="flex items-center">
+					<GithubSquare className="mr-8" />
+					<Text color="#E7E7E7" fontSize={13}>Github #2132</Text>
+				</div>
+				<div className="flex items-center">
+					<Text color="#696969" fontSize={13}>duration : </Text>
+					<Text color="#E7E7E7" fontSize={13}>12s</Text>
+				</div>
+				<div className="flex items-center">
+					<Text color="#696969" fontSize={13}>test count : </Text>
+					<Text color="#E7E7E7" fontSize={13}>12</Text>
+				</div>
 			</div>
+
 		</div>
 	);
 }
+
+
+const flexGap = css`
+	gap: 28rem;
+`
+
 
 function StatusTag({ type }) {
 	if (type === "MANUAL_REVIEW_REQUIRED") {
@@ -86,34 +113,158 @@ function ReportInfoTOp() {
 	const title = data.name || `#${data?.id}`;
 	usePageTitle(title);
 	return (
-		<div className={"flex items-center justify-between"}>
-			<div className={"flex "}>
-				<ImageSection />
-				<TopContentSection />
-				<Button
-					size={"small"}
-					bgColor={"tertiary"}
-					className={"ml-20"}
-					css={css`
-						width: 96rem;
-						height: 28rem;
-					`}
-					onClick={rerunBuild.bind(this, query.id)}
-					title="Rerun this build"
-				>
-					<div className={"flex items-center justify-center text-13 font-400"}>
-						<RerunSVG className={"mr-6"} height={"14rem"} />
-						Rerun
-					</div>
-				</Button>
-				<ThreeEllipsisSVG css={css`:hover { opacity: 0.8 }`} className={"ml-22"} width={"25rem"} />
-			</div>
+		<div className={"flex"}>
 
-			<StatusTag type={data.status} isMonochrome={true} />
+			<ImageSection />
+
+			<div className="w-full">
+				<div id="build-info-top" className="flex justify-between w-full">
+					<BuildInfoTop />
+					<BuildInfoButtons />
+				</div>
+			</div>
 		</div>
 	);
 }
 
+
+
+function BuildInfoButtons() {
+	return <div className="flex items-center" css={btnGap}>
+
+		<Reload />
+		<Review />
+		<RunLocally />
+	</div>;
+}
+
+const btnGap = css`
+	gap: 12rem;
+`
+
+function Reload() {
+	const { query } = useRouter()
+	const runProjectTest = useCallback(() => {
+		rerunBuild(query.id)
+	}, []);
+
+	return (
+		<React.Fragment>
+			<Button bgColor={"tertiary"} title="Rerun this build" onClick={runProjectTest.bind(this)} css={creatTestCSS}>
+				<div className={"flex items-center"}>
+					<ReloadIcon />
+				</div>
+			</Button>
+		</React.Fragment>
+	);
+}
+
+function Review() {
+	const [showCreateTest, setShowCreateTest] = useState(false)
+
+	const runProjectTest = useCallback(() => {
+
+	}, []);
+
+	return (
+		<React.Fragment>
+			<Conditional showIf={showCreateTest}>
+				<Download onClose={setShowCreateTest.bind(this, false)} />
+			</Conditional>
+			<Button title="leave a comment/review" bgColor={"tertiary"} onClick={runProjectTest} css={creatTestCSS}>
+				<div className={"flex items-center"}>
+					<CommentIcon className={"mr-6"} />
+					<span className="mt-1">
+						review
+					</span>
+				</div>
+			</Button>
+		</React.Fragment>
+	);
+}
+
+function RunLocally() {
+	// const router = useRouter();
+	// const { currentProject } = useProjectDetails()
+	// const { query } = router;
+	// const [filters] = useAtom(buildFiltersAtom);
+	// const [, updateMetaData] = useAtom(updateMeta);
+
+	const runProjectTest = useCallback(() => {
+		(async () => {
+			// await handleTestRun(currentProject?.id, query, filters, router, updateMetaData);
+
+			// updateMetaData({
+			// 	type: "user",
+			// 	key: USER_META_KEYS.RAN_TEST,
+			// 	value: true,
+			// });
+
+			// updateMetaData({
+			// 	type: "project",
+			// 	key: PROJECT_META_KEYS.RAN_TEST,
+			// 	value: true,
+			// });
+		})();
+	}, []);
+
+	return (
+		<Button bgColor={"tertiary"} title="run test locally" onClick={runProjectTest} css={runTestCSS}>
+			<div className={"flex items-center"}>
+				<PlayIcon className={"mr-6"} />
+				<span className="mt-2">
+					run locally
+				</span>
+			</div>
+		</Button>
+	);
+}
+
+const runTestCSS = css`
+	padding: 0 10rem;
+	height: 30rpx;
+
+	font-family: 'Gilroy';
+font-style: normal;
+font-weight: 600;
+font-size: 13px;
+
+color: #FFFFFF;
+
+width: max-content;
+
+
+background: #A742F7;
+border: 1px solid #7D41AD;
+border-radius: 8px;
+
+:hover{
+	background: #A742F7;
+	filter: brighntess(.7);
+	border: 1px solid #7D41AD;
+}
+`
+
+const creatTestCSS = css`
+padding: 0 10rem;
+font-family: 'Gilroy';
+font-style: normal;
+font-weight: 600;
+font-size: 13px;
+
+color: #FFFFFF;
+
+width: max-content;
+
+background: #0D0D0D;
+border: 0.5px solid rgba(219, 222, 255, 0.16);
+border-radius: 8px;
+
+:hover{
+	background: #313131;
+	filter: brighntess(.8);
+}
+`
 const section = [
 	{
 		name: "Home",
@@ -153,7 +304,7 @@ function ImageSection() {
 }
 
 const previewImgCss = css`
-	width: 304rem;
+	min-width: 304rem;
     height: 220rem;
     border: 0.5px solid rgb(255 255 255 / 6%);
     border-radius: 15px;

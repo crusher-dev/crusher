@@ -77,7 +77,7 @@ function CreateTest() {
 			<Conditional showIf={showCreateTest}>
 				<Download onClose={setShowCreateTest.bind(this, false)} />
 			</Conditional>
-			<Button bgColor={"tertiary"} onClick={runProjectTest} css={creatTestCSS}>
+			<Button title="Create a new test" bgColor={"tertiary"} onClick={runProjectTest} css={creatTestCSS}>
 				<div className={"flex items-center"}>
 					<PlusCircle className={"mr-6"} />
 					<span className="mt-1">
@@ -115,7 +115,7 @@ function RunTest() {
 	}, []);
 
 	return (
-		<Button bgColor={"tertiary"} onClick={runProjectTest} css={runTestCSS}>
+		<Button title="Run test in this project" bgColor={"tertiary"} onClick={runProjectTest} css={runTestCSS}>
 			<div className={"flex items-center"}>
 				<PlayIcon className={"mr-6"} />
 				<span className="mt-2">
@@ -388,14 +388,16 @@ function NavbarRight(): JSX.Element {
 			<RunTest />
 			<CreateTest />
 		</Conditional>
-		<a href="https://docs.crusher.dev" target="_blank">
-			<Conditional showIf={!isBuildReport}>
+
+		<Conditional showIf={!isBuildReport}>
+			<a href="https://docs.crusher.dev" target="_blank">
 				<TextBlock color={"#6b6565"} className={"flex ml-4"} css={textLink}>
 					<External className="mr-8" />
 					<span className="mt-1">Docs</span>
 				</TextBlock>
-			</Conditional>
-		</a>
+			</a>
+		</Conditional>
+
 	</div>;
 }
 

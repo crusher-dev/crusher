@@ -9,7 +9,7 @@ import { useAtom } from "jotai";
 import { Button } from "dyson/src/components/atoms";
 import { Conditional } from "dyson/src/components/layouts";
 
-import { Book, BuildIcon, ClockIcon, ExternalIcon, Gear, HomeIcon, IntegrationSVG, MapSVG, NewPeople, PlayIcon, PlusCircle, TestIcon, UpgradeIcon } from "@svg/dashboard";
+import { Book, BuildIcon, ClockIcon, External, ExternalIcon, Gear, HomeIcon, IntegrationSVG, MapSVG, NewPeople, PlayIcon, PlusCircle, TestIcon, UpgradeIcon } from "@svg/dashboard";
 
 import { UserNTeam } from "@ui/containers/dashboard/UserNTeam";
 
@@ -30,6 +30,7 @@ import { useProjectDetails } from "@hooks/common";
 import { LinkBlock } from "dyson/src/components/atoms/Link/Link";
 import Download from "@ui/containers/dashboard/Download";
 import { GiveFeedback } from "../containers/dashboard/GiveFeedback";
+import { BackSVG } from "@svg/builds";
 // const AddProject = dynamic(() => import("@ui/containers/dashboard/AddProject"));
 const InviteMembers = dynamic(() => import("@ui/containers/dashboard/InviteMember"));
 
@@ -520,21 +521,23 @@ function TopNavbar({ children }) {
 	);
 }
 
-function External(props) {
-	return (
-		<svg width={11} height={11} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-			<path
-				d="M10.5 1.625v8.25c0 .621-.504 1.125-1.125 1.125h-8.25A1.125 1.125 0 010 9.875v-8.25C0 1.004.504.5 1.125.5h8.25c.621 0 1.125.504 1.125 1.125zM8.437 2H5.813c-.5 0-.752.606-.398.96l.75.75-4.583 4.583a.281.281 0 000 .397l.728.728c.11.11.288.11.397 0L7.29 4.835l.75.75c.352.352.96.105.96-.398V2.562A.563.563 0 008.437 2z"
-				fill="#6b6565"
-			/>
-		</svg>
-	);
-}
-
-const ProjectSection = () => {
+const NavbarLeft = () => {
 	const { currentProject } = useProjectDetails()
 	const [projects] = useAtom(projectsAtom);
 	const isCurrentProject = !!currentProject;
+	const isBuildReport = true
+	if (isBuildReport) {
+		return (
+			<div css={projectsLabel} className={"flex items-center w-full"}>
+				<BackSVG height={12} width={12} className="mr-8" />
+				<Link href="/projects">
+					<span css={projectIcon}>projects</span>
+				</Link>
+				<span>/ crusher</span>
+				<span>/ 517</span>
+			</div>
+		)
+	}
 	if (isCurrentProject) {
 		return (
 			<div css={projectsLabel} className={"flex items-center w-full"}>
@@ -605,8 +608,8 @@ export const SidebarTopBarLayout = ({ children, noContainerWidth = false, hideSi
 					</Conditional>
 
 					<div className="flex items-center h-full">
-						<ProjectSection />
-						<NavBarLeft />
+						<NavbarLeft />
+						<NavbarRight />
 					</div>
 				</TopNavbar>
 				<div
@@ -697,7 +700,7 @@ const scrollContainer = css`
 	overflow-y: scroll;
 	height: calc(100vh - 56rem);
 `;
-function NavBarLeft() {
+function NavbarRight() {
 	const { currentProject } = useProjectDetails()
 	return <div className="flex items-center" css={rightNavbar}>
 		<Conditional showIf={!!currentProject}>

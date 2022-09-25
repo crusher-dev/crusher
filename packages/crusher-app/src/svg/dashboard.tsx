@@ -390,6 +390,19 @@ export function ExternalIcon(props: any) {
 }
 
 
+export function External(props) {
+	return (
+		<svg width={11} height={11} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+			<path
+				d="M10.5 1.625v8.25c0 .621-.504 1.125-1.125 1.125h-8.25A1.125 1.125 0 010 9.875v-8.25C0 1.004.504.5 1.125.5h8.25c.621 0 1.125.504 1.125 1.125zM8.437 2H5.813c-.5 0-.752.606-.398.96l.75.75-4.583 4.583a.281.281 0 000 .397l.728.728c.11.11.288.11.397 0L7.29 4.835l.75.75c.352.352.96.105.96-.398V2.562A.563.563 0 008.437 2z"
+				fill="#6b6565"
+			/>
+		</svg>
+	);
+}
+
+
+
 export function PlayIcon(props: any) {
 	return (
 		<svg

@@ -1,11 +1,11 @@
-import { EditPencilIcon } from "electron-app/src/_ui/icons";
+import { EditPencilIcon, ReselectPointerIcon } from "electron-app/src/_ui/icons";
 import React from "react";
 import { css } from "@emotion/react";
 import { getSavedSteps, getStepInfo } from "electron-app/src/store/selectors/recorder";
 import { useSelector, useDispatch } from "react-redux";
 import { TextHighlighter } from "./helper";
 import { deleteRecordedSteps } from "electron-app/src/store/actions/recorder";
-import { FieldInput } from "electron-app/src/ui/components/sidebar/stepEditor/fields";
+import { FieldInput, FieldSelectorPicker } from "electron-app/src/ui/components/sidebar/stepEditor/fields";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { NormalInput } from "electron-app/src/_ui/components/inputs/normalInput";
 
@@ -21,13 +21,22 @@ const SelectorInfo = ({stepId}) => {
                 </div>
 
                 <EditPencilIcon className={"ml-10"} css={pencilIconCss} />
+                <FieldSelectorPicker className={"ml-10"}/>
             </div>
-            <div css={selectorExtraCss} className={"mt-12"}>
+            <div css={selectorExtraCss} className={"mt-7"}>
                 .class-name, etc, and 24 other
             </div>
         </div>
     )    
 };
+
+const reselectIconCss = css`
+    width: 10rem;
+    height: 12rem;
+    :hover {
+        opacity: 0.8;
+    }
+`;
 
 const selectorExtraCss = css`
     font-size: 12rem;
@@ -82,9 +91,9 @@ const StepMetaInfo = ({stepId}) => {
             {hasSelectors ? (
                 <div className={'flex mt-35'}>
                    <SelectorInfo stepId={stepId}/>
-                   <div css={uniqueCss} className={"ml-auto"}>
+                   {/* <div css={uniqueCss} className={"ml-auto"}>
                        <span css={css`color: rgba(148, 111, 255, 0.99);`}>90%</span> unique
-                   </div>
+                   </div> */}
                </div>
             ): ""}
          

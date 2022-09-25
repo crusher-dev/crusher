@@ -1,4 +1,5 @@
 import { AnyAction } from "redux";
+import { CLEAR_CURRENT_LOCAL_BUILD, TRIGGER_LOCAL_BUILD, UPDATE_LOCAL_BUILD_RESULT } from "../actions/builds";
 
 export interface ICurrentBuildPayload {
     id: string;

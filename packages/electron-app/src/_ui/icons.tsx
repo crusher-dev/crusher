@@ -362,6 +362,24 @@ const EditPencilIcon = (props) => (
   </svg>
 );
 
+const ReselectPointerIcon = React.forwardRef((props, ref) => (
+  <svg
+    viewBox={"0 0 10 12"}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    ref={ref}
+    {...props}
+  >
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M5 .75a.375.375 0 0 1 .375.375V2.25a.375.375 0 0 1-.75 0V1.125A.375.375 0 0 1 5 .75ZM1.818 2.068a.375.375 0 0 1 .53 0l.796.796a.375.375 0 0 1-.53.53l-.796-.796a.375.375 0 0 1 0-.53Zm6.364 0a.375.375 0 0 1 0 .53l-.796.796a.375.375 0 0 1-.53-.53l.796-.796a.375.375 0 0 1 .53 0ZM4.774 4.316a.375.375 0 0 1 .41.155L7.798 8.43a.375.375 0 0 1-.388.574L6.36 8.789l.522 1.95a.375.375 0 1 1-.724.194l-.522-1.95-.801.71a.375.375 0 0 1-.623-.303l.284-4.735a.375.375 0 0 1 .277-.34v.001ZM.5 5.25a.375.375 0 0 1 .375-.375H2a.375.375 0 0 1 0 .75H.875A.375.375 0 0 1 .5 5.25Zm7.125 0A.375.375 0 0 1 8 4.875h1.125a.375.375 0 0 1 0 .75H8a.375.375 0 0 1-.375-.375ZM3.144 7.106a.375.375 0 0 1 0 .53l-.796.796a.375.375 0 1 1-.53-.53l.796-.796a.375.375 0 0 1 .53 0Z"
+      fill="#686868"
+    />
+  </svg>
+));
+
+
 export {
   DisabledCloudIcon,
   CloudIcon,
@@ -379,5 +397,6 @@ export {
   CodeIcon,
   UnCollapseIcon,
   SaveButtonDownIcon,
-  EditPencilIcon
+  EditPencilIcon,
+  ReselectPointerIcon
 }

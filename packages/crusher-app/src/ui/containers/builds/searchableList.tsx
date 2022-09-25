@@ -16,7 +16,7 @@ import { ClockIconSVG, CommentIconSVG, DangerIconSVG } from "@svg/builds";
 import { TestStatusSVG } from "@svg/testReport";
 import { getStringFromDuration, timeSince } from "@utils/common/dateTimeUtils";
 
-import { currentProject } from "../../../store/atoms/global/project";
+
 import { buildFiltersAtom } from "../../../store/atoms/pages/buildPage";
 import { SearchFilterBar } from "../common/searchFilterBar";
 

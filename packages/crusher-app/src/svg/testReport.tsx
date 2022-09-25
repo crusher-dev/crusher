@@ -26,7 +26,7 @@ export function ThreeEllipsisSVG(props: ReactPropTypes) {
 	);
 }
 
-export function CalendarSVG(props: ReactPropTypes) {
+export function CalendarSVG(props: any) {
 	return (
 		<svg width={"13rem"} height={"13rem"} viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<path
@@ -89,21 +89,21 @@ export function FailedSVG(props) {
 	const { isMonochrome } = props;
 	return (
 		<svg
-		  width={16}
-		  height={16}
-		  viewBox="0 0 16 16"
-		  fill="none"
-		  xmlns="http://www.w3.org/2000/svg"
-		  {...props}
+			width={16}
+			height={16}
+			viewBox="0 0 16 16"
+			fill="none"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
 		>
-		  <path
-			fillRule="evenodd"
-			clipRule="evenodd"
-			d="M0 8a8 8 0 1116 0A8 8 0 010 8zm6.166-2.966a.8.8 0 00-1.132 1.132L6.87 8 5.034 9.834a.8.8 0 001.132 1.132L8 9.13l1.834 1.835a.8.8 0 001.132-1.132L9.13 8l1.835-1.834a.8.8 0 00-1.132-1.132L8 6.87 6.166 5.034z"
-			fill={isMonochrome ? "#fff" : "#EF4074"}
-		  />
+			<path
+				fillRule="evenodd"
+				clipRule="evenodd"
+				d="M0 8a8 8 0 1116 0A8 8 0 010 8zm6.166-2.966a.8.8 0 00-1.132 1.132L6.87 8 5.034 9.834a.8.8 0 001.132 1.132L8 9.13l1.834 1.835a.8.8 0 001.132-1.132L9.13 8l1.835-1.834a.8.8 0 00-1.132-1.132L8 6.87 6.166 5.034z"
+				fill={isMonochrome ? "#fff" : "#EF4074"}
+			/>
 		</svg>
-	  );
+	);
 }
 
 export function ExpandSVG(props) {

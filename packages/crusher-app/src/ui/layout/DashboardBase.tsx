@@ -189,20 +189,27 @@ function NavbarLeft() {
 	const { currentProject } = useProjectDetails()
 	const [projects] = useAtom(projectsAtom);
 	const isCurrentProject = !!currentProject;
-	const { asPath } = useRouter()
+	const { asPath, query } = useRouter()
 
 	const isBuildReport = isCurrentProject && asPath.includes('build/');
 	if (isBuildReport) {
+
 		return (
 			<div css={reportLabel} className={"flex items-center w-full"}>
 				<Link href={`/projects`}>
-					<BackSVG height={12} width={12} className="mr-8" />
+					<div className="flex items-center">
+						<BackSVG height={12} width={12} className="mr-8" />
+						<span css={projectIcon}>projects</span>
+					</div>
 				</Link>
 				<Link href={`/${currentProject?.id}/builds`}>
-					<span css={projectIcon}>projects</span>
+					<div className="flex items-center">
+						<span className="ml-1 mr-1">/ </span> <span css={projectIcon}>{currentProject.name}</span>
+					</div>
 				</Link>
-				<span>/ {currentProject.name}</span>
-				<span>/ 517</span>
+				<div className="flex items-center">
+					<span className="ml-1 mr-1">/ </span> <span css={projectIcon}># {query.id}</span>
+				</div>
 				<CorrentSVG className="ml-8" height={18} width={18} />
 			</div>
 		)

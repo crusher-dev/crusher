@@ -25,7 +25,7 @@ import { TestTypeLabel } from "@constants/test";
 import { ReviewSection } from "./testList";
 
 const ReportSection = dynamic(() => import("./testList"));
-function TitleSection() {
+function TopContentSection() {
 	const router = useRouter();
 	const { query } = router;
 	const { data } = useBuildReport(query.id);
@@ -34,6 +34,10 @@ function TitleSection() {
 		<div>
 			<div className={"font-cera text-19 font-700 leading-none flex items-center"} id={"title"}>
 				{data?.name} #{data?.id}
+			</div>
+			<div className={"flex items-center leading-none mt-16 text-12"}>
+				<CalendarSVG className={"mr-8"} />
+				<span style={{ position: "relative", top: 1 }}>{timeSince(new Date(data.startedAt))}</span>
 			</div>
 		</div>
 	);
@@ -75,7 +79,7 @@ function StatusTag({ type }) {
 	);
 }
 
-function NameNStatusSection() {
+function ReportInfoTOp() {
 	const { query } = useRouter();
 	const { data } = useBuildReport(query.id);
 
@@ -85,7 +89,7 @@ function NameNStatusSection() {
 		<div className={"flex items-center justify-between"}>
 			<div className={"flex "}>
 				<ImageSection />
-				<TitleSection />
+				<TopContentSection />
 				<Button
 					size={"small"}
 					bgColor={"tertiary"}
@@ -117,12 +121,17 @@ const section = [
 		key: "reports",
 	},
 	{
+		name: "Tests",
+		icon: null,
+		key: "insights"
+	},
+	{
 		name: "Insights & Alert",
 		icon: null,
 		key: "insights"
 	},
 	{
-		name: "History",
+		name: "log",
 		icon: null,
 	},
 ];
@@ -144,18 +153,15 @@ function ImageSection() {
 }
 
 const previewImgCss = css`
-
-width: 304rem;
-height: 220rem;
-
-
-border: 0.5px solid rgba(255, 255, 255, 0.1);
-border-radius: 15px;
+	width: 304rem;
+    height: 220rem;
+    border: 0.5px solid rgb(255 255 255 / 6%);
+    border-radius: 15px;
 `
 function TabBar() {
 	const [selectedTabIndex, setSelectedTabIndex] = useAtom(selectedTabAtom);
 	return (
-		<div css={Tab} className={"flex mt-74 "}>
+		<div css={Tab} className={"flex mt-88	 "}>
 			{section.map(({ name, icon, key }, i) => (
 				<div onClick={setSelectedTabIndex.bind(this, i)} key={key}>
 					<div css={[TabItem, selectedTabIndex === i && selected]} className={`flex items-center justify-center text-14`}>
@@ -335,11 +341,8 @@ export const TestReportScreen = () => {
 	return (
 		<div className={"pt-46"} css={css`background: #0C0C0C;`}>
 			<div css={buildContainerWidth}>
-				<NameNStatusSection />
-				<div className={"flex items-center leading-none mt-16 text-12"}>
-					<CalendarSVG className={"mr-8"} />
-					<span style={{ position: "relative", top: 1 }}>{timeSince(new Date(data.startedAt))}</span>
-				</div>
+				<ReportInfoTOp />
+
 				<Conditional showIf={selectedTabIndex === 1}>
 					<div className={"flex leading-none mt-56 mb-52  items-center invisible"}>
 						<div

@@ -146,8 +146,10 @@ const stepMetaInfoContainerCss = css`
 
 const StepEditor = ({stepId}) => {
     const stepInfo = useSelector(getStepInfo(stepId));
+    const steps = useSelector(getSavedSteps);
     const dispatch = useDispatch();
     const title = TextHighlighter({text: stepInfo.name}, true);
+    const showPreview = steps[stepId].type !== ActionsInTestEnum.SET_DEVICE;
 
     const handleDelete = () => {
         dispatch(deleteRecordedSteps([stepId]));
@@ -157,16 +159,19 @@ const StepEditor = ({stepId}) => {
         <div css={containerCss}>
             <StepMetaInfo stepId={stepId}/>
             <div className={"px-20 py-24"} css={stepMainContentCss}>
-                <div className="flex">
-                    <div css={elementImageCss}>
-
+                {false && showPreview ? (
+                    <div className="flex">
+                               <div css={elementImageCss}>
+           
+                               </div>
+                               <div className={"ml-auto"}>
+                                   <ul css={actionsListCss}>
+                                       <li>modify url</li>
+                                   </ul>
+                               </div>
                     </div>
-                    <div className={"ml-auto"}>
-                        <ul css={actionsListCss}>
-                            <li>modify url</li>
-                        </ul>
-                    </div>
-                </div>
+                ) :""}
+    
                 <div className={"mt-28 flex justify-end"}>
                     <div onClick={handleDelete} css={deleteCss}>delete</div>
                 </div>

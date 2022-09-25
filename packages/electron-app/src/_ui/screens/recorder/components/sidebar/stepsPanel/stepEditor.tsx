@@ -5,6 +5,8 @@ import { getSavedSteps, getStepInfo } from "electron-app/src/store/selectors/rec
 import { useSelector, useDispatch } from "react-redux";
 import { TextHighlighter } from "./helper";
 import { deleteRecordedSteps } from "electron-app/src/store/actions/recorder";
+import { FieldInput } from "electron-app/src/ui/components/sidebar/stepEditor/fields";
+import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 
 const SelectorInfo = ({stepId}) => {
     const stepInfo = useSelector(getStepInfo(stepId));
@@ -52,11 +54,24 @@ const StepMetaInfo = ({stepId}) => {
 
 
     const hasSelectors = steps[stepId].type.startsWith("ELEMENT");
+    const isUrlType =[ActionsInTestEnum.NAVIGATE_URL, ActionsInTestEnum.WAIT_FOR_NAVIGATION].includes(steps[stepId].type);
+
     return (
         <div css={stepMetaInfoContainerCss} className={"px-20 py-24"}>
             <div css={stepNameCss}>
                 { title }
             </div>
+
+            {isUrlType ? (
+                <FieldInput
+                    className={"mt-28"}
+                    label={"URL:"}
+                    placeholder={"Enter url"}
+                    size={"small"}
+                    initialValue={"https://google.com"}
+                    inputStyleCSS={bigInputCss}
+                />
+            ) : ""}
 
             {hasSelectors ? (
                 <div className={'flex mt-35'}>
@@ -68,14 +83,19 @@ const StepMetaInfo = ({stepId}) => {
             ): ""}
          
 
-            <div css={metaInfoFooterCss} className={`flex ${hasSelectors ? "mt-52" : "mt-30"}`}>
+            <div css={metaInfoFooterCss} className={`flex ${hasSelectors || isUrlType ? "mt-52" : "mt-30"}`}>
                 <div>took 1.9 sec</div>
                 <div className={"ml-auto"}>view logs</div>
             </div>
         </div>
     )
 };
-
+const bigInputCss = css`
+	max-width: 200rem;
+	input {
+		padding: 14rem 6rem;
+	}
+`;
 const metaInfoFooterCss = css`
     font-family: 'Gilroy';
     font-style: normal;

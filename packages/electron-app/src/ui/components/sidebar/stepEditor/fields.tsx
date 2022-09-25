@@ -29,8 +29,8 @@ const FieldInput = (props: IFieldInputProps) => {
 
 	return (
 		<div className={`flex ${className}`} css={fieldContainerStyle}>
-			<span>{label}</span>
-			<Input
+			<span css={labelCss}>{label}</span>
+			<input
 				css={
 					[
 						inputStyle,
@@ -47,6 +47,13 @@ const FieldInput = (props: IFieldInputProps) => {
 	);
 };
 
+const labelCss = css`
+	font-family: 'Gilroy';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 13rem;
+	color: rgba(215, 223, 225, 0.6);
+`;
 type IToggleProps = ToggleProps & {
 	label: string;
 
@@ -202,22 +209,21 @@ const fieldContainerStyle = css`
 	align-items: center;
 `;
 const inputStyle = css`
-	background: #1a1a1c;
-	border-radius: 6rem;
-	border: 1rem solid #43434f;
-	font-family: Gilroy;
-	font-size: 13.75;
+
+background: rgba(177, 79, 254, 0.04);
+border: 0.5px solid #B14FFE;
+box-shadow: 0px 0px 0px 2px rgba(177, 79, 254, 0.04);
+border-radius: 8rem;
+
+font-family: 'Gilroy';
+font-style: normal;
+font-weight: 400;
+font-size: 13rem;
 	min-width: 358rem;
 	color: #fff;
-	outline: nonet;
-	margin-left: auto;
-
-	input {
-		padding: 8rem;
-		:focus {
-			border-color: transparent;
-		}
-	}
+	outline: none;
+	margin-left: 7rem;
+	padding: 7rem 9rem;
 `;
 
 const toggleStyle = css`

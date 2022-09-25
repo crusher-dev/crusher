@@ -5,6 +5,7 @@ import { ActionsList } from "./actionsList";
 import { getItemsFromActionsData } from "./helper";
 import { PageIcon } from "electron-app/src/_ui/icons";
 import { css } from "@emotion/react";
+import { sendSnackBarEvent } from "electron-app/src/ui/components/toast";
 
 const actionsData = require("./actions.json");
 interface IProps {
@@ -12,11 +13,23 @@ interface IProps {
 	defaultExpanded?: boolean;
 }; 
 
+const ToastPrettyActionMap = {
+	"TAKE_VIEWPORT_SCREENSHOT": "page screenshot",
+};
+
 const PageActions = ({className, defaultExpanded, ...props}: IProps) => {
     const handleCallback = React.useCallback((id) => {
+		const showToast = () => {
+			sendSnackBarEvent({
+				type: "step_recorded",
+				message: "added a click check",
+				meta: {action: ToastPrettyActionMap[id]}
+			});
+		};
         switch (id) {
 			case "TAKE_VIEWPORT_SCREENSHOT":
 				performTakePageScreenshot();
+				showToast();
 				break;
 			case "WAIT":
 				emitShowModal({ type: "WAIT" });

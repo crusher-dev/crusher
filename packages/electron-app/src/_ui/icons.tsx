@@ -380,6 +380,23 @@ const ReselectPointerIcon = React.forwardRef((props, ref) => (
 ));
 
 
+const AddedIcon = (props) => (
+  <svg
+    viewBox={"0 0 13 12"}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M6.5 0a6 6 0 1 0 0 12 6 6 0 0 0 0-12Zm.462 4.154a.462.462 0 0 0-.924 0v1.384H4.654a.462.462 0 0 0 0 .924h1.384v1.384a.462.462 0 0 0 .924 0V6.462h1.384a.462.462 0 0 0 0-.924H6.962V4.154Z"
+      fill="#C852FF"
+    />
+  </svg>
+)
+
+
 export {
   DisabledCloudIcon,
   CloudIcon,
@@ -398,5 +415,6 @@ export {
   UnCollapseIcon,
   SaveButtonDownIcon,
   EditPencilIcon,
-  ReselectPointerIcon
+  ReselectPointerIcon,
+  AddedIcon
 }

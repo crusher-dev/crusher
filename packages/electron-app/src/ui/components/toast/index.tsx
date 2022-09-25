@@ -7,12 +7,13 @@ import { shell } from "electron";
 import { resolveToBackendPath, resolveToFrontEndPath } from "@shared/utils/url";
 import { getAppSettings } from "electron-app/src/store/selectors/app";
 import { useStore } from "react-redux";
+import { StepRecordedToast } from "electron-app/src/_ui/screens/recorder/components/sidebar/stepsPanel/stepRecordedToast";
 
 export const snackBarEmitter = mitt();
 
 export type SnackbarEvent = {
 	message: string;
-	type?: "normal" | "success" | "info" | "error" | "test_report" | "test_created";
+	type?: "normal" | "success" | "info" | "error" | "test_report" | "test_created" | "step_recorded";
 	meta?: any;
 };
 
@@ -127,6 +128,7 @@ export const ToastSnackbar = () => {
 	if (event === null) return null;
 	if (event.type === "test_report") return <TestReportToast meta={event.meta} />;
 	if (event.type === "test_created") return <TestCreatedToast meta={event.meta} />;
+	if (event.type === 'step_recorded') return <StepRecordedToast meta={event.meta} />;
 
 	return (
 		<Toast type={event.type} onClose={setEvent.bind(this, null)}>

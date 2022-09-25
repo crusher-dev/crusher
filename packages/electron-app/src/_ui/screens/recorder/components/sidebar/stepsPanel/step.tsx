@@ -49,7 +49,7 @@ const Step = ({className, isActive, onContextMenu, step, onClick, setIsActive, i
     const title = TextHighlighter({text: stepInfo.name});
     
     return (
-        <HoverCard state={stepId as any === 1} autoHide={false} callback={setIsEditorCardOpen.bind(this)} wrapperCss={css`z-index: 123123123 !important;`} css={css`padding: 0rem !important; background: rgb(5, 5, 5) !important; margin-left: -22rem !important;`} content={<StepEditor stepId={stepId} />} placement="right" type="hover" padding={8} offset={0}>
+        <HoverCard callback={setIsEditorCardOpen.bind(this)} wrapperCss={css`z-index: 123123123 !important;`} css={css`padding: 0rem !important; background: rgb(5, 5, 5) !important; margin-left: -22rem !important;`} content={<StepEditor stepId={stepId} />} placement="right" type="hover" padding={8} offset={0}>
             <div onContextMenu={onContextMenu} onClick={onClick} css={[containerCss, isActive  || isEditorCardOpen ? activeItemCss : null]}>
                     <div className={"card"} css={contentCss}>
                         {stepInfo.isRunning ? (

@@ -7,6 +7,7 @@ import { TextHighlighter } from "./helper";
 import { deleteRecordedSteps } from "electron-app/src/store/actions/recorder";
 import { FieldInput } from "electron-app/src/ui/components/sidebar/stepEditor/fields";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
+import { NormalInput } from "electron-app/src/_ui/components/inputs/normalInput";
 
 const SelectorInfo = ({stepId}) => {
     const stepInfo = useSelector(getStepInfo(stepId));
@@ -45,7 +46,7 @@ color: rgba(255, 255, 255, 0.54);
 
 `;
 
-const pencilIconCss = css`width: 10.5rem; height: 10.5rem; margin-top: -2rem;`;
+const pencilIconCss = css`width: 10.5rem; height: 10.5rem; margin-top: -2rem; :hover { opacity: 0.8; } `;
 
 const StepMetaInfo = ({stepId}) => {
     const steps = useSelector(getSavedSteps);
@@ -63,14 +64,19 @@ const StepMetaInfo = ({stepId}) => {
             </div>
 
             {isUrlType ? (
-                <FieldInput
-                    className={"mt-28"}
-                    label={"URL:"}
-                    placeholder={"Enter url"}
-                    size={"small"}
-                    initialValue={"https://google.com"}
-                    inputStyleCSS={bigInputCss}
-                />
+                <div className={'flex items-center mt-20'}>
+                    <div css={labelCss} className={"mr-7 mt-3"}>URL:</div>
+                    <NormalInput
+                        placeholder={"Enter url"}
+                        size={"small"}
+                        initialValue={"https://google.com"}
+                        inputWrapperCss={css`height: unset !important;`}
+                        inputCss={inputCss}
+                    />
+
+                    <EditPencilIcon className={"ml-10"} css={editUrlIconCss} />
+                </div>
+                
             ) : ""}
 
             {hasSelectors ? (
@@ -90,11 +96,25 @@ const StepMetaInfo = ({stepId}) => {
         </div>
     )
 };
-const bigInputCss = css`
-	max-width: 200rem;
-	input {
-		padding: 14rem 6rem;
-	}
+const editUrlIconCss = css`width: 11rem; height: 11rem; margin-top: -2rem; :hover { opacity: 0.8; } `;
+
+const labelCss = css`
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 13rem;
+    color: rgba(215, 223, 225, 0.6);
+`;
+const inputCss = css`
+        font-family: 'Gilroy' !important;
+        font-style: normal !important;
+        font-weight: 400 !important;
+        font-size: 13rem !important;
+        color: rgba(255, 255, 255, 0.93) !important;
+        width: 159rem !important;
+        padding: 12.5rem 9rem !important;
+        border-radius: 8rem !important;
+        height: 26rem !important;
 `;
 const metaInfoFooterCss = css`
     font-family: 'Gilroy';

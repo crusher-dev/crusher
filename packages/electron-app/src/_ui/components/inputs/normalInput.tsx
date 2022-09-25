@@ -2,26 +2,30 @@ import Input from "@dyson/components/atoms/input/Input";
 import { css } from "@emotion/react";
 import React, {useState, useCallback} from "react";
 
-const NormalInput = React.forwardRef(({ placeholder, handleUrlReturn, initialValue, rightIcon, ...props}, ref) => {
+const NormalInput = React.forwardRef(({ placeholder, handleUrlReturn, inputCss: _inputCss, inputWrapperCss, initialValue, className, rightIcon, ...props}, ref) => {
     const [isInFocus, setIsInFocus] = useState(false);
     const [url, setIsUrl] = useState(initialValue);
-    
+
     const handleOnChange = useCallback((event) => {
         setIsUrl(event.target.value);
     }, []);
 
-    const shouldShowRightIcon = isInFocus || !url?.length;
 
+
+    const shouldShowRightIcon = isInFocus || !url?.length;
     return (
         <Input
             placeholder={placeholder}
             css={inputCss}
+			inputWrapperCss={inputWrapperCss}
+			inputCss={_inputCss}
             onReturn={handleUrlReturn}
             ref={ref}
             rightIcon={shouldShowRightIcon ? rightIcon : null}
             onBlur={setIsInFocus.bind(this, false)}
             onFocus={setIsInFocus.bind(this, true)}
             onChange={handleOnChange}
+			initialValue={initialValue}
             {...props}
         />
     );

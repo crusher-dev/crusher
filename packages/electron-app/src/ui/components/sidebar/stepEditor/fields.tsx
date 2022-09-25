@@ -30,7 +30,7 @@ const FieldInput = (props: IFieldInputProps) => {
 	return (
 		<div className={`flex ${className}`} css={fieldContainerStyle}>
 			<span css={labelCss}>{label}</span>
-			<input
+			<Input
 				css={
 					[
 						inputStyle,
@@ -209,21 +209,26 @@ const fieldContainerStyle = css`
 	align-items: center;
 `;
 const inputStyle = css`
+	background: rgba(177, 79, 254, 0.04);
+	border: 0.5px solid transparent;
+	border-radius: 8rem;
 
-background: rgba(177, 79, 254, 0.04);
-border: 0.5px solid #B14FFE;
-box-shadow: 0px 0px 0px 2px rgba(177, 79, 254, 0.04);
-border-radius: 8rem;
 
-font-family: 'Gilroy';
-font-style: normal;
-font-weight: 400;
-font-size: 13rem;
 	min-width: 358rem;
-	color: #fff;
 	outline: none;
 	margin-left: 7rem;
-	padding: 7rem 9rem;
+	input {
+		font-family: 'Gilroy' !important;
+		font-style: normal !important;
+		font-weight: 400 !important;
+		font-size: 13rem !important;
+		color: rgba(255, 255, 255, 0.93) !important;
+		padding: 7rem 9rem !important;
+	}
+
+	:hover {
+		border: 0.5px solid #B14FFE;
+	}
 `;
 
 const toggleStyle = css`

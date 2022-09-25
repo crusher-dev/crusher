@@ -31,7 +31,9 @@ export type InputProps = {
 	onReturn?: (value: string) => void;
 
 	className?: string;
-
+	inputCss?: any;
+	inputWrapperCss?: any;
+	
 	autoComplete?: string;
 	value?: string;
 	type?: string;
@@ -42,7 +44,7 @@ export type InputProps = {
  * Unified button component for Dyson UI system
  */
 export const Input: React.FC<InputProps> = React.forwardRef((mainProps, ref) => {
-	const { initialValue = "", forwardRef, size = "large", className, rightIcon, leftIcon, isError = false, onReturn, children, ...props } = mainProps;
+	const { initialValue = "", forwardRef, inputCss, size = "large", className, inputWrapperCss, rightIcon, leftIcon, isError = false, onReturn, children, ...props } = mainProps;
 	ref = ref ? ref : useRef<HTMLInputElement>(null);
 
 	const onKeyUp = useCallback(
@@ -66,7 +68,8 @@ export const Input: React.FC<InputProps> = React.forwardRef((mainProps, ref) => 
 				css`
 					position: relative;
 				`,
-				style
+				style,
+				inputWrapperCss
 			]}
 			className={`relative ${className}`}
 		>
@@ -75,7 +78,7 @@ export const Input: React.FC<InputProps> = React.forwardRef((mainProps, ref) => 
 					{leftIcon}
 				</div>
 			</Conditional>
-			<input ref={ref} css={[inputBox(sizeStyle, !!leftIcon), isError && errorState]} {...props} onKeyUp={onKeyUp} />
+			<input ref={ref} css={[inputBox(sizeStyle, !!leftIcon), isError && errorState, inputCss]} {...props} onKeyUp={onKeyUp} />
 			<Conditional showIf={!!rightIcon}>
 				<div css={rightIconStyle} className="input__rightIconContainer">
 					{rightIcon}

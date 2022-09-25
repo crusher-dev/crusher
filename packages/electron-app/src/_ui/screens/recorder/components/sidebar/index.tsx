@@ -7,21 +7,35 @@ import { CustomCodeBanner } from "./customCodeBanner";
 import { StepsPanel } from "./stepsPanel/index";
 import { ModalManager } from "electron-app/src/ui/components/modals";
 import { TemplatesModal } from "electron-app/src/ui/components/sidebar/steps/templatesModal";
+import { useLocalBuild } from "electron-app/src/_ui/hooks/tests";
+import { ReplaySidebarHeader } from "./replay/header";
 
 interface ISidebarProps {
     className?: string;
 };
 
+const ReplayingTopBar = () => {
+    return 
+};
 const Sidebar = ({ className, ...props}: ISidebarProps) => {
+    const { currentBuild } = useLocalBuild();
     const isInRecordingSession = useSelector(getIsInRecordingSession);
     const isCustomCodeOn = useSelector(getIsCustomCodeOn);
+
+    const topPanel = React.useMemo(() => {
+        if(currentBuild) {
+            return <ReplaySidebarHeader/>
+        } else {
+            return !isCustomCodeOn ? <ActionsPanel/> : <CustomCodeBanner/>;
+        }
+    }, [currentBuild]);
 
     return (
         <div css={containerCss} className={`${className}`}>
             { isInRecordingSession ? (
                 <>
-                    { !isCustomCodeOn ? <ActionsPanel/> : <CustomCodeBanner/> }
-                    <StepsPanel/>
+                    { topPanel }
+                    <StepsPanel css={[currentBuild ? `height: 100%` : undefined]}/>
                 </> 
             ) : "" }
             <ModalManager />

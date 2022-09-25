@@ -1,4 +1,6 @@
+import { getBuilds, getCurrentLocalBuild } from "electron-app/src/store/selectors/builds";
 import React from "react";
+import { useSelector } from "react-redux";
 
 const useBuildNotifications = () => {
     const [notifications, setNotifications] = React.useState([]);
@@ -44,12 +46,7 @@ const useBuildNotifications = () => {
 //             historyInstance.push("/recorder", {});
 //             goFullScreen();
 //             store.dispatch(setSessionInfoMeta({}));
-//             performReplayTestUrlAction(window["testsToRun"].list[0], true);
-//           } else {
-//             // Time to redirect to dashboard
-//             const totalTestsInBuild = window["testsToRun"].count;
-//             window["testsToRun"] = undefined;
-//             const localBuild = await performSaveLocalBuild(Object.values(window["localRunCache"]));
+//             performReplayTisCustomCodeOn ? <ActionsPanel/> : <CustomCodeBanner/>ld = await performSaveLocalBuild(Object.values(window["localRunCache"]));
 //             console.log("local build is", localBuild);
 //             window["localRunCache"] = undefined;
 //             // steps: Array<any>; id: number; name: string; status: "FINISHED" | "FAILED"
@@ -66,11 +63,14 @@ const useBuildNotifications = () => {
 
 // Create redux state for storing progress
 // currentTest/totalTest =
-const useLocalBuild = (testsList: Array<any>) => {
+const useLocalBuild = () => {
+    const builds = useSelector(getBuilds);
+    const currentBuild = useSelector(getCurrentLocalBuild);
+
     const handleTestCompleted = (testId: any) => {
 
     };
-    return {};
+    return { handleTestCompleted, builds, currentBuild };
 };
 
-export { useBuildNotifications };
+export { useBuildNotifications, useLocalBuild };

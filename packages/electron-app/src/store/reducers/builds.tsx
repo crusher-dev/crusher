@@ -1,5 +1,5 @@
 import { AnyAction } from "redux";
-import { CLEAR_CURRENT_LOCAL_BUILD, TRIGGER_LOCAL_BUILD, UPDATE_LOCAL_BUILD_RESULT } from "../actions/builds";
+import { CLEAR_CURRENT_LOCAL_BUILD, TRIGGER_LOCAL_BUILD, UPDATE_LOCAL_BUILD_RESULT, UPDATE_CURRENT_LOCAL_BUILD } from "../actions/builds";
 
 export interface ICurrentBuildPayload {
     id: string;
@@ -29,6 +29,8 @@ const buildsReducer = (state: IBuildsReducer = initialState, action: AnyAction) 
 	switch (action.type) {
         case TRIGGER_LOCAL_BUILD:
             return { ...state, currentBuild: action.payload }
+        case UPDATE_CURRENT_LOCAL_BUILD:
+            return { ...state, currentBuild: { ...state.currentBuild, ...action.payload } }
         case CLEAR_CURRENT_LOCAL_BUILD:
             return { ...state, currentBuild: null };
         case UPDATE_LOCAL_BUILD_RESULT:

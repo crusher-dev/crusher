@@ -21,6 +21,7 @@ import Toolbar from "../ui/components/toolbar";
 import historyInstance from "./utils/history";
 import Wrapper from "figma-design-scaler/dist/dist/main";
 import { useBuildNotifications } from "./hooks/tests";
+import { clearCurrentLocalBuild, updateCurrentLocalBuild, updateLocalBuildResult } from "../store/actions/builds";
 
 const handleCompletion = async (store: Store, action: IDeepLinkAction, addNotification) => {
 
@@ -36,9 +37,14 @@ const handleCompletion = async (store: Store, action: IDeepLinkAction, addNotifi
             historyInstance.push("/recorder", {});
             goFullScreen();
             store.dispatch(setSessionInfoMeta({}));
+			store.dispatch(updateCurrentLocalBuild({
+				queuedTests: window["testsToRun"].list,
+			} as any));
             performReplayTestUrlAction(window["testsToRun"].list[0], true);
           } else {
-            // Time to redirect to dashboard
+            return;
+			store.dispatch(clearCurrentLocalBuild());
+			// Time to redirect to dashboard
             const totalTestsInBuild = window["testsToRun"].count;
             window["testsToRun"] = undefined;
             const localBuild = await performSaveLocalBuild(Object.values(window["localRunCache"]));

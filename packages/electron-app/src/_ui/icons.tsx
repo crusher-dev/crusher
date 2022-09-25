@@ -395,6 +395,16 @@ const AddedIcon = (props) => (
     />
   </svg>
 )
+const EllipseIcon = (props) => (
+  <svg
+    viewBox="0 0 10 10"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <circle cx={5} cy={5} r={4.5} stroke="#fff" />
+  </svg>
+)
 
 
 export {
@@ -416,5 +426,6 @@ export {
   SaveButtonDownIcon,
   EditPencilIcon,
   ReselectPointerIcon,
-  AddedIcon
+  AddedIcon,
+  EllipseIcon
 }

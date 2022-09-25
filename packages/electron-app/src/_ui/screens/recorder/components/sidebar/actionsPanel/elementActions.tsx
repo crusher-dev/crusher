@@ -8,6 +8,7 @@ import { setSelectedElement } from "electron-app/src/store/actions/recorder";
 import { getSelectedElement } from "electron-app/src/store/selectors/recorder";
 import { ElementIcon } from "electron-app/src/_ui/icons";
 import { css } from "@emotion/react";
+import { sendSnackBarEvent } from "electron-app/src/ui/components/toast";
 
 const actionsData = require("./actions.json");
 interface IProps {
@@ -15,11 +16,24 @@ interface IProps {
 	defaultExpanded?: boolean;
 }; 
 
+const ToastPrettyActionMap = {
+	"CLICK": "click",
+	"HOVER": "hover",
+	"SCREENSHOT": "element screenshot",
+	"ASSERT_VISIBLE": "assert visible",
+};
+
 const ElementActions = ({className, defaultExpanded, ...props}: IProps) => {
     const store = useStore();
     const handleCallback = React.useCallback(async (id) => {
 		turnOnInspectMode({action: id});
-
+		const showToast = () => {
+			sendSnackBarEvent({
+				type: "step_recorded",
+				message: "added a click check",
+				meta: {action: ToastPrettyActionMap[id]}
+			});
+		};
         switch (id) {
 			case "CLICK":
 				window["elementActionsCallback"] = async () => {
@@ -28,6 +42,7 @@ const ElementActions = ({className, defaultExpanded, ...props}: IProps) => {
 					await enableJavascriptInDebugger();
 					performClick(selectedElement);
 					store.dispatch(setSelectedElement(null));
+					showToast();
 				};
 
 				break;
@@ -38,6 +53,7 @@ const ElementActions = ({className, defaultExpanded, ...props}: IProps) => {
 					await enableJavascriptInDebugger();
 					performHover(selectedElement, store);
 					store.dispatch(setSelectedElement(null));
+					showToast();
 				};
 
 				break;
@@ -48,6 +64,7 @@ const ElementActions = ({className, defaultExpanded, ...props}: IProps) => {
 					await enableJavascriptInDebugger();
 					peformTakeElementScreenshot(selectedElement, store);
 					store.dispatch(setSelectedElement(null));
+					showToast();
 				};
 
 				break;
@@ -68,6 +85,7 @@ const ElementActions = ({className, defaultExpanded, ...props}: IProps) => {
 					await enableJavascriptInDebugger();
 					performAssertElementVisibility(selectedElement, store);
 					store.dispatch(setSelectedElement(null));
+					showToast();
 				};
 
 				break;

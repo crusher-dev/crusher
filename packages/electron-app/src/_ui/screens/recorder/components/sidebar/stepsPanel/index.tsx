@@ -91,8 +91,6 @@ const StepsPanel = ({ className, ...props}: IProps) => {
             if (e.key === "Delete") {
                 store.dispatch(deleteRecordedSteps(selectedList));
                 performVerifyTest(false);
-            } else if (e.key === "a" && e.ctrlKey) {
-                toggleSelectAll(recordedSteps.map((item, index) => index));
             }
         };
         window.addEventListener("keyup", keyPressListener, false);

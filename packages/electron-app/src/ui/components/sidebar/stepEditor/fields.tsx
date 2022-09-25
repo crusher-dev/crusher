@@ -89,6 +89,7 @@ type IFieldSelectorPickerProps = React.TextareaHTMLAttributes<HTMLTextAreaElemen
 };
 const FieldSelectorPicker = React.forwardRef((props: IFieldSelectorPickerProps, ref: React.Ref<HTMLTextAreaElement>) => {
 	const { className } = props;
+	const currentRef = ref ? ref : React.createRef(null);
 
 	const selectorsInputProps = React.useMemo(() => {
 		const clonedProps = { ...props };
@@ -117,19 +118,7 @@ const FieldSelectorPicker = React.forwardRef((props: IFieldSelectorPickerProps, 
 		};
 	}, []);
 
-	return (
-		<div className={`${className}`} css={fieldContainerStyle}>
-			<span css={selectorPickerLabelStyle} className={"pr-10"}>
-				{props.label}
-			</span>
-			<div css={selectorPickerContainerStyle}>
-				<textarea ref={ref} {...selectorsInputProps} css={[textAreaStyle, scrollBarStyle]}>
-					{props.initialValue}
-				</textarea>
-				<InspectElementIcon onClick={handleElementSelectorClick} css={inspectElementIconStyle} />
-			</div>
-		</div>
-	);
+	return (<InspectElementIcon className={className} onClick={handleElementSelectorClick} css={inspectElementIconStyle} />);
 });
 
 type IFieldEditModeButtonProps = Omit<ButtonProps, "children"> & {
@@ -238,9 +227,7 @@ const toggleStyle = css`
 const inspectElementIconStyle = css`
 	width: 16rem;
 	height: 16rem;
-	position: absolute;
-	right: 7rem;
-	bottom: 9rem;
+
 	:hover {
 		opacity: 0.8;
 	}

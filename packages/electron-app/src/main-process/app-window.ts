@@ -1157,9 +1157,9 @@ export class AppWindow {
 					await this.webView.playwrightInstance.runActions([action], !!shouldNotSave);
 					break;
 			}
-			if (!shouldNotSleep) {
-				await sleep(250);
-			}
+			// if (!shouldNotSleep) {
+			// 	await sleep(250);
+			// }
 		} catch (e) {
 			this.store.dispatch(updateRecorderState(TRecorderState.ACTION_REQUIRED, {}));
 			throw e;

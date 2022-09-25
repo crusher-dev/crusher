@@ -71,8 +71,8 @@ const inputCss = css`
 		padding-left: 18rem;
 		padding-right: 110rem;
 
-		background: rgba(77, 77, 77, 0.25) !important;
-		border: 0.5px solid rgba(55, 55, 55, 0.23) !important;
+		background: rgba(77, 77, 77, 0.25);
+		border: 0.5px solid rgba(55, 55, 55, 0.23);
 		border-radius: 10px;
 
 		font-family: Gilroy;
@@ -81,7 +81,7 @@ const inputCss = css`
 		font-size: 13rem;
 		color: rgba(255, 255, 255, 0.67);
         :focus {
-            border-color: #D660FF !important;
+            border-color: #D660FF;
         }
 	}
 	}

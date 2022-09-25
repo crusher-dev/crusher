@@ -8,6 +8,7 @@ import { deleteRecordedSteps, recordStep, updateRecorderState } from "electron-a
 import { iElementInfo, TRecorderState } from "electron-app/src/store/reducers/recorder";
 import { getSavedSteps } from "electron-app/src/store/selectors/recorder";
 import { AnyAction, Store } from "redux";
+import { sendSnackBarEvent } from "../components/toast";
 
 const performAction = async (action: iAction, shouldNotSave = false, isRecording = true) => {
 	return ipcRenderer.invoke("perform-action", { action, shouldNotSave, isRecording });

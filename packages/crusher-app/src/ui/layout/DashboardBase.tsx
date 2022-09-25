@@ -30,7 +30,7 @@ import { useProjectDetails } from "@hooks/common";
 import { LinkBlock } from "dyson/src/components/atoms/Link/Link";
 import Download from "@ui/containers/dashboard/Download";
 import { GiveFeedback } from "../containers/dashboard/GiveFeedback";
-import { BackSVG } from "@svg/builds";
+import { BackSVG, CorrentSVG } from "@svg/builds";
 // const AddProject = dynamic(() => import("@ui/containers/dashboard/AddProject"));
 const InviteMembers = dynamic(() => import("@ui/containers/dashboard/InviteMember"));
 
@@ -143,8 +143,6 @@ const projectMenu = [
 		isProject: true
 	},
 ];
-
-
 
 const ResourceBar = () => {
 	return (
@@ -513,7 +511,6 @@ border-radius: 8px;
 `
 
 function TopNavbar({ children }) {
-
 	return (
 		<div css={[nav]}>
 			<div css={[containerWidth, contentContainer]}>{children}</div>
@@ -525,16 +522,21 @@ const NavbarLeft = () => {
 	const { currentProject } = useProjectDetails()
 	const [projects] = useAtom(projectsAtom);
 	const isCurrentProject = !!currentProject;
-	const isBuildReport = true
+	const { asPath } = useRouter()
+
+	const isBuildReport = isCurrentProject && asPath.includes('build');
 	if (isBuildReport) {
 		return (
-			<div css={projectsLabel} className={"flex items-center w-full"}>
-				<BackSVG height={12} width={12} className="mr-8" />
-				<Link href="/projects">
+			<div css={reportLabel} className={"flex items-center w-full"}>
+				<Link href={`/projects`}>
+					<BackSVG height={12} width={12} className="mr-8" />
+				</Link>
+				<Link href={`/${currentProject?.id}/builds`}>
 					<span css={projectIcon}>projects</span>
 				</Link>
-				<span>/ crusher</span>
+				<span>/ {currentProject.name}</span>
 				<span>/ 517</span>
+				<CorrentSVG className="ml-8" height={18} width={18} />
 			</div>
 		)
 	}
@@ -641,7 +643,6 @@ const textLink = css`
 
 const projectsLabel = css`
 	gap: 2rem;
-	font-family: "Cera Pro";
 	font-weight: 400;
 	font-size: 13px;
 	color: #6b6565;
@@ -659,6 +660,17 @@ const projectsLabel = css`
 		color: #aaaaaa;
 		font-size: 12.5rem;
 	}
+`;
+
+const reportLabel = css`
+	gap: 2rem;
+	font-weight: 400;
+	font-size: 14rem;
+	color: #6b6565;
+	letter-spacing: 0.06em;
+
+	height: 56rem;
+
 `;
 
 const background = css`
@@ -701,17 +713,22 @@ const scrollContainer = css`
 	height: calc(100vh - 56rem);
 `;
 function NavbarRight() {
+	const { asPath } = useRouter()
 	const { currentProject } = useProjectDetails()
+	const isCurrentProject = !!currentProject;
+	const isBuildReport = isCurrentProject && asPath.includes('build');
 	return <div className="flex items-center" css={rightNavbar}>
-		<Conditional showIf={!!currentProject}>
+		<Conditional showIf={isCurrentProject}>
 			<RunTest />
 			<CreateTest />
 		</Conditional>
 		<a href="https://docs.crusher.dev" target="_blank">
-			<TextBlock color={"#6b6565"} className={"flex ml-4	"} css={textLink}>
-				<External className="mr-8" />
-				Docs
-			</TextBlock>
+			<Conditional showIf={!isBuildReport}>
+				<TextBlock color={"#6b6565"} className={"flex ml-4"} css={textLink}>
+					<External className="mr-8" />
+					<span className="mt-1">Docs</span>
+				</TextBlock>
+			</Conditional>
 		</a>
 	</div>;
 }

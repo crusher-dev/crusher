@@ -11,7 +11,7 @@ import { userAtom } from "@store/atoms/global/user";
 import { useRouter } from "next/router";
 import { Conditional } from "dyson/src/components/layouts";
 
-export default function DropdownContent() {
+export default function FeedbackContent() {
     const [user] = useAtom(userAtom)
     const router = useRouter()
 

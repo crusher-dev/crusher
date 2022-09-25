@@ -29,6 +29,7 @@ interface IBuildItemCardProps {
 
 function BuildItemCard(props: IBuildItemCardProps) {
 	const { info }: { info: IProjectBuildListItem } = props;
+	const { currentProject } = useProjectDetails()
 
 	const { id, createdAt, tests, status, reviewMessage, commentCount, triggeredBy, duration } = info;
 
@@ -36,7 +37,7 @@ function BuildItemCard(props: IBuildItemCardProps) {
 	const isRunning = !["FAILED", "PASSED", "MANUAL_REVIEW_REQUIRED"].includes(info.status);
 
 	return (
-		<ConditionalLink href={`/app/build/${id}`} disabled={isRunning}>
+		<ConditionalLink href={`/${currentProject.id}/build/${id}`} disabled={isRunning}>
 			<div css={itemContainerStyle} className={"relative"} style={{ cursor: isRunning ? "not-allowed" : "default" }}>
 				<div className={"flex flex-row items-center"}>
 					<div className={"flex flex-row items-center"}>

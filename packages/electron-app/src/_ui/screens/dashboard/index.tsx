@@ -103,9 +103,9 @@ const DashboardScreen = () => {
             console.log("Id arr", idArr);
             mutate({ ...tests, list: tests.list.filter(test => { return !((window as any).deletedTest || []).includes(test.id) }) });
             for (let id of idArr) {
-                // CloudCrusher.deleteTest(id).catch((err) => {
-                //     sendSnackBarEvent({ message: "Error deleting test", type: "error" });
-                // });
+                CloudCrusher.deleteTest(id).catch((err) => {
+                    sendSnackBarEvent({ message: "Error deleting test", type: "error" });
+                });
             }
         },
         [tests],

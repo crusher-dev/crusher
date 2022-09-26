@@ -1,35 +1,30 @@
-import { getBuilds, getCurrentLocalBuild } from "electron-app/src/store/selectors/builds";
+import { addBuildNotification, clearBuildNotifications, removeBuildNotification, updateBuildNotification } from "electron-app/src/store/actions/builds";
+import { getBuildNotifications, getBuilds, getCurrentLocalBuild, getLastBuildNotification } from "electron-app/src/store/selectors/builds";
 import React from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch, useStore } from "react-redux";
 
 const useBuildNotifications = () => {
-    const [notifications, setNotifications] = React.useState([]);
-    
-    // Hydrate
-    React.useEffect(() => {
-        if(!localStorage.getItem("buildNotifications")) {
-            localStorage.setItem("buildNotifications", JSON.stringify([]));
-        }
-        const notifications = JSON.parse(localStorage.getItem("buildNotifications"));
-        setNotifications(notifications);
-    }, []);
+    const notifications = useSelector(getBuildNotifications);
+    const latestNotification = useSelector(getLastBuildNotification);
+    const dispatch = useDispatch();
 
-    const addNotification = React.useCallback((notification) => {
-        setNotifications((notifications) => [...notifications, notification]);
-        localStorage.setItem("buildNotifications", JSON.stringify([...notifications, notification]));
+    const _addNotification = React.useCallback((notification) => {
+        dispatch(addBuildNotification(notification));
     }, [notifications]);
     
-    const removeNotification = React.useCallback((notificationId) => {
-        setNotifications((notifications) => notifications.filter((n) => n.id !== notificationId));
-        localStorage.setItem("buildNotifications", JSON.stringify(notifications.filter((n) => n.id !== notificationId)));
+    const _removeNotification = React.useCallback((notificationId) => {
+        dispatch(removeBuildNotification(notificationId));
     }, [notifications]);
 
-    const clearNotifications = React.useCallback(() => {
-        setNotifications([]);
-        localStorage.setItem("buildNotifications", JSON.stringify([]));
+    const _updateNotification = React.useCallback((notificationId, notification) => {
+        dispatch(updateBuildNotification(notificationId, notification));
+    }, [notifications]);
+
+    const _clearNotifications = React.useCallback(() => {
+        dispatch(clearBuildNotifications());
     }, []);
 
-    return { notifications, addNotification, removeNotification, clearNotifications };
+    return { notifications, latestNotification, addNotification: _addNotification, removeNotification: _removeNotification, clearNotifications: _clearNotifications, updateNotification: _updateNotification };
 };
 
 // const Test = () => {

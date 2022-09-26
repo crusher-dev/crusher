@@ -4,7 +4,7 @@ import { linkOpen } from "electron-app/src/utils/url";
 
 export function Link({ children, href, ...props }) {
 	return (
-		<span css={[linkStyle]} {...props} onClick={linkOpen.bind(this, href)}>
+		<span css={[linkStyle]} onClick={linkOpen.bind(this, href)} {...props}>
 			{children}
 		</span>
 	);

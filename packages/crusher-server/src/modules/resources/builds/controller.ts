@@ -48,8 +48,6 @@ export class BuildsController {
 			browser: [BrowserEnum.CHROME],
 		});
 
-		console.log("Build id is", build);
-
 		return { build, buildReportStatus };
 	}
 

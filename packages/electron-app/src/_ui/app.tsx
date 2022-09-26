@@ -21,7 +21,7 @@ import Toolbar from "../ui/components/toolbar";
 import historyInstance from "./utils/history";
 import Wrapper from "figma-design-scaler/dist/dist/main";
 import { useBuildNotifications } from "./hooks/tests";
-import { clearCurrentLocalBuild, updateCurrentLocalBuild, updateLocalBuildResult } from "../store/actions/builds";
+import { addBuildNotification, clearCurrentLocalBuild, updateCurrentLocalBuild, updateLocalBuildResult } from "../store/actions/builds";
 
 const handleCompletion = async (store: Store, action: IDeepLinkAction, addNotification) => {
 
@@ -50,6 +50,12 @@ const handleCompletion = async (store: Store, action: IDeepLinkAction, addNotifi
             // steps: Array<any>; id: number; name: string; status: "FINISHED" | "FAILED"
             window["localBuildReportId"] = localBuild.build.id;
 			addNotification({id: localBuild.build.id });
+			store.dispatch(addBuildNotification({
+				id: localBuild.build.id,
+				status: localBuild.buildReportStatus,
+				meta: { build: localBuild },
+				time: Date.now()
+			}));
 
             historyInstance.push("/", {});
 

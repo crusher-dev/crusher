@@ -6,41 +6,70 @@ import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import { HoverCard } from "@dyson/components/atoms/tooltip/Tooltip1";
 
 import { linkOpen } from "electron-app/src/utils/url";
-import { getIsProxyInitializing, getProxyState } from "electron-app/src/store/selectors/app";
-import { useSelector } from "react-redux";
+import { getAppSettings, getIsProxyInitializing, getProxyState } from "electron-app/src/store/selectors/app";
+import { useSelector, useStore } from "react-redux";
 import { useBuildNotifications } from "../hooks/tests";
 import { LinkPointer } from "./LinkPointer";
 import { Tooltip } from "@dyson/components/atoms/tooltip/Tooltip";
 import { Conditional } from "@dyson/components/layouts";
+import { resolveToFrontEndPath } from "@shared/utils/url";
+import { shell } from "electron";
+import { CloudCrusher } from "electron-app/src/lib/cloud";
 
 interface IProps {
     className?: string;
 };
 const StickyFooter = ({ className, ...props }: IProps) => {
-    const { notifications } = useBuildNotifications();
+    const { notifications, latestNotification, updateNotification } = useBuildNotifications();
+    const store = useStore();
     const proxyIsInitializing = useSelector(getIsProxyInitializing);
     const proxyState = useSelector(getProxyState);
-
+    
     const isProxyWorking = Object.keys(proxyState).length;
 
     const isProxyDisabled = !proxyIsInitializing && !isProxyWorking;
 
+    const handleViewReport = (reportId) => {
+        const appSettings = getAppSettings(store.getState() as any);
+        shell.openExternal(resolveToFrontEndPath("/app/build/" + reportId, appSettings.frontendEndPoint));
+    };
+
+    React.useEffect(() => {
+        if(latestNotification && latestNotification.id && !latestNotification.status) {
+            const interval = setInterval(() => {
+                CloudCrusher.getBuildReport(latestNotification.id).then((res) => {
+                    updateNotification(latestNotification.id, {
+                        status: res.status,
+                    });
+                    if (res.status != "RUNNING") {
+                        clearInterval(interval);
+                    }
+                });
+            }, 5000);
+
+            return () => {
+                clearInterval(interval);
+            }
+        }
+    }, [latestNotification?.id]);
+
+    const statusMessage = latestNotification?.status && latestNotification?.status !== "RUNNING" ? "has " + latestNotification.status.toLowerCase() : "is running"; 
     return (
         <div css={containerCss} className={`${className}`}>
             <div css={contentCss}>
-                <Conditional showIf={notifications.length}>
+                {latestNotification ? (
                     <div css={notificationContainerCss}>
-                        <div css={notificationContentCss}>
-                            <ConsoleIcon css={consoleIconCss} />
-                            <span css={notificationTextCss}>2: Last build has passed</span>
-                        </div>
-                        <div css={notificationActionCss}>
-                            <Link css={linkCss}>view report</Link>
-                        </div>
-                    </div>
-                </Conditional>
-
-                <Conditional showIf={!notifications.length}>
+                         <div css={notificationContentCss}>
+                             <ConsoleIcon css={consoleIconCss} />
+                             <span css={notificationTextCss}>2: Last build {statusMessage}</span>
+                         </div>
+                         <div css={notificationActionCss}>
+                             <Link css={linkCss} onClick={handleViewReport.bind(this, latestNotification.id)}>view report</Link>
+                         </div>
+                     </div>
+                ) : ""}
+     
+                <Conditional showIf={latestNotification}>
                     <span css={footerBottomLabel}>test page</span>
                 </Conditional>
 

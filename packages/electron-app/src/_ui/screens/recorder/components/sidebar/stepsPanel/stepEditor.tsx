@@ -4,7 +4,7 @@ import { css } from "@emotion/react";
 import { getSavedSteps, getStepInfo } from "electron-app/src/store/selectors/recorder";
 import { useSelector, useDispatch } from "react-redux";
 import { TextHighlighter } from "./helper";
-import { deleteRecordedSteps } from "electron-app/src/store/actions/recorder";
+import { deleteRecordedSteps, updateRecordedStep } from "electron-app/src/store/actions/recorder";
 import { FieldInput, FieldSelectorPicker } from "electron-app/src/ui/components/sidebar/stepEditor/fields";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { NormalInput } from "electron-app/src/_ui/components/inputs/normalInput";
@@ -12,6 +12,7 @@ import { emitShowModal } from "electron-app/src/ui/components/modals";
 import { BrowserButton } from "electron-app/src/ui/components/buttons/browser.button";
 import { Button } from "@dyson/components/atoms";
 import { iSelectorInfo } from "@shared/types/selectorInfo";
+import { sendSnackBarEvent } from "electron-app/src/ui/components/toast";
 
 const SelectorInfo = ({stepId, setShowAdvanced}) => {
     const stepInfo = useSelector(getStepInfo(stepId));
@@ -61,23 +62,45 @@ color: rgba(255, 255, 255, 0.54);
 
 const pencilIconCss = css`width: 10.5rem; height: 10.5rem; margin-top: -2rem; :hover { opacity: 0.8; } `;
 
-const InputValueEditor = ({step}) => {
+const InputValueEditor = ({step, stepId}) => {
     const [isEditMode, setIsEditMode] = React.useState(false);
-
+    const inputRef = React.useRef(null);
+    const dispatch = useDispatch();
+    
     const getInfo = (step) => {
         if(step.type === ActionsInTestEnum.ADD_INPUT) {
+            const updateInputValue = (value: string) => {
+                if (step.payload.meta.value.value !== value) {
+                    step.payload.meta.value.value = value;
+                    dispatch(updateRecordedStep({ ...step }, stepId));
+                    sendSnackBarEvent({ type: "success", message: "Value updated" });
+                }
+            };
+  
             const inputValue = step.payload.meta?.value?.value || "";
-            return { label: "Value:", value: inputValue, placeholder: "Enter value" };
+            return { label: "Value:", value: inputValue, placeholder: "Enter value", updateCallback: updateInputValue };
         }
         if([ActionsInTestEnum.NAVIGATE_URL, ActionsInTestEnum.WAIT_FOR_NAVIGATION].includes(step.type)) {
+            const updateNavigationUrlValue = (value: string) => {
+                if (step.payload.meta.value !== value) {
+                    step.payload.meta.value = value;
+                    dispatch(updateRecordedStep({ ...step }, stepId));
+                    sendSnackBarEvent({ type: "success", message: "Navigation value updated" });
+                }
+            };
+
             const navigationUrlValue = step.payload.meta?.value || "";
-            return { label: "URL:", value: navigationUrlValue, placeholder: "Enter url"};
+            return { label: "URL:", value: navigationUrlValue, placeholder: "Enter url", updateCallback: updateNavigationUrlValue};
         }
 
         return null;
     };
 
     const fieldInfo = getInfo(step);
+    const handleUpdate = () => {
+        fieldInfo.updateCallback(inputRef.current.value);
+        setIsEditMode(false);
+    };
     if(!fieldInfo) return null;
     
     return (
@@ -88,8 +111,11 @@ const InputValueEditor = ({step}) => {
             size={"small"}
             initialValue={fieldInfo.value}
             inputWrapperCss={css`height: unset !important;`}
+            onReturn={handleUpdate.bind(this, false)}
             onBlur={setIsEditMode.bind(this, false)}
             inputCss={inputCss(isEditMode)}
+            disabled={!isEditMode}
+            ref={inputRef}
         />
 
         <EditPencilIcon onClick={setIsEditMode.bind(this, true)} className={"ml-10"} css={editUrlIconCss} />
@@ -113,7 +139,7 @@ const StepMetaInfo = ({stepId, setShowAdvanced}) => {
             </div>
 
             {showFieldInput ? (
-               <InputValueEditor step={steps[stepId]}/>
+               <InputValueEditor stepId={stepId} step={steps[stepId]}/>
             ) : ""}
 
             {hasSelectors ? (

@@ -168,7 +168,7 @@ const DashboardScreen = () => {
                     css={[buttonDropdownMainButtonCss, css` background: #B341F9 !important;`]}
                     options={[
                         { id: "RUN_LOCAL", content: (<span>Run tests</span>) },
-                        { id: "RUN_CLOUD", content: (<span>Run tests (cloud)</span>) },
+                        { id: "RUN_CLOUD", content: (<span>In cloud</span>) },
 
                     ]}
                     primaryOption={"RUN_LOCAL"}

@@ -3,7 +3,7 @@ import { css } from "@emotion/react";
 import { Button } from "@dyson/components/atoms";
 
 interface IProps { title: string; className?: string; id?: string; onClick?: any }
-const ActionButton = ({ title, id, className, onClick }: IProps) => {
+const ActionButton = React.forwardRef(({ title, id, className, onClick }: IProps, ref) => {
     const handleClick = React.useCallback((e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -17,11 +17,12 @@ const ActionButton = ({ title, id, className, onClick }: IProps) => {
 			className={`${className}`}
 			bgColor="tertiary-outline"
 			css={buttonCss}
+            ref={ref}
 		>
 			<span>{title}</span>
 		</Button>
 	);
-};
+});
 
 const buttonCss = css`
     width: 92rem;

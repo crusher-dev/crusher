@@ -53,6 +53,7 @@ interface IProps {
 
 const ButtonDropdown = ({options, id, hideDropdown, primaryOption, wrapperCss, className, callback, ...props}: IProps) => {
     const [showActionDropdown, setShowActionDropdown] = React.useState(false);
+    const buttonRef = React.useRef(null);
 
     const handleCallback = React.useCallback((id: string) => {
         callback(id);
@@ -72,23 +73,26 @@ const ButtonDropdown = ({options, id, hideDropdown, primaryOption, wrapperCss, c
         initialState={showActionDropdown}
         component={<ActionButtonDropdown options={dropdownOptions} callback={handleCallback} />}
         callback={setShowActionDropdown.bind(this)}
-        dropdownCSS={[props.dropdownCss, dropdownCss]}
+        dropdownCSS={[props.dropdownCss, dropdownCss(buttonRef.current)]}
     >
-		<ActionButton id={id} className={className} title={primaryOptionsObject.content} onClick={handleCallback.bind(this, primaryOptionsObject.id)} css={saveButtonStyle} />
+        <div ref={buttonRef} css={css`position: absolute; width: 100%; height: 100%; pointer-events: none; visibility: hidden;`}> </div>
+            <ActionButton id={id} className={className} title={primaryOptionsObject.content} onClick={handleCallback.bind(this, primaryOptionsObject.id)} css={saveButtonStyle} />
 
-        {!hideDropdown ? (
-            <div className={"dropdown-icon"} css={downIconContainerCss}>
-            <SaveButtonDownIcon css={downIconCss} />
-            </div>
-        ): ""}
+            {!hideDropdown ? (
+                <div className={"dropdown-icon"} css={downIconContainerCss}>
+                <SaveButtonDownIcon css={downIconCss} />
+                </div>
+            ): ""}
+      
+
      
     </Dropdown>
     );
 };
 
-const dropdownCss = css`
-    left: 0rem;
-    width: 150rem;
+const dropdownCss = (button) => css`
+    left: 0rem !important;
+    width: ${button ? button.clientWidth : 0}px !important;
     top: unset;
     bottom: calc(100% + 4rem);
 `;

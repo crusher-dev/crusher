@@ -50,7 +50,7 @@ export const TooltipBox = ({ children, className = "tooltip-box", el = "div" }) 
 /**
  * Unified tolltip component for Dyson UI system
  */
-export const HoverCard: React.FC<TooltipWrapperProps> = ({ children, state, onStateChange, autoHide = "true", timer = 0, placement, type, content, padding = 0, className, ...props }) => {
+export const HoverCard: React.FC<TooltipWrapperProps> = ({ children, state, onStateChange, autoHide = "true", timer = 0, placement, type, content, padding = 0, className, disabled=false, ...props }) => {
     const [show, setShow] = useState(false);
     const { offset: offsetWrapper = 8 } = props;
     const { x, y, reference, floating, update, strategy, refs } = useFloating({
@@ -119,14 +119,14 @@ export const HoverCard: React.FC<TooltipWrapperProps> = ({ children, state, onSt
         return () => {
             window.removeEventListener("click", handleClick, { capture: true });
         };
-    }, [show]);
+    }, [callback, show]);
 
 
 
     return (
         <React.Fragment>
             <ClonedElement />
-            {show && (
+            {show && !disabled && (
                 <TooltipBox>
                     <div
                         css={[tooltipWrapper(padding), wrapperCSS]}

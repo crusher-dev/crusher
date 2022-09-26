@@ -16,6 +16,7 @@ import { HoverCard } from "@dyson/components/atoms/tooltip/Tooltip1";
 import { HelpContent } from "electron-app/src/_ui/components/stickyFooter";
 import { StepInfoEditor } from "electron-app/src/ui/components/sidebar/stepEditor";
 import { StepEditor } from "./stepEditor";
+import { FailedStepCard } from "./failedCard";
 
 interface IProps {
     className?: string;
@@ -47,10 +48,11 @@ const Step = ({className, isActive, onContextMenu, step, onClick, setIsActive, i
     }, [setIsActive]);
 
     const title = TextHighlighter({text: stepInfo.name});
-    
+    const hasFailed = stepInfo.isFailed;
+
     return (
-        <HoverCard callback={setIsEditorCardOpen.bind(this)} wrapperCss={css`z-index: 123123123 !important;`} css={css`padding: 0rem !important; background: rgb(5, 5, 5) !important; margin-left: -22rem !important; overflow: hidden !important;`} content={<StepEditor stepId={stepId} />} placement="right" type="hover" padding={8} offset={0}>
-            <div onContextMenu={onContextMenu} onClick={onClick} css={[containerCss, isActive  || isEditorCardOpen ? activeItemCss : null]}>
+        <HoverCard disabled={hasFailed} callback={setIsEditorCardOpen.bind(this)} wrapperCss={css`z-index: 123123123 !important;`} css={css`padding: 0rem !important; background: rgb(5, 5, 5) !important; margin-left: -22rem !important; overflow: hidden !important;`} content={<StepEditor stepId={stepId} />} placement="right" type="hover" padding={8} offset={0}>
+            <div onContextMenu={onContextMenu} onClick={onClick} css={[containerCss(hasFailed)]}>
                     <div className={"card"} css={contentCss}>
                         {stepInfo.isRunning ? (
                             <PointerArrowIcon css={runningPointerIconCss}/>
@@ -72,14 +74,8 @@ const Step = ({className, isActive, onContextMenu, step, onClick, setIsActive, i
                         {stepInfo.isCompleted ? (
                             <GreenCheckboxIcon css={[completedIconCss, !isLast ? inActiveIconCss : null]}/>
                         ): ""}
-                        {stepInfo.isFailed ? (
-                            <TextBlock css={failedStepTaglineCss}>
-                                <WarningIcon css={failedIconCss}/>
-                                <span css={failedWarningTextCss}>&nbsp; This step failed</span>
-                            </TextBlock>
-                        ): ""}
                     </div>
-                    {stepInfo.isFailed ? (
+                    {hasFailed ? (
                         <FailedStepCard stepId={stepId}/>
                     ) : ""}
                 </div>
@@ -92,8 +88,7 @@ const inActiveIconCss = css`
         fill: rgba(99, 99, 99, 0.91);
     }
 `;
-const containerCss = css`
-    padding-right: 11rem;
+const containerCss = (isDisabled) => css`
     border-radius: 2rem;
     border-width: 0.5px 0px;
     border-style: solid;
@@ -102,7 +97,7 @@ const containerCss = css`
         border-top: none;
     }
     :hover {
-        background:  rgba(199, 81, 255, 0.14);
+        background: ${isDisabled ? `inherit` : `rgba(199, 81, 255, 0.14)`};
     }
 `;
 const activeItemCss = css`
@@ -117,7 +112,7 @@ const contentCss = css`
     border-left: none;
     border-right: none;
     padding: 10rem 15rem;
-    padding-right: 5rem;
+    padding-right: 16rem;
     position: relative;
 `;
 const runningPointerIconCss = css`
@@ -128,7 +123,6 @@ const runningPointerIconCss = css`
     top: 8rem;
 `;
 const stepTextCss = css`
-    margin-left: 6rem;
     flex: 1 0 50%;
     word-break: break-all;
 `;
@@ -187,90 +181,6 @@ const failedIconCss = css`
 const failedWarningTextCss = css`
     margin-left: 4rem;
     padding-top: 2rem;
-`;
-
-interface IFailedStepCardProps {
-    stepId: any;
-    className?: string;
-};
-
-const FailedStepCard = ({className, ...props}: IFailedStepCardProps) => {
-    const { stepId } = props;
-    const store = useStore();
-
-    const handleRetryStep = React.useCallback(() => {
-		const savedSteps = getSavedSteps(store.getState());
-		const step = savedSteps[stepId];
-		store.dispatch(deleteRecordedSteps([stepId]));
-
-		continueRemainingSteps([
-			{
-				...step,
-				status: ActionStatusEnum.STARTED,
-			},
-		]);
-	}, [stepId]);
-
-    const handleDeleteAndContinue = React.useCallback(() => {
-		const recorderState = getRecorderState(store.getState());
-
-		store.dispatch(deleteRecordedSteps([stepId]));
-		continueRemainingSteps();
-	}, [stepId]);
-
-    return (
-        <div css={failedContainerCss} className={`${className}`}>
-            <div css={failedHeadingCss}>
-                <Text css={failedHeadingTextCss}>What to do?</Text>
-            </div>
-            <div css={failedContentCss}>
-                <TooltipButton
-                    onClick={handleRetryStep}
-                    tooltip={
-                        <div css={toolTipTextCss}>
-                            Runs this step again,<br/>
-                            usually after modifying it
-                        </div>
-                    }>
-                    Retry step
-                </TooltipButton>
-                <TooltipButton
-                    onClick={handleDeleteAndContinue}
-                    tooltip={
-                        <div css={toolTipTextCss}>
-                        	Delete this step, and<br />
-							continue on with the test
-                        </div>
-                    }>
-                    Delete & continue
-                </TooltipButton>
-            </div>
-        </div>
-    )
-};
-
-const failedContainerCss = css`
-    padding: 15rem;
-    margin: 6rem 0rem;
-    background: #0f1011;
-    border: 1rem solid rgba(255, 255, 255, 0.12);
-    box-sizing: border-box;
-    border-radius: 4rem;
-`;
-const failedHeadingCss = css`
-    display: flex;
-    flex: 1 1 100%;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8rem;
-`;
-const failedHeadingTextCss = css`
-	font-family: Gilroy;
-	font-weight: 800;
-	font-size: 12rem;
-`;
-const failedContentCss = css`
-    display: flex;
 `;
 
 interface ITooltipButtonProps {

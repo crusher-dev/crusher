@@ -3,7 +3,7 @@ import React from "react";
 import { css } from "@emotion/react";
 import { getSavedSteps, getStepInfo } from "electron-app/src/store/selectors/recorder";
 import { useSelector, useDispatch } from "react-redux";
-import { TextHighlighter } from "./helper";
+import { TextHighlighter, transformStringSelectorsToArray } from "./helper";
 import { deleteRecordedSteps, updateRecordedStep } from "electron-app/src/store/actions/recorder";
 import { FieldInput, FieldSelectorPicker } from "electron-app/src/ui/components/sidebar/stepEditor/fields";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
@@ -219,9 +219,13 @@ const EDIT_MODE_MAP = {
 };
 
 const StepAdvancedForm =  ({stepId}) =>{
+    const textAreaRef = React.useRef(null);
     const steps = useSelector(getSavedSteps);
     const stepInfo = useSelector(getStepInfo(stepId));
     const title = TextHighlighter({text: stepInfo.name}, true);
+    const step = steps[stepId];
+
+    const dispatch = useDispatch();
 
     const getReadbleSelectors = (selectors: Array<iSelectorInfo> | null) => {
         if (!selectors) return "";
@@ -232,6 +236,18 @@ const StepAdvancedForm =  ({stepId}) =>{
             })
             .join("\n");
     };
+
+    const handleOnSelectorsPicked = (selectors: Array<iSelectorInfo>, shouldNotify = true) => {
+		step.payload.selectors = selectors;
+		dispatch(updateRecordedStep({ ...step }, stepId));
+		if (shouldNotify) {
+			sendSnackBarEvent({ type: "success", message: "Selectors updated" });
+		}
+	};
+	const saveSelectorsOnUserInput = (e) => {
+		handleOnSelectorsPicked(transformStringSelectorsToArray(e.target.value), false);
+	};
+
     return (
         <div className={"px-20 py-24"} css={[stepMetaInfoContainerCss]}>
             <div css={stepNameCss}>
@@ -239,7 +255,7 @@ const StepAdvancedForm =  ({stepId}) =>{
             </div>
 
             <div className={"flex mt-34"}>
-                <textarea css={textAreaCss}>
+                <textarea onChange={saveSelectorsOnUserInput} ref={textAreaRef} css={textAreaCss}>
                     {getReadbleSelectors(steps[stepId].payload.selectors)}
                 </textarea>
                 <div className={"ml-24"}>

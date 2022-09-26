@@ -1,3 +1,5 @@
+import { SELECTOR_TYPE } from "unique-selector/src/constants";
+
 /*
 	A function to replace text within outer brackets, counting the number of brackets
 	e.g.
@@ -51,4 +53,12 @@ const TextHighlighter = ({text}, shouldStyle = false) => {
         }
   });
 };
-export { parseStepNameText, TextHighlighter };
+
+const  transformStringSelectorsToArray = (selectors: string) => {
+	const selectorsArray = selectors.split("\n");
+	return selectorsArray.map((selector) => {
+		return { type: SELECTOR_TYPE.PLAYWRIGHT, value: selector, uniquenessScore: 1 };
+	});
+}
+
+export { parseStepNameText, TextHighlighter, transformStringSelectorsToArray };

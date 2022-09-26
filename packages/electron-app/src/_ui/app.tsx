@@ -42,12 +42,10 @@ const handleCompletion = async (store: Store, action: IDeepLinkAction, addNotifi
 			} as any));
             performReplayTestUrlAction(window["testsToRun"].list[0], true);
           } else {
-			store.dispatch(clearCurrentLocalBuild());
 			// Time to redirect to dashboard
             const totalTestsInBuild = window["testsToRun"].count;
             window["testsToRun"] = undefined;
             const localBuild = await performSaveLocalBuild(Object.values(window["localRunCache"]));
-            console.log("local build is", localBuild);
             window["localRunCache"] = undefined;
             // steps: Array<any>; id: number; name: string; status: "FINISHED" | "FAILED"
             window["localBuildReportId"] = localBuild.build.id;
@@ -56,6 +54,7 @@ const handleCompletion = async (store: Store, action: IDeepLinkAction, addNotifi
             historyInstance.push("/", {});
 
             goFullScreen(false);
+			store.dispatch(clearCurrentLocalBuild());
             sendSnackBarEvent({ type: "test_report", message: null, meta: { totalCount: totalTestsInBuild, buildReportStatus: localBuild.buildReportStatus }});
         }
     }

@@ -67,12 +67,11 @@ const StickyFooter = ({ className, ...props }: IProps) => {
                              <Link css={linkCss} onClick={handleViewReport.bind(this, latestNotification.id)}>view report</Link>
                          </div>
                      </div>
-                ) : ""}
-     
-                <Conditional showIf={latestNotification}>
+                ) : (
                     <span css={footerBottomLabel}>test page</span>
-                </Conditional>
-
+                )}
+     
+             
 
                 <div css={contextContainerCss}>
                     <Tooltip content={isProxyDisabled ? "disabled" : (proxyIsInitializing ? "initializng" : "active")} placement="top" type="hover">

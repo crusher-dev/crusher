@@ -36,7 +36,7 @@ interface ITabButtonProps {
 }
 const TabButton = (props: ITabButtonProps) => {
 	const { title, className, selected, callback, count } = props;
-	if(count === 0) return null;
+	if (count === 0) return null;
 	return (
 		<div
 			className={className || ""}
@@ -99,19 +99,19 @@ const defaultNodeRenderer = ({ depth, name, data, isNonenumerable, expanded }) =
 
 
 const ArrowRightIcon = (props) => (
-		<svg
-		  xmlns="http://www.w3.org/2000/svg"
-		  viewBox="0 0 17.804 17.804"
-		  style={{
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		viewBox="0 0 17.804 17.804"
+		style={{
 			enableBackground: "new 0 0 17.804 17.804",
-		  }}
-		  xmlSpace="preserve"
-		  {...props}
-		>
-		  <path d="M2.067.043a.4.4 0 0 1 .426.042l13.312 8.503a.41.41 0 0 1 .154.313c0 .12-.061.237-.154.314L2.492 17.717a.402.402 0 0 1-.25.087l-.176-.04a.399.399 0 0 1-.222-.361V.402c0-.152.086-.295.223-.359z" />
-		</svg>
+		}}
+		xmlSpace="preserve"
+		{...props}
+	>
+		<path d="M2.067.043a.4.4 0 0 1 .426.042l13.312 8.503a.41.41 0 0 1 .154.313c0 .12-.061.237-.154.314L2.492 17.717a.402.402 0 0 1-.25.087l-.176-.04a.399.399 0 0 1-.222-.361V.402c0-.152.086-.295.223-.359z" />
+	</svg>
 );
-	  
+
 const StatusBar = (props: any) => {
 	const [currentModal, setCurrentModal] = React.useState({ type: null, stepIndex: null });
 	const store = useStore();
@@ -122,7 +122,7 @@ const StatusBar = (props: any) => {
 	const logs: ILoggerReducer["logs"] = useSelector(getLogs);
 
 	React.useEffect(() => {
-		if(clicked && window["resizeCustomCode"]) {
+		if (clicked && window["resizeCustomCode"]) {
 			setTimeout(() => window["resizeCustomCode"](), 150);
 		}
 	}, [clicked]);
@@ -179,8 +179,8 @@ const StatusBar = (props: any) => {
 					`}
 				>
 					{hasChildrens ? (
-							<ArrowRightIcon onClick={setShowChildrens.bind(this, !showChildrens)} css={[css`width: 8rem; fill: #797979; margin-right: 4rem; :hover { opacity: 0.8 }`, showChildrens ? css`transform: rotate(90deg)` : undefined]}/>
-					) : "" }
+						<ArrowRightIcon onClick={setShowChildrens.bind(this, !showChildrens)} css={[css`width: 8rem; fill: #797979; margin-right: 4rem; :hover { opacity: 0.8 }`, showChildrens ? css`transform: rotate(90deg)` : undefined]} />
+					) : ""}
 					<div>
 						<span
 							css={css`
@@ -219,19 +219,19 @@ const StatusBar = (props: any) => {
 						</span>
 					</div> */}
 				</div>
-					{showChildrens && log.children && log.children.length ? 
-						log.children.map((child: ILog & { children: Array<ILog>; diff: string }) => {
-							return (
-								<LogItem
-									css={css`
+				{showChildrens && log.children && log.children.length ?
+					log.children.map((child: ILog & { children: Array<ILog>; diff: string }) => {
+						return (
+							<LogItem
+								css={css`
 										padding-left: 20rem;
 									`}
-									key={child.id}
-									log={child}
-									diff={child.diff}
-								/>
-							);
-						}) : ""}
+								key={child.id}
+								log={child}
+								diff={child.diff}
+							/>
+						);
+					}) : ""}
 			</div>
 		);
 	};
@@ -263,9 +263,9 @@ const StatusBar = (props: any) => {
 		font-weight: 400;
 		font-size: 13.4rem;
 		`}>
-				<span css={css`color: rgba(90, 196, 255, 1); font-weight: 600;`}>{upperCase(logMessage.type)}:</span>
-				<span className={"ml-4"}>{(logMessage.message.length > 100 ? logMessage.message.substr(0, 100) + "..." : logMessage.message)}</span>
-			</div>;
+			<span css={css`color: rgba(90, 196, 255, 1); font-weight: 600;`}>{upperCase(logMessage.type)}:</span>
+			<span className={"ml-4"}>{(logMessage.message.length > 100 ? logMessage.message.substr(0, 100) + "..." : logMessage.message)}</span>
+		</div>;
 	};
 
 	const handleToggle = React.useCallback((e: any) => {
@@ -339,15 +339,15 @@ const StatusBar = (props: any) => {
 						background: rgba(255, 255, 255, 0.02)
 					}` : undefined,
 					clicked ? css`
-					border-bottom: 0.5px solid rgba(255, 255, 255, 0.17);
+					border-bottom: 0.5px solid #242424;
 					overflow: hidden;
 					` : undefined
-				]}
-				onClick={lastLogMessage ? handleToggle : undefined}
+					]}
+					onClick={lastLogMessage ? handleToggle : undefined}
 				>
-					<div css={[	css`width: 100%;`]} className={"flex items-center"}>
+					<div css={[css`width: 100%;`]} className={"flex items-center"}>
 
-						{lastLogMessage ? (<UpDownSizeIcon css={updownSizeIconCss} className={"updownSize-icon mr-7"}/>) : ""}
+						{lastLogMessage ? (<UpDownSizeIcon css={updownSizeIconCss} className={"updownSize-icon mr-7"} />) : ""}
 						<TabButton
 							selected={selectedTab === TabsEnum.LOGS}
 							title="Logs"
@@ -364,7 +364,7 @@ const StatusBar = (props: any) => {
 								{lastLogMessage ? getFormattedMessage(lastLogMessage) : ""}
 							</div>
 						) : ""}
-			
+
 
 						<Conditional showIf={clicked}>
 							<div
@@ -377,10 +377,18 @@ const StatusBar = (props: any) => {
 							>
 								<div
 									onClick={handleToggle}
+									className="flex items-center justify-center"
 									css={css`
-										padding: 4rem 5rem;
+									height: 16rem;
+									width: 16rem;
+
+									border-radius: 4rem;
+								
 										:hover {
-											background: rgba(255, 255, 255, 0.1);
+											path{
+												fill: #fff;
+											}
+											background: #ffffff14;
 										}
 									`}
 								>
@@ -396,16 +404,16 @@ const StatusBar = (props: any) => {
 						</Conditional>
 					</div>
 
-					<HoverCard content={<HelpContent/>} placement="top" type="hover" padding={8} offset={0}>
-                <div onClick={(e) => { e.preventDefault();  e.stopPropagation(); }} css={docsButtonCss}>
-                    <DocsIcon css={docsIconCss} />
-                    <span css={docsButtonTextCss}>Docs & help</span>
-                </div>
-            </HoverCard>
+					<HoverCard content={<HelpContent />} placement="top" type="hover" padding={8} offset={0}>
+						<div onClick={(e) => { e.preventDefault(); e.stopPropagation(); }} css={docsButtonCss}>
+							<DocsIcon css={docsIconCss} />
+							<span css={docsButtonTextCss}>Docs & help</span>
+						</div>
+					</HoverCard>
 				</div>
 
-		
-			
+
+
 				<Conditional showIf={clicked}>
 					<Conditional showIf={selectedTab === TabsEnum.LOGS}>
 						<div
@@ -423,9 +431,9 @@ const StatusBar = (props: any) => {
 							{logs && logs.get("_").length
 								? logs.get("_").map((log: ILog, index: number) => {
 									// console.log("Log time", log.time,  window["openLogTime"]/1000, log.time - (window["openLogTime"]/1000) );
-										return <LogItem diff={"0"} shouldShowChildren={log.time - (window["openLogTime"]) >= 0 && index == logs.get("_").length -1} log={{...log, children: logs.get(log.id)}} key={log.id} />;
+									return <LogItem diff={"0"} shouldShowChildren={log.time - (window["openLogTime"]) >= 0 && index == logs.get("_").length - 1} log={{ ...log, children: logs.get(log.id) }} key={log.id} />;
 								})
-							: ""}
+								: ""}
 						</div>
 					</Conditional>
 					<Conditional showIf={selectedTab === TabsEnum.CONTEXT}>
@@ -501,7 +509,7 @@ const StatusBar = (props: any) => {
 };
 const docsButtonCss = css`
 background: #0F1010;
-border-left: 0.5px solid #242424;
+
     font-family: 'Cera Pro';
     font-style: normal;
     font-weight: 500;
@@ -516,6 +524,7 @@ border-left: 0.5px solid #242424;
     align-items: center;
     margin-left: auto;
     border-left: 1px solid #242424;
+	border-top: 0.5px solid #242424;
 
 `;
 const docsIconCss = css`
@@ -556,7 +565,7 @@ const statusBarContainerStyle = css`
 	transition: max-height 0.1s, height 0.1s;
 	z-index: 999;
 	margin-top: auto;
-	border-top: 0.5px solid rgba(255, 255, 255, 0.17);
+	border-top: 0.5px solid #242424;
 	border-right: 0;
 	border-bottom: 0;
 `;

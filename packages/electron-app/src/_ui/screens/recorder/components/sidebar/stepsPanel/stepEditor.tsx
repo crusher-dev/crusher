@@ -14,6 +14,13 @@ import { Button } from "@dyson/components/atoms";
 import { iSelectorInfo } from "@shared/types/selectorInfo";
 import { sendSnackBarEvent } from "electron-app/src/ui/components/toast";
 
+const limitString = (string) => {
+    if (string.length > 25) {
+        return string.substring(0, 30) + "...";
+    }
+    return string;
+}
+
 const SelectorInfo = ({stepId, setShowAdvanced}) => {
     const stepInfo = useSelector(getStepInfo(stepId));
 
@@ -22,7 +29,7 @@ const SelectorInfo = ({stepId, setShowAdvanced}) => {
             <div className={"flex items-center"}>
                 <div>
                     <span>main selector:</span>
-                    <span css={mainSelectorCss} className={'font-medium'}>{stepInfo.description}</span>
+                    <span onDoubleClick={setShowAdvanced.bind(this, true)} css={mainSelectorCss} className={'font-medium'}>{limitString(stepInfo.description)}</span>
                 </div>
 
                 <EditPencilIcon onClick={setShowAdvanced.bind(this, true)} className={"ml-10"} css={pencilIconCss} />
@@ -105,18 +112,21 @@ const InputValueEditor = ({step, stepId}) => {
     
     return (
         <div className={'flex items-center mt-20'}>
-        <div css={labelCss} className={"mr-7"}>{ fieldInfo.label}</div>
-        <NormalInput
-            placeholder={fieldInfo.placeholder}
-            size={"small"}
-            initialValue={fieldInfo.value}
-            inputWrapperCss={css`height: unset !important;`}
-            onReturn={handleUpdate.bind(this, false)}
-            onBlur={setIsEditMode.bind(this, false)}
-            inputCss={inputCss(isEditMode)}
-            disabled={!isEditMode}
-            ref={inputRef}
-        />
+        <div css={labelCss} className={"mr-7"}>{ fieldInfo.label }</div>
+        <span onDoubleClick={() => { setIsEditMode(true); setTimeout(() => { inputRef.current.focus(); document.execCommand('selectAll',false,null); }, 50); }}>
+            <NormalInput
+                placeholder={fieldInfo.placeholder}
+                size={"small"}
+                initialValue={fieldInfo.value}
+                inputWrapperCss={css`height: unset !important;`}
+                onReturn={handleUpdate.bind(this, false)}
+                onBlur={setIsEditMode.bind(this, false)}
+                inputCss={inputCss(isEditMode)}
+                disabled={!isEditMode}
+                ref={inputRef}
+            />
+        </span>
+    
 
         <EditPencilIcon onClick={setIsEditMode.bind(this, true)} className={"ml-10"} css={editUrlIconCss} />
     </div>

@@ -487,6 +487,22 @@ const CloseIcon = (props) => (
   </svg>
 )
 
+const UpDownSizeIcon = (props) => (
+  <svg
+    viewBox={"0 0 10 16"}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M3.97.72a.75.75 0 0 1 1.06 0l3.75 3.75a.75.75 0 0 1-1.06 1.06L4.5 2.31 1.28 5.53A.75.75 0 0 1 .22 4.47L3.97.72ZM.22 10.47a.75.75 0 0 1 1.06 0l3.22 3.22 3.22-3.22a.75.75 0 1 1 1.06 1.06l-3.75 3.75a.75.75 0 0 1-1.06 0L.22 11.53a.75.75 0 0 1 0-1.06Z"
+      fill="#7E7E7E"
+    />
+  </svg>
+)
+
 
 export {
   DisabledCloudIcon,
@@ -513,5 +529,6 @@ export {
   OptionsIcon,
   InfoIcon,
   GoBackIcon,
-  CloseIcon
+  CloseIcon,
+  UpDownSizeIcon
 }

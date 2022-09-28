@@ -14,7 +14,7 @@ import { updateRecorderState } from "electron-app/src/store/actions/recorder";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 import { now } from "electron-app/src/main-process/now";
 import { HoverCard } from "@dyson/components/atoms/tooltip/Tooltip1";
-import { DocsIcon } from "electron-app/src/_ui/icons";
+import { DocsIcon, UpDownSizeIcon } from "electron-app/src/_ui/icons";
 import { HelpContent } from "electron-app/src/_ui/components/stickyFooter";
 
 function formatLogs(logs: Array<ILoggerReducer["logs"][0]>): Array<ILoggerReducer["logs"][0]> {
@@ -268,11 +268,11 @@ const StatusBar = (props: any) => {
 			</div>;
 	};
 
-	const handleClose = React.useCallback((e: any) => {
+	const handleToggle = React.useCallback((e: any) => {
 		e.preventDefault();
 		e.stopPropagation();
-		setClicked(false);
-	}, []);
+		setClicked(!clicked);
+	}, [clicked]);
 
 	return (
 		<div
@@ -334,7 +334,9 @@ const StatusBar = (props: any) => {
 						max-height: 38rem;
 						padding: 0rem 14rem;
 						padding-right: 0rem;
-	
+						:hover{
+							background: rgba(255, 255, 255, 0.02)
+						}
 					`,
 					clicked ? css`
 					border-bottom: 0.5px solid rgba(255, 255, 255, 0.17);
@@ -342,9 +344,9 @@ const StatusBar = (props: any) => {
 					` : undefined
 				]}
 				>
-					<div css={[				!clicked ? css`				:hover {
-					opacity: 0.8;
-				}`: undefined, css`width: 100%;`]} onClick={handleMaximiseClick} className={"flex items-center"}>
+					<div css={[	css`width: 100%;`]} onClick={handleToggle} className={"flex items-center"}>
+
+					<UpDownSizeIcon css={updownSizeIconCss} className={"updownSize-icon mr-7"}/>
 						<TabButton
 							selected={selectedTab === TabsEnum.LOGS}
 							title="Logs"
@@ -373,15 +375,11 @@ const StatusBar = (props: any) => {
 								`}
 							>
 								<div
-									onClick={handleClose}
+									onClick={handleToggle}
 									css={css`
 										padding: 4rem 5rem;
 										:hover {
-											svg {
-												opacity: 0.7;
-											}
-											background: rgba(0, 0, 0, 0.2);
-											opacity: 0.8;
+											background: rgba(255, 255, 255, 0.1);
 										}
 									`}
 								>
@@ -518,9 +516,6 @@ border-left: 0.5px solid #242424;
     margin-left: auto;
     border-left: 1px solid #242424;
 
-    :hover {
-        opacity: 0.8;
-    }
 `;
 const docsIconCss = css`
     width: 16px;
@@ -552,9 +547,6 @@ const statusBarTabStyle = css`
 	color: rgba(255, 255, 255, 0.7);
 	display: flex;
 	align-items: center;
-	:hover {
-		opacity: 0.8;
-	}
 `;
 const statusBarContainerStyle = css`
 	background: rgba(12, 12, 13);
@@ -566,6 +558,10 @@ const statusBarContainerStyle = css`
 	border-top: 0.5px solid rgba(255, 255, 255, 0.17);
 	border-right: 0;
 	border-bottom: 0;
+`;
+
+const updownSizeIconCss = css`
+	width: 9.02rem;
 `;
 
 export { StatusBar };

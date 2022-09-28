@@ -327,7 +327,7 @@ const StepEditor = ({stepId}) => {
     };
 
     return (
-        <div css={containerCss} style={{ height: showAdvanced.containerHeight ? showAdvanced.containerHeight + "px" : "auto" }} ref={containerRef}>
+        <div onContextMenu={(e) => e.preventDefault()} css={containerCss} style={{ height: showAdvanced.containerHeight ? showAdvanced.containerHeight + "px" : "auto" }} ref={containerRef}>
             {showAdvanced.show ? (<>
                     <StepAdvancedForm stepId={stepId}/>
             </>) : (

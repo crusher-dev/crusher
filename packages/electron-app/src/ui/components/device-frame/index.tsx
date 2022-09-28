@@ -379,7 +379,7 @@ const containerStyle = css`
 	justify-content: center;
 	position: relative;
 	flex: 1;
-	background:  #1E1E1E;
+	background: #1E1E1E;
     border: 1rem solid #141414;
     border-right: none;
     border-bottom: none;

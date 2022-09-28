@@ -15,6 +15,7 @@ const actionsData = require("./actions.json");
 interface IProps {
     className?: string;
 	defaultExpanded?: boolean;
+	filteredList: any;
 }; 
 
 const ToastPrettyActionMap = {
@@ -24,7 +25,7 @@ const ToastPrettyActionMap = {
 	"ASSERT_VISIBLE": "assert visible",
 };
 
-const ElementActions = ({className, defaultExpanded, ...props}: IProps) => {
+const ElementActions = ({className, filteredList, defaultExpanded, ...props}: IProps) => {
     const store = useStore();
 	const selectedElement = useSelector(getSelectedElement);
 
@@ -73,17 +74,26 @@ const ElementActions = ({className, defaultExpanded, ...props}: IProps) => {
 		}
     }, [selectedElement]);
 
-    const items = React.useMemo(() => {
-        return getItemsFromActionsData(actionsData["ELEMENT"])
-    }, []);
+	const items = React.useMemo(() => {
+		if(filteredList) {
+			// Empty filtered list
+			if(Object.keys(filteredList).length === 0) return null;
+			return filteredList["ELEMENT"];
+		} else {
+			return actionsData["ELEMENT"];
+		}
+    }, [filteredList]);
 
+
+	if(!items) return null;
+	
     return (
         <ActionsList
             className={`${className}`}
             title={"element"}
             description={"actions for element"}
 			icon={<ElementIcon css={elementIconCss}/>}
-            items={items}
+            items={getItemsFromActionsData(items)}
 			defaultExpanded={defaultExpanded}
             callback={handleCallback}
         />

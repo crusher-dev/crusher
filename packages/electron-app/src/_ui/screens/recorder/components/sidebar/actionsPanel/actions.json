@@ -1,16 +1,46 @@
 {
     "PAGE": {
-        "TAKE_VIEWPORT_SCREENSHOT": "Screenshot",
-        "WAIT": "Wait for seconds",
-        "SHOW_SEO_MODAL": "Add SEO checks",
-        "RUN_AFTER_TEST": "Run after Test"
+        "TAKE_VIEWPORT_SCREENSHOT": { 
+            "label": "Screenshot",
+            "keywords": ["take", "screenshot", "page", "viewport"]
+        },
+        "WAIT": { 
+            "label": "Wait for seconds",
+            "keywords": ["wait", "seconds", "timeout", "page", "sleep"]
+        },
+        "SHOW_SEO_MODAL": {
+            "label": "Add SEO checks",
+            "keywords": ["add", "seo", "checks", "page", "assert"]
+        },
+        "RUN_AFTER_TEST": {
+            "label": "Run after test",
+            "keywords": ["run", "after", "page", "test"]
+        }
     },
     "ELEMENT": {
-        "CLICK": "Click",
-        "HOVER": "Hover",
-        "SCREENSHOT": "Screenshot",
-        "SHOW_ASSERT_MODAL": "Add checks",
-        "ASSERT_VISIBILITY": "Assert visibility"
+        "CLICK": {
+            "label": "Click",
+            "keywords": ["click", "tap", "element", "press"]
+        },
+        "HOVER": {
+            "label": "Hover",
+            "keywords": ["hover", "move", "element", "mouse"]
+        },
+        "SCREENSHOT": {
+            "label": "Screenshot",
+            "keywords": ["screenshot", "take", "element", "capture"]
+        },
+        "SHOW_ASSERT_MODAL": {
+            "label": "Add checks",
+            "keywords": ["assert", "text", "check", "element", "verify"]
+        },
+        "ASSERT_VISIBILITY": {
+            "label": "Assert visibility",
+            "keywords": ["assert", "visibility", "visible", "check", "element", "verify"]
+        }
     },
-    "CODE": "code"
+    "CODE": {
+        "label": "code",
+        "keywords": ["code", "javascript", "js", "script"]
+    }
 }

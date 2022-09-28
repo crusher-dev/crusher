@@ -11,6 +11,7 @@ import { GoBackIcon, InfoIcon, ResetIcon } from "electron-app/src/_ui/icons";
 import { enableJavascriptInDebugger, performVerifyTest } from "electron-app/src/ui/commands/perform";
 import { setSelectedElement } from "electron-app/src/store/actions/recorder";
 import { useStore } from "react-redux";
+import { filterActionsItems } from "./helper";
 
 interface IProps {
     className?: string;
@@ -29,6 +30,8 @@ const ActionsPanel = ({className, ...props}: IProps) => {
         store.dispatch(setSelectedElement(null));
     }, []);
     const content = React.useMemo(() => {
+        const filteredList = searchFilter?.length ? filterActionsItems(searchFilter) : null;
+
             if(selectedElement) {
                 return (<>
                         <div className={"ml-16 mb-18"} css={elementSelectedInfoCss}>
@@ -41,14 +44,15 @@ const ActionsPanel = ({className, ...props}: IProps) => {
                                 <InfoIcon className={"ml-auto mr-22"} css={infoIconCss}/>
                             </div>
                         </div>
-                        <ElementActions defaultExpanded={true} css={[topBorderCss, focusedListCss]}/>
+                        <ElementActions filteredList={filteredList} defaultExpanded={true} css={[topBorderCss, focusedListCss]}/>
                     </>
                 )
             }
+
             return (<>
-                <PageActions defaultExpanded={searchFilter || true} css={topBorderCss} />
-                <ElementActions defaultExpanded={searchFilter || true} />
-                <CodeAction/>
+                <PageActions filteredList={filteredList} defaultExpanded={searchFilter || true} css={topBorderCss} />
+                <ElementActions filteredList={filteredList} defaultExpanded={searchFilter || true} />
+                <CodeAction filteredList={filteredList}/>
             </>)
     }, [searchFilter, selectedElement]);
 

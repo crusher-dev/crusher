@@ -9,12 +9,16 @@ import { css } from "@emotion/react";
 const actionsData = require("./actions.json");
 interface IProps {
     className?: string;
+    filteredList: any;
 }; 
 
-const CodeAction = ({className, ...props}: IProps) => {
+const CodeAction = ({className, filteredList, ...props}: IProps) => {
     const handleCallback = React.useCallback((id) => {
         emitShowModal({ type: "CUSTOM_CODE" });
     }, []);
+
+    const isCodePresent = filteredList ? filteredList["CODE"] : actionsData["CODE"];
+    if(!isCodePresent) return null;
 
     return (
         <ActionsList

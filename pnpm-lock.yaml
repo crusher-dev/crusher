@@ -692,6 +692,7 @@ importers:
       figma-design-scaler: link:/home/utkarsh/crusher/figma-scale
       file-loader: ^6.2.0
       file-url: ^4.0.0
+      fuse.js: ^6.6.2
       history: ^5.3.0
       html-tags: ^3.1.0
       html-webpack-plugin: ^5.5.0
@@ -806,6 +807,7 @@ importers:
       figma-design-scaler: link:../../../figma-scale
       file-loader: 6.2.0_webpack@5.21.2
       file-url: 4.0.0
+      fuse.js: 6.6.2
       history: 5.3.0
       html-tags: 3.1.0
       html-webpack-plugin: 5.5.0_webpack@5.21.2
@@ -18147,6 +18149,11 @@ packages:
 
   /functions-have-names/1.2.2:
     resolution: {integrity: sha512-bLgc3asbWdwPbx2mNk2S49kmJCuQeu0nfmaOgbs8WIyzzkw3r4htszdIi9Q9EMezDPTYuJx2wvjZ/EwgAthpnA==}
+
+  /fuse.js/6.6.2:
+    resolution: {integrity: sha512-cJaJkxCCxC8qIIcPBF9yGxY0W/tVZS3uEISDxhYIdtk8OL93pe+6Zj7LjCqVV4dzbqcriOZ+kQ/NE4RXZHsIGA==}
+    engines: {node: '>=10'}
+    dev: false
 
   /gauge/3.0.2:
     resolution: {integrity: sha512-+5J6MS/5XksCuXq++uFRsnUd7Ovu1XenbeuIuNRJxYWjgQbPuFhT14lAvsWfqfAmnwluf1OwMjz39HjfLPci0Q==}

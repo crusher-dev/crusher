@@ -11,13 +11,14 @@ const actionsData = require("./actions.json");
 interface IProps {
     className?: string;
 	defaultExpanded?: boolean;
+	filteredList: any;
 }; 
 
 const ToastPrettyActionMap = {
 	"TAKE_VIEWPORT_SCREENSHOT": "page screenshot",
 };
 
-const PageActions = ({className, defaultExpanded, ...props}: IProps) => {
+const PageActions = ({className, defaultExpanded, filteredList, ...props}: IProps) => {
     const handleCallback = React.useCallback((id) => {
 		const showToast = () => {
 			sendSnackBarEvent({
@@ -45,9 +46,18 @@ const PageActions = ({className, defaultExpanded, ...props}: IProps) => {
 		}
     }, []);
 
-    const items = React.useMemo(() => {
-        return getItemsFromActionsData(actionsData["PAGE"])
-    }, []);
+	const items = React.useMemo(() => {
+		if(filteredList) {
+			// Empty filtered list
+			if(Object.keys(filteredList).length === 0) return null;
+			return filteredList["PAGE"];
+		} else {
+			return actionsData["PAGE"];
+		}
+    }, [filteredList]);
+
+
+	if(!items) return null;
 
     return (
         <ActionsList
@@ -55,7 +65,7 @@ const PageActions = ({className, defaultExpanded, ...props}: IProps) => {
             className={`${className}`}
             title={"page"}
             description={"actions for page"}
-            items={items}
+            items={getItemsFromActionsData(items)}
 			icon={<PageIcon css={pageIconCss}/>}
             callback={handleCallback}
         />

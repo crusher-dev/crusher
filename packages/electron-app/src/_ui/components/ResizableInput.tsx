@@ -6,7 +6,9 @@ const ResizableInput = React.forwardRef(({className, value, ...props}, ref) => {
     const span = useRef();
 
     useEffect(() => {
-      setWidth(span.current.offsetWidth);
+      requestAnimationFrame(() => {
+        setWidth(span.current.offsetWidth);
+      });
     }, [value]);
   
     // set width when span is set

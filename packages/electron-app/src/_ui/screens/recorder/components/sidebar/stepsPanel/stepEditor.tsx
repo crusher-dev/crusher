@@ -3,7 +3,7 @@ import React from "react";
 import { css } from "@emotion/react";
 import { getSavedSteps, getStepInfo } from "electron-app/src/store/selectors/recorder";
 import { useSelector, useDispatch } from "react-redux";
-import { TextHighlighter, transformStringSelectorsToArray } from "./helper";
+import { TextHighlighter, TextHighlighterText, transformStringSelectorsToArray } from "./helper";
 import { deleteRecordedSteps, updateRecordedStep } from "electron-app/src/store/actions/recorder";
 import { FieldInput, FieldSelectorPicker } from "electron-app/src/ui/components/sidebar/stepEditor/fields";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
@@ -13,6 +13,7 @@ import { BrowserButton } from "electron-app/src/ui/components/buttons/browser.bu
 import { Button } from "@dyson/components/atoms";
 import { iSelectorInfo } from "@shared/types/selectorInfo";
 import { sendSnackBarEvent } from "electron-app/src/ui/components/toast";
+import { ResizableInput } from "electron-app/src/_ui/components/ResizableInput";
 
 const limitString = (string) => {
     if (string.length > 25) {
@@ -133,20 +134,69 @@ const InputValueEditor = ({step, stepId}) => {
     )
 };
 
+const StepName = ({stepId}) => {
+    const stepInfo = useSelector(getStepInfo(stepId));
+    const steps = useSelector(getSavedSteps);
+    const step = steps[stepId];
+    const dispatch = useDispatch();
+    const [isEditMode, setIsEditMode] = React.useState(false);
+    const [title, setTitle] = React.useState(stepInfo.name);
+    const titleInputRef = React.useRef(null);
+
+    const updateStepName = () => {
+		dispatch(
+			updateRecordedStep(
+				{
+					...step,
+					name: titleInputRef.current.value,
+				},
+				stepId,
+			),
+		);
+	};
+
+    const handleOnChange = (e) => {
+        // console.log("INptu is", e.target.value);
+        setTitle(e.target.value);
+    }
+
+    const handleOnBlur = () => {
+        updateStepName();
+        setIsEditMode(false);
+    };
+    return (
+        <div css={stepNameCss} onDoubleClick={setIsEditMode.bind(this, true)}>
+            {isEditMode ?    <ResizableInput
+                ref={titleInputRef}
+                css={testInputCss(isEditMode, title)}
+                onChange={handleOnChange.bind(this)}
+                onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                        handleOnBlur();
+                    }
+                }}
+                onBlur = {handleOnBlur.bind(this)}
+                disabled={!isEditMode}
+                value={title}
+            /> : TextHighlighter({text: title}, true)}
+         
+        </div>
+    );
+
+}
+
 const StepMetaInfo = ({stepId, setShowAdvanced}) => {
     const steps = useSelector(getSavedSteps);
     const stepInfo = useSelector(getStepInfo(stepId));
-    const title = TextHighlighter({text: stepInfo.name}, true);
-
+    const step = steps[stepId];
 
     const hasSelectors = steps[stepId].type.startsWith("ELEMENT");
     const showFieldInput =[ActionsInTestEnum.NAVIGATE_URL, ActionsInTestEnum.WAIT_FOR_NAVIGATION, ActionsInTestEnum.ADD_INPUT].includes(steps[stepId].type);
 
+
     return (
         <div css={stepMetaInfoContainerCss} className={"px-20 py-24"}>
-            <div css={stepNameCss}>
-                { title }
-            </div>
+          <StepName stepId={stepId} />
 
             {showFieldInput ? (
                <InputValueEditor stepId={stepId} step={steps[stepId]}/>
@@ -167,6 +217,26 @@ const StepMetaInfo = ({stepId, setShowAdvanced}) => {
             </div>
         </div>
     )
+};
+
+const testInputCss = (isEditing, name) => {
+    return css`
+        background: transparent;
+        padding: 5px 12px;
+        margin-left: -8px !important;
+        padding-left: 8px !important;
+        border: ${isEditing ? "1px solid rgba(255, 255, 255, 0.25)" : "1px solid transparent"};
+        border-radius: ${isEditing ? "4px" : "0px"};
+        width: ${isEditing ? Math.max(7.5 * name.length, 120) + "rem" : "fit-content"};
+        user-select: ${isEditing ? "auto" : "none"};
+
+        font-family: Gilroy;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 13.25px;
+        letter-spacing: 0.05em;
+
+    `;
 };
 const editUrlIconCss = css`width: 11rem; height: 11rem; margin-top: -2rem; :hover { opacity: 0.8; } `;
 

@@ -41,6 +41,8 @@ let parseStepNameText = (text: string): Array<{ type: "normal" | "highlight"; va
 };
 
 const TextHighlighter = ({text}, shouldStyle = false) => {
+	if(!text) [];
+
     return parseStepNameText(text).map((a) => {
         if (a.type === "highlight") {
             return (
@@ -54,6 +56,13 @@ const TextHighlighter = ({text}, shouldStyle = false) => {
   });
 };
 
+const TextHighlighterText = ({text}, shouldStyle = false) => {
+	if(!text) [];
+    return parseStepNameText(text).map((a) => {
+		return a.value;
+  });
+};
+
 const  transformStringSelectorsToArray = (selectors: string) => {
 	const selectorsArray = selectors.split("\n");
 	return selectorsArray.map((selector) => {
@@ -61,4 +70,4 @@ const  transformStringSelectorsToArray = (selectors: string) => {
 	});
 }
 
-export { parseStepNameText, TextHighlighter, transformStringSelectorsToArray };
+export { parseStepNameText, TextHighlighter, transformStringSelectorsToArray, TextHighlighterText };

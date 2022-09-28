@@ -8,7 +8,7 @@ const StepRecordedToast = ({meta}) => {
 	return (
 		<div className={"flex items-center"} css={containerCss}>
 			<AddedIcon css={addedIconCss}/>
-			<div css={messageCss} className={"ml-12"}>added a <span css={actionTextCss}>{action}</span> step</div>
+			<div css={messageCss} className={"ml-8"}>added a <span css={actionTextCss}>{action}</span> step</div>
 		</div>
 	);
 }
@@ -17,6 +17,9 @@ const StepRecordedToast = ({meta}) => {
 const addedIconCss = css`
 	width: 12rem;
 	height: 12rem;
+	path {
+		fill: rgba(255, 114, 68, 1);
+	}
 `;
 const containerCss = css`
 	position: fixed;
@@ -32,7 +35,7 @@ const containerCss = css`
 	z-index: 999999;
 `;
 const actionTextCss = css`
-	color: rgba(200, 82, 255, 1);
+	color: rgba(255, 114, 68, 1);
 	font-weight: 600;
 `;
 const messageCss = css`

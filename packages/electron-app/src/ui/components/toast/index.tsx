@@ -119,9 +119,9 @@ export const ToastSnackbar = () => {
 		snackBarEmitter.on("snackbar-notify", (e) => {
 			setEvent(e as SnackbarEvent);
 
-			setTimeout(() => {
-				setEvent(null);
-			}, 7000);
+			// setTimeout(() => {
+			// 	setEvent(null);
+			// }, 7000);
 		});
 	}, []);
 

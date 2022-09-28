@@ -38,7 +38,7 @@ class ElementsHelper {
         await enableJavascriptInDebugger();
         performClick(selectedElement);
         store.dispatch(setSelectedElement(null));
-        this.showToast("CLICK");
+        ElementsHelper.showToast("CLICK");
     }
 
     static async hover() {
@@ -48,7 +48,7 @@ class ElementsHelper {
         await enableJavascriptInDebugger();
         performHover(selectedElement, store);
         store.dispatch(setSelectedElement(null));
-        this.showToast("HOVER");
+        ElementsHelper.showToast("HOVER");
     }
 
     static async screenshot() {
@@ -58,7 +58,7 @@ class ElementsHelper {
         await enableJavascriptInDebugger();
         peformTakeElementScreenshot(selectedElement, store);
         store.dispatch(setSelectedElement(null));
-        this.showToast("SCREENSHOT");
+        ElementsHelper.showToast("SCREENSHOT");
     }
 
     static showAssertModal() { 
@@ -72,7 +72,7 @@ class ElementsHelper {
         await enableJavascriptInDebugger();
         performAssertElementVisibility(selectedElement, store);
         store.dispatch(setSelectedElement(null));
-        this.showToast("ASSERT_VISIBLE");
+        ElementsHelper.showToast("ASSERT_VISIBLE");
     }
 }
 export { getItemsFromActionsData, ElementsHelper };

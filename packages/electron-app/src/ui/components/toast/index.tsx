@@ -117,11 +117,14 @@ export const ToastSnackbar = () => {
 	const [event, setEvent] = useState<SnackbarEvent | null>(null);
 	useEffect(() => {
 		snackBarEmitter.on("snackbar-notify", (e) => {
+			if(e === null) {
+				return setEvent(null);
+			}
 			setEvent(e as SnackbarEvent);
 
-			// setTimeout(() => {
-			// 	setEvent(null);
-			// }, 7000);
+			setTimeout(() => {
+				setEvent(null);
+			}, 7000);
 		});
 	}, []);
 

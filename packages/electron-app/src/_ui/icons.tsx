@@ -471,6 +471,22 @@ const GoBackIcon = (props) => (
   </svg>
 )
 
+const CloseIcon = (props) => (
+  <svg
+    viewBox={"0 0 8 8"}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M.13.141a.444.444 0 0 1 .627 0l3.237 3.233L7.231.14a.444.444 0 1 1 .628.626L4.622 4l3.237 3.233a.443.443 0 1 1-.628.626L3.994 4.626.757 7.86a.444.444 0 0 1-.627-.626L3.367 4 .13.767a.443.443 0 0 1 0-.626Z"
+      fill="#3E3E3E"
+    />
+  </svg>
+)
+
 
 export {
   DisabledCloudIcon,
@@ -497,4 +513,5 @@ export {
   OptionsIcon,
   InfoIcon,
   GoBackIcon,
+  CloseIcon
 }

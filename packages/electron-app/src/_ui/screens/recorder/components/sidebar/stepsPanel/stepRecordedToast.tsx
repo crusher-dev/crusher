@@ -1,18 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { css } from "@emotion/react";
-import { AddedIcon } from "electron-app/src/_ui/icons";
+import { AddedIcon, CloseIcon } from "electron-app/src/_ui/icons";
+import { sendSnackBarEvent } from "electron-app/src/ui/components/toast";
 
 const StepRecordedToast = ({meta}) => {
 	const { action } = meta;
+	
+	const handleClose = () => {
+		sendSnackBarEvent(null);
+	};
 
 	return (
 		<div className={"flex items-center"} css={containerCss}>
 			<AddedIcon css={addedIconCss}/>
 			<div css={messageCss} className={"ml-8"}>added a <span css={actionTextCss}>{action}</span> step</div>
+			<CloseIcon onClick={handleClose} className={"ml-8"} css={closeIconCss}/>
 		</div>
 	);
 }
 
+const closeIconCss = css`
+	width: 6rem;
+	height: 6rem;
+`;
 
 const addedIconCss = css`
 	width: 12rem;

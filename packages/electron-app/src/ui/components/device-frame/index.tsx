@@ -260,7 +260,6 @@ const DeviceFrame = (props: any) => {
 	}, [ref.current]);
 
 	const handleMenuCallback = React.useCallback((id) => {
-		console.log("Id is", id);
 		if(id === "devtools") {
 			turnOnWebviewDevTools();
 		} else if (id==="inspect") {

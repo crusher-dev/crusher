@@ -271,10 +271,8 @@ const StatusBar = (props: any) => {
 	const handleToggle = React.useCallback((e: any) => {
 		e.preventDefault();
 		e.stopPropagation();
-		if(!logs.size) {
-			setClicked(!clicked);
-		}
-	}, [logs.size, clicked]);
+		setClicked(!clicked);
+	}, [clicked]);
 
 	return (
 		<div
@@ -345,8 +343,9 @@ const StatusBar = (props: any) => {
 					overflow: hidden;
 					` : undefined
 				]}
+				onClick={lastLogMessage ? handleToggle : undefined}
 				>
-					<div css={[	css`width: 100%;`]} onClick={handleToggle} className={"flex items-center"}>
+					<div css={[	css`width: 100%;`]} className={"flex items-center"}>
 
 						{lastLogMessage ? (<UpDownSizeIcon css={updownSizeIconCss} className={"updownSize-icon mr-7"}/>) : ""}
 						<TabButton

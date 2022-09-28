@@ -271,8 +271,10 @@ const StatusBar = (props: any) => {
 	const handleToggle = React.useCallback((e: any) => {
 		e.preventDefault();
 		e.stopPropagation();
-		setClicked(!clicked);
-	}, [clicked]);
+		if(!logs.size) {
+			setClicked(!clicked);
+		}
+	}, [logs.size, clicked]);
 
 	return (
 		<div
@@ -334,10 +336,10 @@ const StatusBar = (props: any) => {
 						max-height: 38rem;
 						padding: 0rem 14rem;
 						padding-right: 0rem;
-						:hover{
-							background: rgba(255, 255, 255, 0.02)
-						}
 					`,
+					lastLogMessage ? css`						:hover{
+						background: rgba(255, 255, 255, 0.02)
+					}` : undefined,
 					clicked ? css`
 					border-bottom: 0.5px solid rgba(255, 255, 255, 0.17);
 					overflow: hidden;
@@ -346,7 +348,7 @@ const StatusBar = (props: any) => {
 				>
 					<div css={[	css`width: 100%;`]} onClick={handleToggle} className={"flex items-center"}>
 
-					<UpDownSizeIcon css={updownSizeIconCss} className={"updownSize-icon mr-7"}/>
+						{lastLogMessage ? (<UpDownSizeIcon css={updownSizeIconCss} className={"updownSize-icon mr-7"}/>) : ""}
 						<TabButton
 							selected={selectedTab === TabsEnum.LOGS}
 							title="Logs"

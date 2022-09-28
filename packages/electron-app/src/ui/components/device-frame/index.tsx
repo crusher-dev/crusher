@@ -197,8 +197,8 @@ const PageLoadFailedScreen = (props: any) => {
 	);
 };
 const menuItems = [
-	{id: "inspect", label: "Inspect"},
-	{id: "devtools", label: "Open devtools", shortcut: <div>Ctrl + Shift + I</div>},
+	{ id: "inspect", label: "Inspect" },
+	{ id: "devtools", label: "Open devtools", shortcut: <div>Ctrl + Shift + I</div> },
 ];
 
 const DeviceFrame = (props: any) => {
@@ -260,64 +260,64 @@ const DeviceFrame = (props: any) => {
 	}, [ref.current]);
 
 	const handleMenuCallback = React.useCallback((id) => {
-		if(id === "devtools") {
+		if (id === "devtools") {
 			turnOnWebviewDevTools();
-		} else if (id==="inspect") {
+		} else if (id === "inspect") {
 			turnOnInspectMode();
 		}
 	}, []);
-    const menuItemsComponent = React.useMemo(() => {
-        return menuItems.map((item) => {
-            return {
-                type: "menuItem",
-                value: item.label,
-                rightItem: item.shortcut,
-                onClick: handleMenuCallback.bind(this, item.id)
-            }
-        });
-    }, []);
+	const menuItemsComponent = React.useMemo(() => {
+		return menuItems.map((item) => {
+			return {
+				type: "menuItem",
+				value: item.label,
+				rightItem: item.shortcut,
+				onClick: handleMenuCallback.bind(this, item.id)
+			}
+		});
+	}, []);
 
 	// Only when code is shown
 	return (
 		<div css={[topContainerStyle]}>
 
-		<RightClickMenu menuItems={menuItemsComponent}>
-			<div css={containerStyle}>
-				{recorderInfo.device && (
-					<div
-						style={{
-							aspectRatio: `${recorderInfo.device?.width} / ${recorderInfo.device?.height}`,
-							maxWidth: `${recorderInfo.device?.width}rem`,
-							width: "95%",
-							maxHeight: "100%",
-							position: "relative",
-						}}
-					>
-						<webview
-							ref={ref}
-							css={webviewStyle}
-							id="device_browser"
-							preload={getPreloadScriptPath()}
-							title={"crusher-webview"}
-							src={"about:blank"}
-							partition={"crusherwebview"}
-							webpreferences="nativeWindowOpen=yes"
-							allowpopups
-							nodeintegration={true}
-						/>
+			<RightClickMenu menuItems={menuItemsComponent}>
+				<div css={containerStyle}>
+					{recorderInfo.device && (
+						<div
+							style={{
+								aspectRatio: `${recorderInfo.device?.width} / ${recorderInfo.device?.height}`,
+								maxWidth: `${recorderInfo.device?.width}rem`,
+								width: "95%",
+								maxHeight: "100%",
+								position: "relative",
+							}}
+						>
+							<webview
+								ref={ref}
+								css={webviewStyle}
+								id="device_browser"
+								preload={getPreloadScriptPath()}
+								title={"crusher-webview"}
+								src={"about:blank"}
+								partition={"crusherwebview"}
+								webpreferences="nativeWindowOpen=yes"
+								allowpopups
+								nodeintegration={true}
+							/>
 
-						<Conditional showIf={recorderCrashState && recorderCrashState.type === TRecorderCrashState.CRASHED}>
-							<CrashScreen />
-						</Conditional>
-						<Conditional showIf={recorderCrashState && recorderCrashState.type === TRecorderCrashState.PAGE_LOAD_FAILED}>
-							<PageLoadFailedScreen />
-						</Conditional>
-						<Conditional showIf={[TRecorderState.PERFORMING_ACTIONS, TRecorderState.PERFORMING_RECORDER_ACTIONS].includes(recorderState.type)}>
-							<div css={deviceOverlayStyle}></div>
-						</Conditional>
-					</div>
-				)}
-			</div>
+							<Conditional showIf={recorderCrashState && recorderCrashState.type === TRecorderCrashState.CRASHED}>
+								<CrashScreen />
+							</Conditional>
+							<Conditional showIf={recorderCrashState && recorderCrashState.type === TRecorderCrashState.PAGE_LOAD_FAILED}>
+								<PageLoadFailedScreen />
+							</Conditional>
+							<Conditional showIf={[TRecorderState.PERFORMING_ACTIONS, TRecorderState.PERFORMING_RECORDER_ACTIONS].includes(recorderState.type)}>
+								<div css={deviceOverlayStyle}></div>
+							</Conditional>
+						</div>
+					)}
+				</div>
 			</RightClickMenu>
 
 		</div>
@@ -364,6 +364,7 @@ const webviewStyle = css`
 	width: 100%;
 	height: 100%;
 	background: #fff;
+	opacity: 0.8;
 `;
 const topContainerStyle = css`
 	position: relative;
@@ -378,9 +379,7 @@ const containerStyle = css`
 	justify-content: center;
 	position: relative;
 	flex: 1;
-	background: linear-gradient(
-		0deg
-		, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), #09090A;
+	background:  #1E1E1E;
     border: 1rem solid #141414;
     border-right: none;
     border-bottom: none;

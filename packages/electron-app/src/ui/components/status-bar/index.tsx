@@ -565,6 +565,7 @@ const statusBarContainerStyle = css`
 	z-index: 999;
 	margin-top: auto;
 	border-top: 0.5px solid #242424;
+	border-left: 0.5px solid #242424;
 	border-right: 0;
 	border-bottom: 0;
 `;

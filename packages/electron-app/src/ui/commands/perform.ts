@@ -342,6 +342,11 @@ const performGoToUrl = (url: string ) => {
 	return ipcRenderer.invoke("goto-url", {url: url});
 };
 
+
+const turnOnWebviewDevTools = () => {
+	return ipcRenderer.invoke("turn-on-webview-dev-tools", {});
+}
+
 export {
 	recordHoverDependencies,
 	performAction,
@@ -396,5 +401,6 @@ export {
 	performGetRecorderTestLogs,
 	performSaveLocalBuild,
 	performCreateCloudProject,
-	performGoToUrl
+	performGoToUrl,
+	turnOnWebviewDevTools
 };

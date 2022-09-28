@@ -19,6 +19,7 @@ import {
 	turnOffElementSelectorInspectMode,
 	turnOffInspectMode,
 	turnOnInspectMode,
+	turnOnWebviewDevTools,
 } from "../../commands/perform";
 import { recordStep, setSelectedElement, updateRecorderCrashState } from "electron-app/src/store/actions/recorder";
 import { saveAutoAction } from "../../commands/saveActions";
@@ -29,6 +30,7 @@ import { MiniCrossIcon, StopIcon } from "../../icons";
 import { Button } from "@dyson/components/atoms";
 import { ILoggerReducer } from "electron-app/src/store/reducers/logger";
 import { StatusBar } from "../status-bar";
+import { RightClickMenu } from "@dyson/components/molecules/RightClick/RightClick";
 
 const CrashScreen = (props: any) => {
 	const store = useStore();
@@ -194,6 +196,10 @@ const PageLoadFailedScreen = (props: any) => {
 		</div>
 	);
 };
+const menuItems = [
+	{id: "inspect", label: "Inspect"},
+	{id: "devtools", label: "Open devtools", shortcut: <div>Ctrl + Shift + I</div>},
+];
 
 const DeviceFrame = (props: any) => {
 	const recorderInfo = useSelector(getRecorderInfo);
@@ -253,9 +259,30 @@ const DeviceFrame = (props: any) => {
 		}
 	}, [ref.current]);
 
+	const handleMenuCallback = React.useCallback((id) => {
+		console.log("Id is", id);
+		if(id === "devtools") {
+			turnOnWebviewDevTools();
+		} else if (id==="inspect") {
+			turnOnInspectMode();
+		}
+	}, []);
+    const menuItemsComponent = React.useMemo(() => {
+        return menuItems.map((item) => {
+            return {
+                type: "menuItem",
+                value: item.label,
+                rightItem: item.shortcut,
+                onClick: handleMenuCallback.bind(this, item.id)
+            }
+        });
+    }, []);
+
 	// Only when code is shown
 	return (
 		<div css={[topContainerStyle]}>
+
+		<RightClickMenu menuItems={menuItemsComponent}>
 			<div css={containerStyle}>
 				{recorderInfo.device && (
 					<div
@@ -292,6 +319,8 @@ const DeviceFrame = (props: any) => {
 					</div>
 				)}
 			</div>
+			</RightClickMenu>
+
 		</div>
 	);
 };

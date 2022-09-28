@@ -261,6 +261,7 @@ export class AppWindow {
 		ipcMain.handle("goto-url", this.handleGotoUrl.bind(this));;
 		ipcMain.on("get-var-context", this.handleGetVarContext.bind(this));
 		ipcMain.on("get-is-advanced-selector", this.handleGetVarContext.bind(this));
+		ipcMain.handle("turn-on-webview-dev-tools", this.handleTurnOnWebviewDevtools.bind(this));
 
 		this.window.on("focus", () => this.window.webContents.send("focus"));
 		this.window.on("blur", () => this.window.webContents.send("blur"));
@@ -307,6 +308,10 @@ export class AppWindow {
 
 	private async handleTurnOnProxy(event: Electron.IpcMainEvent, payload: { configFilePath: string }) {
 		return this.proxyManager.initializeProxy(payload.configFilePath);
+	}
+
+	private async handleTurnOnWebviewDevtools(event: Electron.IpcMainEvent, payload: {}) {
+		this.webView?.webContents.openDevTools();
 	}
 
 	private async handleUndockCode(event: Electron.IpcMainEvent, payload: { code: string }) {

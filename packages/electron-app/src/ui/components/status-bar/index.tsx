@@ -388,7 +388,6 @@ const StatusBar = (props: any) => {
 										css={css`
 											width: 10rem;
 											height: 10rem;
-											opacity: 0.44;
 										`}
 									/>
 								</div>

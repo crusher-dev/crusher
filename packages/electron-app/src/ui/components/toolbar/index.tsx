@@ -462,8 +462,10 @@ enter to submit
 	}, []);
 
 	const handleOutsideClick = React.useCallback(() => {
+		if((document.querySelector(".testName") as HTMLInputElement)) {
 			setTestName((document.querySelector(".testName") as HTMLInputElement).value);
 			setIsEditingTestName(false);
+		}
 			// Save the new test name somewhere
 	}, [isEditingTestName]);
 

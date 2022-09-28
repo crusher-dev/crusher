@@ -52,7 +52,7 @@ const Step = ({className, isActive, onContextMenu, step, onClick, setIsActive, i
 
     return (
         <HoverCard disabled={hasFailed} callback={setIsEditorCardOpen.bind(this)} wrapperCss={css`z-index: 123123123 !important;`} css={css`padding: 0rem !important; background: rgb(5, 5, 5) !important; margin-left: -22rem !important; overflow: hidden !important;`} content={<StepEditor stepId={stepId} />} placement="right" type="hover" padding={8} offset={0}>
-            <div onContextMenu={onContextMenu} onClick={onClick} css={[containerCss(hasFailed)]}>
+            <div onContextMenu={onContextMenu} onClick={onClick} css={[containerCss(hasFailed), isActive ? activeItemCss : undefined]}>
                     <div className={"card"} css={contentCss}>
                         {stepInfo.isRunning ? (
                             <PointerArrowIcon css={runningPointerIconCss}/>

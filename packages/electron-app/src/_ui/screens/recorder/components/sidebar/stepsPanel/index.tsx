@@ -88,7 +88,8 @@ const StepsPanel = ({ className, ...props}: IProps) => {
 
     React.useEffect(() => {
         const keyPressListener = function (e: Event) {
-            if (e.key === "Delete") {
+            if(["input", "textarea"].includes((e.target as any).tagName.toLowerCase())) return;
+            if (e.key === "Delete" && selectedList.length) {
                 store.dispatch(deleteRecordedSteps(selectedList));
                 performVerifyTest(false);
             }

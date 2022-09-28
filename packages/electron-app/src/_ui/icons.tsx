@@ -438,6 +438,40 @@ const OptionsIcon = (props) => (
 )
 
 
+const InfoIcon = React.forwardRef((props, ref) => (
+  <svg
+    viewBox="0 0 14 14"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    ref={ref}
+    {...props}
+  >
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M13.25 6.875a6.375 6.375 0 1 1-12.75 0 6.375 6.375 0 0 1 12.75 0Zm-8.063-.563a.563.563 0 0 1 .563-.562h.19A1.313 1.313 0 0 1 7.22 7.348l-.345 1.549a.188.188 0 0 0 .184.228h.19a.563.563 0 1 1 0 1.125h-.19A1.312 1.312 0 0 1 5.78 8.652l.345-1.549a.188.188 0 0 0-.184-.228h-.19a.563.563 0 0 1-.563-.563ZM6.5 4.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z"
+      fill="#757575"
+    />
+  </svg>
+));
+
+const GoBackIcon = (props) => (
+  <svg
+    viewBox="0 0 10 10"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M10 5a.75.75 0 0 1-.75.75H2.612L4.77 7.71a.75.75 0 1 1-1.04 1.08L.23 5.54a.75.75 0 0 1 0-1.08l3.5-3.25a.75.75 0 1 1 1.04 1.08L2.612 4.25H9.25A.75.75 0 0 1 10 5Z"
+      fill="#ADADAD"
+    />
+  </svg>
+)
+
+
 export {
   DisabledCloudIcon,
   CloudIcon,
@@ -460,5 +494,7 @@ export {
   AddedIcon,
   EllipseIcon,
   FailedStepIcon,
-  OptionsIcon
+  OptionsIcon,
+  InfoIcon,
+  GoBackIcon,
 }

@@ -46,7 +46,7 @@ const ActionsList = ({className, ...props}: IProps) => {
 
     return (
         <div css={[containerCss, bottomSeperatorCss]} className={`${className}`} {...props}>
-            <div onClick={setIsExpanded.bind(this, !isExpanded)} css={[headingCss, bottomSeperatorCss, isExpanded ? activeSectionCss : null]}>
+            <div className={"action-item-header"} onClick={setIsExpanded.bind(this, !isExpanded)} css={[headingCss, bottomSeperatorCss, isExpanded ? activeSectionCss : null]}>
                 {icon ? (
                     <div css={headingIconCss}>
                         {icon}

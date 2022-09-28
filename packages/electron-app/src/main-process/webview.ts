@@ -118,7 +118,7 @@ export class WebView {
 				});
 				if(payload && payload.meta && payload.meta.action) {
 					// @TODO: Remove this timeout hack
-					setTimeout(() => { this.appWindow.getWebContents().executeJavaScript(`window["elementActionsCallback"]()`) }, 100);
+					setTimeout(() => { this.appWindow.getWebContents().executeJavaScript(`window["elementActionsCallback"](); window["elementActionsCallback"]=null;`) }, 100);
 				}
 				
 			await this.webContents.debugger.sendCommand("Overlay.setInspectMode", {

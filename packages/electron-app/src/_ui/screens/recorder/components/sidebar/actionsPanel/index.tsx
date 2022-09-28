@@ -7,8 +7,10 @@ import { InspectModeBanner } from "../inspectModeBanner";
 import { ElementActions } from "./elementActions";
 import { PageActions } from "./pageActions";
 import { CodeAction } from "./codeAction";
-import { ResetIcon } from "electron-app/src/_ui/icons";
-import { performVerifyTest } from "electron-app/src/ui/commands/perform";
+import { GoBackIcon, InfoIcon, ResetIcon } from "electron-app/src/_ui/icons";
+import { enableJavascriptInDebugger, performVerifyTest } from "electron-app/src/ui/commands/perform";
+import { setSelectedElement } from "electron-app/src/store/actions/recorder";
+import { useStore } from "react-redux";
 
 interface IProps {
     className?: string;
@@ -17,15 +19,36 @@ interface IProps {
 const ActionsPanel = ({className, ...props}: IProps) => {
     const isInspectModeOn = useSelector(_isInspectModeOn);
     const isElementSelectorInspectModeOn = useSelector(isInspectElementSelectorModeOn);
+    const store = useStore();
 
     const selectedElement = useSelector(getSelectedElement);
+    const turnOffElementMode = React.useCallback(async () => {
+        await enableJavascriptInDebugger();
+        store.dispatch(setSelectedElement(null));
+    }, []);
     const content = React.useMemo(() => {
+            if(selectedElement) {
+                return (<>
+                        <div className={"ml-16 mb-18"} css={elementSelectedInfoCss}>
+                            <div onClick={turnOffElementMode} className={"flex items-center"}>
+                                <GoBackIcon css={goBackIconCss}/>
+                                <span className={"ml-7"} css={goBackCss}>go back</span>
+                            </div>
+                            <div className={"flex items-center mt-7 pl-17"}>
+                                <span css={elementSelectedTextCss}>Element selected, choose an action</span>
+                                <InfoIcon className={"ml-auto mr-22"} css={infoIconCss}/>
+                            </div>
+                        </div>
+                        <ElementActions defaultExpanded={true} css={[topBorderCss, focusedListCss]}/>
+                    </>
+                )
+            }
             return (<>
                 <PageActions defaultExpanded={true} css={topBorderCss} />
                 <ElementActions />
                 <CodeAction/>
             </>)
-    }, []);
+    }, [selectedElement]);
 
     const handleResetTest = () => performVerifyTest(false);
     return (
@@ -43,6 +66,44 @@ const ActionsPanel = ({className, ...props}: IProps) => {
     );
 };
 
+const goBackCss = css`
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12rem;
+
+    letter-spacing: 0.02em;
+
+    color: #ADADAD;
+`;
+const goBackIconCss = css`
+    width: 10rem;
+`;
+const elementSelectedTextCss = css`
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14rem;
+
+
+    color: rgba(255, 255, 255, 0.79);
+`;
+const infoIconCss = css`
+    width: 12.75rem;
+    height: 12.75rem;
+    :hover {
+        opacity: 0.8;
+    }
+`;
+const elementSelectedInfoCss = css``;
+const focusedListCss = css`
+    .action-item-header {
+        background: rgba(214, 98, 255, 0.056);
+        border-width: 0.5px 0px;
+        border-style: solid;
+        border-color: #D662FF;
+    }
+`;
 const resetIconCss  = css`
     width: 13rem;
     height: 13rem;

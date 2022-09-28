@@ -17,6 +17,8 @@ interface IProps {
 };
 
 const ActionsPanel = ({className, ...props}: IProps) => {
+    const [searchFilter, setSearchFilter] = React.useState(null);
+
     const isInspectModeOn = useSelector(_isInspectModeOn);
     const isElementSelectorInspectModeOn = useSelector(isInspectElementSelectorModeOn);
     const store = useStore();
@@ -44,17 +46,20 @@ const ActionsPanel = ({className, ...props}: IProps) => {
                 )
             }
             return (<>
-                <PageActions defaultExpanded={true} css={topBorderCss} />
-                <ElementActions />
+                <PageActions defaultExpanded={searchFilter || true} css={topBorderCss} />
+                <ElementActions defaultExpanded={searchFilter || true} />
                 <CodeAction/>
             </>)
-    }, [selectedElement]);
+    }, [searchFilter, selectedElement]);
 
+    const handleOnChange = (event) => {
+        setSearchFilter(event.target.value);
+    };
     const handleResetTest = () => performVerifyTest(false);
     return (
         <div className={`${className}`} css={containerCss}>
             <div css={headerCss}>
-                <InputFocusHint hint={`⌘ + k`} placeholder={"search actions"}/>
+                <InputFocusHint onChange={handleOnChange} hint={`⌘ + k`} placeholder={"search actions"}/>
                 <ResetIcon onClick={handleResetTest} css={[resetIconCss]}/>
             </div>
             <div css={contentCss} className="custom-scroll">

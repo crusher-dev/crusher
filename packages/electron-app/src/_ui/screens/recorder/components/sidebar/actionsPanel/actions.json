@@ -11,5 +11,6 @@
         "SCREENSHOT": "Screenshot",
         "SHOW_ASSERT_MODAL": "Add checks",
         "ASSERT_VISIBILITY": "Assert visibility"
-    }
+    },
+    "CODE": "code"
 }

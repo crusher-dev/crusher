@@ -19,7 +19,8 @@ const EmojiPicker = ({ onEmojiSelected, children, ...props }) => {
     }
 
     const dropdown = (
-        <Picker
+        <div onClick={(e) => e.preventDefault() || e.stopPropagation()}>
+  <Picker
             onEmojiSelect={handleEmojiSelect}
             previewPosition={'none'}
             searchPosition={'none'}
@@ -35,6 +36,7 @@ const EmojiPicker = ({ onEmojiSelected, children, ...props }) => {
             noCountryFlags={true}
             theme={"dark"}
         />
+        </div>
     );
 
     return (

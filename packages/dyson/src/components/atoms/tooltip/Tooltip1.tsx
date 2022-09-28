@@ -65,6 +65,7 @@ export const HoverCard: React.FC<TooltipWrapperProps> = ({ children, state, onSt
             return {
                 onMouseOver: () => {
                     setShow(true);
+                    callback(true);
                 },
                 onMouseLeave: (e) => {
                     const isElement = e.relatedTarget instanceof Element;
@@ -72,14 +73,16 @@ export const HoverCard: React.FC<TooltipWrapperProps> = ({ children, state, onSt
                     if (movedToToolip) return;
                     if (autoHide) {
                         setShow(false);
+                        callback(false);
                     }
                 },
             };
         }
 
         return {
-            onClick: () => {
+            onClick: (e) => {
                 setShow(true);
+                callback(true);
             },
         };
     };
@@ -93,16 +96,14 @@ export const HoverCard: React.FC<TooltipWrapperProps> = ({ children, state, onSt
 
     // Show/Hide if props is updated
     useEffect(() => {
-        if(typeof state !== "undefined" || state !== null) {
-            setShow(state);
-        }
+        setShow(state);
     }, [state]);
 
     useEffect(() => {
-        callback && callback(show);
+        // callback && callback(show);
         update();
         if (type !== "click" || autoHide === false) return;
-        const handleClick = (e: SyntheticEvent) => {
+        const handleClick = (e: any) => {
             const isChildrenClick = refs.reference?.current?.contains(e.target) || refs.reference.current === e.target;
             const isTooltipClick = refs.floating?.current?.contains(e.target) || refs.floating.current === e.target;
 
@@ -110,7 +111,8 @@ export const HoverCard: React.FC<TooltipWrapperProps> = ({ children, state, onSt
                 return
             }
             else {
-                setShow(false)
+                setShow(false);
+                callback(false);
             }
 
         };

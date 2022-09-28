@@ -29,6 +29,7 @@ const InputFocusHint = ({ hint, placeholder, className, ...props }: IProps) => {
             rightIcon={HintComponent}
 			onFocus={() => setIsFocused(true)}
 			onBlur={() => setIsFocused(false)}
+			{...props}
         />
     );
 }

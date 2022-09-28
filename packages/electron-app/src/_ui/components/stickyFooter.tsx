@@ -205,9 +205,9 @@ export { StickyFooter };
 
 
 //  🔴🔴 Do not edit, this is copy of DashboardBase help section
-export function HelpContent() {
+export function HelpContent({...props}) {
     return (
-        <div className=" pt-3 pb-6">
+        <div className=" pt-3 pb-6" {...props}>
 
             <a onClick={linkOpen.bind(this, "https://docs.crusher.dev")} target="_blank">
                 <TextBlock fontSize={13.4} color={"#8F8F8F"} css={linkCSS}>

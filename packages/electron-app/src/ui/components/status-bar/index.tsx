@@ -268,6 +268,12 @@ const StatusBar = (props: any) => {
 			</div>;
 	};
 
+	const handleClose = React.useCallback((e: any) => {
+		e.preventDefault();
+		e.stopPropagation();
+		setClicked(false);
+	}, []);
+
 	return (
 		<div
 			css={[
@@ -315,13 +321,13 @@ const StatusBar = (props: any) => {
 					statusBarContainerStyle,
 					clicked
 						? css`
-								height: 341rem;
+								height: 369rem;
 						  `
 						: undefined,
 				]}
 			>
 				<div
-					css={css`
+					css={[css`
 						display: flex;
 						align-items: center;
 						height: 100%;
@@ -329,62 +335,70 @@ const StatusBar = (props: any) => {
 						padding: 0rem 14rem;
 						padding-right: 0rem;
 	
-					`}
+					`,
+					clicked ? css`
+					border-bottom: 0.5px solid rgba(255, 255, 255, 0.17);
+					overflow: hidden;
+					` : undefined
+				]}
 				>
-					<TabButton
-						selected={selectedTab === TabsEnum.LOGS}
-						title="Logs"
-						count={logs && logs.get("_").length}
-						callback={() => {
-							window["openLogTime"] = performance.now();
-							setClicked(true);
-							handleTabSelection(TabsEnum.LOGS);
-						}}
-					/>
+					<div css={[				!clicked ? css`				:hover {
+					opacity: 0.8;
+				}`: undefined, css`width: 100%;`]} onClick={handleMaximiseClick} className={"flex items-center"}>
+						<TabButton
+							selected={selectedTab === TabsEnum.LOGS}
+							title="Logs"
+							count={logs && logs.get("_").length}
+							callback={() => {
+								window["openLogTime"] = performance.now();
+								setClicked(true);
+								handleTabSelection(TabsEnum.LOGS);
+							}}
+						/>
 
-					{lastLogMessage ? (
-						<Conditional showIf={!clicked}>
-						<div css={logTextStyle} className={"ml-10 mt-2"}>
-							{lastLogMessage ? getFormattedMessage(lastLogMessage) : ""}
-						</div>
-						</Conditional>
-					) : ""}
-		
+						{lastLogMessage ? (
+							<div css={logTextStyle} className={"ml-10 mt-2"}>
+								{lastLogMessage ? getFormattedMessage(lastLogMessage) : ""}
+							</div>
+						) : ""}
+			
 
-					<Conditional showIf={clicked}>
-						<div
-							css={css`
-								flex: 1;
-								display: flex;
-								justify-content: flex-end;
-								margin-right: 8rem;
-							`}
-						>
+						<Conditional showIf={clicked}>
 							<div
-								onClick={setClicked.bind(this, !clicked)}
 								css={css`
-									padding: 4rem 5rem;
-									:hover {
-										svg {
-											opacity: 0.7;
-										}
-										background: rgba(0, 0, 0, 0.2);
-										opacity: 0.8;
-									}
+									flex: 1;
+									display: flex;
+									justify-content: flex-end;
+									margin-right: 8rem;
 								`}
 							>
-								<MiniCrossIcon
+								<div
+									onClick={handleClose}
 									css={css`
-										width: 10rem;
-										height: 10rem;
-										opacity: 0.44;
+										padding: 4rem 5rem;
+										:hover {
+											svg {
+												opacity: 0.7;
+											}
+											background: rgba(0, 0, 0, 0.2);
+											opacity: 0.8;
+										}
 									`}
-								/>
+								>
+									<MiniCrossIcon
+										css={css`
+											width: 10rem;
+											height: 10rem;
+											opacity: 0.44;
+										`}
+									/>
+								</div>
 							</div>
-						</div>
-					</Conditional>
+						</Conditional>
+					</div>
+
 					<HoverCard content={<HelpContent/>} placement="top" type="hover" padding={8} offset={0}>
-                <div css={docsButtonCss}>
+                <div onClick={(e) => { e.preventDefault();  e.stopPropagation(); }} css={docsButtonCss}>
                     <DocsIcon css={docsIconCss} />
                     <span css={docsButtonTextCss}>Docs & help</span>
                 </div>
@@ -479,7 +493,7 @@ const StatusBar = (props: any) => {
 			<style>
 				{`
 			.expandBar {
-				max-height: 341rem;
+				max-height: 369rem;
 			}
 		`}
 			</style>

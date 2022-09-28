@@ -72,12 +72,12 @@ enum ITestActionEnum {
 	UPDATE = "UPDATE"
 };
 const SAVE_TEST_ACTION_DROPDOWN_OPTIONS = [
-	{id: ITestActionEnum.VERIFY_SAVE, content: (<span>Save</span>)},
-	{id: ITestActionEnum.SAVE, content: (<span>Save</span>)}
+	{ id: ITestActionEnum.VERIFY_SAVE, content: (<span>Save</span>) },
+	{ id: ITestActionEnum.SAVE, content: (<span>Save</span>) }
 ];
 const UPDATE_TEST_ACTION_DROPDOWN_OPTIONS = [
-	{id: ITestActionEnum.VERIFY_UPDATE, content: (<span>Update</span>)},
-	{id: ITestActionEnum.UPDATE, content: (<span>Update</span>)}
+	{ id: ITestActionEnum.VERIFY_UPDATE, content: (<span>Update</span>) },
+	{ id: ITestActionEnum.UPDATE, content: (<span>Update</span>) }
 ];
 
 const SaveVerifyButton = ({ isTestVerificationComplete }) => {
@@ -99,10 +99,10 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 
 		const hasProxyEnabled = proxyState && Object.keys(proxyState).length;
 		if (startUrl.hostname.toLowerCase() === "localhost" && !hasProxyEnabled) {
-			return {shouldShow: true, startUrl};
+			return { shouldShow: true, startUrl };
 		}
 
-		return {shouldShow: false, startUrl};
+		return { shouldShow: false, startUrl };
 	}, []);
 
 	const verifyTest = (autoSaveType: "UPDATE" | "SAVE", shouldAutoSave: boolean = false) => {
@@ -115,18 +115,18 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 		if (recorderState.type === TRecorderState.RECORDING_ACTIONS) {
 			const proxyWarning = handleProxyWarning();
 			const shouldSkipWarning = localStorage.getItem("skipProxyWarning");
-			
+
 			performVerifyTest(shouldAutoSave, autoSaveType, proxyWarning.shouldShow && !shouldSkipWarning).then((res) => {
 				if (res) {
-					if(res.draftJobId) {
-					window["triggeredTest"] = {
-						id: res.draftJobId,
-					};
-				}
-					if(proxyWarning.shouldShow && !shouldSkipWarning && res) {
+					if (res.draftJobId) {
+						window["triggeredTest"] = {
+							id: res.draftJobId,
+						};
+					}
+					if (proxyWarning.shouldShow && !shouldSkipWarning && res) {
 						window["showProxyWarning"] = { testId: res.id, startUrl: proxyWarning.startUrl };
 					}
-					sendSnackBarEvent({ type: "test_created", message: null});
+					sendSnackBarEvent({ type: "test_created", message: null });
 
 					navigate("/");
 					goFullScreen(false);
@@ -147,14 +147,14 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 
 		saveTest(proxyWarning.shouldShow && !shouldSkipWarning)
 			.then((res) => {
-				if(res.draftJobId) {
+				if (res.draftJobId) {
 					window["triggeredTest"] = { id: res.draftJobId };
 				}
-				if(proxyWarning.shouldShow && !shouldSkipWarning && res) {
+				if (proxyWarning.shouldShow && !shouldSkipWarning && res) {
 					window["showProxyWarning"] = { testId: res.id, startUrl: proxyWarning.startUrl };
 				}
 
-				sendSnackBarEvent({ type: "test_created", message: null});
+				sendSnackBarEvent({ type: "test_created", message: null });
 				navigate("/");
 				goFullScreen(false);
 			})
@@ -176,7 +176,7 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 	};
 
 	const handleCallback = React.useCallback(async (actionType: ITestActionEnum) => {
-		switch(actionType) {
+		switch (actionType) {
 			case ITestActionEnum.UPDATE: {
 				await updateTest().then((res) => {
 					navigate("/");
@@ -190,7 +190,7 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 				break;
 			}
 			case ITestActionEnum.VERIFY_UPDATE: {
-				if(isTestVerificationComplete) {
+				if (isTestVerificationComplete) {
 					editTestInCloud();
 				} else {
 					verifyTest("UPDATE", true);
@@ -198,7 +198,7 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 				break;
 			}
 			case ITestActionEnum.VERIFY_SAVE: {
-				if(isTestVerificationComplete) {
+				if (isTestVerificationComplete) {
 					saveTestToCloud();
 				} else {
 					verifyTest("SAVE", true);
@@ -439,7 +439,7 @@ const Toolbar = (props: any) => {
 		() => {
 
 			return (
-			<div css={css`
+				<div css={css`
 			font-family: Gilroy;
 			font-style: normal;
 			font-weight: 400;
@@ -449,8 +449,8 @@ const Toolbar = (props: any) => {
 			color: #444444;
 			margin-right: 12rem;
 			`}>
-enter to submit
-			</div>);
+					⏎ to start
+				</div>);
 		},
 		[selectedDevice, recorderDevices],
 	);
@@ -462,15 +462,15 @@ enter to submit
 	}, []);
 
 	const handleOutsideClick = React.useCallback(() => {
-		if((document.querySelector(".testName") as HTMLInputElement)) {
+		if ((document.querySelector(".testName") as HTMLInputElement)) {
 			setTestName((document.querySelector(".testName") as HTMLInputElement).value);
 			setIsEditingTestName(false);
 		}
-			// Save the new test name somewhere
+		// Save the new test name somewhere
 	}, [isEditingTestName]);
 
 	const handleKeyPress = React.useCallback((e) => {
-		if(e.keyCode === 13) {
+		if (e.keyCode === 13) {
 			setTestName((document.querySelector(".testName") as HTMLInputElement).value);
 			setIsEditingTestName(false);
 		}
@@ -480,14 +480,14 @@ enter to submit
 		setIsEditingTestName(true);
 		setTimeout(() => {
 			document.querySelector(".testName").focus();
-			document.execCommand('selectAll',false,null);
+			document.execCommand('selectAll', false, null);
 		}, 100);
 
 	}, []);
 
 	return (
 		<div css={containerStyle} {...props}>
-				{/* <BrowserButton
+			{/* <BrowserButton
 					className={"ml-24 go-back-button"}
 					css={css`
 						background: transparent;
@@ -501,40 +501,40 @@ enter to submit
 						disabled={false}
 					/>
 				</BrowserButton> */}
-				<div css={css`display: flex; align-items: center;`}>
-					<MenuDropdown
-						isRecorder={true}
-						callback={handleMenuCallback}
-						hideDropdown={true}
-						css={css`
+			<div css={css`display: flex; align-items: center;`}>
+				<MenuDropdown
+					isRecorder={true}
+					callback={handleMenuCallback}
+					hideDropdown={true}
+					css={css`
 							.crusher-hammer-icon {
 								margin-left: 18rem;
 							}
 						`}
-					/>
-					<div className={"mt-6 ml-10"} css={css`display: flex; align-items: center; font-size: 13.5rem; color: #fff; font-family: Gilroy; font-weight: 400;`}>
-						<span css={css`font-size: 12rem; color: #606060;`}>tests/</span>
-						<div css={css`display: flex; align-items: center;`}>
-							<OnOutsideClick onOutsideClick={handleOutsideClick}>
-								{isEditingTestName ? (
-									<input onKeyDown={handleKeyPress} className={"testName"} css={[isEditingTestName ? css`margin-left: 5.75rem;  padding-top: 2rem; width: 90rem; height: 28rem; padding: 0rem; border-radius: 8px; padding-left: 8rem; padding-right: 8rem;  background: linear-gradient(0deg, rgba(176, 74, 255, 0.02), rgba(176, 74, 255, 0.02)), #0D0D0E;  border: 0.5px solid rgba(176, 74, 255, 0.54);` : null]} defaultValue={testName} />
-								) : (
-									<span css={css`margin-left: 4.25rem; color: #D2D2D2;
+				/>
+				<div className={"mt-6 ml-10"} css={css`display: flex; align-items: center; font-size: 13.5rem; color: #fff; font-family: Gilroy; font-weight: 400;`}>
+					<span css={css`font-size: 12rem; color: #606060;`}>tests/</span>
+					<div css={css`display: flex; align-items: center;`}>
+						<OnOutsideClick onOutsideClick={handleOutsideClick}>
+							{isEditingTestName ? (
+								<input onKeyDown={handleKeyPress} className={"testName"} css={[isEditingTestName ? css`margin-left: 5.75rem;  padding-top: 2rem; width: 90rem; height: 28rem; padding: 0rem; border-radius: 8px; padding-left: 8rem; padding-right: 8rem;  background: linear-gradient(0deg, rgba(176, 74, 255, 0.02), rgba(176, 74, 255, 0.02)), #0D0D0E;  border: 0.5px solid rgba(176, 74, 255, 0.54);` : null]} defaultValue={testName} />
+							) : (
+								<span css={css`margin-left: 4.25rem; color: #D2D2D2;
 									border-radius: 8px;
 									padding: 0rem;
 									width: 94rem;
 									height: 28rem;
 								   background: transparent;`} onClick={handleTestNameClick}>{testName}</span>
-								)}
+							)}
 
-							</OnOutsideClick>
-							<DroppdownIconV2 css={css`width: 9rem; height: 6rem; margin-left: 7rem;`}/>
-						</div>
-						<RedDotIcon css={css`width: 6rem; height: 6rem; margin-left: 10rem;`}/>
+						</OnOutsideClick>
+						<DroppdownIconV2 css={css`width: 9rem; height: 6rem; margin-left: 7rem;`} />
 					</div>
+					<RedDotIcon css={css`width: 6rem; height: 6rem; margin-left: 10rem;`} />
 				</div>
-			
-				{/* <BrowserButton
+			</div>
+
+			{/* <BrowserButton
 					className={"ml-24 go-back-button"}
 					css={css`
 						background: transparent;
@@ -547,8 +547,8 @@ enter to submit
 						disabled={false}
 					/>
 				</BrowserButton> */}
-				{/* Refresh button */}
-				{/* <BrowserButton
+			{/* Refresh button */}
+			{/* <BrowserButton
 					className={"ml-12 reload-page-button"}
 					css={css`
 						background: transparent;
@@ -562,25 +562,25 @@ enter to submit
 						disabled={false}
 					/>
 				</BrowserButton> */}
-				<div css={inputContainerStyle}>
-					<div css={css`	display: flex;
+			<div css={inputContainerStyle}>
+				<div css={css`	display: flex;
 	flex-direction: column; position: absolute; left: calc(50% + 36rem); top: 50%; transform: translate(-50%, -50%);`}>
-						<NormalInput
-							placeholder={"Enter URL to test"}
-							onReturn={handleUrlReturn}
-							isError={urlInputError.value}
-							initialValue={url}
-							ref={urlInputRef}
-							rightIcon={RightIconComponent}
-						/>
-									<Conditional showIf={urlInputError.value}>
-										<span css={inputErrorMessageStyle}>{urlInputError.message}</span>
-									</Conditional>
-					</div>
-			
+					<NormalInput
+						placeholder={"Enter URL to test"}
+						onReturn={handleUrlReturn}
+						isError={urlInputError.value}
+						initialValue={url}
+						ref={urlInputRef}
+						rightIcon={RightIconComponent}
+					/>
+					<Conditional showIf={urlInputError.value}>
+						<span css={inputErrorMessageStyle}>{urlInputError.message}</span>
+					</Conditional>
 				</div>
 
-				<Conditional showIf={isTestBeingVerified}>
+			</div>
+
+			<Conditional showIf={isTestBeingVerified}>
 				<div css={testBeingVerifiedContainerStyle}>
 					{/* <span
 						css={drinkCupTextStyle}
@@ -623,7 +623,7 @@ enter to submit
 						</div>
 					</div>
 				</Conditional>
-				</Conditional>
+			</Conditional>
 			<SettingsModal isOpen={showSettingsModal} handleClose={handleCloseSettingsModal} />
 		</div>
 	);

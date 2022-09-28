@@ -14,6 +14,7 @@ import { Button } from "@dyson/components/atoms";
 import { iSelectorInfo } from "@shared/types/selectorInfo";
 import { sendSnackBarEvent } from "electron-app/src/ui/components/toast";
 import { ResizableInput } from "electron-app/src/_ui/components/ResizableInput";
+import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
 
 const limitString = (string) => {
     if (string.length > 25) {
@@ -166,7 +167,7 @@ const StepName = ({stepId}) => {
     };
     return (
         <div css={stepNameCss} onDoubleClick={setIsEditMode.bind(this, true)}>
-            {isEditMode ?    <ResizableInput
+            {isEditMode ?    <OnOutsideClick onOutsideClick={handleOnBlur.bind(this)}><ResizableInput
                 ref={titleInputRef}
                 css={testInputCss(isEditMode, title)}
                 onChange={handleOnChange.bind(this)}
@@ -178,7 +179,7 @@ const StepName = ({stepId}) => {
                 onBlur = {handleOnBlur.bind(this)}
                 disabled={!isEditMode}
                 value={title}
-            /> : TextHighlighter({text: title}, true)}
+            /> </OnOutsideClick> : TextHighlighter({text: title}, true)}
          
         </div>
     );

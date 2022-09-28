@@ -282,7 +282,7 @@ const DeviceFrame = (props: any) => {
 		<div css={[topContainerStyle]}>
 
 			<RightClickMenu menuItems={menuItemsComponent}>
-				<div css={containerStyle}>
+				<div css={[containerStyle, !recorderInfo.device ? css`background: #070708` : undefined]}>
 					{recorderInfo.device && (
 						<div
 							style={{
@@ -383,7 +383,7 @@ const containerStyle = css`
     border: 1rem solid #141414;
     border-right: none;
     border-bottom: none;
-}`;
+`;
 
 export { DeviceFrame };
 

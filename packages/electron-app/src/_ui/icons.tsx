@@ -507,7 +507,6 @@ const UpDownSizeIcon = (props) => (
 export {
   DisabledCloudIcon,
   CloudIcon,
-  DocsIcon,
   NotepadIcon,
   ConsoleIcon,
   PointerIcon,

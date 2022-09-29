@@ -831,7 +831,6 @@ export {
 	PuppeteerIcon,
 	LinkIcon,
 	CrusherHammerIcon,
-	DownIcon,
 	StopIcon,
 	MiniCrossIcon,
 	ConsoleIcon,

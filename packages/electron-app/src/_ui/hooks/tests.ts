@@ -1,7 +1,7 @@
 import { addBuildNotification, clearBuildNotifications, removeBuildNotification, updateBuildNotification } from "electron-app/src/store/actions/builds";
 import { getBuildNotifications, getBuilds, getCurrentLocalBuild, getLastBuildNotification } from "electron-app/src/store/selectors/builds";
 import React from "react";
-import { useSelector, useDispatch, useStore } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 const useBuildNotifications = () => {
     const notifications = useSelector(getBuildNotifications);
@@ -11,7 +11,7 @@ const useBuildNotifications = () => {
     const _addNotification = React.useCallback((notification) => {
         dispatch(addBuildNotification(notification));
     }, [notifications]);
-    
+
     const _removeNotification = React.useCallback((notificationId) => {
         dispatch(removeBuildNotification(notificationId));
     }, [notifications]);

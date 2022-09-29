@@ -10,24 +10,23 @@ const QuestionPrompt = ({className, defaultValue, callback, ...props} : { classN
     }, []);
 
     return (
-        <div css={[developerQuestionCss]} className={`${className}`}>
+        (<div css={[developerQuestionCss]} className={String(className)}>
             <div css={titleContainerCss}>
                 <div css={headingCss}>Are you a developer</div>
                 <div css={titleTaglineCss}>run commands in terminal</div>
             </div>
-                <div css={yesNoButtonContainerCss} {...props}>
-                    <div css={[yesNoButtonCss, isYes ? selectedButtonCss : undefined]} onClick={handleSelect.bind(this, true)}>
-                        {isYes ? (<SelectedIcon css={selectedIconCss}/>) : ""}
-                        <span>Yes</span>
-                    </div>
-                    <div css={[yesNoButtonCss, !isYes ? selectedButtonCss : undefined]}  onClick={handleSelect.bind(this, false)}>
-                        {!isYes ? (<SelectedIcon css={selectedIconCss}/>) : ""}
-                        <span>No</span>
-                    </div>
+            <div css={yesNoButtonContainerCss} {...props}>
+                <div css={[yesNoButtonCss, isYes ? selectedButtonCss : undefined]} onClick={handleSelect.bind(this, true)}>
+                    {isYes ? (<SelectedIcon css={selectedIconCss}/>) : ""}
+                    <span>Yes</span>
                 </div>
-       
-        </div>
-    )
+                <div css={[yesNoButtonCss, !isYes ? selectedButtonCss : undefined]}  onClick={handleSelect.bind(this, false)}>
+                    {!isYes ? (<SelectedIcon css={selectedIconCss}/>) : ""}
+                    <span>No</span>
+                </div>
+            </div>
+        </div>)
+    );
 };
 
 const titleContainerCss = css`

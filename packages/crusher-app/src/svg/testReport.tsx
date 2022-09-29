@@ -1,5 +1,4 @@
-import { ReactPropTypes } from "react";
-import React from "react";
+import React, {ReactPropTypes} from "react";
 
 export function RerunSVG(props: ReactPropTypes) {
 	return (
@@ -106,7 +105,7 @@ export function FailedSVG(props) {
 	);
 }
 
-export function ExpandSVG(props) {
+export function ExpandSVG() {
 	return (
 		<svg width="22rem" height="22rem" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
 			<rect width="20" height="20" rx="3" fill="#171C24" />

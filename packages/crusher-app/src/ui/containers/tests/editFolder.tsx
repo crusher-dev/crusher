@@ -1,24 +1,20 @@
 import { css } from "@emotion/react";
-import { useCallback, useState } from "react";
-import React from "react";
+import React, {useCallback, useState} from "react";
 
 import { useAtom } from "jotai";
-import useSWR, { mutate } from "swr";
+import {mutate} from "swr";
 
 import { Button, Input } from "dyson/src/components/atoms";
 import { Conditional } from "dyson/src/components/layouts";
 import { Modal } from "dyson/src/components/molecules/Modal";
 
-import { changeTestInfoAPI, deleteFolderAPI, deleteTestApi, getTestListAPI, updateFolderAPI } from "@constants/api";
+import {deleteFolderAPI, getTestListAPI, updateFolderAPI} from "@constants/api";
 import { LoadingSVG } from "@svg/dashboard";
 import { backendRequest } from "@utils/common/backendRequest";
 import { sendSnackBarEvent } from "@utils/common/notify";
 
 import { currentProject } from "../../../store/atoms/global/project";
 import { RequestMethod } from "../../../types/RequestOptions";
-import { SelectBox } from "../../../../../dyson/src/components/molecules/Select/Select";
-import { TextBlock } from "../../../../../dyson/src/components/atoms/textBlock/TextBlock";
-import { IProjectTestsListResponse } from "@crusher-shared/types/response/iProjectTestsListResponse";
 import { sentenceCase } from "@utils/common/textUtils";
 
 const changeFolderData = (projectId: number, folderId: number, name: string) => {

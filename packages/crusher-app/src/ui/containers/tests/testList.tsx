@@ -8,16 +8,14 @@ import useSWR, { mutate } from "swr";
 
 import { Conditional } from "dyson/src/components/layouts";
 
-import { createFolderAPI, getTestListAPI, unlinkGithubRepo } from "@constants/api";
+import {createFolderAPI, getTestListAPI} from "@constants/api";
 import { IProjectTestsListResponse, IProjectTestItem } from "@crusher-shared/types/response/iProjectTestsListResponse";
 import { TestStatusSVG } from "@svg/testReport";
 import { backendRequest } from "@utils/common/backendRequest";
 import { getBoolean } from "@utils/common";
-import { timeSince } from "@utils/common/dateTimeUtils";
 import { sendSnackBarEvent } from "@utils/common/notify";
 
 import { appStateAtom } from "../../../store/atoms/global/appState";
-import { currentProject } from "../../../store/atoms/global/project";
 import { tempTestAtom } from "../../../store/atoms/global/temp/tempTestId";
 import { tempTestNameAtom } from "../../../store/atoms/global/temp/tempTestName";
 
@@ -33,7 +31,6 @@ import { LinkBlock } from "dyson/src/components/atoms/Link/Link";
 import { updateMeta } from "@store/mutators/metaData";
 import { handleTestRun } from "@utils/core/testUtils";
 import { PROJECT_META_KEYS, USER_META_KEYS } from "@constants/USER";
-import { buildFiltersAtom } from "@store/atoms/pages/buildPage";
 import { BuildTriggerEnum } from "@crusher-shared/types/response/iProjectBuildListResponse";
 import { Tooltip } from "dyson/src/components/atoms/tooltip/Tooltip";
 import CreateTestPrompt from "@ui/containers/tests/CreateTestPrompt";
@@ -51,13 +48,11 @@ interface IBuildItemCardProps {
 	createdAt: number;
 }
 
-const EmptyList = dynamic(() => import("@ui/components/common/EmptyList"));
-const FirstTestRunStatus = dynamic(() => import("@ui/containers/tests/firstTestStatus"));
 const EditTest = dynamic(() => import("@ui/containers/tests/editTest"));
 const EditFolderModal = dynamic(() => import("@ui/containers/tests/editFolder"));
 
 const saveTest = (projectId: number, tempTestId: string, customTestName: string | null = null) => {
-	const testName = customTestName ? customTestName : new Date().toDateString().substr(4, 6) + " " + new Date().toLocaleTimeString().substr(0, 10);
+	const testName = customTestName || new Date().toDateString().substr(4, 6) + " " + new Date().toLocaleTimeString().substr(0, 10);
 	return backendRequest(`/projects/${projectId}/tests/actions/create`, {
 		method: RequestMethod.POST,
 		payload: { tempTestId, name: testName },
@@ -72,10 +67,19 @@ const updateTest = (tempTestId: string, mainTestId: string) => {
 };
 
 function TestCard(props: IBuildItemCardProps) {
-	const { testData } = props;
-	const { isRoot } = props;
-	const { testName, isPassing, createdAt, imageURL, clipVideoURL, id, firstRunCompleted, draftBuildId, tags } = testData;
-	const statusIcon = getBoolean(isPassing) ? (
+    const {
+        testData,
+        isRoot
+    } = props;
+    const {
+        testName,
+        isPassing,
+        id,
+        firstRunCompleted,
+        draftBuildId,
+        tags
+    } = testData;
+    const statusIcon = getBoolean(isPassing) ? (
 		<TestStatusSVG type={"PASSED"} height={"16rem"} />
 	) : (
 		<TestStatusSVG
@@ -87,13 +91,9 @@ function TestCard(props: IBuildItemCardProps) {
 		/>
 	);
 
-	const shouldPlayVideo = !imageURL && !!clipVideoURL;
+    const [showEditBox, setShowEditBox] = useState(false);
 
-	const [showEditBox, setShowEditBox] = useState(false);
-
-	const testRunInThisHour = (Date.now() - testData.createdAt) / 1000 < 3600;
-
-	return (
+    return (
 		<a href={`crusher://replay-test?testId=${id}`}>
 			<div
 				css={css`
@@ -158,126 +158,7 @@ function TestCard(props: IBuildItemCardProps) {
 			</div>
 		</a>
 	);
-	return (
-		<div css={itemContainerStyle}>
-			<a css={itemImageStyle} href={`crusher://replay-test?testId=${id}`}>
-				<Conditional showIf={!firstRunCompleted}>
-					<FirstTestRunStatus isRunning={true} />
-				</Conditional>
-
-				<Conditional showIf={!!imageURL}>
-					<img src={imageURL} />
-				</Conditional>
-
-				<Conditional showIf={shouldPlayVideo}>
-					<video
-						height={"100%"}
-						css={css`
-							object-fit: cover;
-							width: 100%;
-							height: 100%;
-						`}
-						onMouseOver={(event) => event.target.play()}
-						onMouseOut={(event) => {
-							event.target.pause();
-							event.target.currentTime = 0;
-						}}
-						muted={true}
-					>
-						<source src={clipVideoURL} type="video/mp4" />
-					</video>
-				</Conditional>
-			</a>
-			<div css={itemMainContainerStyle}>
-				<div className={"flex flex-row items-center"}>
-					<div css={testNameStyle} className={"font-cera"}>
-						{testName}
-					</div>
-					<div className={"ml-auto"}>{statusIcon}</div>
-				</div>
-				<div css={createdAtStyle} className={"flex justify-between mt-24 text-13"}>
-					<span>{timeSince(new Date(createdAt))}</span>
-					<div className={"flex "}>
-						<span
-							className={"edit"}
-							onClick={() => {
-								!showEditBox && setShowEditBox(true);
-							}}
-						>
-							<span className={"flex items-center"} css={editBlockCSS}>
-								<EditIcon className={"mr-6"} /> <span className={"mt-4"}>Edit</span>
-							</span>
-						</span>
-						<Conditional showIf={testRunInThisHour}>
-							<Link href={`/app/build/${draftBuildId}?view_draft=true`}>
-								<span className={"view-build"}>View test build </span>
-							</Link>
-						</Conditional>
-					</div>
-				</div>
-			</div>
-		</div>
-	);
 }
-
-const createdAtStyle = css`
-	color: rgba(255, 255, 255, 0.6);
-`;
-
-const testNameStyle = css`
-	color: rgba(255, 255, 255, 0.8);
-	font-size: 15.5rem;
-	font-weight: bold;
-`;
-
-const itemMainContainerStyle = css`
-	//background: rgba(16, 18, 21, 0.5);
-	padding: 20rem 0rem;
-`;
-const itemContainerStyle = css`
-	//background: rgba(16, 18, 21, 0.5);
-	//border: 1px solid #171c24;
-	border-radius: 4rem;
-	color: rgba(255, 255, 255, 0.6);
-	width: 252rem;
-	margin-bottom: 40px;
-	overflow: hidden;
-	margin-right: 32px;
-
-	.showOnHover {
-		visibility: hidden;
-	}
-
-	:hover {
-		.showOnHover {
-			visibility: visible !important;
-			:hover {
-				text-decoration: underline;
-			}
-		}
-	}
-
-	.view-build {
-		color: #96a7ff;
-
-		margin-left: 12rem;
-		:hover {
-			text-decoration: underline;
-		}
-	}
-`;
-const itemImageStyle = css`
-	height: 183rem;
-	width: 100%;
-	border-radius: 4rem;
-
-	border-width: 0;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	background: rgba(255, 255, 255, 0.1);
-	overflow: hidden;
-`;
 
 function FolderItem(props: { folder: any; id: number }) {
 	const [isOpen, setIsOpen] = useState(false);
@@ -589,7 +470,7 @@ function TestSearchableList() {
 				await updateTest(tempTestId, tempTestUpdateId);
 				sendSnackBarEvent({ message: "Updated the test", type: "success" });
 			} else {
-				await saveTest(selectedProjectId, tempTestId, !!tempTestName ? tempTestName : null);
+				await saveTest(selectedProjectId, tempTestId, tempTestName || null);
 				sendSnackBarEvent({ message: "Successfully saved the test", type: "success" });
 			}
 

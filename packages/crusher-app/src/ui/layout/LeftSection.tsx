@@ -20,13 +20,12 @@ export const InviteMembers = dynamic(() => import("@ui/containers/dashboard/Invi
 
 
 export function LeftSection() {
-    const router = useRouter();
     const [inviteTeammates, setInviteTeamMates] = useState(false);
-    const { route } = router;
+    const { route } = useRouter();
     const { currentProject: project } = useProjectDetails();
 
 
-    const menuItems = !!project ? projectMenu : leftMenu;
+    const menuItems = project ? projectMenu : leftMenu;
 
     return (
         <div css={sidebar} className={"flex flex-col justify-between pb-18"} id="left-section">

@@ -25,7 +25,9 @@ export const loadSegment = () => {
 	);
 };
 
-export const GA_ID = process.env.GA_ID || "UA-51192281-1";
+export const {
+    GA_ID = "UA-51192281-1"
+} = process.env;
 
 // Hate to use GA, but other user activity tool aren't reliable.
 // Might switch to plausible soon. Anyways, if you're not comfortable you can switch off tracking completely.

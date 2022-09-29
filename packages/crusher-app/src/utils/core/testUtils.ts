@@ -18,7 +18,7 @@ const runTests = (projectId: number, folder: string | null = null) => {
 export function handleTestRun(selectedProjectId: number | null, query: any, filters: Record<string, any>, router: BaseRouter, updateMetaData: Function) {
 	(async () => {
 		try {
-			await runTests(selectedProjectId, filters.folder ? filters.folder : null);
+			await runTests(selectedProjectId, filters.folder || null);
 			sendSnackBarEvent({ type: "normal", message: "We're running test." });
 			const buildAPI = getBuildsList(selectedProjectId, query.trigger, filters);
 

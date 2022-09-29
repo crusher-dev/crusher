@@ -43,12 +43,17 @@ export const getOptions = ({ list }, id) => {
 	return list.filter((listItem) => listItem.id !== id).map((listItem) => ({ label: sentenceCase(listItem.testName), value: listItem.id }));
 };
 
-export const EditTestModal = ({ name, folderId, id, onClose, tags }) => {
+export const EditTestModal = ({
+    name,
+    folderId,
+    id,
+    onClose
+}) => {
 	const [testName, changeTestName] = useState(name);
 	const [processing, setProcessing] = useState(false);
 	const [processingDelete, setProcessingDelete] = useState(false);
 	const [project] = useAtom(currentProject);
-	const [selectedFolder, setSelectedFolder] = useState(!!folderId ? [folderId] : []);
+	const [selectedFolder, setSelectedFolder] = useState(folderId ? [folderId] : []);
 
 	const selectedFolderId = selectedFolder.length > 0 && selectedFolder[0];
 	const isFormChanged = testName !== name || folderId !== selectedFolderId;

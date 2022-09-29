@@ -43,25 +43,25 @@ export const useLoadTempData = () => {
 		setTempTest(tempTestId);
 		setTempTestType(tempTestType || "save");
 
-		if (!!urlQuery.get("project_id")) {
+		if (urlQuery.get("project_id")) {
 			setProjectToRedirect(parseInt(urlQuery.get("project_id")));
-		}
+		};
 
-		if (!!loginKey) {
+		if (loginKey) {
 			setLoginKey(loginKey);
-			backendRequest(resolvePathToBackendURI("/cli/actions/login.user"), { method: RequestMethod.POST, payload: { loginKey } }).catch((err) => {
+			backendRequest(resolvePathToBackendURI("/cli/actions/login.user"), { method: RequestMethod.POST, payload: { loginKey } }).catch(() => {
 				console.error("Request failed");
 			});
-		}
-		if (!!inviteCode) {
+		};
+		if (inviteCode) {
 			setInviteCode(inviteCode);
-		}
+		};
 		if (githubToken) {
 			setGithubToken(githubToken);
 		}
 
-		if (!!testId) {
+		if (testId) {
 			setTempTestUpdateId(testId);
-		}
+		};
 	}, []);
 };

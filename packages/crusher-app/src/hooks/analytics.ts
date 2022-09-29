@@ -3,9 +3,8 @@ import { useEffect } from "react";
 
 import { Analytics } from "../utils/core/analytics";
 export const usePageSegmentAnalytics = () => {
-	const router = useRouter();
-	const { pathname } = router;
-	useEffect(() => {
+    const { pathname } = useRouter();
+    useEffect(() => {
 		Analytics.trackPage();
 	}, [pathname]);
 };

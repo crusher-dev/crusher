@@ -7,5 +7,5 @@ export const currentProjectSelector = atom((get) => {
 	const { query } = useRouter()
 	const { project_id } = query
 
-	return projects?.filter(({ id }) => id == parseInt(project_id))[0];
+	return projects?.filter(({ id }) => id === parseInt(project_id))[0];
 });

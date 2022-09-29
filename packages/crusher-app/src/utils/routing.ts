@@ -83,5 +83,5 @@ export const getGoogleAuthUrl = (query: any): string => {
 
 
 export const getIdentifier = (name, id) => {
-	return `${id}`
+	return String(id);
 }

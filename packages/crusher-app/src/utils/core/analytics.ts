@@ -2,10 +2,10 @@ import { getAllCookies } from "crusher-app/src/utils/common/cookieUtils";
 export const waitForSegmentToLoad = () => {
 	return new Promise((res) => {
 		const timer = setInterval(() => {
-			if (!!window["analytics"]) {
+			if (window["analytics"]) {
 				res();
 				clearInterval(timer);
-			}
+			};
 		}, 100);
 	});
 };
@@ -25,11 +25,11 @@ export class Analytics {
 		});
 
 		const CRUSHER_USER_ID = getAllCookies()["CRUSHER_USER_ID"];
-		if (!!CRUSHER_USER_ID) {
+		if (CRUSHER_USER_ID) {
 			window["analytics"].identify(CRUSHER_USER_ID, {
 				email,
 			});
-		}
+		};
 	}
 
 	static async trackPage() {

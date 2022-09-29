@@ -1,25 +1,12 @@
 import { css } from "@emotion/react";
 import React, { useMemo } from "react";
 import { Input } from "dyson/src/components/atoms/input/Input";
-import { Button, Text } from "dyson/src/components/atoms";
-import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
+import {Text} from "dyson/src/components/atoms";
 import Link from "next/link";
 import { LINUX_INFO, OS, OS_INFO } from "@constants/app";
 import useSWR from "swr";
 import { RELEASE_API } from "@constants/api";
 import { getOSType } from "@utils/common";
-
-function LayerSVG(props) {
-	return (
-		<svg width={"48rem"} height={"48rem"} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-			<g opacity={0.4} fill="#787D85">
-				<path d="M48 14.941L24.001 1.896 0 14.941l24.001 13.047L48 14.941z" />
-				<path d="M24.001 32.194L4.461 21.578 0 24.003l24.001 13.04L48 24.003l-4.462-2.425-19.537 10.616z" />
-				<path d="M24.001 41.253L4.461 30.635 0 33.055l24.001 13.047L48 33.055l-4.462-2.42-19.537 10.618z" />
-			</g>
-		</svg>
-	);
-}
 
 export function RenderDownloadLink(props) {
 	const osType = useMemo(getOSType, []);
@@ -95,30 +82,6 @@ export const CreateTestPrompt = ({ className }: { className?: any }) => (
 		</div>
 	</div>
 );
-
-const ViewDemoSection = () => {
-	return (
-		<div className={"flex mt-40 justify-between"} css={demoCSS}>
-			<div>
-				<TextBlock color={"#E3E3E3"} fontSize={16} weight={600}>
-					Or view demo project to see crusher in action
-				</TextBlock>
-				<TextBlock color={"#E3E3E3"} fontSize={13} className={"mt-16"}>
-					-&nbsp;&nbsp;Create test &nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;Break something&nbsp;&nbsp;&nbsp; -&nbsp;&nbsp;Run test
-				</TextBlock>
-			</div>
-
-			<Button bgColor={"tertiary-white"}>View demo</Button>
-		</div>
-	);
-};
-
-const demoCSS = css`
-	margin: 0 auto;
-	margin-top: 40px;
-	width: 784rem;
-	transform: translateX(-20px);
-`;
 
 const boxCSS = css`
 	background: #101215;

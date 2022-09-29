@@ -1,5 +1,5 @@
 import { css } from "@emotion/react";
-import { ReactEventHandler, useCallback, useEffect, useState } from "react";
+import {useCallback, useEffect, useState} from "react";
 
 import { Button, Input } from "dyson/src/components/atoms";
 import { Heading } from "dyson/src/components/atoms/heading/Heading";
@@ -9,12 +9,11 @@ import { Conditional } from "dyson/src/components/layouts";
 import AddProjectModal from "@ui/containers/dashboard/AddProject";
 import { SettingsLayout } from "@ui/layout/SettingsBase";
 
-import Toggle from "dyson/src/components/atoms/toggle/toggle";
 import Switch from "dyson/src/components/atoms/toggle/switch";
 import { GithubSVG } from "@svg/social";
 import { Card } from "dyson/src/components/layouts/Card/Card";
 import { openPopup } from "@utils/common/domUtils";
-import { getGithubOAuthURL, getGithubOAuthURLLegacy } from "@utils/core/external";
+import {getGithubOAuthURLLegacy} from "@utils/core/external";
 import { SelectBox } from "dyson/src/components/molecules/Select/Select";
 import { useAtom } from "jotai";
 import { atomWithImmer } from "jotai/immer";
@@ -480,7 +479,7 @@ function GitIntegration() {
 	);
 }
 
-const getSlackChannelValues = (channels: Array<{ name: string; id: string }> | null) => {
+const getSlackChannelValues = (channels: { name: string; id: string }[] | null) => {
 	if (!channels) return [];
 
 	return (
@@ -504,13 +503,13 @@ function SlackIntegration() {
 	});
 
 	useEffect(() => {
-		if (integrations && integrations.slackIntegration) {
+		if (integrations?.slackIntegration) {
 			console.log("Integrations is", integrations);
 			setIsConnected(true);
 
-			const slackIntegrationMeta = integrations.slackIntegration && integrations.slackIntegration.meta;
+			const slackIntegrationMeta = integrations.slackIntegration?.meta;
 
-			if (slackIntegrationMeta && slackIntegrationMeta.channel) {
+			if (slackIntegrationMeta?.channel) {
 				const normalChannel = slackIntegrationMeta.channel.normal;
 				const alertChannel = slackIntegrationMeta.channel.alert;
 
@@ -549,15 +548,14 @@ function SlackIntegration() {
 
 				const isOnFEPage = windowRef?.location?.href?.includes(window.location.host);
 				if (isOnFEPage) {
-					const url = windowRef?.location?.href;
-					setIsConnected(true);
-					windowRef.close();
-					clearInterval(interval);
-				}
+                    setIsConnected(true);
+                    windowRef.close();
+                    clearInterval(interval);
+                }
 			}, 200);
 		} else {
 			backendRequest(`/integrations/${project.id}/slack/actions/remove`)
-				.then((res) => {
+				.then(() => {
 					setIsConnected(false);
 					setSlackIntegration({
 						normalChannel: [],
@@ -568,7 +566,7 @@ function SlackIntegration() {
 						type: "normal",
 					});
 				})
-				.catch((err) => {
+				.catch(() => {
 					sendSnackBarEvent({
 						message: "Error disabling slack integration",
 						type: "error",
@@ -589,11 +587,11 @@ function SlackIntegration() {
 		const normalChannel = channelTypeName === "normalChannel" ? selectedValues : integration.normalChannel;
 
 		const alertChannelInfo =
-			alertChannel && alertChannel[0] && alertChannel[0].label
+			alertChannel?.[0] && alertChannel[0].label
 				? alertChannel
 				: getSlackChannelValues(slackChannels).filter((channel) => alertChannel[0] === channel.value);
 		const normalChannelInfo =
-			normalChannel && normalChannel[0] && normalChannel[0].label
+			normalChannel?.[0] && normalChannel[0].label
 				? normalChannel
 				: getSlackChannelValues(slackChannels).filter((channel) => normalChannel[0] === channel.value);
 
@@ -621,7 +619,7 @@ function SlackIntegration() {
 					message: "Slack integration saved successfully",
 				});
 			})
-			.catch((err) => {
+			.catch(() => {
 				sendSnackBarEvent({
 					type: "error",
 					message: "Slack integration failed to save",
@@ -638,14 +636,14 @@ function SlackIntegration() {
 			},
 		});
 
-		setNextCursor((previous) => _nextCursor);
+		setNextCursor(() => _nextCursor);
 		setSlackChannels((previous) => [...previous, ...channels]);
 		return true;
 	}, [slackChannels, nextCursor]);
 
 	return (
-		<div className={"justify-between items-start mt-40 mb-24"}>
-			<div className={"flex justify-between items-center w-full"}>
+        (<div className={"justify-between items-start mt-40 mb-24"}>
+            <div className={"flex justify-between items-center w-full"}>
 				<div className={"flex"}>
 					<img src={"/svg/slack-icon.svg"} width={"24rem"} />
 					<div className={"ml-20"}>
@@ -664,7 +662,7 @@ function SlackIntegration() {
 				}} />
 
 			</div>
-			<Conditional showIf={isConnected}>
+            <Conditional showIf={isConnected}>
 				<div
 					css={css`
 						display: block;
@@ -687,7 +685,7 @@ function SlackIntegration() {
 										dropDownHeight={"214rem"}
 										isSearchable={true}
 										values={getSlackChannelValues(slackChannels)}
-										selected={integration.normalChannel ? integration.normalChannel : null}
+										selected={integration.normalChannel || null}
 										placeholder="Select a channel"
 										callback={handleChannelSelect.bind(this, "normal")}
 									/>
@@ -702,7 +700,7 @@ function SlackIntegration() {
 										dropDownHeight={"214rem"}
 										isSearchable={true}
 										values={getSlackChannelValues(slackChannels)}
-										selected={integration.alertChannel ? integration.alertChannel : null}
+										selected={integration.alertChannel || null}
 										placeholder="Select a channel"
 										callback={handleChannelSelect.bind(this, "alert")}
 										css={selectBoxCSS}
@@ -713,93 +711,14 @@ function SlackIntegration() {
 					</Card>
 				</div>
 			</Conditional>
-		</div>
-	);
+        </div>)
+    );
 }
 
 const selectBoxCSS = css`
 	width: 200rem;
 `;
 
-const ciIntegrations = ["Gitlab", "Github"];
-
-const ciButtonCSS = css`
-	width: 100rem;
-	height: 26rem;
-`;
-const selectedCSS = css`
-	background: #6b77df;
-	:hover {
-		background: #6b77df;
-	}
-`;
-function CIButtons({ setSelectedCI, selectedCI }) {
-	return (
-		<div className={"flex"}>
-			{ciIntegrations.map((item, index) => (
-				<Button
-					css={[selectedCI === item && selectedCSS, ciButtonCSS]}
-					size={"x-small"}
-					bgColor={"tertiary-outline"}
-					className={"mr-20"}
-					onClick={setSelectedCI.bind(this, item)}
-				>
-					<span
-						className={"mt-7"}
-						css={css`
-							font-size: 13rem !important;
-						`}
-					>
-						Github
-					</span>
-				</Button>
-			))}
-		</div>
-	);
-}
-
-const CiIntegration = () => {
-	const [selectedCI, setSelectedCI] = useState<string | null>(null);
-	return (
-		<div>
-			<Heading type={2} fontSize={"16"} className={"mt-48 mb-8"}>
-				CI Integration
-			</Heading>
-			<TextBlock fontSize={12} className={"mb-28"} color={"#c1c1c1"}>
-				Integrate with CI of your choice
-			</TextBlock>
-
-			<TextBlock fontSize={"12.6"} className={"mb-12"}>
-				Select CI
-			</TextBlock>
-			<CIButtons selectedCI={selectedCI} setSelectedCI={setSelectedCI} />
-			<Conditional showIf={!!selectedCI}>
-				<div className={"text-13 mt-36"}>
-					<div className={"mb-24"}>
-						1. <span className={"ml-16"}>Create and start your server.</span>
-					</div>
-					<div className={"mb-24"}>
-						2. <span className={"ml-16"}>Expose Localtunnel.</span>
-					</div>
-					<div className={"mb-24"}>
-						3. <span className={"ml-16"}>Copy this snipped below.</span>
-					</div>
-					<div className={"py-20 px-32"} css={codeBackground}>
-						//code
-						<br />
-						ci: run dark
-					</div>
-				</div>
-			</Conditional>
-		</div>
-	);
-};
-
-const codeBackground = css`
-	background: #101215;
-	border: 1px solid #171c24;
-	border-radius: 4px;
-`;
 export const Integrations = () => {
 	const [showModal, setShowModal] = useState(false);
 	return (

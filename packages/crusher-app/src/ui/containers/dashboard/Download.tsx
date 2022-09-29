@@ -1,7 +1,7 @@
 import { css } from "@emotion/react";
 import React, { useCallback, useMemo, useState } from "react";
 
-import { CenterLayout, Conditional } from "dyson/src/components/layouts";
+import {CenterLayout} from "dyson/src/components/layouts";
 import { OverlayTransparent } from "dyson/src/components/layouts/OverlayTransparent/OverlayTransparent";
 
 import CreateTestPrompt from "../tests/CreateTestPrompt";
@@ -13,12 +13,11 @@ import { Button } from "dyson/src/components/atoms";
 import { AppleSVG } from "@svg/dashboard";
 
 export function DownloadButton(props) {
-	const osType = useMemo(getOSType, []);
-	const label = OS_INFO[osType]?.label;
-	const [isDownloading, setDownload] = useState(false);
-	const { data } = useSWR(RELEASE_API);
+    const osType = useMemo(getOSType, []);
+    const [isDownloading, setDownload] = useState(false);
+    const { data } = useSWR(RELEASE_API);
 
-	const DownloadButton = useCallback(
+    const DownloadButton = useCallback(
 		({ downloadLink, label }) => {
 			return (
 				<a href={downloadLink} onClick={setDownload.bind(this, true)}>
@@ -39,7 +38,7 @@ export function DownloadButton(props) {
 		[data],
 	);
 
-	if (osType === OS.Linux) {
+    if (osType === OS.Linux) {
 		const zipLink = LINUX_INFO.Linux_DEB.downloadLink || data?.assets?.filter(({ name }: any) => name.includes("linux-x64"))[0]?.browser_download_url;
 
 		return (
@@ -56,7 +55,7 @@ export function DownloadButton(props) {
 		);
 	}
 
-	if (osType === OS.MAC) {
+    if (osType === OS.MAC) {
 		const dmgLink = OS_INFO.MAC.downloadLink || data?.assets?.filter(({ name }: any) => name.includes("darwin"))[0]?.browser_download_url;
 		return (
 			<div className={"flex flex-col items-center"} {...props}>
@@ -69,7 +68,7 @@ export function DownloadButton(props) {
 		);
 	}
 
-	return (
+    return (
 		<div className={"flex flex-col items-center"} {...props}>
 			<div>Recorder is only available in dmg and dev :(</div>
 		</div>

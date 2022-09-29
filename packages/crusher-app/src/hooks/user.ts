@@ -39,7 +39,7 @@ export function loadUserDataAndRedirect({ fetchData = true, userAndSystemData = 
 			updateInitialData(dataToConsider);
 
 			if (loginKey && loginKey !== "null" && dataToConsider.isUserLoggedIn) {
-				backendRequest(resolvePathToBackendURI("/cli/actions/login.user"), { method: RequestMethod.POST, payload: { loginKey } }).then((res) => {
+				backendRequest(resolvePathToBackendURI("/cli/actions/login.user"), { method: RequestMethod.POST, payload: { loginKey } }).then(() => {
 					setLoginKey(null);
 					window.location.href = "/login_sucessful";
 				}).catch((err) => {

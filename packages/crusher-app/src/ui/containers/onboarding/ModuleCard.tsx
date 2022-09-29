@@ -1,9 +1,7 @@
 import { css } from "@emotion/react";
 import React from "react";
 
-import { Button } from "dyson/src/components/atoms";
-
-export const ModuleCard = ({ onClick }) => {
+export const ModuleCard = () => {
 	return (
 		<div className={"flex px-20 py-12 pt-16 items-start justify-between"} css={cardStyle}>
 			<div>
@@ -30,18 +28,3 @@ const cardStyle = css`
 	border-radius: 9px;
 	border: 1px solid #292f33;
 `;
-
-const smallButtonStyle = css`
-	padding-bottom: 8rem;
-	padding-top: 9rem;
-
-	font-weight: 600 !important;
-	font-size: 12.8rem;
-`;
-
-const OnlineDotCSS: React.CSSProperties = {
-	backgroundColor: "#ff6ba4",
-	width: "6px",
-	height: "6px",
-	borderRadius: "50%",
-};

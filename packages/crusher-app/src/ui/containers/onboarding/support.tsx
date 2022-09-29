@@ -1,29 +1,27 @@
 import { usePageTitle } from "@hooks/seo";
-import { onboardingStepAtom } from "@store/atoms/pages/onboarding";
 import { addScript } from "@utils/common/scriptUtils";
 import { useAtom } from "jotai";
 import React from "react";
 import { Button, Text } from "dyson/src/components/atoms";
 import { GithubSVG } from "@svg/social";
 import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
-import { DiscordSVG } from "@svg/onboarding";
 import { css } from "@emotion/react";
 import { updateMeta } from "@store/mutators/metaData";
 import { USER_META_KEYS } from "@constants/USER";
 import Link from "next/link";
 
 const SupportCrusher = () => {
-	const [, updateOnboarding] = useAtom(updateMeta);
+    const [, updateOnboarding] = useAtom(updateMeta);
 
-	usePageTitle("Support crusher");
+    usePageTitle("Support crusher");
 
-	React.useEffect(() => {
+    React.useEffect(() => {
 		addScript("github-start", {
 			src: "https://buttons.github.io/buttons.js",
 		});
 	}, []);
 
-	const handleOpenApp = () => {
+    const handleOpenApp = () => {
 		updateOnboarding({
 			type: "user",
 			values: [
@@ -39,11 +37,7 @@ const SupportCrusher = () => {
 		});
 	};
 
-	const openDiscord = () => {
-		window.open("https://discord.gg/QWZqZWq", "_blank");
-	};
-
-	return (
+    return (
 		<>
 			<div className={"w-full"}>
 				<div className={"flex justify-between item-center"}>
@@ -101,16 +95,6 @@ const githubCSS = css`
 	border-top-left-radius: 10px;
 	border-bottom-left-radius: 10px;
 	border: 1px solid #131516;
-	width: 50%;
-	height: 220px;
-`;
-
-const discordCSS = css`
-	background: #0c0d0e;
-	border-top-right-radius: 10px;
-	border-bottom-right-radius: 10px;
-	border: 1px solid #131516;
-	border-left-width: 0;
 	width: 50%;
 	height: 220px;
 `;

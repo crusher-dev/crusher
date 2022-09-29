@@ -1,62 +1,36 @@
 import { css } from "@emotion/react";
-import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import React from "react";
 
 import { useAtom } from "jotai";
 import { Conditional } from "dyson/src/components/layouts";
 import CrusherBase from "crusher-app/src/ui/layout/CrusherBase";
 
-import { userAtom } from "../../../store/atoms/global/user";
 import { onboardingStepAtom, OnboardingStepEnum } from "@store/atoms/pages/onboarding";
-import { CliRepoIntegration } from "./cliIntegration";
-import { SetupCrusher } from "./setup";
-import { SupportCrusher } from "./support";
-import { URLOnboarding } from "@ui/containers/onboarding/URLOnboarding";
-import { SurveyContainer } from "@ui/containers/onboarding/Survey";
-import { getBoolean } from "@utils/common";
 import { QuestionPrompt } from "@components/molecules/QuestionPrompt";
 import { DeveloperInput } from "./DeveloperInput";
 import { NoDeveloperInput } from "./NoDeveloperInput";
 import { backendRequest } from "@utils/common/backendRequest";
-import { getTestListAPI, getTestsAPI } from "@constants/api";
+import {getTestsAPI} from "@constants/api";
 import { RequestMethod } from "@types/RequestOptions";
-import { currentProject, projectsAtom } from "@store/atoms/global/project";
+import {projectsAtom} from "@store/atoms/global/project";
 import { USER_META_KEYS } from "@constants/USER";
 import { updateMeta } from "@store/mutators/metaData";
 import { SelectProjectContainer } from "./selectProject";
-
-const GetViewByStep = () => {
-	const [step] = useAtom(onboardingStepAtom);
-
-	switch (step) {
-		case OnboardingStepEnum.SURVEY:
-			return <SurveyContainer />;
-		case OnboardingStepEnum.URL_ONBOARDING:
-			return <URLOnboarding />;
-		case OnboardingStepEnum.SUPPORT_CRUSHER:
-			return <SupportCrusher />;
-		default:
-			return null;
-	}
-};
 
 const steps = [
 	{ id: OnboardingStepEnum.SURVEY, text: "Setup" },
 ];
 
 const CrusherOnboarding = () => {
-	const router = useRouter();
-	const [project] = useAtom(currentProject);
-	const [user] = useAtom(userAtom);
-	const [selectedOnboardingStep, setOnBoardingStep] = useAtom(onboardingStepAtom);
-	const [isDeveloper, setIsDeveloper] = React.useState(true);
-	const [, updateOnboarding] = useAtom(updateMeta);
-	const [projects, setProjectsAtom] = useAtom(projectsAtom);
+    const [selectedOnboardingStep, setOnBoardingStep] = useAtom(onboardingStepAtom);
+    const [isDeveloper, setIsDeveloper] = React.useState(true);
+    const [, updateOnboarding] = useAtom(updateMeta);
+    const [projects] = useAtom(projectsAtom);
 
-	React.useEffect(() => {
+    React.useEffect(() => {
 		const testCreatedPoll = setInterval(async () => {
 			const res = await backendRequest(getTestsAPI(), { method: RequestMethod.GET });
-			if (res.list && res.list.length) {
+			if (res.list?.length) {
 				clearInterval(testCreatedPoll);
 
 				updateOnboarding({
@@ -74,11 +48,11 @@ const CrusherOnboarding = () => {
 			clearInterval(testCreatedPoll);
 		}
 	}, []);
-	const handleCallback = React.useCallback((value) => {
+    const handleCallback = React.useCallback((value) => {
 		setIsDeveloper(value);
 	}, []);
 
-	const NoProjectContainer = (				<div className="flex mt-60 flex-col">
+    const NoProjectContainer = (				<div className="flex mt-60 flex-col">
 	<div>
 		<div css={welcomeHeadingCss}>Create test with Crusher</div>
 	</div>
@@ -87,9 +61,9 @@ const CrusherOnboarding = () => {
 	{isDeveloper ? ( <DeveloperInput/>) : (<NoDeveloperInput/>)}
 </div>);
 
-	return (
-		<CrusherBase>
-			<div css={contentContainer}>
+    return (
+        (<CrusherBase>
+            <div css={contentContainer}>
 				<div className={"flex items-center"}>
 					{steps.map((_step, i) => (
 						<div className={"flex items-center"}>
@@ -127,27 +101,15 @@ const CrusherOnboarding = () => {
 					))}
 				</div>
 					
-					{projects && projects.length ? (
+					{projects?.length ? (
 						<SelectProjectContainer/>
 					) : NoProjectContainer}
 					
 
 			</div>
-		</CrusherBase>
-	);
+        </CrusherBase>)
+    );
 };
-
-const welcomeTaglineCss = css`
-font-family: 'Gilroy';
-font-style: normal;
-font-weight: 400;
-font-size: 13rem;
-/* identical to box height, or 119% */
-
-letter-spacing: -0.003em;
-color: rgba(220, 220, 220, 0.38);
-margin-top: 8rem;
-`;
 
 const welcomeHeadingCss = css`
 	font-family: 'Gilroy';

@@ -21,7 +21,7 @@ export const updateInitialDataMutator = atom(null, (_get, _set, data: UserInitia
 	_set(systemConfigAtom, data.system);
 	_set(projectsAtom, data.projects);
 
-	if (!!data.userData) {
+	if (data.userData) {
 		Analytics.identify(
 			data.userData.name,
 			data.userData.userId,
@@ -31,7 +31,7 @@ export const updateInitialDataMutator = atom(null, (_get, _set, data: UserInitia
 			"false",
 			process.env.NEXT_PUBLIC_CRUSHER_MODE,
 		);
-	}
+	};
 });
 
 export const selectInitialProjectMutator = atom(null, (_get, _set, data: UserInitialData) => {

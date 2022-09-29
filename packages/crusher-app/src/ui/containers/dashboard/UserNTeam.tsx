@@ -99,17 +99,6 @@ function DropdownContent() {
 	);
 }
 
-function DropdownIcon(props) {
-	return (
-		<svg width={9} height={7} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-			<path
-				d="M4.5 6.109a.623.623 0 01-.446-.188L.184 1.986a.649.649 0 010-.907.623.623 0 01.892 0L4.5 4.561 7.924 1.08a.623.623 0 01.891 0 .648.648 0 010 .907L4.945 5.92a.623.623 0 01-.445.188z"
-				fill="#CECECE"
-			/>
-		</svg>
-	);
-}
-
 export function UserNTeam() {
 	const [user] = useAtom(userAtom);
 	const [team] = useAtom(teamAtom);

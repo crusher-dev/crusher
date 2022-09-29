@@ -4,7 +4,9 @@ import { contentContainerScroll } from "@ui/layout/DashboardBase";
 import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import { LinkBlock } from "dyson/src/components/atoms/Link/Link";
 
-export function TutorialContent({ setLessionIndex, lessonIndex }: any): JSX.Element {
+export function TutorialContent({
+    setLessionIndex
+}: any): JSX.Element {
     return <div className={"flex flex-row mt-28 justify-center"}>
         <div css={contentContainerScroll}>
 

@@ -116,7 +116,7 @@ const useGithubAuthorize = () => {
 			} else if (windowRef?.closed) {
 				setConnectedGit({
 					type: "github",
-					token: connectedGit.token ? connectedGit.token + "" : connectedGit.token,
+					token: connectedGit.token && connectedGit.token + "",
 				});
 				clearInterval(interval);
 			}
@@ -127,14 +127,14 @@ const useGithubAuthorize = () => {
 };
 
 const GithubRepoBox = () => {
-	const [connectedGit, setConnectedGit] = useAtom(connectedToGitAtom);
+	const [connectedGit] = useAtom(connectedToGitAtom);
 	const { selectedOrganisation, organisations, repositories, setSelectedOrganisation } = useGithubData(connectedGit);
 	const [searchFilter, setSearchFilter] = React.useState("");
 	const { onGithubClick } = useGithubAuthorize();
 
 	const RepoItem = ({ repository }) => {
 		const [connectedRepo, setConnectdRepo] = useAtom(selectedRepoAtom);
-		const [selectedOnboardingStep, setOnBoardingStep] = useAtom(onboardingStepAtom);
+		const [, setOnBoardingStep] = useAtom(onboardingStepAtom);
 		const [project] = useAtom(currentProject);
 
 		const handleRepoClick = async () => {
@@ -298,12 +298,11 @@ const addGithubProject = (projectId: number, repoData) => {
 };
 
 const GitRepoIntegration = () => {
-	const [, setOnboardingStep] = useAtom(onboardingStepAtom);
-	const [connectedGit, setConnectedGit] = useAtom(connectedToGitAtom);
-	const [githubToken, setGithubToken] = useAtom(githubTokenAtom);
-	const [, updateOnboarding] = useAtom(updateMeta);
+    const [connectedGit, setConnectedGit] = useAtom(connectedToGitAtom);
+    const [githubToken] = useAtom(githubTokenAtom);
+    const [, updateOnboarding] = useAtom(updateMeta);
 
-	const onGithubConnectClick = (alreadAuthorized: boolean = false) => {
+    const onGithubConnectClick = (alreadAuthorized: boolean = false) => {
 		const windowRef = openPopup(getGithubOAuthURL(alreadAuthorized));
 		const interval = setInterval(() => {
 			const isOnFEPage = windowRef?.location?.href?.includes(window.location.host);
@@ -321,7 +320,7 @@ const GitRepoIntegration = () => {
 		}, 50);
 	};
 
-	const handleSkipOnboarding = () => {
+    const handleSkipOnboarding = () => {
 		updateOnboarding({
 			type: "user",
 			key: USER_META_KEYS.INITIAL_ONBOARDING,
@@ -329,7 +328,7 @@ const GitRepoIntegration = () => {
 		});
 	};
 
-	React.useEffect(() => {
+    React.useEffect(() => {
 		if (githubToken && githubToken !== "null" && githubToken.length) {
 			setConnectedGit({
 				...connectedGit,
@@ -339,9 +338,9 @@ const GitRepoIntegration = () => {
 		}
 	}, [githubToken]);
 
-	usePageTitle("Select github repo");
+    usePageTitle("Select github repo");
 
-	return (
+    return (
 		<>
 			<div
 				css={css`

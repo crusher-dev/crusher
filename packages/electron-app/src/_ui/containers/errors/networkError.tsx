@@ -52,15 +52,15 @@ const NetworkErrorContainer = () => {
 	}, []);
 
 	return (
-		<CompactAppLayout title={null} footer={<Footer/>} css={css`z-index: 999;`}>
+		<CompactAppLayout title={null} footer={<Footer />} css={containerCss}>
 			<div css={containerStyle}>
 				<div css={contentContainerStyle}>
 					<ConnectivityWarningIcon css={iconStyle} />
 					<div css={headingStyle}>
-						<span css={highlightStyle}></span>Facing issues with network connectivity! 
+						<span css={highlightStyle}></span>Facing issues with network connectivity!
 					</div>
 					<div css={descriptionStyle}>
-						Please check your internet connection and try again.<br/>
+						Please check your internet connection and try again.<br />
 						<NormalButton onClick={handleRetry} css={retryButtonCss}>Retry</NormalButton>
 					</div>
 				</div>
@@ -69,7 +69,14 @@ const NetworkErrorContainer = () => {
 	);
 };
 
-const retryButtonCss =  css`
+const containerCss = css`
+height: 100%;
+background: #080809;
+padding-top: 8px;
+position: relative;
+`;
+
+const retryButtonCss = css`
 	margin-top: 16rem;
 	width: 52rem;
 `;

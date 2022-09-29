@@ -1,11 +1,11 @@
 import { webFrame } from "electron";
 import { getInitialStateRenderer } from "electron-redux";
 import React from "react";
-import {  setShowShouldOnboardingOverlay } from "../store/actions/app";
+import { setShowShouldOnboardingOverlay } from "../store/actions/app";
 import configureStore from "../store/configureStore";
 import { iReduxState } from "../store/reducers";
 import { render } from "react-dom";
-import { Provider} from "react-redux";
+import { Provider } from "react-redux";
 import { Router, Route, Routes } from "react-router-dom";
 import { Store } from "redux";
 import { Global } from "@emotion/react";
@@ -16,7 +16,7 @@ import { LoginScreen } from "./screens/auth/login";
 import { DashboardScreen } from "./screens/dashboard";
 import { SelectProjectScreen } from "../ui/screens/selectProject";
 import { UnDockCodeScreen } from "../ui/screens/undockCode";
-import {SettingsScreen} from "./screens/settings";
+import { SettingsScreen } from "./screens/settings";
 import historyInstance, { CustomRouter } from './utils/history';
 import { ProjectsListScreen } from "./screens/projectList";
 import { ToastSnackbar } from "../ui/components/toast";
@@ -52,7 +52,7 @@ const globalStyle = css`
 
 function InsideRouter() {
     const handleErrorCallback = React.useCallback((err, key, config) => {
-        if(err.message.includes("status code 401")) {
+        if (err.message.includes("status code 401")) {
             console.log("Unauthorized API: ", key, config);
             performGoToUrl("/unauthorized_error");
         } else {
@@ -61,9 +61,9 @@ function InsideRouter() {
     }, []);
 
     return (
-        <SWRConfig value={{   onError: handleErrorCallback.bind(this) }}>
+        <SWRConfig value={{ onError: handleErrorCallback.bind(this) }}>
             <ToastSnackbar />
-            <Global styles={globalStyle}/>
+            <Global styles={globalStyle} />
             <Routes>
                 <Route path="/login" element={<LoginScreen />} />
                 <Route path="/onboarding" element={<AuthOnboardingScreen />} />
@@ -71,26 +71,26 @@ function InsideRouter() {
                 <Route path="/select-project" element={<ProjectsListScreen />} />
                 <Route path="/code-editor" element={<UnDockCodeScreen />} />
                 <Route path="/settings" element={<SettingsScreen />} />
-                <Route path="/recorder" element={<App/>} />
+                <Route path="/recorder" element={<App />} />
 
-                <Route path="/network_error" element={<NetworkErrorContainer/>} />
-                <Route path="/unauthorized_error" element={<UnAuthorizedErrorContainer/>} />
-                <Route path="/invalid_creds_error" element={<InvalidCredsErrorContainer/>} />
+                <Route path="/network_error" element={<NetworkErrorContainer />} />
+                <Route path="/unauthorized_error" element={<UnAuthorizedErrorContainer />} />
+                <Route path="/invalid_creds_error" element={<InvalidCredsErrorContainer />} />
             </Routes>
         </SWRConfig>
     )
 }
 
 function RootApp() {
-   return (
-    <Provider store={store}>
+    return (
+        <Provider store={store}>
             <CustomRouter>
-                <InsideRouter/>
+                <InsideRouter />
             </CustomRouter>
-	</Provider>
-   );
+        </Provider>
+    );
 }
 render(
-	<RootApp/>,
-	document.querySelector("#app-container"),
+    <RootApp />,
+    document.querySelector("#app-container"),
 );

@@ -62,7 +62,7 @@ const ResizableInput = React.forwardRef(({ isEditingProp = false, onEditModeChan
 const labelCSS = css`
   padding-left: 12px;
   font-size: 14px;
-  padding-top: 2px;
+  padding-top: 1px;
 `
 
 

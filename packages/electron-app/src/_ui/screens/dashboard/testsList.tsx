@@ -17,11 +17,9 @@ import { useBuildNotifications } from "../../hooks/tests";
 import { ResizableInput } from "../../components/ResizableInput";
 import { Conditional } from "@dyson/components/layouts";
 
-const TestListNameInput = ({ testName, testId, isActive, isEditing, setIsEditing, className }) => {
+const EditableTestName = ({ testName, testId, isActive, isEditing, setIsEditing, className }) => {
     const [name, setName] = React.useState(testName);
     const inputRef = React.useRef<HTMLInputElement>(null);
-
-
 
     const handleOnChange = React.useCallback((event) => {
         setName(event.target.value);
@@ -94,7 +92,7 @@ const TestListItem = ({ test, isItemSelected, isEditingName, setIsEditingName, i
             </EmojiPicker>
 
 
-            <TestListNameInput css={testNameInputCss} isActive={isHover} testId={test.id} isEditing={isEditingName} setIsEditing={setIsEditingName} testName={test.testName} />
+            <EditableTestName css={testNameInputCss} isActive={isHover} testId={test.id} isEditing={isEditingName} setIsEditing={setIsEditingName} testName={test.testName} />
             <Conditional showIf={!test.firstRunCompleted}>
                 <div css={loadingContainerCss} title={"verifying..."}>
                     <span className="pt-1">verifying</span>
@@ -174,19 +172,7 @@ font-family: 'EmojiMart';
 	padding-left: 2px;
     line-height: 13px;
 `
-const contextMenuDropdownCss = (pos) => {
-    return css`
-        position: absolute;
-        left: ${pos.x}px;
-        top: ${pos.y}px;
-    `;
-};
-const contextMenuDropdownBoxCss = css`
-    position: absolute;
-    width: 130rem;
-    left: 0rem;
-    top: 0rem;
-`;
+
 const runTextCss = css`
     font-family: "Gilroy";
     font-style: normal;
@@ -264,18 +250,12 @@ const loadingIconCss = css`
     height: 18px;
     margin-left: -5x;
 `;
-const itemCss = (isActive: boolean) => {
-    return css`
-        position: relative;
-        background: ${isActive ? "linear-gradient(0deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.03)), rgba(54, 54, 54, 0.2)" : "none"};
-        color: ${isActive ? "#fff" : "#A6A6A6"};
-        border-bottom: 1px solid rgba(153, 153, 153, 0.09);
-    `;
-}
+
 
 const SELECTED_TESTS_MENU = [
-    { id: "edit", label: "Edit", shortcut: null },
     { id: "rename", label: "Rename", shortcut: (<div>Enter</div>) },
+    { id: "edit", label: "Edit test", shortcut: null },
+    { id: "edit", label: "Run test", shortcut: null },
     { id: "delete", label: 'Delete', shortcut: <div>Delete</div> }
 ];
 
@@ -375,23 +355,11 @@ const TestList = ({ tests, deleteTest }) => {
         }
     }, [tests]);
 
-
     return (
         <ListBox contextMenu={{ [ContextMenuTypeEnum.SINGLE]: { callback: handleRightCallback, menuItems: SELECTED_TESTS_MENU }, [ContextMenuTypeEnum.MULTI]: { callback: handleRightCallback, menuItems: MULTI_SELECTED_MENU } }} selectedHeaderActions={SelectedTestActions} items={items} />
     );
 };
 
-const testsCountCss = css`
-    font-family: Gilroy;
-    font-style: normal;
-    font-weight: 400;
-    font-size: 12rem;
-
-    color: rgba(255, 255, 255, 0.67);
-    padding: 0px 46px;
-    border-bottom: 1px solid rgba(153, 153, 153, 0.09);
-    padding-bottom: 6rem;
-`;
 
 
 export { TestList };

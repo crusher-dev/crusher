@@ -6,18 +6,16 @@ import configureStore from "../store/configureStore";
 import { iReduxState } from "../store/reducers";
 import { render } from "react-dom";
 import { Provider } from "react-redux";
-import { Router, Route, Routes } from "react-router-dom";
-import { Store } from "redux";
+import { Route, Routes } from "react-router-dom";
 import { Global } from "@emotion/react";
 import { css } from "@emotion/react";
 import { App } from "./app";
 import "../../static/assets/styles/tailwind.css";
 import { LoginScreen } from "./screens/auth/login";
 import { DashboardScreen } from "./screens/dashboard";
-import { SelectProjectScreen } from "../ui/screens/selectProject";
 import { UnDockCodeScreen } from "../ui/screens/undockCode";
 import { SettingsScreen } from "./screens/settings";
-import historyInstance, { CustomRouter } from './utils/history';
+import { CustomRouter } from './utils/history';
 import { ProjectsListScreen } from "./screens/projectList";
 import { ToastSnackbar } from "../ui/components/toast";
 import { AuthOnboardingScreen } from "../ui/screens/authOnboarding";
@@ -26,6 +24,7 @@ import { NetworkErrorContainer } from "./containers/errors/networkError";
 import { UnAuthorizedErrorContainer } from "./containers/errors/unauthorizedError";
 import { InvalidCredsErrorContainer } from "./containers/errors/invalidCreds";
 import { performGoToUrl } from "../ui/commands/perform";
+import { Provider as JotaiProvider } from "jotai";
 
 webFrame.setVisualZoomLevelLimits(1, 3);
 
@@ -61,23 +60,25 @@ function InsideRouter() {
     }, []);
 
     return (
-        <SWRConfig value={{ onError: handleErrorCallback.bind(this) }}>
-            <ToastSnackbar />
-            <Global styles={globalStyle} />
-            <Routes>
-                <Route path="/login" element={<LoginScreen />} />
-                <Route path="/onboarding" element={<AuthOnboardingScreen />} />
-                <Route path="/" element={<DashboardScreen />} />
-                <Route path="/select-project" element={<ProjectsListScreen />} />
-                <Route path="/code-editor" element={<UnDockCodeScreen />} />
-                <Route path="/settings" element={<SettingsScreen />} />
-                <Route path="/recorder" element={<App />} />
+        <JotaiProvider>
+            <SWRConfig value={{ onError: handleErrorCallback.bind(this) }}>
+                <ToastSnackbar />
+                <Global styles={globalStyle} />
+                <Routes>
+                    <Route path="/login" element={<LoginScreen />} />
+                    <Route path="/onboarding" element={<AuthOnboardingScreen />} />
+                    <Route path="/" element={<DashboardScreen />} />
+                    <Route path="/select-project" element={<ProjectsListScreen />} />
+                    <Route path="/code-editor" element={<UnDockCodeScreen />} />
+                    <Route path="/settings" element={<SettingsScreen />} />
+                    <Route path="/recorder" element={<App />} />
 
-                <Route path="/network_error" element={<NetworkErrorContainer />} />
-                <Route path="/unauthorized_error" element={<UnAuthorizedErrorContainer />} />
-                <Route path="/invalid_creds_error" element={<InvalidCredsErrorContainer />} />
-            </Routes>
-        </SWRConfig>
+                    <Route path="/network_error" element={<NetworkErrorContainer />} />
+                    <Route path="/unauthorized_error" element={<UnAuthorizedErrorContainer />} />
+                    <Route path="/invalid_creds_error" element={<InvalidCredsErrorContainer />} />
+                </Routes>
+            </SWRConfig>
+        </JotaiProvider>
     )
 }
 

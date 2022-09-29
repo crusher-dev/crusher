@@ -5,19 +5,17 @@ import { BasketBallIcon, EditIcon } from "../../icons";
 import { useNavigate } from "react-router-dom";
 import { goFullScreen, performReplayTestUrlAction } from "electron-app/src/ui/commands/perform";
 import { triggerLocalBuild } from "../../utils/recorder";
-import { KeyboardInputEvent, shell } from "electron";
-import { resolveToFrontend } from "electron-app/src/utils/url";
-import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
 import { CloudCrusher } from "electron-app/src/lib/cloud";
 import { ContextMenuTypeEnum, ListBox } from "../../components/selectableList";
-import { useStore } from "react-redux";
 import { EmojiPicker } from "../../components/emojiPicker";
 import Checkbox from "@dyson/components/atoms/checkbox/checkbox";
-import { useBuildNotifications } from "../../hooks/tests";
 import { ResizableInput } from "../../components/ResizableInput";
 import { Conditional } from "@dyson/components/layouts";
+import { useAtom } from "jotai";
+import { editTestNameAtom } from "electron-app/src/store/jotai/testsPage";
 
-const EditableTestName = ({ testName, testId, isActive, isEditing, setIsEditing, className }) => {
+const EditableTestName = ({ testName, testId }) => {
+    const [testEditName, setTestEditName] = useAtom(editTestNameAtom)
     const [name, setName] = React.useState(testName);
     const inputRef = React.useRef<HTMLInputElement>(null);
 
@@ -31,22 +29,34 @@ const EditableTestName = ({ testName, testId, isActive, isEditing, setIsEditing,
 
     const handleKeyDown = React.useCallback((event) => {
         if (event.key === "Enter") {
-            setIsEditing(false);
+            setTestEditName(null)
             handleSubmit();
         }
     }, []);
 
+    const editModeChangeHandle = (mode) => {
+        if (mode === true) {
+            setTestEditName(testId)
+        } else {
+            setTestEditName(null)
+        }
+    }
+
+    const editThisTestName = testEditName === testId;
 
     return (
-        <ResizableInput
-            ref={inputRef}
-            onKeyDown={handleKeyDown}
-            onChange={handleOnChange}
-            value={name}
-            isEditingProp={isEditing}
-            onEditModeChange={setIsEditing.bind(this)}
-        // disabled={!isEditing}
-        />
+        <div>
+            <ResizableInput
+                ref={inputRef}
+                onKeyDown={handleKeyDown}
+                onChange={handleOnChange}
+                value={name}
+                isEditingProp={editThisTestName}
+                onEditModeChange={editModeChangeHandle.bind(this)}
+            // disabled={!isEditing}
+            />
+            <span onClick={editModeChangeHandle.bind(this, true)}>Edit</span>
+        </div>
     );
 };
 
@@ -263,7 +273,7 @@ const MULTI_SELECTED_MENU = [
 ];
 
 const TestList = ({ tests, deleteTest }) => {
-
+    const [_, setTestEditName] = useAtom(editTestNameAtom)
     const [isRenaming, setIsRename] = React.useState(null);
     const navigate = useNavigate();
 
@@ -349,6 +359,7 @@ const TestList = ({ tests, deleteTest }) => {
             performReplayTestUrlAction(selectedList[0], false, selectedTests);
         } else if (id === "rename") {
             setIsRename(selectedList[0]);
+            setTestEditName(selectedList[0);
         }
     }, [tests]);
 

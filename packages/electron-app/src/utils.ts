@@ -19,6 +19,17 @@ function getAppIconPath() {
 	}
 }
 
+function isDevelopment() {
+	return process.env.NODE_ENV === "development"
+}
+
+export function getAppURl() {
+	if (isDevelopment) {
+		return "http://localhost:8080"
+	}
+	return encodePathAsUrl(__dirname, "index.html")
+}
+
 function encodePathAsUrl(...pathSegments: string[]): string {
 	const Path = path.resolve(...pathSegments);
 	return fileUrl(Path);
@@ -57,11 +68,11 @@ function isValidHttpUrl(str: string) {
 
 	const pattern = new RegExp(
 		"^(https?:\\/\\/)?" + // protocol
-			"((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
-			"((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
-			"(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
-			"(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
-			"(\\#[-a-z\\d_]*)?$",
+		"((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
+		"((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
+		"(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
+		"(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
+		"(\\#[-a-z\\d_]*)?$",
 		"i",
 	); // fragment locator
 	return !!pattern.test(str);
@@ -92,7 +103,7 @@ const getUserInfoFromToken = async (token: string) => {
 const getSelectedProjectTestsRequest: () => AxiosRequestConfig = createAuthorizedRequestFunc((authorizationOptions: any) => {
 	const store = getStore();
 	const selectedProject = getCurrentSelectedProjct(store.getState() as any);
-	if(!selectedProject) return null;
+	if (!selectedProject) return null;
 
 	return {
 		url: resolveToBackend(`/projects/${selectedProject}/tests`),
@@ -103,12 +114,12 @@ const getSelectedProjectTestsRequest: () => AxiosRequestConfig = createAuthorize
 
 const getSelectedProjectTests: () => Promise<any> = createAuthorizedRequestFunc(async () => {
 	let axiosRequest = getSelectedProjectTestsRequest();
-	if(!axiosRequest) throw new Error("No project selected");
+	if (!axiosRequest) throw new Error("No project selected");
 
 	return axios(axiosRequest).then((res) => res.data);
 });
 
-const getUserAccountProjects : () => Promise<any> = createAuthorizedRequestFunc((authorizationOptions: any) => {
+const getUserAccountProjects: () => Promise<any> = createAuthorizedRequestFunc((authorizationOptions: any) => {
 	return axios.get(resolveToBackend("/users/actions/getUserAndSystemInfo"), authorizationOptions).then((res) => res.data);
 });
 

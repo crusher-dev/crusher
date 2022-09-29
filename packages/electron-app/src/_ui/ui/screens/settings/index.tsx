@@ -9,7 +9,6 @@ const SettingsScreen = () => {
     const handleClose = React.useCallback(() => {
         return navigate("/");
     }, []);
-
     return (
         <CompactAppLayout title={<span css={titleCss}>Settings</span>} css={containerCss}>
             <div css={contentCss} >
@@ -22,7 +21,6 @@ const SettingsScreen = () => {
 const containerCss = css`
 height: 100%;
 background: #080809;
-padding-top: 8px;
 position: relative;
 `;
 

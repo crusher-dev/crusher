@@ -9,6 +9,8 @@
 	"private": true,
 	"scripts": {
 		"start:dev": "NODE_ENV=development webpack --config webpack/webpack.config.ts",
+		"start:base": "NODE_ENV=development webpack --config webpack/webpack.base.ts",
+		"start:renderer": "NODE_ENV=development webpack server --config webpack/webpack.renderer.ts",
 		"build": "NODE_ENV=production webpack --config webpack/webpack.config.ts",
 		"release": "pnpm build && node scripts/release.js",
 		"extract:deps": "node scripts/extract-binaries.js",

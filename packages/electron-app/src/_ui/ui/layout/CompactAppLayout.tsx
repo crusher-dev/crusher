@@ -3,7 +3,7 @@ import { css } from "@emotion/react";
 import { shell } from "electron";
 import { MenuDropdown } from "electron-app/src/_ui/ui/components/menuDropdownComponent";
 import { LinkPointer } from "../components/LinkPointer";
-import {Conditional} from "@dyson/components/layouts";
+import { Conditional } from "@dyson/components/layouts";
 
 interface IProps {
     showHeader: boolean;
@@ -95,7 +95,7 @@ const dragCss = css`
 
 const headerCss = css`
   display: flex;
-  padding: 2px 8px 2px 28px;
+  padding: 8px 8px 2px 28px;
   align-items: center;
   position: relative;
   z-index: 23424234324234234;

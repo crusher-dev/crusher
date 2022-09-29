@@ -16,6 +16,5 @@ function LoadingScreen() {
 }
 const containerCss = css`
 background: #080809;
-padding-top: 8px;
 `;
 export { LoadingScreen };

@@ -1,21 +1,11 @@
 import React, { memo, useContext } from "react";
 import { css } from "@emotion/react";
 import { Conditional } from "@dyson/components/layouts";
-import { CrusherHammerIcon, DownIcon, DroppdownIconV2, LoadingIconV2, MoreIcon, NavigateBackIcon, NavigateRefreshIcon, RedDotIcon, SettingsIcon } from "../../../../constants/old_icons";
+import {DroppdownIconV2, LoadingIconV2, RedDotIcon, SettingsIcon} from "../../../../constants/old_icons";
 import { useDispatch, batch, useSelector, useStore } from "react-redux";
 import { devices } from "../../../../../devices";
 import { getRecorderInfo, getRecorderInfoUrl, getRecorderState, getSavedSteps, isTestVerified } from "electron-app/src/store/selectors/recorder";
-import {
-	goFullScreen,
-	performNavigation,
-	performReloadPage,
-	performResetAppSession,
-	performSteps,
-	performVerifyTest,
-	preformGoBackPage,
-	saveTest,
-	updateTest,
-} from "../../../../commands/perform";
+import {goFullScreen, performNavigation, performSteps, performVerifyTest, saveTest, updateTest} from "../../../../commands/perform";
 import { addHttpToURLIfNotThere, isValidHttpUrl } from "../../../../../utils";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 import { getAppEditingSessionMeta, getProxyState, shouldShowOnboardingOverlay } from "electron-app/src/store/selectors/app";
@@ -24,7 +14,6 @@ import { TourContext, useTour } from "@reactour/tour";
 import { setShowShouldOnboardingOverlay } from "electron-app/src/store/actions/app";
 import { sendSnackBarEvent } from "../toast";
 import { Button } from "@dyson/components/atoms"
-import { Dropdown } from "@dyson/components/molecules/Dropdown";
 import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
 import {  useNavigate } from "react-router-dom";
 import { MenuDropdown } from "../../../components/menuDropdownComponent";
@@ -62,7 +51,7 @@ enum ITestActionEnum {
 	VERIFY_UPDATE = "VERIFY_UPDATE",
 	SAVE = "SAVE",
 	UPDATE = "UPDATE"
-};
+}
 const SAVE_TEST_ACTION_DROPDOWN_OPTIONS = [
 	{ id: ITestActionEnum.VERIFY_SAVE, content: (<span>Save</span>) },
 	{ id: ITestActionEnum.SAVE, content: (<span>Save</span>) }
@@ -73,19 +62,20 @@ const UPDATE_TEST_ACTION_DROPDOWN_OPTIONS = [
 ];
 
 const SaveVerifyButton = ({ isTestVerificationComplete }) => {
-	const navigate = useNavigate();
-	const totalSecondsToWaitBeforeSave = 5;
-	const editingSessionMeta = useSelector(getAppEditingSessionMeta);
-	const { isOpen, setCurrentStep, setIsOpen } = useTour();
-	const [showActionMenu, setShowActionMenu] = React.useState(false);
+    const navigate = useNavigate();
+    const editingSessionMeta = useSelector(getAppEditingSessionMeta);
+    const {
+        isOpen,
+        setIsOpen
+    } = useTour();
 
-	const dispatch = useDispatch();
-	const store = useStore();
+    const dispatch = useDispatch();
+    const store = useStore();
 
-	const handleProxyWarning = React.useCallback(() => {
+    const handleProxyWarning = React.useCallback(() => {
 		const steps = getSavedSteps(store.getState());
 		const navigationStep = steps.find((step) => step.type === ActionsInTestEnum.NAVIGATE_URL);
-		const startNavigationUrl = navigationStep && navigationStep.payload && navigationStep.payload.meta ? navigationStep.payload.meta.value : "";
+		const startNavigationUrl = navigationStep?.payload?.meta ? navigationStep.payload.meta.value : "";
 		const startUrl = new URL(startNavigationUrl);
 		const proxyState = getProxyState(store.getState());
 
@@ -97,7 +87,7 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 		return { shouldShow: false, startUrl };
 	}, []);
 
-	const verifyTest = (autoSaveType: "UPDATE" | "SAVE", shouldAutoSave: boolean = false) => {
+    const verifyTest = (autoSaveType: "UPDATE" | "SAVE", shouldAutoSave: boolean = false) => {
 		localStorage.setItem("app.showShouldOnboardingOverlay", "false");
 		dispatch(setShowShouldOnboardingOverlay(false));
 		const recorderState = getRecorderState(store.getState());
@@ -129,7 +119,7 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 		}
 	};
 
-	const saveTestToCloud = () => {
+    const saveTestToCloud = () => {
 		if (isOpen) {
 			setIsOpen(false);
 		}
@@ -155,52 +145,48 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 			});
 	};
 
-	const editTestInCloud = () => {
+    const editTestInCloud = () => {
 		if (isOpen) {
 			setIsOpen(false);
 		}
 
-		updateTest().then((res) => {
+		updateTest().then(() => {
 			handleProxyWarning();
 			navigate("/");
 			goFullScreen(false);
 		});
 	};
 
-	const handleCallback = React.useCallback(async (actionType: ITestActionEnum) => {
+    const handleCallback = React.useCallback(async (actionType: ITestActionEnum) => {
 		switch (actionType) {
-			case ITestActionEnum.UPDATE: {
-				await updateTest().then((res) => {
+			case ITestActionEnum.UPDATE:
+                await updateTest().then(() => {
 					navigate("/");
 					goFullScreen(false);
 				});
-				sendSnackBarEvent({ type: "success", message: "Updating test" });
-				break;
-			}
-			case ITestActionEnum.SAVE: {
-				await saveTestToCloud();
-				break;
-			}
-			case ITestActionEnum.VERIFY_UPDATE: {
-				if (isTestVerificationComplete) {
+                sendSnackBarEvent({ type: "success", message: "Updating test" });
+                break;
+			case ITestActionEnum.SAVE:
+                await saveTestToCloud();
+                break;
+			case ITestActionEnum.VERIFY_UPDATE:
+                if (isTestVerificationComplete) {
 					editTestInCloud();
 				} else {
 					verifyTest("UPDATE", true);
 				}
-				break;
-			}
-			case ITestActionEnum.VERIFY_SAVE: {
-				if (isTestVerificationComplete) {
+                break;
+			case ITestActionEnum.VERIFY_SAVE:
+                if (isTestVerificationComplete) {
 					saveTestToCloud();
 				} else {
 					verifyTest("SAVE", true);
 				}
-				break;
-			}
+                break;
 		}
 	}, [isTestVerificationComplete]);
 
-	return editingSessionMeta ? (
+    return editingSessionMeta ? (
 		<ButtonDropdown
 			dropdownCss={buttonDropdownCss}
 			wrapperCss={css`background: #B341F9; border-radius: 8rem; .dropdown-icon { background: rgba(0, 0, 0, 0.2) !important; }`}
@@ -239,7 +225,9 @@ const buttonDropdownMainButtonCss = css`
 
 SaveVerifyButton.whyDidYouRender = true;
 
-const StepActionMenu = ({ showDropDownCallback, callback }) => {
+const StepActionMenu = ({
+    callback
+}) => {
 	const ActionItem = ({ title, id, callback }) => {
 		return (
 			<div
@@ -270,42 +258,38 @@ const dropdownItemTextStyle = css`
 `;
 
 const Toolbar = (props: any) => {
-	const navigate = useNavigate();
+    const [url, setUrl] = React.useState("" || null);
+    const [selectedDevice] = React.useState([recorderDevices[0]]);
+    const [showSettingsModal, setShowSettingsModal] = React.useState(false);
+    const [urlInputError, setUrlInputError] = React.useState({ value: false, message: "" });
+    const [isEditingTestName, setIsEditingTestName] = React.useState(false);
+    const [testName, setTestName] = React.useState(generateRandomTestName());
 
-	const [url, setUrl] = React.useState("" || null);
-	const [selectedDevice, setSelectedDevice] = React.useState([recorderDevices[0]]);
-	const [showSettingsModal, setShowSettingsModal] = React.useState(false);
-	const [urlInputError, setUrlInputError] = React.useState({ value: false, message: "" });
-	const [showMenu, setShowMenu] = React.useState(false);
-	const [isEditingTestName, setIsEditingTestName] = React.useState(false);
-	const [testName, setTestName] = React.useState(generateRandomTestName());
+    const urlInputRef = React.useRef<HTMLInputElement>(null);
+    const recorderInfoUrl = useSelector(getRecorderInfoUrl);
+    const recorderInfo = useSelector(getRecorderInfo);
+    const recorderState = useSelector(getRecorderState);
+    const isTestVerificationComplete = useSelector(isTestVerified);
 
-	const urlInputRef = React.useRef<HTMLInputElement>(null);
-	const recorderInfoUrl = useSelector(getRecorderInfoUrl);
-	const recorderInfo = useSelector(getRecorderInfo);
-	const recorderState = useSelector(getRecorderState);
-	const isTestVerificationComplete = useSelector(isTestVerified);
+    const dispatch = useDispatch();
+    const store = useStore();
+    const tourCont = useContext(TourContext);
 
-	const dispatch = useDispatch();
-	const store = useStore();
-	const tourCont = useContext(TourContext);
-	const { isOpen, currentStep, setCurrentStep } = useTour();
-
-	React.useEffect(() => {
+    React.useEffect(() => {
 		if (recorderInfoUrl.url !== url) {
 			setUrl(recorderInfoUrl.url);
 		}
 	}, [recorderInfoUrl.url]);
 
-	const handleUrlReturn = React.useCallback(() => {
-		const isOpen = tourCont.isOpen;
-		const currentStep = tourCont.currentStep;
-		const setCurrentStep = tourCont.setCurrentStep;
+    const handleUrlReturn = React.useCallback(() => {
+        const {
+            setCurrentStep
+        } = tourCont;
 
-		const recorderInfo = getRecorderInfo(store.getState());
-		const isOnboardingOn = shouldShowOnboardingOverlay(store.getState());
+        const recorderInfo = getRecorderInfo(store.getState());
+        const isOnboardingOn = shouldShowOnboardingOverlay(store.getState());
 
-		if (urlInputRef.current?.value) {
+        if (urlInputRef.current?.value) {
 			const validUrl = addHttpToURLIfNotThere(urlInputRef.current?.value);
 			if (!isValidHttpUrl(validUrl)) {
 				setUrlInputError({ value: true, message: "Please enter a valid URL" });
@@ -370,64 +354,16 @@ const Toolbar = (props: any) => {
 			setUrlInputError({ value: true, message: "" });
 			urlInputRef.current.focus();
 		}
-	}, [selectedDevice]);
+    }, [selectedDevice]);
 
-	const handleChangeDevice = (selected) => {
-		const deviceObj = recorderDevices.find((device) => device.value === selected[0]);
-		setSelectedDevice([deviceObj]);
-		const recorderInfo = getRecorderInfo(store.getState());
-		// if (recorderInfo.url) {
-		// 	// Only perform and set if already recording
-		// 	resetTest(deviceObj.device);
-		// }
-	};
+    const isRecorderInInitialState = recorderState.type === TRecorderState.BOOTING;
 
-	const isRecorderInInitialState = recorderState.type === TRecorderState.BOOTING;
-
-	const goBack = () => {
-		preformGoBackPage();
-	};
-	const refreshPage = () => {
-		performReloadPage();
-	};
-
-	const handleCloseSettingsModal = () => {
+    const handleCloseSettingsModal = () => {
 		setShowSettingsModal(false);
 	};
 
-	const isTestBeingVerified = recorderState.type === TRecorderState.PERFORMING_ACTIONS;
-	const LeftIconComponent = React.useMemo(
-		() => (
-			<Dropdown
-				initialState={showMenu}
-				// dropdownCSS={dropdownStyle}
-				component={
-					<StepActionMenu
-						callback={(id) => {
-							if (id === "REVERIFY") {
-								performVerifyTest(false);
-							} else if (id === "RESET") {
-								performResetAppSession();
-							} else if (id === "BACK") {
-								goBack();
-							}
-							setShowMenu(false);
-						}}
-						showDropDownCallback={() => {
-							setShowMenu(false);
-						}}
-					/>
-				}
-				callback={setShowMenu.bind(this)}
-			>
-				<div css={dropdownContainerStyle}>
-					<MoreIcon css={dropdownMoreIconStyle} />
-				</div>
-			</Dropdown>
-		),
-		[showMenu],
-	);
-	const RightIconComponent = React.useMemo(
+    const isTestBeingVerified = recorderState.type === TRecorderState.PERFORMING_ACTIONS;
+    const RightIconComponent = React.useMemo(
 		() => {
 
 			return (
@@ -447,13 +383,13 @@ const Toolbar = (props: any) => {
 		[selectedDevice, recorderDevices],
 	);
 
-	const handleMenuCallback = React.useCallback((value, isNavigating) => {
+    const handleMenuCallback = React.useCallback((value, isNavigating) => {
 		if (isNavigating) {
 			goFullScreen(false);
 		}
 	}, []);
 
-	const handleOutsideClick = React.useCallback(() => {
+    const handleOutsideClick = React.useCallback(() => {
 		if ((document.querySelector(".testName") as HTMLInputElement)) {
 			setTestName((document.querySelector(".testName") as HTMLInputElement).value);
 			setIsEditingTestName(false);
@@ -461,14 +397,14 @@ const Toolbar = (props: any) => {
 		// Save the new test name somewhere
 	}, [isEditingTestName]);
 
-	const handleKeyPress = React.useCallback((e) => {
+    const handleKeyPress = React.useCallback((e) => {
 		if (e.keyCode === 13) {
 			setTestName((document.querySelector(".testName") as HTMLInputElement).value);
 			setIsEditingTestName(false);
 		}
 	});
 
-	const handleTestNameClick = React.useCallback(() => {
+    const handleTestNameClick = React.useCallback(() => {
 		setIsEditingTestName(true);
 		setTimeout(() => {
 			document.querySelector(".testName").focus();
@@ -477,7 +413,7 @@ const Toolbar = (props: any) => {
 
 	}, []);
 
-	return (
+    return (
 		<div css={containerStyle} {...props}>
 			<div css={css`display: flex; align-items: center;`}>
 				<MenuDropdown
@@ -601,47 +537,6 @@ const verifySaveTestContainerStyle = css`
 StepActionMenu.whyDidYouRender = true;
 
 Toolbar.whyDidYouRender = true;
-const dropdownMoreIconStyle = css`
-	width: 18rem;
-`;
-const dropdownContainerStyle = css`
-	height: 100%;
-	display: flex;
-	align-items: center;
-	background: #0d1010;
-	padding: 0rem 10rem;
-	border-right: 0.35px solid rgba(255, 255, 255, 0.17);
-`;
-const selectBoxStyle = css`
-	.selectBox {
-		:hover {
-			border: none;
-			border-left-width: 1rem;
-			border-left-style: solid;
-			border-left-color: rgba(255, 255, 255, 0.13);
-			border-top-right-radius: 100rem;
-			border-bottom-right-radius: 100rem;
-		}
-		input {
-			width: 50rem;
-			height: 30rem;
-		}
-		outline: none;
-		padding: 14rem;
-		height: 33rem !important;
-		background: none;
-		border-left-width: 1rem;
-		border-left-style: solid;
-		border-left-color: rgba(255, 255, 255, 0.13);
-		border-top-right-radius: 100rem !important;
-		border-bottom-right-radius: 100rem !important;
-	}
-	.selectBox__value {
-		margin-right: 10rem;
-		font-size: 13rem;
-	}
-	width: 104rem;
-`;
 
 const loadingTextStyle = css`
 	margin-left: 12rem;
@@ -658,19 +553,9 @@ const verifyStatusIconStyle = css`
 	margin-left: auto;
 	margin-right: 20rem;
 `;
-const drinkCupTextStyle = css`
-	font-size: 14rem;
-	margin-left: 18rem;
-`;
 const testBeingVerifiedContainerStyle = css`
 	display: flex;
 	align-items: flex-end;
-`;
-const hammerIconStyle = css`
-	width: 19rem;
-	:hover {
-		opacity: 0.8;
-	}
 `;
 const inputContainerStyle = css`
 	left: 50%;
@@ -684,10 +569,6 @@ const inputErrorMessageStyle = css`
 	bottom: -14rem;
 	font-size: 10.5rem;
 	color: #ff4583;
-`;
-const menuContainerStyle = css`
-	font-size: 14rem;
-	color: #fff;
 `;
 const settingsIconStyle = css`
 	height: 15rem;
@@ -713,66 +594,6 @@ const containerStyle = css`
 	z-index: 999;
 	padding-right: 16rem;
 `;
-const inputStyle = css`
-	height: 40rem;
-	.input__rightIconContainer {
-		right: 0px;
-
-		:hover {
-			opacity: 0.8;
-		}
-	}
-	.input__leftIconContainer {
-		border-radius: 8rem 0px 0px 8rem;
-		height: 85%;
-		left: 1rem;
-		.outsideDiv,
-		.showOnClick {
-			height: 100%;
-		}
-		/* To stop border collision */
-		margin-left: 0.5rem;
-		margin-top: 0.5rem;
-		margin-bottom: 0.5rem;
-
-		.dropdown-box {
-			overflow: hidden;
-			width: 104rem;
-			margin-left: 12rem;
-			z-index: 99999;
-		}
-	}
-	& > input {
-		width: 359rem;
-		/* border: 1px solid #9462ff; */
-		outline-color: #9462ff;
-		outline-width: 1px;
-		box-sizing: border-box;
-		border-radius: 8rem 0px 0px 8rem;
-		height: 100%;
-		padding-left: 18rem;
-		padding-right: 110rem;
-
-		background: rgba(77, 77, 77, 0.25) !important;
-		border: 0.5px solid rgba(55, 55, 55, 0.23) !important;
-		border-radius: 10px;
-
-		font-family: Gilroy;
-		font-style: normal;
-		font-weight: 600;
-		font-size: 13rem;
-		color: rgba(255, 255, 255, 0.67);
-
-	}
-	}
-	.dropdown-box {
-		overflow: hidden;
-	}
-	.input__rightIconContainer {
-		right: 1rem;
-		z-index: 9999;
-	}
-`;
 const buttonStyle = css`
 	background: #B341F9!important;
 	font-size: 14rem;
@@ -781,51 +602,6 @@ const buttonStyle = css`
 	border-radius: 8rem !important;
     width: 77rem;
 	height: 36rem;
-`;
-
-const saveButtonStyle = css`
-	width: 116rem;
-	height: 32rem;
-	background: linear-gradient(0deg, #9462ff, #9462ff);
-	border-radius: 6rem;
-	font-family: Gilroy;
-	font-style: normal;
-	letter-spacing: 0.3px;
-	font-weight: 500 !important;
-	font-size: 14rem;
-	line-height: 17rem;
-	border: 0.5px solid transparent;
-	border-right-width: 0rem;
-	border-top-right-radius: 0rem;
-	border-bottom-right-radius: 0rem;
-	color: #ffffff;
-	:hover {
-		border: 0.5px solid #8860de;
-		border-right-width: 0rem;
-		border-top-right-radius: 0rem;
-		border-bottom-right-radius: 0rem;
-	}
-`;
-const recTextStyle = css`
-	font-family: Cera Pro;
-	font-style: normal;
-	font-weight: normal;
-	font-size: 13rem;
-	line-height: 13rem;
-`;
-const onlineDotStyle = css`
-	display: block;
-	width: 8rem;
-	height: 8rem;
-	background: #a8e061;
-	border-radius: 50rem;
-	margin: 0rem;
-`;
-
-const dropDownContainer = css`
-	box-sizing: border-box;
-	width: 80rem;
-	position: relative;
 `;
 
 export { Toolbar };

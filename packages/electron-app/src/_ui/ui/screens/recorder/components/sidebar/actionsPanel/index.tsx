@@ -1,6 +1,6 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { useSelector } from "react-redux";
+import {useSelector, useStore} from "react-redux";
 import { getSelectedElement, isInspectElementSelectorModeOn, isInspectModeOn as _isInspectModeOn } from "electron-app/src/store/selectors/recorder";
 import { InputFocusHint } from "electron-app/src/_ui/ui/components/inputs/inputFocusHint";
 import { InspectModeBanner } from "../inspectModeBanner";
@@ -10,14 +10,15 @@ import { CodeAction } from "./codeAction";
 import { GoBackIcon, InfoIcon, ResetIcon } from "electron-app/src/_ui/constants/icons";
 import { enableJavascriptInDebugger, performVerifyTest } from "electron-app/src/_ui/commands/perform";
 import { setSelectedElement } from "electron-app/src/store/actions/recorder";
-import { useStore } from "react-redux";
 import { filterActionsItems } from "./helper";
 
 interface IProps {
     className?: string;
-};
+}
 
-const ActionsPanel = ({className, ...props}: IProps) => {
+const ActionsPanel = ({
+    className
+}: IProps) => {
     const [searchFilter, setSearchFilter] = React.useState(null);
 
     const isInspectModeOn = useSelector(_isInspectModeOn);
@@ -61,7 +62,7 @@ const ActionsPanel = ({className, ...props}: IProps) => {
     };
     const handleResetTest = () => performVerifyTest(false);
     return (
-        <div className={`${className}`} css={containerCss}>
+        (<div className={String(className)} css={containerCss}>
             <div css={headerCss}>
                 <InputFocusHint onChange={handleOnChange} hint={`⌘ + k`} placeholder={"search actions"}/>
                 <ResetIcon onClick={handleResetTest} css={[resetIconCss]}/>
@@ -71,7 +72,7 @@ const ActionsPanel = ({className, ...props}: IProps) => {
                     <InspectModeBanner/>
                 ) : content}
             </div>
-        </div>
+        </div>)
     );
 };
 

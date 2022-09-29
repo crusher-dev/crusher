@@ -1,28 +1,21 @@
 import { css } from "@emotion/react";
 import React from "react";
 import { Text } from "@dyson/components/atoms/text/Text";
-import { Checkbox, CheckboxProps } from "@dyson/components/atoms/checkbox/checkbox";
+import {CheckboxProps} from "@dyson/components/atoms/checkbox/checkbox";
 import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
 import { Dropdown } from "@dyson/components/molecules/Dropdown";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { Conditional } from "@dyson/components/layouts";
 import { useDispatch, useSelector, useStore } from "react-redux";
 import { getIsStatusBarVisible, getRecorderState, getSavedSteps } from "electron-app/src/store/selectors/recorder";
-import { ConsoleIcon, GreenCheckboxIcon, MoreIcon, MuteIcon, PointerArrowIcon } from "../../../icons";
+import {ConsoleIcon, GreenCheckboxIcon, MoreIcon, PointerArrowIcon} from "../../../icons";
 import { LoadingIcon, WarningIcon } from "electron-app/src/ui/icons";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
-import {
-	deleteRecordedSteps,
-	markRecordedStepsOptional,
-	setStatusBarVisibility,
-	updateRecordedStep,
-	updateRecorderState,
-} from "electron-app/src/store/actions/recorder";
+import {deleteRecordedSteps, markRecordedStepsOptional, setStatusBarVisibility} from "electron-app/src/store/actions/recorder";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
-import { continueRemainingSteps, performJumpTo } from "electron-app/src/ui/commands/perform";
-import { getAppSessionMeta, getRemainingSteps } from "electron-app/src/store/selectors/app";
-import { TemplatesModal } from "./templatesModal";
+import {continueRemainingSteps} from "electron-app/src/ui/commands/perform";
+import {getRemainingSteps} from "electron-app/src/store/selectors/app";
 import { StepInfoEditor } from "../stepEditor";
 import { iAction } from "@shared/types/action";
 import { Tooltip } from "@dyson/components/atoms/tooltip/Tooltip";
@@ -62,39 +55,13 @@ enum StepActionsEnum {
 	JUMP_TO = "JUMP_TO",
 }
 
-const StepActionMenu = ({ showDropDownCallback, callback }) => {
-	const ActionItem = ({ title, id, callback }) => {
-		return (
-			<div
-				css={css`
-					:hover {
-						background: #687ef2;
-					}
-				`}
-				onClick={callback.bind(this, id)}
-			>
-				<TextBlock css={dropdownItemTextStyle}>{title}</TextBlock>
-			</div>
-		);
-	};
-
-	return (
-		<>
-			{/* <ActionItem title={"Create template"} id={GroupActionsEnum.CREATE_TEMPLATE} callback={callback}/> */}
-			<ActionItem title={"Edit"} id={StepActionsEnum.EDIT} callback={callback} />
-			<ActionItem title={"Jump to"} id={StepActionsEnum.JUMP_TO} callback={callback} />
-			<ActionItem title={"Delete"} id={StepActionsEnum.DELETE} callback={callback} />
-		</>
-	);
-};
-
 /*
 	A function to replace text within outer brackets, counting the number of brackets
 	e.g.
 		"Click on [input[type="text"]] [https://google.com]" => "Click on (input[type="text"]) (https://google.com)"
 		"Navigate to [https://google.com]" => "Navigate to (https://google.com)"
 */
-let parseText = (text: string): Array<{ type: "normal" | "highlight"; value: string }> => {
+let parseText = (text: string): { type: "normal" | "highlight"; value: string }[] => {
 	let count = 0;
 	let start = 0;
 	let end = 0;
@@ -122,59 +89,37 @@ let parseText = (text: string): Array<{ type: "normal" | "highlight"; value: str
 		finalArr.push({ type: "highlight", value: text.substring(start + 1) });
 		newText = "";
 	}
-	if (newText && newText.length) {
+	if (newText?.length) {
 		finalArr.push({ type: "normal", value: newText });
 	}
 	return finalArr;
 };
 
 const Step = ({
-	stepIndex,
-	action,
-	title,
-	subtitle,
-	isRunning,
-	isFailed,
-	isCompleted,
-	...props
+    stepIndex,
+    action,
+    title,
+    subtitle,
+    isRunning,
+    isFailed,
+    isCompleted
 }: CheckboxProps & { action: iAction; isCompleted: boolean; stepIndex: string | number; title: string; subtitle: string; isRunning?: boolean; isFailed?: boolean }): JSX.Element => {
-	const [isHover, setIsHover] = React.useState(false);
-	const [showStepActionDropdown, setShowStepActionDropdown] = React.useState(false);
-	const [isPinned, setIsPinned] = React.useState(false);
-	const dispatch = useDispatch();
-	const store = useStore();
-	const recorderState = useSelector(getRecorderState);
+    const [isHover, setIsHover] = React.useState(false);
+    const [, setShowStepActionDropdown] = React.useState(false);
+    const [isPinned, setIsPinned] = React.useState(false);
+    const dispatch = useDispatch();
+    const store = useStore();
 
-	React.useEffect(() => {
+    React.useEffect(() => {
 		setShowStepActionDropdown(false);
 	}, [isHover]);
 
-	const handleStepActionDropdown = (id) => {
-		const recorderState = getRecorderState(store.getState());
-		setShowStepActionDropdown(false);
-		switch (id) {
-			case StepActionsEnum.DELETE: {
-				if (recorderState.type === TRecorderState.ACTION_REQUIRED) {
-					dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
-				}
-				dispatch(deleteRecordedSteps([stepIndex]));
-				break;
-			}
-			case StepActionsEnum.JUMP_TO: {
-				performJumpTo(stepIndex);
-				break;
-			}
-		}
-	};
+    const handleDeleteAndContinue = () => {
+        dispatch(deleteRecordedSteps([stepIndex]));
+        continueRemainingSteps();
+    };
 
-	const handleDeleteAndContinue = () => {
-		const recorderState = getRecorderState(store.getState());
-
-		dispatch(deleteRecordedSteps([stepIndex]));
-		continueRemainingSteps();
-	};
-
-	const updateAndReRunStep = () => {
+    const updateAndReRunStep = () => {
 		const savedSteps = getSavedSteps(store.getState());
 
 		const step = savedSteps[stepIndex];
@@ -188,17 +133,17 @@ const Step = ({
 		]);
 	};
 
-	const finalIsRunning = isRunning;
+    const finalIsRunning = isRunning;
 
-	const handleSetIsPinned = (value) => {
+    const handleSetIsPinned = (value) => {
 		setIsPinned(value);
 		if (!value) {
 			setIsHover(false);
 		}
 	};
 
-	const titleTag =
-		title && title.length
+    const titleTag =
+		title?.length
 			? parseText(title).map((a) => {
 				if (a.type === "highlight") {
 					return (
@@ -212,7 +157,7 @@ const Step = ({
 			})
 			: null;
 
-	return (
+    return (
 		<div
 			onMouseOver={() => {
 				setIsHover(true);
@@ -335,7 +280,9 @@ enum GroupActionsEnum {
 	DELETE = "DELETE",
 }
 
-const GroupActionsMenu = ({ showDropDownCallback, callback }) => {
+const GroupActionsMenu = ({
+    callback
+}) => {
 	const ActionItem = ({ title, id, callback }) => {
 		return (
 			<div
@@ -360,31 +307,22 @@ const GroupActionsMenu = ({ showDropDownCallback, callback }) => {
 	);
 };
 
-const StepsPanel = ({ className, ...props }: any) => {
-	const [checkedSteps, setCheckedSteps] = React.useState(new Set());
-	const recordedSteps = useSelector(getSavedSteps);
-	const remainingSteps = useSelector(getRemainingSteps);
-	const recorderState = useSelector(getRecorderState);
-	const isStatusBarVisible = useSelector(getIsStatusBarVisible);
-	const [showGroupActionsDropdown, setShowGroupActionsDropDown] = React.useState(false);
-	const dispatch = useDispatch();
+const StepsPanel = ({
+    className
+}: any) => {
+    const [checkedSteps, setCheckedSteps] = React.useState(new Set());
+    const recordedSteps = useSelector(getSavedSteps);
+    const remainingSteps = useSelector(getRemainingSteps);
+    const recorderState = useSelector(getRecorderState);
+    const isStatusBarVisible = useSelector(getIsStatusBarVisible);
+    const [showGroupActionsDropdown, setShowGroupActionsDropDown] = React.useState(false);
+    const dispatch = useDispatch();
 
-	React.useEffect(() => {
+    React.useEffect(() => {
 		actionDescriptor.initActionHandlers();
 	}, []);
 
-	const toggleAllSteps = React.useCallback(
-		(checked) => {
-			if (checked) {
-				setCheckedSteps(new Set([...steps.map((step) => step.id)]));
-			} else {
-				setCheckedSteps(new Set());
-			}
-		},
-		[checkedSteps.size, recordedSteps.length],
-	);
-
-	const toggleStep = React.useCallback(
+    const toggleStep = React.useCallback(
 		(index) => {
 			const selectedSteps = new Set(checkedSteps);
 			if (checkedSteps.has(index)) {
@@ -398,23 +336,23 @@ const StepsPanel = ({ className, ...props }: any) => {
 		[checkedSteps, recordedSteps.length],
 	);
 
-	const steps = recordedSteps.map((action, index) => {
+    const steps = recordedSteps.map((action, index) => {
 		return {
 			action: action,
 			id: index,
-			title: action.name ? action.name : actionDescriptor.describeAction(action as any),
-			selector: action.payload && action.payload.selectors && action.payload.selectors.length ? action.payload.selectors[0].value : "window",
+			title: action.name || actionDescriptor.describeAction(action as any),
+			selector: action.payload?.selectors?.length ? action.payload.selectors[0].value : "window",
 			status: action.status,
 		};
 	});
 
-	React.useEffect(() => {
+    React.useEffect(() => {
 		const testListContainer: any = document.querySelector("#steps-list-container");
 		const elementHeight = testListContainer.scrollHeight;
 		testListContainer.scrollBy(0, elementHeight);
 	}, [recordedSteps.length]);
 
-	React.useEffect(() => {
+    React.useEffect(() => {
 		if (recorderState.type === TRecorderState.ACTION_REQUIRED) {
 			const testListContainer: any = document.querySelector("#steps-list-container");
 			const elementHeight = testListContainer.scrollHeight;
@@ -422,7 +360,7 @@ const StepsPanel = ({ className, ...props }: any) => {
 		}
 	}, [recorderState.type]);
 
-	const handleGrouActionSelected = React.useCallback(
+    const handleGrouActionSelected = React.useCallback(
 		(id) => {
 			setShowGroupActionsDropDown(false);
 			setCheckedSteps(new Set());
@@ -444,17 +382,17 @@ const StepsPanel = ({ className, ...props }: any) => {
 		[checkedSteps],
 	);
 
-	const handleContinueTest = () => {
+    const handleContinueTest = () => {
 		continueRemainingSteps();
 	};
 
-	const handleConsoleIconClick = React.useCallback(() => {
+    const handleConsoleIconClick = React.useCallback(() => {
 		dispatch(setStatusBarVisibility(!isStatusBarVisible));
 	}, [isStatusBarVisible]);
 
-	return (
-		<div className={`${className}`} id="steps-pane" css={containerStyle}>
-			<div css={stepsHeaderStyle}>
+    return (
+        (<div className={String(className)} id="steps-pane" css={containerStyle}>
+            <div css={stepsHeaderStyle}>
 				{/* <Checkbox isSelected={recordedSteps.length === checkedSteps.size} callback={toggleAllSteps} /> */}
 				<Text css={stepsTextStyle}>{recordedSteps.length} Steps</Text>
 				<div css={css`margin-left: auto;`}>
@@ -484,23 +422,20 @@ const StepsPanel = ({ className, ...props }: any) => {
 					</div>
 				</Conditional>
 			</div>
-
-			<div className="custom-scroll" id={"steps-list-container"} css={stepsContainerStyle}>
-				{steps.map((step, index) => (
-					<Step
-						isSelectAllType={false}
-						key={step.id}
-						action={step.action}
-						stepIndex={step.id}
-						isRunning={step.status === ActionStatusEnum.STARTED}
-						isCompleted={step.status === ActionStatusEnum.COMPLETED}
-						isFailed={step.status === ActionStatusEnum.FAILED}
-						isSelected={checkedSteps.has(step.id)}
-						callback={() => toggleStep(step.id)}
-						title={step.title}
-						subtitle={step.selector ? step.selector.substr(0, 25) : ""}
-					/>
-				))}
+            <div className="custom-scroll" id={"steps-list-container"} css={stepsContainerStyle}>
+				{steps.map(step => (<Step
+                    isSelectAllType={false}
+                    key={step.id}
+                    action={step.action}
+                    stepIndex={step.id}
+                    isRunning={step.status === ActionStatusEnum.STARTED}
+                    isCompleted={step.status === ActionStatusEnum.COMPLETED}
+                    isFailed={step.status === ActionStatusEnum.FAILED}
+                    isSelected={checkedSteps.has(step.id)}
+                    callback={() => toggleStep(step.id)}
+                    title={step.title}
+                    subtitle={step.selector ? step.selector.substr(0, 25) : ""}
+                />))}
 
 				<Conditional showIf={remainingSteps && remainingSteps.length > 0}>
 					<div
@@ -527,8 +462,8 @@ const StepsPanel = ({ className, ...props }: any) => {
 					</div>
 				</Conditional>
 			</div>
-		</div>
-	);
+        </div>)
+    );
 };
 
 const containerStyle = css`
@@ -579,13 +514,6 @@ const stepsContainerStyle = css`
 	padding-top: 0rem;
 	height: 100%;
 	padding-bottom: 0rem;
-`;
-const runningStepStyle = css`
-	border-left: 3rem solid #9462ff;
-	&:hover {
-		border: 1.5rem solid rgba(255, 255, 255, 0.1) !important;
-		border-left: 3rem solid #9462ff !important;
-	}
 `;
 const stepStyle = css`
 	display: flex;

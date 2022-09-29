@@ -7,7 +7,7 @@ import { shell } from "electron";
 import { Link } from "../../components/Link";
 import { ActionButton } from "electron-app/src/_ui/ui/containers/components/buttons/action.button";
 
-const CreateFirstTest = ({}) => {
+const CreateFirstTest = () => {
 	const navigate = useNavigate();
 
 	const handleCreateTest = React.useCallback(() => {

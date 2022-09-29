@@ -1,5 +1,5 @@
 import React from "react";
-import { getIsCustomCodeOn, getIsInRecordingSession, getRecorderInfo, getRecorderState } from "electron-app/src/store/selectors/recorder";
+import {getIsCustomCodeOn, getIsInRecordingSession} from "electron-app/src/store/selectors/recorder";
 import { useSelector } from "react-redux";
 import { css } from "@emotion/react";
 import { ActionsPanel } from "./actionsPanel";
@@ -13,9 +13,11 @@ import { Conditional } from "@dyson/components/layouts";
 
 interface ISidebarProps {
     className?: string;
-};
+}
 
-const Sidebar = ({ className, ...props }: ISidebarProps) => {
+const Sidebar = ({
+    className
+}: ISidebarProps) => {
     const { currentBuild } = useLocalBuild();
     const isInRecordingSession = useSelector(getIsInRecordingSession);
     const isCustomCodeOn = useSelector(getIsCustomCodeOn);
@@ -29,7 +31,7 @@ const Sidebar = ({ className, ...props }: ISidebarProps) => {
     }, [currentBuild]);
 
     return (
-        <div css={containerCss} className={`${className}`}>
+        (<div css={containerCss} className={String(className)}>
             <Conditional showIf={isInRecordingSession}>
                 <>
                     {topPanel}
@@ -38,8 +40,8 @@ const Sidebar = ({ className, ...props }: ISidebarProps) => {
             </Conditional>
             <ModalManager />
             <TemplatesModal isOpen={false} handleClose={() => { }} />
-        </div>
-    )
+        </div>)
+    );
 };
 
 const containerCss = css`

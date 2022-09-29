@@ -21,7 +21,7 @@ const createAuthorizedRequestFunc = (callback, silent = false) => {
     return (...args) => {
         const store: any = getStore();
         const userInfo = getUserAccountInfo(store.getState());
-        const isUserLoggedIn = userInfo && userInfo.token;
+        const isUserLoggedIn = userInfo?.token;
         if (!isUserLoggedIn && !silent) { throw new Error("User not logged in"); }
 
         const headers = {
@@ -30,7 +30,7 @@ const createAuthorizedRequestFunc = (callback, silent = false) => {
         };
 
         if (isUserLoggedIn) {
-            headers["Authorization"] = `${userInfo.token}`;
+            headers["Authorization"] = String(userInfo.token);
         }
 
         return callback({ headers, withCredentials: true }, ...args);
@@ -41,7 +41,7 @@ const checkIfLoggedIn = () => {
     const store: any = getStore();
     const userInfo = getUserAccountInfo(store.getState());
 
-    return userInfo && userInfo.token ? true : false;
+    return userInfo?.token ? true : false;
 };
 
 export const linkOpen = (link) => shell.openExternal(link);

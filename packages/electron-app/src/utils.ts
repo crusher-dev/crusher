@@ -101,17 +101,15 @@ const getSelectedProjectTestsRequest: () => AxiosRequestConfig = createAuthorize
 	};
 }, true);
 
-const getSelectedProjectTests: () => Promise<any> = createAuthorizedRequestFunc(async (authorizationOptions: any) => {
+const getSelectedProjectTests: () => Promise<any> = createAuthorizedRequestFunc(async () => {
 	let axiosRequest = getSelectedProjectTestsRequest();
 	if(!axiosRequest) throw new Error("No project selected");
 
 	return axios(axiosRequest).then((res) => res.data);
 });
 
-const getUserAccountProjects : () => Promise<any> = createAuthorizedRequestFunc(async (authorizationOptions: any) => {
-	return axios.get(resolveToBackend("/users/actions/getUserAndSystemInfo"), {
-		...authorizationOptions
-	}).then((res) => res.data);
+const getUserAccountProjects : () => Promise<any> = createAuthorizedRequestFunc((authorizationOptions: any) => {
+	return axios.get(resolveToBackend("/users/actions/getUserAndSystemInfo"), authorizationOptions).then((res) => res.data);
 });
 
 export {

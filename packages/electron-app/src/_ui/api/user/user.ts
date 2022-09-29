@@ -1,5 +1,4 @@
 import React from "react";
-import { CloudCrusher } from "electron-app/src/lib/cloud";
 import useRequest from "../../utils/useRequest";
 import { getUserInfoAPIRequest } from "./user.requests";
 import { useNavigate } from "react-router-dom";
@@ -15,7 +14,7 @@ export function useUser() {
     if(userInfo && !userInfo.isUserLoggedIn){
       const userInfoRedux = getUserAccountInfo(store.getState());
       console.log("User info redux", userInfoRedux);
-      if(userInfoRedux && userInfoRedux.token) {
+      if(userInfoRedux?.token) {
           // Invalid crdentials error. Logout
           return navigate("/invalid_creds_error");
       }
@@ -23,7 +22,7 @@ export function useUser() {
     }
   }, [userInfo]);
   const projects = React.useMemo(() => {
-    if(userInfo && userInfo.projects) {
+    if(userInfo?.projects) {
       return userInfo.projects;
     }
     return null;

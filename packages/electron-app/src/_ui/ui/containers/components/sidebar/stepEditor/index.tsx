@@ -6,24 +6,18 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { ActionSpecificInfo } from "./actionSpecificInfo";
 
-function getSelectors(action: iAction) {
-	if (!action.payload.selectors) return "";
+const StepInfoEditor = ({
+    action,
+    isPinned,
+    actionIndex
+}: { action: iAction; actionIndex: number }) => {
+    const [isStepNameEditable, setIsStepNameEditable] = React.useState(false);
+    const [stepName, setStepName] = React.useState(action.name || "Enter step name");
+    const stepNameRef: React.Ref<HTMLInputElement> = React.useRef(null);
 
-	return action.payload.selectors
-		.map((selector, index) => {
-			return selector.value;
-		})
-		.join("\n");
-}
-const StepInfoEditor = ({ action, isPinned, setIsPinned, actionIndex, ...props }: { action: iAction; actionIndex: number }) => {
-	const [isOptional, setIsOptional] = React.useState(!!action.payload.isOptional);
-	const [isStepNameEditable, setIsStepNameEditable] = React.useState(false);
-	const [stepName, setStepName] = React.useState(action.name ? action.name : "Enter step name");
-	const stepNameRef: React.Ref<HTMLInputElement> = React.useRef(null);
+    const dispatch = useDispatch();
 
-	const dispatch = useDispatch();
-
-	const updateStepName = () => {
+    const updateStepName = () => {
 		setIsStepNameEditable(false);
 		dispatch(
 			updateRecordedStep(
@@ -36,37 +30,20 @@ const StepInfoEditor = ({ action, isPinned, setIsPinned, actionIndex, ...props }
 		);
 	};
 
-	const handleOptionalToggle = (state) => {
-		setIsOptional.bind(this, state);
-
-		dispatch(
-			updateRecordedStep(
-				{
-					...action,
-					payload: {
-						...action.payload,
-						isOptional: state,
-					},
-				},
-				actionIndex,
-			),
-		);
-	};
-
-	const handleNameDoubleClick = () => {
+    const handleNameDoubleClick = () => {
 		setIsStepNameEditable(true);
 		setTimeout(() => {
 			stepNameRef.current.focus();
 		});
 	};
 
-	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
 		if (e.keyCode === 13) {
 			updateStepName();
 		}
 	};
 
-	return (
+    return (
 		<div
 			className={"step-info-editor"}
 			onClick={setIsPinned!.bind(this, true)}

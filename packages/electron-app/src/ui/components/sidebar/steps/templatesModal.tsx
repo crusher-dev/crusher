@@ -5,13 +5,12 @@ import { css } from "@emotion/react";
 import { Input } from "@dyson/components/atoms/input/Input";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { useDispatch, useSelector } from "react-redux";
-import { performRunAfterTest } from "electron-app/src/ui/commands/perform";
 import { Toggle } from "@dyson/components/atoms/toggle/toggle";
 import { getAppSettings } from "electron-app/src/store/selectors/app";
 import { setSettngs } from "electron-app/src/store/actions/app";
 import { iReduxState } from "electron-app/src/store/reducers";
 import { sendSnackBarEvent } from "../../toast";
-import { AddIcon, DownIcon, UpIcon } from "electron-app/src/ui/icons";
+import {DownIcon, UpIcon} from "electron-app/src/ui/icons";
 import { Conditional } from "@dyson/components/layouts";
 import { Switch } from "@dyson/components/atoms/toggle/switch";
 
@@ -21,34 +20,30 @@ interface iStartupModalProps {
 }
 
 const TemplatesModal = (props: iStartupModalProps) => {
-	const { isOpen } = props;
-	const appSettings = useSelector(getAppSettings);
-	const [showRequirements, setShowRequirements] = React.useState(false);
+    const { isOpen } = props;
+    const appSettings = useSelector(getAppSettings);
+    const [showRequirements, setShowRequirements] = React.useState(false);
 
-	const [templateName, setTemplateName] = React.useState("");
-	const [frontendEndPoint, setFrontendEndPoint] = React.useState(appSettings.frontendEndPoint || "");
-	const [autoDetectActions, setAutoDetctActions] = React.useState(appSettings.autoDetectActions || false);
-	const [enableMouseTracker, setEnableMouseTracker] = React.useState(appSettings.enableMouseTracker || false);
+    const [templateName, setTemplateName] = React.useState("");
+    const [frontendEndPoint] = React.useState(appSettings.frontendEndPoint || "");
+    const [autoDetectActions, setAutoDetctActions] = React.useState(appSettings.autoDetectActions || false);
+    const [enableMouseTracker, setEnableMouseTracker] = React.useState(appSettings.enableMouseTracker || false);
 
-	const dispatch = useDispatch();
+    const dispatch = useDispatch();
 
-	const handleBackendEndPointChange = (event: any) => {
+    const handleBackendEndPointChange = (event: any) => {
 		setTemplateName(event.target.value);
 	};
 
-	const handleFrontEndPointChange = (event: any) => {
-		setFrontendEndPoint(event.target.value);
-	};
-
-	const handleEnableMouseTrackerCallback = (toggleValue) => {
+    const handleEnableMouseTrackerCallback = (toggleValue) => {
 		setEnableMouseTracker(toggleValue);
 	};
 
-	const handleAutoDetectActionsCallback = (toggleValue) => {
+    const handleAutoDetectActionsCallback = (toggleValue) => {
 		setAutoDetctActions(toggleValue);
 	};
 
-	const saveAction = async () => {
+    const saveAction = () => {
 		const settings: iReduxState["app"]["settings"] = {
 			backendEndPoint: templateName,
 			frontendEndPoint,
@@ -62,9 +57,9 @@ const TemplatesModal = (props: iStartupModalProps) => {
 		props.handleClose();
 	};
 
-	if (!isOpen) return null;
+    if (!isOpen) return null;
 
-	return (
+    return (
 		<Modal modalStyle={modalStyle} onOutsideClick={props.handleClose}>
 			<ModalTopBar title={"Templates"} desc={"Groups series of steps into single shareable step"} closeModal={props.handleClose} />
 			<div

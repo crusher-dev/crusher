@@ -1,5 +1,4 @@
 import React from "react";
-import { Toggle } from "@dyson/components/atoms/toggle/toggle";
 import Switch, { ToggleProps } from "@dyson/components/atoms/toggle/switch";
 import { Input } from "@dyson/components/atoms";
 import { InputProps } from "@dyson/components/atoms/input/Input";
@@ -21,7 +20,7 @@ const FieldInput = (props: IFieldInputProps) => {
 	const { className, label } = props;
 
 	const inputProps = React.useMemo(() => {
-		const clonedProps = { ...props };
+		const clonedProps = props;
 		delete clonedProps.label;
 		delete clonedProps.className;
 		return clonedProps;
@@ -65,7 +64,7 @@ const FieldToggle = (props: IToggleProps) => {
 	const { className } = props;
 
 	const toggleProps = React.useMemo(() => {
-		const clonedProps = { ...props };
+		const clonedProps = props;
 		delete clonedProps.label;
 		delete clonedProps.className;
 
@@ -85,26 +84,16 @@ type IFieldSelectorPickerProps = React.TextareaHTMLAttributes<HTMLTextAreaElemen
 	initialValue?: string;
 	// Applies to the component's container
 	className?: string;
-	onSelectorsPicked: (selectors: Array<iSelectorInfo>) => any;
+	onSelectorsPicked: (selectors: iSelectorInfo[]) => any;
 };
-const FieldSelectorPicker = React.forwardRef((props: IFieldSelectorPickerProps, ref: React.Ref<HTMLTextAreaElement>) => {
-	const { className } = props;
-	const currentRef = ref ? ref : React.createRef(null);
+const FieldSelectorPicker = React.forwardRef((props: IFieldSelectorPickerProps) => {
+    const { className } = props;
 
-	const selectorsInputProps = React.useMemo(() => {
-		const clonedProps = { ...props };
-		delete clonedProps.label;
-		delete clonedProps.className;
-		delete clonedProps.initialValue;
-
-		return clonedProps;
-	}, [props]);
-
-	const handleElementSelectorClick = () => {
+    const handleElementSelectorClick = () => {
 		turnOnElementSelectorInspectMode();
 	};
 
-	React.useEffect(() => {
+    React.useEffect(() => {
 		const handleMessage = (event) => {
 			const { type, selectedElementInfo } = JSON.parse(event.data);
 			if (type === "selected-element-for-selectors") {
@@ -118,7 +107,7 @@ const FieldSelectorPicker = React.forwardRef((props: IFieldSelectorPickerProps, 
 		};
 	}, []);
 
-	return (<InspectElementIcon className={className} onClick={handleElementSelectorClick} css={inspectElementIconStyle} />);
+    return (<InspectElementIcon className={className} onClick={handleElementSelectorClick} css={inspectElementIconStyle} />);
 });
 
 type IFieldEditModeButtonProps = Omit<ButtonProps, "children"> & {
@@ -132,7 +121,7 @@ const FieldEditModeButton = (props: IFieldEditModeButtonProps) => {
 	const { className } = props;
 
 	const buttonProps = React.useMemo(() => {
-		const clonedProps = { ...props };
+		const clonedProps = props;
 		delete clonedProps.label;
 		delete clonedProps.className;
 
@@ -140,15 +129,15 @@ const FieldEditModeButton = (props: IFieldEditModeButtonProps) => {
 	}, [props]);
 
 	return (
-		<div className={`${className}`}>
-			<span>{props.label}</span>
-			<div className={"mt-24"} css={buttonContainerStyle}>
+        (<div className={String(className)}>
+            <span>{props.label}</span>
+            <div className={"mt-24"} css={buttonContainerStyle}>
 				<Button {...buttonProps}>
 					<span css={buttonTextStyle}>Open Edit Modal</span>
 				</Button>
 			</div>
-		</div>
-	);
+        </div>)
+    );
 };
 
 const buttonTextStyle = css`
@@ -161,36 +150,6 @@ const buttonContainerStyle = css`
 	position: relative;
 	display: flex;
 	justify-content: center;
-`;
-
-const textAreaStyle = css`
-	width: 100%;
-	height: 100rem;
-	background: rgba(0, 0, 0, 0.34);
-	border: 1px solid rgba(196, 196, 196, 0.2);
-	border-radius: 4rem;
-	resize: none;
-	padding: 4rem 8rem;
-	line-height: 20rem;
-	font-size: 12rem;
-`;
-
-const scrollBarStyle = css`
-	::-webkit-scrollbar {
-		display: none;
-	}
-`;
-
-const selectorPickerContainerStyle = css`
-	flex: 1;
-	position: relative;
-	textarea {
-		font-size: 12rem;
-	}
-`;
-const selectorPickerLabelStyle = css`
-	align-self: start;
-	margin-top: 4rem;
 `;
 
 const fieldContainerStyle = css`

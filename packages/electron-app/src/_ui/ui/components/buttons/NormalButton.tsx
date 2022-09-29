@@ -4,16 +4,16 @@ import { Button } from "@dyson/components/atoms";
 
 const NormalButton = ({className, onClick, children, ...props}) => {
 	return (
-		<Button
+        (<Button
 			onClick={onClick}
 			bgColor="tertiary-outline"
 			css={buttonCss}
-			className={`${className}`}
+			className={String(className)}
 			{...props}
 		>
-			{children}
-		</Button>
-	);
+            {children}
+        </Button>)
+    );
 };
 
 

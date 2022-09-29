@@ -2,37 +2,33 @@ import React from "react";
 import { css } from "@emotion/react";
 import { CompactAppLayout } from "../../layout/CompactAppLayout";
 import { Footer } from "../../layout/Footer";
-import { Navigate, useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import { useStore } from "react-redux";
 import { setSelectedProject } from "electron-app/src/store/actions/app";
-import { getUserAccountProjects } from "electron-app/src/utils";
 import { LoadingScreen } from "../loading";
 import { useUser } from "../../../api/user/user";
-import { ListBox } from "../../components/selectableList";
 import { NormalList } from "../../components/NormalList";
-import Wrapper from "figma-design-scaler/dist/dist/main";
 import { BasketBallIcon, ConsoleIconV3, RocketIcon } from "../../../constants/icons";
 import { EmojiPicker } from "../../components/emojiPicker";
-import Checkbox from "@dyson/components/atoms/checkbox/checkbox";
 import { CloudCrusher } from "electron-app/src/lib/cloud";
 
 const CreateProjectBanner = ({ className, ...props }) => {
 	return (
-		<div css={createProjectBannerContainerCss} className={`${className}`} {...props}>
-			<div css={createProjecTitleCss}>
+        (<div css={createProjectBannerContainerCss} className={String(className)} {...props}>
+            <div css={createProjecTitleCss}>
 				<RocketIcon css={rocketIconCss} />
 				<span css={createProjectTitleTextCss}>Create new project</span>
 			</div>
-			<div css={createProjectDescriptionCss}>running command in git repo is faster way</div>
-			<div css={createProjectActionsCss}>
+            <div css={createProjectDescriptionCss}>running command in git repo is faster way</div>
+            <div css={createProjectActionsCss}>
 				<div css={[chooseDirButtonCss, hoverButtonCss]}>Choose dir</div>
 				<div css={[runCommandButtonCss, hoverButtonCss]}>
 					<ConsoleIconV3 css={consoleIconCss} />
 					<span>run command</span>
 				</div>
 			</div>
-		</div>
-	);
+        </div>)
+    );
 }
 
 const chooseDirButtonCss = css`
@@ -129,7 +125,9 @@ const createProjectDescriptionCss = css`
 `;
 
 const ProjectsListScreen = () => {
-	const { projects, userInfo, error } = useUser();
+	const {
+        projects
+    } = useUser();
 	const navigate = useNavigate();
 
 	React.useEffect(() => {
@@ -139,13 +137,13 @@ const ProjectsListScreen = () => {
 	}, [projects]);
 	if (!projects) return (<LoadingScreen />);
 	return (
-		// <Wrapper figmaUrl={"https://www.figma.com/proto/lK8wsCW8hLzssu5Z987lky/Crusher-%7C-Aug-(Copy)?node-id=2201%3A3868&scaling=scale-down-width&page-id=988%3A3439&starting-point-node-id=988%3A3817"}>
-		<CompactAppLayout css={containerCss} title={<div css={titleCss}>Select project</div>} footer={<Footer />}>
-			<ProjectList projects={projects} />
-			{projects.length < 3 ? (<CreateProjectBanner css={createProjectBannerCss} />) : ""}
-		</CompactAppLayout>
-		// </Wrapper>
-	);
+        // <Wrapper figmaUrl={"https://www.figma.com/proto/lK8wsCW8hLzssu5Z987lky/Crusher-%7C-Aug-(Copy)?node-id=2201%3A3868&scaling=scale-down-width&page-id=988%3A3439&starting-point-node-id=988%3A3817"}>
+        // </Wrapper>
+        (<CompactAppLayout css={containerCss} title={<div css={titleCss}>Select project</div>} footer={<Footer />}>
+            <ProjectList projects={projects} />
+            {projects.length < 3 ? (<CreateProjectBanner css={createProjectBannerCss} />) : ""}
+        </CompactAppLayout>)
+    );
 }
 
 const createProjectBannerCss = css`
@@ -170,16 +168,15 @@ const titleCss = css`
 
 
 const ProjectItem = ({ project, defaultEmoji }) => {
-	const [isOpen, setIsOpen] = React.useState(false);
-	const [emoji, setEmoji] = React.useState(defaultEmoji);
+    const [emoji, setEmoji] = React.useState(defaultEmoji);
 
-	const handleEmojiSelected = React.useCallback((emoji) => {
+    const handleEmojiSelected = React.useCallback((emoji) => {
 		if (emoji) {
 			setEmoji(emoji.native);
 			CloudCrusher.updateProjectEmoji(project.id, emoji.native);
 		}
 	}, []);
-	return (
+    return (
 		<div css={css`width: 100%; height: 100%; padding: 12px 17px; padding-right: 40px; display: flex; align-items: center;`}>
 			<EmojiPicker onEmojiSelected={handleEmojiSelected}>
 				<div className={"emoji-block"} css={emojiBlock}>
@@ -227,15 +224,15 @@ const ProjectList = ({ projects }) => {
 
 	const handleProjectItemClick = React.useCallback((projectId, event) => {
 		const paths = event.nativeEvent.path;
-		const isEmojiClicked = paths.some((path) => path.classList && path.classList.contains("emoji-block"));
+		const isEmojiClicked = paths.some((path) => path.classList?.contains("emoji-block"));
 		if (isEmojiClicked) return;
 
 		store.dispatch(setSelectedProject(projectId))
 		setTimeout(() => navigate("/"), 50);
 	}, []);
 
-	const items: Array<any> = React.useMemo(() => {
-		return projects.map((project, index) => {
+	const items: any[] = React.useMemo(() => {
+		return projects.map(project => {
 			return {
 				id: project.id,
 				content: <ProjectItem defaultEmoji={project.emoji} project={project} />

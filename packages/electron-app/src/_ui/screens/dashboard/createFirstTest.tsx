@@ -7,7 +7,7 @@ import { shell } from "electron";
 import {ActionButton} from "../../../ui/components/create-first-test";
 import {Link} from "../../ui/components/Link";
 
-const CreateFirstTest = ({ }) => {
+const CreateFirstTest = () => {
 	const navigate = useNavigate();
 
 	const handleCreateTest = React.useCallback(() => {

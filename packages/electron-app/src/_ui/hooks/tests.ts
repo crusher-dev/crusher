@@ -62,7 +62,7 @@ const useLocalBuild = () => {
     const builds = useSelector(getBuilds);
     const currentBuild = useSelector(getCurrentLocalBuild);
 
-    const handleTestCompleted = (testId: any) => {
+    const handleTestCompleted = () => {
 
     };
     return { handleTestCompleted, builds, currentBuild };

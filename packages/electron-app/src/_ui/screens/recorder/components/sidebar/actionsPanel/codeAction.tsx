@@ -1,19 +1,20 @@
 import React from "react";
-import { performTakePageScreenshot } from "electron-app/src/ui/commands/perform";
 import { emitShowModal } from "electron-app/src/ui/components/modals";
 import { ActionsList } from "./actionsList";
-import { getItemsFromActionsData } from "./helper";
-import { CodeIcon, PageIcon } from "electron-app/src/_ui/icons";
+import {CodeIcon} from "electron-app/src/_ui/icons";
 import { css } from "@emotion/react";
 
 const actionsData = require("./actions.json");
 interface IProps {
     className?: string;
     filteredList: any;
-};
+}
 
-const CodeAction = ({ className, filteredList, ...props }: IProps) => {
-    const handleCallback = React.useCallback((id) => {
+const CodeAction = ({
+    className,
+    filteredList
+}: IProps) => {
+    const handleCallback = React.useCallback(() => {
         emitShowModal({ type: "CUSTOM_CODE" });
     }, []);
 
@@ -21,14 +22,14 @@ const CodeAction = ({ className, filteredList, ...props }: IProps) => {
     if (!isCodePresent) return null;
 
     return (
-        <ActionsList
+        (<ActionsList
             onClick={handleCallback}
-            className={`${className}`}
+            className={String(className)}
             title={"code"}
             icon={<CodeIcon css={codeIconCss} />}
             callback={handleCallback}
-        />
-    )
+        />)
+    );
 };
 
 const codeIconCss = css`

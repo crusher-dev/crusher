@@ -4,28 +4,17 @@ import { useSelector, useStore } from "react-redux";
 import { css } from "@emotion/react";
 import { Conditional } from "@dyson/components/layouts";
 import { getLogs } from "electron-app/src/store/selectors/logger";
-import { MiniCrossIcon, PlayIconV2, UpMaximiseIcon } from "../../../../constants/old_icons";
-import { ObjectInspector, TableInspector, chromeDark, ObjectRootLabel, ObjectLabel } from "react-inspector";
+import {MiniCrossIcon} from "../../../../constants/old_icons";
+import {ObjectInspector, chromeDark} from "react-inspector";
 import { BrowserButton } from "../buttons/browser.button";
 import { CustomCodeModal } from "../modals/page/customCodeModal";
 import { modalEmitter } from "../modals";
 import { getRecorderState, getSavedSteps } from "electron-app/src/store/selectors/recorder";
 import { updateRecorderState } from "electron-app/src/store/actions/recorder";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
-import { now } from "electron-app/src/main-process/now";
 import { HoverCard } from "@dyson/components/atoms/tooltip/Tooltip1";
 import { DocsIcon, UpDownSizeIcon } from "electron-app/src/_ui/constants/icons";
 import { HelpContent } from "electron-app/src/_ui/ui/components/stickyFooter";
-
-function formatLogs(logs: Array<ILoggerReducer["logs"][0]>): Array<ILoggerReducer["logs"][0]> {
-	logs = logs.map((log, index) => {
-		return { ...log, diff: index == 0 ? "0" : (log.time - logs[index - 1].time).toFixed(2) };
-	});
-	const noParentLogs = logs.filter((log: ILoggerReducer["logs"][0]) => !log.parent);
-	return noParentLogs.map((log) => {
-		return { ...log, children: logs.filter((_log: ILoggerReducer["logs"][0]) => _log.parent === log.id) };
-	});
-}
 
 interface ITabButtonProps {
 	title: string;
@@ -35,7 +24,12 @@ interface ITabButtonProps {
 	callback?: any;
 }
 const TabButton = (props: ITabButtonProps) => {
-	const { title, className, selected, callback, count } = props;
+	const {
+        className,
+        selected,
+        callback,
+        count
+    } = props;
 	if (count === 0) return null;
 	return (
 		<div
@@ -80,23 +74,6 @@ const SAMPLE_CONTEXT = {
 	userPhone: "9876543210",
 };
 
-const FIGMA_SAMPLE_CONTEXT = {
-	string: "this is a test ...",
-	integer: 42,
-	array: [1, 2, 3, "test", null],
-	float: 3.141592653589793,
-	undefined: undefined,
-	object: {
-		"first-child": true,
-		"second-child": false,
-		"last-child": null,
-	},
-	string_number: "1234",
-};
-
-const defaultNodeRenderer = ({ depth, name, data, isNonenumerable, expanded }) =>
-	depth === 0 ? <ObjectRootLabel name={name} data={data} /> : <ObjectLabel name={name} data={data} isNonenumerable={isNonenumerable} />;
-
 
 const ArrowRightIcon = (props) => (
 	<svg
@@ -112,7 +89,7 @@ const ArrowRightIcon = (props) => (
 	</svg>
 );
 
-const StatusBar = (props: any) => {
+const StatusBar = () => {
 	const [currentModal, setCurrentModal] = React.useState({ type: null, stepIndex: null });
 	const store = useStore();
 
@@ -142,11 +119,10 @@ const StatusBar = (props: any) => {
 		});
 	}, []);
 
-	const closeModal = (isDocking: boolean = false) => {
-		const recorderState = getRecorderState(store.getState());
-		setCurrentModal({ type: null, stepIndex: null });
-		window["openLogTime"] = performance.now();
-	};
+	const closeModal = () => {
+        setCurrentModal({ type: null, stepIndex: null });
+        window["openLogTime"] = performance.now();
+    };
 
 	React.useEffect(() => {
 		if (logs && logs.get("_").length > 0) {
@@ -159,7 +135,7 @@ const StatusBar = (props: any) => {
 	}, [logs]);
 
 	const LogItem = (props: {
-		log: ILog & { children: Array<ILog>; diff: string };
+		log: ILog & { children: ILog[]; diff: string };
 		diff: string;
 		className?: string;
 		shouldShowChildren;
@@ -167,11 +143,11 @@ const StatusBar = (props: any) => {
 		const { log, shouldShowChildren } = props;
 		const [showChildrens, setShowChildrens] = React.useState(shouldShowChildren);
 
-		const hasChildrens = React.useMemo(() => (log.children && log.children.length), [log]);
+		const hasChildrens = React.useMemo(() => (log.children?.length), [log]);
 
 		return (
-			<div className={`${props.className}`}>
-				<div
+            (<div className={String(props.className)}>
+                <div
 					css={css`
 						padding-top: 16rem;
 						display: flex;
@@ -203,8 +179,8 @@ const StatusBar = (props: any) => {
 						</span>
 					</div>
 				</div>
-				{showChildrens && log.children && log.children.length ?
-					log.children.map((child: ILog & { children: Array<ILog>; diff: string }) => {
+                {showChildrens && log.children && log.children.length ?
+					log.children.map((child: ILog & { children: ILog[]; diff: string }) => {
 						return (
 							<LogItem
 								css={css`
@@ -216,8 +192,8 @@ const StatusBar = (props: any) => {
 							/>
 						);
 					}) : ""}
-			</div>
-		);
+            </div>)
+        );
 	};
 
 	const handleTabSelection = (tabType: TabsEnum) => {
@@ -236,10 +212,9 @@ const StatusBar = (props: any) => {
 
 
 	const getFormattedMessage = (logMessage) => {
-		const upperCase = (str) => str.charAt(0).toUpperCase() + str.slice(1);
-		const isInfo = logMessage.type === "info";
+        const upperCase = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 
-		return <div css={css`display: flex; align-items: center; font-family: 'Gilroy';
+        return <div css={css`display: flex; align-items: center; font-family: 'Gilroy';
 		font-style: normal;
 		font-weight: 400;
 		font-size: 13.4rem;
@@ -247,7 +222,7 @@ const StatusBar = (props: any) => {
 			<span css={css`color: rgba(90, 196, 255, 1); font-weight: 600;`}>{upperCase(logMessage.type)}:</span>
 			<span className={"ml-4"}>{(logMessage.message.length > 100 ? logMessage.message.substr(0, 100) + "..." : logMessage.message)}</span>
 		</div>;
-	};
+    };
 
 	const handleToggle = React.useCallback((e: any) => {
 		e.preventDefault();
@@ -256,7 +231,7 @@ const StatusBar = (props: any) => {
 	}, [clicked]);
 
 	return (
-		<div
+        (<div
 			css={[
 				css`
 					position: absolute;
@@ -272,7 +247,7 @@ const StatusBar = (props: any) => {
 					: undefined,
 			]}
 		>
-			{currentModal && currentModal.type === "CUSTOM_CODE" ? (
+            {currentModal && currentModal.type === "CUSTOM_CODE" ? (
 				<div
 					css={css`
 						flex: 1;
@@ -295,9 +270,9 @@ const StatusBar = (props: any) => {
 			) : (
 				""
 			)}
-			<div
+            <div
 				id={`logsTab`}
-				className={`${clicked ? "expandBar" : ""}`}
+				className={String(clicked ? "expandBar" : "")}
 				css={[
 					statusBarContainerStyle,
 					clicked
@@ -411,7 +386,7 @@ const StatusBar = (props: any) => {
 							{logs && logs.get("_").length
 								? logs.get("_").map((log: ILog, index: number) => {
 									// console.log("Log time", log.time,  window["openLogTime"]/1000, log.time - (window["openLogTime"]/1000) );
-									return <LogItem diff={"0"} shouldShowChildren={log.time - (window["openLogTime"]) >= 0 && index == logs.get("_").length - 1} log={{ ...log, children: logs.get(log.id) }} key={log.id} />;
+									return <LogItem diff={"0"} shouldShowChildren={log.time - (window["openLogTime"]) >= 0 && index === logs.get("_").length - 1} log={{ ...log, children: logs.get(log.id) }} key={log.id} />;
 								})
 								: ""}
 						</div>
@@ -477,15 +452,15 @@ const StatusBar = (props: any) => {
 					</Conditional>
 				</Conditional>
 			</div>
-			<style>
+            <style>
 				{`
 			.expandBar {
 				max-height: 369rem;
 			}
 		`}
 			</style>
-		</div>
-	);
+        </div>)
+    );
 };
 const docsButtonCss = css`
 background: #0F1010;

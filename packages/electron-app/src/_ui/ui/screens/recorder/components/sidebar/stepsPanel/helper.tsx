@@ -6,7 +6,7 @@ import { SELECTOR_TYPE } from "unique-selector/src/constants";
 		"Click on [input[type="text"]] [https://google.com]" => "Click on (input[type="text"]) (https://google.com)"
 		"Navigate to [https://google.com]" => "Navigate to (https://google.com)"
 */
-let parseStepNameText = (text: string): Array<{ type: "normal" | "highlight"; value: string }> => {
+let parseStepNameText = (text: string): { type: "normal" | "highlight"; value: string }[] => {
 	let count = 0;
 	let start = 0;
 	let end = 0;
@@ -34,14 +34,15 @@ let parseStepNameText = (text: string): Array<{ type: "normal" | "highlight"; va
 		finalArr.push({ type: "highlight", value: text.substring(start + 1) });
 		newText = "";
 	}
-	if (newText && newText.length) {
+	if (newText?.length) {
 		finalArr.push({ type: "normal", value: newText });
 	}
 	return finalArr;
 };
 
 const TextHighlighter = ({text}, shouldStyle = false) => {
-	if(!text) [];
+	if (!text)
+        {}
 
     return parseStepNameText(text).map((a) => {
         if (a.type === "highlight") {
@@ -56,8 +57,9 @@ const TextHighlighter = ({text}, shouldStyle = false) => {
   });
 };
 
-const TextHighlighterText = ({text}, shouldStyle = false) => {
-	if(!text) [];
+const TextHighlighterText = ({text}) => {
+	if (!text)
+        {}
     return parseStepNameText(text).map((a) => {
 		return a.value;
   });

@@ -9,20 +9,20 @@ import { goFullScreen } from "../../../../commands/perform";
 
 export const ActionButton = ({ title, className, onClick }) => {
 	return (
-		<Button
+        (<Button
 			id={"verify-save-test"}
 			onClick={(e) => {
 				e.preventDefault();
 				e.stopPropagation();
 				onClick(e);
 			}}
-			className={`${className}`}
+			className={String(className)}
 			bgColor="tertiary-outline"
 			css={saveButtonStyle}
 		>
-			<span>{title}</span>
-		</Button>
-	);
+            <span>{title}</span>
+        </Button>)
+    );
 };
 
 const saveButtonStyle = css`
@@ -55,7 +55,7 @@ export const DocsGoBackActionBar = ({ buttonTitle, buttonCallback }) => {
 	);
 };
 
-export const CreateFirstTest = ({}) => {
+export const CreateFirstTest = () => {
 	const navigate = useNavigate();
 
 	const handleCreateTest = React.useCallback(() => {

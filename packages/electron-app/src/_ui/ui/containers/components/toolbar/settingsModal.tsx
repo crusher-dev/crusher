@@ -63,7 +63,7 @@ const SettingsModalContent = ({ className, ...props }: iStartupModalProps & { cl
 	};
 
 
-	const saveAction = async () => {
+	const saveAction = () => {
 		const settings: iReduxState["app"]["settings"] = {
 			backendEndPoint,
 			frontendEndPoint,
@@ -107,8 +107,8 @@ const SettingsModalContent = ({ className, ...props }: iStartupModalProps & { cl
 	};
 
 	return (
-		<div css={formContainerStyle} className={`${className}`}>
-			<div
+        (<div css={formContainerStyle} className={String(className)}>
+            <div
 				css={css`
 				font-size: 15rem;
 				font-weight: 600;
@@ -118,14 +118,14 @@ const SettingsModalContent = ({ className, ...props }: iStartupModalProps & { cl
 			>
 				General
 			</div>
-			<hr
+            <hr
 				css={css`
 				margin-top: 8rem;
 				border-color: rgb(255, 255, 255, 0.1);
 				height: 0.1rem;
 			`}
 			/>
-			<div
+            <div
 				css={css`
 				margin-top: 16rem;
 			`}
@@ -180,8 +180,7 @@ const SettingsModalContent = ({ className, ...props }: iStartupModalProps & { cl
 					/>
 				</div>
 			</div>
-
-			<div
+            <div
 				css={css`
 				font-size: 15rem;
 				font-weight: 600;
@@ -192,14 +191,14 @@ const SettingsModalContent = ({ className, ...props }: iStartupModalProps & { cl
 			>
 				Recorder
 			</div>
-			<hr
+            <hr
 				css={css`
 				margin-top: 8rem;
 				border-color: rgb(255, 255, 255, 0.1);
 				height: 0.1rem;
 			`}
 			/>
-			<div
+            <div
 				css={css`
 				margin-top: 16rem;
 			`}
@@ -245,8 +244,7 @@ const SettingsModalContent = ({ className, ...props }: iStartupModalProps & { cl
 					/>
 				</div>
 			</div>
-
-			<div css={submitFormContainerStyle} className={"submit-action-button"}>
+            <div css={submitFormContainerStyle} className={"submit-action-button"}>
 				<div
 					onClick={handleConnectToCloud}
 					css={css`
@@ -276,8 +274,8 @@ const SettingsModalContent = ({ className, ...props }: iStartupModalProps & { cl
 					Save
 				</Button>
 			</div>
-		</div>
-	);
+        </div>)
+    );
 }
 
 const SettingsModal = (props: iStartupModalProps) => {

@@ -4,7 +4,7 @@ import Input from "@dyson/components/atoms/input/Input";
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
 
 const ResizableInput = React.forwardRef(({ isEditingProp = false, onEditModeChange, selectAllOnDoubleClick = true, className, value, ...props }, ref) => {
-  const [width, setWidth] = useState(0);
+  const [, setWidth] = useState(0);
   const [isEditing, setIsEditing] = useState(isEditingProp)
   const span = useRef();
 
@@ -17,7 +17,7 @@ const ResizableInput = React.forwardRef(({ isEditingProp = false, onEditModeChan
 
   // set width when span is set
   useEffect(() => {
-    if (span && span.current) {
+    if (span?.current) {
       setWidth(span?.current?.offsetWidth);
     }
   }, [span]);
@@ -44,7 +44,7 @@ const ResizableInput = React.forwardRef(({ isEditingProp = false, onEditModeChan
   }
 
   return (
-    <OnOutsideClick onClick={() => {
+    (<OnOutsideClick onClick={() => {
       setIsEditing(false);
       onEditModeChange(false);
     }}>
@@ -56,9 +56,8 @@ const ResizableInput = React.forwardRef(({ isEditingProp = false, onEditModeChan
         onBlur={() => {
           setIsEditing(false);
           onEditModeChange(isEditingProp);
-        }} title="" initialValue={value} size="small" className={`${className}`} css={inputCss} ref={ref} type="text" {...props} />
-
-    </OnOutsideClick>
+        }} title="" initialValue={value} size="small" className={String(className)} css={inputCss} ref={ref} type="text" {...props} />
+    </OnOutsideClick>)
   );
 });
 

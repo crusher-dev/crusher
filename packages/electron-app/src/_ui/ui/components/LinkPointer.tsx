@@ -12,13 +12,13 @@ interface IProps {
 const LinkPointer = ({ children, showExternalIcon = true, className, ...props }: IProps) => {
     const { onClick } = props;
     return (
-        <div className={`${className}`} onClick={onClick} css={containerCss}>
+        (<div className={String(className)} onClick={onClick} css={containerCss}>
             {children}
             <Conditional showIf={showExternalIcon}>
                 <PointerIcon css={pointerIconCss} />
             </Conditional>
-        </div>
-    )
+        </div>)
+    );
 };
 
 const containerCss = css`

@@ -1,11 +1,10 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { BulbIcon, CrossIcon, CrusherHammerColorIcon, CrusherHammerIcon, InspectElementIcon, LoadingIconV2, LogoV2, MiniCrossIcon, SettingsIcon } from "../icons";
+import {LoadingIconV2, LogoV2, MiniCrossIcon} from "../icons";
 import { shell } from "electron";
 import { DropdownIconSVG } from "@dyson/assets/icons";
 import { useNavigate } from "react-router-dom";
-import { useInView } from "react-intersection-observer";
-import { getBuildReport, performExit } from "../commands/perform";
+import {performExit} from "../commands/perform";
 import { resolveToFrontEndPath } from "@shared/utils/url";
 import { useStore } from "react-redux";
 import { getAppSettings, getCurrentSelectedProjct } from "electron-app/src/store/selectors/app";
@@ -38,7 +37,7 @@ export { Link };
 function capitalize(s) {
 	return s[0].toUpperCase() + s.slice(1).toLowerCase();
 }
-export function StatusMessageBar({ isLoadingScreen }) {
+export function StatusMessageBar({}) {
 	const [shouldShow, setShouldShow] = React.useState(false);
 	const [testStatus, setTestStatus] = React.useState(null);
 	const [buildId, setBuildId] = React.useState(null);
@@ -79,7 +78,7 @@ export function StatusMessageBar({ isLoadingScreen }) {
 			const interval = setInterval(() => {
 				CloudCrusher.getBuildReport(buildId).then((res) => {
 					setTestStatus(res.status);
-					if (res.status != "RUNNING") {
+					if (res.status !== "RUNNING") {
 						clearInterval(interval);
 					}
 				});
@@ -194,12 +193,15 @@ const statusTextStyle = css`
 	color: #ffffff;
 `;
 
-function ActionButtonDropdown({ setShowActionMenu, isRecorder, ...props }) {
-	const navigate = useNavigate();
-	const store = useStore();
-	const [projectConfigFile, setProjectConfigFile] = React.useState(null);
+function ActionButtonDropdown({
+    setShowActionMenu,
+    isRecorder
+}) {
+    const navigate = useNavigate();
+    const store = useStore();
+    const [projectConfigFile, setProjectConfigFile] = React.useState(null);
 
-	React.useEffect(() => {
+    React.useEffect(() => {
 		try {
 			const projectId = getCurrentSelectedProjct(store.getState() as any);
 			const projectConfigFile = window.localStorage.getItem("projectConfigFile");
@@ -207,10 +209,13 @@ function ActionButtonDropdown({ setShowActionMenu, isRecorder, ...props }) {
 			if (projectConfigFileJson[projectId]) {
 				setProjectConfigFile(projectConfigFileJson[projectId]);
 			}
-		} catch (ex) { }
+		} catch { }
 	}, []);
 
-	const MenuItem = ({ label, onClick, ...props }) => {
+    const MenuItem = ({
+        label,
+        onClick
+    }) => {
 		return (
 			<div
 				css={css`
@@ -232,41 +237,36 @@ function ActionButtonDropdown({ setShowActionMenu, isRecorder, ...props }) {
 		);
 	};
 
-	const handleOpenConfigFile = React.useCallback(() => {
+    const handleOpenConfigFile = React.useCallback(() => {
 		setShowActionMenu(false);
 		shell.openPath(projectConfigFile);
 	}, [projectConfigFile]);
 
-	const handleSettings = () => {
+    const handleSettings = () => {
 		setShowActionMenu(false);
 		navigate("/settings");
 	};
 
-	const handleOpenApp = () => {
-		setShowActionMenu(false);
-		shell.openExternal(resolveToFrontEndPath("/"));
-	};
-
-	const handleExit = () => {
+    const handleExit = () => {
 		setShowActionMenu(false);
 		performExit();
 	};
 
-	const handleSelectProject = () => {
+    const handleSelectProject = () => {
 		setShowActionMenu(false, true);
 		return navigate("/select-project");
 	};
 
-	const handleGoBackToDashboard = () => {
+    const handleGoBackToDashboard = () => {
 		setShowActionMenu(false, true);
 		return navigate("/");
 	};
 
-	const handleHelpAccount = () => {
+    const handleHelpAccount = () => {
 		shell.openExternal("https://docs.crusher.dev");
 	};
 
-	return (
+    return (
 		<div
 			className={"flex flex-col justify-between h-full"}
 			css={css`
@@ -322,17 +322,15 @@ export const MenuDropdown = ({ className, isRecorder, hideDropdown, callback }) 
 	);
 };
 function ModelContainerLayout({ children, title, titleContainerCss, footer, footerCss, className, isLoadingScreen, headerStyle, ...props }) {
-	const navigate = useNavigate();
-
-	const handleOpenAppClick = React.useCallback(() => {
+    const handleOpenAppClick = React.useCallback(() => {
 		shell.openExternal("https://app.crusher.dev");
 	}, []);
 
-	const handleDocsClick = () => {
+    const handleDocsClick = () => {
 		shell.openExternal("https://docs.crusher.dev");
 	};
 
-	return (
+    return (
 		<div css={containerStyle} {...props}>
 			<div css={dragStyle} className={"drag"}></div>
 			<div css={headerStyleCSS} style={headerStyle}>

@@ -65,7 +65,7 @@ const actionDropdownOptions = [
 ]
 
 const DashboardFooter = ({ tests }) => {
-    const [showActionDropdown, setShowActionDropdown] = React.useState(false);
+    const [, setShowActionDropdown] = React.useState(false);
 	const navigate = useNavigate();
 
 	const handleCreateTest = React.useCallback(() => {

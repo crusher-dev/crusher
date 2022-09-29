@@ -12,12 +12,11 @@ const useSelectableList = () => {
       setSelectedList([]);
       return;
     }
-    setSelectedList([...items])
+    setSelectedList(items.slice())
   }
 
-  const toggleSelectItem = React.useCallback((index, items) => {
-    const isControlKey = keyPressed == 17 || keyPressed === 91;
-    const isShiftKey = keyPressed == 17;
+  const toggleSelectItem = React.useCallback(index => {
+    const isControlKey = keyPressed === 17 || keyPressed === 91;
     const isElementAlreadySelected = selectedList.includes(index);
     if (isControlKey) {
       if (isElementAlreadySelected) {
@@ -46,7 +45,7 @@ const useSelectableList = () => {
       setKeyPressed(event.keyCode);
     };
 
-    const keyUpCallback = function (event) {
+    const keyUpCallback = function() {
       setKeyPressed(null);
     };
 

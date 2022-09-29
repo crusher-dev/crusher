@@ -4,7 +4,7 @@ import { Toast } from "@dyson/components/atoms/toast/Toast";
 import { css } from "@emotion/react";
 import mitt from "mitt";
 import { shell } from "electron";
-import { resolveToBackendPath, resolveToFrontEndPath } from "@shared/utils/url";
+import {resolveToFrontEndPath} from "@shared/utils/url";
 import { getAppSettings } from "electron-app/src/store/selectors/app";
 import { useStore } from "react-redux";
 import { StepRecordedToast } from "electron-app/src/_ui/ui/screens/recorder/components/sidebar/stepsPanel/stepRecordedToast";
@@ -59,12 +59,8 @@ const TestReportToast = ({ meta }) => {
 };
 
 
-const TestCreatedToast = ({ meta }) => {
-	const store = useStore();
-
-
-
-	return (
+const TestCreatedToast = () => {
+    return (
 		<div css={reportToastContainerStyle}>
 			<div css={reportToastSectionContainerStyle}>
 				<div

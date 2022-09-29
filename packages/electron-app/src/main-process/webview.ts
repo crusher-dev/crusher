@@ -1,5 +1,5 @@
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
-import { WebContents, ipcMain, webContents, session } from "electron";
+import {WebContents, ipcMain, webContents} from "electron";
 import * as path from "path";
 import { PlaywrightInstance } from "../lib/playwright";
 import { TRecorderCrashState, TRecorderState } from "../store/reducers/recorder";
@@ -115,7 +115,7 @@ export class WebView {
 					functionDeclaration: "function(){const event = new CustomEvent('elementSelected', {detail:{element: this}}); window.dispatchEvent(event);}",
 					objectId: nodeObject.object.objectId,
 				});
-				if(payload && payload.meta && payload.meta.action) {
+				if(payload?.meta?.action) {
 					// @TODO: Remove this timeout hack
 					setTimeout(() => { this.appWindow.getWebContents().executeJavaScript(`window["elementActionsCallback"](); window["elementActionsCallback"]=null;`) }, 100);
 				}

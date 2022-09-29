@@ -1,7 +1,7 @@
 import { getStore } from "../store/configureStore";
 import { getCurrentSelectedProjct, getProxyState } from "../store/selectors/app";
 import { turnOnProxy } from "../_ui/commands/perform";
-import {resolveToBackend, resolveToFrontend} from "./url";
+import {resolveToBackend} from "./url";
 const words = require("./words.json");
 
 const waitForUserLogin = async (callback?: any): Promise<{ loginKey: string; interval }> => {
@@ -31,10 +31,11 @@ export function generateRandomTestName() {
 	const  wordsArr = words.data;
 	const currentDate = new Date();
 	return `${wordsArr[getRandArrIndex(wordsArr)]}-${("0" + currentDate.getHours()).slice(-2) + "" + currentDate.getMinutes()}` 
-};
+}
 export function setEndOfContenteditable(contentEditableElement)
 {
-    var range,selection;
+    var range;
+    var selection;
     if(document.createRange)//Firefox, Chrome, Opera, Safari, IE 9+
     {
         range = document.createRange();//Create a range (a range is a like the selection but invisible)

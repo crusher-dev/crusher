@@ -1,35 +1,27 @@
 import React from "react";
-import { enableJavascriptInDebugger, peformTakeElementScreenshot, performAssertElementVisibility, performClick, performHover, performTakePageScreenshot, turnOnInspectMode } from "electron-app/src/_ui/commands/perform";
-import { emitShowModal } from "electron-app/src/_ui/ui/containers/components/modals";
+import {turnOnInspectMode} from "electron-app/src/_ui/commands/perform";
 import { ActionsList } from "./actionsList";
 import { ElementsHelper, getItemsFromActionsData } from "./helper";
-import { useStore } from "react-redux";
-import { setSelectedElement } from "electron-app/src/store/actions/recorder";
+import { useSelector } from "react-redux";
 import { getSelectedElement } from "electron-app/src/store/selectors/recorder";
 import { ElementIcon } from "electron-app/src/_ui/constants/icons";
 import { css } from "@emotion/react";
-import { sendSnackBarEvent } from "electron-app/src/_ui/ui/containers/components/toast";
-import { useSelector } from "react-redux";
 
 const actionsData = require("./actions.json");
 interface IProps {
     className?: string;
 	defaultExpanded?: boolean;
 	filteredList: any;
-}; 
+}
 
-const ToastPrettyActionMap = {
-	"CLICK": "click",
-	"HOVER": "hover",
-	"SCREENSHOT": "element screenshot",
-	"ASSERT_VISIBLE": "assert visible",
-};
+const ElementActions = ({
+    className,
+    filteredList,
+    defaultExpanded
+}: IProps) => {
+    const selectedElement = useSelector(getSelectedElement);
 
-const ElementActions = ({className, filteredList, defaultExpanded, ...props}: IProps) => {
-    const store = useStore();
-	const selectedElement = useSelector(getSelectedElement);
-
-    const handleCallback = React.useCallback(async (id) => {
+    const handleCallback = React.useCallback(id => {
 		if(!selectedElement) {
 			turnOnInspectMode({action: id});
 		}
@@ -74,7 +66,7 @@ const ElementActions = ({className, filteredList, defaultExpanded, ...props}: IP
 		}
     }, [selectedElement]);
 
-	const items = React.useMemo(() => {
+    const items = React.useMemo(() => {
 		if(filteredList) {
 			// Empty filtered list
 			if(Object.keys(filteredList).length === 0) return null;
@@ -85,19 +77,19 @@ const ElementActions = ({className, filteredList, defaultExpanded, ...props}: IP
     }, [filteredList]);
 
 
-	if(!items) return null;
-	
+    if(!items) return null;
+
     return (
-        <ActionsList
-            className={`${className}`}
+        (<ActionsList
+            className={String(className)}
             title={"element"}
             description={"actions for element"}
 			icon={<ElementIcon css={elementIconCss}/>}
             items={getItemsFromActionsData(items)}
 			defaultExpanded={defaultExpanded}
             callback={handleCallback}
-        />
-    )
+        />)
+    );
 };
 
 const elementIconCss = css`

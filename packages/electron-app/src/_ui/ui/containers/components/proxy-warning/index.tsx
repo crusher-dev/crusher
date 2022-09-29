@@ -4,27 +4,27 @@ import { ConnectivityWarningIcon, LoadingIconV2, PlayV2Icon } from "../../../../
 import {Link} from "electron-app/src/_ui/ui/components/Link";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { shell } from "electron";
-import { performRunDraftTest, performRunTests, turnOnProxy } from "../../../../commands/perform";
+import {performRunDraftTest, turnOnProxy} from "../../../../commands/perform";
 import { getCurrentSelectedProjct, getProxyState } from "electron-app/src/store/selectors/app";
 import { useSelector, useStore } from "react-redux";
 
 const ReadDocsButton = ({ title, className, onClick }) => {
 	return (
-		<Button
+        (<Button
 			id={"verify-save-test"}
 			onClick={(e) => {
 				e.preventDefault();
 				e.stopPropagation();
 				onClick(e);
 			}}
-			className={`${className}`}
+			className={String(className)}
 			bgColor="tertiary-outline"
 			size="x-small"
 			css={saveButtonStyle}
 		>
-			<span>{title}</span>
-		</Button>
-	);
+            <span>{title}</span>
+        </Button>)
+    );
 };
 
 const saveButtonStyle = css`

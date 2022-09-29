@@ -7,22 +7,11 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useStore } from "react-redux";
 import { getCurrentSelectedProjct, getIsProxyInitializing, getProxyState, getUserAccountInfo } from "electron-app/src/store/selectors/app";
 import { LoadingScreen } from "../../_ui/screens/loading";
-import {
-	getCloudUserInfo,
-	getUserTests,
-	goFullScreen,
-	performDeleteTest,
-	performReplayTest,
-	performReplayTestUrlAction,
-	performRunTests,
-	turnOnProxy,
-	updateTestName,
-} from "../commands/perform";
-import { ModelContainerLayout } from "../layouts/modalContainer";
+import {getCloudUserInfo, getUserTests, goFullScreen, performDeleteTest, performReplayTestUrlAction, performRunTests, turnOnProxy, updateTestName} from "../commands/perform";
+import { ModelContainerLayout } from "../../_ui/ui/layout/modalContainer";
 import { sendSnackBarEvent } from "../components/toast";
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
 import { shell } from "electron";
-import { resolveToFrontEndPath } from "@shared/utils/url";
 import { CreateFirstTest } from "../components/create-first-test";
 import { ProxyWarningContainer } from "../components/proxy-warning";
 import InsufficientPermission from "./insufficientPermission";
@@ -77,14 +66,14 @@ const createTestLinkStyle = css`
 `;
 
 function TestListItem({ test, isActive, deleteItem, setLockState, projectId, onMouseEnterCallback }) {
-	const [isEditMode, setIsEditMode] = React.useState(false);
-	const [testName, setTestName] = React.useState(test.testName);
-	const [showMenu, setShowMenu] = React.useState({ shouldShow: false, pos: null });
-	const inputRef = React.useRef(null);
-	const navigate = useNavigate();
-	const containerRef = React.useRef(null);
+    const [isEditMode, setIsEditMode] = React.useState(false);
+    const [testName, setTestName] = React.useState(test.testName);
+    const [showMenu, setShowMenu] = React.useState({ shouldShow: false, pos: null });
+    const inputRef = React.useRef(null);
+    const navigate = useNavigate();
+    const containerRef = React.useRef(null);
 
-	const handleDoubleClick = React.useCallback(() => {
+    const handleDoubleClick = React.useCallback(() => {
 		setIsEditMode(true);
 		setTimeout(() => {
 			inputRef.current.focus();
@@ -92,29 +81,29 @@ function TestListItem({ test, isActive, deleteItem, setLockState, projectId, onM
 		});
 	}, [inputRef]);
 
-	const handleSave = () => {
+    const handleSave = () => {
 		setIsEditMode(false);
 
 		updateTestName(test.id, testName);
 	};
 
-	const handleKeyDown = () => {
+    const handleKeyDown = () => {
 		if (event.key === "Enter") {
 			handleSave();
 		}
 	};
 
-	const handleRun = React.useCallback(() => {
+    const handleRun = React.useCallback(() => {
 		navigate("/recorder");
 		goFullScreen();
 		performReplayTestUrlAction(test.id, true);
 	}, [test, projectId]);
 
-	const handleOutsideClick = React.useCallback(() => {
+    const handleOutsideClick = React.useCallback(() => {
 		handleSave();
 	}, [inputRef]);
 
-	const handleRightClick = (e) => {
+    const handleRightClick = (e) => {
 		const pos = { x: e.clientX, y: e.clientY };
 		const constainerRects = containerRef.current.getBoundingClientRect();
 
@@ -123,7 +112,7 @@ function TestListItem({ test, isActive, deleteItem, setLockState, projectId, onM
 		setLockState(true);
 	};
 
-	const InnerComponent = (
+    const InnerComponent = (
 		<span onDoubleClick={handleDoubleClick}>
 			<input
 				size={isEditMode ? 20 : testName.length}
@@ -151,16 +140,7 @@ function TestListItem({ test, isActive, deleteItem, setLockState, projectId, onM
 		</span>
 	);
 
-	const handleOnMouseEnter = React.useCallback(
-		(e) => {
-			if (!showMenu) {
-				onMouseEnterCallback(e);
-			}
-		},
-		[showMenu],
-	);
-
-	const handleDropdownCallack = React.useCallback(
+    const handleDropdownCallack = React.useCallback(
 		(val) => {
 			setLockState(val);
 			if (!val) {
@@ -173,8 +153,8 @@ function TestListItem({ test, isActive, deleteItem, setLockState, projectId, onM
 		[showMenu],
 	);
 
-	return (
-		<li
+    return (
+        (<li
 			ref={containerRef}
 			css={[
 				css`
@@ -185,8 +165,8 @@ function TestListItem({ test, isActive, deleteItem, setLockState, projectId, onM
 			onContextMenu={handleRightClick}
 			onMouseEnter={onMouseEnterCallback.bind(this, showMenu)}
 		>
-			{isEditMode ? <OnOutsideClick onOutsideClick={handleOutsideClick}>{InnerComponent}</OnOutsideClick> : InnerComponent}
-			{showMenu && showMenu.pos ? (
+            {isEditMode ? <OnOutsideClick onOutsideClick={handleOutsideClick}>{InnerComponent}</OnOutsideClick> : InnerComponent}
+            {showMenu?.pos ? (
 				<Dropdown
 					initialState={true}
 					css={css`
@@ -214,7 +194,7 @@ function TestListItem({ test, isActive, deleteItem, setLockState, projectId, onM
 					{" "}
 				</Dropdown>
 			) : undefined}
-			{!test.firstRunCompleted ? (
+            {!test.firstRunCompleted ? (
 				<LoadingIconV2
 					css={[
 						css`
@@ -232,7 +212,7 @@ function TestListItem({ test, isActive, deleteItem, setLockState, projectId, onM
 			) : (
 				""
 			)}
-			<div
+            <div
 				className={"action-buttons"}
 				css={[
 					css`
@@ -292,19 +272,18 @@ function TestListItem({ test, isActive, deleteItem, setLockState, projectId, onM
 					</div>
 				</div>
 			</div>
-		</li>
-	);
+        </li>)
+    );
 }
 function TestList({ userTests, deleteTest, projectId }) {
-	const navigate = useNavigate();
-	const [lastHoverItem, setLastHoverItem] = React.useState(0);
-	const [lockState, setLockState] = React.useState(false);
+    const [lastHoverItem, setLastHoverItem] = React.useState(0);
+    const [lockState, setLockState] = React.useState(false);
 
-	const handleSetLockState = (value) => {
+    const handleSetLockState = (value) => {
 		setLockState(value);
 	};
 
-	const onMouseEnterCallback = React.useCallback(
+    const onMouseEnterCallback = React.useCallback(
 		(index) => {
 			if (!lockState) {
 				setLastHoverItem(index);
@@ -313,7 +292,7 @@ function TestList({ userTests, deleteTest, projectId }) {
 		[lockState],
 	);
 
-	return (
+    return (
 		<ul css={testItemStyle}>
 			{userTests
 				? userTests.map((test, index) => {
@@ -389,8 +368,17 @@ const testItemHoverStyle = css`
 	color: #9f87ff;
 `;
 
-function TestItemMenuDropdown({ testId, draftJobId, setShowActionMenu, setIsEditMode, deleteTest, ...props }) {
-	const MenuItem = ({ label, onClick, ...props }) => {
+function TestItemMenuDropdown({
+    testId,
+    draftJobId,
+    setShowActionMenu,
+    setIsEditMode,
+    deleteTest
+}) {
+	const MenuItem = ({
+        label,
+        onClick
+    }) => {
 		return (
 			<div
 				css={css`
@@ -437,8 +425,13 @@ function TestItemMenuDropdown({ testId, draftJobId, setShowActionMenu, setIsEdit
 		</div>
 	);
 }
-function ActionButtonDropdown({ setShowActionMenu, projectId, ...props }) {
-	const MenuItem = ({ label, onClick, ...props }) => {
+function ActionButtonDropdown({
+    setShowActionMenu
+}) {
+	const MenuItem = ({
+        label,
+        onClick
+    }) => {
 		return (
 			<div
 				css={css`
@@ -610,47 +603,43 @@ function DashboardScreen() {
 	}, []);
 
 	React.useEffect(() => {
-		document.querySelector("html").style.fontSize = "1px";
-		const userInfo = getUserAccountInfo(store.getState());
-		if (!userInfo) {
+        document.querySelector("html").style.fontSize = "1px";
+        const userInfo = getUserAccountInfo(store.getState());
+        if (!userInfo) {
 			setTimeout(() => {
 				navigate("/login");
 			}, 1000);
 		}
 
-		if (window["showProxyWarning"] && !Object.keys(proxyState).length) {
+        if (window["showProxyWarning"] && !Object.keys(proxyState).length) {
 			setShowProxyWarning({ show: true, testId: window["showProxyWarning"].testId, startUrl: window["showProxyWarning"].startUrl });
 
 			window["showProxyWarning"] = false;
 		}
 
-		const userAccountInfo = getUserAccountInfo(store.getState());
-		const queryParamString = window.location.hash.split("?")[1];
-		const queryParams = new URLSearchParams(queryParamString);
-		const projectId = getCurrentSelectedProjct(store.getState() as any);
+        const userAccountInfo = getUserAccountInfo(store.getState());
+        const projectId = getCurrentSelectedProjct(store.getState() as any);
 
-		if (projectId && userAccountInfo) {
+        if (projectId && userAccountInfo) {
 			getUserTests(projectId).then((tests) => {
 				setUserTests(tests.list);
 			});
 		}
 
-		const interval = setInterval(() => {
-			const userAccountInfo = getUserAccountInfo(store.getState());
-			const queryParamString = window.location.hash.split("?")[1];
-			const queryParams = new URLSearchParams(queryParamString);
-			const projectId = getCurrentSelectedProjct(store.getState() as any);
+        const interval = setInterval(() => {
+            const userAccountInfo = getUserAccountInfo(store.getState());
+            const projectId = getCurrentSelectedProjct(store.getState() as any);
 
-			if (projectId && userAccountInfo) {
+            if (projectId && userAccountInfo) {
 				getUserTests(projectId).then((tests) => {
 					setUserTests(tests.list.filter((a) => { return !((window as any).deletedTest || []).includes(a.id) }));
 				});
 			}
-		}, 5000);
-		return () => {
+        }, 5000);
+        return () => {
 			clearInterval(interval);
 		};
-	}, []);
+    }, []);
 
 	React.useEffect(() => {
 		if (userAccountInfo) {
@@ -675,24 +664,22 @@ function DashboardScreen() {
 	}, [selectedProject]);
 	const userProject = React.useMemo(() => {
 		const selectedProject = getCurrentSelectedProjct(store.getState() as any);
-		if (userInfo && userInfo.projects) {
-			if (!userInfo.projects.find((project) => project.id == selectedProject)) {
-				console.log("Unauthorized", userInfo, selectedProject);
-				store.dispatch(setSelectedProject(null));
-				setIsUnauthorized(true);
-			}
-		}
-		return userInfo && userInfo.projects ? userInfo.projects.find((p) => p.id == selectedProject) : null;
+		if (userInfo?.projects && !userInfo.projects.find((project) => project.id === selectedProject)) {
+            console.log("Unauthorized", userInfo, selectedProject);
+            store.dispatch(setSelectedProject(null));
+            setIsUnauthorized(true);
+        }
+		return userInfo?.projects ? userInfo.projects.find((p) => p.id === selectedProject) : null;
 	}, [userInfo]);
 
 	const handleTestDelete = React.useCallback(
 		(id) => {
-			setUserTests(userTests.filter((a) => a.id != id));
+			setUserTests(userTests.filter((a) => a.id !== id));
 			if (!(window as any).deletedTest) {
 				(window as any).deletedTest = [];
 			}
 			(window as any).deletedTest.push(id);
-			performDeleteTest(id).catch((err) => {
+			performDeleteTest(id).catch(() => {
 				sendSnackBarEvent({ message: "Error deleting test", type: "error" });
 			});
 		},

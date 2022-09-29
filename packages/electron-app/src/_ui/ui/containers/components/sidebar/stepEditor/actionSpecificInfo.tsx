@@ -1,4 +1,4 @@
-import React, { ReactText } from "react";
+import React from "react";
 import { iAction } from "@shared/types/action";
 import { css } from "@emotion/react";
 import { FieldEditModeButton, FieldInput, FieldSelectorPicker, FieldToggle } from "./fields";
@@ -27,47 +27,48 @@ const EDIT_MODE_MAP = {
 };
 
 const ActionSpecificInfo = (props: IActionSpecificInfoProps) => {
-	const { action, actionIndex } = props;
-	const textAreaRef: React.Ref<HTMLTextAreaElement> = React.useRef(null);
-	const dispatch = useDispatch();
+    const { action, actionIndex } = props;
+    const textAreaRef: React.Ref<HTMLTextAreaElement> = React.useRef(null);
+    const dispatch = useDispatch();
 
-	const isElementStep = action.type.startsWith("ELEMENT");
+    const isElementStep = action.type.startsWith("ELEMENT");
 
-	// <--- Optional --->
-	const isOptional = action.payload.isOptional;
-	const handleOptionalToggle = (state) => {
+    // <--- Optional --->
+    const {
+        isOptional,
+        timeout = "30000"
+    } = action.payload;
+    const handleOptionalToggle = (state) => {
 		action.payload.isOptional = state;
-		dispatch(updateRecordedStep({ ...action }, actionIndex));
+		dispatch(updateRecordedStep(action, actionIndex));
 	};
 
-	// <-- Timeout -->
-	const timeout = action.payload.timeout || "30000";
-	const updateTimeout = (value: string) => {
+    const updateTimeout = (value: string) => {
 		action.payload.timeout = parseInt(value, 10);
-		dispatch(updateRecordedStep({ ...action }, actionIndex));
+		dispatch(updateRecordedStep(action, actionIndex));
 	};
-	const handleTimeoutBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const handleTimeoutBlur = (e: React.FocusEvent<HTMLInputElement>) => {
 		updateTimeout((e.target as HTMLInputElement).value);
 	};
 
-	// <--- Selctor Picker --->
-	const readableSelectors = getReadbleSelectors(action.payload.selectors!);
-	const handleOnSelectorsPicked = (selectors: Array<iSelectorInfo>, shouldNotify = true) => {
+    // <--- Selctor Picker --->
+    const readableSelectors = getReadbleSelectors(action.payload.selectors!);
+    const handleOnSelectorsPicked = (selectors: iSelectorInfo[], shouldNotify = true) => {
 		action.payload.selectors = selectors;
 		const readableSelectors = getReadbleSelectors(action.payload.selectors!);
 		console.log("Text area is", textAreaRef.current, readableSelectors);
 		textAreaRef.current.value = readableSelectors;
-		dispatch(updateRecordedStep({ ...action }, actionIndex));
+		dispatch(updateRecordedStep(action, actionIndex));
 		if (shouldNotify) {
 			sendSnackBarEvent({ type: "success", message: "Selectors updated" });
 		}
 	};
-	const saveSelectorsOnUserInput = (e) => {
+    const saveSelectorsOnUserInput = (e) => {
 		handleOnSelectorsPicked(transformStringSelectorsToArray(e.target.value), false);
 	};
 
-	// <--- Edit mode (For opening advanced modals) --->
-	const handleEditModeClick = () => {
+    // <--- Edit mode (For opening advanced modals) --->
+    const handleEditModeClick = () => {
 		if (!EDIT_MODE_MAP[action.type]) {
 			return sendSnackBarEvent({
 				type: "error",
@@ -81,33 +82,33 @@ const ActionSpecificInfo = (props: IActionSpecificInfoProps) => {
 		});
 	};
 
-	// <-- Input -->
-	const inputValue = action.payload.meta?.value?.value || "";
-	const updateInputActionValue = (value: string) => {
+    // <-- Input -->
+    const inputValue = action.payload.meta?.value?.value || "";
+    const updateInputActionValue = (value: string) => {
 		if (action.payload.meta.value.value !== value) {
 			action.payload.meta.value.value = value;
-			dispatch(updateRecordedStep({ ...action }, actionIndex));
+			dispatch(updateRecordedStep(action, actionIndex));
 			sendSnackBarEvent({ type: "success", message: "Value updated" });
 		}
 	};
-	const handleInputActionBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const handleInputActionBlur = (e: React.FocusEvent<HTMLInputElement>) => {
 		updateInputActionValue((e.target as HTMLInputElement).value);
 	};
 
-	// <-- Both Navigate Url and Wait for navigation -->
-	const navigationUrlValue = action.payload.meta?.value || "";
-	const updateNavigationUrlValue = (value: string) => {
+    // <-- Both Navigate Url and Wait for navigation -->
+    const navigationUrlValue = action.payload.meta?.value || "";
+    const updateNavigationUrlValue = (value: string) => {
 		if (action.payload.meta.value !== value) {
 			action.payload.meta.value = value;
-			dispatch(updateRecordedStep({ ...action }, actionIndex));
+			dispatch(updateRecordedStep(action, actionIndex));
 			sendSnackBarEvent({ type: "success", message: "Navigation value updated" });
 		}
 	};
-	const handleNavigationInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const handleNavigationInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
 		updateNavigationUrlValue((e.target as HTMLInputElement).value);
 	};
 
-	return (
+    return (
 		<div css={containerStyle}>
 			<div className="mt-4">
 				<Conditional showIf={action.type === ActionsInTestEnum.ADD_INPUT}>
@@ -166,11 +167,11 @@ const ActionSpecificInfo = (props: IActionSpecificInfoProps) => {
 	);
 };
 
-function getReadbleSelectors(selectors: Array<iSelectorInfo> | null) {
+function getReadbleSelectors(selectors: iSelectorInfo[] | null) {
 	if (!selectors) return "";
 
 	return selectors
-		.map((selector, index) => {
+		.map(selector => {
 			return selector.value;
 		})
 		.join("\n");

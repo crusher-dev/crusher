@@ -8,12 +8,12 @@ import { iElementInfo } from "electron-app/src/store/reducers/recorder";
 import { getSavedSteps } from "electron-app/src/store/selectors/recorder";
 import { AnyAction, Store } from "redux";
 
-const performAction = async (action: iAction, shouldNotSave = false, isRecording = true) => {
+const performAction = (action: iAction, shouldNotSave = false, isRecording = true) => {
 	return ipcRenderer.invoke("perform-action", { action, shouldNotSave, isRecording });
 };
 
 
-const performNavigation = async (url: string, store: Store<unknown, AnyAction>) => {
+const performNavigation = (url: string) => {
 	return performAction({
 		type: ActionsInTestEnum.NAVIGATE_URL,
 		payload: {
@@ -58,9 +58,7 @@ const saveSetDeviceIfNotThere = (device: any, store: Store<unknown, AnyAction>) 
 					type: ActionsInTestEnum.SET_DEVICE,
 					payload: {
 						meta: {
-							device: {
-								...device,
-							},
+							device: device,
 						},
 					},
 				},
@@ -70,7 +68,7 @@ const saveSetDeviceIfNotThere = (device: any, store: Store<unknown, AnyAction>) 
 	}
 };
 
-const peformTakeElementScreenshot = async (selectedElement: iElementInfo, store: Store<unknown, AnyAction>) => {
+const peformTakeElementScreenshot = async (selectedElement: iElementInfo) => {
 	await recordHoverDependencies(selectedElement);
 
 	await performAction({
@@ -101,7 +99,7 @@ const performClick = async (selectedElement: iElementInfo) => {
 	);
 };
 
-const performHover = async (selectedElement: iElementInfo, store: Store<unknown, AnyAction>) => {
+const performHover = async (selectedElement: iElementInfo) => {
 	await recordHoverDependencies(selectedElement);
 
 	await performAction({
@@ -142,7 +140,7 @@ const performCustomCode = async (code: string, templateId: string | null) => {
 	});
 };
 
-export const performAssertElementVisibility = async (selectedElement: iElementInfo, store: Store<unknown, AnyAction>) => {
+export const performAssertElementVisibility = async (selectedElement: iElementInfo) => {
 	await registerActionAsSavedStep({
 		type: ActionsInTestEnum.ASSERT_ELEMENT_VISIBILITY,
 		payload: {
@@ -154,19 +152,19 @@ export const performAssertElementVisibility = async (selectedElement: iElementIn
 	});
 };
 
-const performVerifyTest = async (shouldAlsoSave = true, autoSaveType: "UPDATE" | "SAVE" = "SAVE", shouldNotRunTest = true) => {
+const performVerifyTest = (shouldAlsoSave = true, autoSaveType: "UPDATE" | "SAVE" = "SAVE", shouldNotRunTest = true) => {
 	return ipcRenderer.invoke("verify-test", { shouldAlsoSave, autoSaveType, shouldNotRunTest });
 };
 
-const performRunTests = async (testIds) => {
+const performRunTests = testIds => {
 	return ipcRenderer.invoke("run-tests", { testIds });
 };
 
-const performResetAppSession = async () => {
+const performResetAppSession = () => {
 	ipcRenderer.invoke("reset-app-session");
 };
 
-const performReplayTest = async (testId) => {
+const performReplayTest = testId => {
 	return ipcRenderer.invoke("replay-test", { testId });
 };
 
@@ -174,7 +172,7 @@ const performClearRemainingStpes = () => {
 	return ipcRenderer.invoke("clear-remaining-steps");
 };
 
-const performReplayTestUrlAction = async (testId, redirectAfterSuccess = false, selectedTests = []) => {
+const performReplayTestUrlAction = (testId, redirectAfterSuccess = false, selectedTests = []) => {
 	return ipcRenderer.invoke("replay-test-url-action", { testId, redirectAfterSuccess, selectedTests });
 };
 
@@ -226,7 +224,7 @@ const resetStorage = () => {
 	ipcRenderer.invoke("reset-storage");
 };
 
-const continueRemainingSteps = (extraSteps?: Array<iAction>) => {
+const continueRemainingSteps = (extraSteps?: iAction[]) => {
 	ipcRenderer.invoke("continue-remaining-steps", { extraSteps });
 };
 

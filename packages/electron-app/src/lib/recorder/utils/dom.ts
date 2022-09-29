@@ -1,17 +1,12 @@
+// for (i = 0, length = links.length; i < length; i++) {
+// 	links[i].target == "_blank" && links[i].removeAttribute("target");
+// }
 export class DOM {
 	static isElement(element: any) {
 		return element instanceof Element || element instanceof HTMLDocument;
 	}
 
-	static removeAllTargetBlankFromLinks() {
-		const { links } = document;
-		let i;
-		let length;
-
-		// for (i = 0, length = links.length; i < length; i++) {
-		// 	links[i].target == "_blank" && links[i].removeAttribute("target");
-		// }
-	}
+	static removeAllTargetBlankFromLinks() {}
 
 	static disableAllUserEvents(eventExceptions: { [eventName: string]: any }): () => void {
 		console.debug("Disabling all user events");
@@ -86,7 +81,7 @@ export interface iPageSeoMeta {
 }
 
 export function getAllSeoMetaInfo() {
-	const metaElements: Array<HTMLMetaElement> = [...(document.querySelectorAll("meta") as any)];
+	const metaElements: HTMLMetaElement[] = (document.querySelectorAll("meta") as any).slice();
 	const metaTagsValuesMap: iPageSeoMeta = metaElements.reduce((prev: any, current: HTMLMetaElement) => {
 		const name = current && typeof current.getAttribute === "function" ? current.getAttribute("name") : null;
 		if (!name) {

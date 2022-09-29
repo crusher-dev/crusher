@@ -1,10 +1,7 @@
 import { applyMiddleware, createStore, compose, Store, StoreEnhancer } from "redux";
-import thunkMiddleware from "redux-thunk";
 
-import { iReduxState, rootReducer } from "./reducers";
-import loggerMiddleware from "redux-logger";
-import { forwardToMain, forwardToRenderer, triggerAlias, replayActionMain, replayActionRenderer } from "electron-redux";
-import { isProduction } from "../utils";
+import {rootReducer} from "./reducers";
+import {forwardToMain, forwardToRenderer, replayActionMain, replayActionRenderer} from "electron-redux";
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -23,7 +20,7 @@ export function getStore(): Store<unknown> {
 }
 
 export default function configureStore(intialState: any, scope = "main", isTemporary = false): Store<unknown> {
-	let middlewares: Array<any> = [];
+	let middlewares: any[] = [];
 
 	if(!isTemporary) {
 		// if (!isProduction()) {

@@ -2,13 +2,12 @@ import React from 'react';
 import { css } from "@emotion/react";
 import { Text } from "@dyson/components/atoms/text/Text";
 import { ConsoleIcon } from 'electron-app/src/_ui/constants/old_icons';
-import { useSelector } from "react-redux";
+import {useSelector, useStore} from "react-redux";
 import { getIsStatusBarVisible, getSavedSteps } from 'electron-app/src/store/selectors/recorder';
 import { Step } from './step';
 import { useSelectableList } from 'electron-app/src/_ui/hooks/list';
 import { OnOutsideClick } from '@dyson/components/layouts/onOutsideClick/onOutsideClick';
 import { RightClickMenu } from '@dyson/components/molecules/RightClick/RightClick';
-import { useStore } from "react-redux";
 import { deleteRecordedSteps } from 'electron-app/src/store/actions/recorder';
 import { performVerifyTest } from 'electron-app/src/_ui/commands/perform';
 import { ResetIcon } from 'electron-app/src/_ui/constants/icons';
@@ -20,8 +19,16 @@ const menuItems = [
     {id: "rename", label: "Rename", shortcut: <div>Enter</div>},
     {id: "delete", label: 'Delete', shortcut: <div>⌘+D</div>}
 ];
-const StepsPanel = ({ className, ...props}: IProps) => {
-    const { isItemSelected, selectedList, resetSelected, toggleSelectItem, selectItem, toggleSelectAll } = useSelectableList();
+const StepsPanel = ({
+    className
+}: IProps) => {
+    const {
+        isItemSelected,
+        selectedList,
+        resetSelected,
+        toggleSelectItem,
+        selectItem
+    } = useSelectableList();
 	const recordedSteps = useSelector(getSavedSteps);
 	const isStatusBarVisible = useSelector(getIsStatusBarVisible);
     const store = useStore();
@@ -105,7 +112,7 @@ const StepsPanel = ({ className, ...props}: IProps) => {
     }, []);
 
     return (
-        <div css={containerCss} className={`${className}`}>
+        (<div css={containerCss} className={String(className)}>
             <div css={headerCss}>
                 <Text css={sectionHeadingCss}>{recordedSteps.length} Steps</Text>
                 <div css={sectionActionsCss}>
@@ -120,8 +127,8 @@ const StepsPanel = ({ className, ...props}: IProps) => {
                     </div>
                 </RightClickMenu>
             </OnOutsideClick>
-        </div>
-    )
+        </div>)
+    );
 }
 
 const resetIconCss  = css`

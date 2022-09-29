@@ -3,8 +3,8 @@ import { CLEAR_CURRENT_LOCAL_BUILD, TRIGGER_LOCAL_BUILD, UPDATE_LOCAL_BUILD_RESU
 
 export interface ICurrentBuildPayload {
     id: string;
-    tests: Array<any>;
-    queuedTests: Array<any>;
+    tests: any[];
+    queuedTests: any[];
     time: any;
 };
 
@@ -25,7 +25,7 @@ interface IBuildsReducer {
         [id: string]: IBuildResultPayload
     },
 	currentBuild: ICurrentBuildPayload | null;
-    notifications: Array<IBuildNotification>;
+    notifications: IBuildNotification[];
 }
 
 const initialState: IBuildsReducer = {

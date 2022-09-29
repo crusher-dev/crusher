@@ -9,14 +9,16 @@ import { TemplatesModal } from "./steps/templatesModal";
 import { ModalManager } from "../modals";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 
-const Sidebar = ({ className, ...props }: any) => {
+const Sidebar = ({
+    className
+}: any) => {
 	const recorderInfo = useSelector(getRecorderInfo);
 	const recorderState = useSelector(getRecorderState);
 	const IS_GETTING_STARTED = false;
 
 	return (
-		<div css={[containerStyle, IS_GETTING_STARTED ? gettingStartedContainerStyle : null]} className={`${className}`}>
-			<Conditional showIf={recorderInfo.device}>
+        (<div css={[containerStyle, IS_GETTING_STARTED ? gettingStartedContainerStyle : null]} className={String(className)}>
+            <Conditional showIf={recorderInfo.device}>
 				<>
 					{recorderState.type !== TRecorderState.CUSTOM_CODE_ON ? (
 						<ActionsPanel />
@@ -59,40 +61,11 @@ const Sidebar = ({ className, ...props }: any) => {
 					<StepsPanel />
 				</>
 			</Conditional>
-
-			<ModalManager />
-			<TemplatesModal isOpen={false} handleClose={() => { }} />
-		</div>
-	);
+            <ModalManager />
+            <TemplatesModal isOpen={false} handleClose={() => { }} />
+        </div>)
+    );
 };
-const inputStyle = css`
-	outline: none;
-	input {
-		background: none;
-	}
-`;
-const buttonStyle = css`
-	font-size: 13rem;
-	border: 1rem solid rgba(196, 196, 196, 0.15);
-	box-sizing: border-box;
-	border-radius: 4rem;
-	height: 34rem;
-	padding: 4rem 8rem;
-	min-width: 100rem;
-	background: transparent;
-	width: 100%;
-	:hover {
-		opacity: 0.9;
-		background: transparent;
-		border: 1rem solid rgba(196, 196, 196, 0.15);
-	}
-`;
-const skipButtonStyle = css`
-	background: rgba(105, 147, 255, 0.06);
-	:hover {
-		background: rgba(105, 147, 255, 0.06);
-	}
-`;
 const containerStyle = css`
 	display: flex;
 	flex-direction: column;

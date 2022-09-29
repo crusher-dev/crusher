@@ -8,18 +8,18 @@ import Checkbox from "@dyson/components/atoms/checkbox/checkbox";
 export enum ContextMenuTypeEnum {
     SINGLE = "single",
     MULTI = "multi",
-};
+}
 interface IProps {
     className?: string;
     selectedHeaderActions: any;
-    items?: Array<{ content: any; id: any; }>;
+    items?: { content: any; id: any; }[];
     contextMenu?: { [type: string]: { callback?: any; menuItems?: any } };
 }
 const ListBox = ({ className, contextMenu, selectedHeaderActions: SelectedHeaderActions, items, ...props }: IProps) => {
     const { selectedList, selectItem, isItemSelected, resetSelected, toggleSelectAll, toggleSelectItem } = useSelectableList();
     const listItems = React.useMemo(() => {
         if (!items) return null;
-        return items.map((item, index) => {
+        return items.map(item => {
             return (
                 <ListItem key={item.id} onContextMenu={selectItem.bind(this, item.id)} onClick={toggleSelectItem.bind(this, item.id)} isActive={isItemSelected(item.id)}>
                     {item.content(isItemSelected(item.id))}
@@ -55,20 +55,18 @@ const ListBox = ({ className, contextMenu, selectedHeaderActions: SelectedHeader
     const allSelected = selectedList.length === items.length;
 
     return (
-        <OnOutsideClick onOutsideClick={handleOutSideClick}>
+        (<OnOutsideClick onOutsideClick={handleOutSideClick}>
             <div css={headerCss}>
                 <Checkbox css={checkboxCss} callback={toggleSelectAll.bind(this, items.map((a) => a.id))} isSelectAllType={false} isSelected={allSelected} />
                 <div css={testsCountCss}>{items.length} tests</div>
                 {SelectedHeaderActions ? <SelectedHeaderActions toggleSelectAll={toggleSelectAll} items={items} selectedList={selectedList} /> : ""}
             </div>
-
             <RightClickMenu menuItems={menuItemsComponent}>
-                <ul className={`${className}`} css={listCss} {...props}>
+                <ul className={String(className)} css={listCss} {...props}>
                     {listItems}
                 </ul>
             </RightClickMenu>
-        </OnOutsideClick>
-
+        </OnOutsideClick>)
     );
 };
 

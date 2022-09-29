@@ -8,7 +8,7 @@ const resultsTunnelRegexp = new RegExp(/results\stunnel\s(.*)/gms);
 class ProxyManager {
 	_currentProxyProcess: ChildProcess | null;
 	_results: any | null;
-	_logs: Array<string> = [];
+	_logs: string[] = [];
 
 	isDisabled: boolean = false;
 

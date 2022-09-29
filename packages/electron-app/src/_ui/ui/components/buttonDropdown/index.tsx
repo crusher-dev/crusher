@@ -41,7 +41,7 @@ const menuItemCss = css`
 	}
 `;
 interface IProps {
-    options: Array<{ id: string, content: any }>;
+    options: { id: string, content: any }[];
     primaryOption: string;
     callback?: any;
     className?: any;

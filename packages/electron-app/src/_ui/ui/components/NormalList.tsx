@@ -6,7 +6,7 @@ import Checkbox from "@dyson/components/atoms/checkbox/checkbox";
 interface IProps {
     className?: string;
     onClick?: any;
-    items?: Array<{ content: any; id: any; }>;
+    items?: { content: any; id: any; }[];
     selectAllCallback?: any;
     hideCheckBoxTop?: boolean;
 }
@@ -15,7 +15,7 @@ const NormalList = ({ className, hideCheckBoxTop = false, selectAllCallback, onC
 
     const listItems = React.useMemo(() => {
         if (!items) return null;
-        return items.map((item, index) => {
+        return items.map(item => {
             return (
                 <ListItem key={item.id} onClick={onClick.bind(this, item.id)}>
                     {item.content}
@@ -34,11 +34,10 @@ const NormalList = ({ className, hideCheckBoxTop = false, selectAllCallback, onC
             <Checkbox css={[checkboxCss, hideCheckBoxTop && hideCheckbox]} callback={handleSelectAll} isSelectAllType={false} isSelected={shouldSelectAll} />
             <div css={testsCountCss}>{items.length} projects</div>
         </div>
-        <ul className={`${className}`} css={listCss} {...props}>
+        <ul className={String(className)} css={listCss} {...props}>
             {listItems}
         </ul>
-    </>
-    );
+    </>);
 };
 
 const hideCheckbox = css`

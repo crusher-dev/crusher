@@ -1,4 +1,4 @@
-import React, { RefObject, useState } from "react";
+import React, {useState} from "react";
 import { useSelector, useStore } from "react-redux";
 import { AssertionFormTable, ASSERTION_OPERATION_TYPE } from "../../forms/assertionForm";
 import { iAssertionRow, iField } from "@shared/types/assertionRow";
@@ -7,9 +7,7 @@ import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { getSelectedElement } from "electron-app/src/store/selectors/recorder";
 import { enableJavascriptInDebugger, recordHoverDependencies, registerActionAsSavedStep } from "electron-app/src/_ui/commands/perform";
-import { recordStep, setSelectedElement, updateRecordedStep } from "electron-app/src/store/actions/recorder";
-import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
-import { BulbIcon } from "electron-app/src/_ui/constants/old_icons";
+import {setSelectedElement, updateRecordedStep} from "electron-app/src/store/actions/recorder";
 import { Modal } from "@dyson/components/molecules/Modal";
 import { ModalTopBar } from "../topBar";
 import { css } from "@emotion/react";
@@ -27,20 +25,22 @@ interface iAssertElementModalProps {
 	handleClose?: () => void;
 }
 
-const getValidationFields = (elementInfo: any): Array<iField> => {
-	if (!elementInfo) return [];
-	const innerHTML = elementInfo.innerHTML;
-	const innerText = elementInfo.innerText;
-	const attributes = elementInfo.attributes;
+const getValidationFields = (elementInfo: any): iField[] => {
+    if (!elementInfo) return [];
+    const {
+        innerHTML,
+        innerText,
+        attributes
+    } = elementInfo;
 
-	const MetaTagsFields = attributes.map((attribute) => {
+    const MetaTagsFields = attributes.map((attribute) => {
 		return {
 			name: attribute.name,
 			value: attribute.value,
 			meta: { type: "ATTRIBUTE" },
 		};
 	});
-	return [
+    return [
 		{ name: "innerText", value: innerText, meta: { type: "innerText" } },
 		{ name: "innerHTML", value: innerHTML, meta: { type: "innerHTML" } },
 		...MetaTagsFields,
@@ -53,12 +53,12 @@ const getElementFieldValue = (fieldInfo: iField) => {
 
 const AssertElementModal = (props: iAssertElementModalProps) => {
 	const { handleClose, isOpen } = props;
-	const [elementInfo, setElementInfo] = useState(null);
+	const [, setElementInfo] = useState(null);
 	const store = useStore();
 	const selectedElement = useSelector(getSelectedElement);
 	const { isOpen: isOnboardingOpen, setCurrentStep } = useTour();
 
-	const [validationRows, setValidationRows] = useState([] as Array<iAssertionRow>);
+	const [validationRows, setValidationRows] = useState([] as iAssertionRow[]);
 	const validationFields = getValidationFields(elementInfo!);
 	const validationOperations = [ASSERTION_OPERATION_TYPE.MATCHES, ASSERTION_OPERATION_TYPE.CONTAINS, ASSERTION_OPERATION_TYPE.REGEX];
 
@@ -113,13 +113,13 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 	};
 
 	const addValidationRows = (
-		rows: Array<{
+		rows: {
 			field: iField;
 			operation: ASSERTION_OPERATION_TYPE;
 			validation: string;
-		}>,
+		}[],
 	) => {
-		const newValidationRows = [...validationRows];
+		const newValidationRows = validationRows.slice();
 		for (let i = 0; i < rows.length; i++) {
 			newValidationRows.push({
 				id: uniqueId("generate-checks-row"),
@@ -128,7 +128,7 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 				validation: rows[i].validation,
 			});
 		}
-		setValidationRows([...newValidationRows]);
+		setValidationRows(newValidationRows.slice());
 	};
 
 	const createNewElementAssertionRow = () => {
@@ -158,7 +158,7 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 
 		validationRows[rowIndex].field = newField;
 		validationRows[rowIndex].validation = getElementFieldValue(newField);
-		setValidationRows([...validationRows]);
+		setValidationRows(validationRows.slice());
 	};
 
 	const updateOperationOfValidationRow = (newFieldName: string, rowId: string) => {
@@ -166,7 +166,7 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 		if (rowIndex === -1) throw new Error("Invalid id for validation row");
 
 		validationRows[rowIndex].operation = newFieldName;
-		setValidationRows([...validationRows]);
+		setValidationRows(validationRows.slice());
 	};
 
 	const updateValidationValueOfValidationRow = (newValidationValue: string, rowId: string) => {
@@ -174,7 +174,7 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 		if (rowIndex === -1) throw new Error("Invalid id for validation row");
 
 		validationRows[rowIndex].validation = newValidationValue;
-		setValidationRows([...validationRows]);
+		setValidationRows(validationRows.slice());
 	};
 
 	const saveElementValidationAction = async () => {
@@ -204,19 +204,19 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 		}
 
 		props.stepAction.payload.meta.validations = validationRows;
-		store.dispatch(updateRecordedStep({ ...props.stepAction }, props.stepIndex));
+		store.dispatch(updateRecordedStep(props.stepAction, props.stepIndex));
 		sendSnackBarEvent({ type: "success", message: "Updated Element assertions" });
 		handleCloseWrapper(true);
 	};
 
 	const deleteValidationRow = (rowIndex) => {
 		const newValidationRows = validationRows.filter((a) => a.id !== rowIndex);
-		setValidationRows([...newValidationRows]);
+		setValidationRows(newValidationRows.slice());
 	};
 
 	const handleCloseWrapper = (isAfterSave = false) => {
 		if (isOnboardingOpen) {
-			if(isAfterSave === true) {
+			if(isAfterSave) {
 				setCurrentStep(5);
 			} else {
 				// Timeout so that it can find the element to highlight,
@@ -315,9 +315,6 @@ const modalStyle = css`
 	background: linear-gradient(0deg, rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.42)), #111213;
 `;
 
-const containerStyle = (areRowsPresent) => {
-	return { marginTop: areRowsPresent ? "2.25rem" : "1.5rem" };
-};
 const bottomBarStyle = {
 	display: "flex",
 	justifyContent: "flex-end",
@@ -330,34 +327,6 @@ const formButtonStyle = {
 	fontSize: "0.9rem",
 	fontWeight: 900,
 	display: "flex",
-};
-const advanceLinkContainerStyle = {
-	display: "flex",
-	alignItems: "center",
-};
-const generateChecksContainerStyle = {
-	display: "flex",
-	alignItems: "center",
-	justifyContent: "flex-end",
-	marginLeft: "1.935rem",
-};
-const bulbIconStyle = {
-	position: "relative",
-	top: "-0.15rem",
-};
-const generateTextStyle = {
-	marginLeft: "0.3rem",
-	color: "#fff",
-	textDecoration: "underline",
-	fontSize: "0.9rem",
-	cursor: "pointer",
-};
-const saveButtonStyle = {
-	fontSize: "0.9rem",
-	padding: "10px 32px",
-	textAlign: "center",
-	color: "#fff",
-	marginLeft: 24,
 };
 
 export { AssertElementModal };

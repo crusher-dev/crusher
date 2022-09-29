@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { css } from "@emotion/react";
 import { AddedIcon, CloseIcon } from "electron-app/src/_ui/constants/icons";
 import { sendSnackBarEvent } from "electron-app/src/_ui/ui/containers/components/toast";

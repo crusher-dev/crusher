@@ -10,21 +10,21 @@ import { getElementDescription } from "./utils/dom";
 
 export default class EventsController {
 	recordingOverlay: EventRecording;
-	_recordedEvents: Array<{ eventType: string; element: Node }> = [];
+	_recordedEvents: { eventType: string; element: Node }[] = [];
 
 	constructor(recordingOverlay: EventRecording) {
 		this.recordingOverlay = recordingOverlay;
 		(window as any).getSelectors = getSelectors;
 	}
 
-	getRelevantHoverRecordsFromSavedEvents(nodes: Array<Node>, rootElement: HTMLElement): Array<Node> {
+	getRelevantHoverRecordsFromSavedEvents(nodes: Node[], rootElement: HTMLElement): Node[] {
 		if (!this._recordedEvents.length) return nodes;
 
 		const reverseRecordedEvents = this._recordedEvents.reverse().filter((a) => {
 			return [ActionsInTestEnum.CLICK, ActionsInTestEnum.HOVER].includes(a.eventType as ActionsInTestEnum);
 		});
 
-		function getListTillNoMatching(list: Array<{ eventType: string; element: Node }>) {
+		function getListTillNoMatching(list: { eventType: string; element: Node }[]) {
 			const out = [];
 			for (const item of list) {
 				const result = nodes.some((node) => {
@@ -91,7 +91,7 @@ export default class EventsController {
 		}
 	}
 
-	getSelectorsOfNodes(nodes: Array<HTMLElement>): Array<{ selectors: Array<iSelectorInfo | null> }> {
+	getSelectorsOfNodes(nodes: HTMLElement[]): { selectors: Array<iSelectorInfo | null> }[] {
 		return nodes.map((node) => {
 			const selectors = node ? getSelectors(node) : null;
 			return { selectors };

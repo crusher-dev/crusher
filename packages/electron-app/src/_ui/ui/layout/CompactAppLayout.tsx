@@ -22,35 +22,30 @@ const CompactAppLayout = ({ className, title, headerRightSection, showHeader = t
     const handleOpenApp = React.useCallback(() => shell.openExternal("https://app.crusher.dev"), []);
 
     return (
-        <div className={`${className}`} css={containerCss} {...props}>
+        (<div className={String(className)} css={containerCss} {...props}>
             <div css={dragCss} className={"drag"}></div>
-
             <Conditional showIf={showHeader}>
                 <div css={headerCss} className={"header"}>
                     <div css={headerLeftSectionCss}>
                         <MenuDropdown isRecorder={false} css={menuDropdownCss} />
                     </div>
                     <div css={titleCss} className={"header-title"}>{title}</div>
-                    {headerRightSection ? headerRightSection : (
-                        <div css={headerRightSectionCss}>
-                            <LinkPointer css={linkCss} onClick={handleOpenDocs}>Docs</LinkPointer>
-                            <LinkPointer onClick={handleOpenApp} css={[linkCss, openAppLinkCss]}>
-                                Open app
-                            </LinkPointer>
-                        </div>
-                    )}
+                    {headerRightSection || (<div css={headerRightSectionCss}>
+                        <LinkPointer css={linkCss} onClick={handleOpenDocs}>Docs</LinkPointer>
+                        <LinkPointer onClick={handleOpenApp} css={[linkCss, openAppLinkCss]}>
+                            Open app
+                        </LinkPointer>
+                    </div>)}
 
                 </div>
             </Conditional>
-
             <div css={contentCss} className={"content-section"}>
                 {children}
             </div>
-
             <Conditional showIf={!!footer}>
                 <div css={footerCss}>{footer}</div>
             </Conditional>
-        </div>
+        </div>)
     );
 };
 

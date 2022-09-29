@@ -2,7 +2,6 @@ import { setupLogger } from "@crusher-shared/modules/logger";
 setupLogger("recorder");
 
 require("v8-compile-cache");
-import * as Sentry from "@sentry/electron";
 import { isProduction, parseDeepLinkUrlAction } from "./../utils";
 import { app, session } from "electron";
 import { APP_NAME } from "../../config/about";
@@ -10,13 +9,8 @@ import { AppWindow } from "./app-window";
 import { now } from "./now";
 import { installSameOriginFilter } from "./same-origin-filter";
 import configureStore from "../store/configureStore";
-import * as path from "path";
-import net from "net";
 import { getGlobalAppConfig } from "../lib/global-config";
-import { rootReducer } from "../store/reducers";
 import { SettingsManager } from "../lib/settingsManager";
-
-const os = require("os");
 
 //     Sentry.init({ dsn: "https://392b9a7bcc324b2dbdff0146ccfee044@o1075083.ingest.sentry.io/6075223" });
 //     require('update-electron-app')({
@@ -33,7 +27,7 @@ const launchTime = now();
 let readyTime: number | null = null;
 
 type OnDidLoadFn = (window: AppWindow) => void;
-let onDidLoadFns: Array<OnDidLoadFn> | null = [];
+let onDidLoadFns: OnDidLoadFn[] | null = [];
 
 function setupElectronApp() {
 	app.setName(APP_NAME);
@@ -76,7 +70,7 @@ if (process.platform === "linux" && !isDuplicateInstance) {
 	});
 }
 
-app.on("second-instance", (event, args, workingDirectory) => {
+app.on("second-instance", (event, args) => {
 	if (mainWindow) {
 		if (mainWindow.isMinimized()) {
 			mainWindow.restore();
@@ -120,7 +114,6 @@ app.on("open-url", (event, url) => {
 	handleAppURL(url);
 });
 
-let store;
 function createWindow() {
 	console.log("Creating window now...");
 	const globalAppConfig = getGlobalAppConfig();
@@ -140,7 +133,7 @@ function createWindow() {
 				...(_store.getState() as any).app.settings,
 				...settings
 			},
-			accountInfo: globalAppConfig && globalAppConfig.userInfo ? globalAppConfig.userInfo : null
+			accountInfo: globalAppConfig?.userInfo ? globalAppConfig.userInfo : null
 		}
 	};
 	const store = configureStore(initialState, "main");
@@ -157,7 +150,7 @@ function createWindow() {
 		for (const extension of extensions) {
 			try {
 				installExtension(extension, { loadExtensionOptions: { allowFileAccess: true } });
-			} catch (e) {}
+			} catch {}
 		}
 	}
 

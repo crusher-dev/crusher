@@ -1,6 +1,4 @@
-import axios, { AxiosRequestConfig } from "axios";
-import { getStore } from "electron-app/src/store/configureStore";
-import { getCurrentSelectedProjct } from "electron-app/src/store/selectors/app";
+import {AxiosRequestConfig} from "axios";
 import { createAuthorizedRequestFunc, resolveToBackend } from "electron-app/src/utils/url";
 
 

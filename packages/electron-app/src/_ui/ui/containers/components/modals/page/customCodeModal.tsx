@@ -56,8 +56,15 @@ const DropdownOption = ({ label }) => {
 	return <div css={{ padding: "7rem 8rem", width: "100%", cursor: "default" }}>{label}</div>;
 };
 
-function ActionButtonDropdown({ setShowActionMenu, callback, selectedTemplate, ...props }) {
-	const MenuItem = ({ label, onClick, ...props }) => {
+function ActionButtonDropdown({
+    setShowActionMenu,
+    callback,
+    selectedTemplate
+}) {
+	const MenuItem = ({
+        label,
+        onClick
+    }) => {
 		return (
 			<div
 				css={css`
@@ -120,30 +127,31 @@ async function validate(crusherSdk: CrusherSdk) {
     // expect(input.inputValue()).toBe(page.url());
 }`;
 const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
-	const { isOpen } = props;
-	const store = useStore();
-	const [codeTemplates, setCodeTemplates] = React.useState([]);
-	const [selectedTemplate, setSelectedTemplate] = React.useState(null);
-	const [savingTemplateState, setSavingTemplateState] = React.useState({ state: "input" });
-	const [needName, setNeedName] = React.useState(false);
-	const [modalName, setModalName] = React.useState("ts:modal.ts");
-	const [showActionMenu, setShowActionMenu] = React.useState(false);
+    const { isOpen } = props;
+    const store = useStore();
+    const [codeTemplates, setCodeTemplates] = React.useState([]);
+    const [selectedTemplate, setSelectedTemplate] = React.useState(null);
+    const [, setSavingTemplateState] = React.useState({ state: "input" });
+    const [needName, setNeedName] = React.useState(false);
+    const [modalName] = React.useState("ts:modal.ts");
+    const [showActionMenu, setShowActionMenu] = React.useState(false);
 
-	const monacoRef: React.Ref<Monaco> = React.useRef(null);
-	const editorRef = React.useRef(null);
-	const editorMainRef = React.useRef(null);
+    const monacoRef: React.Ref<Monaco> = React.useRef(null);
+    const editorMainRef = React.useRef(null);
 
-	const codeTextAreaRef = useRef(null as null | HTMLTextAreaElement);
+    const codeTextAreaRef = useRef(null as null | HTMLTextAreaElement);
 
-	React.useEffect(() => {
+    React.useEffect(() => {
 		const handleListener = () => {
-			if (editorMainRef.current && editorMainRef.current) {
+			if (editorMainRef.current) {
 				const topbar = document.querySelector("#top-bar");
 				const rect = topbar.parentElement.getBoundingClientRect();
 				const containerNode = (editorMainRef.current as monaco.editor.IStandaloneCodeEditor).getContainerDomNode();
 				const mainContainerNode = containerNode.parentNode.parentNode;
 
-				const childNodes = mainContainerNode.parentNode.childNodes;
+				const {
+                    childNodes
+                } = mainContainerNode.parentNode;
 				let occupiedHeight = 0;
 				for (let childNode of Array.from(childNodes)) {
 					if (childNode !== mainContainerNode) {
@@ -164,26 +172,25 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 			window.removeEventListener("resize", handleListener.bind(this));
 		};
 	}, []);
-	React.useEffect(() => {
+    React.useEffect(() => {
 		if (isOpen) {
-			setCodeTemplates([]);
-			setSelectedTemplate(null);
-			const action = props.stepAction;
-			setSavingTemplateState({ state: "input" });
-			setNeedName(false);
-			getCodeTemplates().then((res) => {
+            setCodeTemplates([]);
+            setSelectedTemplate(null);
+            setSavingTemplateState({ state: "input" });
+            setNeedName(false);
+            getCodeTemplates().then((res) => {
 				const templatesArr = res.map((a) => ({ id: a.id, code: a.code, name: a.name }));
 				setCodeTemplates(templatesArr);
 			});
-		}
+        }
 	}, [isOpen]);
 
-	const handleCustomClose = React.useCallback(
+    const handleCustomClose = React.useCallback(
 		(shouldUpdate: boolean = true) => {
 			const recorderState = getRecorderState(store.getState());
 			if (shouldUpdate && recorderState.payload && (recorderState.payload as any).previousState) {
 				store.dispatch(
-					updateRecorderState((recorderState.payload as any).previousState.type, { ...(recorderState.payload as any).previousState.payload }),
+					updateRecorderState((recorderState.payload as any).previousState.type, (recorderState.payload as any).previousState.payload),
 				);
 			}
 			props.handleClose();
@@ -191,61 +198,57 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 		[props.handleClose],
 	);
 
-	const runCustomCode = React.useCallback(() => {
+    const runCustomCode = React.useCallback(() => {
 		store.dispatch(updateRecorderState(TRecorderState.PERFORMING_ACTIONS, {}));
 
 		performCustomCode(monacoRef.current.editor.getModel(modalName).getValue(), selectedTemplate);
 		handleCustomClose(false);
 	}, [selectedTemplate, codeTextAreaRef, handleCustomClose]);
 
-	const updateCustomCode = React.useCallback(() => {
+    const updateCustomCode = React.useCallback(() => {
 		if (props.stepAction) {
 			props.stepAction.payload.meta.script = monacoRef.current.editor.getModel(modalName).getValue();
 			props.stepAction.payload.meta.templateId = selectedTemplate;
-			store.dispatch(updateRecordedStep({ ...props.stepAction }, props.stepIndex));
+			store.dispatch(updateRecordedStep(props.stepAction, props.stepIndex));
 			sendSnackBarEvent({ type: "success", message: "Custom code updated" });
 			handleCustomClose();
 		}
 	}, [props.stepAction, selectedTemplate, codeTextAreaRef, handleCustomClose]);
 
-	const isThereScriptOutput = true;
-
-	const isThereScriptError = false;
-
-	const handleSaveAsTemplate = async () => {
+    const handleSaveAsTemplate = () => {
 		setNeedName(true);
 		setTimeout(() => {
 			document.querySelector("#template-name-input")?.focus();
 		}, 5);
 	};
 
-	const handleUpdateTemplate = async () => {
+    const handleUpdateTemplate = async () => {
 		if (selectedTemplate) {
 			const templateRecord = codeTemplates.find((a) => a.id === selectedTemplate);
 			await updateCodeTemplate(selectedTemplate, templateRecord.name, monacoRef.current.editor.getModel(modalName).getValue());
 			templateRecord.code = monacoRef.current.editor.getModel(modalName).getValue();
-			setCodeTemplates([...codeTemplates]);
+			setCodeTemplates(codeTemplates.slice());
 			sendSnackBarEvent({ type: "success", message: "Custom code template updated" });
 		}
 	};
 
-	const handleDetach = async () => {
+    const handleDetach = () => {
 		if (selectedTemplate) {
 			setSelectedTemplate(null);
 			sendSnackBarEvent({ type: "success", message: "Detached from template. Just click on Save to continue..." });
 		}
 	};
 
-	const handleDeleteTemplate = async () => {
+    const handleDeleteTemplate = async () => {
 		if (selectedTemplate) {
 			await deleteCodeTemplate(selectedTemplate);
-			setCodeTemplates([...codeTemplates.filter((a) => a.id !== selectedTemplate)]);
+			setCodeTemplates(codeTemplates.filter((a) => a.id !== selectedTemplate));
 			setSelectedTemplate(null);
 			sendSnackBarEvent({ type: "success", message: "Custom code template deleted" });
 		}
 	};
 
-	const transformListToSelectBoxValues = (codeTemplates) => {
+    const transformListToSelectBoxValues = (codeTemplates) => {
 		return codeTemplates.map((test) => ({
 			value: test.id,
 			label: test.name,
@@ -253,13 +256,13 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 		}));
 	};
 
-	if (!isOpen) return null;
+    if (!isOpen) return null;
 
-	const getSelectedOption = (arr, id) => {
+    const getSelectedOption = (arr, id) => {
 		return arr.find((a) => a.value === id);
 	};
 
-	const handleOnMount = (editor: any, monaco: Monaco) => {
+    const handleOnMount = (editor: any) => {
 		editorMainRef.current = editor;
 
 		if (props.stepAction) {
@@ -279,7 +282,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 			});
 		}
 	};
-	const handleEditorWillMount = (monaco: Monaco) => {
+    const handleEditorWillMount = (monaco: Monaco) => {
 		monacoRef.current = monaco;
 
 		monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
@@ -306,7 +309,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 		monaco.editor.defineTheme("my-theme", {
 			base: "vs-dark",
 			inherit: true,
-			rules: [...newTheme.rules],
+			rules: newTheme.rules.slice(),
 			colors: {
 				...newTheme.colors,
 				"editor.background": "#080809",
@@ -314,7 +317,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 		});
 	};
 
-	const handleCreateTemplate = (name) => {
+    const handleCreateTemplate = (name) => {
 		if (!name || !name.length) {
 			sendSnackBarEvent({ type: "error", message: "Error: Enter some name for the template" });
 			return;
@@ -328,22 +331,22 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 				setSavingTemplateState({ state: "saved" });
 				sendSnackBarEvent({ type: "success", message: "Template saved" });
 			})
-			.catch((err) => {
+			.catch(() => {
 				sendSnackBarEvent({ type: "error", message: "Error template saved" });
 			});
 	};
 
-	const handleUnDock = () => {
+    const handleUnDock = () => {
 		performUndockCode();
 		props.handleClose();
 	};
 
-	const handleReadDocs = React.useCallback(() => {
+    const handleReadDocs = React.useCallback(() => {
 		shell.openExternal("https://docs.crusher.dev");
 	}, []);
 
-	return (
-		<div
+    return (
+        (<div
 			id="current-modal"
 			css={css`
 				background: black;
@@ -352,7 +355,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 				flex-direction: column;
 			`}
 		>
-			<ModalTopBar
+            <ModalTopBar
 				css={css`
 					padding-bottom: 12rem;
 				`}
@@ -394,7 +397,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 					handleCustomClose();
 				}}
 			/>
-			<div
+            <div
 				css={css`
 					padding: 8rem 34rem;
 					display: flex;
@@ -426,7 +429,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 					selected={selectedTemplate ? [getSelectedOption(transformListToSelectBoxValues(codeTemplates), selectedTemplate)] : undefined}
 					values={transformListToSelectBoxValues(codeTemplates)}
 					callback={(selectedValue) => {
-						const value = selectedValue[0];
+						const [value] = selectedValue;
 						setSelectedTemplate(selectedValue[0]);
 						const codeTemplate = codeTemplates.find((item) => item.id === value);
 						monacoRef.current.editor.getModel(modalName).setValue(codeTemplate.code);
@@ -471,7 +474,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 					</div>
 				</Conditional>
 			</div>
-			<div
+            <div
 				css={css`
 					height: auto;
 					padding: 12rem 34rem;
@@ -546,7 +549,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 					</div>
 				)}
 			</div>
-			<div css={bottomBarStyle}>
+            <div css={bottomBarStyle}>
 				<div
 					css={css`
 						display: flex;
@@ -618,7 +621,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 								}
 							}}
 						>
-							{props.stepAction ? (selectedTemplate ? "Save step" : "Save step") : "Save and run"}
+							{props.stepAction ? ('Save step') : "Save and run"}
 						</Button>
 						<div
 							css={css`
@@ -649,8 +652,8 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 					</Dropdown>
 				</div>
 			</div>
-		</div>
-	);
+        </div>)
+    );
 };
 
 const UnDockIcon = (props) => (
@@ -662,30 +665,6 @@ const UnDockIcon = (props) => (
 	</svg>
 );
 
-const runLinkStyle = css`
-	font-family: Gilroy;
-	font-style: normal;
-	font-weight: 600;
-	font-size: 14rem;
-	text-align: right;
-
-	color: rgba(255, 255, 255, 0.69);
-	:hover {
-		opacity: 0.8;
-	}
-`;
-
-const actionLinkStyle = css`
-	font-family: Cera Pro;
-	font-style: normal;
-	font-weight: 400;
-	font-size: 14rem;
-
-	color: rgba(255, 255, 255, 0.4);
-	:hover {
-		opacity: 0.8;
-	}
-`;
 const inputStyle = css`
 	background: #1a1a1c;
 	border-radius: 6rem;
@@ -697,27 +676,6 @@ const inputStyle = css`
 	outline: none;
 `;
 
-const modalStyle = css`
-	width: 800rem;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -20%);
-	display: flex;
-	flex-direction: column;
-	padding: 0rem;
-	background: linear-gradient(0deg, rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.42)), #111213;
-`;
-
-const containerCSS = css`
-	padding-top: 1rem;
-	position: relative;
-`;
-const validationStatusContainerCSS = css`
-	position: absolute;
-	right: 0.75rem;
-	top: 1.5rem;
-`;
 const bottomBarStyle = css`
 	display: flex;
 	align-items: center;

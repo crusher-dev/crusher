@@ -1,15 +1,14 @@
-import { EditPencilIcon, ReselectPointerIcon } from "electron-app/src/_ui/constants/icons";
+import {EditPencilIcon} from "electron-app/src/_ui/constants/icons";
 import React from "react";
 import { css } from "@emotion/react";
 import { getSavedSteps, getStepInfo } from "electron-app/src/store/selectors/recorder";
 import { useSelector, useDispatch } from "react-redux";
-import { TextHighlighter, TextHighlighterText, transformStringSelectorsToArray } from "./helper";
+import {TextHighlighter, transformStringSelectorsToArray} from "./helper";
 import { deleteRecordedSteps, updateRecordedStep } from "electron-app/src/store/actions/recorder";
-import { FieldInput, FieldSelectorPicker } from "electron-app/src/_ui/ui/containers/components/sidebar/stepEditor/fields";
+import {FieldSelectorPicker} from "electron-app/src/_ui/ui/containers/components/sidebar/stepEditor/fields";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { NormalInput } from "electron-app/src/_ui/ui/components/inputs/normalInput";
 import { emitShowModal } from "electron-app/src/_ui/ui/containers/components/modals";
-import { BrowserButton } from "electron-app/src/_ui/ui/containers/components/buttons/browser.button";
 import { Button } from "@dyson/components/atoms";
 import { iSelectorInfo } from "@shared/types/selectorInfo";
 import { sendSnackBarEvent } from "electron-app/src/_ui/ui/containers/components/toast";
@@ -44,14 +43,6 @@ const SelectorInfo = ({stepId, setShowAdvanced}) => {
     )    
 };
 
-const reselectIconCss = css`
-    width: 10rem;
-    height: 12rem;
-    :hover {
-        opacity: 0.8;
-    }
-`;
-
 const selectorExtraCss = css`
     font-size: 12rem;
 `;
@@ -81,7 +72,7 @@ const InputValueEditor = ({step, stepId}) => {
             const updateInputValue = (value: string) => {
                 if (step.payload.meta.value.value !== value) {
                     step.payload.meta.value.value = value;
-                    dispatch(updateRecordedStep({ ...step }, stepId));
+                    dispatch(updateRecordedStep(step, stepId));
                     sendSnackBarEvent({ type: "success", message: "Value updated" });
                 }
             };
@@ -93,7 +84,7 @@ const InputValueEditor = ({step, stepId}) => {
             const updateNavigationUrlValue = (value: string) => {
                 if (step.payload.meta.value !== value) {
                     step.payload.meta.value = value;
-                    dispatch(updateRecordedStep({ ...step }, stepId));
+                    dispatch(updateRecordedStep(step, stepId));
                     sendSnackBarEvent({ type: "success", message: "Navigation value updated" });
                 }
             };
@@ -188,8 +179,6 @@ const StepName = ({stepId}) => {
 
 const StepMetaInfo = ({stepId, setShowAdvanced}) => {
     const steps = useSelector(getSavedSteps);
-    const stepInfo = useSelector(getStepInfo(stepId));
-    const step = steps[stepId];
 
     const hasSelectors = steps[stepId].type.startsWith("ELEMENT");
     const showFieldInput =[ActionsInTestEnum.NAVIGATE_URL, ActionsInTestEnum.WAIT_FOR_NAVIGATION, ActionsInTestEnum.ADD_INPUT].includes(steps[stepId].type);
@@ -271,14 +260,6 @@ const metaInfoFooterCss = css`
 
 `;
 
-const uniqueCss = css`
-    font-family: 'Gilroy';
-    font-style: normal;
-    font-weight: 700;
-    font-size: 13rem;
-
-    color: rgba(215, 223, 225, 0.6);
-`;
 const stepNameCss = css`
     font-family: 'Gilroy';
     font-style: normal;
@@ -308,19 +289,19 @@ const StepAdvancedForm =  ({stepId}) =>{
 
     const dispatch = useDispatch();
 
-    const getReadbleSelectors = (selectors: Array<iSelectorInfo> | null) => {
+    const getReadbleSelectors = (selectors: iSelectorInfo[] | null) => {
         if (!selectors) return "";
     
         return selectors
-            .map((selector, index) => {
+            .map(selector => {
                 return selector.value;
             })
             .join("\n");
     };
 
-    const handleOnSelectorsPicked = (selectors: Array<iSelectorInfo>, shouldNotify = true) => {
+    const handleOnSelectorsPicked = (selectors: iSelectorInfo[], shouldNotify = true) => {
 		step.payload.selectors = selectors;
-		dispatch(updateRecordedStep({ ...step }, stepId));
+		dispatch(updateRecordedStep(step, stepId));
 		if (shouldNotify) {
 			sendSnackBarEvent({ type: "success", message: "Selectors updated" });
 		}
@@ -372,7 +353,6 @@ const StepEditor = ({stepId}) => {
     const [showAdvanced, setShowAdvanced] = React.useState({show: false, containerHeight: null});
     const containerRef = React.useRef(null);
 
-    const stepInfo = useSelector(getStepInfo(stepId));
     const steps = useSelector(getSavedSteps);
     const dispatch = useDispatch();
     const showPreview = ![ActionsInTestEnum.SET_DEVICE, ActionsInTestEnum.RUN_AFTER_TEST].includes(steps[stepId].type);
@@ -383,7 +363,7 @@ const StepEditor = ({stepId}) => {
     const handleDelete = () => {
         dispatch(deleteRecordedSteps([stepId]));
     };
-	const handleEditModeClick = () => {
+    const handleEditModeClick = () => {
 		emitShowModal({
 			type: EDIT_MODE_MAP[step.type],
 			stepIndex: stepId,

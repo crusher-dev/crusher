@@ -1,15 +1,7 @@
 import React, { memo } from "react";
 import { css } from "@emotion/react";
-import {
-	getIsStatusBarVisible,
-	getRecorderCrashState,
-	getRecorderInfo,
-	getRecorderState,
-	getSelectedElement,
-	isInspectElementSelectorModeOn,
-	isInspectModeOn,
-} from "electron-app/src/store/selectors/recorder";
-import { useDispatch, useSelector, useStore } from "react-redux";
+import {getRecorderCrashState, getRecorderInfo, getRecorderState, getSelectedElement, isInspectElementSelectorModeOn, isInspectModeOn} from "electron-app/src/store/selectors/recorder";
+import {useSelector, useStore} from "react-redux";
 import { Conditional } from "@dyson/components/layouts";
 import * as url from "url";
 import { IpcMessageEvent } from "electron";
@@ -30,7 +22,7 @@ import { Button } from "@dyson/components/atoms";
 
 import { RightClickMenu } from "@dyson/components/molecules/RightClick/RightClick";
 
-const CrashScreen = (props: any) => {
+const CrashScreen = () => {
 	const store = useStore();
 
 	return (
@@ -105,7 +97,7 @@ const CrashScreen = (props: any) => {
 	);
 };
 
-const PageLoadFailedScreen = (props: any) => {
+const PageLoadFailedScreen = () => {
 	const store = useStore();
 	const handleCloseDialog = () => {
 		store.dispatch(updateRecorderCrashState(null));
@@ -199,20 +191,19 @@ const menuItems = [
 	{ id: "devtools", label: "Inspect", shortcut: <div>Ctrl + Shift + I</div> },
 ];
 
-const DeviceFrame = (props: any) => {
-	const recorderInfo = useSelector(getRecorderInfo);
-	const recorderState = useSelector(getRecorderState);
-	const recorderCrashState = useSelector(getRecorderCrashState);
-	const isStatusBarVisible = useSelector(getIsStatusBarVisible);
+const DeviceFrame = () => {
+    const recorderInfo = useSelector(getRecorderInfo);
+    const recorderState = useSelector(getRecorderState);
+    const recorderCrashState = useSelector(getRecorderCrashState);
 
-	const ref = React.useRef<HTMLWebViewElement>(null);
-	const store = useStore();
+    const ref = React.useRef<HTMLWebViewElement>(null);
+    const store = useStore();
 
-	const getPreloadScriptPath = () => {
+    const getPreloadScriptPath = () => {
 		return url.resolve(window.location.href, "./webview-preload.js");
 	};
 
-	React.useEffect(() => {
+    React.useEffect(() => {
 		if (ref.current) {
 			ref.current.addEventListener("ipc-message", (event: IpcMessageEvent) => {
 				const recorderState = getRecorderState(store.getState());
@@ -257,14 +248,14 @@ const DeviceFrame = (props: any) => {
 		}
 	}, [ref.current]);
 
-	const handleMenuCallback = React.useCallback((id) => {
+    const handleMenuCallback = React.useCallback((id) => {
 		if (id === "devtools") {
 			turnOnWebviewDevTools();
 		} else if (id === "inspect") {
 			turnOnInspectMode();
 		}
 	}, []);
-	const menuItemsComponent = React.useMemo(() => {
+    const menuItemsComponent = React.useMemo(() => {
 		return menuItems.map((item) => {
 			return {
 				type: "menuItem",
@@ -275,8 +266,8 @@ const DeviceFrame = (props: any) => {
 		});
 	}, []);
 
-	// Only when code is shown
-	return (
+    // Only when code is shown
+    return (
 		<div css={[topContainerStyle]}>
 
 			<RightClickMenu menuItems={menuItemsComponent}>
@@ -337,22 +328,6 @@ const deviceOverlayStyle = css`
 	left: 0;
 	top: 0;
 	z-index: 998;
-`;
-
-const runningStatusStyle = css`
-	position: fixed;
-	width: 100%;
-	display: flex;
-	text-align: center;
-	justify-content: center;
-	bottom: 0%;
-	height: 29rem;
-	align-items: center;
-	color: rgba(255, 255, 255, 0.6);
-	font-family: Gilroy;
-	color: #fff;
-	font-size: 14rem;
-	background: #141212;
 `;
 
 const webviewStyle = css`

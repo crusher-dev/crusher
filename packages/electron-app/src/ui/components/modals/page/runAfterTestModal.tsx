@@ -2,7 +2,6 @@ import React from "react";
 import { ModalTopBar } from "../topBar";
 import { Modal } from "@dyson/components/molecules/Modal";
 import { css } from "@emotion/react";
-import { Input } from "@dyson/components/atoms/input/Input";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { useDispatch } from "react-redux";
 import { getUserTests, performRunAfterTest } from "electron-app/src/ui/commands/perform";
@@ -22,39 +21,35 @@ const DropdownOption = ({ label }) => {
 	return <div css={{ padding: "7rem 8rem", width: "100%", cursor: "default" }}>{label}</div>;
 };
 const RunAfterTestModal = (props: iStartupModalProps) => {
-	const { isOpen } = props;
-	const [testId, setTestId] = React.useState("");
-	const [userTests, setUserTests] = React.useState([]);
+    const { isOpen } = props;
+    const [testId, setTestId] = React.useState("");
+    const [userTests, setUserTests] = React.useState([]);
 
-	const dispatch = useDispatch();
+    const dispatch = useDispatch();
 
-	React.useEffect(() => {
+    React.useEffect(() => {
 		if (props.stepAction && isOpen) {
 			setTestId(props.stepAction.payload.meta.value);
 		}
 	}, [isOpen, props.stepAction]);
 
-	const handleTestIdChange = (event: any) => {
-		setTestId(event.target.value);
-	};
-
-	const saveAction = async () => {
+    const saveAction = () => {
 		if (testId && testId !== "") {
 			performRunAfterTest(testId);
 			props.handleClose();
 		}
 	};
 
-	const updateAction = async () => {
+    const updateAction = () => {
 		if (testId && testId !== "") {
 			props.stepAction.payload.meta.value = testId;
-			dispatch(updateRecordedStep({ ...props.stepAction }, props.stepIndex));
+			dispatch(updateRecordedStep(props.stepAction, props.stepIndex));
 			sendSnackBarEvent({ type: "success", message: "Action updated" });
 			props.handleClose();
 		}
 	};
 
-	React.useEffect(() => {
+    React.useEffect(() => {
 		if (isOpen) {
 			getUserTests().then((tests) => {
 				setUserTests(tests.list);
@@ -62,13 +57,13 @@ const RunAfterTestModal = (props: iStartupModalProps) => {
 		}
 	}, [isOpen]);
 
-	if (!isOpen) return null;
+    if (!isOpen) return null;
 
-	const handleRunAfterTestInput = (selected) => {
+    const handleRunAfterTestInput = (selected) => {
 		setTestId(selected[0]);
 	};
 
-	const transformListToSelectBoxValues = (list: Array<any>) => {
+    const transformListToSelectBoxValues = (list: any[]) => {
 		return list.map((test) => ({
 			value: test.id,
 			label: test.testName,
@@ -76,11 +71,11 @@ const RunAfterTestModal = (props: iStartupModalProps) => {
 		}));
 	};
 
-	const getSelectedOption = (list: Array<any>, testId: string) => {
+    const getSelectedOption = (list: any[], testId: string) => {
 		return transformListToSelectBoxValues(list).filter((test) => test.value === testId);
 	};
 
-	return (
+    return (
 		<Modal id="current-modal" modalStyle={modalStyle} onOutsideClick={props.handleClose}>
 			<ModalTopBar title={"Run after test"} desc={"Runs test in the same browser context as specified"} closeModal={props.handleClose} />
 			<div
@@ -171,16 +166,6 @@ const buttonStyle = css`
 	width: 93rem;
 	height: 34rem;
 	margin-left: 20rem;
-`;
-const inputStyle = css`
-	background: #1a1a1c;
-	border-radius: 6rem;
-	border: 1rem solid #43434f;
-	font-family: Gilroy;
-	font-size: 14rem;
-	min-width: 358rem;
-	color: #fff;
-	outline: nonet;
 `;
 const inputContainerStyle = {
 	display: "flex",

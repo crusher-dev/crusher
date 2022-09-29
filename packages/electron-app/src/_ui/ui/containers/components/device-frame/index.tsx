@@ -29,7 +29,7 @@ import { Button } from "@dyson/components/atoms";
 
 import { RightClickMenu } from "@dyson/components/molecules/RightClick/RightClick";
 
-const CrashScreen = (props: any) => {
+const CrashScreen = () => {
 	const store = useStore();
 
 	return (
@@ -104,7 +104,7 @@ const CrashScreen = (props: any) => {
 	);
 };
 
-const PageLoadFailedScreen = (props: any) => {
+const PageLoadFailedScreen = () => {
 	const store = useStore();
 	const handleCloseDialog = () => {
 		store.dispatch(updateRecorderCrashState(null));
@@ -198,7 +198,7 @@ const menuItems = [
 	{ id: "devtools", label: "Inspect", shortcut: <div>Ctrl + Shift + I</div> },
 ];
 
-const DeviceFrame = (props: any) => {
+const DeviceFrame = () => {
 	const recorderInfo = useSelector(getRecorderInfo);
 	const recorderState = useSelector(getRecorderState);
 	const recorderCrashState = useSelector(getRecorderCrashState);

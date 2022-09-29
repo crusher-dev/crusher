@@ -4,18 +4,18 @@ import React from "react";
 
 const BrowserButton = ({ children, className, ...props }) => {
 	return (
-		<Button
+        (<Button
 			bgColor={"tertiary-dark"}
 			css={css`
 				border-color: transparent;
 				padding: 0 6rem;
 			`}
-			className={`${className}`}
+			className={String(className)}
 			{...props}
 		>
-			{children}
-		</Button>
-	);
+            {children}
+        </Button>)
+    );
 };
 
 export { BrowserButton };

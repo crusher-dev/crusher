@@ -12,13 +12,17 @@ interface IProps {
 	className?: string;
 	defaultExpanded?: boolean;
 	filteredList: any;
-};
+}
 
 const ToastPrettyActionMap = {
 	"TAKE_VIEWPORT_SCREENSHOT": "page screenshot",
 };
 
-const PageActions = ({ className, defaultExpanded, filteredList, ...props }: IProps) => {
+const PageActions = ({
+    className,
+    defaultExpanded,
+    filteredList
+}: IProps) => {
 	const handleCallback = React.useCallback((id) => {
 		const showToast = () => {
 			sendSnackBarEvent({
@@ -60,16 +64,16 @@ const PageActions = ({ className, defaultExpanded, filteredList, ...props }: IPr
 	if (!items) return null;
 
 	return (
-		<ActionsList
+        (<ActionsList
 			defaultExpanded={defaultExpanded}
-			className={`${className}`}
+			className={String(className)}
 			title={"page"}
 			description={"actions for page"}
 			items={getItemsFromActionsData(items)}
 			icon={<PageIcon css={pageIconCss} />}
 			callback={handleCallback}
-		/>
-	)
+		/>)
+    );
 };
 
 const pageIconCss = css`

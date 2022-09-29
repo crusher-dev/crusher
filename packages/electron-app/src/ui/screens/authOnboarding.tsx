@@ -1,7 +1,6 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { Link, ModelContainerLayout } from "../layouts/modalContainer";
-import { useInView } from "react-intersection-observer";
+import { Link, ModelContainerLayout } from "../../_ui/ui/layout/modalContainer";
 import { LinkBox } from "./login";
 import { performCreateCloudProject } from "../commands/perform";
 import { useNavigate } from "react-router-dom";
@@ -48,7 +47,7 @@ const YesNoButtons = ({ className, selected, callback, ...props }: { className?:
     }, []);
 
     return (
-        <div css={yesNoButtonContainerCss} className={`${className}`} {...props}>
+        (<div css={yesNoButtonContainerCss} className={String(className)} {...props}>
             <div css={[yesNoButtonCss, selected === "YES" ? selectedButtonCss : undefined]} onClick={handleSelect.bind(this, "YES")}>
                 {selected === "YES" ? (<SelectedIcon css={selectedIconCss} />) : ""}
                 <span>Yes</span>
@@ -57,8 +56,8 @@ const YesNoButtons = ({ className, selected, callback, ...props }: { className?:
                 {selected === "NO" ? (<SelectedIcon css={selectedIconCss} />) : ""}
                 <span>No</span>
             </div>
-        </div>
-    )
+        </div>)
+    );
 };
 
 const selectedIconCss = css`width: 12px; height: 12px; position: relative; top: 1.4px;`;
@@ -155,7 +154,7 @@ const DeveloperInput = () => {
     React.useEffect(() => {
         const pollInterval = setInterval(() => {
             getUserAccountProjects().then((res) => {
-                if (res && res.projects && res.projects.length) {
+                if (res?.projects?.length) {
                     // Select the first project
                     store.dispatch(setSelectedProject(res.projects[0].id));
                     navigate("/");

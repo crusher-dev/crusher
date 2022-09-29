@@ -2,14 +2,10 @@ import React from "react";
 import { css } from "@emotion/react";
 import { Text } from "@dyson/components/atoms/text/Text";
 import { useSelector } from "react-redux";
-import { getSelectedElement, isInspectElementSelectorModeOn, isInspectModeOn as _isInspectModeOn } from "electron-app/src/store/selectors/recorder";
+import {isInspectModeOn as _isInspectModeOn} from "electron-app/src/store/selectors/recorder";
 import { turnOffElementSelectorInspectMode, turnOffInspectMode } from "electron-app/src/_ui/commands/perform";
 
-interface IProps {
-    className?: string;
-};
-
-const InspectModeBanner = ({className, ...props} : IProps) => {
+const InspectModeBanner = () => {
     const isInspectModeOn = useSelector(_isInspectModeOn);
 
     const handleCancelAction = React.useCallback(() => {

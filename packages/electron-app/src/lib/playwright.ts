@@ -6,14 +6,12 @@ import { ExportsManager } from "../../../crusher-shared/lib/exports";
 import { CrusherCookieSetPayload } from "../../../crusher-shared/types/sdk/types";
 import { GlobalManagerPolyfill, LogManagerPolyfill, StorageManagerPolyfill } from "./polyfills";
 import { ActionDescriptor, CrusherRunnerActions, CrusherSdk, getMainActions } from "runner-utils/src/index";
-import { Browser, BrowserContext, ConsoleMessage, Page, ElementHandle, Frame, JSHandle } from "playwright";
+import {Browser, BrowserContext, ConsoleMessage, Page, ElementHandle, JSHandle} from "playwright";
 import { AppWindow } from "../main-process/app-window";
 import * as fs from "fs";
 import * as path from "path";
-import { now } from "../main-process/now";
 import { ACTION_DESCRIPTIONS } from "../_ui/ui/containers/components/sidebar/steps";
 import { uuidv4 } from "runner-utils/src/utils/helper";
-import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 const { performance } = require("perf_hooks");
 //@ts-ignore
 const playwright = typeof __non_webpack_require__ !== "undefined" ? __non_webpack_require__("./playwright/index.js") : require("playwright");
@@ -36,7 +34,7 @@ class PlaywrightInstance {
 	public actionDescriptor: ActionDescriptor;
 
 	/* Map to contain element handles from uniqueId saved in renderer */
-	elementsMap: Map<string, { handle: ElementHandle; parentFrameSelectors?: Array<any> }>;
+	elementsMap: Map<string, { handle: ElementHandle; parentFrameSelectors?: any[] }>;
 	page: Page;
 
 	private isBusy = false;
@@ -78,7 +76,7 @@ class PlaywrightInstance {
 	}
 
 	private _overrideSdkActions() {
-		CrusherSdk.prototype.spawnTests = async () => {
+		CrusherSdk.prototype.spawnTests = () => {
 			return;
 		};
 
@@ -104,7 +102,7 @@ class PlaywrightInstance {
 				}
 			};
 
-			const filteredCookies: Array<ElectronCompatibleCookiePayload> = cookies.map((cookie) => {
+			const filteredCookies: ElectronCompatibleCookiePayload[] = cookies.map((cookie) => {
 				return {
 					...cookie,
 					sameSite: cookie.sameSite ? getCompatibleElectronSameSiteFormat(cookie.sameSite) : undefined,
@@ -161,17 +159,15 @@ class PlaywrightInstance {
 		const ownerFrame = await elementHandle.ownerFrame();
 		const parentFrame = await ownerFrame.parentFrame();
 		let parentFrameSelectors = null;
-		if (parentFrame) {
-			if (!(await ownerFrame.isDetached())) {
-				const ownerFrameElement = await ownerFrame.frameElement();
-				parentFrameSelectors = await parentFrame.evaluate(
-					(element) => {
-						return (window as any).getSelectors(element[0]);
-					},
-					[ownerFrameElement],
-				);
-			}
-		}
+		if (parentFrame && !(await ownerFrame.isDetached())) {
+            const ownerFrameElement = await ownerFrame.frameElement();
+            parentFrameSelectors = await parentFrame.evaluate(
+                (element) => {
+                    return (window as any).getSelectors(element[0]);
+                },
+                [ownerFrameElement],
+            );
+        }
 		if (elementHandle) {
 			this.elementsMap.set(uniqueElementId, { handle: elementHandle, parentFrameSelectors });
 			this.appWindow.reinstateElementSteps(uniqueElementId, this.elementsMap.get(uniqueElementId));
@@ -180,9 +176,9 @@ class PlaywrightInstance {
 
 	async connect() {
 		const debuggingPortFile = fs.readFileSync(path.join(app.getPath("userData"), "DevToolsActivePort"), "utf8");
-		const debuggingPort = debuggingPortFile.split("\n")[0];
+		const [debuggingPort] = debuggingPortFile.split("\n");
 		this.browser = await playwright.chromium.connectOverCDP(`http://localhost:${debuggingPort}/`, { customBrowserName: "electron-webview" });
-		this.browserContext = (await this.browser.contexts())[0];
+		[this.browserContext] = (await this.browser.contexts());
 		// @TODO: Look into this
 		this.page = await this._getWebViewPage();
 		this.sdkManager = new CrusherSdk(this.page, this._exportsManager as any, this._storageManager as any);
@@ -215,39 +211,36 @@ class PlaywrightInstance {
 
 	/* Serves as an API to click/hover over elements through playwright */
 	private _handleConsoleMessage = async (msg: ConsoleMessage) => {
-		const messageArgs = msg.args();
+        const [typeObj, valueObj] = msg.args();
+        if (!typeObj || !valueObj) return;
 
-		const [typeObj, valueObj] = messageArgs;
-		if (!typeObj || !valueObj) return;
+        const type = await typeObj.jsonValue();
+        switch (type) {
+        case "CRUSHER_HOVER_ELEMENT":
+            await (valueObj as ElementHandle).hover();
+            break;
+        case "CRUSHER_CLICK_ELEMENT":
+            await (valueObj as ElementHandle).click();
+            break;
+        }
+    };
 
-		const type = await typeObj.jsonValue();
-		switch (type) {
-			case "CRUSHER_HOVER_ELEMENT":
-				await (valueObj as ElementHandle).hover();
-				break;
-			case "CRUSHER_CLICK_ELEMENT":
-				await (valueObj as ElementHandle).click();
-				break;
-			case "CRUSHER_SAVE_ELEMENT_HANDLE": {
-			
-			}
-		}
-	};
-
-	async runActions(actions: Array<iAction>, shouldNotSave = false): Promise<void> {
+	async runActions(actions: iAction[], shouldNotSave = false): Promise<void> {
 		const actionsArr = getMainActions(actions);
 
 		/* Inputs can get affected if webview looses focus */
 		await this.appWindow.focusWebView();
 
-		await this.runnerManager.runActions(actionsArr, this.browser, this.page, async (action: iAction, result: iActionResult) => {
-			const { status, message, meta } = result;
+		await this.runnerManager.runActions(actionsArr, this.browser, this.page, (action: iAction, result: iActionResult) => {
+			const {
+                status
+            } = result;
 			switch (status) {
 				case ActionStatusEnum.STARTED:
 					this.lastAction = { id: uuidv4(), action };
 					this.appWindow.recordLog({
 						id: this.lastAction.id,
-						message: `${action.name ? action.name : this.actionDescriptor.describeAction(action as any)}`,
+						message: String(action.name || this.actionDescriptor.describeAction(action as any)),
 						type: "info",
 						args: [],
 						time: performance.now(),
@@ -258,7 +251,9 @@ class PlaywrightInstance {
 				case ActionStatusEnum.FAILED:
 				case ActionStatusEnum.STALLED:
 					this.lastAction = null;
-					const failedReason = result.meta.failedReason;
+					const {
+                        failedReason
+                    } = result.meta;
 					const isStalled = status === ActionStatusEnum.STALLED;
 
 					const uniqueId = uuidv4();
@@ -271,7 +266,7 @@ class PlaywrightInstance {
 					});
 					this.appWindow.recordLog({
 						id: uuidv4(),
-						message: `<= ${failedReason.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, "")}`,
+						message: `<= ${failedReason.replace(/[\u001b\u009b][#();?[]*(?:\d{1,4}(?:;\d{0,4})*)?[\d<=>A-ORZcf-nqry]/g, "")}`,
 						type: "error",
 						args: [],
 						time: performance.now(),

@@ -3,17 +3,19 @@ import { css } from "@emotion/react";
 
 interface IProps {
     className?: string;
-};
+}
 
-const CustomCodeBanner = ({className, ...props} : IProps) => {
+const CustomCodeBanner = ({
+    className
+}: IProps) => {
     return (
-        <div css={containerCss} className={`${className}`}>
+        (<div css={containerCss} className={String(className)}>
             <div>
                 <div css={mainTextCss}>Coding mode enabled</div>
                 <div css={descriptionCss}>No manual actions are allowed.</div>
             </div>
-        </div>
-    )
+        </div>)
+    );
 };
 
 const containerCss = css`

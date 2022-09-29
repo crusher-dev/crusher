@@ -10,9 +10,8 @@ import { loginUserToCloud } from "../../../../utils/login";
 import { focusOnWindow, performGoToUrl } from "electron-app/src/_ui/commands/perform";
 import { shell } from "electron";
 import { resolveToFrontend } from "electron-app/src/utils/url";
-import {  useNavigate } from "react-router-dom";
 import { useStore } from "react-redux";
- 
+
 const WaitingForLogin = () => {
     return (
         <div css={waitingContainerCss}>
@@ -23,11 +22,10 @@ const WaitingForLogin = () => {
 };
 
 const LoginScreen = () => {
-    const navigate = useNavigate();
-	const store = useStore();
-	const [isWaitingForLogin, setIsWaitingForLogin] = React.useState(false);
-	
-	const handlePostLogin = React.useCallback((userInfo: string) => {
+    const store = useStore();
+    const [isWaitingForLogin, setIsWaitingForLogin] = React.useState(false);
+
+    const handlePostLogin = React.useCallback(() => {
 		focusOnWindow();
 		performGoToUrl("/");
 	}, []);

@@ -11,7 +11,7 @@ const loginUserToCloud = async (loginCallback, store) => {
         if (_interval) { clearInterval(_interval); _interval = null; }
 
         const userInfo = getUserAccountInfo(store.getState());
-        store.dispatch(setUserAccountInfo({ ...(userInfo ? userInfo : {}), token: loginToken }));
+        store.dispatch(setUserAccountInfo({ ...((userInfo || {})), token: loginToken }));
 
         saveAndGetUserInfo(loginToken).then((userInfo) => {
             loginCallback(userInfo);

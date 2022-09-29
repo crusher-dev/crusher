@@ -1,6 +1,6 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { DeleteIcon, GarbageIcon, LoadingIconV2, PlayIcon } from "electron-app/src/_ui/constants/old_icons";
+import {GarbageIcon, LoadingIconV2, PlayIcon} from "electron-app/src/_ui/constants/old_icons";
 import { BasketBallIcon, EditIcon } from "../../../constants/icons";
 import { useNavigate } from "react-router-dom";
 import { goFullScreen, performReplayTestUrlAction } from "electron-app/src/_ui/commands/perform";
@@ -35,7 +35,7 @@ const EditableTestName = ({ testName, testId }) => {
     }, []);
 
     const editModeChangeHandle = (mode) => {
-        if (mode === true) {
+        if (mode) {
             setTestEditName(testId)
         } else {
             setTestEditName(null)
@@ -56,9 +56,14 @@ const EditableTestName = ({ testName, testId }) => {
     );
 };
 
-const TestItem = ({ test, isItemSelected, isEditingName, setIsEditingName, index, deleteTest, lock }) => {
+const TestItem = ({
+    test,
+    isItemSelected,
+    isEditingName,
+    setIsEditingName
+}) => {
 
-    const [isHover, setIsHover] = React.useState(false);
+    const [isHover] = React.useState(false);
     const [emoji, setEmoji] = React.useState(test.emoji);
     const navigate = useNavigate();
 
@@ -269,10 +274,10 @@ const MULTI_SELECTED_MENU = [
 ];
 
 const TestList = ({ tests, deleteTest }) => {
-    const [_, setTestEditName] = useAtom(editTestNameAtom)
+    const [, setTestEditName] = useAtom(editTestNameAtom)
     const navigate = useNavigate();
 
-    const items: Array<any> = React.useMemo(() => {
+    const items: any[] = React.useMemo(() => {
         if (!tests) return null;
         let isAcquired = false;
         const lockMechanism = { isAcquired: () => isAcquired, acquire: () => { if (!isAcquired) { isAcquired = true; return true; } return false }, release: () => { isAcquired = false; return true; } };

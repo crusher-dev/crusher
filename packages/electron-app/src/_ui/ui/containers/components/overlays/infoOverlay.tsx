@@ -1,9 +1,7 @@
 import React from "react";
 import { css } from "@emotion/react";
 import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
-import { Button } from "@dyson/components/atoms/button/Button";
 import { Text } from "@dyson/components/atoms/text/Text";
-import { useAtom } from "jotai";
 import { useDispatch, useSelector } from "react-redux";
 import { shouldShowOnboardingOverlay } from "electron-app/src/store/selectors/app";
 import { setShowShouldOnboardingOverlay } from "electron-app/src/store/actions/app";
@@ -57,17 +55,6 @@ const heading = css`
 	padding-bottom: 9rem;
 `;
 
-const buttonStyle = css`
-	width: 154rem;
-	border: 1px solid #303235;
-	box-sizing: border-box;
-	border-radius: 6rem;
-	font-family: Gilroy;
-	font-size: 15rem;
-	text-align: center;
-	color: rgba(255, 255, 255, 0.83);
-	margin-right: 20rem;
-`;
 const text2Style = css`
 	font-family: Gilroy;
 	font-style: normal;
@@ -88,11 +75,6 @@ const text1Style = css`
 	font-size: 14rem;
 	line-height: 18rem;
 	margin-right: 23rem;
-	color: #ffffff;
-`;
-const knowStyle = css`
-	font-family: Cera Pro;
-	font-size: 12rem;
 	color: #ffffff;
 `;
 const blockStyle = css`

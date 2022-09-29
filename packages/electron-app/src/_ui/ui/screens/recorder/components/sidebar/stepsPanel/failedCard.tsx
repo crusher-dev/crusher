@@ -1,10 +1,10 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { FailedStepIcon, OptionsIcon } from "electron-app/src/_ui/constants/icons";
+import {FailedStepIcon} from "electron-app/src/_ui/constants/icons";
 import { NormalButton } from "electron-app/src/_ui/ui/components/buttons/NormalButton";
 import { continueRemainingSteps } from "electron-app/src/_ui/commands/perform";
 import { deleteRecordedSteps } from "electron-app/src/store/actions/recorder";
-import { getRecorderState, getSavedSteps } from "electron-app/src/store/selectors/recorder";
+import {getSavedSteps} from "electron-app/src/store/selectors/recorder";
 import { ActionStatusEnum } from "@shared/types/action";
 import { useStore } from "react-redux";
 
@@ -124,9 +124,5 @@ const linkCss = css`
 
     color: rgba(94, 94, 94, 0.87);
     :hover { opacity: 0.8; }
-`;
-const optionsIconCss = css`
-    width: 17rem;
-    height: 3.7rem;
 `;
 export { FailedStepCard };

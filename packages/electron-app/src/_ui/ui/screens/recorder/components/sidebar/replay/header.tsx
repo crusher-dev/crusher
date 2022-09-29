@@ -1,6 +1,5 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { InputFocusHint } from "electron-app/src/_ui/ui/components/inputs/inputFocusHint";
 import { EllipseIcon, ResetIcon } from "electron-app/src/_ui/constants/icons";
 import { useLocalBuild } from "electron-app/src/_ui/hooks/tests";
 
@@ -85,21 +84,21 @@ const ReplaySidebarHeader = ({className}: IProps) => {
     const handleResetTest = () => {};
     
     return (
-            <div className={`${className}`} css={containerCss}>
-                <div className={"flex"} css={headerCss}>
-                    <div>
-                        <div css={titleCss}>Running test</div>
-                        <div css={testNameCss} className={"mt-8"}>google test</div>
-                    </div>
-                    <div className={'flex ml-auto'}>
-                        <ResetIcon onClick={handleResetTest} css={[resetIconCss]}/>
-                    </div>
+        (<div className={String(className)} css={containerCss}>
+            <div className={"flex"} css={headerCss}>
+                <div>
+                    <div css={titleCss}>Running test</div>
+                    <div css={testNameCss} className={"mt-8"}>google test</div>
                 </div>
-                <div css={contentCss} className="custom-scroll px-14">
-                    <ProgressBar/>
+                <div className={'flex ml-auto'}>
+                    <ResetIcon onClick={handleResetTest} css={[resetIconCss]}/>
                 </div>
             </div>
-    )
+            <div css={contentCss} className="custom-scroll px-14">
+                <ProgressBar/>
+            </div>
+        </div>)
+    );
 };
 
 const titleCss = css`
@@ -123,11 +122,6 @@ const resetIconCss  = css`
     :hover {
         opacity: 0.8;
     }
-`;
-const topBorderCss = css`
-    border-top-width: 0.5px;
-    border-top-style: solid;
-    border-top-color: #1B1B1B;
 `;
 const containerCss = css`
 	overflow: hidden;

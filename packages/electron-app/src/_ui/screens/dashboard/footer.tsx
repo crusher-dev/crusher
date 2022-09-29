@@ -4,7 +4,7 @@ import { goFullScreen, performRunTests } from "electron-app/src/ui/commands/perf
 import { useNavigate } from "react-router-dom";
 
 import { triggerLocalBuild } from "../../utils/recorder";
-import { StatusMessageBar } from "electron-app/src/ui/layouts/modalContainer";
+import { StatusMessageBar } from "electron-app/src/_ui/ui/layout/modalContainer";
 import {ButtonDropdown} from "../../ui/components/buttonDropdown";
 
 const PlusIcon = (props) => (
@@ -66,7 +66,7 @@ const actionDropdownOptions = [
 ]
 
 const DashboardFooter = ({ tests }) => {
-	const [showActionDropdown, setShowActionDropdown] = React.useState(false);
+	const [, setShowActionDropdown] = React.useState(false);
 	const navigate = useNavigate();
 
 	const handleCreateTest = React.useCallback(() => {

@@ -1,61 +1,20 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { ConnectivityWarningIcon, LoadingIconV2, PlayV2Icon } from "../../../constants/old_icons";
-import { Link } from "../../components/menuDropdownComponent";
-import { Button } from "@dyson/components/atoms/button/Button";
-import { shell } from "electron";
-import { performGoToUrl, performRunDraftTest, performRunTests, turnOnProxy } from "../../../commands/perform";
-import { getCurrentSelectedProjct, getProxyState, getUserAccountInfo } from "electron-app/src/store/selectors/app";
-import { useSelector, useStore } from "react-redux";
+import {performGoToUrl} from "../../../commands/perform";
+import {getUserAccountInfo} from "electron-app/src/store/selectors/app";
+import {useStore} from "react-redux";
 import { CompactAppLayout } from "../../layout/CompactAppLayout";
 import { Footer } from "../../layout/Footer";
 import { NormalButton } from "../../components/buttons/NormalButton";
 import { getGlobalAppConfig, writeGlobalAppConfig } from "electron-app/src/lib/global-config";
 import { setUserAccountInfo } from "electron-app/src/store/actions/app";
-import { useNavigate } from "react-router-dom";
-
-const ReadDocsButton = ({ title, className, onClick }) => {
-	return (
-		<Button
-			id={"verify-save-test"}
-			onClick={(e) => {
-				e.preventDefault();
-				e.stopPropagation();
-				onClick(e);
-			}}
-			className={`${className}`}
-			bgColor="tertiary-outline"
-			size="x-small"
-			css={saveButtonStyle}
-		>
-			<span>{title}</span>
-		</Button>
-	);
-};
-
-const saveButtonStyle = css`
-	width: 100rem;
-	background: transparent;
-	border-radius: 6rem;
-	font-family: Gilroy;
-	font-style: normal;
-	font-weight: 600;
-	font-size: 13.6rem;
-	border: 0.5px solid #ffffff;
-	color: #ffffff;
-	:hover {
-		background: transparent;
-		border: 0.6px solid #ffffff;
-	}
-`;
 
 const UnAuthorizedErrorContainer = () => {
-	const store = useStore();
-	const navigate = useNavigate();
+    const store = useStore();
 
-	const handeLogout = React.useCallback(() => {
+    const handeLogout = React.useCallback(() => {
 		const appConfig = getGlobalAppConfig();
-		if (appConfig && appConfig["userInfo"]) {
+		if (appConfig?.["userInfo"]) {
 			delete appConfig["userInfo"];
 			writeGlobalAppConfig(appConfig);
 		}
@@ -63,7 +22,7 @@ const UnAuthorizedErrorContainer = () => {
 		performGoToUrl("/");
 	}, []);
 
-	const handleAccountInfo = React.useCallback(() => {
+    const handleAccountInfo = React.useCallback(() => {
 		const acc = getUserAccountInfo(store.getState() as any);
 		if (acc) {
 			alert(`Account info\n\nTeam: ${acc.teamName}\nName: ${acc.name}\nLogin: ${acc.email}`)
@@ -72,7 +31,7 @@ const UnAuthorizedErrorContainer = () => {
 		}
 	}, []);
 
-	return (
+    return (
 		<CompactAppLayout title={null} footer={<Footer />} css={containerCss}>
 			<div css={containerStyle}>
 				<div css={contentContainerStyle}>
@@ -121,9 +80,6 @@ const accountInfoButtonCss = css`
 	width: 84rem;
     background: transparent !important;
 `;
-const skipLinkStyle = css`
-	margin-left: 20rem;
-`;
 
 const contentContainerStyle = css`
 	display: flex;
@@ -169,38 +125,5 @@ const containerStyle = css`
 const iconStyle = css`
     width: 90rem;
     fill: #8860de;
-`;
-const actionsBarContainerStyle = css`
-	display: flex;
-	align-items: center;
-	margin-top: 20rem;
-`;
-const waitingTextStyle = css`
-	margin-top: 40rem;
-	font-family: Gilroy;
-	font-style: normal;
-	font-weight: 400;
-	font-size: 13rem;
-	text-align: center;
-	letter-spacing: 0.01em;
-
-	color: #ffffff;
-`;
-const watch = css`
-	font-size: 14rem;
-	display: flex;
-	align-items: center;
-
-	column-gap: 8rem;
-	align-self: center !important;
-	justify-self: end;
-
-	margin-top: 100rem;
-
-	:hover {
-		color: #a966ff;
-		text-decoration: underline;
-		cursor: pointer;
-	}
 `;
 export { UnAuthorizedErrorContainer };

@@ -1,6 +1,6 @@
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
 import { iAction } from "@shared/types/action";
-import { iElementInfo, TRecorderCrashState, TRecorderState } from "../reducers/recorder";
+import {iElementInfo, TRecorderState} from "../reducers/recorder";
 
 export const UPDATE_RECORDER_STATE = "UPDATE_RECORDER_STATE";
 export const SET_IS_WEBVIEW_INITIALIZED = "SET_IS_WEBVIEW_INITIALIZED";

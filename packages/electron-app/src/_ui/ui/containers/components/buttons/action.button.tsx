@@ -11,17 +11,17 @@ const ActionButton = React.forwardRef(({ title, id, className, onClick }: IProps
     }, [onClick]);
 
 	return (
-		<Button
+        (<Button
             id={id}
 			onClick={handleClick}
-			className={`${className}`}
+			className={String(className)}
 			bgColor="tertiary-outline"
 			css={buttonCss}
             ref={ref}
 		>
-			<span>{title}</span>
-		</Button>
-	);
+            <span>{title}</span>
+        </Button>)
+    );
 });
 
 const buttonCss = css`

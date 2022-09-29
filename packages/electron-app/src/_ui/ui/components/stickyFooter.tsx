@@ -1,6 +1,6 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { CloudIcon, ConsoleIcon, DisabledCloudIcon, DocsIcon, NotepadIcon } from "../../constants/icons";
+import {CloudIcon, ConsoleIcon, DisabledCloudIcon, DocsIcon} from "../../constants/icons";
 import { Link } from "./Link";
 import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
 import { HoverCard } from "@dyson/components/atoms/tooltip/Tooltip1";
@@ -9,18 +9,21 @@ import { linkOpen } from "electron-app/src/utils/url";
 import { getAppSettings, getIsProxyInitializing, getProxyState } from "electron-app/src/store/selectors/app";
 import { useSelector, useStore } from "react-redux";
 import { useBuildNotifications } from "../../hooks/tests";
-import { LinkPointer } from "./LinkPointer";
 import { Tooltip } from "@dyson/components/atoms/tooltip/Tooltip";
-import { Conditional } from "@dyson/components/layouts";
 import { resolveToFrontEndPath } from "@shared/utils/url";
 import { shell } from "electron";
 import { CloudCrusher } from "electron-app/src/lib/cloud";
 
 interface IProps {
     className?: string;
-};
-const StickyFooter = ({ className, ...props }: IProps) => {
-    const { notifications, latestNotification, updateNotification } = useBuildNotifications();
+}
+const StickyFooter = ({
+    className
+}: IProps) => {
+    const {
+        latestNotification,
+        updateNotification
+    } = useBuildNotifications();
     const store = useStore();
     const proxyIsInitializing = useSelector(getIsProxyInitializing);
     const proxyState = useSelector(getProxyState);
@@ -35,13 +38,13 @@ const StickyFooter = ({ className, ...props }: IProps) => {
     };
 
     React.useEffect(() => {
-        if(latestNotification && latestNotification.id && !latestNotification.status) {
+        if(latestNotification?.id && !latestNotification.status) {
             const interval = setInterval(() => {
                 CloudCrusher.getBuildReport(latestNotification.id).then((res) => {
                     updateNotification(latestNotification.id, {
                         status: res.status,
                     });
-                    if (res.status != "RUNNING") {
+                    if (res.status !== "RUNNING") {
                         clearInterval(interval);
                     }
                 });
@@ -55,7 +58,7 @@ const StickyFooter = ({ className, ...props }: IProps) => {
 
     const statusMessage = latestNotification?.status && latestNotification?.status !== "RUNNING" ? "has " + latestNotification.status.toLowerCase() : "is running"; 
     return (
-        <div css={containerCss} className={`${className}`}>
+        (<div css={containerCss} className={String(className)}>
             <div css={contentCss}>
                 {latestNotification ? (
                     <div css={notificationContainerCss}>
@@ -90,8 +93,8 @@ const StickyFooter = ({ className, ...props }: IProps) => {
                     <span css={docsButtonTextCss}>Docs & help</span>
                 </div>
             </HoverCard>
-        </div>
-    )
+        </div>)
+    );
 };
 
 
@@ -139,10 +142,6 @@ const contextContainerCss = css`
     align-items: center;
     gap: 12px;
     margin-left: auto;
-`;
-const notepadIconCss = css`
-    width: 14px;
-    height: 14px;
 `;
 const notificationContainerCss = css`
     flex: 1;

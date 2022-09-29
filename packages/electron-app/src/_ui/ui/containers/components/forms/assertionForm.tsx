@@ -6,9 +6,9 @@ import { SelectBox } from "@dyson/components/molecules/Select/Select";
 import { Input } from "@dyson/components/atoms/input/Input";
 
 interface iAssertionFormTableProps {
-	rowItems: Array<iAssertionRow>;
-	fields: Array<iField>;
-	operations: Array<ASSERTION_OPERATION_TYPE>;
+	rowItems: iAssertionRow[];
+	fields: iField[];
+	operations: ASSERTION_OPERATION_TYPE[];
 	onFieldChange?: (selectedFieldName: string, rowId: string) => void;
 	onOperationChange?: (selectedOperation: ASSERTION_OPERATION_TYPE, rowId: string) => void;
 	onValidationChange?: (newValidation: string, rowId: string) => void;
@@ -27,44 +27,21 @@ function checkIfValidationPasses(fieldValue: string, validationValue: string, op
 			return fieldValue === validationValue;
 		case ASSERTION_OPERATION_TYPE.CONTAINS:
 			return fieldValue.includes(validationValue);
-		case ASSERTION_OPERATION_TYPE.REGEX: {
-			try {
+		case ASSERTION_OPERATION_TYPE.REGEX:
+            try {
 				const rgx = new RegExp(validationValue);
 				if (rgx.test(fieldValue)) {
 					return true;
 				} else {
 					throw new Error("Regex didn't match");
 				}
-			} catch (err) {
+			} catch {
 				return false;
 			}
-		}
 		default:
 			throw new Error("Unknown Validation Operation");
 	}
 }
-
-const reactSelectDefaultStyles = {
-	option: (provided, state) => ({
-		...provided,
-		fontSize: 14,
-	}),
-	control: (provided, state) => ({
-		...provided,
-		minHeight: 32,
-		maxHeight: 32,
-		padding: 0,
-	}),
-	singleValue: (provided) => ({
-		...provided,
-		fontSize: 14,
-	}),
-	valueContainer: (provided) => ({
-		...provided,
-		top: "-0.2rem",
-		width: "70rem",
-	}),
-};
 
 const DropdownOption = ({ label }) => {
 	return <div css={{ padding: "7rem 8rem", width: "100%", cursor: "default" }}>{label}</div>;
@@ -75,12 +52,12 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 
 	const renderFieldInput = (selectedField: string, rowId: string) => {
 		const getFieldOptions = () => {
-			const options = [];
-			fields.forEach((field) => {
+            const options = [];
+            for (const field of fields) {
 				options.push({ value: field.name, label: field.name, component: <DropdownOption label={field.name} />, inactive: false });
-			});
-			return options;
-		};
+			}
+            return options;
+        };
 		const fieldOptions = getFieldOptions();
 
 		const selectedOption = fieldOptions.find((option) => option.value === selectedField);
@@ -123,17 +100,17 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 
 	const renderFieldOperationInput = (selectedOperation: string, rowId: string) => {
 		const getOperationOptions = () => {
-			const options = [];
-			operations.forEach((operation) => {
+            const options = [];
+            for (const operation of operations) {
 				options.push({ value: operation, label: operation, component: <DropdownOption label={operation} />, inactive: false });
-			});
-			return options;
-		};
+			}
+            return options;
+        };
 
 		const operationOptions = getOperationOptions();
 		const selectedOption = operationOptions.find((option) => option.value === selectedOperation);
 
-		const handleOnOperationChange = (selectedOptions: Array<string>) => {
+		const handleOnOperationChange = (selectedOptions: string[]) => {
 			if (onOperationChange) {
 				onOperationChange(selectedOptions[0] as any, rowId);
 			}
@@ -182,7 +159,7 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 		if (deleteValidationRow) deleteValidationRow(rowIndex);
 	};
 
-	const rowOut = rowItems.map((row, index: number) => {
+	const rowOut = rowItems.map(row => {
 		const isValidationCorrect = checkIfValidationPasses(row.field.value, row.validation, row.operation as ASSERTION_OPERATION_TYPE);
 		return (
 			<div
@@ -250,13 +227,6 @@ const inputTableItemFieldContainerStyle = {
 	fontStyle: "normal",
 	fontSize: "0.82rem",
 	display: "flex",
-};
-
-const inputTableGridOptionValueInputStyle = {
-	padding: "6px 16px",
-	borderRadius: "0.25rem",
-	width: "100%",
-	fontSize: 14,
 };
 
 const inputStyle = css`

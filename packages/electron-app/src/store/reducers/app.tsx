@@ -1,17 +1,6 @@
 import { AnyAction } from "redux";
-import {} from "../actions/recorder";
-import { iSelectorInfo } from "@shared/types/selectorInfo";
 import { iAction } from "@shared/types/action";
-import {
-	RESET_APP_SESSION,
-	SET_PROXY_INITIALIZING,
-	SET_PROXY_STATE,
-	SET_SELECTED_PROJECT,
-	SET_SESSION_META,
-	SET_SETTINGS,
-	SET_SHOW_SHOULD_ONBOARDING_OVERLAY,
-	SET_USER_ACCOUNT_INFO,
-} from "../actions/app";
+import {SET_PROXY_INITIALIZING, SET_PROXY_STATE, SET_SELECTED_PROJECT, SET_SESSION_META, SET_SETTINGS, SET_SHOW_SHOULD_ONBOARDING_OVERLAY, SET_USER_ACCOUNT_INFO} from "../actions/app";
 
 export interface iSettings {
 	backendEndPoint: string;
@@ -22,7 +11,7 @@ export interface iSettings {
 
 export interface ISessionMeta {
 	editing?: { testId: string } | undefined;
-	remainingSteps?: Array<iAction> | undefined;
+	remainingSteps?: iAction[] | undefined;
 }
 
 export interface IProxyState {

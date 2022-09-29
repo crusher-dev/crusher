@@ -1,6 +1,6 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { ActionHeadingIcon, PlayIconV3 } from "electron-app/src/_ui/constants/old_icons";
+import {PlayIconV3} from "electron-app/src/_ui/constants/old_icons";
 import { getRecorderState } from "electron-app/src/store/selectors/recorder";
 import { useStore } from "react-redux";
 import { sendSnackBarEvent } from "electron-app/src/_ui/ui/containers/components/toast";
@@ -9,7 +9,7 @@ import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 interface IProps {
     title: string;
     description?: string;
-    items?: Array<{ id: string; content: any }>;
+    items?: { id: string; content: any }[];
     icon?: any;
     className?: string;
     callback?: any;
@@ -45,7 +45,7 @@ const ActionsList = ({ className, ...props }: IProps) => {
     }, [items]);
 
     return (
-        <div css={[containerCss, bottomSeperatorCss]} className={`${className}`} {...props}>
+        (<div css={[containerCss, bottomSeperatorCss]} className={String(className)} {...props}>
             <div className={"action-item-header"} onClick={setIsExpanded.bind(this, !isExpanded)} css={[headingCss, isExpanded ? activeSectionCss : null]}>
                 {icon ? (
                     <div css={headingIconCss}>
@@ -65,7 +65,7 @@ const ActionsList = ({ className, ...props }: IProps) => {
                     {itemsContent}
                 </div>
             ) : ""}
-        </div>
+        </div>)
     );
 };
 

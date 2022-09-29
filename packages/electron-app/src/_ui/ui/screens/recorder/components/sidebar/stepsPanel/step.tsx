@@ -1,10 +1,8 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { Tooltip } from "@dyson/components/atoms/tooltip/Tooltip";
-import { Button } from "@dyson/components/atoms";
 import { getStepInfo } from "electron-app/src/store/selectors/recorder";
-import { useStore, useSelector } from "react-redux";
-import { GreenCheckboxIcon, LoadingIcon, PointerArrowIcon, WarningIcon } from "electron-app/src/_ui/constants/old_icons";
+import {useSelector} from "react-redux";
+import {GreenCheckboxIcon, LoadingIcon, PointerArrowIcon} from "electron-app/src/_ui/constants/old_icons";
 import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
 import { TextHighlighter } from "./helper";
 import { HoverCard } from "@dyson/components/atoms/tooltip/Tooltip1";
@@ -21,24 +19,13 @@ interface IProps {
     isLast: boolean;
 
     step?: any;
-};
-
-const menuItems = [
-    { id: "rename", label: "Rename", shortcut: <div>Enter</div> },
-    { id: "delete", label: 'Delete', shortcut: <div>⌘+D</div> }
-];
+}
 
 
 const Step = ({ className, isActive, onContextMenu, step, onClick, setIsActive, isLast, ...props }: IProps) => {
     const { stepId } = props;
-    const [isEditorCardOpen, setIsEditorCardOpen] = React.useState(false);
+    const [, setIsEditorCardOpen] = React.useState(false);
     const stepInfo = useSelector(getStepInfo(stepId));
-    const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-    const store = useStore();
-
-    const handleMenuOpenChange = React.useCallback((isOpen) => {
-        setIsActive(isOpen);
-    }, [setIsActive]);
 
     const title = TextHighlighter({ text: stepInfo.name });
     const hasFailed = stepInfo.isFailed;
@@ -155,42 +142,4 @@ const completedIconCss = css`
     height: 14rem;
 `;
 
-interface ITooltipButtonProps {
-    tooltip: any;
-    children?: any;
-
-    className?: string;
-    onClick?: any;
-};
-const TooltipButton = ({ className, ...props }: ITooltipButtonProps) => {
-    const { tooltip, onClick: callback, children } = props;
-    return (
-        <Tooltip
-            padding={8}
-            type={"hover"}
-            placement="top"
-            content={tooltip}>
-            <Button
-                size="small"
-                onClick={callback}
-                className={`${className}`}
-                css={tooltipButtonCss}
-                bgColor="tertiary-outline">
-                {children}
-            </Button>
-        </Tooltip>
-    );
-}
-
-
-const tooltipButtonCss = css`
-    margin-right: 9rem;
-    background: #ffffff;
-    border-radius: 4rem;
-    font-size: 12rem !important;
-    color: #40383b;
-    :hover {
-        background: rgba(255, 255, 255, 0.8);
-    }
-`;
 export { Step };

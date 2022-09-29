@@ -1,7 +1,7 @@
 import { app, BrowserWindow, ipcMain, session, shell } from "electron";
 import windowStateKeeper from "electron-window-state";
 import { APP_NAME } from "../../config/about";
-import { encodePathAsUrl, getAppIconPath, getSelectedProjectTests, getUserAccountProjects, getUserInfoFromToken, sleep } from "../utils";
+import {encodePathAsUrl, getAppIconPath, getSelectedProjectTests, getUserAccountProjects, getUserInfoFromToken} from "../utils";
 import { Emitter, Disposable } from "event-kit";
 import { now } from "./now";
 import { AnyAction, Store } from "redux";
@@ -36,7 +36,7 @@ import { resetAppSession, setSelectedProject, setSessionInfoMeta, setUserAccount
 import { resolveToFrontEndPath } from "@shared/utils/url";
 import { getGlobalAppConfig, writeGlobalAppConfig } from "../lib/global-config";
 import template from "@crusher-shared/utils/templateString";
-import { ILog, ILoggerReducer } from "../store/reducers/logger";
+import {ILog} from "../store/reducers/logger";
 import { clearLogs, recordLog } from "../store/actions/logger";
 import axios from "axios";
 import { identify } from "../lib/analytics";
@@ -90,7 +90,7 @@ export class AppWindow {
 			minHeight: this.minHeight,
 			autoHideMenuBar: true,
 			show: false,
-			frame: process.platform === "darwin" ? false : true,
+			frame: !(process.platform === "darwin"),
 			icon: getAppIconPath(),
 			// This fixes subpixel aliasing on Windows
 			// See https://github.com/atom/atom/commit/683bef5b9d133cb194b476938c77cc07fd05b972
@@ -319,11 +319,11 @@ export class AppWindow {
 		return this.proxyManager.initializeProxy(payload.configFilePath);
 	}
 
-	private async handleTurnOnWebviewDevtools(event: Electron.IpcMainEvent, payload: {}) {
+	private async handleTurnOnWebviewDevtools() {
 		this.webView?.webContents.openDevTools();
 	}
 
-	private async handleUndockCode(event: Electron.IpcMainEvent, payload: { code: string }) {
+	private async handleUndockCode() {
 		this.codeWindow = new BrowserWindow({
 			title: APP_NAME,
 			titleBarStyle: "hidden",
@@ -332,7 +332,7 @@ export class AppWindow {
 			height: this.window.getBounds().height,
 			autoHideMenuBar: true,
 			show: true,
-			frame: process.platform === "darwin" ? false : true,
+			frame: !(process.platform === "darwin"),
 			icon: getAppIconPath(),
 			// This fixes subpixel aliasing on Windows
 			// See https://github.com/atom/atom/commit/683bef5b9d133cb194b476938c77cc07fd05b972
@@ -361,20 +361,20 @@ export class AppWindow {
 			const recorderState = getRecorderState(this.store.getState() as any);
 			if (recorderState.payload && (recorderState.payload as any).previousState) {
 				this.store.dispatch(
-					updateRecorderState((recorderState.payload as any).previousState.type, { ...(recorderState.payload as any).previousState.payload }),
+					updateRecorderState((recorderState.payload as any).previousState.type, (recorderState.payload as any).previousState.payload),
 				);
 			}
 		});
 	}
 
-	private async handleCloudRunTests(event: Electron.IpcMainEvent, payload: { testIds: Array<string> | undefined }) {
+	private async handleCloudRunTests(event: Electron.IpcMainEvent, payload: { testIds: string[] | undefined }) {
 		return CloudCrusher.runTests(payload.testIds, this.proxyManager._results);
 	}
 
-	private handleGetAdvancedSelector(event: Electron.IpcMainEvent, payload: any) {
+	private handleGetAdvancedSelector(event: Electron.IpcMainEvent) {
 		event.returnValue = this.useAdvancedSelectorPicker;
 	}
-	private handleGetVarContext(event: Electron.IpcMainEvent, payload: any) {
+	private handleGetVarContext(event: Electron.IpcMainEvent) {
 		const context = this.webView.playwrightInstance.getContext();
 		event.returnValue = Object.keys(context).reduce((prev, current) => {
 			// Get typescript type of current, CustomClass | string | number | boolean | undefined | null
@@ -384,15 +384,14 @@ export class AppWindow {
 	}
 
 	private async handleUpdateCodeTemplate(event: Electron.IpcMainEvent, payload: { id: number; name: string; code: string }) {
-		// await this.store.dispatch(updateCodeTemplate(payload.id, payload.codeTemplate));
-		// pdate.codeTemplate
-		const accountInfo = getUserAccountInfo(this.store.getState() as any);
-		if (!accountInfo || !accountInfo.token) {
+        // await this.store.dispatch(updateCodeTemplate(payload.id, payload.codeTemplate));
+        // pdate.codeTemplate
+        const accountInfo = getUserAccountInfo(this.store.getState() as any);
+        if (!accountInfo || !accountInfo.token) {
 			return null;
 		}
-		const appSettings = getAppSettings(this.store.getState() as any);
 
-		return axios
+        return axios
 			.post(
 				resolveToBackend("teams/actions/update.codeTemplate"),
 				{ id: payload.id, name: payload.name, code: payload.code },
@@ -407,16 +406,15 @@ export class AppWindow {
 			.then((res) => {
 				return res.data;
 			});
-	}
+    }
 
 	private async handleDeleteCodeTemplate(event: Electron.IpcMainEvent, payload: { id: string }) {
-		const accountInfo = getUserAccountInfo(this.store.getState() as any);
-		if (!accountInfo || !accountInfo.token) {
+        const accountInfo = getUserAccountInfo(this.store.getState() as any);
+        if (!accountInfo || !accountInfo.token) {
 			return null;
 		}
-		const appSettings = getAppSettings(this.store.getState() as any);
 
-		return axios
+        return axios
 			.post(
 				resolveToBackend("teams/actions/delete.codeTemplate"),
 				{ id: payload.id },
@@ -431,16 +429,15 @@ export class AppWindow {
 			.then((res) => {
 				return res.data;
 			});
-	}
+    }
 
 	private async handleSaveCodeTemplate(event, payload: { createPayload: any }) {
-		const accountInfo = getUserAccountInfo(this.store.getState() as any);
-		if (!accountInfo || !accountInfo.token) {
+        const accountInfo = getUserAccountInfo(this.store.getState() as any);
+        if (!accountInfo || !accountInfo.token) {
 			return null;
 		}
-		const appSettings = getAppSettings(this.store.getState() as any);
 
-		return axios
+        return axios
 			.post(resolveToBackend("teams/actions/save.code"), payload.createPayload, {
 				headers: {
 					Accept: "application/json, text/plain, */*",
@@ -451,11 +448,11 @@ export class AppWindow {
 			.then((res) => {
 				return res.data;
 			});
-	}
+    }
 
 	private async handleGotoUrl(event, payload: { url: string }) {
 		let finalUrl = payload.url;
-		if (finalUrl[0] == '/') {
+		if (finalUrl[0] === '/') {
 			finalUrl = encodePathAsUrl(__dirname, "index.html") + (finalUrl[1] ? "#/" + payload.url.substring(1) + `?test=${Date.now()}` : "");
 
 		}
@@ -463,13 +460,13 @@ export class AppWindow {
 	}
 
 	private async handleGetRecorderTestLogs() {
-		if (this.webView && this.webView.playwrightInstance) {
+		if (this.webView?.playwrightInstance) {
 			return this.webView.playwrightInstance.getTestLogs();
 		}
 		return null;
 	}
 
-	private async handleSaveLocalBuild(event, payload: { tests: Array<any> }) {
+	private async handleSaveLocalBuild(event, payload: { tests: any[] }) {
 		return CloudCrusher.saveLocalBuildReport(payload.tests);
 	}
 
@@ -477,14 +474,13 @@ export class AppWindow {
 		return CloudCrusher.createProject(payload.name);
 	}
 
-	private async handleGetCodeTemplates(event) {
-		const accountInfo = getUserAccountInfo(this.store.getState() as any);
-		if (!accountInfo || !accountInfo.token) {
+	private async handleGetCodeTemplates() {
+        const accountInfo = getUserAccountInfo(this.store.getState() as any);
+        if (!accountInfo || !accountInfo.token) {
 			return null;
 		}
-		const appSettings = getAppSettings(this.store.getState() as any);
 
-		return axios
+        return axios
 			.get(resolveToBackend("teams/actions/get.codeTemplates"), {
 				headers: {
 					Accept: "application/json, text/plain, */*",
@@ -495,7 +491,7 @@ export class AppWindow {
 			.then((res) => {
 				return res.data;
 			});
-	}
+    }
 
 	private async disableJavascriptInDebugger() {
 		if (this.window) {
@@ -519,13 +515,12 @@ export class AppWindow {
 	}
 
 	private async handleJumpToStep(event: Electron.IpcMainEvent, payload: { stepIndex: number }) {
-		const recorderSteps = getSavedSteps(this.store.getState() as any);
-		await this.resetRecorder();
-		const appSettings = getAppSettings(this.store.getState() as any);
-		this.setRemainingSteps(recorderSteps.slice(payload.stepIndex + 1) as any);
-		await this.handleReplayTestSteps(recorderSteps.slice(0, payload.stepIndex + 1) as any);
-		return true;
-	}
+        const recorderSteps = getSavedSteps(this.store.getState() as any);
+        await this.resetRecorder();
+        this.setRemainingSteps(recorderSteps.slice(payload.stepIndex + 1) as any);
+        await this.handleReplayTestSteps(recorderSteps.slice(0, payload.stepIndex + 1) as any);
+        return true;
+    }
 
 	private handleClearRemainingSteps() {
 		this.setRemainingSteps([]);
@@ -536,7 +531,7 @@ export class AppWindow {
 		event.returnValue = ![TRecorderState.PERFORMING_ACTIONS, TRecorderState.CUSTOM_CODE_ON].includes(recorderState.type);
 	}
 
-	private async handleGetUserTests(event: Electron.IpcMainEvent, payload: {}) {
+	private async handleGetUserTests() {
 		return getSelectedProjectTests();
 	}
 
@@ -546,13 +541,12 @@ export class AppWindow {
 	}
 	// Workaround to limitation of setting Cookie through XHR in renderer process
 	private async handleSaveNGetUserInfo(event, payload: { token: string }) {
-		const appSettings = getAppSettings(this.store.getState() as any);
-		const userInfo = await getUserInfoFromToken(payload.token);
-		this.store.dispatch(setUserAccountInfo(userInfo));
+        const userInfo = await getUserInfoFromToken(payload.token);
+        this.store.dispatch(setUserAccountInfo(userInfo));
 
-		this.setGlobalCrusherAccountInfo(userInfo);
-		return userInfo;
-	}
+        this.setGlobalCrusherAccountInfo(userInfo);
+        return userInfo;
+    }
 	// Set focus to our recorder window
 	private focusWindow() {
 		this.window.focus();
@@ -578,7 +572,7 @@ export class AppWindow {
 		const logs = new Map(getLogs(this.store.getState() as any));
 
 		if (!log.parent) {
-			logs.set("_", [...(logs.get("_") as Array<any>), log]);
+			logs.set("_", [...(logs.get("_") as any[]), log]);
 		} else {
 			logs.set(log.parent, [...(logs.get(log.parent) || []), log]);
 		}
@@ -618,7 +612,7 @@ export class AppWindow {
 		console.log("Saving step", { type: action.type });
 		if (!this.webView.playwrightInstance) return;
 		const elementInfo = this.webView.playwrightInstance.getElementInfoFromUniqueId(action.payload.meta?.uniqueNodeId);
-		if (elementInfo && elementInfo.parentFrameSelectors) {
+		if (elementInfo?.parentFrameSelectors) {
 			action.payload.meta = {
 				...(action.payload.meta || {}),
 				parentFrameSelectors: elementInfo.parentFrameSelectors,
@@ -667,14 +661,7 @@ export class AppWindow {
 	}
 
 	reinstateElementSteps(uniqueElementId, elementInfo) {
-		const recordedSteps = getSavedSteps(this.store.getState() as any);
-		const stepsToReinstate = recordedSteps
-			.map((step, index) => ({ step, index }))
-			.filter((step) => {
-				return step.step.payload.meta?.uniqueNodeId === uniqueElementId;
-			});
-
-		stepsToReinstate.map((a) => {
+        {
 			a.step.payload.meta = {
 				...(a.step.payload.meta || {}),
 				parentFrameSelectors: elementInfo.parentFrameSelectors,
@@ -682,16 +669,16 @@ export class AppWindow {
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore
 			this.store.dispatch(updateRecordedStep(a.step, a.index));
-		});
-	}
+		};
+    }
 
-	async continueRemainingSteps(event: Electron.IpcMainEvent, payload: { extraSteps?: Array<iAction> | null }) {
+	async continueRemainingSteps(event: Electron.IpcMainEvent, payload: { extraSteps?: iAction[] | null }) {
 		const { extraSteps } = payload;
 		let remainingSteps = getRemainingSteps(this.store.getState() as any);
 		await this.setRemainingSteps(null);
 
 		if (extraSteps) {
-			remainingSteps = remainingSteps ? [...extraSteps, ...remainingSteps] : [...extraSteps];
+			remainingSteps = remainingSteps ? [...extraSteps, ...remainingSteps] : extraSteps.slice();
 		}
 		if (remainingSteps) {
 			await this.handleReplayTestSteps(remainingSteps);
@@ -710,8 +697,8 @@ export class AppWindow {
 		if (!elementHandle) {
 			return null;
 		}
-		const attributes = await elementHandle.evaluate((element, args) => {
-			const attributeNamesArr: Array<string> = (element as HTMLElement).getAttributeNames();
+		const attributes = await elementHandle.evaluate(element => {
+			const attributeNamesArr: string[] = (element as HTMLElement).getAttributeNames();
 			return attributeNamesArr.map((attributeName) => {
 				return {
 					name: attributeName,
@@ -751,7 +738,7 @@ export class AppWindow {
 		return assertElementInfo;
 	}
 
-	async handleGetPageSeoInfo(event: Electron.IpcMainEvent, url: string) {
+	async handleGetPageSeoInfo() {
 		return {
 			title: await this.webView.playwrightInstance.page.title(),
 			metaTags: (await this.webView.playwrightInstance.page.evaluate(() => {
@@ -786,50 +773,43 @@ export class AppWindow {
 	}
 
 	async handleReloadPage() {
-		this.store.dispatch(updateRecorderState(TRecorderState.PERFORMING_ACTIONS, {}));
-		const savedSteps = getSavedSteps(this.store.getState() as any);
+        this.store.dispatch(updateRecorderState(TRecorderState.PERFORMING_ACTIONS, {}));
 
-		this.store.dispatch(
+        this.store.dispatch(
 			recordStep({
 				type: ActionsInTestEnum.RELOAD_PAGE,
 				payload: {},
 			}),
 		);
 
-		this.webView.webContents.reload();
+        this.webView.webContents.reload();
 
-		await this.webView.playwrightInstance.page.waitForNavigation({ waitUntil: "networkidle" });
+        await this.webView.playwrightInstance.page.waitForNavigation({ waitUntil: "networkidle" });
 
-		/* Change this to back */
-		this.store.dispatch(updateCurrentRunningStepStatus(ActionStatusEnum.COMPLETED));
+        /* Change this to back */
+        this.store.dispatch(updateCurrentRunningStepStatus(ActionStatusEnum.COMPLETED));
 
-		this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
-	}
+        this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
+    }
 
-	async handleUpdateTest(event: Electron.IpcMainEvent) {
-		const editingSessionMeta = getAppEditingSessionMeta(this.store.getState() as any);
-		const recordedSteps = getSavedSteps(this.store.getState() as any);
-		const appSettings = getAppSettings(this.store.getState() as any);
+	async handleUpdateTest() {
+        const editingSessionMeta = getAppEditingSessionMeta(this.store.getState() as any);
+        const recordedSteps = getSavedSteps(this.store.getState() as any);
 
-		const projectId = await this.window.webContents.executeJavaScript("window.localStorage.getItem('projectId');");
-		const accountInfo = getUserAccountInfo(this.store.getState() as any);
-
-		return CloudCrusher.updateTestDirectly(
+        return CloudCrusher.updateTestDirectly(
 			editingSessionMeta.testId,
 			{ events: recordedSteps as any, }
 		);
-	}
+    }
 
 	private async handleGetBuildReport(event: Electron.IpcMainEvent, payload: { buildId: string }) {
 		return CloudCrusher.getBuildReport(payload.buildId);
 	}
 
 	private async handleUpdateCloudTestName(event: Electron.IpcMainEvent, payload: { testId: string; testName: string }) {
-		const userAccountInfo = getUserAccountInfo(this.store.getState() as any);
-		const appSettings = getAppSettings(this.store.getState() as any);
-		await CloudCrusher.updateTestName(payload.testId, payload.testName);
-		return true;
-	}
+        await CloudCrusher.updateTestName(payload.testId, payload.testName);
+        return true;
+    }
 
 	async _handleSaveTestCall(event: Electron.IpcMainEvent, payload: { shouldNotRunTest: boolean }) {
 		return this.handleSaveTest(payload.shouldNotRunTest);
@@ -837,27 +817,24 @@ export class AppWindow {
 
 	async handleRunDraftTest(event: Electron.IpcMainEvent, payload: { testId: number }) {
 		return CloudCrusher.runDraftTest(
-			`${payload.testId}`,
+			String(payload.testId),
 			this.proxyManager._results
 		);
 	}
 
 	async handleSaveTest(shouldNotRunTest: boolean = false) {
-		const recordedSteps = getSavedSteps(this.store.getState() as any);
-		const appSettings = getAppSettings(this.store.getState() as any);
-		const testName = getTestName(this.store.getState() as any);
+        const recordedSteps = getSavedSteps(this.store.getState() as any);
+        const testName = getTestName(this.store.getState() as any);
 
-		const projectId = getCurrentSelectedProjct(this.store.getState() as any);
-		let testRecord = null;
-		if (app.commandLine.hasSwitch("exit-on-save")) {
-			const projectId = app.commandLine.getSwitchValue("projectId");
-
-			testRecord = await CloudCrusher.saveTestDirectly(
+        const projectId = getCurrentSelectedProjct(this.store.getState() as any);
+        let testRecord = null;
+        if (app.commandLine.hasSwitch("exit-on-save")) {
+            testRecord = await CloudCrusher.saveTestDirectly(
 				{ events: recordedSteps as any, name: testName },
 				!shouldNotRunTest,
 				this.proxyManager._results
 			);
-		} else {
+        } else {
 			const accountInfo = getUserAccountInfo(this.store.getState() as any);
 
 			if (projectId && accountInfo) {
@@ -875,11 +852,14 @@ export class AppWindow {
 			}
 		}
 
-		return testRecord;
-	}
+        return testRecord;
+    }
 
 	async handleVerifyTest(event, payload) {
-		const { shouldAlsoSave, shouldNotRunTest, autoSaveType } = payload;
+		const {
+            shouldAlsoSave,
+            autoSaveType
+        } = payload;
 		const recordedSteps = getSavedSteps(this.store.getState() as any);
 		await this.resetRecorder(TRecorderState.PERFORMING_ACTIONS);
 
@@ -897,25 +877,24 @@ export class AppWindow {
 	}
 
 	async handleRemoteReplayTest(event: Electron.IpcMainInvokeEvent, payload: { testId: number }) {
-		console.log("Replaying test", { testId: payload.testId });
+        console.log("Replaying test", { testId: payload.testId });
 
-		await this.resetRecorder();
-		const appSettings = getAppSettings(this.store.getState() as any);
-		const testSteps = await CloudCrusher.getTest(`${payload.testId}`);
-		return this.handleReplayTestSteps(testSteps);
-	}
+        await this.resetRecorder();
+        const testSteps = await CloudCrusher.getTest(String(payload.testId));
+        return this.handleReplayTestSteps(testSteps);
+    }
 
-	async handleRemoteReplayTestUrlAction(event: Electron.IpcMainInvokeEvent, payload: { testId: number; redirectAfterSuccess: boolean; selectedTests: Array<any> }) {
+	async handleRemoteReplayTestUrlAction(event: Electron.IpcMainInvokeEvent, payload: { testId: number; redirectAfterSuccess: boolean; selectedTests: any[] }) {
 		this.sendMessage("url-action", {
 			action: { commandName: "replay-test", args: { testId: payload.testId, redirectAfterSuccess: payload.redirectAfterSuccess, selectedTests: payload.selectedTests } },
 		});
 	}
 
-	private async handleLoginWithGithub(event: Electron.IpcMainInvokeEvent) {
+	private async handleLoginWithGithub() {
 		const appSettings = getAppSettings(this.store.getState() as any);
 		await shell.openExternal(resolveToFrontEndPath(`/`, appSettings.frontendEndPoint));
 	}
-	private handleLoginWithGitlab(event: Electron.IpcMainInvokeEvent) {
+	private handleLoginWithGitlab() {
 		return shell.openExternal("https://youtube.com");
 	}
 
@@ -937,7 +916,7 @@ export class AppWindow {
 					this.window.unmaximize();
 				}
 				this.window.setFullScreen(false);
-				setImmediate(async () => {
+				setImmediate(() => {
 					if (process.platform === "darwin") {
 						this.window.setTrafficLightPosition({ x: 10, y: 15 });
 					}
@@ -955,7 +934,7 @@ export class AppWindow {
 		return getUserAccountProjects();
 	}
 
-	private setRemainingSteps(steps: Array<iAction>) {
+	private setRemainingSteps(steps: iAction[]) {
 		const sessionInfoMeta = getAppSessionMeta(this.store.getState() as any);
 		this.store.dispatch(
 			setSessionInfoMeta({
@@ -965,16 +944,15 @@ export class AppWindow {
 		);
 	}
 
-	async handleReplayTestSteps(steps: Array<iAction> | null = null) {
-		this.store.dispatch(updateRecorderState(TRecorderState.PERFORMING_ACTIONS, {}));
-		const appSettings = getAppSettings(this.store.getState() as any);
+	async handleReplayTestSteps(steps: iAction[] | null = null) {
+        this.store.dispatch(updateRecorderState(TRecorderState.PERFORMING_ACTIONS, {}));
 
-		const browserActions = getBrowserActions(steps);
-		const mainActions = getMainActions(steps);
+        const browserActions = getBrowserActions(steps);
+        const mainActions = getMainActions(steps);
 
-		const reaminingSteps = [...browserActions, ...mainActions];
+        const reaminingSteps = [...browserActions, ...mainActions];
 
-		try {
+        try {
 			for (const browserAction of browserActions) {
 				reaminingSteps.shift();
 
@@ -982,9 +960,9 @@ export class AppWindow {
 					await this.store.dispatch(setDevice(browserAction.payload.meta.device.id));
 					await this.handlePerformAction(null, { action: browserAction, shouldNotSave: !!(browserAction as any).shouldNotRecord });
 					if (reaminingSteps.length) {
-						await new Promise((resolve, reject) => {
+						await new Promise(resolve => {
 							const intervalFun = () => {
-								if (this.webView && this.webView.playwrightInstance && this.webView.playwrightInstance.page) {
+								if (this.webView?.playwrightInstance?.page) {
 									resolve(true);
 									return true;
 								}
@@ -1025,20 +1003,18 @@ export class AppWindow {
 			}
 			this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
 			return true;
-		} catch (ex) {
+		} catch {
 			this.store.dispatch(updateRecorderState(TRecorderState.ACTION_REQUIRED, {}));
 			this.setRemainingSteps(reaminingSteps);
 			return false;
 		}
-	}
+    }
 
 	private turnOnInspectMode(event, payload) {
-		const { meta } = payload;
-
-		this.store.dispatch(setInspectMode(payload));
-		this.webView.turnOnInspectMode();
-		// this.webView.webContents.focus();
-	}
+        this.store.dispatch(setInspectMode(payload));
+        this.webView.turnOnInspectMode();
+        // this.webView.webContents.focus();
+    }
 
 	private turnOnElementSelectorInspectMode() {
 		this.store.dispatch(setInspectElementSelectorMode(true));
@@ -1069,10 +1045,9 @@ export class AppWindow {
 	}
 
 	private async handleExitApp() {
-		console.log("Exitting now...");
-		await this.destroy();
-		process.exit();
-	}
+        console.log("Exitting now...");
+        await this.destroy();
+    }
 
 	private async handleResetStorage() {
 		console.log("Resetting webview storage");
@@ -1099,13 +1074,16 @@ export class AppWindow {
 		event: Electron.IpcMainInvokeEvent,
 		payload: { action: iAction; shouldNotSave?: boolean; isRecording?: boolean; shouldNotSleep?: boolean },
 	) {
-		if (this.webView && this.webView.playwrightInstance) {
+		if (this.webView?.playwrightInstance) {
 			console.log("Starting action", this.webView.playwrightInstance.actionDescriptor.describeAction(payload.action));
 		} else {
 			console.log("Starting action", payload.action.type);
 		}
 
-		const { action, shouldNotSave, shouldNotSleep } = payload;
+		const {
+            action,
+            shouldNotSave
+        } = payload;
 
 		try {
 			switch (action.type) {
@@ -1114,9 +1092,7 @@ export class AppWindow {
 						this.store.dispatch(setDevice(action.payload.meta.device.id));
 					}
 					// Custom implementation here, because we are in the recorder
-					const userAgent = action.payload.meta?.device.userAgentRaw
-						? action.payload.meta?.device.userAgentRaw
-						: getUserAgentFromName(action.payload.meta?.device.userAgent).value;
+					const userAgent = action.payload.meta?.device.userAgentRaw || getUserAgentFromName(action.payload.meta?.device.userAgent).value;
 					if (this.webView) {
 						this.webView.webContents.setUserAgent(userAgent);
 					}
@@ -1128,18 +1104,17 @@ export class AppWindow {
 					await this.waitForWebView();
 					break;
 				}
-				case ActionsInTestEnum.NAVIGATE_URL: {
-					this.store.dispatch(setSiteUrl(template(action.payload.meta.value, { ctx: {} })));
-					await this.webView.playwrightInstance.runActions([action], !!shouldNotSave);
-					break;
-				}
-				case ActionsInTestEnum.RUN_AFTER_TEST: {
-					await this.resetRecorder();
-					this.store.dispatch(
+				case ActionsInTestEnum.NAVIGATE_URL:
+                    this.store.dispatch(setSiteUrl(template(action.payload.meta.value, { ctx: {} })));
+                    await this.webView.playwrightInstance.runActions([action], !!shouldNotSave);
+                    break;
+				case ActionsInTestEnum.RUN_AFTER_TEST:
+                    await this.resetRecorder();
+                    this.store.dispatch(
 						updateRecorderState(TRecorderState.PERFORMING_ACTIONS, { type: ActionsInTestEnum.RUN_AFTER_TEST, testId: action.payload.meta.value }),
 					);
-					await this.handleRunAfterTest(action, true);
-					await this.handlePerformAction(null, {
+                    await this.handleRunAfterTest(action, true);
+                    await this.handlePerformAction(null, {
 						action: {
 							type: ActionsInTestEnum.NAVIGATE_URL,
 							payload: {
@@ -1151,21 +1126,19 @@ export class AppWindow {
 						},
 						shouldNotSave: false,
 					});
-					this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
-					break;
-				}
-				case ActionsInTestEnum.RELOAD_PAGE: {
-					this.webView.webContents.reload();
-					await this.webView.playwrightInstance.page.waitForNavigation({ waitUntil: "networkidle" });
-					if (!shouldNotSave) {
+                    this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
+                    break;
+				case ActionsInTestEnum.RELOAD_PAGE:
+                    this.webView.webContents.reload();
+                    await this.webView.playwrightInstance.page.waitForNavigation({ waitUntil: "networkidle" });
+                    if (!shouldNotSave) {
 						this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
 					}
-					break;
-				}
+                    break;
 				default:
 					if (payload.isRecording && action.payload.meta?.uniqueNodeId) {
 						const elementInfo = this.webView.playwrightInstance.getElementInfoFromUniqueId(action.payload.meta?.uniqueNodeId);
-						if (elementInfo && elementInfo.parentFrameSelectors) {
+						if (elementInfo?.parentFrameSelectors) {
 							action.payload.meta = {
 								...(action.payload.meta || {}),
 								parentFrameSelectors: elementInfo.parentFrameSelectors,
@@ -1189,7 +1162,7 @@ export class AppWindow {
 		// 	this.webView.dispose();
 		// 	this.webView = undefined;
 		// }
-		if (this.webView && this.webView.playwrightInstance) {
+		if (this.webView?.playwrightInstance) {
 			this.webView.playwrightInstance.clear();
 		}
 		this.store.dispatch(resetRecorderState(state));
@@ -1201,9 +1174,7 @@ export class AppWindow {
 	}
 
 	private async handleRunAfterTest(action: iAction, shouldRecordSetDevice = false) {
-		const appSettings = getAppSettings(this.store.getState() as any);
-
-		try {
+        try {
 			const testSteps = await CloudCrusher.getTest(action.payload.meta.value);
 
 			const replayableTestSteps = await CloudCrusher.getReplayableTestActions(testSteps, true);
@@ -1211,7 +1182,7 @@ export class AppWindow {
 
 			for (const browserAction of browserActions) {
 				if (browserAction.type === ActionsInTestEnum.SET_DEVICE) {
-					await this.handlePerformAction(null, { action: browserAction, shouldNotSave: shouldRecordSetDevice ? false : true });
+					await this.handlePerformAction(null, { action: browserAction, shouldNotSave: !shouldRecordSetDevice });
 				} else {
 					if (browserAction.type !== ActionsInTestEnum.RUN_AFTER_TEST) {
 						this.store.dispatch(recordStep(browserAction, ActionStatusEnum.COMPLETED));
@@ -1239,9 +1210,9 @@ export class AppWindow {
 
 			throw e;
 		}
-	}
+    }
 
-	async handleWebviewAttached(event, webContents) {
+	async handleWebviewAttached() {
 		console.debug("Webview is attached");
 		this.webView = new WebView(this, async () => {
 			if (this.codeWindow) {
@@ -1293,7 +1264,7 @@ export class AppWindow {
 	}
 
 	private get rendererLoaded(): boolean {
-		return !!this.loadTime && !!this.rendererReadyTime;
+		return this.loadTime && !!this.rendererReadyTime;
 	}
 
 	/**

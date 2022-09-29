@@ -36,7 +36,10 @@ export { Link };
 
 
 
-function ActionButtonDropdown({ setShowActionMenu, isRecorder, ...props }) {
+function ActionButtonDropdown({
+    setShowActionMenu,
+    isRecorder
+}) {
     const navigate = useNavigate();
     const store = useStore();
     const [projectConfigFile, setProjectConfigFile] = React.useState(null);
@@ -49,10 +52,13 @@ function ActionButtonDropdown({ setShowActionMenu, isRecorder, ...props }) {
             if (projectConfigFileJson[projectId]) {
                 setProjectConfigFile(projectConfigFileJson[projectId]);
             }
-        } catch (ex) {}
+        } catch {}
     }, []);
 
-    const MenuItem = ({ label, onClick, ...props }) => {
+    const MenuItem = ({
+        label,
+        onClick
+    }) => {
         return (
             <div
                 css={css`

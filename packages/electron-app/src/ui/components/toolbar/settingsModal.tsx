@@ -5,19 +5,17 @@ import { css } from "@emotion/react";
 import { Input } from "@dyson/components/atoms/input/Input";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { useDispatch, useSelector } from "react-redux";
-import { focusOnWindow, performRunAfterTest, saveAndGetUserInfo } from "electron-app/src/ui/commands/perform";
-import { Toggle } from "@dyson/components/atoms/toggle/toggle";
+import {focusOnWindow, saveAndGetUserInfo} from "electron-app/src/ui/commands/perform";
 import Switch from "@dyson/components/atoms/toggle/switch";
 import { getAppSettings, getUserAccountInfo } from "electron-app/src/store/selectors/app";
-import { setSettngs, setUserAccountInfo } from "electron-app/src/store/actions/app";
+import {setSettngs} from "electron-app/src/store/actions/app";
 import { iReduxState } from "electron-app/src/store/reducers";
 import { sendSnackBarEvent } from "../toast";
 import { Conditional } from "@dyson/components/layouts";
-import { LoadingIcon, LoadingIconV2 } from "../../icons";
-import { shell, webFrame } from "electron";
-import { getUserInfoFromToken, waitForUserLogin } from "electron-app/src/utils";
+import {LoadingIconV2} from "../../icons";
+import {shell} from "electron";
+import {waitForUserLogin} from "electron-app/src/utils";
 import { resolveToFrontEndPath } from "@shared/utils/url";
-import { showReportDialog } from "@sentry/electron";
 import { SettingsManager } from "electron-app/src/lib/settingsManager";
 
 interface iStartupModalProps {
@@ -32,20 +30,19 @@ enum ConnectToCloudStatusEnum {
 }
 
 const SettingsModalContent = ({ className, ...props }: iStartupModalProps & { className?: string }) => {
-	const { isOpen } = props;
-	const appSettings = useSelector(getAppSettings);
-	const userAccountInfo = useSelector(getUserAccountInfo);
+    const appSettings = useSelector(getAppSettings);
+    const userAccountInfo = useSelector(getUserAccountInfo);
 
-	const [backendEndPoint, setBackendEndPoint] = React.useState(appSettings.backendEndPoint || "");
-	const [frontendEndPoint, setFrontendEndPoint] = React.useState(appSettings.frontendEndPoint || "");
-	const [autoDetectActions, setAutoDetctActions] = React.useState(appSettings.autoDetectActions || false);
-	const [enableMouseTracker, setEnableMouseTracker] = React.useState(appSettings.enableMouseTracker || false);
-	const [connectToCloudStatus, setConnectToCloudStatus] = React.useState(
+    const [backendEndPoint, setBackendEndPoint] = React.useState(appSettings.backendEndPoint || "");
+    const [frontendEndPoint, setFrontendEndPoint] = React.useState(appSettings.frontendEndPoint || "");
+    const [autoDetectActions, setAutoDetctActions] = React.useState(appSettings.autoDetectActions || false);
+    const [enableMouseTracker, setEnableMouseTracker] = React.useState(appSettings.enableMouseTracker || false);
+    const [connectToCloudStatus, setConnectToCloudStatus] = React.useState(
 		userAccountInfo ? ConnectToCloudStatusEnum.CONNECTED : ConnectToCloudStatusEnum.NOT_CONNECTED,
 	);
-	const dispatch = useDispatch();
+    const dispatch = useDispatch();
 
-	React.useEffect(() => {
+    React.useEffect(() => {
 		if (userAccountInfo) {
 			setConnectToCloudStatus(ConnectToCloudStatusEnum.CONNECTED);
 		} else {
@@ -53,23 +50,19 @@ const SettingsModalContent = ({ className, ...props }: iStartupModalProps & { cl
 		}
 	}, [userAccountInfo]);
 
-	const handleBackendEndPointChange = (event: any) => {
+    const handleBackendEndPointChange = (event: any) => {
 		setBackendEndPoint(event.target.value);
 	};
 
-	const handleFrontEndPointChange = (event: any) => {
+    const handleFrontEndPointChange = (event: any) => {
 		setFrontendEndPoint(event.target.value);
 	};
 
-	const handleEnableMouseTrackerCallback = (toggleValue) => {
+    const handleEnableMouseTrackerCallback = (toggleValue) => {
 		setEnableMouseTracker(toggleValue);
 	};
 
-	const handleAutoDetectActionsCallback = (toggleValue) => {
-		setAutoDetctActions(toggleValue);
-	};
-
-	const saveAction = async () => {
+    const saveAction = () => {
 		const settings: iReduxState["app"]["settings"] = {
 			backendEndPoint,
 			frontendEndPoint,
@@ -84,7 +77,7 @@ const SettingsModalContent = ({ className, ...props }: iStartupModalProps & { cl
 		props.handleClose();
 	};
 
-	const connectToCloud = React.useCallback(async () => {
+    const connectToCloud = React.useCallback(async () => {
 		setConnectToCloudStatus(ConnectToCloudStatusEnum.WAITING);
 		const { loginKey } = await waitForUserLogin((loginToken: string) => {
 			saveAndGetUserInfo(loginToken).then((info) => {
@@ -95,7 +88,7 @@ const SettingsModalContent = ({ className, ...props }: iStartupModalProps & { cl
 		await shell.openExternal(resolveToFrontEndPath("?lK=" + loginKey, frontendEndPoint));
 	}, [backendEndPoint, frontendEndPoint]);
 
-	const handleConnectToCloud = React.useCallback(() => {
+    const handleConnectToCloud = React.useCallback(() => {
 		if (connectToCloudStatus === ConnectToCloudStatusEnum.NOT_CONNECTED) {
 			connectToCloud();
 		} else if (connectToCloudStatus === ConnectToCloudStatusEnum.CONNECTED) {
@@ -106,15 +99,15 @@ const SettingsModalContent = ({ className, ...props }: iStartupModalProps & { cl
 	}, [userAccountInfo, connectToCloudStatus]);
 
 
-	const connectWordMap = {
+    const connectWordMap = {
 		[ConnectToCloudStatusEnum.CONNECTED]: "Connected",
 		[ConnectToCloudStatusEnum.WAITING]: "Connecting",
 		[ConnectToCloudStatusEnum.NOT_CONNECTED]: "Connect",
 	};
 
-	return (
-		<div css={formContainerStyle} className={`${className}`}>
-			<div
+    return (
+        (<div css={formContainerStyle} className={String(className)}>
+            <div
 				css={css`
 				font-size: 15rem;
 				font-weight: 600;
@@ -124,14 +117,14 @@ const SettingsModalContent = ({ className, ...props }: iStartupModalProps & { cl
 			>
 				General
 			</div>
-			<hr
+            <hr
 				css={css`
 				margin-top: 8rem;
 				border-color: rgb(255, 255, 255, 0.1);
 				height: 0.1rem;
 			`}
 			/>
-			<div
+            <div
 				css={css`
 				margin-top: 16rem;
 			`}
@@ -186,8 +179,7 @@ const SettingsModalContent = ({ className, ...props }: iStartupModalProps & { cl
 					/>
 				</div>
 			</div>
-
-			<div
+            <div
 				css={css`
 				font-size: 15rem;
 				font-weight: 600;
@@ -198,14 +190,14 @@ const SettingsModalContent = ({ className, ...props }: iStartupModalProps & { cl
 			>
 				Recorder
 			</div>
-			<hr
+            <hr
 				css={css`
 				margin-top: 8rem;
 				border-color: rgb(255, 255, 255, 0.1);
 				height: 0.1rem;
 			`}
 			/>
-			<div
+            <div
 				css={css`
 				margin-top: 16rem;
 			`}
@@ -251,8 +243,7 @@ const SettingsModalContent = ({ className, ...props }: iStartupModalProps & { cl
 					/>
 				</div>
 			</div>
-
-			<div css={submitFormContainerStyle} className={"submit-action-button"}>
+            <div css={submitFormContainerStyle} className={"submit-action-button"}>
 				<div
 					onClick={handleConnectToCloud}
 					css={css`
@@ -282,8 +273,8 @@ const SettingsModalContent = ({ className, ...props }: iStartupModalProps & { cl
 					Save
 				</Button>
 			</div>
-		</div>
-	);
+        </div>)
+    );
 }
 
 const SettingsModal = (props: iStartupModalProps) => {

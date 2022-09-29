@@ -72,7 +72,10 @@ const titleStyle = css`
 const DashboardScreen = () => {
     const [animationComplete, setAnimationComplete] = React.useState(false);
     const { userInfo, projects } = useUser();
-    const { data: tests, isValidating, mutate } = useRequest(userInfo && userInfo.isUserLoggedIn ? getSelectedProjectTestsRequest : () => null, { refreshInterval: 5000 })
+    const {
+        data: tests,
+        mutate
+    } = useRequest(userInfo?.isUserLoggedIn ? getSelectedProjectTestsRequest : () => null, { refreshInterval: 5000 })
     const [selectedProject, setSelectedProject] = React.useState(null);
     const [showProxyWarning, setShowProxyWarning] = React.useState({ show: false, testId: null, startUrl: null });
     const { addNotification } = useBuildNotifications();
@@ -85,7 +88,7 @@ const DashboardScreen = () => {
     }, [])
 
     const handleTestDelete = React.useCallback(
-        (idArr: Array<any>) => {
+        (idArr: any[]) => {
             // setTests(tests.filter((a) => a.id != id));
             if (!(window as any).deletedTest) {
                 (window as any).deletedTest = [];
@@ -94,7 +97,7 @@ const DashboardScreen = () => {
             console.log("Id arr", idArr);
             mutate({ ...tests, list: tests.list.filter(test => { return !((window as any).deletedTest || []).includes(test.id) }) });
             for (let id of idArr) {
-                CloudCrusher.deleteTest(id).catch((err) => {
+                CloudCrusher.deleteTest(id).catch(() => {
                     sendSnackBarEvent({ message: "Error deleting test", type: "error" });
                 });
             }
@@ -115,7 +118,7 @@ const DashboardScreen = () => {
         turnOnProxyServers();
         // @TODO: Cache this API
         if (selectedProjectId && userInfo && userInfo.projects) {
-            const project = userInfo.projects.find((p) => (p.id == selectedProjectId));
+            const project = userInfo.projects.find((p) => (p.id === selectedProjectId));
             if (project) {
                 setSelectedProject(project);
             }
@@ -171,16 +174,16 @@ const DashboardScreen = () => {
     }, [handleRunCallback]);
     const isLoading = React.useMemo(() => (!tests), [tests]);
     // To make delete experience fast
-    const filteredTests = tests && tests.list && tests.list.length ? tests.list.filter(test => { return !((window as any).deletedTest || []).includes(test.id) }) : [];
+    const filteredTests = tests?.list?.length ? tests.list.filter(test => { return !((window as any).deletedTest || []).includes(test.id) }) : [];
 
     const testContent = filteredTests.length ? (<TestList deleteTest={handleTestDelete} tests={filteredTests} />) : (<CreateFirstTest />);
     const content = showProxyWarning.show ? <ProxyWarningContainer testId={showProxyWarning.testId} exitCallback={setShowProxyWarning.bind(this, false)} startUrl={showProxyWarning.startUrl} /> : testContent;
 
     const hasNotLoaded = isLoading || !animationComplete;
     return (
-        <CompactAppLayout footer={hasNotLoaded ? null : (<><Footer /><StickyFooter /></>)} headerRightSection={headerComponent} showHeader={!hasNotLoaded} css={loadingCSS(hasNotLoaded)} title={selectedProject && !hasNotLoaded ? <TitleComponent project={selectedProject} /> : null}>
+        (<CompactAppLayout footer={hasNotLoaded ? null : (<><Footer /><StickyFooter /></>)} headerRightSection={headerComponent} showHeader={!hasNotLoaded} css={loadingCSS()} title={selectedProject && !hasNotLoaded ? <TitleComponent project={selectedProject} /> : null}>
             {hasNotLoaded ? (<LoadingProgressBar inAppLoading={false} />) : content}
-        </CompactAppLayout>
+        </CompactAppLayout>)
     );
 };
 
@@ -192,7 +195,7 @@ const headerComponentCss = css`
         background: transparent !important;
     }
 `;
-const loadingCSS = (hasNotLoaded) => css`
+const loadingCSS = () => css`
     background: #080809;
 `;
 const buttonDropdownCss = css`

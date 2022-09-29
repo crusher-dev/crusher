@@ -10,8 +10,8 @@ import { focusOnWindow, saveAndGetUserInfo } from "../commands/perform";
 import { sendSnackBarEvent } from "../components/toast";
 import { useSelector } from "react-redux";
 import { getAppSettings } from "electron-app/src/store/selectors/app";
-import { ModelContainerLayout } from "../layouts/modalContainer";
-import { CommonFooter } from "../layouts/commonFooter";
+
+import {CompactAppLayout} from "../../_ui/layout/CompactAppLayout";
 
 const GithubButton = (props) => {
 	return (
@@ -201,13 +201,12 @@ function LoginScreen() {
 
 
 	return (
-		<ModelContainerLayout
+		<CompactAppLayout
 			css={css`
 				padding-top: 0rem;
 			`}
 			header={null}
 			title={null}
-			footer={<CommonFooter />}
 		>
 			<div css={mainContentStyle}>
 				<div
@@ -259,7 +258,7 @@ function LoginScreen() {
 					</div>
 				)}
 			</div>
-		</ModelContainerLayout>
+		</CompactAppLayout>
 	);
 }
 

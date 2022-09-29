@@ -4,6 +4,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { DocsGoBackActionBar } from "../components/create-first-test";
 import { ModelContainerLayout } from "../layouts/modalContainer";
+import {CompactAppLayout} from "../../_ui/layout/CompactAppLayout";
 
 function InsufficientPermissionScreen() {
 	const navigate = useNavigate();
@@ -12,13 +13,13 @@ function InsufficientPermissionScreen() {
 	};
 
 	return (
-		<ModelContainerLayout title={<div css={titleStyle}>Home</div>}>
+		<CompactAppLayout title={<div css={titleStyle}>Home</div>}>
 			<div css={containerStyle}>
 				<div css={contentHeadingStyle}>Insufficient permission</div>
 				<div css={contentDescriptionStyle}>Not part of the team. Request access from admin of this project.</div>
 				<DocsGoBackActionBar buttonTitle={"Go back"} buttonCallback={handleGoBack} />
 			</div>
-		</ModelContainerLayout>
+		</CompactAppLayout>
 	);
 }
 

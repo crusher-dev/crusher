@@ -1,11 +1,9 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { Link } from "../components/Link";
-import { ExternalLinkIcon } from "electron-app/src/ui/icons";
 import { shell } from "electron";
 import { MenuDropdown } from "electron-app/src/ui/layouts/modalContainer";
-import { Conditional } from "@dyson/components/layouts";
 import { LinkPointer } from "../components/LinkPointer";
+import {Conditional} from "@dyson/components/layouts";
 
 interface IProps {
     showHeader: boolean;
@@ -26,7 +24,8 @@ const CompactAppLayout = ({ className, title, headerRightSection, showHeader = t
     return (
         <div className={`${className}`} css={containerCss} {...props}>
             <div css={dragCss} className={"drag"}></div>
-            {showHeader ? (
+
+            <Conditional showIf={showHeader}>
                 <div css={headerCss} className={"header"}>
                     <div css={headerLeftSectionCss}>
                         <MenuDropdown isRecorder={false} css={menuDropdownCss} />
@@ -42,13 +41,15 @@ const CompactAppLayout = ({ className, title, headerRightSection, showHeader = t
                     )}
 
                 </div>
-            ) : ""}
+            </Conditional>
 
             <div css={contentCss} className={"content-section"}>
                 {children}
             </div>
 
-            {footer ? (<div css={footerCss}>{footer}</div>) : ""}
+            <Conditional showIf={!!footer}>
+                <div css={footerCss}>{footer}</div>
+            </Conditional>
         </div>
     );
 };
@@ -98,12 +99,11 @@ const dragCss = css`
 `;
 
 const headerCss = css`
-    display: flex;
-    padding: 2px 28px;
-    padding-right: 8px;
-    align-items: center;
-    position: relative;
-    z-index: 23424234324234234;
+  display: flex;
+  padding: 2px 8px 2px 28px;
+  align-items: center;
+  position: relative;
+  z-index: 23424234324234234;
 `;
 
 const headerLeftSectionCss = css`
@@ -129,11 +129,7 @@ const headerRightSectionCss = css`
     display: flex;
     align-items: center;
 `;
-const externalLinkIconCss = css`
-    margin-left: 4rem;
-	margin-top: -2px;
-	zoom: 0.95;
-`;
+
 const contentCss = css`
     flex: 1;
     padding-top: 18px;
@@ -148,8 +144,9 @@ const contentCss = css`
     }
 `;
 const footerCss = css`
-	margin-top: auto;
-	border-top: .5x solid rgba(255, 255, 255, 0.08);
+  margin-top: auto;
+  border-top-style: solid;
+  border-top-color: rgba(255, 255, 255, 0.08);
 `;
 
 export { CompactAppLayout };

@@ -29,6 +29,7 @@ import InsufficientPermission from "./insufficientPermission";
 import { setSelectedProject } from "electron-app/src/store/actions/app";
 import { getUserAccountProjects } from "electron-app/src/utils";
 import { checkIfLoggedIn, resolveToFrontend } from "electron-app/src/utils/url";
+import {CompactAppLayout} from "../../_ui/layout/CompactAppLayout";
 
 const PlusIcon = (props) => (
 	<svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
@@ -749,14 +750,14 @@ function DashboardScreen() {
 	const mainContent = haveZeroTests ? <CreateFirstTest /> : <TestList deleteTest={handleTestDelete} projectId={selectedProject} userTests={userTests} />;
 
 	return (
-		<ModelContainerLayout
+		<CompactAppLayout
 			headerStyle={haveZeroTests ? { borderBottom: "none" } : {}}
 			title={TitleComponent}
 			titleContainerCss={css`margin-left: 38rem;`}
 			footer={userTests && <DashboardFooter projectId={selectedProject} userTests={userTests} />}
 		>
 			{showProxyWarning.show ? <ProxyWarningContainer testId={showProxyWarning.testId} exitCallback={setShowProxyWarning.bind(this, false)} startUrl={showProxyWarning.startUrl} /> : mainContent}
-		</ModelContainerLayout>
+		</CompactAppLayout>
 	);
 }
 

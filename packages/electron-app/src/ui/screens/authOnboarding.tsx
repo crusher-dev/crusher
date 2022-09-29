@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { useStore } from "react-redux";
 import { setSelectedProject } from "electron-app/src/store/actions/app";
 import { getUserAccountProjects } from "electron-app/src/utils";
+import {CompactAppLayout} from "../../_ui/layout/CompactAppLayout";
 
 const Footer = () => {
     return (
@@ -273,7 +274,7 @@ const AuthOnboardingScreen = () => {
 		document.querySelector("html").style.fontSize = "1px";
     }, []);
     return (
-        <ModelContainerLayout footer={<Footer/>} footerCss={footerCss}>
+        <CompactAppLayout footer={<Footer/>} footerCss={footerCss}>
             <div css={containerCss}>
                 <div css={[developerQuestionCss, selected ? css`transform: translate(0, -140px);` : undefined]}>
                     <div css={headingCss}>Are you a developer?</div>
@@ -283,7 +284,7 @@ const AuthOnboardingScreen = () => {
                 {selected === "NO" ? (<ProjectInput/>) : ""}
                 {selected === "YES" ? (<DeveloperInput/>) : ""}
             </div>
-        </ModelContainerLayout>
+        </CompactAppLayout>
     )
 };
 

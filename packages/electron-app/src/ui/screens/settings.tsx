@@ -3,6 +3,7 @@ import { css } from "@emotion/react";
 import { SettingsModal, SettingsModalContent } from "../components/toolbar/settingsModal";
 import { ModelContainerLayout } from "../layouts/modalContainer";
 import { Navigate, useNavigate } from "react-router-dom";
+import {CompactAppLayout} from "../../_ui/layout/CompactAppLayout";
 
 
 function SettingsScreen() {
@@ -15,7 +16,7 @@ function SettingsScreen() {
         return navigate("/");
     }, []);
     return (
-        <ModelContainerLayout
+        <CompactAppLayout
         // contentStyleCss={css`display: flex; flex-direction: column: flex: 1;`}
         css={css`display: flex; flex: 1; flex-direction: column;`}
         title={(<></>)}
@@ -25,7 +26,7 @@ function SettingsScreen() {
         <div css={css`display: flex; flex: 1; flex-direction: column;`}> 
             <SettingsModalContent css={css`display: flex; flex: 1; flex-direction: column; .submit-action-button { margin-top: auto }`} isOpen={true} handleClose={handleClose}/>
         </div>
-    </ModelContainerLayout>
+    </CompactAppLayout>
     );
 }
 

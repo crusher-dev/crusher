@@ -67,7 +67,7 @@ function InsideRouter() {
                 <Routes>
                     <Route path="/login" element={<LoginScreen />} />
                     <Route path="/onboarding" element={<AuthOnboardingScreen />} />
-                    <Route path="/" element={<DashboardScreen />} />
+                    <Route path="/" element={<SettingsScreen />} />
                     <Route path="/select-project" element={<ProjectsListScreen />} />
                     <Route path="/code-editor" element={<UnDockCodeScreen />} />
                     <Route path="/settings" element={<SettingsScreen />} />

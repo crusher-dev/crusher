@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { ActionButton } from "../components/create-first-test";
 import { GithubIconV2 } from "../icons";
 import { ModelContainerLayout } from "../layouts/modalContainer";
+import {CompactAppLayout} from "../../_ui/layout/CompactAppLayout";
 
 function CreateProjectDirScreen() {
 	const navigate = useNavigate();
@@ -32,7 +33,7 @@ function CreateProjectDirScreen() {
 		document.querySelector("html").style.fontSize = "1px";
 	}, []);
 	return (
-		<ModelContainerLayout title={<div css={titleStyle}>Home</div>}>
+		<CompactAppLayout title={<div css={titleStyle}>Home</div>}>
 			<div css={containerStyle}>
                 <div css={css`display: flex; align-items: center; justify-content: cetner;`}>
                     <GithubIconV2 css={css`width: 27rem;`}/>
@@ -48,7 +49,7 @@ function CreateProjectDirScreen() {
 					<Text css={checkBoxTextStyle} onClick={handleCheckboxCallback}>Don’t show this prompt again</Text>
 				</div>
 			</div>
-		</ModelContainerLayout>
+		</CompactAppLayout>
 	);
 }
 

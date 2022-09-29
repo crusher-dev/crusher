@@ -6,6 +6,11 @@ const NormalInput = React.forwardRef(({ placeholder, handleUrlReturn, inputCss: 
 	const [isInFocus, setIsInFocus] = useState(false);
 	const [url, setIsUrl] = useState(initialValue);
 
+	React.useEffect(() => {
+		if(url === null) {
+			setIsUrl(initialValue);
+		}
+	}, [initialValue]);
 	const handleOnChange = useCallback((event) => {
 		setIsUrl(event.target.value);
 	}, []);

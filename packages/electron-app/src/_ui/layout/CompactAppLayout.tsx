@@ -84,6 +84,7 @@ const containerCss = css`
 
     border: none;
     border-radius: 0px;
+    background: #080809;
 `;
 
 const dragCss = css`

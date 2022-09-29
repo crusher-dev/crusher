@@ -67,9 +67,10 @@ min-width: fit-content;
 
 input{
   padding-right 8px !important;
-width: 200px;
+min-width: 200px;
 margin-left: 2px;
 height: 28px;
+padding-left: calc(10rem + 0rem);
 }
 `;
 export { ResizableInput };

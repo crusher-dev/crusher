@@ -2,9 +2,9 @@ import React from "react";
 import { css } from "@emotion/react";
 import { useNavigate } from "react-router-dom";
 import { CompactAppLayout } from "../layout/CompactAppLayout";
-import { DocsGoBackActionBar } from "electron-app/src/ui/components/create-first-test";
+import { DocsGoBackActionBar } from "electron-app/src/app/containers/components/create-first-test";
 
-function InsufficientPermissionScreen() {
+export function InsufficientPermissionScreen() {
 	const navigate = useNavigate();
 	const handleGoBack = React.useCallback(() => {
 		navigate("/select-project");
@@ -60,4 +60,4 @@ const contentDescriptionCss = css`
 	color: rgba(255, 255, 255, 0.64);
 `;
 
-export { InsufficientPermissionScreen };
+

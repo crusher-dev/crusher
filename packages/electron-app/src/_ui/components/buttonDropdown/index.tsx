@@ -1,8 +1,7 @@
 import React from "react";
 import { css } from "@emotion/react";
 import { Dropdown } from "@dyson/components/molecules/Dropdown";
-import { ActionButton } from "electron-app/src/ui/components/buttons/action.button";
-import { DownIcon } from "electron-app/src/ui/icons";
+import { ActionButton } from "electron-app/src/app/containers/components/buttons/action.button";
 import { SaveButtonDownIcon } from "../../icons";
 
 const ActionButtonDropdown = ({ options, callback }) => {

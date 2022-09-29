@@ -1,6 +1,6 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { CustomCodeModal } from "../components/modals/page/customCodeModal";
+import { CustomCodeModal } from "../containers/components/modals/page/customCodeModal";
 
 function UnDockCodeScreen() {
 	const handleClose = () => {

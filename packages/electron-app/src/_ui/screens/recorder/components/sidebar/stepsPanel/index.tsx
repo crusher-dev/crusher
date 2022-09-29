@@ -1,7 +1,7 @@
 import React from 'react';
 import { css } from "@emotion/react";
 import { Text } from "@dyson/components/atoms/text/Text";
-import { ConsoleIcon } from 'electron-app/src/ui/icons';
+import { ConsoleIcon } from 'electron-app/src/_ui/old_icons';
 import { useSelector } from "react-redux";
 import { getIsStatusBarVisible, getSavedSteps } from 'electron-app/src/store/selectors/recorder';
 import { Step } from './step';

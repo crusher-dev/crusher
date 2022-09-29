@@ -3,7 +3,7 @@ import { css } from "@emotion/react";
 import { CompactAppLayout } from "../../../layout/CompactAppLayout";
 import { Footer } from "../../../layout/Footer";
 
-import { LoadingIconV2 } from "electron-app/src/ui/icons";
+import { LoadingIconV2 } from "electron-app/src/_ui/old_icons";
 
 import { loginUserToCloud } from "../../../utils/login";
 

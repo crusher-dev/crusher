@@ -1,6 +1,6 @@
 import React from "react";
 import { enableJavascriptInDebugger, peformTakeElementScreenshot, performAssertElementVisibility, performClick, performHover, performTakePageScreenshot, turnOnInspectMode } from "electron-app/src/_ui/commands/perform";
-import { emitShowModal } from "electron-app/src/ui/components/modals";
+import { emitShowModal } from "electron-app/src/_ui/containers/components/modals";
 import { ActionsList } from "./actionsList";
 import { ElementsHelper, getItemsFromActionsData } from "./helper";
 import { useStore } from "react-redux";
@@ -8,7 +8,7 @@ import { setSelectedElement } from "electron-app/src/store/actions/recorder";
 import { getSelectedElement } from "electron-app/src/store/selectors/recorder";
 import { ElementIcon } from "electron-app/src/_ui/icons";
 import { css } from "@emotion/react";
-import { sendSnackBarEvent } from "electron-app/src/ui/components/toast";
+import { sendSnackBarEvent } from "electron-app/src/_ui/containers/components/toast";
 import { useSelector } from "react-redux";
 
 const actionsData = require("./actions.json");

@@ -5,9 +5,9 @@ import { css } from "@emotion/react";
 import { ActionsPanel } from "./actionsPanel";
 import { CustomCodeBanner } from "./customCodeBanner";
 import { StepsPanel } from "./stepsPanel/index";
-import { ModalManager } from "electron-app/src/ui/components/modals";
-import { TemplatesModal } from "electron-app/src/ui/components/sidebar/steps/templatesModal";
-import { useLocalBuild } from "electron-app/src/_ui/hooks/tests";
+import { ModalManager } from "electron-app/src/app/containers/components/modals";
+import { TemplatesModal } from "electron-app/src/app/containers/components/sidebar/steps/templatesModal";
+import { useLocalBuild } from "electron-app/src/app/hooks/tests";
 import { ReplaySidebarHeader } from "./replay/header";
 import { Conditional } from "@dyson/components/layouts";
 

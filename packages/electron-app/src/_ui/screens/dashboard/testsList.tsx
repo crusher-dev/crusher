@@ -1,6 +1,6 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { DeleteIcon, GarbageIcon, LoadingIconV2, PlayIcon } from "electron-app/src/ui/icons";
+import { DeleteIcon, GarbageIcon, LoadingIconV2, PlayIcon } from "electron-app/src/_ui/old_icons";
 import { BasketBallIcon, EditIcon } from "../../icons";
 import { useNavigate } from "react-router-dom";
 import { goFullScreen, performReplayTestUrlAction } from "electron-app/src/_ui/commands/perform";

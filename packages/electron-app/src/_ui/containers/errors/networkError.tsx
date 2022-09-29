@@ -1,6 +1,6 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { ConnectivityWarningIcon } from "../../../ui/icons";
+import { ConnectivityWarningIcon } from "../../old_icons";
 import { performGoToUrl } from "../../commands/perform";
 import { CompactAppLayout } from "../../layout/CompactAppLayout";
 import { Footer } from "../../layout/Footer";

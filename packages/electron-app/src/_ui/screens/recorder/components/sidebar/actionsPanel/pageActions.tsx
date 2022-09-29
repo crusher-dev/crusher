@@ -1,11 +1,11 @@
 import React from "react";
 import { performTakePageScreenshot } from "electron-app/src/_ui/commands/perform";
-import { emitShowModal } from "electron-app/src/ui/components/modals";
+import { emitShowModal } from "electron-app/src/_ui/containers/components/modals";
 import { ActionsList } from "./actionsList";
 import { getItemsFromActionsData } from "./helper";
 import { PageIcon } from "electron-app/src/_ui/icons";
 import { css } from "@emotion/react";
-import { sendSnackBarEvent } from "electron-app/src/ui/components/toast";
+import { sendSnackBarEvent } from "electron-app/src/_ui/containers/components/toast";
 
 const actionsData = require("./actions.json");
 interface IProps {

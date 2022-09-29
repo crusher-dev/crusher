@@ -2,7 +2,7 @@ import React from "react";
 import { css } from "@emotion/react";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { Dropdown } from "@dyson/components/molecules/Dropdown";
-import { DownIcon, LoadingIconV2 } from "../../../ui/icons";
+import { DownIcon, LoadingIconV2 } from "../../old_icons";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useStore } from "react-redux";
 import { getCurrentSelectedProjct, getIsProxyInitializing, getProxyState, getUserAccountInfo } from "electron-app/src/store/selectors/app";
@@ -12,24 +12,22 @@ import {
 	getUserTests,
 	goFullScreen,
 	performDeleteTest,
-	performReplayTest,
 	performReplayTestUrlAction,
 	performRunTests,
 	turnOnProxy,
 	updateTestName,
 } from "../../commands/perform";
-import { ModelContainerLayout } from "../layouts/modalContainer";
-import { sendSnackBarEvent } from "../../../ui/components/toast";
+import { sendSnackBarEvent } from "../../containers/components/toast";
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
 import { shell } from "electron";
-import { resolveToFrontEndPath } from "@shared/utils/url";
-import { CreateFirstTest } from "../../../ui/components/create-first-test";
-import { ProxyWarningContainer } from "../../../ui/components/proxy-warning";
-import InsufficientPermission from "../../../ui/screens/insufficientPermission";
+import { CreateFirstTest } from "../../containers/components/create-first-test";
+import { ProxyWarningContainer } from "../../containers/components/proxy-warning";
+
 import { setSelectedProject } from "electron-app/src/store/actions/app";
 import { getUserAccountProjects } from "electron-app/src/utils";
 import { checkIfLoggedIn, resolveToFrontend } from "electron-app/src/utils/url";
 import {CompactAppLayout} from "../../layout/CompactAppLayout";
+import {InsufficientPermissionScreen} from "../inSufficientPermission";
 
 const PlusIcon = (props) => (
 	<svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
@@ -743,7 +741,7 @@ function DashboardScreen() {
 	}
 
 	if (isUnauthorized) {
-		return <InsufficientPermission />;
+		return <InsufficientPermissionScreen />;
 	}
 
 	const haveZeroTests = userAccountInfo && userTests && !userTests.length;

@@ -1,7 +1,7 @@
 import React from "react";
 import { css } from "@emotion/react";
 import { CompactAppLayout } from "../../layout/CompactAppLayout";
-import { SettingsModalContent } from "../../../ui/components/toolbar/settingsModal";
+import { SettingsModalContent } from "../../containers/components/toolbar/settingsModal";
 import { useNavigate } from "react-router-dom";
 
 const SettingsScreen = () => {

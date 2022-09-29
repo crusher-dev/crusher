@@ -1,6 +1,6 @@
 import React from "react";
 import { performTakePageScreenshot } from "electron-app/src/_ui/commands/perform";
-import { emitShowModal } from "electron-app/src/ui/components/modals";
+import { emitShowModal } from "electron-app/src/_ui/containers/components/modals";
 import { ActionsList } from "./actionsList";
 import { getItemsFromActionsData } from "./helper";
 import { CodeIcon, PageIcon } from "electron-app/src/_ui/icons";

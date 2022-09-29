@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "@dyson/components/atoms";
 import { css } from "@emotion/react";
-import { GithubIcon } from "electron-app/src/ui/icons";
+import { GithubIcon } from "electron-app/src/app/old_icons";
 
 const GithubButton = (props) => {
 	return (

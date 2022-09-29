@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { css } from "@emotion/react";
-import { AddedIcon, CloseIcon } from "electron-app/src/_ui/icons";
-import { sendSnackBarEvent } from "electron-app/src/ui/components/toast";
+import { AddedIcon, CloseIcon } from "electron-app/src/app/icons";
+import { sendSnackBarEvent } from "electron-app/src/app/containers/components/toast";
 
 const StepRecordedToast = ({meta}) => {
 	const { action } = meta;

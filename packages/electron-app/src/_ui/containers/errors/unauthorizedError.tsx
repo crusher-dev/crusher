@@ -1,7 +1,7 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { ConnectivityWarningIcon, LoadingIconV2, PlayV2Icon } from "../../../ui/icons";
-import { Link } from "../../../ui/layouts/modalContainer";
+import { ConnectivityWarningIcon, LoadingIconV2, PlayV2Icon } from "../../old_icons";
+import { Link } from "../../components/menuDropdownComponent";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { shell } from "electron";
 import { performGoToUrl, performRunDraftTest, performRunTests, turnOnProxy } from "../../commands/perform";

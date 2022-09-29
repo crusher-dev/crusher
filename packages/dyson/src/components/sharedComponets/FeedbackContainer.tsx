@@ -1,24 +1,34 @@
 
 import React, { useEffect, useRef, useState } from "react";
 
-import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
-import { AngryFace, Chat, CryFace, ExcitedFace, HappyFace, LoadingSVG } from "@svg/dashboard";
+import { TextBlock } from "../atoms/index";
+import { AngryFace, CryFace, ExcitedFace, HappyFace, LoadingSVG } from "./svg/emoji";
 import { css } from "@emotion/react";
-import { Button } from "dyson/src/components/atoms";
-import { sendDataToAirtable } from "@utils/external";
-import { useAtom } from "jotai";
-import { userAtom } from "@store/atoms/global/user";
-import { useRouter } from "next/router";
-import { Conditional } from "dyson/src/components/layouts";
+import { Button } from "../atoms";
 
-export default function FeedbackContent() {
-    const [user] = useAtom(userAtom)
-    const router = useRouter()
+import { Conditional } from "../layouts";
+
+var Airtable = require('airtable');
+
+export const sendDataToAirtable = (data: any, baseName = "appxweFi3rTf0jZUd", tableName = 'API') => {
+    const base = new Airtable({ apiKey: 'key04vQVynqzBeori' }).base(baseName);
+    return new Promise((res, rej) => {
+
+        base(tableName).create(data, function (err: any, records: any) {
+            if (err) {
+                rej(err)
+            }
+            res(records)
+        });
+
+    })
+}
+
+export default function FeedbackContent(props: any) {
+    const { user, asPath } = props
 
     const [selectedEmoji, setSelectedEmoji] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [submitted, setSubmitted] = useState(false);
-
     const [feedback, setFeedback] = useState(null)
 
     const ref = useRef()
@@ -36,12 +46,11 @@ export default function FeedbackContent() {
                 userId: `${user.userId | user.email | user.name}`,
                 mood: selectedEmoji,
                 feedback: feedback,
-                page: router.asPath
+                page: asPath
             }
         }])
         setLoading(false)
     }
-
 
     return (
         <div className={"flex flex-col justify-between h-full"}>

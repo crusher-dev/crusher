@@ -567,6 +567,7 @@ importers:
       '@types/node': ^12.0.0
       '@types/react': ^17.0.0
       '@types/react-dom': ^17.0.0
+      airtable: ^0.11.5
       autoprefixer: ^9
       babel-preset-react-app: ^10.0.1
       postcss: ^7
@@ -597,6 +598,7 @@ importers:
       '@types/node': 12.20.16
       '@types/react': 17.0.14
       '@types/react-dom': 17.0.9
+      airtable: 0.11.5
       autoprefixer: 9.8.6
       babel-preset-react-app: 10.0.1
       postcss: 7.0.36
@@ -30867,7 +30869,7 @@ packages:
       serialize-javascript: 6.0.0
       source-map: 0.6.1
       terser: 5.13.1
-      webpack: 5.73.0_webpack-cli@4.10.0
+      webpack: 5.73.0
     dev: true
 
   /terser-webpack-plugin/5.3.1_zjtckeea76d3oit4tw4tcptpni:

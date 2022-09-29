@@ -5,6 +5,10 @@ import { LinkPointer } from "./LinkPointer";
 import { DiscordSVG, GithubSVG } from "./stickyFooter";
 import { linkOpen } from "electron-app/src/utils/url";
 import { Tooltip } from "@dyson/components/atoms/tooltip/Tooltip";
+import DropdownContent from "@dyson/components/sharedComponets/FeedbackContainer";
+import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
+import { HoverCard } from "dyson/src/components/atoms/tooltip/Tooltip1";
+
 
 const Footer = () => {
     return (
@@ -19,6 +23,7 @@ const Footer = () => {
 
             </div>
             <div css={rightSectionCss}>
+                <ShareFeedbak />
                 <Link css={socialIcon} href="https://github.com/crusher-dev/crusher" title="Github">
                     <GithubSVG height={14} width={14} />
                 </Link>
@@ -29,6 +34,53 @@ const Footer = () => {
         </div>
     );
 };
+
+
+
+
+export function ShareFeedbak() {
+    const user = {}
+    const asPath = "app page"
+    return (
+        <HoverCard wrapperCSS={wrapperCSS} css={userDropdownCSS} content={<DropdownContent
+            user={user}
+            asPath={asPath}
+        />} placement="top-start" type="click" padding={2} offset={0}>
+
+            <div className="flex items-center pt-0" css={feedbackCSS}>
+                <LinkPointer css={resourcesCss}>feedback</LinkPointer>
+            </div>
+        </HoverCard>
+    );
+}
+
+const wrapperCSS = css`
+    padding-bottom: 10rem;
+    padding-left: 20rem;
+    min-height:320rem;
+    
+`
+
+const userDropdownCSS = css`
+	margin-left: -12re;
+
+    padding: 24rem !important;
+    width: 356rem;
+
+    border-radius: 16px;
+`
+export const feedbackCSS = css`
+	:hover {
+		div,
+		span {
+			color: #fff;
+		}
+		path {
+			fill: #fff;
+		}
+	}
+`;
+
 
 
 
@@ -88,3 +140,4 @@ color: #828282;
 
 `;
 export { Footer };
+

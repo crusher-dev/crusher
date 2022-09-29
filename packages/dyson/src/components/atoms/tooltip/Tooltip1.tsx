@@ -2,7 +2,6 @@ import ReactDOM from "react-dom";
 import { css, SerializedStyles } from "@emotion/react";
 import { useFloating, shift, offset } from "@floating-ui/react-dom";
 import React, { ReactElement, useState, useEffect, useMemo, useRef, SyntheticEvent, useCallback } from "react";
-import { Conditional } from "../../layouts";
 
 
 export type TooltipWrapperProps = {
@@ -50,7 +49,7 @@ export const TooltipBox = ({ children, className = "tooltip-box", el = "div" }) 
 /**
  * Unified tolltip component for Dyson UI system
  */
-export const HoverCard: React.FC<TooltipWrapperProps> = ({ children, state, onStateChange, autoHide = "true", timer = 0, placement, type, content, padding = 0, className, disabled=false, ...props }) => {
+export const HoverCard: React.FC<TooltipWrapperProps> = ({ children, state, onStateChange, autoHide = "true", timer = 0, placement, type, content, padding = 0, className, disabled = false, ...props }) => {
     const [show, setShow] = useState(false);
     const { offset: offsetWrapper = 8 } = props;
     const { x, y, reference, floating, update, strategy, refs } = useFloating({
@@ -58,6 +57,7 @@ export const HoverCard: React.FC<TooltipWrapperProps> = ({ children, state, onSt
         strategy: "fixed",
         middleware: [shift(), offset(offsetWrapper)],
     });
+
 
     const { wrapperCSS, callback } = props;
     const eventListener = () => {
@@ -82,7 +82,7 @@ export const HoverCard: React.FC<TooltipWrapperProps> = ({ children, state, onSt
         return {
             onClick: (e) => {
                 setShow(true);
-                callback(true);
+                !!callback && callback(true);
             },
         };
     };
@@ -112,7 +112,7 @@ export const HoverCard: React.FC<TooltipWrapperProps> = ({ children, state, onSt
             }
             else {
                 setShow(false);
-                callback(false);
+                !!callback && callback(false);
             }
 
         };

@@ -1,14 +1,8 @@
 import React, { memo, useContext } from "react";
 import { css } from "@emotion/react";
-import Input from "@dyson/components/atoms/input/Input";
-import { SelectBox } from "@dyson/components/molecules/Select/Select";
 import { Conditional } from "@dyson/components/layouts";
-import { Button } from "@dyson/components/atoms/button/Button";
-import { Text } from "@dyson/components/atoms/text/Text";
 import { CrusherHammerIcon, DownIcon, DroppdownIconV2, LoadingIconV2, MoreIcon, NavigateBackIcon, NavigateRefreshIcon, RedDotIcon, SettingsIcon } from "../../icons";
-import { BrowserButton } from "../buttons/browser.button";
 import { useDispatch, batch, useSelector, useStore } from "react-redux";
-import { setDevice, setSiteUrl } from "electron-app/src/store/actions/recorder";
 import { devices } from "../../../devices";
 import { getRecorderInfo, getRecorderInfoUrl, getRecorderState, getSavedSteps, isTestVerified } from "electron-app/src/store/selectors/recorder";
 import {
@@ -16,11 +10,9 @@ import {
 	performNavigation,
 	performReloadPage,
 	performResetAppSession,
-	performSetDevice,
 	performSteps,
 	performVerifyTest,
 	preformGoBackPage,
-	resetTest,
 	saveTest,
 	updateTest,
 } from "../../commands/perform";

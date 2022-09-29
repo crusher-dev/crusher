@@ -5,13 +5,22 @@ import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import { HoverCard } from "dyson/src/components/atoms/tooltip/Tooltip1";
 import { css } from "@emotion/react";
 import dynamic from 'next/dynamic'
-const DropdownContent = dynamic(() => import('./FeedbackContainer'), {
+import { useAtom } from "jotai";
+import { userAtom } from "@store/atoms/global/user";
+import { useRouter } from "next/router";
+const DropdownContent = dynamic(() => import('dyson/src/components/sharedComponets/FeedbackContainer'), {
     ssr: false,
 })
 
 export function GiveFeedback() {
+    const [user] = useAtom(userAtom)
+    const { asPath } = useRouter()
+
     return (
-        <HoverCard wrapperCSS={wrapperCSS} css={userDropdownCSS} content={<DropdownContent />} placement="top-start" type="click" padding={2} offset={0}>
+        <HoverCard wrapperCSS={wrapperCSS} css={userDropdownCSS} content={<DropdownContent
+            user={user}
+            asPath={asPath}
+        />} placement="top-start" type="click" padding={2} offset={0}>
 
             <div className="flex items-center pt-1" css={feedbackCSS}>
                 <Chat className="mr-8" />
@@ -33,7 +42,7 @@ const wrapperCSS = css`
 const userDropdownCSS = css`
 	margin-left: -12re,;
 
-    padding: 28rem;
+    padding: 24rem;
 
     width: 356rem;
 

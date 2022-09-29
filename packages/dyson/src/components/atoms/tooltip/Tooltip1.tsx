@@ -65,7 +65,7 @@ export const HoverCard: React.FC<TooltipWrapperProps> = ({ children, state, onSt
             return {
                 onMouseOver: () => {
                     setShow(true);
-                    callback(true);
+                    !!callback && callback(true);
                 },
                 onMouseLeave: (e) => {
                     const isElement = e.relatedTarget instanceof Element;
@@ -73,7 +73,7 @@ export const HoverCard: React.FC<TooltipWrapperProps> = ({ children, state, onSt
                     if (movedToToolip) return;
                     if (autoHide) {
                         setShow(false);
-                        callback(false);
+                        !!callback && callback(false);
                     }
                 },
             };

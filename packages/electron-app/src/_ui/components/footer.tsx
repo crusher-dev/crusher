@@ -8,7 +8,7 @@ import { Tooltip } from "@dyson/components/atoms/tooltip/Tooltip";
 import DropdownContent from "@dyson/components/sharedComponets/FeedbackContainer";
 import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import { HoverCard } from "dyson/src/components/atoms/tooltip/Tooltip1";
-
+import { ChatSVG } from "dyson/src/components/sharedComponets/svg/normal";
 
 const Footer = () => {
     return (
@@ -48,7 +48,7 @@ export function ShareFeedbak() {
         />} placement="top-start" type="click" padding={2} offset={0}>
 
             <div className="flex items-center pt-0" css={feedbackCSS}>
-                <LinkPointer css={resourcesCss}>feedback</LinkPointer>
+                <LinkPointer css={resourcesCss} showExternalIcon={false}><ChatSVG /></LinkPointer>
             </div>
         </HoverCard>
     );

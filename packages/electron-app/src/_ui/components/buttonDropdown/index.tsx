@@ -5,44 +5,44 @@ import { ActionButton } from "electron-app/src/ui/components/buttons/action.butt
 import { DownIcon } from "electron-app/src/ui/icons";
 import { SaveButtonDownIcon } from "../../icons";
 
-const ActionButtonDropdown = ({options, callback}) => {
+const ActionButtonDropdown = ({ options, callback }) => {
     const handleClick = React.useCallback((optionId: string) => {
         callback(optionId);
     }, [callback]);
-    
+
     const menuItems = React.useMemo(() => {
         return options.map((option) => {
-             return (
+            return (
                 <div css={menuItemCss} onClick={handleClick.bind(this, option.id)}>
-				    {option.content}
-			    </div>
-             );
+                    {option.content}
+                </div>
+            );
         });
     }, [options]);
 
-	return (
-		<div
-			className={"flex flex-col justify-between h-full"}
-			css={css`
+    return (
+        <div
+            className={"flex flex-col justify-between h-full"}
+            css={css`
 				font-size: 13rem;
 				color: #fff;
 			`}
-		>
-			<div>
-				{menuItems}
-			</div>
-		</div>
-	);
+        >
+            <div>
+                {menuItems}
+            </div>
+        </div>
+    );
 }
 
 const menuItemCss = css`
     padding: 6rem 13rem;
 	:hover {
-		background: #687ef2 !important;
+		background: #B341F9 !important;
 	}
 `;
 interface IProps {
-    options: Array<{id: string, content: any}>;
+    options: Array<{ id: string, content: any }>;
     primaryOption: string;
     callback?: any;
     className?: any;
@@ -51,7 +51,7 @@ interface IProps {
     dropdownCss?: any;
 };
 
-const ButtonDropdown = ({options, id, hideDropdown, primaryOption, wrapperCss, className, callback, ...props}: IProps) => {
+const ButtonDropdown = ({ options, id, hideDropdown, primaryOption, wrapperCss, className, callback, ...props }: IProps) => {
     const [showActionDropdown, setShowActionDropdown] = React.useState(false);
     const buttonRef = React.useRef(null);
 
@@ -68,25 +68,25 @@ const ButtonDropdown = ({options, id, hideDropdown, primaryOption, wrapperCss, c
     }, [options, primaryOption]);
 
     return (
-    <Dropdown
-        css={wrapperCss}
-        initialState={showActionDropdown}
-        component={<ActionButtonDropdown options={dropdownOptions} callback={handleCallback} />}
-        callback={setShowActionDropdown.bind(this)}
-        dropdownCSS={[props.dropdownCss, dropdownCss(buttonRef.current)]}
-    >
-        <div ref={buttonRef} css={css`position: absolute; width: 100%; height: 100%; pointer-events: none; visibility: hidden;`}> </div>
+        <Dropdown
+            css={wrapperCss}
+            initialState={showActionDropdown}
+            component={<ActionButtonDropdown options={dropdownOptions} callback={handleCallback} />}
+            callback={setShowActionDropdown.bind(this)}
+            dropdownCSS={[props.dropdownCss, dropdownCss(buttonRef.current)]}
+        >
+            <div ref={buttonRef} css={css`position: absolute; width: 100%; height: 100%; pointer-events: none; visibility: hidden;`}> </div>
             <ActionButton id={id} className={className} title={primaryOptionsObject.content} onClick={handleCallback.bind(this, primaryOptionsObject.id)} css={saveButtonStyle} />
 
             {!hideDropdown ? (
                 <div className={"dropdown-icon"} css={downIconContainerCss}>
-                <SaveButtonDownIcon css={downIconCss} />
+                    <SaveButtonDownIcon css={downIconCss} />
                 </div>
-            ): ""}
-      
+            ) : ""}
 
-     
-    </Dropdown>
+
+
+        </Dropdown>
     );
 };
 
@@ -106,6 +106,7 @@ const saveButtonStyle = css`
     font-weight: 600;
     font-size: 14rem;
     line-height: 17rem;
+    padding-top: 1px;
     border: none !important;
     color: #ffffff;
     :hover {

@@ -1,7 +1,6 @@
 import * as path from "path";
 import fileUrl from "file-url";
 import { IDeepLinkAction } from "./types";
-import { resolveToBackendPath, resolveToFrontEndPath } from "@shared/utils/url";
 import { createAuthorizedRequestFunc, resolveToBackend } from "./utils/url";
 import axios, { AxiosRequestConfig } from "axios";
 import { getStore } from "./store/configureStore";

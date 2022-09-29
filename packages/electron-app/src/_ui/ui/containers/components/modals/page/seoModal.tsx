@@ -10,7 +10,7 @@ import { Text } from "@dyson/components/atoms/text/Text";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { recordStep, updateRecordedStep } from "electron-app/src/store/actions/recorder";
 import { AssertionFormTable, ASSERTION_OPERATION_TYPE } from "../../forms/assertionForm";
-import { iSeoMetaInformationMeta } from "../../../../../types";
+import { iSeoMetaInformationMeta } from "../../../../../../types";
 import { Conditional } from "@dyson/components/layouts";
 import { ipcRenderer } from "electron";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";

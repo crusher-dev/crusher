@@ -1,9 +1,9 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { ActionHeadingIcon, PlayIconV3 } from "electron-app/src/_ui/old_icons";
+import { ActionHeadingIcon, PlayIconV3 } from "electron-app/src/_ui/constants/old_icons";
 import { getRecorderState } from "electron-app/src/store/selectors/recorder";
 import { useStore } from "react-redux";
-import { sendSnackBarEvent } from "electron-app/src/_ui/containers/components/toast";
+import { sendSnackBarEvent } from "electron-app/src/_ui/ui/containers/components/toast";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 
 interface IProps {

@@ -13,7 +13,7 @@ import { setSettngs, setUserAccountInfo } from "electron-app/src/store/actions/a
 import { iReduxState } from "electron-app/src/store/reducers";
 import { sendSnackBarEvent } from "../toast";
 import { Conditional } from "@dyson/components/layouts";
-import { LoadingIcon, LoadingIconV2 } from "../../../old_icons";
+import { LoadingIcon, LoadingIconV2 } from "../../../../constants/old_icons";
 import { shell, webFrame } from "electron";
 import { getUserInfoFromToken, waitForUserLogin } from "electron-app/src/utils";
 import { resolveToFrontEndPath } from "@shared/utils/url";

@@ -1,8 +1,8 @@
 import React from "react";
 import { css } from "@emotion/react";
 import { Dropdown } from "@dyson/components/molecules/Dropdown";
-import { ActionButton } from "electron-app/src/_ui/containers/components/buttons/action.button";
-import { SaveButtonDownIcon } from "../../icons";
+import { ActionButton } from "electron-app/src/_ui/ui/containers/components/buttons/action.button";
+import { SaveButtonDownIcon } from "../../../constants/icons";
 
 const ActionButtonDropdown = ({ options, callback }) => {
     const handleClick = React.useCallback((optionId: string) => {

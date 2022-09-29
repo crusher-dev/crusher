@@ -4,7 +4,7 @@ import { useSelector, useStore } from "react-redux";
 import { css } from "@emotion/react";
 import { Conditional } from "@dyson/components/layouts";
 import { getLogs } from "electron-app/src/store/selectors/logger";
-import { MiniCrossIcon, PlayIconV2, UpMaximiseIcon } from "../../../old_icons";
+import { MiniCrossIcon, PlayIconV2, UpMaximiseIcon } from "../../../../constants/old_icons";
 import { ObjectInspector, TableInspector, chromeDark, ObjectRootLabel, ObjectLabel } from "react-inspector";
 import { BrowserButton } from "../buttons/browser.button";
 import { CustomCodeModal } from "../modals/page/customCodeModal";
@@ -14,8 +14,8 @@ import { updateRecorderState } from "electron-app/src/store/actions/recorder";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 import { now } from "electron-app/src/main-process/now";
 import { HoverCard } from "@dyson/components/atoms/tooltip/Tooltip1";
-import { DocsIcon, UpDownSizeIcon } from "electron-app/src/_ui/icons";
-import { HelpContent } from "electron-app/src/_ui/components/stickyFooter";
+import { DocsIcon, UpDownSizeIcon } from "electron-app/src/_ui/constants/icons";
+import { HelpContent } from "electron-app/src/_ui/ui/components/stickyFooter";
 
 function formatLogs(logs: Array<ILoggerReducer["logs"][0]>): Array<ILoggerReducer["logs"][0]> {
 	logs = logs.map((log, index) => {

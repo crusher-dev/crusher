@@ -8,8 +8,8 @@ import { Button } from "@dyson/components/atoms/button/Button";
 import { Conditional } from "@dyson/components/layouts";
 import { useDispatch, useSelector, useStore } from "react-redux";
 import { getIsStatusBarVisible, getRecorderState, getSavedSteps } from "electron-app/src/store/selectors/recorder";
-import { ConsoleIcon, GreenCheckboxIcon, MoreIcon, MuteIcon, PointerArrowIcon } from "../../../../old_icons";
-import { LoadingIcon, WarningIcon } from "electron-app/src/_ui/old_icons";
+import { ConsoleIcon, GreenCheckboxIcon, MoreIcon, MuteIcon, PointerArrowIcon } from "../../../../../constants/old_icons";
+import { LoadingIcon, WarningIcon } from "electron-app/src/_ui/constants/old_icons";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
 import {
 	deleteRecordedSteps,

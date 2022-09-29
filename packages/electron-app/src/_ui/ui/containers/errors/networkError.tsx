@@ -1,10 +1,10 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { ConnectivityWarningIcon } from "../../old_icons";
-import { performGoToUrl } from "../../commands/perform";
+import { ConnectivityWarningIcon } from "../../../constants/old_icons";
+import { performGoToUrl } from "../../../commands/perform";
 import { CompactAppLayout } from "../../layout/CompactAppLayout";
 import { Footer } from "../../layout/Footer";
-import { NormalButton } from "../../components/buttons/NormalButton"; 
+import { NormalButton } from "../../components/buttons/NormalButton";
 
 const NetworkErrorContainer = () => {
 	const handleRetry = React.useCallback(() => {

@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 import { css } from "@emotion/react";
 import { useSelector } from "react-redux";
-import { getRecorderInfo, getRecorderState } from "../../../../store/selectors/recorder";
+import { getRecorderInfo, getRecorderState } from "../../../../../store/selectors/recorder";
 import { Conditional } from "@dyson/components/layouts";
 import { ActionsPanel } from "../../../screens/recorder/components/sidebar/actionsPanel";
 import { StepsPanel } from "./steps";

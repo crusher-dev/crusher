@@ -1,6 +1,6 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { sendSnackBarEvent } from "electron-app/src/_ui/containers/components/toast";
+import { sendSnackBarEvent } from "electron-app/src/_ui/ui/containers/components/toast";
 
 const LinkBox = ({ value, ...props }) => {
 	const ref = React.useRef(null);

@@ -4,7 +4,7 @@ import { Tooltip } from "@dyson/components/atoms/tooltip/Tooltip";
 import { Button } from "@dyson/components/atoms";
 import { getStepInfo } from "electron-app/src/store/selectors/recorder";
 import { useStore, useSelector } from "react-redux";
-import { GreenCheckboxIcon, LoadingIcon, PointerArrowIcon, WarningIcon } from "electron-app/src/_ui/old_icons";
+import { GreenCheckboxIcon, LoadingIcon, PointerArrowIcon, WarningIcon } from "electron-app/src/_ui/constants/old_icons";
 import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
 import { TextHighlighter } from "./helper";
 import { HoverCard } from "@dyson/components/atoms/tooltip/Tooltip1";

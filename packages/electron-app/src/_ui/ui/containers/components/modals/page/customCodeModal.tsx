@@ -18,7 +18,7 @@ import {
 	saveCodeTemplate,
 	updateCodeTemplate
 } from "electron-app/src/_ui/commands/perform";
-import { DownIcon } from "electron-app/src/_ui/old_icons";
+import { DownIcon } from "electron-app/src/_ui/constants/old_icons";
 import * as fs from "fs";
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import * as path from "path";

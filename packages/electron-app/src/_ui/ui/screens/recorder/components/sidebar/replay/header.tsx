@@ -1,7 +1,7 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { InputFocusHint } from "electron-app/src/_ui/components/inputs/inputFocusHint";
-import { EllipseIcon, ResetIcon } from "electron-app/src/_ui/icons";
+import { InputFocusHint } from "electron-app/src/_ui/ui/components/inputs/inputFocusHint";
+import { EllipseIcon, ResetIcon } from "electron-app/src/_ui/constants/icons";
 import { useLocalBuild } from "electron-app/src/_ui/hooks/tests";
 
 const ProgressBar = () => {

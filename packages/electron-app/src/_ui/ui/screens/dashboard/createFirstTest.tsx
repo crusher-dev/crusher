@@ -1,11 +1,11 @@
 import { goFullScreen } from "electron-app/src/_ui/commands/perform";
-import { CreateIcon, PlayV2Icon } from "electron-app/src/_ui/old_icons";
+import { CreateIcon, PlayV2Icon } from "electron-app/src/_ui/constants/old_icons";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { css } from "@emotion/react";
 import { shell } from "electron";
 import { Link } from "../../components/Link";
-import { ActionButton } from "electron-app/src/_ui/containers/components/buttons/action.button";
+import { ActionButton } from "electron-app/src/_ui/ui/containers/components/buttons/action.button";
 
 const CreateFirstTest = ({}) => {
 	const navigate = useNavigate();

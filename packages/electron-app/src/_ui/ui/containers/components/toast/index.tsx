@@ -7,7 +7,7 @@ import { shell } from "electron";
 import { resolveToBackendPath, resolveToFrontEndPath } from "@shared/utils/url";
 import { getAppSettings } from "electron-app/src/store/selectors/app";
 import { useStore } from "react-redux";
-import { StepRecordedToast } from "electron-app/src/_ui/screens/recorder/components/sidebar/stepsPanel/stepRecordedToast";
+import { StepRecordedToast } from "electron-app/src/_ui/ui/screens/recorder/components/sidebar/stepsPanel/stepRecordedToast";
 
 export const snackBarEmitter = mitt();
 

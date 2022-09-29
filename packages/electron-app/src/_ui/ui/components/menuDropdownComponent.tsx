@@ -1,10 +1,10 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { BulbIcon, CrossIcon, CrusherHammerColorIcon, CrusherHammerIcon, InspectElementIcon, LoadingIconV2, LogoV2, MiniCrossIcon, SettingsIcon } from "../old_icons";
+import { BulbIcon, CrossIcon, CrusherHammerColorIcon, CrusherHammerIcon, InspectElementIcon, LoadingIconV2, LogoV2, MiniCrossIcon, SettingsIcon } from "../../constants/old_icons";
 import { shell } from "electron";
 import { DropdownIconSVG } from "@dyson/assets/icons";
 import { useNavigate } from "react-router-dom";
-import { getBuildReport, performExit } from "../commands/perform";
+import { getBuildReport, performExit } from "../../commands/perform";
 import { resolveToFrontEndPath } from "@shared/utils/url";
 import { useStore } from "react-redux";
 import { getCurrentSelectedProjct } from "electron-app/src/store/selectors/app";

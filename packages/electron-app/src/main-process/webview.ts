@@ -1,7 +1,6 @@
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { WebContents, ipcMain, webContents, session } from "electron";
 import * as path from "path";
-import { Disposer } from "../lib/disposable";
 import { PlaywrightInstance } from "../lib/playwright";
 import { TRecorderCrashState, TRecorderState } from "../store/reducers/recorder";
 import { isInspectModeOn } from "../store/selectors/recorder";

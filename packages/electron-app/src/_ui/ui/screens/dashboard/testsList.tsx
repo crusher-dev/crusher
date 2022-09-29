@@ -1,10 +1,10 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { DeleteIcon, GarbageIcon, LoadingIconV2, PlayIcon } from "electron-app/src/_ui/old_icons";
-import { BasketBallIcon, EditIcon } from "../../icons";
+import { DeleteIcon, GarbageIcon, LoadingIconV2, PlayIcon } from "electron-app/src/_ui/constants/old_icons";
+import { BasketBallIcon, EditIcon } from "../../../constants/icons";
 import { useNavigate } from "react-router-dom";
 import { goFullScreen, performReplayTestUrlAction } from "electron-app/src/_ui/commands/perform";
-import { triggerLocalBuild } from "../../utils/recorder";
+import { triggerLocalBuild } from "../../../utils/recorder";
 import { CloudCrusher } from "electron-app/src/lib/cloud";
 import { ContextMenuTypeEnum, ListBox } from "../../components/selectableList";
 import { EmojiPicker } from "../../components/emojiPicker";
@@ -12,7 +12,7 @@ import Checkbox from "@dyson/components/atoms/checkbox/checkbox";
 import { ResizableInput } from "../../components/ResizableInput";
 import { Conditional } from "@dyson/components/layouts";
 import { useAtom } from "jotai";
-import { editTestNameAtom } from "electron-app/src/store/jotai/testsPage";
+import { editTestNameAtom } from "electron-app/src/_ui/store/jotai/testsPage";
 
 const EditableTestName = ({ testName, testId }) => {
     const [testEditName, setTestEditName] = useAtom(editTestNameAtom)

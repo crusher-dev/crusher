@@ -2,7 +2,7 @@ import React from "react";
 import { css } from "@emotion/react";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { Dropdown } from "@dyson/components/molecules/Dropdown";
-import { DownIcon, LoadingIconV2 } from "../../old_icons";
+import { DownIcon, LoadingIconV2 } from "../../../constants/old_icons";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useStore } from "react-redux";
 import { getCurrentSelectedProjct, getIsProxyInitializing, getProxyState, getUserAccountInfo } from "electron-app/src/store/selectors/app";
@@ -16,7 +16,7 @@ import {
 	performRunTests,
 	turnOnProxy,
 	updateTestName,
-} from "../../commands/perform";
+} from "../../../commands/perform";
 import { sendSnackBarEvent } from "../../containers/components/toast";
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
 import { shell } from "electron";

@@ -1,7 +1,7 @@
 import { Global, css } from "@emotion/react";
 import React from "react";
 import Picker from '@emoji-mart/react'
-import { HoverCard } from "dyson/src/components/atoms/tooltip/Tooltip1";
+import { HoverCard } from "@dyson/components/atoms/tooltip/Tooltip1";
 
 
 

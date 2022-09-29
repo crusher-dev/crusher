@@ -2,7 +2,7 @@ import React from "react";
 import { css } from "@emotion/react";
 import { useNavigate } from "react-router-dom";
 import { CompactAppLayout } from "../layout/CompactAppLayout";
-import { DocsGoBackActionBar } from "electron-app/src/_ui/containers/components/create-first-test";
+import { DocsGoBackActionBar } from "electron-app/src/_ui/ui/containers/components/create-first-test";
 
 export function InsufficientPermissionScreen() {
 	const navigate = useNavigate();

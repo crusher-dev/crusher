@@ -11,18 +11,18 @@ import { Global } from "@emotion/react";
 import { css } from "@emotion/react";
 import { App } from "./app";
 import "../../static/assets/styles/tailwind.css";
-import { LoginScreen } from "./screens/auth/login";
-import { DashboardScreen } from "./screens/dashboard";
-import { UnDockCodeScreen } from "./screens/undockCode";
-import { SettingsScreen } from "./screens/settings";
+import { LoginScreen } from "./ui/screens/auth/login";
+import { DashboardScreen } from "./ui/screens/dashboard";
+import { UnDockCodeScreen } from "./ui/screens/undockCode";
+import { SettingsScreen } from "./ui/screens/settings";
 import { CustomRouter } from './utils/history';
-import { ProjectsListScreen } from "./screens/projectList";
-import { ToastSnackbar } from "./containers/components/toast";
-import { AuthOnboardingScreen } from "./screens/authOnboarding";
+import { ProjectsListScreen } from "./ui/screens/projectList";
+import { ToastSnackbar } from "./ui/containers/components/toast";
+import { AuthOnboardingScreen } from "./ui/screens/authOnboarding";
 import { SWRConfig } from "swr";
-import { NetworkErrorContainer } from "./containers/errors/networkError";
-import { UnAuthorizedErrorContainer } from "./containers/errors/unauthorizedError";
-import { InvalidCredsErrorContainer } from "./containers/errors/invalidCreds";
+import { NetworkErrorContainer } from "./ui/containers/errors/networkError";
+import { UnAuthorizedErrorContainer } from "./ui/containers/errors/unauthorizedError";
+import { InvalidCredsErrorContainer } from "./ui/containers/errors/invalidCreds";
 import { performGoToUrl } from "./commands/perform";
 import { Provider as JotaiProvider } from "jotai";
 
@@ -72,7 +72,6 @@ function InsideRouter() {
                     <Route path="/code-editor" element={<UnDockCodeScreen />} />
                     <Route path="/settings" element={<SettingsScreen />} />
                     <Route path="/recorder" element={<App />} />
-
                     <Route path="/network_error" element={<NetworkErrorContainer />} />
                     <Route path="/unauthorized_error" element={<UnAuthorizedErrorContainer />} />
                     <Route path="/invalid_creds_error" element={<InvalidCredsErrorContainer />} />
@@ -91,6 +90,7 @@ function RootApp() {
         </Provider>
     );
 }
+
 render(
     <RootApp />,
     document.querySelector("#app-container"),

@@ -1,19 +1,19 @@
-import { EditPencilIcon, ReselectPointerIcon } from "electron-app/src/_ui/icons";
+import { EditPencilIcon, ReselectPointerIcon } from "electron-app/src/_ui/constants/icons";
 import React from "react";
 import { css } from "@emotion/react";
 import { getSavedSteps, getStepInfo } from "electron-app/src/store/selectors/recorder";
 import { useSelector, useDispatch } from "react-redux";
 import { TextHighlighter, TextHighlighterText, transformStringSelectorsToArray } from "./helper";
 import { deleteRecordedSteps, updateRecordedStep } from "electron-app/src/store/actions/recorder";
-import { FieldInput, FieldSelectorPicker } from "electron-app/src/_ui/containers/components/sidebar/stepEditor/fields";
+import { FieldInput, FieldSelectorPicker } from "electron-app/src/_ui/ui/containers/components/sidebar/stepEditor/fields";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
-import { NormalInput } from "electron-app/src/_ui/components/inputs/normalInput";
-import { emitShowModal } from "electron-app/src/_ui/containers/components/modals";
-import { BrowserButton } from "electron-app/src/_ui/containers/components/buttons/browser.button";
+import { NormalInput } from "electron-app/src/_ui/ui/components/inputs/normalInput";
+import { emitShowModal } from "electron-app/src/_ui/ui/containers/components/modals";
+import { BrowserButton } from "electron-app/src/_ui/ui/containers/components/buttons/browser.button";
 import { Button } from "@dyson/components/atoms";
 import { iSelectorInfo } from "@shared/types/selectorInfo";
-import { sendSnackBarEvent } from "electron-app/src/_ui/containers/components/toast";
-import { ResizableInput } from "electron-app/src/_ui/components/ResizableInput";
+import { sendSnackBarEvent } from "electron-app/src/_ui/ui/containers/components/toast";
+import { ResizableInput } from "electron-app/src/_ui/ui/components/ResizableInput";
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
 
 const limitString = (string) => {

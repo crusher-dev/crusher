@@ -1,10 +1,10 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { ConnectivityWarningIcon, LoadingIconV2, PlayV2Icon } from "../../../old_icons";
-import {Link} from "electron-app/src/_ui/components/Link";
+import { ConnectivityWarningIcon, LoadingIconV2, PlayV2Icon } from "../../../../constants/old_icons";
+import {Link} from "electron-app/src/_ui/ui/components/Link";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { shell } from "electron";
-import { performRunDraftTest, performRunTests, turnOnProxy } from "../../../commands/perform";
+import { performRunDraftTest, performRunTests, turnOnProxy } from "../../../../commands/perform";
 import { getCurrentSelectedProjct, getProxyState } from "electron-app/src/store/selectors/app";
 import { useSelector, useStore } from "react-redux";
 

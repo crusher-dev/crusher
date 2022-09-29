@@ -1,6 +1,6 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { GithubIcon } from "electron-app/src/_ui/old_icons";
+import { GithubIcon } from "electron-app/src/_ui/constants/old_icons";
 import { Button } from "@dyson/components/atoms";
 
 const NormalButton = ({className, onClick, children, ...props}) => {

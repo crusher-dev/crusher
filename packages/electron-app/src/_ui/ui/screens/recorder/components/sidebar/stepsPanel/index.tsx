@@ -1,7 +1,7 @@
 import React from 'react';
 import { css } from "@emotion/react";
 import { Text } from "@dyson/components/atoms/text/Text";
-import { ConsoleIcon } from 'electron-app/src/_ui/old_icons';
+import { ConsoleIcon } from 'electron-app/src/_ui/constants/old_icons';
 import { useSelector } from "react-redux";
 import { getIsStatusBarVisible, getSavedSteps } from 'electron-app/src/store/selectors/recorder';
 import { Step } from './step';
@@ -11,7 +11,7 @@ import { RightClickMenu } from '@dyson/components/molecules/RightClick/RightClic
 import { useStore } from "react-redux";
 import { deleteRecordedSteps } from 'electron-app/src/store/actions/recorder';
 import { performVerifyTest } from 'electron-app/src/_ui/commands/perform';
-import { ResetIcon } from 'electron-app/src/_ui/icons';
+import { ResetIcon } from 'electron-app/src/_ui/constants/icons';
 
 interface IProps {
     className?: string;

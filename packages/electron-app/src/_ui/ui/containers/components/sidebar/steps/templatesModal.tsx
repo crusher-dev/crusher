@@ -11,7 +11,7 @@ import { getAppSettings } from "electron-app/src/store/selectors/app";
 import { setSettngs } from "electron-app/src/store/actions/app";
 import { iReduxState } from "electron-app/src/store/reducers";
 import { sendSnackBarEvent } from "../../toast";
-import { AddIcon, DownIcon, UpIcon } from "electron-app/src/_ui/old_icons";
+import { AddIcon, DownIcon, UpIcon } from "electron-app/src/_ui/constants/old_icons";
 import { Conditional } from "@dyson/components/layouts";
 import { Switch } from "@dyson/components/atoms/toggle/switch";
 

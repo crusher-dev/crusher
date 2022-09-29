@@ -1,6 +1,6 @@
 import React from "react";
 import { useInView } from "react-intersection-observer";
-import { LogoAnimated } from "../../../../dyson/src/components/atoms/logo/LogoAnimated";
+import { LogoAnimated } from "@dyson/components/atoms/logo/LogoAnimated";
 import { css } from "@emotion/react";
 import { Conditional } from "@dyson/components/layouts";
 

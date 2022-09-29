@@ -3,9 +3,9 @@ import { css } from "@emotion/react";
 import { CompactAppLayout } from "../../../layout/CompactAppLayout";
 import { Footer } from "../../../layout/Footer";
 
-import { LoadingIconV2 } from "electron-app/src/_ui/old_icons";
+import { LoadingIconV2 } from "electron-app/src/_ui/constants/old_icons";
 
-import { loginUserToCloud } from "../../../utils/login";
+import { loginUserToCloud } from "../../../../utils/login";
 
 import { focusOnWindow, performGoToUrl } from "electron-app/src/_ui/commands/perform";
 import { shell } from "electron";

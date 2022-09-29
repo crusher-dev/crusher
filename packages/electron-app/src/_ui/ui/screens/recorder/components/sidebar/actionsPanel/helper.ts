@@ -3,8 +3,8 @@ import { setSelectedElement } from "electron-app/src/store/actions/recorder";
 import { getStore } from "electron-app/src/store/configureStore";
 import { getSelectedElement } from "electron-app/src/store/selectors/recorder";
 import { enableJavascriptInDebugger, peformTakeElementScreenshot, performAssertElementVisibility, performClick, performHover } from "electron-app/src/_ui/commands/perform";
-import { emitShowModal } from "electron-app/src/_ui/containers/components/modals";
-import { sendSnackBarEvent } from "electron-app/src/_ui/containers/components/toast";
+import { emitShowModal } from "electron-app/src/_ui/ui/containers/components/modals";
+import { sendSnackBarEvent } from "electron-app/src/_ui/ui/containers/components/toast";
 import Fuse from "fuse.js";
 
 const actionsData = require("./actions.json");

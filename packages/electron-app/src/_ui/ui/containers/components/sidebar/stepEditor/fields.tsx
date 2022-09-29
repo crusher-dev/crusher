@@ -4,7 +4,7 @@ import Switch, { ToggleProps } from "@dyson/components/atoms/toggle/switch";
 import { Input } from "@dyson/components/atoms";
 import { InputProps } from "@dyson/components/atoms/input/Input";
 import { css } from "@emotion/react";
-import { InspectElementIcon } from "../../../../old_icons";
+import { InspectElementIcon } from "../../../../../constants/old_icons";
 import { turnOnElementSelectorInspectMode } from "electron-app/src/_ui/commands/perform";
 import { iSelectorInfo } from "@shared/types/selectorInfo";
 import { Button, ButtonProps } from "@dyson/components/atoms/button/Button";

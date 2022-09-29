@@ -1,9 +1,9 @@
 import React from "react";
 import { performTakePageScreenshot } from "electron-app/src/_ui/commands/perform";
-import { emitShowModal } from "electron-app/src/_ui/containers/components/modals";
+import { emitShowModal } from "electron-app/src/_ui/ui/containers/components/modals";
 import { ActionsList } from "./actionsList";
 import { getItemsFromActionsData } from "./helper";
-import { CodeIcon, PageIcon } from "electron-app/src/_ui/icons";
+import { CodeIcon, PageIcon } from "electron-app/src/_ui/constants/icons";
 import { css } from "@emotion/react";
 
 const actionsData = require("./actions.json");

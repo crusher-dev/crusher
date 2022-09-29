@@ -1,11 +1,11 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { CreateIcon, PlayV2Icon } from "../../../old_icons";
+import { CreateIcon, PlayV2Icon } from "../../../../constants/old_icons";
 import { Link } from "../../../components/menuDropdownComponent";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { shell } from "electron";
 import { useNavigate } from "react-router-dom";
-import { goFullScreen } from "../../../commands/perform";
+import { goFullScreen } from "../../../../commands/perform";
 
 export const ActionButton = ({ title, className, onClick }) => {
 	return (

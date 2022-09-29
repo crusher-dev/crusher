@@ -24,7 +24,7 @@ import { iAction } from "@shared/types/action";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { RESET_APP_SESSION } from "../actions/app";
-import { TElementActionsEnum } from "electron-app/src/_ui/screens/recorder/components/sidebar/actionsPanel/elementActions";
+import { TElementActionsEnum } from "electron-app/src/_ui/ui/screens/recorder/components/sidebar/actionsPanel/elementActions";
 
 export enum TRecorderState {
 	BOOTING = "BOOTING", // <- Internal state (Initialize recorder script)

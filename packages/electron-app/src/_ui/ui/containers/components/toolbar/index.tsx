@@ -1,9 +1,9 @@
 import React, { memo, useContext } from "react";
 import { css } from "@emotion/react";
 import { Conditional } from "@dyson/components/layouts";
-import { CrusherHammerIcon, DownIcon, DroppdownIconV2, LoadingIconV2, MoreIcon, NavigateBackIcon, NavigateRefreshIcon, RedDotIcon, SettingsIcon } from "../../../old_icons";
+import { CrusherHammerIcon, DownIcon, DroppdownIconV2, LoadingIconV2, MoreIcon, NavigateBackIcon, NavigateRefreshIcon, RedDotIcon, SettingsIcon } from "../../../../constants/old_icons";
 import { useDispatch, batch, useSelector, useStore } from "react-redux";
-import { devices } from "../../../../devices";
+import { devices } from "../../../../../devices";
 import { getRecorderInfo, getRecorderInfoUrl, getRecorderState, getSavedSteps, isTestVerified } from "electron-app/src/store/selectors/recorder";
 import {
 	goFullScreen,
@@ -15,8 +15,8 @@ import {
 	preformGoBackPage,
 	saveTest,
 	updateTest,
-} from "../../../commands/perform";
-import { addHttpToURLIfNotThere, isValidHttpUrl } from "../../../../utils";
+} from "../../../../commands/perform";
+import { addHttpToURLIfNotThere, isValidHttpUrl } from "../../../../../utils";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 import { getAppEditingSessionMeta, getProxyState, shouldShowOnboardingOverlay } from "electron-app/src/store/selectors/app";
 import { SettingsModal } from "./settingsModal";
@@ -29,10 +29,10 @@ import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
 import {  useNavigate } from "react-router-dom";
 import { MenuDropdown } from "../../../components/menuDropdownComponent";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
-import { ButtonDropdown } from "electron-app/src/_ui/components/buttonDropdown";
+import { ButtonDropdown } from "electron-app/src/_ui/ui/components/buttonDropdown";
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
 import { generateRandomTestName } from "electron-app/src/utils/renderer";
-import { NormalInput } from "electron-app/src/_ui/components/inputs/normalInput";
+import { NormalInput } from "electron-app/src/_ui/ui/components/inputs/normalInput";
 
 const DeviceItem = ({ label }) => {
 	return (

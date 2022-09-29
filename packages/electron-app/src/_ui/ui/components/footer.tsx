@@ -6,9 +6,9 @@ import { DiscordSVG, GithubSVG } from "./stickyFooter";
 import { linkOpen } from "electron-app/src/utils/url";
 import { Tooltip } from "@dyson/components/atoms/tooltip/Tooltip";
 import DropdownContent from "@dyson/components/sharedComponets/FeedbackContainer";
-import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
-import { HoverCard } from "dyson/src/components/atoms/tooltip/Tooltip1";
-import { ChatSVG } from "dyson/src/components/sharedComponets/svg/normal";
+import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
+import { HoverCard } from "@dyson/components/atoms/tooltip/Tooltip1";
+import { ChatSVG } from "@dyson/components/sharedComponets/svg/normal";
 
 const Footer = () => {
     return (

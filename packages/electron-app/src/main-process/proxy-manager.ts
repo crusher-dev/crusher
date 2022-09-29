@@ -1,6 +1,5 @@
 import child_process, { ChildProcess } from "child_process";
-import fs from "fs";
-import { app, BrowserWindow } from "electron";
+import { app } from "electron";
 import { AnyAction, Store } from "redux";
 import { setProxyInitializing, setProxyState } from "../store/actions/app";
 
@@ -63,7 +62,6 @@ class ProxyManager {
 		this._logs = [];
 		if (this._currentProxyProcess) {
 			console.info("[ProxyManager]: Killing an existing tunnel process");
-
 			this.store.dispatch(setProxyState({}));
 			this._currentProxyProcess.kill();
 			this._currentProxyProcess = null;

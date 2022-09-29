@@ -1,7 +1,7 @@
 import { css } from "@emotion/react";
 import { iAction } from "@shared/types/action";
 import { updateRecordedStep } from "electron-app/src/store/actions/recorder";
-import { CrossIcon } from "electron-app/src/_ui/old_icons";
+import { CrossIcon } from "electron-app/src/_ui/constants/old_icons";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { ActionSpecificInfo } from "./actionSpecificInfo";

@@ -1,6 +1,6 @@
 import { Conditional } from "@dyson/components/layouts";
 import { css } from "@emotion/react";
-import { BrowserIcon, CloseModalIcon, CrossIcon } from "../../../old_icons";
+import { BrowserIcon, CloseModalIcon, CrossIcon } from "../../../../constants/old_icons";
 
 interface iModalTopBarProps {
 	title: string;

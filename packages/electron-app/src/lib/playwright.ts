@@ -11,7 +11,7 @@ import { AppWindow } from "../main-process/app-window";
 import * as fs from "fs";
 import * as path from "path";
 import { now } from "../main-process/now";
-import { ACTION_DESCRIPTIONS } from "../ui/components/sidebar/steps";
+import { ACTION_DESCRIPTIONS } from "../_ui/ui/containers/components/sidebar/steps";
 import { uuidv4 } from "runner-utils/src/utils/helper";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 const { performance } = require("perf_hooks");

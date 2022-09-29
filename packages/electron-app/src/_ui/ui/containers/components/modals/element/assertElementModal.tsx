@@ -9,7 +9,7 @@ import { getSelectedElement } from "electron-app/src/store/selectors/recorder";
 import { enableJavascriptInDebugger, recordHoverDependencies, registerActionAsSavedStep } from "electron-app/src/_ui/commands/perform";
 import { recordStep, setSelectedElement, updateRecordedStep } from "electron-app/src/store/actions/recorder";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
-import { BulbIcon } from "electron-app/src/_ui/old_icons";
+import { BulbIcon } from "electron-app/src/_ui/constants/old_icons";
 import { Modal } from "@dyson/components/molecules/Modal";
 import { ModalTopBar } from "../topBar";
 import { css } from "@emotion/react";

@@ -1,6 +1,6 @@
 import React, { ChangeEvent } from "react";
 import { iAssertionRow, iField } from "@shared/types/assertionRow";
-import { DeleteIcon } from "electron-app/src/_ui/old_icons";
+import { DeleteIcon } from "electron-app/src/_ui/constants/old_icons";
 import { css } from "@emotion/react";
 import { SelectBox } from "@dyson/components/molecules/Select/Select";
 import { Input } from "@dyson/components/atoms/input/Input";

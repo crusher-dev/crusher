@@ -1,7 +1,7 @@
 import React from "react";
 import { useStore } from "react-redux";
 import { css } from "@emotion/core";
-import { useSelectableList } from "../hooks/list";
+import { useSelectableList } from "../../hooks/list";
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
 import { RightClickMenu } from "@dyson/components/molecules/RightClick/RightClick";
 import Checkbox from "@dyson/components/atoms/checkbox/checkbox";

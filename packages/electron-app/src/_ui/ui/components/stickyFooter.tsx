@@ -1,14 +1,14 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { CloudIcon, ConsoleIcon, DisabledCloudIcon, DocsIcon, NotepadIcon } from "../icons";
+import { CloudIcon, ConsoleIcon, DisabledCloudIcon, DocsIcon, NotepadIcon } from "../../constants/icons";
 import { Link } from "./Link";
-import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
+import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
 import { HoverCard } from "@dyson/components/atoms/tooltip/Tooltip1";
 
 import { linkOpen } from "electron-app/src/utils/url";
 import { getAppSettings, getIsProxyInitializing, getProxyState } from "electron-app/src/store/selectors/app";
 import { useSelector, useStore } from "react-redux";
-import { useBuildNotifications } from "../hooks/tests";
+import { useBuildNotifications } from "../../hooks/tests";
 import { LinkPointer } from "./LinkPointer";
 import { Tooltip } from "@dyson/components/atoms/tooltip/Tooltip";
 import { Conditional } from "@dyson/components/layouts";

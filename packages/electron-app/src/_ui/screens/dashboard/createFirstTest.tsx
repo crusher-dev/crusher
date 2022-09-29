@@ -4,7 +4,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { css } from "@emotion/react";
 import { shell } from "electron";
-import {ActionButton} from "../../../ui/components/create-first-test";
+import {ActionButton} from "../../ui/components/actionButton";
 import {Link} from "../../ui/components/Link";
 
 const CreateFirstTest = () => {

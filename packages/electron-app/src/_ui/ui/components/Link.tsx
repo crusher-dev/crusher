@@ -2,7 +2,7 @@ import React from "react";
 import { css } from "@emotion/react";
 import { linkOpen } from "electron-app/src/utils/url";
 
-export function Link({ children, href, ...props }) {
+export function Link({ children, href, ...props }: any) {
 	return (
 		<span css={[linkStyle]} onClick={linkOpen.bind(this, href)} {...props}>
 			{children}

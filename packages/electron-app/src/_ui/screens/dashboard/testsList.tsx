@@ -360,12 +360,13 @@ const TestList = ({ tests, deleteTest }) => {
     }, [deleteTest]);
 
     const handleRightCallback = React.useCallback((id, selectedList) => {
+        const selectedTests = tests.filter((test) => selectedList.includes(test.id));
+
         if (id === "delete" || id === "delete-all") {
             deleteTest(selectedList);
         } else if (id === "run" || id === "run-all") {
             triggerLocalBuild(selectedList);
         } else if (id === "edit") {
-            const selectedTests = tests.filter((test) => selectedList.includes(test.id));
             navigate("/recorder");
             goFullScreen();
             performReplayTestUrlAction(selectedList[0], false, selectedTests);

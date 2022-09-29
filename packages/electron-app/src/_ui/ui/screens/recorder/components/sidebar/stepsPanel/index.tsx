@@ -2,7 +2,7 @@ import React from 'react';
 import { css } from "@emotion/react";
 import { Text } from "@dyson/components/atoms/text/Text";
 import { ConsoleIcon } from 'electron-app/src/_ui/constants/old_icons';
-import {useSelector, useStore} from "react-redux";
+import { useSelector, useStore } from "react-redux";
 import { getIsStatusBarVisible, getSavedSteps } from 'electron-app/src/store/selectors/recorder';
 import { Step } from './step';
 import { useSelectableList } from 'electron-app/src/_ui/hooks/list';
@@ -10,14 +10,13 @@ import { OnOutsideClick } from '@dyson/components/layouts/onOutsideClick/onOutsi
 import { RightClickMenu } from '@dyson/components/molecules/RightClick/RightClick';
 import { deleteRecordedSteps } from 'electron-app/src/store/actions/recorder';
 import { performVerifyTest } from 'electron-app/src/_ui/commands/perform';
-import { ResetIcon } from 'electron-app/src/_ui/constants/icons';
 
 interface IProps {
     className?: string;
 }
 const menuItems = [
-    {id: "rename", label: "Rename", shortcut: <div>Enter</div>},
-    {id: "delete", label: 'Delete', shortcut: <div>⌘+D</div>}
+    { id: "rename", label: "Rename", shortcut: <div>Enter</div> },
+    { id: "delete", label: 'Delete', shortcut: <div>⌘+D</div> }
 ];
 const StepsPanel = ({
     className
@@ -29,12 +28,12 @@ const StepsPanel = ({
         toggleSelectItem,
         selectItem
     } = useSelectableList();
-	const recordedSteps = useSelector(getSavedSteps);
-	const isStatusBarVisible = useSelector(getIsStatusBarVisible);
+    const recordedSteps = useSelector(getSavedSteps);
+    const isStatusBarVisible = useSelector(getIsStatusBarVisible);
     const store = useStore();
 
     const toggleStatusBar = React.useCallback(() => {
-        
+
     }, []);
 
     const handleStepClick = React.useCallback((stepId) => {
@@ -58,10 +57,10 @@ const StepsPanel = ({
     }, [selectedList, selectItem, handleStepClick, recordedSteps]);
 
     React.useEffect(() => {
-		const testListContainer: any = document.querySelector("#steps-list-container");
-		const elementHeight = testListContainer.scrollHeight;
-		testListContainer.scrollBy(0, elementHeight);
-	}, [recordedSteps.length]);
+        const testListContainer: any = document.querySelector("#steps-list-container");
+        const elementHeight = testListContainer.scrollHeight;
+        testListContainer.scrollBy(0, elementHeight);
+    }, [recordedSteps.length]);
 
 
     const handleOutSideClick = React.useCallback(() => {
@@ -72,10 +71,10 @@ const StepsPanel = ({
         }, 100);
     }, [resetSelected]);
 
-    const handleMenuOpenChange = () => {}
+    const handleMenuOpenChange = () => { }
 
     const handleCallback = React.useCallback((id) => {
-        switch(id) {
+        switch (id) {
             case "delete":
                 store.dispatch(deleteRecordedSteps(selectedList));
                 break;
@@ -95,7 +94,7 @@ const StepsPanel = ({
 
     React.useEffect(() => {
         const keyPressListener = function (e: Event) {
-            if(["input", "textarea"].includes((e.target as any).tagName.toLowerCase())) return;
+            if (["input", "textarea"].includes((e.target as any).tagName.toLowerCase())) return;
             if (e.key === "Delete" && selectedList.length) {
                 store.dispatch(deleteRecordedSteps(selectedList));
                 performVerifyTest(false);
@@ -107,23 +106,20 @@ const StepsPanel = ({
         }
     }, [recordedSteps, selectedList]);
 
-    const resetTest = React.useCallback(() => {
-        performVerifyTest(false);
-    }, []);
 
     return (
         (<div css={containerCss} className={String(className)}>
             <div css={headerCss}>
                 <Text css={sectionHeadingCss}>{recordedSteps.length} Steps</Text>
                 <div css={sectionActionsCss}>
-                    <ResetIcon onClick={resetTest} css={[resetIconCss]}/>
+
                     <ConsoleIcon onClick={toggleStatusBar} css={[consoleIconCss, isStatusBarVisible ? consoleActiveIconCss : null]} />
                 </div>
             </div>
-            <OnOutsideClick className={"custom-scroll"} id={"steps-list-container"}  css={css`height: 100%; overflow-y: overlay;`} onOutsideClick={handleOutSideClick}>
+            <OnOutsideClick className={"custom-scroll"} id={"steps-list-container"} css={css`height: 100%; overflow-y: overlay;`} onOutsideClick={handleOutSideClick}>
                 <RightClickMenu onOpenChange={handleMenuOpenChange} menuItems={menuItemsComponent}>
                     <div className={`custom-scroll`} css={contentCss}>
-                            {steps}
+                        {steps}
                     </div>
                 </RightClickMenu>
             </OnOutsideClick>
@@ -131,7 +127,7 @@ const StepsPanel = ({
     );
 }
 
-const resetIconCss  = css`
+const resetIconCss = css`
     width: 12rem;
     height: 12rem;
     margin-right: 12rem;
@@ -153,7 +149,7 @@ const headerCss = css`
     padding: 14rem 18rem;
     padding-top: 19rem;
 `;
-const sectionHeadingCss =  css`
+const sectionHeadingCss = css`
     font-family: Gilroy;
     font-style: normal;
     font-weight: 500;

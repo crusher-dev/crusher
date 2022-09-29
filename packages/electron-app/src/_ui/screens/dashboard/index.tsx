@@ -45,20 +45,13 @@ const openAppCss = css`
     font-size: 13px;
     color: #828282;
 `;
-const rocketIconStyle = css`
-	font-size: 12px;
-	color: #ffffff;
-`;
+
 const titleBoldStyle = css`
 	font-weight: 700;
 	font-size: 13.5rem;
 	color: #fff !important;
 `;
-const titleCloudIconStyle = css`
-	width: 12rem;
-	height: 11rem;
-	margin-left: 12rem;
-`;
+
 const titleStyle = css`
 	font-family: "Gilroy";
 	font-style: normal;
@@ -76,7 +69,7 @@ const titleStyle = css`
 
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 2px;
 `;
 const DashboardScreen = () => {
     const [animationComplete, setAnimationComplete] = React.useState(false);

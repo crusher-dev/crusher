@@ -125,7 +125,7 @@ const testItem = (isItemSelected) => css`
         visibility: visible;
     }
 }
-height: 36px;
+height: 40px;
 padding: 6px 18px; padding-right: 16px; display: flex; flex: 1; align-items: center; :hover { & > .action-buttons { display: flex !important; } }`
 
 const loadingContainerCss = css`

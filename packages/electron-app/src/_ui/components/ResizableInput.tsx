@@ -3,7 +3,7 @@ import { css } from "@emotion/react";
 import Input from "@dyson/components/atoms/input/Input";
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
 
-const ResizableInput = React.forwardRef(({ isEditingProp = false, className, value, ...props }, ref) => {
+const ResizableInput = React.forwardRef(({ isEditingProp = false, selectAllOnDoubleClick = true, className, value, ...props }, ref) => {
   const [width, setWidth] = useState(0);
   const [isEditing, setIsEditing] = useState(isEditingProp)
   const span = useRef();
@@ -25,7 +25,8 @@ const ResizableInput = React.forwardRef(({ isEditingProp = false, className, val
     if (isEditing) {
       requestAnimationFrame(() => {
         ref.current.focus();
-        ref.current.setSelectionRange(ref.current.value.length, ref.current.value.length);
+        const totalLength = ref.current.value.length;
+        ref.current.setSelectionRange(selectAllOnDoubleClick ? 0 : totalLength, totalLength);
       });
     }
   }, [isEditing]);
@@ -57,8 +58,8 @@ const ResizableInput = React.forwardRef(({ isEditingProp = false, className, val
 
 const labelCSS = css`
   padding-left: 12px;
-  font-size: 12px;
-  padding-top: 3px;
+  font-size: 14px;
+  padding-top: 2px;
 `
 
 
@@ -68,9 +69,11 @@ min-width: fit-content;
 input{
   padding-right 8px !important;
 min-width: 200px;
+font-size: 14px;
 margin-left: 2px;
 height: 28px;
 padding-left: calc(10rem + 0rem);
+letter-spacing 0.42px
 }
 `;
 export { ResizableInput };

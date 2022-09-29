@@ -49,7 +49,7 @@ const EditableTestName = ({ testName, testId, isActive, isEditing, setIsEditing,
     );
 };
 
-const TestListItem = ({ test, isItemSelected, isEditingName, setIsEditingName, index, deleteTest, lock }) => {
+const TestItem = ({ test, isItemSelected, isEditingName, setIsEditingName, index, deleteTest, lock }) => {
 
     const [isHover, setIsHover] = React.useState(false);
     const [emoji, setEmoji] = React.useState(test.emoji);
@@ -75,9 +75,6 @@ const TestListItem = ({ test, isItemSelected, isEditingName, setIsEditingName, i
         }
     }, []);
 
-    const handleSelectAll = React.useCallback((shouldSelect) => {
-
-    }, []);
 
     return (
         <div css={testItem(isItemSelected)} title={`Run test - ${test.testName}`}>
@@ -151,7 +148,7 @@ min-width: 22px;
 align-items: center;
 justify-content:center;
 
-
+padding-top: 1rem;
 border-radius: 6px;
 :hover{
 	background: rgba(217, 217, 217, 0.12);
@@ -265,7 +262,7 @@ const MULTI_SELECTED_MENU = [
 ];
 
 const TestList = ({ tests, deleteTest }) => {
-    const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+
     const [isRenaming, setIsRename] = React.useState(null);
     const navigate = useNavigate();
 
@@ -284,7 +281,7 @@ const TestList = ({ tests, deleteTest }) => {
             return {
                 id: test.id,
                 content: (isItemSelected) => (
-                    <TestListItem
+                    <TestItem
                         key={test.id}
                         index={index}
                         isEditingName={isRenaming === test.id}
@@ -300,7 +297,6 @@ const TestList = ({ tests, deleteTest }) => {
     }, [isRenaming, tests]);
 
     const SelectedTestActions = React.useMemo(() => ({ items, toggleSelectAll, selectedList }) => {
-        const store = useStore();
 
         const handleRun = React.useCallback(() => {
             triggerLocalBuild(selectedList);
@@ -355,8 +351,16 @@ const TestList = ({ tests, deleteTest }) => {
         }
     }, [tests]);
 
+    const contextMenu = {
+        [ContextMenuTypeEnum.SINGLE]: { callback: handleRightCallback, menuItems: SELECTED_TESTS_MENU },
+        [ContextMenuTypeEnum.MULTI]: { callback: handleRightCallback, menuItems: MULTI_SELECTED_MENU }
+    }
     return (
-        <ListBox contextMenu={{ [ContextMenuTypeEnum.SINGLE]: { callback: handleRightCallback, menuItems: SELECTED_TESTS_MENU }, [ContextMenuTypeEnum.MULTI]: { callback: handleRightCallback, menuItems: MULTI_SELECTED_MENU } }} selectedHeaderActions={SelectedTestActions} items={items} />
+        <ListBox
+            contextMenu={contextMenu}
+            selectedHeaderActions={SelectedTestActions}
+            items={items}
+        />
     );
 };
 

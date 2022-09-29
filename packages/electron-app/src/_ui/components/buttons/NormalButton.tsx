@@ -38,7 +38,7 @@ const buttonCss = css`
 	box-sizing: content-box;
 	display: flex;
 	align-items: center;
-	background: linear-gradient(133.85deg, #905cff 25.39%, #6d55ff 74.5%, #6951ff 74.5%);
+	background: #B341F9!important;
 	border-radius: 6rem;
 	font-family: Gilroy;
 	font-style: normal;
@@ -50,7 +50,7 @@ const buttonCss = css`
     justify-content: center;
     height: 28rem !important;
 	:hover {
-		background: linear-gradient(133.85deg, #905cff 25.39%, #6d55ff 74.5%, #6951ff 74.5%);
+		background: #B341F9!important;
 		opacity: 0.8;
 		border: none;
 	}

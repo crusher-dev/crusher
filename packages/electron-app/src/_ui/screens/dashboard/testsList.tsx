@@ -36,6 +36,7 @@ const EditableTestName = ({ testName, testId, isActive, isEditing, setIsEditing,
         }
     }, []);
 
+
     return (
         <ResizableInput
             ref={inputRef}
@@ -53,7 +54,6 @@ const TestItem = ({ test, isItemSelected, isEditingName, setIsEditingName, index
 
     const [isHover, setIsHover] = React.useState(false);
     const [emoji, setEmoji] = React.useState(test.emoji);
-    const { addNotification } = useBuildNotifications();
     const navigate = useNavigate();
 
     const listItemActionsStyle = React.useMemo(() => listItemActionsCss(isHover), [isHover]);
@@ -75,6 +75,7 @@ const TestItem = ({ test, isItemSelected, isEditingName, setIsEditingName, index
         }
     }, []);
 
+    const handleSelectAll = React.useCallback(() => { }, []);
 
     return (
         <div css={testItem(isItemSelected)} title={`Run test - ${test.testName}`}>

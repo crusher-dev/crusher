@@ -8,6 +8,7 @@ const ResizableInput = React.forwardRef(({ isEditingProp = false, onEditModeChan
   const [isEditing, setIsEditing] = useState(isEditingProp)
   const span = useRef();
 
+
   useEffect(() => {
     requestAnimationFrame(() => {
       setWidth(span?.current?.offsetWidth);
@@ -29,6 +30,7 @@ const ResizableInput = React.forwardRef(({ isEditingProp = false, onEditModeChan
         ref.current.setSelectionRange(selectAllOnDoubleClick ? 0 : totalLength, totalLength);
       });
     }
+    onEditModeChange(isEditing)
   }, [isEditing]);
 
   React.useEffect(() => {
@@ -40,6 +42,7 @@ const ResizableInput = React.forwardRef(({ isEditingProp = false, onEditModeChan
       {value}
     </div>)
   }
+
   return (
     <OnOutsideClick onClick={() => {
       setIsEditing(false);

@@ -6,12 +6,12 @@ import { useNavigate } from "react-router-dom";
 import { ipcRenderer, shell } from "electron";
 import { resolveToFrontEndPath } from "@shared/utils/url";
 import { waitForUserLogin } from "electron-app/src/utils/renderer";
-import { focusOnWindow, saveAndGetUserInfo } from "../../_ui/commands/perform";
+import { focusOnWindow, saveAndGetUserInfo } from "../commands/perform";
 import { sendSnackBarEvent } from "../components/toast";
 import { useSelector } from "react-redux";
 import { getAppSettings } from "electron-app/src/store/selectors/app";
-
-import {CompactAppLayout} from "../../_ui/layout/CompactAppLayout";
+import { ModelContainerLayout } from "../layouts/modalContainer";
+import { CommonFooter } from "../layouts/commonFooter";
 
 const GithubButton = (props) => {
 	return (
@@ -201,12 +201,13 @@ function LoginScreen() {
 
 
 	return (
-		<CompactAppLayout
+		<ModelContainerLayout
 			css={css`
 				padding-top: 0rem;
 			`}
 			header={null}
 			title={null}
+			footer={<CommonFooter />}
 		>
 			<div css={mainContentStyle}>
 				<div
@@ -215,7 +216,7 @@ function LoginScreen() {
 					`}
 				>
 					<div css={css`display: flex; justify-content: center;`}>
-						<UserProfileIcon css={css`width: 29rem; height: 29rem;`}/>
+						<UserProfileIcon css={css`width: 29rem; height: 29rem;`} />
 					</div>
 
 					<div css={headingStyle}>Login to continue</div>
@@ -258,7 +259,7 @@ function LoginScreen() {
 					</div>
 				)}
 			</div>
-		</CompactAppLayout>
+		</ModelContainerLayout>
 	);
 }
 
@@ -282,42 +283,42 @@ const loginButtonCss = css`
 `;
 const UserProfileIcon = (props) => (
 	<svg
-      viewBox={"0 0 29 29"}
-	  fill="none"
-	  xmlns="http://www.w3.org/2000/svg"
-	  {...props}
+		viewBox={"0 0 29 29"}
+		fill="none"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
 	>
-	  <path
-		opacity={0.1}
-		fillRule="evenodd"
-		clipRule="evenodd"
-		d="M1 14.114C1 3.314 3.35 1 14.313 1c10.962 0 13.312 2.315 13.312 13.114 0 6.28-.795 9.692-3.617 11.446l-.466-1.424c-.496-1.76-1.4-2.929-2.925-3.635-1.492-.691-3.547-.923-6.305-.923-2.76 0-4.814.25-6.307.961-1.523.725-2.426 1.91-2.921 3.668l-.46 1.358C1.796 23.812 1 20.4 1 14.114ZM9.505 11.2c0-2.616 2.152-4.736 4.807-4.736 2.656 0 4.808 2.12 4.808 4.736 0 2.615-2.152 4.735-4.808 4.735-2.654 0-4.807-2.12-4.807-4.735Z"
-		fill="#121418"
-	  />
-	  <path
-		d="M1 14.114C1 3.314 3.35 1 14.313 1c10.962 0 13.312 2.315 13.312 13.114 0 10.799-2.35 13.114-13.313 13.114C3.35 27.228 1 24.913 1 14.114Z"
-		fill="#121418"
-		stroke="#989898"
-		strokeWidth={2}
-	  />
-	  <path
-		d="M18.75 11.2c0 2.414-1.987 4.37-4.438 4.37-2.45 0-4.437-1.956-4.437-4.37 0-2.415 1.987-4.372 4.438-4.372 2.45 0 4.437 1.957 4.437 4.371Z"
-		fill="#121418"
-		stroke="#989898"
-		strokeWidth={2}
-	  />
-	  <path
-		d="M5.438 24.314c.943-3.362 3.372-4.372 8.875-4.372 5.502 0 7.93.937 8.874 4.298"
-		fill="#121418"
-	  />
-	  <path
-		d="M5.438 24.314c.943-3.362 3.372-4.372 8.875-4.372 5.502 0 7.93.937 8.874 4.298"
-		stroke="#989898"
-		strokeWidth={2}
-		strokeLinecap="round"
-	  />
+		<path
+			opacity={0.1}
+			fillRule="evenodd"
+			clipRule="evenodd"
+			d="M1 14.114C1 3.314 3.35 1 14.313 1c10.962 0 13.312 2.315 13.312 13.114 0 6.28-.795 9.692-3.617 11.446l-.466-1.424c-.496-1.76-1.4-2.929-2.925-3.635-1.492-.691-3.547-.923-6.305-.923-2.76 0-4.814.25-6.307.961-1.523.725-2.426 1.91-2.921 3.668l-.46 1.358C1.796 23.812 1 20.4 1 14.114ZM9.505 11.2c0-2.616 2.152-4.736 4.807-4.736 2.656 0 4.808 2.12 4.808 4.736 0 2.615-2.152 4.735-4.808 4.735-2.654 0-4.807-2.12-4.807-4.735Z"
+			fill="#121418"
+		/>
+		<path
+			d="M1 14.114C1 3.314 3.35 1 14.313 1c10.962 0 13.312 2.315 13.312 13.114 0 10.799-2.35 13.114-13.313 13.114C3.35 27.228 1 24.913 1 14.114Z"
+			fill="#121418"
+			stroke="#989898"
+			strokeWidth={2}
+		/>
+		<path
+			d="M18.75 11.2c0 2.414-1.987 4.37-4.438 4.37-2.45 0-4.437-1.956-4.437-4.37 0-2.415 1.987-4.372 4.438-4.372 2.45 0 4.437 1.957 4.437 4.371Z"
+			fill="#121418"
+			stroke="#989898"
+			strokeWidth={2}
+		/>
+		<path
+			d="M5.438 24.314c.943-3.362 3.372-4.372 8.875-4.372 5.502 0 7.93.937 8.874 4.298"
+			fill="#121418"
+		/>
+		<path
+			d="M5.438 24.314c.943-3.362 3.372-4.372 8.875-4.372 5.502 0 7.93.937 8.874 4.298"
+			stroke="#989898"
+			strokeWidth={2}
+			strokeLinecap="round"
+		/>
 	</svg>
-  )
+)
 
 
 const openThisLinkStyle = css`

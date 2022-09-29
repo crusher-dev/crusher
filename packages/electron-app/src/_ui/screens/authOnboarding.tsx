@@ -1,7 +1,7 @@
 import React from "react";
 import { css } from "@emotion/react";
 
-import { LinkBox } from "./login";
+
 import { performCreateCloudProject } from "../../_ui/commands/perform";
 import { useNavigate } from "react-router-dom";
 import { useStore } from "react-redux";
@@ -9,6 +9,7 @@ import { setSelectedProject } from "electron-app/src/store/actions/app";
 import { getUserAccountProjects } from "electron-app/src/utils";
 import {CompactAppLayout} from "../../_ui/layout/CompactAppLayout";
 import {Link} from "electron-app/src/_ui/components/Link";
+import {LinkBox} from "../../_ui/components/LinkBox";
 
 const Footer = () => {
     return (

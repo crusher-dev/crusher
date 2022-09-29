@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useStore } from "react-redux";
 import { getAppSettings, getUserAccountInfo } from "electron-app/src/store/selectors/app";
 import { LoadingScreen } from "./loading";
-import { getUserTests, performReplayTest, performReplayTestUrlAction } from "../../_ui/commands/perform";
+import { getUserTests, performReplayTest, performReplayTestUrlAction } from "../commands/perform";
 import { shell } from "electron";
 import { Input } from "@dyson/components/atoms";
 import { SelectBox } from "@dyson/components/molecules/Select/Select";
@@ -53,19 +53,19 @@ function TestList({ userTests }) {
 		<ul css={testItemStyle}>
 			{userTests
 				? userTests.map((test) => {
-						return (
-							<li
-								onClick={() => {
-									navigate("/recorder");
-									setTimeout(() => {
-										performReplayTestUrlAction(test.id);
-									}, 500);
-								}}
-							>
-								{test.testName}
-							</li>
-						);
-				  })
+					return (
+						<li
+							onClick={() => {
+								navigate("/recorder");
+								setTimeout(() => {
+									performReplayTestUrlAction(test.id);
+								}, 500);
+							}}
+						>
+							{test.testName}
+						</li>
+					);
+				})
 				: ""}
 		</ul>
 	);

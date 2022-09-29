@@ -510,8 +510,8 @@ const Toolbar = (props: any) => {
 					</div>
 					<Conditional showIf={recorderInfo.url}>
 						<div title={[TRecorderState.RECORDING_ACTIONS].includes(recorderState.type) ? "recording actions" : "waiting for current actions to finish"} className={"flex items-center"}>
-							<RedDotIcon css={[css`width: 6rem; height: 6rem; margin-left: 10rem;`, [TRecorderState.RECORDING_ACTIONS].includes(recorderState.type) ? css`& > rect { fill: #90EE90; }` : undefined]} />
-							<span className={"ml-4"} css={recorderStatusTextCss}>{[TRecorderState.RECORDING_ACTIONS].includes(recorderState.type) ? "recording-actions" : "waiting"}</span>
+							<RedDotIcon css={[css`width: 7rem; height: 7rem; margin-left: 10rem;`, [TRecorderState.RECORDING_ACTIONS].includes(recorderState.type) ? css`& > rect { fill: #90EE90; }` : undefined]} />
+							<span className={"ml-6"} css={recorderStatusTextCss}>{[TRecorderState.RECORDING_ACTIONS].includes(recorderState.type) ? "recording" : "waiting"}</span>
 						</div>
 					</Conditional>
 

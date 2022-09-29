@@ -200,16 +200,16 @@ const Step = ({
 	const titleTag =
 		title && title.length
 			? parseText(title).map((a) => {
-					if (a.type === "highlight") {
-						return (
-							<span className="highlight-box" title={a.value}>
-								{a.value.length > 15 ? `${a.value.substring(0, 15)}...` : a.value}
-							</span>
-						);
-					} else {
-						return <span title={a.value}>{a.value}</span>;
-					}
-			  })
+				if (a.type === "highlight") {
+					return (
+						<span className="highlight-box" title={a.value}>
+							{a.value.length > 15 ? `${a.value.substring(0, 15)}...` : a.value}
+						</span>
+					);
+				} else {
+					return <span title={a.value}>{a.value}</span>;
+				}
+			})
 			: null;
 
 	return (
@@ -224,15 +224,17 @@ const Step = ({
 			data-status={action.status}
 		>
 			<div css={[stepStyle, isHover && hoverStepStyle, isFailed && failedStyle]}>
-				{finalIsRunning ? (
-					<PointerArrowIcon css={css`    width: 6rem;
+
+				<Conditional showIf={finalIsRunning}>
+					<PointerArrowIcon css={css` 
+					width: 6rem;
 					height: 9rem;
 					position: absolute;
-					left: 8rem;
-					top: 8rem;`}/>
-				): ``}
-				<div className="flex flex-col" css={css``}>
-					
+					left: 7rem;
+					top: 10rem;`} />
+				</Conditional>
+				<div className="flex flex-col">
+
 				</div>
 				<div css={stepTextStyle}>
 					<TextBlock css={[stepTitleStyle, isFailed ? failedStepTitleStyle : null, finalIsRunning ? css`color: #A056FF !important;` : null]}>{titleTag}</TextBlock>
@@ -247,37 +249,9 @@ const Step = ({
 					/>
 				</Conditional>
 				<Conditional showIf={isCompleted}>
-					<GreenCheckboxIcon css={css`width: 14rem; height: 14rem;`}/>
+					<GreenCheckboxIcon css={css`width: 14rem; height: 14rem;`} />
 				</Conditional>
-				{/* <Conditional showIf={isHover && !finalIsRunning}>
-					<div
-						css={css`
-							align-self: stretch;
-							.outsideDiv,
-							.showOnClick {
-								height: 100%;
-							}
-						`}
-					>
-						<Dropdown
-							initialState={showStepActionDropdown}
-							dropdownCSS={dropdownStyle}
-							component={<StepActionMenu callback={handleStepActionDropdown} showDropDownCallback={setShowStepActionDropdown.bind(this)} />}
-							callback={setShowStepActionDropdown.bind(this)}
-						>
-							<MoreIcon
-								onClick={setShowStepActionDropdown.bind(this, true)}
-								css={css`
-									width: 15rem;
-									height: 100%;
-									:hover {
-										opacity: 0.7;
-									}
-								`}
-							/>
-						</Dropdown>
-					</div>
-				</Conditional> */}
+
 
 				<Conditional showIf={isFailed}>
 					<TextBlock css={stepWarningStyle}>

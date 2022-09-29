@@ -197,8 +197,8 @@ const PageLoadFailedScreen = (props: any) => {
 	);
 };
 const menuItems = [
-	{ id: "inspect", label: "Inspect" },
-	{ id: "devtools", label: "Open devtools", shortcut: <div>Ctrl + Shift + I</div> },
+	{ id: "inspect", label: "Select element" },
+	{ id: "devtools", label: "Inspect", shortcut: <div>Ctrl + Shift + I</div> },
 ];
 
 const DeviceFrame = (props: any) => {

@@ -9,7 +9,7 @@ import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 interface IProps {
     title: string;
     description?: string;
-    items?: Array<{id: string; content: any}>;
+    items?: Array<{ id: string; content: any }>;
     icon?: any;
     className?: string;
     callback?: any;
@@ -17,18 +17,18 @@ interface IProps {
     defaultExpanded?: boolean;
 }
 
-const ActionsList = ({className, ...props}: IProps) => {
+const ActionsList = ({ className, ...props }: IProps) => {
     const { title, description, defaultExpanded, callback, icon, items } = props;
 
     const [isExpanded, setIsExpanded] = React.useState(defaultExpanded);
     const store = useStore();
-    
+
     const handleClick = React.useCallback((id: any) => {
         const recorderState = getRecorderState(store.getState());
         if (recorderState.type !== TRecorderState.RECORDING_ACTIONS) {
-			sendSnackBarEvent({ type: "error", message: "A action is in progress. Wait and retry again" });
-			return;
-		} 
+            sendSnackBarEvent({ type: "error", message: "A action is in progress. Wait and retry again" });
+            return;
+        }
 
         callback(id);
     }, [callback]);
@@ -81,7 +81,7 @@ const containerCss = css`
 `;
 
 const headingCss = css`
-    padding: 10rem 15rem;
+    padding: 10rem 20rem;
     display: flex;
     :hover {
         background: rgba(85, 85, 85, 0.1);

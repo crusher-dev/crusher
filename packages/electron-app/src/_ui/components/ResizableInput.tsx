@@ -36,7 +36,7 @@ const ResizableInput = React.forwardRef(({ isEditingProp = false, selectAllOnDou
   }, [isEditingProp]);
 
   if (!isEditing) {
-    return (<div title="click to edit the name" css={labelCSS} onDoubleClick={setIsEditing.bind(this, true)}>
+    return (<div title="edit name" css={labelCSS} onDoubleClick={setIsEditing.bind(this, true)}>
       {value}
     </div>)
   }

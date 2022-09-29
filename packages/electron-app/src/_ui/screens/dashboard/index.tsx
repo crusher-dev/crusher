@@ -229,12 +229,12 @@ const createIconCss = css`
 `;
 const createTestCss = css`
     display: flex;
-    gap: 4rem;
+    gap: 6rem;
     align-items: center;
     font-family: 'Gilroy';
     font-style: normal;
     font-weight: 500;
-    font-size: 13.6rem;
+    font-size: 13rem;
 
     color: #FFFFFF;
 

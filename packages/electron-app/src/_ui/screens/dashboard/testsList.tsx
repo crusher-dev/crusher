@@ -221,6 +221,8 @@ const runTestsCSS = css`
 	gap: 4rem;
     position: relative;
 
+    font-size: 13rem;
+
     padding: 6px 6px;
     :hover {
         color: #fff;

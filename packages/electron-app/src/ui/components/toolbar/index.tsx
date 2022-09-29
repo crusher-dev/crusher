@@ -30,7 +30,6 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { MenuDropdown } from "../../layouts/modalContainer";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { ButtonDropdown } from "electron-app/src/_ui/components/buttonDropdown";
-import { DropdownIconSVG } from "@dyson/assets/icons";
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
 import { generateRandomTestName, setEndOfContenteditable } from "electron-app/src/utils/renderer";
 import { NormalInput } from "electron-app/src/_ui/components/inputs/normalInput";
@@ -509,43 +508,15 @@ const Toolbar = (props: any) => {
 						</OnOutsideClick>
 						<DroppdownIconV2 css={css`width: 9rem; height: 6rem; margin-left: 7rem;`} />
 					</div>
-					{recorderInfo.url ? (
+					<Conditional showIf={recorderInfo.url}>
 						<div title={[TRecorderState.RECORDING_ACTIONS].includes(recorderState.type) ? "recording actions" : "waiting for current actions to finish"} className={"flex items-center"}>
 							<RedDotIcon css={[css`width: 6rem; height: 6rem; margin-left: 10rem;`, [TRecorderState.RECORDING_ACTIONS].includes(recorderState.type) ? css`& > rect { fill: #90EE90; }` : undefined]} />
-							<span className={"ml-14"} css={recorderStatusTextCss}>{[TRecorderState.RECORDING_ACTIONS].includes(recorderState.type) ? "recording-actions" : "waiting"}</span>
+							<span className={"ml-4"} css={recorderStatusTextCss}>{[TRecorderState.RECORDING_ACTIONS].includes(recorderState.type) ? "recording-actions" : "waiting"}</span>
 						</div>
-					) : ""}
+					</Conditional>
+
 				</div>
 			</div>
-
-			{/* <BrowserButton
-					className={"ml-24 go-back-button"}
-					css={css`
-						background: transparent;
-					`}
-				>
-					<MoreIcon
-						css={css`
-							height: 20rem;
-						`}
-						disabled={false}
-					/>
-				</BrowserButton> */}
-			{/* Refresh button */}
-			{/* <BrowserButton
-					className={"ml-12 reload-page-button"}
-					css={css`
-						background: transparent;
-					`}
-					onClick={refreshPage}
-				>
-					<NavigateRefreshIcon
-						css={css`
-							height: 20rem;
-						`}
-						disabled={false}
-					/>
-				</BrowserButton> */}
 			<div css={inputContainerStyle}>
 				<div css={css`	display: flex;
 	flex-direction: column; position: absolute; left: calc(50% + 36rem); top: 50%; transform: translate(-50%, -50%);`}>
@@ -618,8 +589,6 @@ const recorderStatusTextCss = css`
 	font-style: normal;
 	font-weight: 400;
 	font-size: 14rem;
-	text-decoration-line: underline;
-
 	color: #7C7C7C;
 	:hover {
 		opacity: 0.8;

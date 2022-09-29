@@ -36,8 +36,6 @@ const Footer = () => {
 };
 
 
-
-
 export function ShareFeedbak() {
     const user = {}
     const asPath = "app page"
@@ -47,7 +45,7 @@ export function ShareFeedbak() {
             asPath={asPath}
         />} placement="top-start" type="click" padding={2} offset={0}>
 
-            <div className="flex items-center pt-0" css={feedbackCSS}>
+            <div className="flex items-center pt-0" css={feedbackCSS} title="Share feedback">
                 <LinkPointer css={resourcesCss} showExternalIcon={false}><ChatSVG /></LinkPointer>
             </div>
         </HoverCard>

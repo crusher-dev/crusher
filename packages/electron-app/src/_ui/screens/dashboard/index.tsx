@@ -18,7 +18,7 @@ import { TestList } from "./testsList";
 import Wrapper from "figma-design-scaler/dist/dist/main";
 import { ButtonDropdown } from "../../components/buttonDropdown";
 import { AddIconV3 } from "electron-app/src/ui/icons";
-import { goFullScreen, performRunTests } from "electron-app/src/ui/commands/perform";
+import { goFullScreen, performRunTests } from "electron-app/src/_ui/commands/perform";
 import { CloudIcon } from "../../icons";
 import { StickyFooter } from "../../components/stickyFooter";
 import { Footer } from "../../components/footer";

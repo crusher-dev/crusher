@@ -5,7 +5,7 @@ import { Input } from "@dyson/components/atoms";
 import { InputProps } from "@dyson/components/atoms/input/Input";
 import { css } from "@emotion/react";
 import { InspectElementIcon } from "../../../icons";
-import { turnOnElementSelectorInspectMode } from "electron-app/src/ui/commands/perform";
+import { turnOnElementSelectorInspectMode } from "electron-app/src/_ui/commands/perform";
 import { iSelectorInfo } from "@shared/types/selectorInfo";
 import { Button, ButtonProps } from "@dyson/components/atoms/button/Button";
 

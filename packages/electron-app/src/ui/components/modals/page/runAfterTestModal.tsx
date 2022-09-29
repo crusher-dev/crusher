@@ -5,7 +5,7 @@ import { css } from "@emotion/react";
 import { Input } from "@dyson/components/atoms/input/Input";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { useDispatch } from "react-redux";
-import { getUserTests, performRunAfterTest } from "electron-app/src/ui/commands/perform";
+import { getUserTests, performRunAfterTest } from "electron-app/src/_ui/commands/perform";
 import { SelectBox } from "@dyson/components/molecules/Select/Select";
 import { iAction } from "@shared/types/action";
 import { updateRecordedStep } from "electron-app/src/store/actions/recorder";

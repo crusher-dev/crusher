@@ -15,7 +15,7 @@ import {
 	preformGoBackPage,
 	saveTest,
 	updateTest,
-} from "../../commands/perform";
+} from "../../../_ui/commands/perform";
 import { addHttpToURLIfNotThere, isValidHttpUrl } from "../../../utils";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 import { getAppEditingSessionMeta, getProxyState, shouldShowOnboardingOverlay } from "electron-app/src/store/selectors/app";
@@ -26,12 +26,12 @@ import { sendSnackBarEvent } from "../toast";
 import { Button } from "@dyson/components/atoms/index"
 import { Dropdown } from "@dyson/components/molecules/Dropdown";
 import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
-import { Navigate, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import { MenuDropdown } from "../../layouts/modalContainer";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { ButtonDropdown } from "electron-app/src/_ui/components/buttonDropdown";
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
-import { generateRandomTestName, setEndOfContenteditable } from "electron-app/src/utils/renderer";
+import { generateRandomTestName } from "electron-app/src/utils/renderer";
 import { NormalInput } from "electron-app/src/_ui/components/inputs/normalInput";
 
 const DeviceItem = ({ label }) => {

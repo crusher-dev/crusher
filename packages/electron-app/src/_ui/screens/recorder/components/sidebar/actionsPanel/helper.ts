@@ -2,7 +2,7 @@ import { pxToRemValue } from "electron-app/src/lib/recorder/utils/helper";
 import { setSelectedElement } from "electron-app/src/store/actions/recorder";
 import { getStore } from "electron-app/src/store/configureStore";
 import { getSelectedElement } from "electron-app/src/store/selectors/recorder";
-import { enableJavascriptInDebugger, peformTakeElementScreenshot, performAssertElementVisibility, performClick, performHover } from "electron-app/src/ui/commands/perform";
+import { enableJavascriptInDebugger, peformTakeElementScreenshot, performAssertElementVisibility, performClick, performHover } from "electron-app/src/_ui/commands/perform";
 import { emitShowModal } from "electron-app/src/ui/components/modals";
 import { sendSnackBarEvent } from "electron-app/src/ui/components/toast";
 import Fuse from "fuse.js";

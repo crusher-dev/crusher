@@ -5,7 +5,7 @@ import { Link } from "../../layouts/modalContainer";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { shell } from "electron";
 import { useNavigate } from "react-router-dom";
-import { goFullScreen } from "../../commands/perform";
+import { goFullScreen } from "../../../_ui/commands/perform";
 
 export const ActionButton = ({ title, className, onClick }) => {
 	return (

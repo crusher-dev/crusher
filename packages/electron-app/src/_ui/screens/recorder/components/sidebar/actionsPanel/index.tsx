@@ -8,7 +8,7 @@ import { ElementActions } from "./elementActions";
 import { PageActions } from "./pageActions";
 import { CodeAction } from "./codeAction";
 import { GoBackIcon, InfoIcon, ResetIcon } from "electron-app/src/_ui/icons";
-import { enableJavascriptInDebugger, performVerifyTest } from "electron-app/src/ui/commands/perform";
+import { enableJavascriptInDebugger, performVerifyTest } from "electron-app/src/_ui/commands/perform";
 import { setSelectedElement } from "electron-app/src/store/actions/recorder";
 import { useStore } from "react-redux";
 import { filterActionsItems } from "./helper";

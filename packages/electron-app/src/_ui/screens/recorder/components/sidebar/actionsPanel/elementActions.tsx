@@ -1,5 +1,5 @@
 import React from "react";
-import { enableJavascriptInDebugger, peformTakeElementScreenshot, performAssertElementVisibility, performClick, performHover, performTakePageScreenshot, turnOnInspectMode } from "electron-app/src/ui/commands/perform";
+import { enableJavascriptInDebugger, peformTakeElementScreenshot, performAssertElementVisibility, performClick, performHover, performTakePageScreenshot, turnOnInspectMode } from "electron-app/src/_ui/commands/perform";
 import { emitShowModal } from "electron-app/src/ui/components/modals";
 import { ActionsList } from "./actionsList";
 import { ElementsHelper, getItemsFromActionsData } from "./helper";

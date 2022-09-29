@@ -3,7 +3,7 @@ import { css } from "@emotion/react";
 import { DeleteIcon, GarbageIcon, LoadingIconV2, PlayIcon } from "electron-app/src/ui/icons";
 import { BasketBallIcon, EditIcon } from "../../icons";
 import { useNavigate } from "react-router-dom";
-import { goFullScreen, performReplayTestUrlAction } from "electron-app/src/ui/commands/perform";
+import { goFullScreen, performReplayTestUrlAction } from "electron-app/src/_ui/commands/perform";
 import { triggerLocalBuild } from "../../utils/recorder";
 import { CloudCrusher } from "electron-app/src/lib/cloud";
 import { ContextMenuTypeEnum, ListBox } from "../../components/selectableList";

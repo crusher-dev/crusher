@@ -20,7 +20,7 @@ import {
 } from "electron-app/src/store/actions/recorder";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
-import { continueRemainingSteps, performJumpTo } from "electron-app/src/ui/commands/perform";
+import { continueRemainingSteps, performJumpTo } from "electron-app/src/_ui/commands/perform";
 import { getAppSessionMeta, getRemainingSteps } from "electron-app/src/store/selectors/app";
 import { TemplatesModal } from "./templatesModal";
 import { StepInfoEditor } from "../stepEditor";

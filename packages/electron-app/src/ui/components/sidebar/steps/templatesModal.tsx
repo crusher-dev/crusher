@@ -5,7 +5,7 @@ import { css } from "@emotion/react";
 import { Input } from "@dyson/components/atoms/input/Input";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { useDispatch, useSelector } from "react-redux";
-import { performRunAfterTest } from "electron-app/src/ui/commands/perform";
+import { performRunAfterTest } from "electron-app/src/_ui/commands/perform";
 import { Toggle } from "@dyson/components/atoms/toggle/toggle";
 import { getAppSettings } from "electron-app/src/store/selectors/app";
 import { setSettngs } from "electron-app/src/store/actions/app";

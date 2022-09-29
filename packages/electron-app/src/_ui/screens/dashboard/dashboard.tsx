@@ -2,11 +2,11 @@ import React from "react";
 import { css } from "@emotion/react";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { Dropdown } from "@dyson/components/molecules/Dropdown";
-import { DownIcon, LoadingIconV2 } from "../icons";
+import { DownIcon, LoadingIconV2 } from "../../../ui/icons";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useStore } from "react-redux";
 import { getCurrentSelectedProjct, getIsProxyInitializing, getProxyState, getUserAccountInfo } from "electron-app/src/store/selectors/app";
-import { LoadingScreen } from "../../_ui/screens/loading";
+import { LoadingScreen } from "../loading";
 import {
 	getCloudUserInfo,
 	getUserTests,
@@ -17,19 +17,19 @@ import {
 	performRunTests,
 	turnOnProxy,
 	updateTestName,
-} from "../commands/perform";
+} from "../../commands/perform";
 import { ModelContainerLayout } from "../layouts/modalContainer";
-import { sendSnackBarEvent } from "../components/toast";
+import { sendSnackBarEvent } from "../../../ui/components/toast";
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
 import { shell } from "electron";
 import { resolveToFrontEndPath } from "@shared/utils/url";
-import { CreateFirstTest } from "../components/create-first-test";
-import { ProxyWarningContainer } from "../components/proxy-warning";
-import InsufficientPermission from "./insufficientPermission";
+import { CreateFirstTest } from "../../../ui/components/create-first-test";
+import { ProxyWarningContainer } from "../../../ui/components/proxy-warning";
+import InsufficientPermission from "../../../ui/screens/insufficientPermission";
 import { setSelectedProject } from "electron-app/src/store/actions/app";
 import { getUserAccountProjects } from "electron-app/src/utils";
 import { checkIfLoggedIn, resolveToFrontend } from "electron-app/src/utils/url";
-import {CompactAppLayout} from "../../_ui/layout/CompactAppLayout";
+import {CompactAppLayout} from "../../layout/CompactAppLayout";
 
 const PlusIcon = (props) => (
 	<svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>

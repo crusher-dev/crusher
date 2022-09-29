@@ -1,6 +1,6 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { goFullScreen, performRunTests } from "electron-app/src/ui/commands/perform";
+import { goFullScreen, performRunTests } from "electron-app/src/_ui/commands/perform";
 import { useNavigate } from "react-router-dom";
 import { ButtonDropdown } from "../../components/buttonDropdown";
 import { triggerLocalBuild } from "../../utils/recorder";

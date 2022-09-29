@@ -20,9 +20,9 @@ import {
 	turnOffInspectMode,
 	turnOnInspectMode,
 	turnOnWebviewDevTools,
-} from "../../commands/perform";
+} from "../../../_ui/commands/perform";
 import { setSelectedElement, updateRecorderCrashState } from "electron-app/src/store/actions/recorder";
-import { saveAutoAction } from "../../commands/saveActions";
+import { saveAutoAction } from "../../../_ui/commands/saveActions";
 import { TRecorderMessagesType } from "../../../lib/recorder/host-proxy";
 import { TRecorderCrashState, TRecorderState } from "electron-app/src/store/reducers/recorder";
 import { StopIcon } from "../../icons";

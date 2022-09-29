@@ -11,7 +11,7 @@ import { TRecorderState } from "../store/reducers/recorder";
 import { getAppSessionMeta } from "../store/selectors/app";
 import { getIsStatusBarVisible, getRecorderInfo, getRecorderState, getSavedSteps } from "../store/selectors/recorder";
 import { IDeepLinkAction } from "../types";
-import { goFullScreen, performGetRecorderTestLogs, performReplayTest, performReplayTestUrlAction, performSaveLocalBuild, performSteps, resetStorage } from "../ui/commands/perform";
+import { goFullScreen, performGetRecorderTestLogs, performReplayTest, performReplayTestUrlAction, performSaveLocalBuild, performSteps, resetStorage } from "./commands/perform";
 import DeviceFrame from "../ui/components/device-frame";
 import { InfoOverLay } from "../ui/components/overlays/infoOverlay";
 import { Sidebar } from "./screens/recorder/components/sidebar";

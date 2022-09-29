@@ -23,7 +23,7 @@ import { SWRConfig } from "swr";
 import { NetworkErrorContainer } from "./containers/errors/networkError";
 import { UnAuthorizedErrorContainer } from "./containers/errors/unauthorizedError";
 import { InvalidCredsErrorContainer } from "./containers/errors/invalidCreds";
-import { performGoToUrl } from "../ui/commands/perform";
+import { performGoToUrl } from "./commands/perform";
 import { Provider as JotaiProvider } from "jotai";
 
 webFrame.setVisualZoomLevelLimits(1, 3);
@@ -67,7 +67,7 @@ function InsideRouter() {
                 <Routes>
                     <Route path="/login" element={<LoginScreen />} />
                     <Route path="/onboarding" element={<AuthOnboardingScreen />} />
-                    <Route path="/" element={<SettingsScreen />} />
+                    <Route path="/" element={<DashboardScreen />} />
                     <Route path="/select-project" element={<ProjectsListScreen />} />
                     <Route path="/code-editor" element={<UnDockCodeScreen />} />
                     <Route path="/settings" element={<SettingsScreen />} />

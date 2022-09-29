@@ -10,7 +10,7 @@ import { OnOutsideClick } from '@dyson/components/layouts/onOutsideClick/onOutsi
 import { RightClickMenu } from '@dyson/components/molecules/RightClick/RightClick';
 import { useStore } from "react-redux";
 import { deleteRecordedSteps } from 'electron-app/src/store/actions/recorder';
-import { performVerifyTest } from 'electron-app/src/ui/commands/perform';
+import { performVerifyTest } from 'electron-app/src/_ui/commands/perform';
 import { ResetIcon } from 'electron-app/src/_ui/icons';
 
 interface IProps {

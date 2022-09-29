@@ -12,18 +12,6 @@ const performAction = async (action: iAction, shouldNotSave = false, isRecording
 	return ipcRenderer.invoke("perform-action", { action, shouldNotSave, isRecording });
 };
 
-const performSetDevice = async (device: iDevice) => {
-	return performAction({
-		type: ActionsInTestEnum.SET_DEVICE,
-		payload: {
-			meta: {
-				device: {
-					...device,
-				},
-			},
-		},
-	});
-};
 
 const performNavigation = async (url: string, store: Store<unknown, AnyAction>) => {
 	return performAction({

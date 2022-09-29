@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { ipcRenderer, shell } from "electron";
 import { resolveToFrontEndPath } from "@shared/utils/url";
 import { waitForUserLogin } from "electron-app/src/utils/renderer";
-import { focusOnWindow, saveAndGetUserInfo } from "../commands/perform";
+import { focusOnWindow, saveAndGetUserInfo } from "../../_ui/commands/perform";
 import { sendSnackBarEvent } from "../components/toast";
 import { useSelector } from "react-redux";
 import { getAppSettings } from "electron-app/src/store/selectors/app";

@@ -3,7 +3,7 @@ import { css } from "@emotion/react";
 import Input from "@dyson/components/atoms/input/Input";
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
 
-const ResizableInput = React.forwardRef(({ isEditingProp = false, selectAllOnDoubleClick = true, className, value, ...props }, ref) => {
+const ResizableInput = React.forwardRef(({ isEditingProp = false, onEditModeChange, selectAllOnDoubleClick = true, className, value, ...props }, ref) => {
   const [width, setWidth] = useState(0);
   const [isEditing, setIsEditing] = useState(isEditingProp)
   const span = useRef();
@@ -32,7 +32,7 @@ const ResizableInput = React.forwardRef(({ isEditingProp = false, selectAllOnDou
   }, [isEditing]);
 
   React.useEffect(() => {
-    setIsEditing(isEditingProp)
+    setIsEditing(isEditingProp);
   }, [isEditingProp]);
 
   if (!isEditing) {
@@ -42,14 +42,17 @@ const ResizableInput = React.forwardRef(({ isEditingProp = false, selectAllOnDou
   }
   return (
     <OnOutsideClick onClick={() => {
-      setIsEditing(false)
+      setIsEditing(false);
+      onEditModeChange(false);
     }}>
       <Input
         onReturn={() => {
           setIsEditing(false)
+          onEditModeChange(false);
         }}
         onBlur={() => {
-          setIsEditing(false)
+          setIsEditing(false);
+          onEditModeChange(false);
         }} title="" initialValue={value} size="small" className={`${className}`} css={inputCss} ref={ref} type="text" {...props} />
 
     </OnOutsideClick>

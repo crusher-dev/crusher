@@ -45,6 +45,7 @@ const TestListNameInput = ({ testName, testId, isActive, isEditing, setIsEditing
             onChange={handleOnChange}
             value={name}
             isEditingProp={isEditing}
+            onEditModeChange={setIsEditing.bind(this)}
         // disabled={!isEditing}
         />
     );

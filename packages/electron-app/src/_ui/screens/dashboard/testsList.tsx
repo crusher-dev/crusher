@@ -45,18 +45,14 @@ const EditableTestName = ({ testName, testId }) => {
     const editThisTestName = testEditName === testId;
 
     return (
-        <div>
-            <ResizableInput
-                ref={inputRef}
-                onKeyDown={handleKeyDown}
-                onChange={handleOnChange}
-                value={name}
-                isEditingProp={editThisTestName}
-                onEditModeChange={editModeChangeHandle.bind(this)}
-            // disabled={!isEditing}
-            />
-            <span onClick={editModeChangeHandle.bind(this, true)}>Edit</span>
-        </div>
+        <ResizableInput
+            ref={inputRef}
+            onKeyDown={handleKeyDown}
+            onChange={handleOnChange}
+            value={name}
+            isEditingProp={editThisTestName}
+            onEditModeChange={editModeChangeHandle.bind(this)}
+        />
     );
 };
 
@@ -274,15 +270,8 @@ const MULTI_SELECTED_MENU = [
 
 const TestList = ({ tests, deleteTest }) => {
     const [_, setTestEditName] = useAtom(editTestNameAtom)
-    const [isRenaming, setIsRename] = React.useState(null);
     const navigate = useNavigate();
 
-    const setRename = React.useCallback((testId, value) => {
-        if (value === null || !value) {
-            return setIsRename(null);
-        }
-        setIsRename(testId);
-    }, []);
     const items: Array<any> = React.useMemo(() => {
         if (!tests) return null;
         let isAcquired = false;
@@ -295,8 +284,6 @@ const TestList = ({ tests, deleteTest }) => {
                     <TestItem
                         key={test.id}
                         index={index}
-                        isEditingName={isRenaming === test.id}
-                        setIsEditingName={setRename.bind(this, test.id)}
                         isItemSelected={isItemSelected}
                         lock={lockMechanism}
                         test={test}
@@ -305,7 +292,7 @@ const TestList = ({ tests, deleteTest }) => {
                 )
             };
         });
-    }, [isRenaming, tests]);
+    }, [tests]);
 
     const SelectedTestActions = React.useMemo(() => ({ items, toggleSelectAll, selectedList }) => {
 
@@ -358,8 +345,7 @@ const TestList = ({ tests, deleteTest }) => {
             goFullScreen();
             performReplayTestUrlAction(selectedList[0], false, selectedTests);
         } else if (id === "rename") {
-            setIsRename(selectedList[0]);
-            setTestEditName(selectedList[0);
+            setTestEditName(selectedList[0]);
         }
     }, [tests]);
 

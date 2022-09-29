@@ -1,11 +1,11 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { BulbIcon, CrossIcon, CrusherHammerColorIcon, CrusherHammerIcon, InspectElementIcon, LoadingIconV2, LogoV2, MiniCrossIcon, SettingsIcon } from "../../constants/old_icons";
+import { LogoV2 } from "../../constants/old_icons";
 import { shell } from "electron";
 import { DropdownIconSVG } from "@dyson/assets/icons";
 import { useNavigate } from "react-router-dom";
-import { getBuildReport, performExit } from "../../commands/perform";
-import { resolveToFrontEndPath } from "@shared/utils/url";
+import {  performExit } from "../../commands/perform";
+
 import { useStore } from "react-redux";
 import { getCurrentSelectedProjct } from "electron-app/src/store/selectors/app";
 import { Dropdown } from "@dyson/components/molecules/Dropdown";
@@ -159,11 +159,6 @@ export const MenuDropdown = ({ className, isRecorder, hideDropdown, callback }) 
         </Dropdown>
     );
 };
-
-
-
-
-
 
 const crusherDropdownContainerStyle = css`
 	display: flex;

@@ -2,9 +2,10 @@ import React from "react";
 import { css } from "@emotion/react";
 import { goFullScreen, performRunTests } from "electron-app/src/ui/commands/perform";
 import { useNavigate } from "react-router-dom";
-import { ButtonDropdown } from "../../components/buttonDropdown";
+
 import { triggerLocalBuild } from "../../utils/recorder";
 import { StatusMessageBar } from "electron-app/src/ui/layouts/modalContainer";
+import {ButtonDropdown} from "../../ui/components/buttonDropdown";
 
 const PlusIcon = (props) => (
 	<svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>

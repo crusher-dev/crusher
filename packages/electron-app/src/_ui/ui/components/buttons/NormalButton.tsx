@@ -1,6 +1,5 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { GithubIcon } from "electron-app/src/_ui/constants/old_icons";
 import { Button } from "@dyson/components/atoms";
 
 const NormalButton = ({className, onClick, children, ...props}) => {
@@ -17,23 +16,7 @@ const NormalButton = ({className, onClick, children, ...props}) => {
 	);
 };
 
-const iconCss = css`
-    width: 18rem;
-    margin-left: 2rem;
-`;
 
-const textCss = css`
-	font-family: "Gilroy";
-	font-style: normal;
-	font-weight: 700;
-	font-size: 14rem;
-	text-align: center;
-	letter-spacing: -0.0032em;
-
-	color: #ffffff;
-	margin-left: auto;
-	margin-right: 12rem;
-`;
 const buttonCss = css`
 	box-sizing: content-box;
 	display: flex;

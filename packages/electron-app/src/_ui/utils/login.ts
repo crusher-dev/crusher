@@ -7,7 +7,6 @@ let _interval = null;
 
 const loginUserToCloud = async (loginCallback, store) => {
     if (_interval) { clearInterval(_interval); _interval = null; }
-
     const { loginKey, interval } = await waitForUserLogin((loginToken: string) => {
         if (_interval) { clearInterval(_interval); _interval = null; }
 

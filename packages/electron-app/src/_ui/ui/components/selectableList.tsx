@@ -1,5 +1,4 @@
 import React from "react";
-import { useStore } from "react-redux";
 import { css } from "@emotion/core";
 import { useSelectableList } from "../../hooks/list";
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";

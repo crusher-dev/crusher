@@ -5,19 +5,17 @@ import { css } from "@emotion/react";
 import { Input } from "@dyson/components/atoms/input/Input";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { useDispatch, useSelector } from "react-redux";
-import { focusOnWindow, performRunAfterTest, saveAndGetUserInfo } from "electron-app/src/_ui/commands/perform";
-import { Toggle } from "@dyson/components/atoms/toggle/toggle";
+import { focusOnWindow, saveAndGetUserInfo } from "electron-app/src/_ui/commands/perform";
 import Switch from "@dyson/components/atoms/toggle/switch";
 import { getAppSettings, getUserAccountInfo } from "electron-app/src/store/selectors/app";
-import { setSettngs, setUserAccountInfo } from "electron-app/src/store/actions/app";
+import { setSettngs } from "electron-app/src/store/actions/app";
 import { iReduxState } from "electron-app/src/store/reducers";
 import { sendSnackBarEvent } from "../toast";
 import { Conditional } from "@dyson/components/layouts";
-import { LoadingIcon, LoadingIconV2 } from "../../../../constants/old_icons";
-import { shell, webFrame } from "electron";
-import { getUserInfoFromToken, waitForUserLogin } from "electron-app/src/utils";
+import {  LoadingIconV2 } from "../../../../constants/old_icons";
+import { shell } from "electron";
+import {waitForUserLogin } from "electron-app/src/utils";
 import { resolveToFrontEndPath } from "@shared/utils/url";
-import { showReportDialog } from "@sentry/electron";
 import { SettingsManager } from "electron-app/src/lib/settingsManager";
 
 interface iStartupModalProps {
@@ -32,7 +30,6 @@ enum ConnectToCloudStatusEnum {
 }
 
 const SettingsModalContent = ({ className, ...props }: iStartupModalProps & { className?: string }) => {
-	const { isOpen } = props;
 	const appSettings = useSelector(getAppSettings);
 	const userAccountInfo = useSelector(getUserAccountInfo);
 
@@ -65,9 +62,6 @@ const SettingsModalContent = ({ className, ...props }: iStartupModalProps & { cl
 		setEnableMouseTracker(toggleValue);
 	};
 
-	const handleAutoDetectActionsCallback = (toggleValue) => {
-		setAutoDetctActions(toggleValue);
-	};
 
 	const saveAction = async () => {
 		const settings: iReduxState["app"]["settings"] = {

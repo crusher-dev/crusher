@@ -152,7 +152,7 @@ const DashboardScreen = () => {
                 <ButtonDropdown
                     dropdownCss={buttonDropdownCss}
                     hideDropdown={true}
-                    css={[buttonDropdownMainButtonCss, css`background: transparent !important; width: auto !important; border: none !important; margin-right: 12px;`]}
+                    css={[buttonDropdownMainButtonCss, css`background: transparent !important; width: auto !important; border: none !important;`]}
                     options={[
                         {
                             id: "SAVE", content: (<span css={createTestCss}>
@@ -210,17 +210,17 @@ const buttonDropdownCss = css`
 	top: calc(100% + 4rem) !important;
 `;
 const buttonDropdownMainButtonCss = css`
-	width: 76rem;
-	height: 30rem;
-	padding: 0rem !important;
-    border-radius: 6rem !important;
+    background: #A742F7;
+    border: 1px solid #7D41AD;
+    width: fit-content;
+    border-radius: 8px !important;
     background: hsla(268, 100%, 60%, 1) !important;
 
     font-family: 'Gilroy' !important;
     font-style: normal !important;
     font-weight: 600 !important;
-    font-size: 14rem !important;
-
+    font-size: 13rem !important;
+    height: 30rpx;
     color: #FFFFFF !important;
 `;
 const createIconCss = css`

@@ -365,13 +365,14 @@ const TestList = ({ tests, deleteTest }) => {
         } else if (id === "run" || id === "run-all") {
             triggerLocalBuild(selectedList);
         } else if (id === "edit") {
+            const selectedTests = tests.filter((test) => selectedList.includes(test.id));
             navigate("/recorder");
             goFullScreen();
             performReplayTestUrlAction(selectedList[0]);
         } else if (id === "rename") {
             setIsRename(selectedList[0]);
         }
-    }, []);
+    }, [tests]);
 
 
     return (

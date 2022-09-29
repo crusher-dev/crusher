@@ -21,15 +21,13 @@ import {
 	turnOnInspectMode,
 	turnOnWebviewDevTools,
 } from "../../commands/perform";
-import { recordStep, setSelectedElement, updateRecorderCrashState } from "electron-app/src/store/actions/recorder";
+import { setSelectedElement, updateRecorderCrashState } from "electron-app/src/store/actions/recorder";
 import { saveAutoAction } from "../../commands/saveActions";
 import { TRecorderMessagesType } from "../../../lib/recorder/host-proxy";
 import { TRecorderCrashState, TRecorderState } from "electron-app/src/store/reducers/recorder";
-import { InfoOverLay } from "../overlays/infoOverlay";
-import { MiniCrossIcon, StopIcon } from "../../icons";
+import { StopIcon } from "../../icons";
 import { Button } from "@dyson/components/atoms";
-import { ILoggerReducer } from "electron-app/src/store/reducers/logger";
-import { StatusBar } from "../status-bar";
+
 import { RightClickMenu } from "@dyson/components/molecules/RightClick/RightClick";
 
 const CrashScreen = (props: any) => {

@@ -81,7 +81,8 @@ const containerCss = css`
 `;
 
 const headingCss = css`
-    padding: 10rem 20rem;
+    padding: 10rem 16rem;
+    padding-right: 12rem;
     display: flex;
     :hover {
         background: rgba(85, 85, 85, 0.1);

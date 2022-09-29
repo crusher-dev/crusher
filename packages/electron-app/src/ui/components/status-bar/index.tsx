@@ -118,7 +118,6 @@ const StatusBar = (props: any) => {
 
 	const [clicked, setClicked] = React.useState(false);
 	const [selectedTab, setSelectedTab] = React.useState(TabsEnum.LOGS);
-	const logsScrollRef: React.Ref<HTMLDivElement> = React.useRef(null);
 	const logs: ILoggerReducer["logs"] = useSelector(getLogs);
 
 	React.useEffect(() => {
@@ -203,21 +202,6 @@ const StatusBar = (props: any) => {
 							{log.message}
 						</span>
 					</div>
-					{/* <div
-						css={css`
-							margin-left: auto;
-						`}
-					>
-						<span
-							css={css`
-								color: #525252;
-								font-size: 12.5rem;
-								font-family: Gilroy;
-							`}
-						>
-							+{props.diff} ms
-						</span>
-					</div> */}
 				</div>
 				{showChildrens && log.children && log.children.length ?
 					log.children.map((child: ILog & { children: Array<ILog>; diff: string }) => {
@@ -240,9 +224,6 @@ const StatusBar = (props: any) => {
 		setSelectedTab(tabType);
 	};
 
-	const handleMaximiseClick = () => {
-		setClicked(true);
-	};
 
 	const lastLogMessage = logs && logs.get("_").length ? logs.get("_")[logs.get("_").length - 1] : null;
 	const stepAction = React.useMemo(() => {

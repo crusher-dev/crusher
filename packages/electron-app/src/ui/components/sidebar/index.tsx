@@ -6,8 +6,6 @@ import { Conditional } from "@dyson/components/layouts";
 import { ActionsPanel } from "../../../_ui/screens/recorder/components/sidebar/actionsPanel";
 import { StepsPanel } from "./steps";
 import { TemplatesModal } from "./steps/templatesModal";
-import { CypressIcon, LinkIcon, PuppeteerIcon, SeleniumIcon } from "../../icons";
-import { Button, Input } from "@dyson/components/atoms";
 import { ModalManager } from "../modals/";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 
@@ -18,8 +16,7 @@ const Sidebar = ({ className, ...props }: any) => {
 
 	return (
 		<div css={[containerStyle, IS_GETTING_STARTED ? gettingStartedContainerStyle : null]} className={`${className}`}>
-			{/* <GettingStartedSidebar /> */}
-			{recorderInfo.device ? (
+			<Conditional showIf={recorderInfo.device}>
 				<>
 					{recorderState.type !== TRecorderState.CUSTOM_CODE_ON ? (
 						<ActionsPanel />
@@ -61,11 +58,10 @@ const Sidebar = ({ className, ...props }: any) => {
 
 					<StepsPanel />
 				</>
-			) : (
-				""
-			)}
+			</Conditional>
+
 			<ModalManager />
-			<TemplatesModal isOpen={false} handleClose={() => {}} />
+			<TemplatesModal isOpen={false} handleClose={() => { }} />
 		</div>
 	);
 };

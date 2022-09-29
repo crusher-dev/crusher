@@ -115,6 +115,17 @@ export class AppWindow {
 
 		this.window = new BrowserWindow(windowOptions);
 
+		this.window.on("close", (e) => {
+			const url = this.window.webContents.getURL();
+			if(url.includes("#/recorder")){
+				e.preventDefault();
+				this.handleGoFullScreen(null, {fullScreen: false});	
+				this.window.loadURL(encodePathAsUrl(__dirname, "index.html"));
+
+				return false;
+			}
+		});
+
 		if (app.commandLine.hasSwitch("open-recorder")) {
 			this.window.maximize();
 		}

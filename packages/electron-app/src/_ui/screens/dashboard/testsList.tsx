@@ -368,7 +368,7 @@ const TestList = ({ tests, deleteTest }) => {
             const selectedTests = tests.filter((test) => selectedList.includes(test.id));
             navigate("/recorder");
             goFullScreen();
-            performReplayTestUrlAction(selectedList[0]);
+            performReplayTestUrlAction(selectedList[0], false, selectedTests);
         } else if (id === "rename") {
             setIsRename(selectedList[0]);
         }

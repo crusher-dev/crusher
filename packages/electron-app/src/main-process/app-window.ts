@@ -117,7 +117,7 @@ export class AppWindow {
 
 		this.window.on("close", (e) => {
 			const url = this.window.webContents.getURL();
-			if(url.includes("#/recorder")){
+			if (url.includes("#/recorder")) {
 				e.preventDefault();
 				this.sendMessage("go-to-dashboard", {});
 				return false;
@@ -905,9 +905,9 @@ export class AppWindow {
 		return this.handleReplayTestSteps(testSteps);
 	}
 
-	async handleRemoteReplayTestUrlAction(event: Electron.IpcMainInvokeEvent, payload: { testId: number; redirectAfterSuccess: boolean }) {
+	async handleRemoteReplayTestUrlAction(event: Electron.IpcMainInvokeEvent, payload: { testId: number; redirectAfterSuccess: boolean; selectedTests: Array<any> }) {
 		this.sendMessage("url-action", {
-			action: { commandName: "replay-test", args: { testId: payload.testId, redirectAfterSuccess: payload.redirectAfterSuccess } },
+			action: { commandName: "replay-test", args: { testId: payload.testId, redirectAfterSuccess: payload.redirectAfterSuccess, selectedTests: payload.selectedTests } },
 		});
 	}
 
@@ -1017,9 +1017,9 @@ export class AppWindow {
 					shouldNotSave: !!(savedStep as any).shouldNotRecord,
 					shouldNotSleep: !!(savedStep as any).shouldNotRecordc,
 				});
-				
+
 				// Need to wait until networkIdle for content script to initialize
-				if(savedStep.type === ActionsInTestEnum.NAVIGATE_URL || savedStep.payload.meta.value === "about:blank") {
+				if (savedStep.type === ActionsInTestEnum.NAVIGATE_URL || savedStep.payload.meta.value === "about:blank") {
 					await this.webView.playwrightInstance.page.waitForLoadState("networkidle");
 				}
 			}

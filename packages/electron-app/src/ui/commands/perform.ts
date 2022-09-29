@@ -188,8 +188,8 @@ const performClearRemainingStpes = () => {
 	return ipcRenderer.invoke("clear-remaining-steps");
 };
 
-const performReplayTestUrlAction = async (testId, redirectAfterSuccess = false) => {
-	return ipcRenderer.invoke("replay-test-url-action", { testId, redirectAfterSuccess });
+const performReplayTestUrlAction = async (testId, redirectAfterSuccess = false, selectedTests = []) => {
+	return ipcRenderer.invoke("replay-test-url-action", { testId, redirectAfterSuccess, selectedTests });
 };
 
 const turnOnInspectMode = (meta) => {
@@ -221,7 +221,7 @@ const updateTestName = (testId, testName) => {
 };
 
 const saveTest = (shouldNotRunTest: boolean = false) => {
-	return ipcRenderer.invoke("save-test", {shouldNotRunTest});
+	return ipcRenderer.invoke("save-test", { shouldNotRunTest });
 };
 
 const updateTest = () => {
@@ -322,7 +322,7 @@ const turnOnProxy = (configFilePath) => {
 };
 
 const performRunDraftTest = (testId) => {
-	return ipcRenderer.invoke("run-draft-test", {testId});
+	return ipcRenderer.invoke("run-draft-test", { testId });
 }
 
 const performSaveLocalBuild = (tests) => {
@@ -334,12 +334,12 @@ const performGetRecorderTestLogs = () => {
 }
 
 const performCreateCloudProject = (projectName: string) => {
-	return ipcRenderer.invoke("create-cloud-project", {name: projectName});
+	return ipcRenderer.invoke("create-cloud-project", { name: projectName });
 }
 
 
-const performGoToUrl = (url: string ) => {
-	return ipcRenderer.invoke("goto-url", {url: url});
+const performGoToUrl = (url: string) => {
+	return ipcRenderer.invoke("goto-url", { url: url });
 };
 
 

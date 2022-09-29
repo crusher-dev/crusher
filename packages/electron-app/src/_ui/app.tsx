@@ -14,7 +14,7 @@ import { IDeepLinkAction } from "../types";
 import { goFullScreen, performGetRecorderTestLogs, performReplayTest, performReplayTestUrlAction, performSaveLocalBuild, performSteps, resetStorage } from "../ui/commands/perform";
 import DeviceFrame from "../ui/components/device-frame";
 import { InfoOverLay } from "../ui/components/overlays/infoOverlay";
-import {Sidebar} from "./screens/recorder/components/sidebar";
+import { Sidebar } from "./screens/recorder/components/sidebar";
 import { StatusBar } from "../ui/components/status-bar";
 import { sendSnackBarEvent } from "../ui/components/toast";
 import Toolbar from "../ui/components/toolbar";
@@ -25,31 +25,31 @@ import { addBuildNotification, clearCurrentLocalBuild, updateCurrentLocalBuild, 
 
 const handleCompletion = async (store: Store, action: IDeepLinkAction, addNotification) => {
 
-    // @TODO: Change `redirectAfterSuccess` to `isLocalBuild`
-    console.log("Action args", action, window["testsToRun"]);
-    if(action.args.redirectAfterSuccess && window["testsToRun"]) {
-        window["testsToRun"].list = window["testsToRun"].list.filter(testId => testId !== action.args.testId);
-        const logs = await performGetRecorderTestLogs();
-        const recorderState = getRecorderState(store.getState());
-        window["localRunCache"][action.args.testId] = { steps: logs, id: action.args.testId, status: recorderState.type !== TRecorderState.ACTION_REQUIRED? "FINISHED" : "FAILED"};
+	// @TODO: Change `redirectAfterSuccess` to `isLocalBuild`
+	console.log("Action args", action, window["testsToRun"]);
+	if (action.args.redirectAfterSuccess && window["testsToRun"]) {
+		window["testsToRun"].list = window["testsToRun"].list.filter(testId => testId !== action.args.testId);
+		const logs = await performGetRecorderTestLogs();
+		const recorderState = getRecorderState(store.getState());
+		window["localRunCache"][action.args.testId] = { steps: logs, id: action.args.testId, status: recorderState.type !== TRecorderState.ACTION_REQUIRED ? "FINISHED" : "FAILED" };
 
-        if(window["testsToRun"].list.length) {
-            historyInstance.push("/recorder", {});
-            goFullScreen();
-            store.dispatch(setSessionInfoMeta({}));
+		if (window["testsToRun"].list.length) {
+			historyInstance.push("/recorder", {});
+			goFullScreen();
+			store.dispatch(setSessionInfoMeta({}));
 			store.dispatch(updateCurrentLocalBuild({
 				queuedTests: window["testsToRun"].list,
 			} as any));
-            performReplayTestUrlAction(window["testsToRun"].list[0], true);
-          } else {
+			performReplayTestUrlAction(window["testsToRun"].list[0], true);
+		} else {
 			// Time to redirect to dashboard
-            const totalTestsInBuild = window["testsToRun"].count;
-            window["testsToRun"] = undefined;
-            const localBuild = await performSaveLocalBuild(Object.values(window["localRunCache"]));
-            window["localRunCache"] = undefined;
-            // steps: Array<any>; id: number; name: string; status: "FINISHED" | "FAILED"
-            window["localBuildReportId"] = localBuild.build.id;
-			addNotification({id: localBuild.build.id });
+			const totalTestsInBuild = window["testsToRun"].count;
+			window["testsToRun"] = undefined;
+			const localBuild = await performSaveLocalBuild(Object.values(window["localRunCache"]));
+			window["localRunCache"] = undefined;
+			// steps: Array<any>; id: number; name: string; status: "FINISHED" | "FAILED"
+			window["localBuildReportId"] = localBuild.build.id;
+			addNotification({ id: localBuild.build.id });
 			store.dispatch(addBuildNotification({
 				id: localBuild.build.id,
 				status: localBuild.buildReportStatus,
@@ -57,41 +57,42 @@ const handleCompletion = async (store: Store, action: IDeepLinkAction, addNotifi
 				time: Date.now()
 			}));
 
-            historyInstance.push("/", {});
+			historyInstance.push("/", {});
 
-            goFullScreen(false);
+			goFullScreen(false);
 			store.dispatch(clearCurrentLocalBuild());
-            sendSnackBarEvent({ type: "test_report", message: null, meta: { totalCount: totalTestsInBuild, buildReportStatus: localBuild.buildReportStatus }});
-        }
-    }
+			sendSnackBarEvent({ type: "test_report", message: null, meta: { totalCount: totalTestsInBuild, buildReportStatus: localBuild.buildReportStatus } });
+		}
+	}
 };
 
 
 const handleUrlAction = (store: Store, addNotification, event: Electron.IpcRendererEvent, { action }: { action: IDeepLinkAction },) => {
-    switch(action.commandName) {
-        case "replay-test":
+	switch (action.commandName) {
+		case "replay-test":
 			const sessionInfoMeta = getAppSessionMeta(store.getState() as any);
 			store.dispatch(
 				setSessionInfoMeta({
 					...sessionInfoMeta,
 					editing: {
 						testId: action.args.testId,
-				    },
+					},
 				}),
 			);
-            
-            performReplayTest(action.args.testId).finally(handleCompletion.bind(this, store, action, addNotification))
-            break;
-        case "restore":
-            if (window.localStorage.getItem("saved-steps")) {
-                const savedSteps = JSON.parse(window.localStorage.getItem("saved-steps"));
-                window.localStorage.removeItem("saved-steps");
-                performSteps(savedSteps);
-            }
-            break;
-        default:
-            console.error("Invalid URL action: ", action);
-    }
+			const selectedTests = action.args;
+			console.log("Selected testsa", selectedTests);
+			performReplayTest(action.args.testId).finally(handleCompletion.bind(this, store, action, addNotification))
+			break;
+		case "restore":
+			if (window.localStorage.getItem("saved-steps")) {
+				const savedSteps = JSON.parse(window.localStorage.getItem("saved-steps"));
+				window.localStorage.removeItem("saved-steps");
+				performSteps(savedSteps);
+			}
+			break;
+		default:
+			console.error("Invalid URL action: ", action);
+	}
 };
 
 
@@ -175,10 +176,10 @@ const steps: Array<StepType> = [
 		selector: "#element-actions-list",
 		content: <OnboardingItem title={"Select a element action"} description={"You can click, hover, take screenshot or add assertions"} />,
 	},
-    {
+	{
 		selector: "#current-modal",
 		content: <OnboardingItem title={"Select a element action"} description={"You can click, hover, take screenshot or add assertions"} />,
-        resizeObservables: ["#current-modal"],
+		resizeObservables: ["#current-modal"],
 	},
 	{
 		selector: "#device_browser",
@@ -191,13 +192,13 @@ const steps: Array<StepType> = [
 ];
 
 function doArrow(position, verticalAlign, horizontalAlign) {
-    const opositeSide = {
-        top: "bottom",
-        bottom: "top",
-        right: "left",
-        left: "right",
-    };
-    const popoverPadding = 10;
+	const opositeSide = {
+		top: "bottom",
+		bottom: "top",
+		right: "left",
+		left: "right",
+	};
+	const popoverPadding = 10;
 
 	if (!position || position === "custom") {
 		return {};
@@ -228,30 +229,30 @@ function doArrow(position, verticalAlign, horizontalAlign) {
 }
 
 const App = () => {
-    let navigate = useNavigate();
-	const {addNotification} = useBuildNotifications();
-    const store = useStore();
-    const recorderInfo = useSelector(getRecorderInfo);
-    const isStatusBarVisible = useSelector(getIsStatusBarVisible);
-    const recorderState = useSelector(getRecorderState);
+	let navigate = useNavigate();
+	const { addNotification } = useBuildNotifications();
+	const store = useStore();
+	const recorderInfo = useSelector(getRecorderInfo);
+	const isStatusBarVisible = useSelector(getIsStatusBarVisible);
+	const recorderState = useSelector(getRecorderState);
 
-    React.useEffect(() => {
+	React.useEffect(() => {
 		document.querySelector("html").style = "";
-    }, []);
+	}, []);
 
-    React.useEffect(() => {
-        ipcRenderer.on("webview-initialized", async (event: Electron.IpcRendererEvent, { initializeTime }) => {
+	React.useEffect(() => {
+		ipcRenderer.on("webview-initialized", async (event: Electron.IpcRendererEvent, { initializeTime }) => {
 			store.dispatch(setIsWebViewInitialized(true));
 		});
 
 		ipcRenderer.on("go-to-dashboard", async () => {
-            historyInstance.push("/", {});
-            goFullScreen(false);
+			historyInstance.push("/", {});
+			goFullScreen(false);
 		});
-        ipcRenderer.on("url-action", handleUrlAction.bind(this, store, addNotification));
+		ipcRenderer.on("url-action", handleUrlAction.bind(this, store, addNotification));
 
-        return () => {
-            ipcRenderer.removeAllListeners("url-action");
+		return () => {
+			ipcRenderer.removeAllListeners("url-action");
 			ipcRenderer.removeAllListeners("renderer-ready");
 			ipcRenderer.removeAllListeners("webview-initialized");
 			store.dispatch(resetRecorder());
@@ -261,36 +262,36 @@ const App = () => {
 				...sessionInfoMeta,
 				remainingSteps: [],
 			}),
-			resetStorage();
-        }
-    }, []);
+				resetStorage();
+		}
+	}, []);
 
-    const dragableStyle = React.useMemo(() => dragableCss(), []);
-    const contentStyle = React.useMemo(() => contentCss(), []);
-    const toolbarStyle = React.useMemo(() => { toolbarCss(recorderState.type === TRecorderState.CUSTOM_CODE_ON) }, [recorderState]);
+	const dragableStyle = React.useMemo(() => dragableCss(), []);
+	const contentStyle = React.useMemo(() => contentCss(), []);
+	const toolbarStyle = React.useMemo(() => { toolbarCss(recorderState.type === TRecorderState.CUSTOM_CODE_ON) }, [recorderState]);
 
-    return (
-        // <Wrapper figmaUrl={"https://www.figma.com/proto/MsJZCnY5NvrDF4kL1oczZq/Crusher-%7C-Aug?node-id=2305%3A6559&scaling=min-zoom&page-id=2305%3A5930"}>
-			<div>
-				<div css={dragableStyle} className={"drag"}></div>
-				<div css={contentStyle}>
+	return (
+		// <Wrapper figmaUrl={"https://www.figma.com/proto/MsJZCnY5NvrDF4kL1oczZq/Crusher-%7C-Aug?node-id=2305%3A6559&scaling=min-zoom&page-id=2305%3A5930"}>
+		<div>
+			<div css={dragableStyle} className={"drag"}></div>
+			<div css={contentStyle}>
 				<Sidebar css={sidebarCss} />
-					<div css={bodyCss}>
-							<Toolbar css={toolbarStyle} />
-							<DeviceFrame css={deviceFrameContainerCss} />
-							{isStatusBarVisible ? <StatusBar /> : ""}
-					</div>
+				<div css={bodyCss}>
+					<Toolbar css={toolbarStyle} />
+					<DeviceFrame css={deviceFrameContainerCss} />
+					{isStatusBarVisible ? <StatusBar /> : ""}
 				</div>
-
-				<Global styles={globalCss}/>
-				<InfoOverLay />
 			</div>
-        // </Wrapper>
-    )
+
+			<Global styles={globalCss} />
+			<InfoOverLay />
+		</div>
+		// </Wrapper>
+	)
 };
 
 const dragableCss = () => {
-    return css`
+	return css`
         min-height: 32px;
         width: 100%;
         background: #111213;
@@ -301,13 +302,13 @@ const dragableCss = () => {
     `;
 };
 const contentCss = () => {
-    return css`
+	return css`
         display: flex;
         background: #020202;
         width: 100%;
         overflow-x: hidden;
         color: white;
-        height: ${process.platform ==="darwin" ? `calc(100vh - 32px)` : "100vh"};
+        height: ${process.platform === "darwin" ? `calc(100vh - 32px)` : "100vh"};
     `;
 }
 const globalCss = css`
@@ -358,7 +359,7 @@ const bodyCss = css`
 	overflow: hidden;
 `;
 const toolbarCss = (isCUstomCodeOn: boolean) => {
-    return css`
+	return css`
         background-color: #09090A;
         padding: 5rem;
         min-height: 61rem;

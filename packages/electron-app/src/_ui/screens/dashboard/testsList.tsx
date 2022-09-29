@@ -2,24 +2,20 @@ import React from "react";
 import { css } from "@emotion/react";
 import { DeleteIcon, GarbageIcon, LoadingIconV2, PlayIcon } from "electron-app/src/ui/icons";
 import { BasketBallIcon, EditIcon } from "../../icons";
-import { min } from "lodash";
 import { useNavigate } from "react-router-dom";
 import { goFullScreen, performReplayTestUrlAction } from "electron-app/src/ui/commands/perform";
 import { triggerLocalBuild } from "../../utils/recorder";
-import { Dropdown } from "@dyson/components/molecules/Dropdown";
 import { KeyboardInputEvent, shell } from "electron";
 import { resolveToFrontend } from "electron-app/src/utils/url";
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
 import { CloudCrusher } from "electron-app/src/lib/cloud";
 import { ContextMenuTypeEnum, ListBox } from "../../components/selectableList";
-import { useSelectableList } from "../../hooks/list";
-import { RightClickMenu } from "@dyson/components/molecules/RightClick/RightClick";
-import { deleteRecordedSteps } from "electron-app/src/store/actions/recorder";
 import { useStore } from "react-redux";
 import { EmojiPicker } from "../../components/emojiPicker";
 import Checkbox from "@dyson/components/atoms/checkbox/checkbox";
 import { useBuildNotifications } from "../../hooks/tests";
 import { ResizableInput } from "../../components/ResizableInput";
+import { Conditional } from "@dyson/components/layouts";
 
 const TestListNameInput = ({ testName, testId, isActive, isEditing, setIsEditing, className }) => {
     const [name, setName] = React.useState(testName);
@@ -188,15 +184,13 @@ const TestListItem = ({ test, isItemSelected, isEditingName, setIsEditingName, i
             </EmojiPicker>
 
             <TestListNameInput css={testNameInputCss} isActive={isHover} testId={test.id} isEditing={isEditingName} setIsEditing={setIsEditingName} testName={test.testName} />
-            {!test.firstRunCompleted ? (
+            <Conditional showIf={!test.firstRunCompleted}>
                 <div css={loadingContainerCss} title={"verifying..."}>
-                    <span>Verifying</span>
+                    <span className="pt-1">verifying</span>
                     <LoadingIconV2 css={loadingIconCss} />
-                </div>
-            ) : (
-                ""
-            )}
 
+                </div>
+            </Conditional>
 
             <div className={"action-buttons"} css={listItemActionsStyle}>
                 <div onClick={handleEdit} css={editContainerCss} title="edit this test">
@@ -226,8 +220,9 @@ padding: 6px 18px; padding-right: 16px; display: flex; flex: 1; align-items: cen
 const loadingContainerCss = css`
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 4px;
     font-size: 11px;
+    
 `;
 
 const checkboxCss = css`

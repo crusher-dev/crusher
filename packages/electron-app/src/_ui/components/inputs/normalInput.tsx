@@ -1,34 +1,32 @@
 import Input from "@dyson/components/atoms/input/Input";
 import { css } from "@emotion/react";
-import React, {useState, useCallback} from "react";
+import React, { useState, useCallback } from "react";
 
-const NormalInput = React.forwardRef(({ placeholder, handleUrlReturn, inputCss: _inputCss, inputWrapperCss, initialValue, className, rightIcon, ...props}, ref) => {
-    const [isInFocus, setIsInFocus] = useState(false);
-    const [url, setIsUrl] = useState(initialValue);
+const NormalInput = React.forwardRef(({ placeholder, handleUrlReturn, inputCss: _inputCss, inputWrapperCss, initialValue, className, rightIcon, ...props }, ref) => {
+	const [isInFocus, setIsInFocus] = useState(false);
+	const [url, setIsUrl] = useState(initialValue);
 
-    const handleOnChange = useCallback((event) => {
-        setIsUrl(event.target.value);
-    }, []);
+	const handleOnChange = useCallback((event) => {
+		setIsUrl(event.target.value);
+	}, []);
 
-
-
-    const shouldShowRightIcon = isInFocus || !url?.length;
-    return (
-        <Input
-            placeholder={placeholder}
-            css={inputCss}
+	const shouldShowRightIcon = isInFocus || !url?.length;
+	return (
+		<Input
+			placeholder={placeholder}
+			css={inputCss}
 			inputWrapperCss={inputWrapperCss}
 			inputCss={_inputCss}
-            onReturn={handleUrlReturn}
-            ref={ref}
-            rightIcon={shouldShowRightIcon ? rightIcon : null}
-            onBlur={setIsInFocus.bind(this, false)}
-            onFocus={setIsInFocus.bind(this, true)}
-            onChange={handleOnChange}
+			onReturn={handleUrlReturn}
+			ref={ref}
+			rightIcon={shouldShowRightIcon ? rightIcon : null}
+			onBlur={setIsInFocus.bind(this, false)}
+			onFocus={setIsInFocus.bind(this, true)}
+			onChange={handleOnChange}
 			initialValue={initialValue}
-            {...props}
-        />
-    );
+			{...props}
+		/>
+	);
 });
 
 const inputCss = css`
@@ -78,7 +76,7 @@ const inputCss = css`
 		font-family: Gilroy;
 		font-style: normal;
 		font-weight: 600;
-		font-size: 13rem;
+		font-size: 13.8rem;
 		color: rgba(255, 255, 255, 0.67);
         :focus {
             border-color: #D660FF;

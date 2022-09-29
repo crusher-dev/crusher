@@ -99,7 +99,7 @@ const SettingsModalContent = ({ className, ...props }: iStartupModalProps & { cl
 		if (connectToCloudStatus === ConnectToCloudStatusEnum.NOT_CONNECTED) {
 			connectToCloud();
 		} else if (connectToCloudStatus === ConnectToCloudStatusEnum.CONNECTED) {
-			sendSnackBarEvent({ type: "info", message: `Already Connected to cloud! Hello, ${userAccountInfo.name}` });
+			sendSnackBarEvent({ type: "info", message: `Already Connected to startcloud! Hello, ${userAccountInfo.name}` });
 		} else {
 			sendSnackBarEvent({ type: "error", message: "Waiting for the login process to complete" });
 		}
@@ -335,12 +335,11 @@ const buttonStyle = css`
 const inputStyle = css`
 	background: #1a1a1c;
 	border-radius: 6rem;
-	border: 1rem solid #43434f;
 	font-family: Gilroy;
 	font-size: 14rem;
 	min-width: 358rem;
 	color: #fff;
-	outline: nonet;
+	outline: none;
 	margin-left: auto;
 `;
 const inputContainerStyle = css`

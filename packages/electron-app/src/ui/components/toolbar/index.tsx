@@ -23,6 +23,7 @@ import { SettingsModal } from "./settingsModal";
 import { TourContext, useTour } from "@reactour/tour";
 import { setShowShouldOnboardingOverlay } from "electron-app/src/store/actions/app";
 import { sendSnackBarEvent } from "../toast";
+import { Button } from "@dyson/components/atoms/index"
 import { Dropdown } from "@dyson/components/molecules/Dropdown";
 import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
 import { Navigate, useNavigate } from "react-router-dom";
@@ -587,7 +588,7 @@ const Toolbar = (props: any) => {
 			</Conditional>
 			<Conditional showIf={!isTestBeingVerified}>
 				<Conditional showIf={isRecorderInInitialState}>
-					<Button onClick={handleUrlReturn.bind(this)} bgColor="tertiary-outline" css={buttonStyle}>
+					<Button title="Create a test" onClick={handleUrlReturn.bind(this)} bgColor="tertiary-outline" css={buttonStyle}>
 						Start
 					</Button>
 				</Conditional>
@@ -804,6 +805,7 @@ const buttonStyle = css`
 	background: #B341F9!important;
 	font-size: 14rem;
 	box-sizing: border-box;
+	border: .5px solid #B341F9 !important;
 	border-radius: 8rem !important;
     width: 77rem;
 	height: 36rem;

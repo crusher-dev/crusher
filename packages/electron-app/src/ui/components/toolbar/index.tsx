@@ -480,20 +480,6 @@ const Toolbar = (props: any) => {
 
 	return (
 		<div css={containerStyle} {...props}>
-			{/* <BrowserButton
-					className={"ml-24 go-back-button"}
-					css={css`
-						background: transparent;
-					`}
-					onClick={goBack}
-				>
-					<NavigateBackIcon
-						css={css`
-							height: 20rem;
-						`}
-						disabled={false}
-					/>
-				</BrowserButton> */}
 			<div css={css`display: flex; align-items: center;`}>
 				<MenuDropdown
 					isRecorder={true}

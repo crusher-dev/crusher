@@ -1003,12 +1003,16 @@ export class AppWindow {
 
 			for (const savedStep of mainActions) {
 				reaminingSteps.shift();
-
 				await this.handlePerformAction(null, {
 					action: savedStep,
 					shouldNotSave: !!(savedStep as any).shouldNotRecord,
 					shouldNotSleep: !!(savedStep as any).shouldNotRecordc,
 				});
+				
+				// Need to wait until networkIdle for content script to initialize
+				if(savedStep.type === ActionsInTestEnum.NAVIGATE_URL || savedStep.payload.meta.value === "about:blank") {
+					await this.webView.playwrightInstance.page.waitForLoadState("networkidle");
+				}
 			}
 			this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
 			return true;

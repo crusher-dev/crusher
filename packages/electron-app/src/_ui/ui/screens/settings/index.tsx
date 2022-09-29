@@ -26,7 +26,6 @@ padding-top: 8px;
 position: relative;
 `;
 
-
 const titleCss = css`
     font-family: Cera Pro;
     font-style: normal;

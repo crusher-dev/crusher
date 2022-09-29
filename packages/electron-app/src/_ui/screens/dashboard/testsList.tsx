@@ -20,19 +20,8 @@ import { Conditional } from "@dyson/components/layouts";
 const TestListNameInput = ({ testName, testId, isActive, isEditing, setIsEditing, className }) => {
     const [name, setName] = React.useState(testName);
     const inputRef = React.useRef<HTMLInputElement>(null);
-    const handleDoubleClick = React.useCallback(() => {
-        setIsEditing(true);
-    }, []);
 
-    React.useEffect(() => {
-        if (isEditing) {
-            setTimeout(() => {
-                inputRef.current.focus();
-                inputRef.current.setSelectionRange(inputRef.current.value.length, inputRef.current.value.length);
 
-            });
-        }
-    }, [isEditing]);
 
     const handleOnChange = React.useCallback((event) => {
         setName(event.target.value);
@@ -49,98 +38,18 @@ const TestListNameInput = ({ testName, testId, isActive, isEditing, setIsEditing
         }
     }, []);
 
-    const handleOutsideClick = React.useCallback(() => {
-        setIsEditing(false);
-        handleSubmit();
-    }, []);
-
-    const testInputStyle = React.useMemo(() => testInputCss(isActive, isEditing, name), [isEditing, name, isActive]);
-
     return (
-        <OnOutsideClick className={`${className}`} disable={!isEditing} onOutsideClick={handleOutsideClick}>
-            <span css={testInputContainerCss} onDoubleClick={handleDoubleClick}>
-                <ResizableInput
-                    ref={inputRef}
-                    css={testInputStyle}
-                    onKeyDown={handleKeyDown}
-                    onChange={handleOnChange}
-                    value={name}
-                    disabled={!isEditing}
-                />
-            </span>
-        </OnOutsideClick>
-
+        <ResizableInput
+            ref={inputRef}
+            onKeyDown={handleKeyDown}
+            onChange={handleOnChange}
+            value={name}
+            isEditingProp={isEditing}
+        // disabled={!isEditing}
+        />
     );
 };
 
-const testInputContainerCss = css``;
-const testInputCss = (isActive, isEditing, name) => {
-    return css`
-        background: transparent;
-        padding: 5px 12px;
-        margin-left: -8px !important;
-        padding-left: 8px !important;
-        border: ${isEditing ? "1px solid rgba(255, 255, 255, 0.25)" : "1px solid transparent"};
-        border-radius: ${isEditing ? "4px" : "0px"};
-        width: ${isEditing ? Math.max(7.5 * name.length, 120) + "rem" : "fit-content"};
-        user-select: ${isEditing ? "auto" : "none"};
-
-        font-family: Gilroy;
-        font-style: normal;
-        font-weight: 500;
-        font-size: 13.25px;
-        letter-spacing: 0.05em;
-
-    `;
-};
-
-function ContextMenuItemDropdown({ test, closeDropdown, renameTest, deleteTest, ...props }) {
-    const MenuItem = ({ label, onClick, ...props }) => {
-        return (
-            <div css={contextMenuItemCss} onClick={onClick}>
-                {label}
-            </div>
-        );
-    };
-
-    const handleViewReport = React.useCallback(() => {
-        shell.openExternal(resolveToFrontend(`/app/build/${test.draftBuildId}`));
-        closeDropdown();
-    }, [test]);
-
-    const handleRename = React.useCallback(() => {
-        renameTest();
-        closeDropdown();
-    }, [test]);
-    const handleDelete = React.useCallback(() => {
-        deleteTest();
-        closeDropdown();
-    }, []);
-
-    return (
-        <div
-            className={"flex flex-col justify-between h-full"}
-            css={contextMenuDropdownListContainerCss}
-        >
-            <div>
-                <MenuItem onClick={handleViewReport} label={"View Report"} className={"close-on-click"} />
-                <MenuItem onClick={handleRename} label={"Rename"} className={"close-on-click"} />
-                <MenuItem onClick={handleDelete} label={"Delete"} className={"close-on-click"} />
-            </div>
-        </div>
-    );
-}
-
-const contextMenuDropdownListContainerCss = css`
-    font-size: 13rem;
-    color: #fff;
-`;
-const contextMenuItemCss = css`
-    padding: 6rem 13rem;
-    :hover {
-        background: #687ef2 !important;
-    }
-`;
 const TestListItem = ({ test, isItemSelected, isEditingName, setIsEditingName, index, deleteTest, lock }) => {
 
     const [isHover, setIsHover] = React.useState(false);
@@ -183,6 +92,7 @@ const TestListItem = ({ test, isItemSelected, isEditingName, setIsEditingName, i
                 </div>
             </EmojiPicker>
 
+
             <TestListNameInput css={testNameInputCss} isActive={isHover} testId={test.id} isEditing={isEditingName} setIsEditing={setIsEditingName} testName={test.testName} />
             <Conditional showIf={!test.firstRunCompleted}>
                 <div css={loadingContainerCss} title={"verifying..."}>
@@ -215,6 +125,7 @@ const testItem = (isItemSelected) => css`
         visibility: visible;
     }
 }
+height: 36px;
 padding: 6px 18px; padding-right: 16px; display: flex; flex: 1; align-items: center; :hover { & > .action-buttons { display: flex !important; } }`
 
 const loadingContainerCss = css`

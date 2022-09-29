@@ -33,7 +33,7 @@ export type InputProps = {
 	className?: string;
 	inputCss?: any;
 	inputWrapperCss?: any;
-	
+
 	autoComplete?: string;
 	value?: string;
 	type?: string;
@@ -146,17 +146,10 @@ const leftIconStyle = css`
 	align-items: center;
 `;
 const inputBox = (sizeStyle: { height: number }, leftIconStyle) => css`
-	// background: linear-gradient(0deg, #0e1012, #0e1012);
-	// border: 1px solid #2a2e38;
-	// box-sizing: border-box;
-	// border-radius: 4px;
-	// color: #fff;
 	height: ${sizeStyle.height}rem;
 	padding-top: 3rem;
 	font-size: ${sizeStyle.fontSize}rem;
-	padding-left: calc(16rem + ${leftIconStyle === true ? "12rem" : "0rem"});
-
-
+	padding-left: calc(12rem + ${leftIconStyle === true ? "12rem" : "0rem"});
 	width: 100%;
 
 	:focus {

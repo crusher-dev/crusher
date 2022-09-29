@@ -119,9 +119,7 @@ export class AppWindow {
 			const url = this.window.webContents.getURL();
 			if(url.includes("#/recorder")){
 				e.preventDefault();
-				this.handleGoFullScreen(null, {fullScreen: false});	
-				this.window.loadURL(encodePathAsUrl(__dirname, "index.html"));
-
+				this.sendMessage("go-to-dashboard", {});
 				return false;
 			}
 		});

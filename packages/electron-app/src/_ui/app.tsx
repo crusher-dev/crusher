@@ -3,7 +3,7 @@ import { StepType, TourProvider, useTour } from "@reactour/tour";
 import { ipcRenderer } from "electron";
 import React from "react";
 import { useSelector, useStore } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useRoutes } from "react-router-dom";
 import { Store } from "redux";
 import { setSessionInfoMeta } from "../store/actions/app";
 import { resetRecorder, setIsWebViewInitialized } from "../store/actions/recorder";
@@ -244,6 +244,10 @@ const App = () => {
 			store.dispatch(setIsWebViewInitialized(true));
 		});
 
+		ipcRenderer.on("go-to-dashboard", async () => {
+            historyInstance.push("/", {});
+            goFullScreen(false);
+		});
         ipcRenderer.on("url-action", handleUrlAction.bind(this, store, addNotification));
 
         return () => {

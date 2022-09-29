@@ -2,13 +2,11 @@ import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
 import { iAction } from "@shared/types/action";
 import { iDevice } from "@shared/types/extension/device";
-import { iSelectorInfo } from "@shared/types/selectorInfo";
 import { ipcRenderer } from "electron";
-import { deleteRecordedSteps, recordStep, updateRecorderState } from "electron-app/src/store/actions/recorder";
-import { iElementInfo, TRecorderState } from "electron-app/src/store/reducers/recorder";
+import { recordStep } from "electron-app/src/store/actions/recorder";
+import { iElementInfo } from "electron-app/src/store/reducers/recorder";
 import { getSavedSteps } from "electron-app/src/store/selectors/recorder";
 import { AnyAction, Store } from "redux";
-import { sendSnackBarEvent } from "../components/toast";
 
 const performAction = async (action: iAction, shouldNotSave = false, isRecording = true) => {
 	return ipcRenderer.invoke("perform-action", { action, shouldNotSave, isRecording });

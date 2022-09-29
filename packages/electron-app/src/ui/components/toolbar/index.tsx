@@ -509,7 +509,12 @@ const Toolbar = (props: any) => {
 						</OnOutsideClick>
 						<DroppdownIconV2 css={css`width: 9rem; height: 6rem; margin-left: 7rem;`} />
 					</div>
-					<RedDotIcon css={css`width: 6rem; height: 6rem; margin-left: 10rem;`} />
+					{recorderInfo.url ? (
+						<div title={[TRecorderState.RECORDING_ACTIONS].includes(recorderState.type) ? "recording actions" : "waiting for current actions to finish"} className={"flex items-center"}>
+							<RedDotIcon css={[css`width: 6rem; height: 6rem; margin-left: 10rem;`, [TRecorderState.RECORDING_ACTIONS].includes(recorderState.type) ? css`& > rect { fill: #90EE90; }` : undefined]} />
+							<span className={"ml-14"} css={recorderStatusTextCss}>{[TRecorderState.RECORDING_ACTIONS].includes(recorderState.type) ? "recording-actions" : "waiting"}</span>
+						</div>
+					) : ""}
 				</div>
 			</div>
 
@@ -608,6 +613,18 @@ const Toolbar = (props: any) => {
 	);
 };
 
+const recorderStatusTextCss = css`
+	font-family: 'Gilroy';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 14rem;
+	text-decoration-line: underline;
+
+	color: #7C7C7C;
+	:hover {
+		opacity: 0.8;
+	}
+`;
 const verifySaveTestContainerStyle = css`
 	margin-left: 11rem;
 `;

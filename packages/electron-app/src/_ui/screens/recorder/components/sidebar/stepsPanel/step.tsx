@@ -54,7 +54,7 @@ const Step = ({className, isActive, onContextMenu, step, onClick, setIsActive, i
         <HoverCard disabled={hasFailed} callback={setIsEditorCardOpen.bind(this)} wrapperCss={css`z-index: 123123123 !important;`} css={css`padding: 0rem !important; background: rgb(5, 5, 5) !important; margin-left: -22rem !important; overflow: hidden !important;`} content={<StepEditor stepId={stepId} />} placement="right" type="hover" padding={8} offset={0}>
             <div onContextMenu={onContextMenu} onClick={onClick} css={[containerCss(hasFailed), isActive ? activeItemCss : undefined]}>
                     <div className={"card"} css={contentCss}>
-                        {stepInfo.isRunning ? (
+                        {true || stepInfo.isRunning ? (
                             <PointerArrowIcon css={runningPointerIconCss}/>
                         ) : ""}
                         <div css={stepTextCss}>
@@ -119,8 +119,8 @@ const runningPointerIconCss = css`
     width: 6rem;
     height: 9rem;
     position: absolute;
-    left: 8rem;
-    top: 8rem;
+    left: 5rem;
+    top: 11rem;
 `;
 const stepTextCss = css`
     flex: 1 0 50%;

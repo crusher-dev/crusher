@@ -10,14 +10,14 @@ const ResizableInput = React.forwardRef(({ isEditingProp = false, onEditModeChan
 
   useEffect(() => {
     requestAnimationFrame(() => {
-      setWidth(span.current.offsetWidth);
+      setWidth(span?.current?.offsetWidth);
     });
   }, [value]);
 
   // set width when span is set
   useEffect(() => {
     if (span && span.current) {
-      setWidth(span.current.offsetWidth);
+      setWidth(span?.current?.offsetWidth);
     }
   }, [span]);
 
@@ -52,7 +52,7 @@ const ResizableInput = React.forwardRef(({ isEditingProp = false, onEditModeChan
         }}
         onBlur={() => {
           setIsEditing(false);
-          onEditModeChange(false);
+          onEditModeChange(isEditingProp);
         }} title="" initialValue={value} size="small" className={`${className}`} css={inputCss} ref={ref} type="text" {...props} />
 
     </OnOutsideClick>

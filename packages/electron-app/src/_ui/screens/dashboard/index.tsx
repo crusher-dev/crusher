@@ -28,11 +28,12 @@ import { LinkPointer } from "../../components/LinkPointer";
 import { linkOpen } from "electron-app/src/utils/url";
 import { resolveToFrontEndPath } from "@shared/utils/url";
 
-const TitleComponent = ({ projectName }) => {
+const TitleComponent = ({ project }) => {
+    const { name, id } = project;
     return (
         <div css={titleStyle}>
-            <b css={titleBoldStyle}>{projectName}</b>
-            <LinkPointer onClick={linkOpen.bind(this, resolveToFrontEndPath("/"))} css={openAppCss}>app</LinkPointer>
+            <b css={titleBoldStyle}>{name}</b>
+            <LinkPointer onClick={linkOpen.bind(this, resolveToFrontEndPath(`/${id}/dashboard`))} css={openAppCss}>app</LinkPointer>
         </div>
     );
 };
@@ -180,7 +181,7 @@ const DashboardScreen = () => {
 
     const hasNotLoaded = isLoading || !animationComplete;
     return (
-        <CompactAppLayout footer={hasNotLoaded ? null : (<><Footer /><StickyFooter /></>)} headerRightSection={headerComponent} showHeader={!hasNotLoaded} css={loadingCSS(hasNotLoaded)} title={selectedProject && !hasNotLoaded ? <TitleComponent projectName={selectedProject.name} /> : null}>
+        <CompactAppLayout footer={hasNotLoaded ? null : (<><Footer /><StickyFooter /></>)} headerRightSection={headerComponent} showHeader={!hasNotLoaded} css={loadingCSS(hasNotLoaded)} title={selectedProject && !hasNotLoaded ? <TitleComponent project={selectedProject} /> : null}>
             {hasNotLoaded ? (<LoadingProgressBar inAppLoading={false} />) : content}
         </CompactAppLayout>
     );

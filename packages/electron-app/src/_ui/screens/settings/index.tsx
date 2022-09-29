@@ -11,13 +11,21 @@ const SettingsScreen = () => {
     }, []);
 
     return (
-        <CompactAppLayout title={<span css={titleCss}>Settings</span>}>
-            <div css={contentCss} > 
-                <SettingsModalContent css={modalCss} isOpen={true} handleClose={handleClose}/>
-            </div>   
+        <CompactAppLayout title={<span css={titleCss}>Settings</span>} css={containerCss}>
+            <div css={contentCss} >
+                <SettingsModalContent css={modalCss} isOpen={true} handleClose={handleClose} />
+            </div>
         </CompactAppLayout>
     );
 }
+
+const containerCss = css`
+height: 100%;
+background: #080809;
+padding-top: 8px;
+position: relative;
+`;
+
 
 const titleCss = css`
     font-family: Cera Pro;

@@ -37,10 +37,8 @@ const CreateFirstTest = () => {
 };
 
 const DocsGoBackActionBar = ({ buttonTitle, buttonCallback }) => {
-
 	return (
 		<div css={actionsContainerCss}>
-
 			<NormalButton title={buttonTitle} onClick={buttonCallback} css={[newButtonStyle]} />
 		</div>
 	);

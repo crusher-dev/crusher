@@ -7,15 +7,13 @@ import { StickyFooter } from "../../containers/common/stickyFooter";
 
 const SettingsScreen = () => {
 	const navigate = useNavigate();
-	const handleClose = React.useCallback(() => {
-		return navigate("/");
-	}, []);
+
 	return (
 		<CompactAppLayout
 			footer={<StickyFooter />}
 			title={<span css={titleCss}>Settings</span>} css={containerCss}>
 			<SettingsLayout >
-				sdf
+				<SettingsModalContent />
 			</SettingsLayout>
 		</CompactAppLayout>
 	);
@@ -46,7 +44,7 @@ export const SettingsLayout = (props: any) => {
 			<div css={leftSection} className="py-16 px-16">
 				sd
 			</div>
-			<div>
+			<div className="w-full">
 				{children}
 			</div>
 		</div>
@@ -66,6 +64,6 @@ margin-top:-10px;
 const leftSection = css`
 	background: #080808;
 	border-right: .5px solid rgba(153, 153, 153, 0.12);
-	width: 220px;
+	min-width: 220px;
 
 `

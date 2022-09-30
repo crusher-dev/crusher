@@ -304,7 +304,7 @@ const DeviceFrame = () => {
 								title={"crusher-webview"}
 								src={"about:blank"}
 								partition={"crusherwebview"}
-								webpreferences="nativeWindowOpen=yes"
+								webpreferences="nativeWindowOpen=yes, contextIsolation=true, sandbox=true"
 								allowpopups
 								nodeintegration={true}
 							/>

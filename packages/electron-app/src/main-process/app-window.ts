@@ -111,7 +111,7 @@ export class AppWindow {
 				worldSafeExecuteJavaScript: false,
 				contextIsolation: false,
 				webviewTag: true,
-				nodeIntegrationInSubFrames: true,
+				nodeIntegrationInSubFrames: false,
 				webSecurity: false,
 				nativeWindowOpen: true,
 				devTools: true,

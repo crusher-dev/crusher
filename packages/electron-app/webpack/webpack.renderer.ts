@@ -14,9 +14,6 @@ const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 
 // Remove output directory
 const OUTPUT_DIR = path.resolve(__dirname, "../../../output/crusher-electron-app/");
-if (fs.existsSync(OUTPUT_DIR)) {
-	fs.rmdirSync(OUTPUT_DIR, { force: true, recursive: true });
-}
 
 const isDevelopment = true;
 

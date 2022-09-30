@@ -5,10 +5,6 @@ import { forwardToMain, forwardToRenderer, replayActionMain, replayActionRendere
 import { isProduction } from "../utils";
 import loggerMiddleware from "redux-logger";
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-const hotModule = module.hot;
-
 const composeEnhancers =
 	typeof window === "object" && (window as any)["__REDUX_DEVTOOLS_EXTENSION_COMPOSE__"]
 		? (window as any)["__REDUX_DEVTOOLS_EXTENSION_COMPOSE__"]({})
@@ -44,9 +40,6 @@ export default function configureStore(intialState: any, scope = "main", isTempo
 
 	const store = createStore(rootReducer, intialState, composedEnhancers);
 
-	if (hotModule) {
-		hotModule.accept("./reducers", () => store?.replaceReducer(rootReducer));
-	}
 
 	if (!isTemporary) {
 		if (scope === "main") {

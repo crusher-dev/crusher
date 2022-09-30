@@ -146,8 +146,8 @@ export const newInputBoxCSS = css`
 		border: 0.5px solid rgba(56, 56, 56, 0.6);
 		border-radius: 10rem;
 		font-weight: 500;
+		height: 40rem;
 		:focus {
-			// background: #121316;
 			background: rgba(77, 77, 77, 0.05);
 			border: 0.5px solid #dadada;
 			border-color: #dadada;
@@ -155,11 +155,7 @@ export const newInputBoxCSS = css`
 		::placeholder {
 			color: #808080;
 		}
-		:hover {
-			// box-shadow: 0px 0px 0px 3px rgba(28, 28, 28, 0.72);
-		}
 
-		height: 40rem;
 		padding-top: 2rem;
 	}
 
@@ -188,7 +184,7 @@ const buttonCss = css`
 	border-color: transparent !important;
 
 	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0) !important;
-
+	height: 40rem;
 	:hover {
 		background: transparent !important;
 		color: #cecece;

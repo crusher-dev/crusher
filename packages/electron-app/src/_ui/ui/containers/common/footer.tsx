@@ -101,7 +101,7 @@ const containerCss = css`
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	border-top: 0.5px solid rgba(255, 255, 255, 0.08);
+	border-top: 0.5px solid rgba(153, 153, 153, 0.12);
 `;
 const leftSectionCss = css`
 	display: flex;

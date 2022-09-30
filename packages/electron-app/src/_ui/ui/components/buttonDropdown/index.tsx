@@ -137,7 +137,7 @@ const downIconContainerCss = css`
 	background: #7146cc;
 	display: flex;
 	align-items: center;
-	padding: 0rem 7rem;
+	padding: 0rem 6rem;
 	border-top-right-radius: 6rem;
 	border-bottom-right-radius: 6rem;
 

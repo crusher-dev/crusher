@@ -284,7 +284,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 			rules: newTheme.rules.slice(),
 			colors: {
 				...newTheme.colors,
-				"editor.background": "#080809",
+				"editor.background": "#080808",
 			},
 		});
 	};
@@ -449,7 +449,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 				css={css`
 					height: auto;
 					padding: 12rem 34rem;
-					background: #080809;
+					background: #080808;
 					padding-left: 4rem;
 					border-bottom-left-radius: 12px;
 					border-bottom-right-radius: 12px;
@@ -622,7 +622,7 @@ const bottomBarStyle = css`
 	display: flex;
 	align-items: center;
 	padding: 12rem 28rem;
-	background: #080809;
+	background: #080808;
 `;
 const saveButtonStyle = css`
 

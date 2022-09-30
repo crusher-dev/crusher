@@ -44,7 +44,7 @@ const CompactAppLayout = ({ className, title, headerRightSection, showHeader = t
 					)}
 				</div>
 			</Conditional>
-			<div css={contentCss} className={"content-section"}>
+			<div css={contentCss} className={"content-section pt-10"}>
 				{children}
 			</div>
 			<Conditional showIf={!!footer}>
@@ -85,7 +85,7 @@ const containerCss = css`
 
 	border: none;
 	border-radius: 0px;
-	background: #080809;
+	background: #080808;
 `;
 
 const dragCss = css`
@@ -117,13 +117,12 @@ const titleCss = css`
 	flex: 1;
 	display: flex;
 	justify-content: center;
-	padding-top: 3rem;
+	padding-top: 6rem;
 	font-family: Cera Pro;
 
 	font-weight: 500;
 	font-size: 13.4px;
 	color: #ffffff;
-	margin-left: 36rem;
 `;
 const headerRightSectionCss = css`
 	position: relative;
@@ -135,11 +134,13 @@ const headerRightSectionCss = css`
 	gap: 8px;
 	display: flex;
 	align-items: center;
+
+	height: 22px;
 `;
 
 const contentCss = css`
 	flex: 1;
-	padding-top: 18px;
+	padding-top: 20px;
 	overflow-y: overlay;
 	::-webkit-scrollbar {
 		background: transparent;
@@ -153,7 +154,7 @@ const contentCss = css`
 const footerCss = css`
 	margin-top: auto;
 	border-top-style: solid;
-	border-top-color: rgba(255, 255, 255, 0.08);
+	border-top-color: rgba(153, 153, 153, 0.12);
 `;
 
 export { CompactAppLayout };

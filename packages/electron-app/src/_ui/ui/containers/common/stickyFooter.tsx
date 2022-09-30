@@ -17,7 +17,7 @@ import { CloudCrusher } from "electron-app/src/lib/cloud";
 interface IProps {
 	className?: string;
 }
-const StickyFooter = ({ className }: IProps) => {
+export const StickyFooter = ({ className }: IProps) => {
 	const { latestNotification, updateNotification } = useBuildNotifications();
 	const store = useStore();
 	const proxyIsInitializing = useSelector(getIsProxyInitializing);
@@ -104,14 +104,14 @@ const StickyFooter = ({ className }: IProps) => {
 };
 
 const containerCss = css`
-	background: #0d0d0e;
+	background: #0D0D0D;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	border-top: 0.5px solid rgba(255, 255, 255, 0.08);
+	border-top: 0.5px solid rgba(153, 153, 153, 0.12);
 `;
 const docsButtonCss = css`
-	background: #0f1010;
+	background: #000000;
 	border-left: 0.5px solid #242424;
 	font-family: "Cera Pro";
 

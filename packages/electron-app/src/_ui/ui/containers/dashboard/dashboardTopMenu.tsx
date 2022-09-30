@@ -24,7 +24,7 @@ function DashboardTopDropdownContent({ setShowActionMenu, isRecorder }) {
 			if (projectConfigFileJson[projectId]) {
 				setProjectConfigFile(projectConfigFileJson[projectId]);
 			}
-		} catch {}
+		} catch { }
 	}, []);
 
 	const handleOpenConfigFile = React.useCallback(() => {
@@ -117,7 +117,7 @@ export const MenuDropdown = ({ className, isRecorder, hideDropdown, callback }) 
 
 const crusherDropdownContainerStyle = css`
 	display: flex;
-	gap: 8rem;
+	gap: 4rem;
 	align-items: center;
 	:hover {
 		opacity: 0.8;

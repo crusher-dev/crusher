@@ -140,7 +140,7 @@ const createProjectBannerCss = css`
 `;
 const containerCss = css`
 	height: 100%;
-	background: #080809;
+	background: #080808;
 	position: relative;
 `;
 

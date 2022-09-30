@@ -3,6 +3,7 @@ import { css } from "@emotion/react";
 import { CompactAppLayout } from "../../layout/CompactAppLayout";
 import { SettingsModalContent } from "../../containers/components/toolbar/settingsModal";
 import { useNavigate } from "react-router-dom";
+import { StickyFooter } from "../../containers/common/stickyFooter";
 
 const SettingsScreen = () => {
 	const navigate = useNavigate();
@@ -10,17 +11,19 @@ const SettingsScreen = () => {
 		return navigate("/");
 	}, []);
 	return (
-		<CompactAppLayout title={<span css={titleCss}>Settings</span>} css={containerCss}>
-			<div css={contentCss}>
-				<SettingsModalContent css={modalCss} isOpen={true} handleClose={handleClose} />
-			</div>
+		<CompactAppLayout
+			footer={<StickyFooter />}
+			title={<span css={titleCss}>Settings</span>} css={containerCss}>
+			<SettingsLayout >
+				sdf
+			</SettingsLayout>
 		</CompactAppLayout>
 	);
 };
 
 const containerCss = css`
 	height: 100%;
-	background: #080809;
+	background: #080808;
 	position: relative;
 `;
 
@@ -30,21 +33,39 @@ const titleCss = css`
 	font-weight: 500;
 	font-size: 13.4px;
 	color: #ffffff;
-	margin-left: 36rem;
-`;
-const contentCss = css`
-	display: flex;
-	flex: 1;
-	flex-direction: column;
-	height: 100%;
-`;
-const modalCss = css`
-	display: flex;
-	flex: 1;
-	flex-direction: column;
-	.submit-action-button {
-		margin-top: auto;
-	}
 `;
 
+
 export { SettingsScreen };
+
+
+export const SettingsLayout = (props: any) => {
+	const { children } = props;
+	return (
+		<div css={container} className="flex">
+			<div css={leftSection} className="py-16 px-16">
+				sd
+			</div>
+			<div>
+				{children}
+			</div>
+		</div>
+	)
+}
+
+const container = css`
+background: #080808;
+border-width: 0.5px 0.5px 0px 0.5px;
+border-style: solid;
+border-color:  rgba(153, 153, 153, 0.12);
+font-size: 13px;
+min-height: 568px;
+margin-top:-10px;
+`
+
+const leftSection = css`
+	background: #080808;
+	border-right: .5px solid rgba(153, 153, 153, 0.12);
+	width: 220px;
+
+`

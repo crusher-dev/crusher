@@ -15,6 +15,6 @@ function LoadingScreen() {
 	);
 }
 const containerCss = css`
-	background: #080809;
+	background: #080808;
 `;
 export { LoadingScreen };

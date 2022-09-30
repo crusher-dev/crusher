@@ -23,7 +23,7 @@ const LinkPointer = ({ children, showExternalIcon = true, className, ...props }:
 const containerCss = css`
 	display: flex;
 	align-items: center;
-	padding: 6rem 6rem;
+	padding: 4rem 6rem;
 	:hover {
 		background: linear-gradient(0deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.06)), #131314;
 		border-radius: 6px;

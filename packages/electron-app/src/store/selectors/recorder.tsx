@@ -14,7 +14,8 @@ export const getRecorderInfoUrl = (state: iReduxState) => ({
 });
 
 export const isInspectModeOn = (state: iReduxState) => state.recorder.isInspectModeOn;
-export const isInspectElementSelectorModeOn = (state: iReduxState) => state.recorder.isInspectElementSelectorModeOn;
+export const isInspectElementSelectorModeOn = (state: iReduxState) => state.recorder.elementInspectModeMeta?.isOn;
+export const getInspectElementSelectorMeta = (state: iReduxState) => state.recorder.elementInspectModeMeta;
 
 export const getSelectedElement = (state: iReduxState) => state.recorder.selectedElement;
 
@@ -22,7 +23,7 @@ export const getSavedSteps = (state: iReduxState) => state.recorder.savedSteps;
 export const getStepInfo = (stepId: any) => {
 	return (state: iReduxState) => {
 		const step = getSavedSteps(state)[stepId];
-		const selectors = step.payload?.selectors?.length ? step.payload.selectors[0].value : "window";
+		const selectors = step.payload?.selectors?.length ? step.payload.selectors[0].value : null;
 
 		const actionDescriptor = new ActionDescriptor();
 		actionDescriptor.initActionHandlers();

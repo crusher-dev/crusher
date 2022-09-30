@@ -19,27 +19,10 @@ const EditableTestName = ({ testName, testId }) => {
 	const [name, setName] = React.useState(testName);
 	const inputRef = React.useRef<HTMLInputElement>(null);
 
-	const handleOnChange = React.useCallback((event) => {
-		setName(event.target.value);
-	}, []);
-
-	const handleSubmit = React.useCallback(() => {
-		CloudCrusher.updateTestName(testId, inputRef.current.value);
-	}, [name]);
-
-	const handleKeyDown = React.useCallback((event) => {
-		if (event.key === "Enter") {
-			setTestEditName(null);
-			handleSubmit();
-		}
-	}, []);
-
-	const editModeChangeHandle = (mode) => {
-		if (mode) {
-			setTestEditName(testId);
-		} else {
-			setTestEditName(null);
-		}
+	const handleOnChange = (value) => {
+		CloudCrusher.updateTestName(testId, value);
+		setTestEditName(false as any);
+		setName(value);
 	};
 
 	const editThisTestName = testEditName === testId;
@@ -47,11 +30,9 @@ const EditableTestName = ({ testName, testId }) => {
 	return (
 		<ResizableInput
 			ref={inputRef}
-			onKeyDown={handleKeyDown}
 			onChange={handleOnChange}
 			value={name}
 			isEditingProp={editThisTestName}
-			onEditModeChange={editModeChangeHandle.bind(this)}
 		/>
 	);
 };

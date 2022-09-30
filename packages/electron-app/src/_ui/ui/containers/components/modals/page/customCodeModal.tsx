@@ -10,6 +10,7 @@ import { ipcRenderer, remote, shell } from "electron";
 import { updateRecordedStep, updateRecorderState } from "electron-app/src/store/actions/recorder";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 import { getRecorderState } from "electron-app/src/store/selectors/recorder";
+import { getAppURl } from "electron-app/src/utils";
 import {
 	deleteCodeTemplate,
 	getCodeTemplates,
@@ -21,6 +22,7 @@ import {
 import { DownIcon } from "electron-app/src/_ui/constants/old_icons";
 import { MenuItem } from "electron-app/src/_ui/ui/components/dropdown/menuItems";
 import * as fs from "fs";
+import * as url from "url";
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 import * as path from "path";
 import React, { useRef } from "react";
@@ -33,14 +35,15 @@ function ensureFirstBackSlash(str) {
 	return str.length > 0 && str.charAt(0) !== "/" ? "/" + str : str;
 }
 
-function uriFromPath(_path) {
-	const pathName = path.resolve(_path).replace(/\\/g, "/");
-	return encodeURI("file://" + ensureFirstBackSlash(pathName));
-}
+// function uriFromPath(_path) {
+// 	const pathName = path.resolve(_path).replace(/\\/g, "/");
+// 	return encodeURI("file://" + ensureFirstBackSlash(pathName));
+// }
 
+// @TODO: Add a proper fix here, instead of loading monaco from remote url.
 loader.config({
 	paths: {
-		vs: uriFromPath(path.join(remote.app.getAppPath(), "static/monaco-editor/min/vs")),
+		vs: url.resolve(getAppURl(), "/static/monaco-editor/min/vs/"),
 	},
 });
 

@@ -153,11 +153,6 @@ const InputValueEditor = ({ step, stepId }) => {
 	);
 };
 
-const fieldInputCss = css`
-	input {
-
-	}
-`;
 const StepName = ({ stepId }) => {
 	const [isStepNameEditing, setIsStepNameEditing] = useAtom(editInputAtom);
 

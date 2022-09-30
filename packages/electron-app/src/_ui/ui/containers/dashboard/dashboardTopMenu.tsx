@@ -11,7 +11,6 @@ import { getCurrentSelectedProjct } from "electron-app/src/store/selectors/app";
 import { Dropdown } from "@dyson/components/molecules/Dropdown";
 import { MenuItem } from "../../components/dropdown/menuItems";
 
-
 function DashboardTopDropdownContent({ setShowActionMenu, isRecorder }) {
 	const navigate = useNavigate();
 	const store = useStore();

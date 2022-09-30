@@ -175,7 +175,7 @@ export class AppWindow {
 		});
 
 		// Disable zoom-in/zoom-out
-		this.window.webContents.on("did-finish-load", () => { });
+		this.window.webContents.on("did-finish-load", () => {});
 
 		this.window.webContents.on("did-fail-load", () => {
 			this.window.webContents.openDevTools();
@@ -1001,7 +1001,7 @@ export class AppWindow {
 			}
 			this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
 			return true;
-		} catch(err) {
+		} catch (err) {
 			console.error(err);
 			this.store.dispatch(updateRecorderState(TRecorderState.ACTION_REQUIRED, {}));
 			this.setRemainingSteps(reaminingSteps);

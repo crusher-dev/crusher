@@ -21,7 +21,7 @@ export interface iSettings {
 export interface ISessionMeta {
 	editing?: { testId: string } | undefined;
 	remainingSteps?: iAction[] | undefined;
-	selectedTest?: {testName: string; id: string;};
+	selectedTest?: { testName: string; id: string };
 }
 
 export interface IProxyState {
@@ -95,8 +95,8 @@ const appReducer = (state: IAppReducer = initialState, action: AnyAction): IAppR
 				sessionMeta: {
 					...state.sessionMeta,
 					selectedTest: action.payload.testInfo,
-				}
-			}
+				},
+			};
 		default:
 			return state;
 	}

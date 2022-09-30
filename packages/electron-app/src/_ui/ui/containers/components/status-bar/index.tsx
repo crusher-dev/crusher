@@ -483,7 +483,6 @@ const StatusBar = () => {
 									data={SAMPLE_CONTEXT}
 								/>
 							</div>
-
 						</div>
 					</Conditional>
 				</Conditional>

@@ -135,7 +135,10 @@ const DashboardScreen = () => {
 				// sendSnackBarEvent({ type: "success", message: "Test started successfully!" });
 			});
 		} else if (id === "RUN_LOCAL") {
-			triggerLocalBuild(tests.list.map((test) => test.id), tests.list);
+			triggerLocalBuild(
+				tests.list.map((test) => test.id),
+				tests.list,
+			);
 		}
 	};
 	const headerComponent = React.useMemo(() => {

@@ -285,7 +285,7 @@ const useTestName = () => {
 		dispatch(setTestName(testName));
 	};
 
-	return { testName, setTestName: updateTestName }
+	return { testName, setTestName: updateTestName };
 };
 const Toolbar = (props: any) => {
 	const [url, setUrl] = React.useState("" || null);
@@ -294,10 +294,10 @@ const Toolbar = (props: any) => {
 	const [urlInputError, setUrlInputError] = React.useState({ value: false, message: "" });
 	const [isEditingTestName, setIsEditingTestName] = React.useState(false);
 	const { testName, setTestName } = useTestName();
-	const currentTestInfo = useSelector(getCurrentTestInfo)
+	const currentTestInfo = useSelector(getCurrentTestInfo);
 
 	React.useEffect(() => {
-		if(currentTestInfo) {
+		if (currentTestInfo) {
 			setTestName(currentTestInfo.testName);
 		}
 	}, [currentTestInfo]);

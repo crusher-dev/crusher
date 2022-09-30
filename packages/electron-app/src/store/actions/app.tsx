@@ -56,5 +56,5 @@ export const setProxyInitializing = (isInitializing: boolean) => ({
 
 export const setCurrentTestInfo = (testInfo: any) => ({
 	type: SET_CURRENT_TEST_INFO,
-	payload: {testInfo}
+	payload: { testInfo },
 });

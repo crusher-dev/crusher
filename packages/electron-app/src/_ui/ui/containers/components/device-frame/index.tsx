@@ -206,7 +206,7 @@ const DeviceFrame = () => {
 	const store = useStore();
 
 	const getPreloadScriptPath = () => {
-		return`file://${process.env.OUTPUT_DIR}/` +"webview-preload.js";
+		return `file://${process.env.OUTPUT_DIR}/` + "webview-preload.js";
 	};
 
 	React.useEffect(() => {
@@ -359,7 +359,7 @@ const topContainerStyle = css`
 `;
 const containerStyle = (isStatusBarVisible) => css`
 	width: 100%;
-	height: ${ isStatusBarVisible ? "calc(100% - 30rem)" : "100%" };
+	height: ${isStatusBarVisible ? "calc(100% - 30rem)" : "100%"};
 	display: flex;
 	align-items: center;
 	justify-content: center;

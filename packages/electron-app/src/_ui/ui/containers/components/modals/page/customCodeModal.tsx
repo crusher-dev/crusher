@@ -529,18 +529,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 						gap: 20rem;
 						align-items: center;
 					`}
-				>
-					{/* <div css={actionLinkStyle}>View log</div> */}
-					{/* <div css={[actionLinkStyle, `display: flex; align-items: center; gap: 12rem;`]}>
-						<PlayIconV2
-							css={css`
-								width: 16rem;
-								height: 16rem;
-							`}
-						/>
-						<span>Run with context</span>
-					</div> */}
-				</div>
+				></div>
 				<div
 					css={css`
 						display: flex;
@@ -548,8 +537,6 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 						margin-left: auto;
 					`}
 				>
-					{/* <div css={runLinkStyle} onClick={runCustomCode}>Run</div> */}
-
 					<Dropdown
 						initialState={showActionMenu}
 						component={
@@ -598,25 +585,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 						>
 							{props.stepAction ? "Save step" : "Save and run"}
 						</Button>
-						<div
-							css={css`
-								background: #7353f5;
-								display: flex;
-								align-items: center;
-								padding: 0rem 9rem;
-								border-top-right-radius: 6rem;
-								border-bottom-right-radius: 6rem;
-								border-left-color: #4d37a7;
-								border-left-width: 2.5rem;
-								border-left-style: solid;
-								:hover {
-									filter: brightness(75%);
-									background: #6749de;
-									border-left-color: #6749de;
-								}
-								align-self: stretch;
-							`}
-						>
+						<div css={buttonSideBar}>
 							<DownIcon
 								fill={"#fff"}
 								css={css`
@@ -658,13 +627,28 @@ const bottomBarStyle = css`
 	background: #080809;
 `;
 const saveButtonStyle = css`
-	margin-left: 24rem;
-	width: 128rem;
-	height: 30rem;
+	border-radius: 8px;
+	background: #b341f9 !important;
+	font-size: 14rem;
+	box-sizing: border-box;
+	border: 0.5px solid #b341f9 !important;
+	border-radius: 8rem 0 0 8rem !important;
+	height: 36rem;
+	padding: 0 8rem !important;
+`;
 
-	border-right: 0px !important;
-	border-top-right-radius: 0px !important;
-	border-bottom-right-radius: 0px !important;
+const buttonSideBar = css`
+	background: #b341f9;
+	display: flex;
+	align-items: center;
+	padding: 0rem 9rem;
+	border-top-right-radius: 6rem;
+	border-bottom-right-radius: 6rem;
+	border-left-color: #8b37bd;
+	border-left-width: 1rem;
+	border-left-style: solid;
+
+	align-self: stretch;
 `;
 
 export { CustomCodeModal };

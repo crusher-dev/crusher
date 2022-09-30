@@ -54,7 +54,7 @@ const tranformActionsToList = (): IActionItem[] => {
 
 const transformResultsToActions = (list) => {
 	const finalObj = {};
-	list.map(({item}) => {
+	list.map(({ item }) => {
 		if (!finalObj[item.category]) {
 			finalObj[item.category] = {};
 		}
@@ -65,7 +65,7 @@ const transformResultsToActions = (list) => {
 		} else {
 			finalObj[itemCategory] = item;
 		}
-	})
+	});
 	return finalObj;
 };
 

@@ -160,7 +160,7 @@ const consoleIconCss = (isActive) => css`
 	width: 11.7rem;
 	height: 12.3rem;
 	path {
-		fill: ${isActive ? "rgba(255, 255, 255, 0.8)" : "rgba(255, 255, 255, 0.35)"}; 
+		fill: ${isActive ? "rgba(255, 255, 255, 0.8)" : "rgba(255, 255, 255, 0.35)"};
 	}
 	:hover {
 		opacity: 0.7;

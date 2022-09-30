@@ -3,7 +3,7 @@ import { applyMiddleware, createStore, compose, Store, StoreEnhancer } from "red
 import { rootReducer } from "./reducers";
 import { forwardToMain, forwardToRenderer, replayActionMain, replayActionRenderer } from "electron-redux";
 import { isProduction } from "../utils";
-import loggerMiddleware from 'redux-logger'
+import loggerMiddleware from "redux-logger";
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore

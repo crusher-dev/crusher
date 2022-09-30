@@ -78,7 +78,6 @@ const ActionsPanel = ({ className }: IProps) => {
 };
 
 const goBackCss = css`
-
 	font-size: 12rem;
 
 	letter-spacing: 0.02em;
@@ -89,7 +88,6 @@ const goBackIconCss = css`
 	width: 10rem;
 `;
 const elementSelectedTextCss = css`
-
 	font-weight: 500;
 	font-size: 14rem;
 

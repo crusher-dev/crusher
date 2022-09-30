@@ -99,8 +99,6 @@ const headerCss = css`
 	height: 30px;
 `;
 const testsCountCss = css`
-	
-	
 	font-weight: 400;
 	font-size: 12rem;
 

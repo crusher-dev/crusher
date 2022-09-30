@@ -25,8 +25,7 @@ const saveButtonStyle = css`
 	height: 30rem;
 	background: #a966ff;
 	border-radius: 6rem;
-	
-	
+
 	font-weight: 600;
 	font-size: 14rem;
 	line-height: 17rem;

@@ -77,15 +77,13 @@ const layoutCss = css`
 
 const headingCss = css`
 	font-family: Cera Pro;
-	
+
 	font-weight: 700;
 	font-size: 16rem;
 
 	color: #ffffff;
 `;
 const descriptionCss = css`
-	
-	
 	font-weight: 400;
 	font-size: 12rem;
 	text-align: center;
@@ -117,8 +115,7 @@ const loginButtonCss = css`
 	border-radius: 8px;
 	padding: 6rem;
 	width: 125rem;
-	
-	
+
 	font-weight: 600;
 	font-size: 14rem;
 

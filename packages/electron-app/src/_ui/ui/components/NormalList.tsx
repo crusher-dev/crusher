@@ -69,8 +69,6 @@ const headerCss = css`
 	align-items: center;
 `;
 const testsCountCss = css`
-	
-	
 	font-weight: 400;
 	font-size: 12rem;
 

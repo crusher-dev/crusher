@@ -23,7 +23,6 @@ const linkContainerStyle = css`
 	border-radius: 6px;
 	padding: 12rem 18rem;
 
-
 	font-size: 11rem;
 
 	color: #888888;

@@ -57,7 +57,6 @@ const runCommandButtonCss = css`
 	gap: 4px;
 	background: #b12af0;
 
-
 	font-weight: 600;
 	font-size: 14px;
 	text-align: center;
@@ -105,7 +104,6 @@ const rocketIconCss = css`
 	height: 20px;
 `;
 const createProjectTitleTextCss = css`
-
 	font-weight: 700;
 	font-size: 17px;
 
@@ -114,7 +112,6 @@ const createProjectTitleTextCss = css`
 	margin-bottom: 1px;
 `;
 const createProjectDescriptionCss = css`
-
 	font-size: 12px;
 
 	letter-spacing: 0.03em;
@@ -253,7 +250,6 @@ const ProjectList = ({ projects }) => {
 };
 
 const testItemStyle = css`
-
 	font-size: 14px;
 	letter-spacing: 0.03em;
 

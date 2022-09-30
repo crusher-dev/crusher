@@ -379,8 +379,6 @@ const Toolbar = (props: any) => {
 		return (
 			<div
 				css={css`
-					
-					
 					font-weight: 400;
 					font-size: 12.7rem;
 
@@ -447,7 +445,7 @@ const Toolbar = (props: any) => {
 						align-items: center;
 						font-size: 13.5rem;
 						color: #fff;
-						
+
 						font-weight: 400;
 					`}
 				>
@@ -618,7 +616,6 @@ const Toolbar = (props: any) => {
 };
 
 const recorderStatusTextCss = css`
-
 	font-size: 14rem;
 	color: #7c7c7c;
 	:hover {

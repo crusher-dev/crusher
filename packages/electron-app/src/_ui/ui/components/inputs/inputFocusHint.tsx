@@ -100,8 +100,6 @@ const inputCss = css`
 `;
 
 const hintCss = css`
-	
-	
 	font-weight: 400;
 	font-size: 12.7rem;
 

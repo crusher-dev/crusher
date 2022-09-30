@@ -31,8 +31,7 @@ const saveButtonStyle = css`
 	width: 100rem;
 	background: transparent;
 	border-radius: 6rem;
-	
-	
+
 	font-weight: 600;
 	font-size: 13.6rem;
 	border: 0.5px solid #ffffff;
@@ -161,7 +160,7 @@ const contentContainerStyle = css`
 const headingStyle = css`
 	margin-top: 24rem;
 	font-family: Cera Pro;
-	
+
 	font-weight: 900;
 	font-size: 18rem;
 	text-align: center;
@@ -174,8 +173,6 @@ const highlightStyle = css`
 const descriptionStyle = css`
 	margin-top: 12rem;
 
-	
-	
 	font-weight: 400;
 	font-size: 14rem;
 	text-align: center;
@@ -200,8 +197,7 @@ const actionsBarContainerStyle = css`
 `;
 const waitingTextStyle = css`
 	margin-top: 40rem;
-	
-	
+
 	font-weight: 400;
 	font-size: 13rem;
 	text-align: center;

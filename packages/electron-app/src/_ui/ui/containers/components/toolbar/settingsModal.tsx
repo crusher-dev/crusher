@@ -319,7 +319,7 @@ const buttonStyle = css`
 const inputStyle = css`
 	background: #1a1a1c;
 	border-radius: 6rem;
-	
+
 	font-size: 14rem;
 	min-width: 358rem;
 	color: #fff;

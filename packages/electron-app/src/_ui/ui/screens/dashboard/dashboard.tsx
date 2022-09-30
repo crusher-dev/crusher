@@ -51,7 +51,6 @@ const CreateTestLink = (props) => {
 	);
 };
 const createTestLinkStyle = css`
-
 	font-weight: 500;
 	font-size: 14px;
 	line-height: 14px;
@@ -269,7 +268,7 @@ function TestListItem({ test, isActive, deleteItem, setLockState, projectId, onM
 								opacity: 0.8;
 							}
 						`}
-					//  onClick={() => { navigate("/recorder"); goFullScreen(); setTimeout(() => {performReplayTestUrlAction(test.id);}, 500); }}
+						//  onClick={() => { navigate("/recorder"); goFullScreen(); setTimeout(() => {performReplayTestUrlAction(test.id);}, 500); }}
 					>
 						<PlayIcon
 							css={css`
@@ -305,18 +304,18 @@ function TestList({ userTests, deleteTest, projectId }) {
 		<ul css={testItemStyle}>
 			{userTests
 				? userTests.map((test, index) => {
-					return (
-						<TestListItem
-							key={test.id}
-							deleteItem={deleteTest}
-							projectId={projectId}
-							test={test}
-							isActive={lastHoverItem === index}
-							setLockState={handleSetLockState}
-							onMouseEnterCallback={onMouseEnterCallback.bind(this, index)}
-						/>
-					);
-				})
+						return (
+							<TestListItem
+								key={test.id}
+								deleteItem={deleteTest}
+								projectId={projectId}
+								test={test}
+								isActive={lastHoverItem === index}
+								setLockState={handleSetLockState}
+								onMouseEnterCallback={onMouseEnterCallback.bind(this, index)}
+							/>
+						);
+				  })
 				: ""}
 		</ul>
 	);
@@ -332,7 +331,6 @@ const EditIcon = (props) => (
 );
 
 const runTextStyle = css`
-
 	font-weight: 600;
 	font-size: 13rem;
 
@@ -353,7 +351,6 @@ const PlayIcon = (props) => (
 );
 
 const testItemStyle = css`
-
 	font-size: 14px;
 	letter-spacing: 0.03em;
 
@@ -561,15 +558,12 @@ const DashboardFooter = ({ userTests, projectId }) => {
 	);
 };
 
-
-
 const saveButtonStyle = css`
 	width: 92rem;
 	height: 30rem;
 	background: linear-gradient(0deg, #9462ff, #9462ff);
 	border-radius: 6rem;
-	
-	
+
 	font-weight: 600;
 	font-size: 14rem;
 	line-height: 17rem;
@@ -579,7 +573,6 @@ const saveButtonStyle = css`
 	}
 `;
 const infoTextStyle = css`
-
 	font-size: 13rem;
 
 	color: rgba(255, 255, 255, 0.67);

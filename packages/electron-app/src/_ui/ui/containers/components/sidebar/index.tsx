@@ -32,8 +32,6 @@ const Sidebar = ({ className }: any) => {
 							<div>
 								<div
 									css={css`
-										
-										
 										font-weight: 700;
 										font-size: 15rem;
 									`}
@@ -43,8 +41,7 @@ const Sidebar = ({ className }: any) => {
 								<div
 									css={css`
 										margin-top: 4rem;
-										
-										
+
 										font-weight: 400;
 										font-size: 12rem;
 										color: rgba(255, 255, 255, 0.9);

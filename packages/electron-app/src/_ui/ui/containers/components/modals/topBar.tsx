@@ -70,7 +70,6 @@ const headingStyle = css`
 	color: #FFFFFF;
 `;
 const subHeadingStyle = css`
-	
 	font-size: 14rem;
 	color: #ffffff;
 	font-family: Cera Pro;

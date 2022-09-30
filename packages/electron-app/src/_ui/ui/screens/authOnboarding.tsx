@@ -32,7 +32,6 @@ const footerContentCss = css`
 	gap: 60rem;
 `;
 const footerLinkCss = css`
-
 	font-weight: 500;
 	font-size: 14.5px;
 	line-height: 16px;
@@ -217,7 +216,6 @@ const ClipboardIcon = (props) => (
 );
 
 const linkBoxCss = css`
-
 	font-weight: 500;
 	font-size: 16px;
 	text-align: center;
@@ -266,7 +264,6 @@ const inputFormContainerCss = css`
 `;
 
 const noteCss = css`
-
 	font-size: 12px;
 	letter-spacing: 0.03em;
 	margin-top: 20px;

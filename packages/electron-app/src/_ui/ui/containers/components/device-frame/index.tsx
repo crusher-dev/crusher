@@ -35,20 +35,19 @@ const CrashScreen = () => {
 	return (
 		<div
 			css={css`
-			width: 100%;
-			height: 100%;
-			background: transparent;
-			position: absolute;
-			left: 0;
-			top: 0;
-			z-index: 998;
-			background: rgba(0, 0, 0, 0.96);
-			color: #fff;
-			font-size: 14rem;
-			display: flex;
-			color: rgba(255, 255, 255, 0.57)
-			
-		`}
+				width: 100%;
+				height: 100%;
+				background: transparent;
+				position: absolute;
+				left: 0;
+				top: 0;
+				z-index: 998;
+				background: rgba(0, 0, 0, 0.96);
+				color: #fff;
+				font-size: 14rem;
+				display: flex;
+				color: rgba(255, 255, 255, 0.57);
+			`}
 		>
 			<div
 				css={css`
@@ -113,20 +112,19 @@ const PageLoadFailedScreen = () => {
 	return (
 		<div
 			css={css`
-			width: 100%;
-			height: 100%;
-			background: transparent;
-			position: absolute;
-			left: 0;
-			top: 0;
-			z-index: 998;
-			background: rgba(0, 0, 0, 0.96);
-			color: #fff;
-			font-size: 14rem;
-			display: flex;
-			color: rgba(255, 255, 255, 0.57)
-			
-		`}
+				width: 100%;
+				height: 100%;
+				background: transparent;
+				position: absolute;
+				left: 0;
+				top: 0;
+				z-index: 998;
+				background: rgba(0, 0, 0, 0.96);
+				color: #fff;
+				font-size: 14rem;
+				display: flex;
+				color: rgba(255, 255, 255, 0.57);
+			`}
 		>
 			<div
 				css={css`

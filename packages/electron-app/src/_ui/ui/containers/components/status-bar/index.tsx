@@ -169,7 +169,6 @@ const StatusBar = () => {
 							css={css`
 								font-size: 14rem;
 								color: ${log.type === "error" ? "#C2607D" : "#9FC370"};
-								
 							`}
 						>
 							{log.type}
@@ -178,7 +177,7 @@ const StatusBar = () => {
 							css={css`
 								font-size: 14rem;
 								color: #717171;
-								
+
 								word-break: break-all;
 							`}
 							className={"ml-20"}
@@ -227,7 +226,7 @@ const StatusBar = () => {
 					display: flex;
 					align-items: center;
 					font-family: "Gilroy";
-					
+
 					font-weight: 400;
 					font-size: 13.4rem;
 				`}
@@ -515,7 +514,7 @@ const docsButtonCss = css`
 	background: #0f1010;
 
 	font-family: "Cera Pro";
-	
+
 	font-weight: 500;
 	font-size: 12px;
 
@@ -539,12 +538,11 @@ const docsButtonTextCss = css`
 const logTextStyle = css`
 	color: #717171;
 	font-size: 13.5rem;
-	
 `;
 const logsCountStyle = css`
 	padding: 3rem 5rem;
 	font-family: "Cera Pro";
-	
+
 	font-weight: 500;
 	font-size: 12px;
 	text-align: center;

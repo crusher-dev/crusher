@@ -47,7 +47,6 @@ const FieldInput = (props: IFieldInputProps) => {
 };
 
 const labelCss = css`
-
 	font-size: 13rem;
 	color: rgba(215, 223, 225, 0.6);
 `;

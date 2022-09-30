@@ -41,7 +41,6 @@ let parseStepNameText = (text: string): { type: "normal" | "highlight"; value: s
 };
 
 const TextHighlighter = ({ text }, shouldStyle = false) => {
-
 	return parseStepNameText(text).map((a) => {
 		if (a.type === "highlight") {
 			return (

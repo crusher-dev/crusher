@@ -203,7 +203,6 @@ const emojiCSS = css`
 `;
 
 const runTextCss = css`
-
 	font-weight: 500;
 	font-size: 12rem;
 
@@ -214,7 +213,6 @@ const runTextCss = css`
 	color: #b061ff;
 `;
 const editTextCss = css`
-
 	font-weight: 500;
 	font-size: 12rem;
 	letter-spacing: 0.03em;

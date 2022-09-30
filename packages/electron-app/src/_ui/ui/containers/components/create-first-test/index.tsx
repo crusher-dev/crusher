@@ -30,8 +30,7 @@ const saveButtonStyle = css`
 	height: 30rem;
 	background: #a966ff;
 	border-radius: 6rem;
-	
-	
+
 	font-weight: 600;
 	font-size: 14rem;
 	line-height: 17rem;
@@ -126,7 +125,7 @@ const createIconStyle = css`
 const contentHeadingStyle = css`
 	margin-top: 28rem;
 	font-family: Cera Pro;
-	
+
 	font-weight: 900;
 	font-size: 18rem;
 	text-align: center;
@@ -136,8 +135,6 @@ const contentHeadingStyle = css`
 const contentDescriptionStyle = css`
 	margin-top: 10rem;
 
-	
-	
 	font-weight: 400;
 	font-size: 14rem;
 	text-align: center;

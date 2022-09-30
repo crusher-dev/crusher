@@ -11,7 +11,6 @@ export function Link({ children, href, ...props }: any) {
 }
 
 const linkStyle = css`
-
 	font-size: 14px;
 	color: #ffffff;
 	:hover {

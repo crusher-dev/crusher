@@ -20,7 +20,6 @@ export function Link({ children, ...props }) {
 }
 
 const linkStyle = css`
-
 	font-weight: 600;
 	font-size: 14px;
 	color: #ffffff;
@@ -174,15 +173,12 @@ const statusMessageBarRightStyle = css`
 `;
 
 const statusLinkStyle = css`
-
 	font-size: 13px;
 	letter-spacing: 0.03em;
 
 	color: #ffffff;
 `;
 const statusTextStyle = css`
-	
-	
 	font-weight: 400;
 	font-size: 13px;
 	letter-spacing: 0.03em;
@@ -213,7 +209,7 @@ function DropwdownContent({ setShowActionMenu, isRecorder }) {
 					padding: 6rem 13rem;
 					color: #fcfcfc;
 					font-family: Cera Pro;
-					
+
 					font-weight: 400;
 					font-size: 13rem;
 					:hover {

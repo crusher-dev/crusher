@@ -16,8 +16,7 @@ const buttonCss = css`
 	align-items: center;
 	background: #b341f9 !important;
 	border-radius: 8rem !important;
-	
-	
+
 	font-weight: normal;
 	font-size: 14rem;
 	line-height: 17rem;

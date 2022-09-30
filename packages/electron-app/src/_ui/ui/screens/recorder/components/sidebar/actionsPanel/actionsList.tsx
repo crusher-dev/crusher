@@ -94,15 +94,11 @@ const headingContentCss = css`
 	flex-direction: column;
 `;
 const headingTitleCss = css`
-	
-	
 	font-weight: 500;
 	font-size: 14rem;
 	color: #ffffff;
 `;
 const headingDescriptionCss = css`
-	
-	
 	font-weight: 400;
 	font-size: 10rem;
 
@@ -131,8 +127,6 @@ const contentCss = css`
 `;
 
 const actionItemCss = css`
-	
-	
 	font-weight: 400;
 	font-size: 12rem;
 	color: #7c7c7c;

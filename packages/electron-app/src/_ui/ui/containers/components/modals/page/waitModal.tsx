@@ -141,7 +141,7 @@ const inputStyle = css`
 	background: #1a1a1c;
 	border-radius: 6rem;
 	border: 1rem solid #43434f;
-	
+
 	font-size: 14rem;
 	min-width: 358rem;
 	color: #fff;

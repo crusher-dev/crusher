@@ -51,7 +51,6 @@ const actionTextCss = css`
 	font-weight: 600;
 `;
 const messageCss = css`
-
 	font-weight: 500;
 	font-size: 14rem;
 `;

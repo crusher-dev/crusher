@@ -3,6 +3,10 @@ import HtmlWebpackPlugin from "html-webpack-plugin";
 import * as path from "path";
 import { IgnorePlugin } from "webpack";
 
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
+const ReactRefreshTypeScript = require('react-refresh-typescript');
+
+
 require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
@@ -15,21 +19,27 @@ if (fs.existsSync(OUTPUT_DIR)) {
 	fs.rmdirSync(OUTPUT_DIR, { force: true, recursive: true });
 }
 
+const isDevelopment = true;
+
 const commonConfig = {
 	mode: process.env.NODE_ENV || "development",
-	plugins: [			new IgnorePlugin({ resourceRegExp: /^fsevents$/ }),	new MiniCssExtractPlugin()],
+	plugins: [
+		isDevelopment && new ReactRefreshWebpackPlugin(),
+		new IgnorePlugin({ resourceRegExp: /^fsevents$/ }),	new MiniCssExtractPlugin()],
 	module: {
 		rules: [
+
 			{
-				test: /\.tsx?$/,
+				test: /\.[jt]sx?$/,
+				exclude: /node_modules/,
 				use: [
 					{
-						loader: "babel-loader",
-					},
-					{
-						loader: "ts-loader",
+						loader: require.resolve('ts-loader'),
 						options: {
-							transpileOnly: true,
+							getCustomTransformers: () => ({
+								before: [isDevelopment && ReactRefreshTypeScript()].filter(Boolean),
+							}),
+							transpileOnly: isDevelopment,
 						},
 					},
 				],

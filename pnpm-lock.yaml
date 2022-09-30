@@ -734,6 +734,7 @@ importers:
       react-modal: ^3.12.1
       react-redux: ^7.2.0
       react-refresh: ^0.14.0
+      react-refresh-typescript: ^2.0.7
       react-router-dom: ^6.3.0
       react-select: ^4.3.0
       reactour: ^1.18.1
@@ -905,6 +906,7 @@ importers:
       prettier: 2.3.2
       pug-loader: 2.4.0_pug@2.0.4
       react-refresh: 0.14.0
+      react-refresh-typescript: 2.0.7_dcojc634woxyxlo6xwayfpl3ga
       speed-measure-webpack-plugin: 1.5.0_webpack@5.41.1
       style-loader: 2.0.0_webpack@5.41.1
       tailwindcss: 1.9.6
@@ -27481,6 +27483,16 @@ packages:
       react-dom: 17.0.2_react@17.0.2
       react-is: 16.13.1
     dev: false
+
+  /react-refresh-typescript/2.0.7_dcojc634woxyxlo6xwayfpl3ga:
+    resolution: {integrity: sha512-KbuW57FauO11e6a9gU836sCm3M3z0b2+J2qPhUudg0QplOfz0eAF3gMeshcUC/ChfNLJCK1SZxvYmUtRxiZE5A==}
+    peerDependencies:
+      react-refresh: 0.10.x || 0.11.x || 0.12.x || 0.13.x || 0.14.x
+      typescript: ^4
+    dependencies:
+      react-refresh: 0.14.0
+      typescript: 4.3.5
+    dev: true
 
   /react-refresh/0.11.0:
     resolution: {integrity: sha512-F27qZr8uUqwhWZboondsPx8tnC3Ct3SxZA3V5WyEvujRyyNv0VYPhoBg1gZ8/MV5tubQp76Trw8lTv9hzRBa+A==}

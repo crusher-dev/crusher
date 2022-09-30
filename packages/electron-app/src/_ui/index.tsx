@@ -25,7 +25,6 @@ import { UnAuthorizedErrorContainer } from "./ui/containers/errors/unauthorizedE
 import { InvalidCredsErrorContainer } from "./ui/containers/errors/invalidCreds";
 import { performGoToUrl } from "./commands/perform";
 import { Provider as JotaiProvider } from "jotai";
-
 webFrame.setVisualZoomLevelLimits(1, 3);
 
 function getPersistStore() {

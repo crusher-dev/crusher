@@ -1,6 +1,6 @@
 import React from "react";
 import { css } from "@emotion/react";
-import {CloudIcon, ConsoleIcon, DisabledCloudIcon, DocsIcon} from "../../constants/icons";
+import { CloudIcon, ConsoleIcon, DisabledCloudIcon, DocsIcon } from "../../constants/icons";
 import { Link } from "./Link";
 import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
 import { HoverCard } from "@dyson/components/atoms/tooltip/Tooltip1";
@@ -27,7 +27,7 @@ const StickyFooter = ({
     const store = useStore();
     const proxyIsInitializing = useSelector(getIsProxyInitializing);
     const proxyState = useSelector(getProxyState);
-    
+
     const isProxyWorking = Object.keys(proxyState).length;
 
     const isProxyDisabled = !proxyIsInitializing && !isProxyWorking;
@@ -38,7 +38,7 @@ const StickyFooter = ({
     };
 
     React.useEffect(() => {
-        if(latestNotification?.id && !latestNotification.status) {
+        if (latestNotification?.id && !latestNotification.status) {
             const interval = setInterval(() => {
                 CloudCrusher.getBuildReport(latestNotification.id).then((res) => {
                     updateNotification(latestNotification.id, {
@@ -56,25 +56,25 @@ const StickyFooter = ({
         }
     }, [latestNotification?.id]);
 
-    const statusMessage = latestNotification?.status && latestNotification?.status !== "RUNNING" ? "has " + latestNotification.status.toLowerCase() : "is running"; 
+    const statusMessage = latestNotification?.status && latestNotification?.status !== "RUNNING" ? "has " + latestNotification.status.toLowerCase() : "is running";
     return (
         (<div css={containerCss} className={String(className)}>
             <div css={contentCss}>
                 {latestNotification ? (
                     <div css={notificationContainerCss}>
-                         <div css={notificationContentCss}>
-                             <ConsoleIcon css={consoleIconCss} />
-                             <span css={notificationTextCss}>2: Last build {statusMessage}</span>
-                         </div>
-                         <div css={notificationActionCss}>
-                             <Link css={linkCss} onClick={handleViewReport.bind(this, latestNotification.id)}>view report</Link>
-                         </div>
-                     </div>
+                        <div css={notificationContentCss}>
+                            <ConsoleIcon css={consoleIconCss} />
+                            <span css={notificationTextCss}>2: Last build {statusMessage}</span>
+                        </div>
+                        <div css={notificationActionCss}>
+                            <Link css={linkCss} onClick={handleViewReport.bind(this, latestNotification.id)}>view report</Link>
+                        </div>
+                    </div>
                 ) : (
                     <span css={footerBottomLabel}>test page</span>
                 )}
-     
-             
+
+
 
                 <div css={contextContainerCss}>
                     <Tooltip content={isProxyDisabled ? "disabled" : (proxyIsInitializing ? "initializng" : "active")} placement="top" type="hover">
@@ -204,7 +204,7 @@ export { StickyFooter };
 
 
 //  🔴🔴 Do not edit, this is copy of DashboardBase help section
-export function HelpContent({...props}) {
+export function HelpContent({ ...props }) {
     return (
         <div className=" pt-3 pb-6" {...props}>
 

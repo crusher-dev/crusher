@@ -1001,7 +1001,8 @@ export class AppWindow {
 			}
 			this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
 			return true;
-		} catch {
+		} catch(err) {
+			console.error("Error is", err);
 			this.store.dispatch(updateRecorderState(TRecorderState.ACTION_REQUIRED, {}));
 			this.setRemainingSteps(reaminingSteps);
 			return false;

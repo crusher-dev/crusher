@@ -8,10 +8,10 @@ import { getRecorderInfo, getRecorderInfoUrl, getRecorderState, getSavedSteps, i
 import { goFullScreen, performNavigation, performSteps, performVerifyTest, saveTest, updateTest } from "../../../../commands/perform";
 import { addHttpToURLIfNotThere, isValidHttpUrl } from "../../../../../utils";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
-import { getAppEditingSessionMeta, getProxyState, shouldShowOnboardingOverlay } from "electron-app/src/store/selectors/app";
+import { getAppEditingSessionMeta, getCurrentTestInfo, getProxyState, shouldShowOnboardingOverlay } from "electron-app/src/store/selectors/app";
 import { SettingsModal } from "./settingsModal";
 import { TourContext, useTour } from "@reactour/tour";
-import { setShowShouldOnboardingOverlay } from "electron-app/src/store/actions/app";
+import { setCurrentTestInfo, setShowShouldOnboardingOverlay } from "electron-app/src/store/actions/app";
 import { sendSnackBarEvent } from "../toast";
 import { Button } from "@dyson/components/atoms";
 import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
@@ -278,6 +278,13 @@ const Toolbar = (props: any) => {
 	const [urlInputError, setUrlInputError] = React.useState({ value: false, message: "" });
 	const [isEditingTestName, setIsEditingTestName] = React.useState(false);
 	const [testName, setTestName] = React.useState(generateRandomTestName());
+	const currentTestInfo = useSelector(getCurrentTestInfo)
+	
+	React.useEffect(() => {
+		if(currentTestInfo) {
+			setTestName(currentTestInfo.testName);
+		}
+	}, [currentTestInfo]);
 
 	const urlInputRef = React.useRef<HTMLInputElement>(null);
 	const recorderInfoUrl = useSelector(getRecorderInfoUrl);

@@ -50,7 +50,7 @@ const handleCompletion = async (store: Store, action: IDeepLinkAction, addNotifi
 					queuedTests: window["testsToRun"].list,
 				} as any),
 			);
-			performReplayTestUrlAction(window["testsToRun"].list[0], true);
+			performReplayTestUrlAction(window["testsToRun"].list[0], true, action.args.selectedTests || []);
 		} else {
 			// Time to redirect to dashboard
 			const totalTestsInBuild = window["testsToRun"].count;
@@ -82,16 +82,19 @@ const handleUrlAction = (store: Store, addNotification, event: Electron.IpcRende
 	switch (action.commandName) {
 		case "replay-test":
 			const sessionInfoMeta = getAppSessionMeta(store.getState() as any);
+			const { selectedTests } = action.args;
+			
+			console.log("Selected tests are", selectedTests);
+			const currentTest = selectedTests && selectedTests.length ? selectedTests.find(test => test.id === action.args.testId) : null;
 			store.dispatch(
 				setSessionInfoMeta({
 					...sessionInfoMeta,
 					editing: {
 						testId: action.args.testId,
 					},
+					selectedTest: currentTest,
 				}),
 			);
-			const selectedTests = action.args;
-			console.log("Selected testsa", selectedTests);
 			performReplayTest(action.args.testId).finally(handleCompletion.bind(this, store, action, addNotification));
 			break;
 		case "restore":

@@ -2,6 +2,8 @@ import { applyMiddleware, createStore, compose, Store, StoreEnhancer } from "red
 
 import { rootReducer } from "./reducers";
 import { forwardToMain, forwardToRenderer, replayActionMain, replayActionRenderer } from "electron-redux";
+import { isProduction } from "../utils";
+import loggerMiddleware from 'redux-logger'
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -24,7 +26,7 @@ export default function configureStore(intialState: any, scope = "main", isTempo
 
 	if (!isTemporary) {
 		// if (!isProduction()) {
-		// middlewares.push(loggerMiddleware);
+		// 	middlewares.push(loggerMiddleware);
 		// }
 
 		if (scope === "renderer") {

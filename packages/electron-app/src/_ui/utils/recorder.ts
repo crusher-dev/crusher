@@ -3,7 +3,7 @@ import { getStore } from "electron-app/src/store/configureStore";
 import { goFullScreen, performReplayTestUrlAction } from "electron-app/src/_ui/commands/perform";
 import historyInstance from "./history";
 
-const triggerLocalBuild = (testsList: number[] = undefined) => {
+const triggerLocalBuild = (testsList: number[] = undefined, selectedTests: any[] = []) => {
 	const store = getStore();
 	store.dispatch(
 		createLocalBuild({
@@ -18,7 +18,7 @@ const triggerLocalBuild = (testsList: number[] = undefined) => {
 
 	historyInstance.push("/recorder", "");
 	goFullScreen();
-	return performReplayTestUrlAction(window["testsToRun"].list[0], true);
+	return performReplayTestUrlAction(window["testsToRun"].list[0], true, selectedTests);
 };
 
 export { triggerLocalBuild };

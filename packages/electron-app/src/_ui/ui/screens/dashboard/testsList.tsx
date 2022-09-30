@@ -66,11 +66,11 @@ const TestItem = ({ test, isItemSelected, isEditingName, setIsEditingName }) => 
 	const handleEdit = React.useCallback(() => {
 		navigate("/recorder");
 		goFullScreen();
-		performReplayTestUrlAction(test.id);
+		performReplayTestUrlAction(test.id, false, [test]);
 	}, [test]);
 
 	const handleRunTest = React.useCallback(() => {
-		triggerLocalBuild([test.id]);
+		triggerLocalBuild([test.id], [test]);
 	}, [test]);
 
 	const handleEmojiSelected = React.useCallback((emoji) => {
@@ -375,7 +375,7 @@ const TestList = ({ tests, deleteTest }) => {
 			if (id === "delete" || id === "delete-all") {
 				deleteTest(selectedList);
 			} else if (id === "run" || id === "run-all") {
-				triggerLocalBuild(selectedList);
+				triggerLocalBuild(selectedList, selectedTests);
 			} else if (id === "edit") {
 				navigate("/recorder");
 				goFullScreen();

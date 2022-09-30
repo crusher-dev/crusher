@@ -9,6 +9,7 @@ export const RESET_APP_SESSION = "RESET_APP_SESSION";
 export const SET_PROXY_STATE = "SET_PROXY_STATE";
 export const SET_PROXY_INITIALIZING = "SET_PROXY_INITIALIZING";
 export const SET_SELECTED_PROJECT = "SET_SELECTED_PROJECT";
+export const SET_CURRENT_TEST_INFO = "SET_CURRENT_TEST_INFO";
 
 export const setSelectedProject = (projectId) => ({
 	type: SET_SELECTED_PROJECT,
@@ -51,4 +52,9 @@ export const resetAppSession = () => {
 export const setProxyInitializing = (isInitializing: boolean) => ({
 	type: SET_PROXY_INITIALIZING,
 	payload: { isInitializing },
+});
+
+export const setCurrentTestInfo = (testInfo: any) => ({
+	type: SET_CURRENT_TEST_INFO,
+	payload: {testInfo}
 });

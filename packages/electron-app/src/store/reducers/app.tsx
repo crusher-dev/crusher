@@ -1,6 +1,7 @@
 import { AnyAction } from "redux";
 import { iAction } from "@shared/types/action";
 import {
+	SET_CURRENT_TEST_INFO,
 	SET_PROXY_INITIALIZING,
 	SET_PROXY_STATE,
 	SET_SELECTED_PROJECT,
@@ -20,6 +21,7 @@ export interface iSettings {
 export interface ISessionMeta {
 	editing?: { testId: string } | undefined;
 	remainingSteps?: iAction[] | undefined;
+	selectedTest?: {testName: string; id: string;};
 }
 
 export interface IProxyState {
@@ -87,6 +89,14 @@ const appReducer = (state: IAppReducer = initialState, action: AnyAction): IAppR
 				...state,
 				selectedProject: action.payload.projectId,
 			};
+		case SET_CURRENT_TEST_INFO:
+			return {
+				...state,
+				sessionMeta: {
+					...state.sessionMeta,
+					selectedTest: action.payload.testInfo,
+				}
+			}
 		default:
 			return state;
 	}

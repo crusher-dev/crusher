@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { css } from "@emotion/react";
 import { shell } from "electron";
 import { Link } from "../../components/Link";
-import { ActionButton } from "electron-app/src/_ui/ui/containers/components/buttons/action.button";
+import { NormalButton } from "electron-app/src/_ui/ui/containers/components/buttons/normalButton";
 
 const CreateFirstTest = () => {
 	const navigate = useNavigate();
@@ -43,7 +43,7 @@ const DocsGoBackActionBar = ({ buttonTitle, buttonCallback }) => {
 	return (
 		<div css={actionsContainerCss}>
 			<Link onClick={openDocs}>Docs</Link>
-			<ActionButton title={buttonTitle} onClick={buttonCallback} css={actionButtonCss} />
+			<NormalButton title={buttonTitle} onClick={buttonCallback} css={actionButtonCss} />
 		</div>
 	);
 };

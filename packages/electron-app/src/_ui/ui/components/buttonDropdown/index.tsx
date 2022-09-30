@@ -1,7 +1,7 @@
 import React from "react";
 import { css } from "@emotion/react";
 import { Dropdown } from "@dyson/components/molecules/Dropdown";
-import { ActionButton } from "electron-app/src/_ui/ui/containers/components/buttons/action.button";
+import { NormalButton } from "electron-app/src/_ui/ui/containers/components/buttons/normalButton";
 import { SaveButtonDownIcon } from "../../../constants/icons";
 
 const DropwdownContent = ({ options, callback }) => {
@@ -90,7 +90,7 @@ const ButtonDropdown = ({ options, id, hideDropdown, primaryOption, wrapperCss, 
 			>
 				{" "}
 			</div>
-			<ActionButton
+			<NormalButton
 				id={id}
 				className={className}
 				title={primaryOptionsObject.content}

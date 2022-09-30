@@ -8,7 +8,7 @@ interface IProps {
 	id?: string;
 	onClick?: any;
 }
-const ActionButton = React.forwardRef(({ title, id, className, onClick }: IProps, ref) => {
+const NormalButton = React.forwardRef(({ title, id, className, onClick }: IProps, ref) => {
 	const handleClick = React.useCallback(
 		(e) => {
 			e.preventDefault();
@@ -41,4 +41,4 @@ const buttonCss = css`
 	}
 `;
 
-export { ActionButton };
+export { NormalButton };

@@ -54,7 +54,7 @@ const ActionsPanel = ({ className }: IProps) => {
 		return (
 			<>
 				<PageActions filteredList={filteredList} defaultExpanded={searchFilter || true} css={topBorderCss} />
-				<ElementActions filteredList={filteredList} defaultExpanded={searchFilter || true} />
+				<ElementActions filteredList={filteredList} defaultExpanded={searchFilter} />
 				<CodeAction filteredList={filteredList} />
 			</>
 		);

@@ -52,18 +52,20 @@ const tranformActionsToList = (): IActionItem[] => {
 	return finalItems;
 };
 
-const transformResultsToActions = () => {
+const transformResultsToActions = (list) => {
 	const finalObj = {};
-	if (!finalObj[item.category]) {
-		finalObj[item.category] = {};
-	}
-	const itemId = item.id;
-	const itemCategory = item.category;
-	if (itemId) {
-		finalObj[itemCategory][itemId] = item;
-	} else {
-		finalObj[itemCategory] = item;
-	}
+	list.map(({item}) => {
+		if (!finalObj[item.category]) {
+			finalObj[item.category] = {};
+		}
+		const itemId = item.id;
+		const itemCategory = item.category;
+		if (itemId) {
+			finalObj[itemCategory][itemId] = item;
+		} else {
+			finalObj[itemCategory] = item;
+		}
+	})
 	return finalObj;
 };
 
@@ -79,7 +81,7 @@ const filterActionsItems = (filter: string) => {
 	});
 	const searchItems = fuse.search(filter);
 	console.log("Search items are", searchItems);
-	const finalList = transformResultsToActions();
+	const finalList = transformResultsToActions(searchItems);
 	console.log("Search items are", filter, finalList);
 
 	return finalList;

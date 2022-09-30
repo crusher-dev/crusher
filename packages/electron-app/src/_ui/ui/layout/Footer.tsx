@@ -13,8 +13,12 @@ function Footer() {
 
 	return (
 		<div css={navBarCss}>
-			<LinkPointer showExternalIcon={false} onClick={handleOpenDocs}>Docs</LinkPointer>
-			<LinkPointer showExternalIcon={false} onClick={handleOpenSettings} css={settingsCss}>Settings</LinkPointer>
+			<LinkPointer showExternalIcon={false} onClick={handleOpenDocs}>
+				Docs
+			</LinkPointer>
+			<LinkPointer showExternalIcon={false} onClick={handleOpenSettings} css={settingsCss}>
+				Settings
+			</LinkPointer>
 		</div>
 	);
 }
@@ -30,9 +34,9 @@ const navBarCss = css`
 	color: rgba(255, 255, 255, 0.67);
 	padding: 8rem 20rem;
 	border-top: 0.5px solid rgba(255, 255, 255, 0.08);
-	background:  #0D0D0E;
+	background: #0d0d0e;
 `;
 const settingsCss = css`
-    margin-left: auto;
+	margin-left: auto;
 `;
 export { Footer };

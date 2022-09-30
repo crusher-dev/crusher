@@ -1,4 +1,4 @@
-import  {useEffect} from "react";
+import { useEffect } from "react";
 import { CompactAppLayout } from "../layout/CompactAppLayout";
 import { Footer } from "../layout/Footer";
 import { LoadingProgressBar } from "../components/LoadingProgressBar";
@@ -15,6 +15,6 @@ function LoadingScreen() {
 	);
 }
 const containerCss = css`
-background: #080809;
+	background: #080809;
 `;
 export { LoadingScreen };

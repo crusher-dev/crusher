@@ -50,27 +50,27 @@ const DocsGoBackActionBar = ({ buttonTitle, buttonCallback }) => {
 
 /* ======== DocsGoBackActionBar.styles ======== */
 const actionsContainerCss = css`
-    display: flex;
-    margin-top: 20rem;
-    justify-content: center;
-    align-items: center;
+	display: flex;
+	margin-top: 20rem;
+	justify-content: center;
+	align-items: center;
 `;
 const actionButtonCss = css`
-    margin-left: 12rem;
+	margin-left: 12rem;
 `;
 
 /* ======== CreateFirstTest.styles ======== */
 const containerCss = css`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    height: 100%;
-    margin-top: -2rem;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	height: 100%;
+	margin-top: -2rem;
 `;
 const contentCss = css`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 `;
 const createIconCss = css`
 	width: 28rem;

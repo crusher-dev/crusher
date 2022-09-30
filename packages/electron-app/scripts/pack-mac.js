@@ -5,7 +5,7 @@ const shell = require("shelljs");
 const { notarize } = require("electron-notarize");
 const { execSync } = require("child_process");
 const { checkIfBuildPresent } = require("./utils");
-const fs = require('fs');
+const fs = require("fs");
 // shell.exec(`cd ${path.resolve("../../output/crusher-electron-app/playwright")} && pnpm install`);
 
 const getIsArm = () => {
@@ -63,7 +63,7 @@ builder
 				output: path.resolve(__dirname, "../../../output/crusher-electron-app-release/darwin"),
 			},
 			electronDist: (options) => {
-				if(options.arch === builder.Arch.arm64) {
+				if (options.arch === builder.Arch.arm64) {
 					console.log("Choosing arm64");
 					return path.resolve(__dirname, "../bin/darwin-arm64");
 				}
@@ -85,12 +85,13 @@ builder
 	.catch((error) => {
 		console.error("Failed", error);
 		// handle error
-	}).finally((a) => {
+	})
+	.finally((a) => {
 		let distPath = null;
-		if(distPath = checkIfBuildPresent('mac', builder.Arch.x64)) {
+		if ((distPath = checkIfBuildPresent("mac", builder.Arch.x64))) {
 			fs.renameSync(distPath, distPath.replace(`-${builder.Arch.x64}.zip`, `-x64.zip`));
 		}
-		if(distPath = checkIfBuildPresent('mac', builder.Arch.arm64)) {
+		if ((distPath = checkIfBuildPresent("mac", builder.Arch.arm64))) {
 			fs.renameSync(distPath, distPath.replace(`-${builder.Arch.arm64}.zip`, `-arm64.zip`));
 		}
 	});

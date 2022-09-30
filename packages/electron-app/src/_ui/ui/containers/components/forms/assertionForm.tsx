@@ -28,7 +28,7 @@ function checkIfValidationPasses(fieldValue: string, validationValue: string, op
 		case ASSERTION_OPERATION_TYPE.CONTAINS:
 			return fieldValue.includes(validationValue);
 		case ASSERTION_OPERATION_TYPE.REGEX:
-            try {
+			try {
 				const rgx = new RegExp(validationValue);
 				if (rgx.test(fieldValue)) {
 					return true;
@@ -52,12 +52,12 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 
 	const renderFieldInput = (selectedField: string, rowId: string) => {
 		const getFieldOptions = () => {
-            const options = [];
-            for (const field of fields) {
+			const options = [];
+			for (const field of fields) {
 				options.push({ value: field.name, label: field.name, component: <DropdownOption label={field.name} />, inactive: false });
 			}
-            return options;
-        };
+			return options;
+		};
 		const fieldOptions = getFieldOptions();
 
 		const selectedOption = fieldOptions.find((option) => option.value === selectedField);
@@ -100,12 +100,12 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 
 	const renderFieldOperationInput = (selectedOperation: string, rowId: string) => {
 		const getOperationOptions = () => {
-            const options = [];
-            for (const operation of operations) {
+			const options = [];
+			for (const operation of operations) {
 				options.push({ value: operation, label: operation, component: <DropdownOption label={operation} />, inactive: false });
 			}
-            return options;
-        };
+			return options;
+		};
 
 		const operationOptions = getOperationOptions();
 		const selectedOption = operationOptions.find((option) => option.value === selectedOperation);
@@ -159,7 +159,7 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 		if (deleteValidationRow) deleteValidationRow(rowIndex);
 	};
 
-	const rowOut = rowItems.map(row => {
+	const rowOut = rowItems.map((row) => {
 		const isValidationCorrect = checkIfValidationPasses(row.field.value, row.validation, row.operation as ASSERTION_OPERATION_TYPE);
 		return (
 			<div

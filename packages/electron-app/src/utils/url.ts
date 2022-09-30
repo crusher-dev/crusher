@@ -4,44 +4,46 @@ import { getAppSettings, getUserAccountInfo } from "../store/selectors/app";
 import { shell } from "electron";
 
 const resolveToBackend = (endpoint: string) => {
-    const store: any = getStore();
-    const appSettings = getAppSettings(store.getState());
+	const store: any = getStore();
+	const appSettings = getAppSettings(store.getState());
 
-    return appSettings.backendEndPoint ? resolveToBackendPath(endpoint, appSettings.backendEndPoint) : resolveToBackendPath(endpoint);
+	return appSettings.backendEndPoint ? resolveToBackendPath(endpoint, appSettings.backendEndPoint) : resolveToBackendPath(endpoint);
 };
 
 const resolveToFrontend = (endpoint: string) => {
-    const store: any = getStore();
-    const appSettings = getAppSettings(store.getState());
+	const store: any = getStore();
+	const appSettings = getAppSettings(store.getState());
 
-    return appSettings.frontendEndPoint ? resolveToFrontEndPath(endpoint, appSettings.frontendEndPoint) : resolveToFrontEndPath(endpoint);
+	return appSettings.frontendEndPoint ? resolveToFrontEndPath(endpoint, appSettings.frontendEndPoint) : resolveToFrontEndPath(endpoint);
 };
 
 const createAuthorizedRequestFunc = (callback, silent = false) => {
-    return (...args) => {
-        const store: any = getStore();
-        const userInfo = getUserAccountInfo(store.getState());
-        const isUserLoggedIn = userInfo?.token;
-        if (!isUserLoggedIn && !silent) { throw new Error("User not logged in"); }
+	return (...args) => {
+		const store: any = getStore();
+		const userInfo = getUserAccountInfo(store.getState());
+		const isUserLoggedIn = userInfo?.token;
+		if (!isUserLoggedIn && !silent) {
+			throw new Error("User not logged in");
+		}
 
-        const headers = {
-            Accept: "application/json, text/plain, */*",
-            "Content-Type": "application/json"
-        };
+		const headers = {
+			Accept: "application/json, text/plain, */*",
+			"Content-Type": "application/json",
+		};
 
-        if (isUserLoggedIn) {
-            headers["Authorization"] = String(userInfo.token);
-        }
+		if (isUserLoggedIn) {
+			headers["Authorization"] = String(userInfo.token);
+		}
 
-        return callback({ headers, withCredentials: true }, ...args);
-    };
+		return callback({ headers, withCredentials: true }, ...args);
+	};
 };
 
 const checkIfLoggedIn = () => {
-    const store: any = getStore();
-    const userInfo = getUserAccountInfo(store.getState());
+	const store: any = getStore();
+	const userInfo = getUserAccountInfo(store.getState());
 
-    return userInfo?.token ? true : false;
+	return userInfo?.token ? true : false;
 };
 
 export const linkOpen = (link) => shell.openExternal(link);

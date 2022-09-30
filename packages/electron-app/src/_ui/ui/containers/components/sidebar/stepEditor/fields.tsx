@@ -47,7 +47,7 @@ const FieldInput = (props: IFieldInputProps) => {
 };
 
 const labelCss = css`
-	font-family: 'Gilroy';
+	font-family: "Gilroy";
 	font-style: normal;
 	font-weight: 400;
 	font-size: 13rem;
@@ -87,13 +87,13 @@ type IFieldSelectorPickerProps = React.TextareaHTMLAttributes<HTMLTextAreaElemen
 	onSelectorsPicked: (selectors: iSelectorInfo[]) => any;
 };
 const FieldSelectorPicker = React.forwardRef((props: IFieldSelectorPickerProps) => {
-    const { className } = props;
+	const { className } = props;
 
-    const handleElementSelectorClick = () => {
+	const handleElementSelectorClick = () => {
 		turnOnElementSelectorInspectMode();
 	};
 
-    React.useEffect(() => {
+	React.useEffect(() => {
 		const handleMessage = (event) => {
 			const { type, selectedElementInfo } = JSON.parse(event.data);
 			if (type === "selected-element-for-selectors") {
@@ -107,7 +107,7 @@ const FieldSelectorPicker = React.forwardRef((props: IFieldSelectorPickerProps) 
 		};
 	}, []);
 
-    return (<InspectElementIcon className={className} onClick={handleElementSelectorClick} css={inspectElementIconStyle} />);
+	return <InspectElementIcon className={className} onClick={handleElementSelectorClick} css={inspectElementIconStyle} />;
 });
 
 type IFieldEditModeButtonProps = Omit<ButtonProps, "children"> & {
@@ -129,15 +129,15 @@ const FieldEditModeButton = (props: IFieldEditModeButtonProps) => {
 	}, [props]);
 
 	return (
-        (<div className={String(className)}>
-            <span>{props.label}</span>
-            <div className={"mt-24"} css={buttonContainerStyle}>
+		<div className={String(className)}>
+			<span>{props.label}</span>
+			<div className={"mt-24"} css={buttonContainerStyle}>
 				<Button {...buttonProps}>
 					<span css={buttonTextStyle}>Open Edit Modal</span>
 				</Button>
 			</div>
-        </div>)
-    );
+		</div>
+	);
 };
 
 const buttonTextStyle = css`
@@ -161,12 +161,11 @@ const inputStyle = css`
 	border: 0.5px solid transparent;
 	border-radius: 8rem;
 
-
 	min-width: 358rem;
 	outline: none;
 	margin-left: 7rem;
 	input {
-		font-family: 'Gilroy' !important;
+		font-family: "Gilroy" !important;
 		font-style: normal !important;
 		font-weight: 400 !important;
 		font-size: 13rem !important;
@@ -175,7 +174,7 @@ const inputStyle = css`
 	}
 
 	:hover {
-		border: 0.5px solid #B14FFE;
+		border: 0.5px solid #b14ffe;
 	}
 `;
 

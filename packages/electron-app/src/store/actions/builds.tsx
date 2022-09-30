@@ -10,40 +10,40 @@ export const REMOVE_BUILD_NOTIFICATION = "REMOVE_BUILD_NOTIFICATION";
 export const CLEAR_BUILD_NOTIFICATIONS = "CLEAR_BUILD_NOTIFICATIONS";
 
 export const addBuildNotification = (payload: IBuildNotification) => ({
-    type: ADD_BUILD_NOTIFICATION,
-    payload,
+	type: ADD_BUILD_NOTIFICATION,
+	payload,
 });
 export const updateBuildNotification = (id: string, payload: IBuildNotification) => ({
-    type: UPDATE_BUILD_NOTIIFICATION,
-    payload: {
-        buildId: id,
-        meta: payload,
-    }
+	type: UPDATE_BUILD_NOTIIFICATION,
+	payload: {
+		buildId: id,
+		meta: payload,
+	},
 });
 
 export const removeBuildNotification = (id: string) => ({
-    type: REMOVE_BUILD_NOTIFICATION,
-    payload: id,
+	type: REMOVE_BUILD_NOTIFICATION,
+	payload: id,
 });
 
 export const clearBuildNotifications = () => ({
-    type: CLEAR_BUILD_NOTIFICATIONS,
+	type: CLEAR_BUILD_NOTIFICATIONS,
 });
 
 export const updateCurrentLocalBuild = (payload: ICurrentBuildPayload) => ({
-    type: UPDATE_CURRENT_LOCAL_BUILD,
-    payload,
+	type: UPDATE_CURRENT_LOCAL_BUILD,
+	payload,
 });
 export const createLocalBuild = (payload: ICurrentBuildPayload) => ({
-    type: TRIGGER_LOCAL_BUILD,
-    payload,
+	type: TRIGGER_LOCAL_BUILD,
+	payload,
 });
 
 export const clearCurrentLocalBuild = () => ({
-    type: CLEAR_CURRENT_LOCAL_BUILD,
+	type: CLEAR_CURRENT_LOCAL_BUILD,
 });
 
 export const updateLocalBuildResult = (payload: IBuildResultPayload) => ({
-    type: UPDATE_LOCAL_BUILD_RESULT,
-    payload,
+	type: UPDATE_LOCAL_BUILD_RESULT,
+	payload,
 });

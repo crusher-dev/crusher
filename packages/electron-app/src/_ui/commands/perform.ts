@@ -12,7 +12,6 @@ const performAction = (action: iAction, shouldNotSave = false, isRecording = tru
 	return ipcRenderer.invoke("perform-action", { action, shouldNotSave, isRecording });
 };
 
-
 const performNavigation = (url: string) => {
 	return performAction({
 		type: ActionsInTestEnum.NAVIGATE_URL,
@@ -156,7 +155,7 @@ const performVerifyTest = (shouldAlsoSave = true, autoSaveType: "UPDATE" | "SAVE
 	return ipcRenderer.invoke("verify-test", { shouldAlsoSave, autoSaveType, shouldNotRunTest });
 };
 
-const performRunTests = testIds => {
+const performRunTests = (testIds) => {
 	return ipcRenderer.invoke("run-tests", { testIds });
 };
 
@@ -164,7 +163,7 @@ const performResetAppSession = () => {
 	ipcRenderer.invoke("reset-app-session");
 };
 
-const performReplayTest = testId => {
+const performReplayTest = (testId) => {
 	return ipcRenderer.invoke("replay-test", { testId });
 };
 
@@ -307,29 +306,27 @@ const turnOnProxy = (configFilePath) => {
 
 const performRunDraftTest = (testId) => {
 	return ipcRenderer.invoke("run-draft-test", { testId });
-}
+};
 
 const performSaveLocalBuild = (tests) => {
 	return ipcRenderer.invoke("save-local-build", { tests });
-}
+};
 
 const performGetRecorderTestLogs = () => {
 	return ipcRenderer.invoke("get-recorder-test-logs", {});
-}
+};
 
 const performCreateCloudProject = (projectName: string) => {
 	return ipcRenderer.invoke("create-cloud-project", { name: projectName });
-}
-
+};
 
 const performGoToUrl = (url: string) => {
 	return ipcRenderer.invoke("goto-url", { url: url });
 };
 
-
 const turnOnWebviewDevTools = () => {
 	return ipcRenderer.invoke("turn-on-webview-dev-tools", {});
-}
+};
 
 export {
 	recordHoverDependencies,
@@ -386,5 +383,5 @@ export {
 	performSaveLocalBuild,
 	performCreateCloudProject,
 	performGoToUrl,
-	turnOnWebviewDevTools
+	turnOnWebviewDevTools,
 };

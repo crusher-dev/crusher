@@ -1,5 +1,5 @@
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
-import {WebContents, ipcMain, webContents} from "electron";
+import { WebContents, ipcMain, webContents } from "electron";
 import * as path from "path";
 import { PlaywrightInstance } from "../lib/playwright";
 import { TRecorderCrashState, TRecorderState } from "../store/reducers/recorder";
@@ -69,7 +69,7 @@ export class WebView {
 		console.log("Initialized recorder in", this._initializeTime.toFixed(2) + "ms");
 		// This signals the renderer process that the webview is ready, and its okay
 		// to continue.
-		this.appWindow.sendMessage("webview-initialized", { initializeTime: this._initializeTime.toFixed(2)});
+		this.appWindow.sendMessage("webview-initialized", { initializeTime: this._initializeTime.toFixed(2) });
 	}
 
 	private registerIPCListeners() {
@@ -111,15 +111,17 @@ export class WebView {
 		if (method === "Overlay.inspectNodeRequested") {
 			const nodeObject = await this.webContents.debugger.sendCommand("DOM.resolveNode", { backendNodeId: params.backendNodeId });
 			const payload = isInspectModeOn(this.appWindow.store.getState() as any);
-				await this.webContents.debugger.sendCommand("Runtime.callFunctionOn", {
-					functionDeclaration: "function(){const event = new CustomEvent('elementSelected', {detail:{element: this}}); window.dispatchEvent(event);}",
-					objectId: nodeObject.object.objectId,
-				});
-				if(payload?.meta?.action) {
-					// @TODO: Remove this timeout hack
-					setTimeout(() => { this.appWindow.getWebContents().executeJavaScript(`window["elementActionsCallback"](); window["elementActionsCallback"]=null;`) }, 100);
-				}
-				
+			await this.webContents.debugger.sendCommand("Runtime.callFunctionOn", {
+				functionDeclaration: "function(){const event = new CustomEvent('elementSelected', {detail:{element: this}}); window.dispatchEvent(event);}",
+				objectId: nodeObject.object.objectId,
+			});
+			if (payload?.meta?.action) {
+				// @TODO: Remove this timeout hack
+				setTimeout(() => {
+					this.appWindow.getWebContents().executeJavaScript(`window["elementActionsCallback"](); window["elementActionsCallback"]=null;`);
+				}, 100);
+			}
+
 			await this.webContents.debugger.sendCommand("Overlay.setInspectMode", {
 				mode: "none",
 				highlightConfig: highlighterStyle,

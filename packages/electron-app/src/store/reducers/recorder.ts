@@ -154,10 +154,10 @@ const recorderReducer = (state: IRecorderReducer = initialState, action: AnyActi
 				selectedElement: action.payload.element,
 			};
 		case RECORD_STEP:
-            if (action.type === ActionsInTestEnum.WAIT_FOR_NAVIGATION) {
+			if (action.type === ActionsInTestEnum.WAIT_FOR_NAVIGATION) {
 				return state;
 			}
-            return {
+			return {
 				...state,
 				/* Set verified status to false, if a new step is added */
 				isVerified: false,
@@ -227,12 +227,12 @@ const recorderReducer = (state: IRecorderReducer = initialState, action: AnyActi
 			};
 		}
 		case SET_IS_WEBVIEW_INITIALIZED:
-            return {
+			return {
 				...state,
 				isWebViewInitialized: action.payload.isInitialized,
 			};
 		case RESET_RECORDER:
-            return initialState;
+			return initialState;
 		case RESET_APP_SESSION:
 			return initialState;
 		case SET_STATUS_BAR_VISIBILITY:

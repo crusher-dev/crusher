@@ -4,7 +4,6 @@ import { getDeviceFromId } from "../../devices";
 import { iReduxState } from "../reducers";
 import { TRecorderState } from "../reducers/recorder";
 
-
 export const getRecorderInfo = (state: iReduxState) => ({
 	url: state.recorder.currentUrl,
 	device: state.recorder.device ? getDeviceFromId(state.recorder.device) : null,
@@ -24,28 +23,28 @@ export const getStepInfo = (stepId: any) => {
 	return (state: iReduxState) => {
 		const step = getSavedSteps(state)[stepId];
 		const selectors = step.payload?.selectors?.length ? step.payload.selectors[0].value : "window";
-		
+
 		const actionDescriptor = new ActionDescriptor();
 		actionDescriptor.initActionHandlers();
 		const stepName = step.name || actionDescriptor.describeAction(step as any);
-		
+
 		return {
 			isRunning: step.status === ActionStatusEnum.STARTED,
 			isCompleted: step.status === ActionStatusEnum.COMPLETED,
 			isFailed: step.status === ActionStatusEnum.FAILED,
 			name: stepName,
 			description: selectors,
-			step: step
+			step: step,
 		};
 	};
 };
 export const getRecorderState = (state: iReduxState) => state.recorder.state;
 export const getIsInRecordingSession = (state: iReduxState) => {
-    return !!getRecorderInfo(state).device ;
-}
+	return !!getRecorderInfo(state).device;
+};
 export const getIsCustomCodeOn = (state: iReduxState) => {
 	return getRecorderState(state).type === TRecorderState.CUSTOM_CODE_ON;
-}
+};
 
 export const isTestVerified = (state: iReduxState) => state.recorder.isVerified;
 

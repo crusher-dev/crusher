@@ -1,289 +1,283 @@
 const monacoTheme = {
 	rules: [
 		[
-			{ token: 'comment', foreground: '#6f6f6f' },
-			{ token: 'punctuation.definition.comment', foreground: '#6f6f6f' }
+			{ token: "comment", foreground: "#6f6f6f" },
+			{ token: "punctuation.definition.comment", foreground: "#6f6f6f" },
 		],
-		[{ token: 'comment.block.preprocessor', foreground: '#888888' }],
+		[{ token: "comment.block.preprocessor", foreground: "#888888" }],
 		[
-			{ token: 'comment.documentation', foreground: '#888888' },
-			{ token: 'comment.block.documentation', foreground: '#888888' }
-		],
-		[
-			{
-				token: 'comment.block.documentation punctuation.definition.bracket.curly',
-				foreground: '#57B5EA'
-			}
-		],
-		[{ token: 'comment.block storage.type' }],
-		[
-			{
-				token: 'comment.block.documentation punctuation.definition.block.tag',
-				foreground: '#AB54D3'
-			}
-		],
-		[{ token: 'invalid.illegal', foreground: '#cc0000' }],
-		[{ token: 'keyword.operator', foreground: '#AB54D3' }],
-		[{ token: 'keyword.operator.type' }],
-		[
-			{
-				token: 'meta.tag.attributes keyword.operator.assignment',
-				foreground: '#fff'
-			}
-		],
-		[{ token: 'keyword.operator.assignment', foreground: '#AB54D3' }],
-		[{ token: 'keyword.operator.arithmetic' }],
-		[
-			{ token: 'keyword', foreground: '#AB54D3' },
-			{ token: 'storage', foreground: '#AB54D3' }
-		],
-		[{ token: 'keyword.other.definition.ini', foreground: '#ddd' }],
-		[
-			{ token: 'storage.type', foreground: '#AB54D3' },
-			{ token: 'support.type', foreground: '#AB54D3' },
-			{ token: 'keyword.control', foreground: '#AB54D3' }
-		],
-		[
-			{ token: 'constant.language', foreground: '#E97258' },
-			{ token: 'support.constant', foreground: '#E97258' },
-			{ token: 'variable.language', foreground: '#E97258' }
+			{ token: "comment.documentation", foreground: "#888888" },
+			{ token: "comment.block.documentation", foreground: "#888888" },
 		],
 		[
 			{
-				token: 'constant.language.import-export-all',
-				foreground: '#ddd'
-			}
+				token: "comment.block.documentation punctuation.definition.bracket.curly",
+				foreground: "#57B5EA",
+			},
+		],
+		[{ token: "comment.block storage.type" }],
+		[
+			{
+				token: "comment.block.documentation punctuation.definition.block.tag",
+				foreground: "#AB54D3",
+			},
+		],
+		[{ token: "invalid.illegal", foreground: "#cc0000" }],
+		[{ token: "keyword.operator", foreground: "#AB54D3" }],
+		[{ token: "keyword.operator.type" }],
+		[
+			{
+				token: "meta.tag.attributes keyword.operator.assignment",
+				foreground: "#fff",
+			},
+		],
+		[{ token: "keyword.operator.assignment", foreground: "#AB54D3" }],
+		[{ token: "keyword.operator.arithmetic" }],
+		[
+			{ token: "keyword", foreground: "#AB54D3" },
+			{ token: "storage", foreground: "#AB54D3" },
+		],
+		[{ token: "keyword.other.definition.ini", foreground: "#ddd" }],
+		[
+			{ token: "storage.type", foreground: "#AB54D3" },
+			{ token: "support.type", foreground: "#AB54D3" },
+			{ token: "keyword.control", foreground: "#AB54D3" },
 		],
 		[
-			{ token: 'variable', foreground: '#fff' },
-			{ token: 'support.variable', foreground: '#fff' }
+			{ token: "constant.language", foreground: "#E97258" },
+			{ token: "support.constant", foreground: "#E97258" },
+			{ token: "variable.language", foreground: "#E97258" },
 		],
 		[
 			{
-				token: 'meta.object.member variable.other.constant',
-				foreground: '#36acaa'
-			}
+				token: "constant.language.import-export-all",
+				foreground: "#ddd",
+			},
 		],
-		[{ token: 'variable.language.this', foreground: '#d9931e' }],
 		[
-			{
-				token: 'meta.tag.attributes variable.other',
-				foreground: '#57B5EA'
-			}
+			{ token: "variable", foreground: "#fff" },
+			{ token: "support.variable", foreground: "#fff" },
 		],
 		[
 			{
-				token: 'meta.object.member variable.other.readwrite',
-				foreground: '#57B5EA'
-			}
+				token: "meta.object.member variable.other.constant",
+				foreground: "#36acaa",
+			},
 		],
-		[
-			{ token: 'entity.name.function', foreground: '#57B5EA' },
-			{ token: 'support.function', foreground: '#57B5EA' }
-		],
-		[{ token: 'storage.type.function.arrow', foreground: '#AB54D3' }],
-		[
-			{ token: 'entity.name.type', foreground: '#57B5EA' },
-			{ token: 'entity.other.inherited-class', foreground: '#57B5EA' },
-			{ token: 'support.class', foreground: '#57B5EA' }
-		],
-		[{ token: 'entity.name.exception', foreground: '#cc0000' }],
-		[{ token: 'entity.name.section', foreground: '#AB54D3' }],
-		[
-			{ token: 'constant.numeric', foreground: '#57B5EA' },
-			{ token: 'constant.character', foreground: '#57B5EA' },
-			{ token: 'constant', foreground: '#57B5EA' }
-		],
-		[{ token: 'string', foreground: 'grey' }],
-		[{ token: 'string.unquoted', foreground: '#fff' }],
-		[{ token: 'constant.character.escape', foreground: '#888888' }],
-		[{ token: 'string.regexp', foreground: '#57B5EA' }],
-		[{ token: 'constant.other.symbol', foreground: '#AB6526' }],
-		[{ token: 'punctuation', foreground: '#fff' }],
-		[{ token: 'punctuation.definition.quasi', foreground: '#98C75C' }],
-		[
-			{ token: 'punctuation.definition.keyword', foreground: '#AB54D3' }
-		],
-		[{ token: 'punctuation.definition.string', foreground: '#98C75C' }],
+		[{ token: "variable.language.this", foreground: "#d9931e" }],
 		[
 			{
-				token: 'punctuation.definition.entity.ini',
-				foreground: '#AB54D3'
-			}
-		],
-		[{ token: 'punctuation.definition.tag', foreground: '#57B5EA' }],
-		[{ token: 'punctuation.definition.bold', foreground: '#57B5EA' }],
-		[
-			{ token: 'punctuation.definition.heading', foreground: '#AB54D3' }
+				token: "meta.tag.attributes variable.other",
+				foreground: "#57B5EA",
+			},
 		],
 		[
 			{
-				token: 'punctuation.definition.string.template',
-				foreground: '#E97258'
-			}
+				token: "meta.object.member variable.other.readwrite",
+				foreground: "#57B5EA",
+			},
+		],
+		[
+			{ token: "entity.name.function", foreground: "#57B5EA" },
+			{ token: "support.function", foreground: "#57B5EA" },
+		],
+		[{ token: "storage.type.function.arrow", foreground: "#AB54D3" }],
+		[
+			{ token: "entity.name.type", foreground: "#57B5EA" },
+			{ token: "entity.other.inherited-class", foreground: "#57B5EA" },
+			{ token: "support.class", foreground: "#57B5EA" },
+		],
+		[{ token: "entity.name.exception", foreground: "#cc0000" }],
+		[{ token: "entity.name.section", foreground: "#AB54D3" }],
+		[
+			{ token: "constant.numeric", foreground: "#57B5EA" },
+			{ token: "constant.character", foreground: "#57B5EA" },
+			{ token: "constant", foreground: "#57B5EA" },
+		],
+		[{ token: "string", foreground: "grey" }],
+		[{ token: "string.unquoted", foreground: "#fff" }],
+		[{ token: "constant.character.escape", foreground: "#888888" }],
+		[{ token: "string.regexp", foreground: "#57B5EA" }],
+		[{ token: "constant.other.symbol", foreground: "#AB6526" }],
+		[{ token: "punctuation", foreground: "#fff" }],
+		[{ token: "punctuation.definition.quasi", foreground: "#98C75C" }],
+		[{ token: "punctuation.definition.keyword", foreground: "#AB54D3" }],
+		[{ token: "punctuation.definition.string", foreground: "#98C75C" }],
+		[
+			{
+				token: "punctuation.definition.entity.ini",
+				foreground: "#AB54D3",
+			},
+		],
+		[{ token: "punctuation.definition.tag", foreground: "#57B5EA" }],
+		[{ token: "punctuation.definition.bold", foreground: "#57B5EA" }],
+		[{ token: "punctuation.definition.heading", foreground: "#AB54D3" }],
+		[
+			{
+				token: "punctuation.definition.string.template",
+				foreground: "#E97258",
+			},
 		],
 		[
 			{
-				token: 'meta.tag.attributes punctuation.section.embedded',
-				foreground: '#57B5EA'
-			}
+				token: "meta.tag.attributes punctuation.section.embedded",
+				foreground: "#57B5EA",
+			},
 		],
 		[
-			{ token: 'meta.definition.variable', foreground: '#FF9A7A' },
+			{ token: "meta.definition.variable", foreground: "#FF9A7A" },
 			{
-				token: 'meta.definition.variable entity.name.function',
-				foreground: '#FF9A7A'
-			}
+				token: "meta.definition.variable entity.name.function",
+				foreground: "#FF9A7A",
+			},
 		],
-		[{ token: 'meta.brace', foreground: '#fff' }],
+		[{ token: "meta.brace", foreground: "#fff" }],
 		[
 			{
-				token: 'meta.definition.method entity.name.function',
-				foreground: '#57B5EA'
+				token: "meta.definition.method entity.name.function",
+				foreground: "#57B5EA",
 			},
 			{
-				token: 'meta.function-call entity.name.function',
-				foreground: '#57B5EA'
-			}
+				token: "meta.function-call entity.name.function",
+				foreground: "#57B5EA",
+			},
 		],
-		[{ token: 'meta.link.inline', foreground: '#57B5EA' }],
+		[{ token: "meta.link.inline", foreground: "#57B5EA" }],
 		[
-			{ token: 'support.type.primitive', foreground: '#36ACAA' },
+			{ token: "support.type.primitive", foreground: "#36ACAA" },
 			{
-				token: 'meta.type.parameters entity.name.type',
-				foreground: '#36ACAA'
-			}
+				token: "meta.type.parameters entity.name.type",
+				foreground: "#36ACAA",
+			},
 		],
 		[
-			{ token: 'meta.tag.sgml.doctype', foreground: '#ddd' },
-			{ token: 'meta.tag.sgml.doctype string', foreground: '#ddd' },
+			{ token: "meta.tag.sgml.doctype", foreground: "#ddd" },
+			{ token: "meta.tag.sgml.doctype string", foreground: "#ddd" },
 			{
-				token: 'meta.tag.sgml.doctype entity.name.tag',
-				foreground: '#ddd'
+				token: "meta.tag.sgml.doctype entity.name.tag",
+				foreground: "#ddd",
 			},
 			{
-				token: 'meta.tag.sgml punctuation.definition.tag.html',
-				foreground: '#ddd'
-			}
+				token: "meta.tag.sgml punctuation.definition.tag.html",
+				foreground: "#ddd",
+			},
 		],
 		[
-			{ token: 'meta.tag', foreground: '#ddd' },
-			{ token: 'punctuation.definition.tag.html', foreground: '#ddd' },
+			{ token: "meta.tag", foreground: "#ddd" },
+			{ token: "punctuation.definition.tag.html", foreground: "#ddd" },
 			{
-				token: 'punctuation.definition.tag.begin.html',
-				foreground: '#ddd'
+				token: "punctuation.definition.tag.begin.html",
+				foreground: "#ddd",
 			},
 			{
-				token: 'punctuation.definition.tag.end.html',
-				foreground: '#ddd'
-			}
+				token: "punctuation.definition.tag.end.html",
+				foreground: "#ddd",
+			},
 		],
-		[{ token: 'entity.name.tag', foreground: '#57B5EA' }],
+		[{ token: "entity.name.tag", foreground: "#57B5EA" }],
 		[
 			{
-				token: 'meta.tag entity.other.attribute-name',
-				foreground: '#d9931e'
+				token: "meta.tag entity.other.attribute-name",
+				foreground: "#d9931e",
 			},
 			{
-				token: 'entity.other.attribute-name.html',
-				foreground: '#d9931e'
-			}
-		],
-		[
-			{ token: 'constant.character.entity', foreground: '#d9931e' },
-			{ token: 'punctuation.definition.entity', foreground: '#d9931e' }
-		],
-		[
-			{ token: 'meta.selector', foreground: '#AB54D3' },
-			{ token: 'meta.selector entity', foreground: '#AB54D3' },
-			{
-				token: 'meta.selector entity punctuation',
-				foreground: '#AB54D3'
+				token: "entity.other.attribute-name.html",
+				foreground: "#d9931e",
 			},
-			{ token: 'entity.name.tag.css', foreground: '#AB54D3' }
 		],
 		[
-			{ token: 'meta.property-name', foreground: '#ddd' },
-			{ token: 'support.type.property-name', foreground: '#ddd' }
+			{ token: "constant.character.entity", foreground: "#d9931e" },
+			{ token: "punctuation.definition.entity", foreground: "#d9931e" },
 		],
 		[
-			{ token: 'support.type.property-name.json', foreground: '#E97258' }
-		],
-		[
+			{ token: "meta.selector", foreground: "#AB54D3" },
+			{ token: "meta.selector entity", foreground: "#AB54D3" },
 			{
-				token: 'source.json punctuation.support.type.property-name',
-				foreground: '#E97258'
-			}
-		],
-		[
-			{
-				token: 'punctuation.definition.entity.css',
-				foreground: '#AB54D3'
-			}
-		],
-		[
-			{ token: 'meta.property-value', foreground: '#E97258' },
-			{
-				token: 'meta.property-value constant.other',
-				foreground: '#E97258'
+				token: "meta.selector entity punctuation",
+				foreground: "#AB54D3",
 			},
-			{ token: 'support.constant.property-value', foreground: '#E97258' }
+			{ token: "entity.name.tag.css", foreground: "#AB54D3" },
 		],
-		[{ token: 'keyword.other.important', foreground: '#AB54D3' }],
-		[{ token: 'meta.paragraph.markdown', foreground: '#ddd' }],
+		[
+			{ token: "meta.property-name", foreground: "#ddd" },
+			{ token: "support.type.property-name", foreground: "#ddd" },
+		],
+		[{ token: "support.type.property-name.json", foreground: "#E97258" }],
 		[
 			{
-				token: 'markup.quote meta.paragraph.markdown',
-				foreground: '#E97258',
-				fontStyle: 'italic'
+				token: "source.json punctuation.support.type.property-name",
+				foreground: "#E97258",
+			},
+		],
+		[
+			{
+				token: "punctuation.definition.entity.css",
+				foreground: "#AB54D3",
+			},
+		],
+		[
+			{ token: "meta.property-value", foreground: "#E97258" },
+			{
+				token: "meta.property-value constant.other",
+				foreground: "#E97258",
+			},
+			{ token: "support.constant.property-value", foreground: "#E97258" },
+		],
+		[{ token: "keyword.other.important", foreground: "#AB54D3" }],
+		[{ token: "meta.paragraph.markdown", foreground: "#ddd" }],
+		[
+			{
+				token: "markup.quote meta.paragraph.markdown",
+				foreground: "#E97258",
+				fontStyle: "italic",
 			},
 			{
-				token: 'markup.quote punctuation.definition',
-				foreground: '#E97258',
-				fontStyle: 'italic'
-			}
+				token: "markup.quote punctuation.definition",
+				foreground: "#E97258",
+				fontStyle: "italic",
+			},
 		],
-		[{ token: 'markup.bold.markdown', foreground: '#57B5EA' }],
-		[{ token: 'markup.changed', foreground: '#ddd' }],
-		[{ token: 'markup.deleted', foreground: '#ddd' }],
-		[{ token: 'markup.italic', fontStyle: 'italic' }],
-		[{ token: 'markup.error', foreground: '#cc0000' }],
-		[{ token: 'markup.inserted', foreground: '#ddd' }],
-		[{ token: 'meta.link', foreground: '#57B5EA' }],
+		[{ token: "markup.bold.markdown", foreground: "#57B5EA" }],
+		[{ token: "markup.changed", foreground: "#ddd" }],
+		[{ token: "markup.deleted", foreground: "#ddd" }],
+		[{ token: "markup.italic", fontStyle: "italic" }],
+		[{ token: "markup.error", foreground: "#cc0000" }],
+		[{ token: "markup.inserted", foreground: "#ddd" }],
+		[{ token: "meta.link", foreground: "#57B5EA" }],
 		[
-			{ token: 'markup.output', foreground: '#888888' },
-			{ token: 'markup.raw', foreground: '#888888' }
+			{ token: "markup.output", foreground: "#888888" },
+			{ token: "markup.raw", foreground: "#888888" },
 		],
-		[{ token: 'markup.prompt', foreground: '#888888' }],
-		[{ token: 'markup.heading', foreground: '#AA3731' }],
-		[{ token: 'markup.underline', fontStyle: 'underline' }],
-		[{ token: 'markup.quote', foreground: '#6f6f6f' }],
-		[{ token: 'markup.list', foreground: '#57B5EA' }],
+		[{ token: "markup.prompt", foreground: "#888888" }],
+		[{ token: "markup.heading", foreground: "#AA3731" }],
+		[{ token: "markup.underline", fontStyle: "underline" }],
+		[{ token: "markup.quote", foreground: "#6f6f6f" }],
+		[{ token: "markup.list", foreground: "#57B5EA" }],
 		[
-			{ token: 'markup.bold', foreground: '#E97258' },
-			{ token: 'markup.italic', foreground: '#E97258' }
+			{ token: "markup.bold", foreground: "#E97258" },
+			{ token: "markup.italic", foreground: "#E97258" },
 		],
-		[{ token: 'markup.inline.raw', foreground: '#bd10e0' }],
+		[{ token: "markup.inline.raw", foreground: "#bd10e0" }],
 		[
-			{ token: 'meta.diff.range', foreground: '#434343' },
-			{ token: 'meta.diff.index', foreground: '#434343' },
-			{ token: 'meta.separator', foreground: '#434343' }
+			{ token: "meta.diff.range", foreground: "#434343" },
+			{ token: "meta.diff.index", foreground: "#434343" },
+			{ token: "meta.separator", foreground: "#434343" },
 		],
-		[{ token: 'meta.diff.header.from-file', foreground: '#434343' }],
-		[{ token: 'meta.diff.header.to-file', foreground: '#434343' }],
-		[{ token: 'constant.other.timestamp', foreground: '#B731B0' }],
-		[
-			{
-				token: 'meta.embedded.block.frontmatter string.unquoted',
-				foreground: '#98C75C'
-			}
-		],
+		[{ token: "meta.diff.header.from-file", foreground: "#434343" }],
+		[{ token: "meta.diff.header.to-file", foreground: "#434343" }],
+		[{ token: "constant.other.timestamp", foreground: "#B731B0" }],
 		[
 			{
-				token: 'punctuation.section.embedded.begin.php',
-				foreground: '#AB54D3'
-			}
-		]
+				token: "meta.embedded.block.frontmatter string.unquoted",
+				foreground: "#98C75C",
+			},
+		],
+		[
+			{
+				token: "punctuation.section.embedded.begin.php",
+				foreground: "#AB54D3",
+			},
+		],
 	],
 	colors: {
 		"activityBar.background": "#333842",
@@ -651,7 +645,7 @@ const newTheme = {
 		"gitDecoration.ignoreResourceForeground": "#6f6f6f",
 	},
 	rules: [
-		{ token: 'type', foreground: '#ACFC5B' },
+		{ token: "type", foreground: "#ACFC5B" },
 		{ foreground: "#6f6f6f", token: "comment" },
 		{ foreground: "#6f6f6f", token: "punctuation.definition.comment" },
 		{ foreground: "#888888", token: "comment.block.preprocessor" },
@@ -812,8 +806,7 @@ const newTheme = {
 		},
 		{ foreground: "#AB54D3", token: "punctuation.section.embedded.begin.php" },
 		{ token: "", foreground: "#ffffff" },
-	]
-}
+	],
+};
 
 export { monacoTheme, newTheme };
-

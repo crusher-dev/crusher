@@ -9,16 +9,14 @@ import { TemplatesModal } from "./steps/templatesModal";
 import { ModalManager } from "../modals";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 
-const Sidebar = ({
-    className
-}: any) => {
+const Sidebar = ({ className }: any) => {
 	const recorderInfo = useSelector(getRecorderInfo);
 	const recorderState = useSelector(getRecorderState);
 	const IS_GETTING_STARTED = false;
 
 	return (
-        (<div css={[containerStyle, IS_GETTING_STARTED ? gettingStartedContainerStyle : null]} className={String(className)}>
-            <Conditional showIf={recorderInfo.device}>
+		<div css={[containerStyle, IS_GETTING_STARTED ? gettingStartedContainerStyle : null]} className={String(className)}>
+			<Conditional showIf={recorderInfo.device}>
 				<>
 					{recorderState.type !== TRecorderState.CUSTOM_CODE_ON ? (
 						<ActionsPanel />
@@ -61,10 +59,10 @@ const Sidebar = ({
 					<StepsPanel />
 				</>
 			</Conditional>
-            <ModalManager />
-            <TemplatesModal isOpen={false} handleClose={() => { }} />
-        </div>)
-    );
+			<ModalManager />
+			<TemplatesModal isOpen={false} handleClose={() => {}} />
+		</div>
+	);
 };
 const containerStyle = css`
 	display: flex;
@@ -74,7 +72,7 @@ const containerStyle = css`
 	overflow: hidden;
 	position: relative;
 	z-index: 1000;
-	background-color: #09090A;
+	background-color: #09090a;
 `;
 const gettingStartedContainerStyle = css`
 	background-color: #070709;

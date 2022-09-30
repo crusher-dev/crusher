@@ -10,7 +10,7 @@ import { useSelector, useStore } from "react-redux";
 
 const ReadDocsButton = ({ title, className, onClick }) => {
 	return (
-		(<Button
+		<Button
 			id={"verify-save-test"}
 			onClick={(e) => {
 				e.preventDefault();
@@ -23,7 +23,7 @@ const ReadDocsButton = ({ title, className, onClick }) => {
 			css={saveButtonStyle}
 		>
 			<span>{title}</span>
-		</Button>)
+		</Button>
 	);
 };
 
@@ -66,22 +66,26 @@ const ProxyWarningContainer = ({ exitCallback, testId, startUrl }) => {
 	React.useEffect(() => {
 		if (Object.keys(proxyState).length) {
 			// Run the test with this config now.
-			performRunDraftTest(testId).then((res) => {
-				window["messageBarCallback"](res.draftJobId);
-			}).catch((err) => {
-				console.log("Err is", err);
-			});
+			performRunDraftTest(testId)
+				.then((res) => {
+					window["messageBarCallback"](res.draftJobId);
+				})
+				.catch((err) => {
+					console.log("Err is", err);
+				});
 			exitCallback();
 		}
 	}, [proxyState]);
 
 	const handleSkip = React.useCallback(() => {
 		localStorage.setItem("skipProxyWarning", "true");
-		performRunDraftTest(testId).then((res) => {
-			window["messageBarCallback"](res.draftJobId);
-		}).catch((err) => {
-			console.log("Err is", err);
-		});
+		performRunDraftTest(testId)
+			.then((res) => {
+				window["messageBarCallback"](res.draftJobId);
+			})
+			.catch((err) => {
+				console.log("Err is", err);
+			});
 
 		exitCallback();
 	}, []);
@@ -117,7 +121,26 @@ const ProxyWarningContainer = ({ exitCallback, testId, startUrl }) => {
 				</Link>
 			</div>
 			<div css={waitingTextStyle}>
-				<Link onClick={isRetrying ? undefined : handleRetry}>{isRetrying ? (<span css={css`display: flex; align-items:center;`}>Retrying <LoadingIconV2 css={css`margin-left: 8rem; height: 18rem;`} /></span>) : "Retry"}</Link>
+				<Link onClick={isRetrying ? undefined : handleRetry}>
+					{isRetrying ? (
+						<span
+							css={css`
+								display: flex;
+								align-items: center;
+							`}
+						>
+							Retrying{" "}
+							<LoadingIconV2
+								css={css`
+									margin-left: 8rem;
+									height: 18rem;
+								`}
+							/>
+						</span>
+					) : (
+						"Retry"
+					)}
+				</Link>
 			</div>
 			<div css={watch} onClick={handleOpenHelpVideo}>
 				<PlayV2Icon /> Watch video

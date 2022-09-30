@@ -20,14 +20,14 @@ function getAppIconPath() {
 }
 
 function isDevelopment() {
-	return process.env.NODE_ENV === "development"
+	return process.env.NODE_ENV === "development";
 }
 
 export function getAppURl() {
 	if (isDevelopment) {
-		return "http://localhost:8080"
+		return "http://localhost:8080";
 	}
-	return encodePathAsUrl(__dirname, "index.html")
+	return encodePathAsUrl(__dirname, "index.html");
 }
 
 function encodePathAsUrl(...pathSegments: string[]): string {
@@ -68,16 +68,15 @@ function isValidHttpUrl(str: string) {
 
 	const pattern = new RegExp(
 		"^(https?:\\/\\/)?" + // protocol
-		"((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
-		"((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
-		"(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
-		"(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
-		"(\\#[-a-z\\d_]*)?$",
+			"((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
+			"((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
+			"(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
+			"(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
+			"(\\#[-a-z\\d_]*)?$",
 		"i",
 	); // fragment locator
 	return !!pattern.test(str);
 }
-
 
 const getUserInfoFromToken = async (token: string) => {
 	// call axios request with token as cookie header
@@ -134,5 +133,5 @@ export {
 	getUserInfoFromToken,
 	getUserAccountProjects,
 	getSelectedProjectTests,
-	getSelectedProjectTestsRequest
+	getSelectedProjectTestsRequest,
 };

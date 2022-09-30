@@ -1,25 +1,24 @@
-
 import { css } from "@emotion/react";
 import { ReactElement } from "react";
 
 type TMenuItem = {
-    label: ReactElement | string;
-    rightLabel: ReactElement | string;
-    showHighlighted: boolean;
-    selected: boolean;
+	label: ReactElement | string;
+	rightLabel: ReactElement | string;
+	showHighlighted: boolean;
+	selected: boolean;
 } & React.DetailedHTMLProps<any, any>;
 
 export function MenuItem({ label, rightLabel, css, showHighlighted = false, selected = false, className, ...otherProps }: TMenuItem) {
-    return (
-        <div
-            css={[dropDownItem, showHighlighted && highlightHoverStyle, selected && isSelectedStyle, css]}
-            className={`flex justify-between items-center px-12 py-6 ${className}`}
-            {...otherProps}
-        >
-            <span className={"name font-500 leading-none font-cera capitalize"}>{label}</span>
-            <span className={"text-12 shortcut leading-none"}>{rightLabel}</span>
-        </div>
-    );
+	return (
+		<div
+			css={[dropDownItem, showHighlighted && highlightHoverStyle, selected && isSelectedStyle, css]}
+			className={`flex justify-between items-center px-12 py-6 ${className}`}
+			{...otherProps}
+		>
+			<span className={"name font-500 leading-none font-cera capitalize"}>{label}</span>
+			<span className={"text-12 shortcut leading-none"}>{rightLabel}</span>
+		</div>
+	);
 }
 
 const highlightHoverStyle = css`

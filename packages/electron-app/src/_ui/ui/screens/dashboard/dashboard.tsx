@@ -164,7 +164,7 @@ function TestListItem({ test, isActive, deleteItem, setLockState, projectId, onM
 	);
 
 	return (
-		(<li
+		<li
 			ref={containerRef}
 			css={[
 				css`
@@ -270,7 +270,7 @@ function TestListItem({ test, isActive, deleteItem, setLockState, projectId, onM
 								opacity: 0.8;
 							}
 						`}
-					//  onClick={() => { navigate("/recorder"); goFullScreen(); setTimeout(() => {performReplayTestUrlAction(test.id);}, 500); }}
+						//  onClick={() => { navigate("/recorder"); goFullScreen(); setTimeout(() => {performReplayTestUrlAction(test.id);}, 500); }}
 					>
 						<PlayIcon
 							css={css`
@@ -282,7 +282,7 @@ function TestListItem({ test, isActive, deleteItem, setLockState, projectId, onM
 					</div>
 				</div>
 			</div>
-		</li>)
+		</li>
 	);
 }
 function TestList({ userTests, deleteTest, projectId }) {
@@ -306,18 +306,18 @@ function TestList({ userTests, deleteTest, projectId }) {
 		<ul css={testItemStyle}>
 			{userTests
 				? userTests.map((test, index) => {
-					return (
-						<TestListItem
-							key={test.id}
-							deleteItem={deleteTest}
-							projectId={projectId}
-							test={test}
-							isActive={lastHoverItem === index}
-							setLockState={handleSetLockState}
-							onMouseEnterCallback={onMouseEnterCallback.bind(this, index)}
-						/>
-					);
-				})
+						return (
+							<TestListItem
+								key={test.id}
+								deleteItem={deleteTest}
+								projectId={projectId}
+								test={test}
+								isActive={lastHoverItem === index}
+								setLockState={handleSetLockState}
+								onMouseEnterCallback={onMouseEnterCallback.bind(this, index)}
+							/>
+						);
+				  })
 				: ""}
 		</ul>
 	);
@@ -378,17 +378,8 @@ const testItemHoverStyle = css`
 	color: #9f87ff;
 `;
 
-function TestItemMenuDropdown({
-	testId,
-	draftJobId,
-	setShowActionMenu,
-	setIsEditMode,
-	deleteTest
-}) {
-	const MenuItem = ({
-		label,
-		onClick
-	}) => {
+function TestItemMenuDropdown({ testId, draftJobId, setShowActionMenu, setIsEditMode, deleteTest }) {
+	const MenuItem = ({ label, onClick }) => {
 		return (
 			<div
 				css={css`
@@ -435,13 +426,8 @@ function TestItemMenuDropdown({
 		</div>
 	);
 }
-function DropwdownContent({
-	setShowActionMenu
-}) {
-	const MenuItem = ({
-		label,
-		onClick
-	}) => {
+function DropwdownContent({ setShowActionMenu }) {
+	const MenuItem = ({ label, onClick }) => {
 		return (
 			<div
 				css={css`
@@ -642,7 +628,11 @@ function DashboardScreen() {
 
 			if (projectId && userAccountInfo) {
 				getUserTests(projectId).then((tests) => {
-					setUserTests(tests.list.filter((a) => { return !((window as any).deletedTest || []).includes(a.id) }));
+					setUserTests(
+						tests.list.filter((a) => {
+							return !((window as any).deletedTest || []).includes(a.id);
+						}),
+					);
 				});
 			}
 		}, 5000);
@@ -706,7 +696,6 @@ function DashboardScreen() {
 	}
 
 	const TitleComponent = React.useMemo(() => {
-
 		const isProxyWorking = Object.keys(proxyState).length;
 		return (
 			<div css={titleStyle}>
@@ -722,8 +711,8 @@ function DashboardScreen() {
 						proxyIsInitializing
 							? css``
 							: isProxyWorking
-								? undefined
-								: css`
+							? undefined
+							: css`
 									path {
 										fill: rgba(0, 0, 0, 0.8);
 									}
@@ -749,10 +738,20 @@ function DashboardScreen() {
 		<CompactAppLayout
 			headerStyle={haveZeroTests ? { borderBottom: "none" } : {}}
 			title={TitleComponent}
-			titleContainerCss={css`margin-left: 38rem;`}
+			titleContainerCss={css`
+				margin-left: 38rem;
+			`}
 			footer={userTests && <DashboardFooter projectId={selectedProject} userTests={userTests} />}
 		>
-			{showProxyWarning.show ? <ProxyWarningContainer testId={showProxyWarning.testId} exitCallback={setShowProxyWarning.bind(this, false)} startUrl={showProxyWarning.startUrl} /> : mainContent}
+			{showProxyWarning.show ? (
+				<ProxyWarningContainer
+					testId={showProxyWarning.testId}
+					exitCallback={setShowProxyWarning.bind(this, false)}
+					startUrl={showProxyWarning.startUrl}
+				/>
+			) : (
+				mainContent
+			)}
 		</CompactAppLayout>
 	);
 }
@@ -822,7 +821,7 @@ const saveButtonStyle = css`
 	line-height: 17rem;
 	color: #ffffff;
 	:hover {
-		filter: brightness(.8)
+		filter: brightness(0.8);
 	}
 `;
 const infoTextStyle = css`

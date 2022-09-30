@@ -1,5 +1,5 @@
 const ProjectsListScreen = () => {
-    return null;
-}
+	return null;
+};
 
 export { ProjectsListScreen };

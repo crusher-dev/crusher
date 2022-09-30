@@ -1,7 +1,7 @@
 import { getStore } from "../store/configureStore";
 import { getCurrentSelectedProjct, getProxyState } from "../store/selectors/app";
 import { turnOnProxy } from "../_ui/commands/perform";
-import {resolveToBackend} from "./url";
+import { resolveToBackend } from "./url";
 const words = require("./words.json");
 
 const waitForUserLogin = async (callback?: any): Promise<{ loginKey: string; interval }> => {
@@ -24,13 +24,13 @@ const waitForUserLogin = async (callback?: any): Promise<{ loginKey: string; int
 };
 
 function getRandArrIndex(arr) {
-	return Math.floor(Math.random()* arr.length);
+	return Math.floor(Math.random() * arr.length);
 }
 
 export function generateRandomTestName() {
-	const  wordsArr = words.data;
+	const wordsArr = words.data;
 	const currentDate = new Date();
-	return `${wordsArr[getRandArrIndex(wordsArr)]}-${("0" + currentDate.getHours()).slice(-2) + "" + currentDate.getMinutes()}` 
+	return `${wordsArr[getRandArrIndex(wordsArr)]}-${("0" + currentDate.getHours()).slice(-2) + "" + currentDate.getMinutes()}`;
 }
 
 const turnOnProxyServers = () => {

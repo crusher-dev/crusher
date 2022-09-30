@@ -21,26 +21,26 @@ const DropdownOption = ({ label }) => {
 	return <div css={{ padding: "7rem 8rem", width: "100%", cursor: "default" }}>{label}</div>;
 };
 const RunAfterTestModal = (props: iStartupModalProps) => {
-    const { isOpen } = props;
-    const [testId, setTestId] = React.useState("");
-    const [userTests, setUserTests] = React.useState([]);
+	const { isOpen } = props;
+	const [testId, setTestId] = React.useState("");
+	const [userTests, setUserTests] = React.useState([]);
 
-    const dispatch = useDispatch();
+	const dispatch = useDispatch();
 
-    React.useEffect(() => {
+	React.useEffect(() => {
 		if (props.stepAction && isOpen) {
 			setTestId(props.stepAction.payload.meta.value);
 		}
 	}, [isOpen, props.stepAction]);
 
-    const saveAction = () => {
+	const saveAction = () => {
 		if (testId && testId !== "") {
 			performRunAfterTest(testId);
 			props.handleClose();
 		}
 	};
 
-    const updateAction = () => {
+	const updateAction = () => {
 		if (testId && testId !== "") {
 			props.stepAction.payload.meta.value = testId;
 			dispatch(updateRecordedStep(props.stepAction, props.stepIndex));
@@ -49,7 +49,7 @@ const RunAfterTestModal = (props: iStartupModalProps) => {
 		}
 	};
 
-    React.useEffect(() => {
+	React.useEffect(() => {
 		if (isOpen) {
 			getUserTests().then((tests) => {
 				setUserTests(tests.list);
@@ -57,13 +57,13 @@ const RunAfterTestModal = (props: iStartupModalProps) => {
 		}
 	}, [isOpen]);
 
-    if (!isOpen) return null;
+	if (!isOpen) return null;
 
-    const handleRunAfterTestInput = (selected) => {
+	const handleRunAfterTestInput = (selected) => {
 		setTestId(selected[0]);
 	};
 
-    const transformListToSelectBoxValues = (list: any[]) => {
+	const transformListToSelectBoxValues = (list: any[]) => {
 		return list.map((test) => ({
 			value: test.id,
 			label: test.testName,
@@ -71,11 +71,11 @@ const RunAfterTestModal = (props: iStartupModalProps) => {
 		}));
 	};
 
-    const getSelectedOption = (list: any[], testId: string) => {
+	const getSelectedOption = (list: any[], testId: string) => {
 		return transformListToSelectBoxValues(list).filter((test) => test.value === testId);
 	};
 
-    return (
+	return (
 		<Modal id="current-modal" modalStyle={modalStyle} onOutsideClick={props.handleClose}>
 			<ModalTopBar title={"Run after test"} desc={"Runs test in the same browser context as specified"} closeModal={props.handleClose} />
 			<div

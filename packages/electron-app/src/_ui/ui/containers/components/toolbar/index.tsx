@@ -13,7 +13,7 @@ import { SettingsModal } from "./settingsModal";
 import { TourContext, useTour } from "@reactour/tour";
 import { setShowShouldOnboardingOverlay } from "electron-app/src/store/actions/app";
 import { sendSnackBarEvent } from "../toast";
-import { Button } from "@dyson/components/atoms"
+import { Button } from "@dyson/components/atoms";
 import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
 import { useNavigate } from "react-router-dom";
 import { MenuDropdown } from "../../../components/menuDropdownComponent";
@@ -50,24 +50,21 @@ enum ITestActionEnum {
 	VERIFY_SAVE = "VERIFY_SAVE",
 	VERIFY_UPDATE = "VERIFY_UPDATE",
 	SAVE = "SAVE",
-	UPDATE = "UPDATE"
+	UPDATE = "UPDATE",
 }
 const SAVE_TEST_ACTION_DROPDOWN_OPTIONS = [
-	{ id: ITestActionEnum.VERIFY_SAVE, content: (<span>Save</span>) },
-	{ id: ITestActionEnum.SAVE, content: (<span>Save</span>) }
+	{ id: ITestActionEnum.VERIFY_SAVE, content: <span>Save</span> },
+	{ id: ITestActionEnum.SAVE, content: <span>Save</span> },
 ];
 const UPDATE_TEST_ACTION_DROPDOWN_OPTIONS = [
-	{ id: ITestActionEnum.VERIFY_UPDATE, content: (<span>Update</span>) },
-	{ id: ITestActionEnum.UPDATE, content: (<span>Update</span>) }
+	{ id: ITestActionEnum.VERIFY_UPDATE, content: <span>Update</span> },
+	{ id: ITestActionEnum.UPDATE, content: <span>Update</span> },
 ];
 
 const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 	const navigate = useNavigate();
 	const editingSessionMeta = useSelector(getAppEditingSessionMeta);
-	const {
-		isOpen,
-		setIsOpen
-	} = useTour();
+	const { isOpen, setIsOpen } = useTour();
 
 	const dispatch = useDispatch();
 	const store = useStore();
@@ -157,40 +154,54 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 		});
 	};
 
-	const handleCallback = React.useCallback(async (actionType: ITestActionEnum) => {
-		switch (actionType) {
-			case ITestActionEnum.UPDATE:
-				await updateTest().then(() => {
-					navigate("/");
-					goFullScreen(false);
-				});
-				sendSnackBarEvent({ type: "success", message: "Updating test" });
-				break;
-			case ITestActionEnum.SAVE:
-				await saveTestToCloud();
-				break;
-			case ITestActionEnum.VERIFY_UPDATE:
-				if (isTestVerificationComplete) {
-					editTestInCloud();
-				} else {
-					verifyTest("UPDATE", true);
-				}
-				break;
-			case ITestActionEnum.VERIFY_SAVE:
-				if (isTestVerificationComplete) {
-					saveTestToCloud();
-				} else {
-					verifyTest("SAVE", true);
-				}
-				break;
-		}
-	}, [isTestVerificationComplete]);
+	const handleCallback = React.useCallback(
+		async (actionType: ITestActionEnum) => {
+			switch (actionType) {
+				case ITestActionEnum.UPDATE:
+					await updateTest().then(() => {
+						navigate("/");
+						goFullScreen(false);
+					});
+					sendSnackBarEvent({ type: "success", message: "Updating test" });
+					break;
+				case ITestActionEnum.SAVE:
+					await saveTestToCloud();
+					break;
+				case ITestActionEnum.VERIFY_UPDATE:
+					if (isTestVerificationComplete) {
+						editTestInCloud();
+					} else {
+						verifyTest("UPDATE", true);
+					}
+					break;
+				case ITestActionEnum.VERIFY_SAVE:
+					if (isTestVerificationComplete) {
+						saveTestToCloud();
+					} else {
+						verifyTest("SAVE", true);
+					}
+					break;
+			}
+		},
+		[isTestVerificationComplete],
+	);
 
 	return editingSessionMeta ? (
 		<ButtonDropdown
 			dropdownCss={buttonDropdownCss}
-			wrapperCss={css`background: #B341F9; border-radius: 8rem; .dropdown-icon { background: rgba(0, 0, 0, 0.2) !important; }`}
-			css={[buttonDropdownMainButtonCss, css`width: 66rem;`]}
+			wrapperCss={css`
+				background: #b341f9;
+				border-radius: 8rem;
+				.dropdown-icon {
+					background: rgba(0, 0, 0, 0.2) !important;
+				}
+			`}
+			css={[
+				buttonDropdownMainButtonCss,
+				css`
+					width: 66rem;
+				`,
+			]}
 			options={UPDATE_TEST_ACTION_DROPDOWN_OPTIONS}
 			primaryOption={isTestVerificationComplete ? ITestActionEnum.UPDATE : ITestActionEnum.VERIFY_UPDATE}
 			callback={handleCallback}
@@ -198,7 +209,13 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 	) : (
 		<ButtonDropdown
 			dropdownCss={buttonDropdownCss}
-			wrapperCss={css`background: #B341F9; border-radius: 8rem; .dropdown-icon { background: rgba(0, 0, 0, 0.2) !important; }`}
+			wrapperCss={css`
+				background: #b341f9;
+				border-radius: 8rem;
+				.dropdown-icon {
+					background: rgba(0, 0, 0, 0.2) !important;
+				}
+			`}
 			css={buttonDropdownMainButtonCss}
 			options={SAVE_TEST_ACTION_DROPDOWN_OPTIONS}
 			primaryOption={isTestVerificationComplete ? ITestActionEnum.SAVE : ITestActionEnum.VERIFY_SAVE}
@@ -211,23 +228,20 @@ const buttonDropdownCss = css`
 	left: 20rem !important;
 	height: max-content !important;
 	top: calc(100% + 4rem) !important;
-	
 `;
 const buttonDropdownMainButtonCss = css`
 	width: 50rem;
 	height: 32rem;
 	padding: 0rem !important;
-	background: #B341F9 !important;
+	background: #b341f9 !important;
 	border-radius: 8rem !important;
 	border-top-right-radius: 0rem !important;
-    border-bottom-right-radius: 0rem !important;
+	border-bottom-right-radius: 0rem !important;
 `;
 
 SaveVerifyButton.whyDidYouRender = true;
 
-const StepActionMenu = ({
-	callback
-}) => {
+const StepActionMenu = ({ callback }) => {
 	const ActionItem = ({ title, id, callback }) => {
 		return (
 			<div
@@ -282,9 +296,7 @@ const Toolbar = (props: any) => {
 	}, [recorderInfoUrl.url]);
 
 	const handleUrlReturn = React.useCallback(() => {
-		const {
-			setCurrentStep
-		} = tourCont;
+		const { setCurrentStep } = tourCont;
 
 		const recorderInfo = getRecorderInfo(store.getState());
 		const isOnboardingOn = shouldShowOnboardingOverlay(store.getState());
@@ -363,25 +375,23 @@ const Toolbar = (props: any) => {
 	};
 
 	const isTestBeingVerified = recorderState.type === TRecorderState.PERFORMING_ACTIONS;
-	const RightIconComponent = React.useMemo(
-		() => {
+	const RightIconComponent = React.useMemo(() => {
+		return (
+			<div
+				css={css`
+					font-family: Gilroy;
+					font-style: normal;
+					font-weight: 400;
+					font-size: 12.7rem;
 
-			return (
-				<div css={css`
-			font-family: Gilroy;
-			font-style: normal;
-			font-weight: 400;
-			font-size: 12.7rem;
-	
-			
-			color: #444444;
-			margin-right: 12rem;
-			`}>
-					⏎ to start
-				</div>);
-		},
-		[selectedDevice, recorderDevices],
-	);
+					color: #444444;
+					margin-right: 12rem;
+				`}
+			>
+				⏎ to start
+			</div>
+		);
+	}, [selectedDevice, recorderDevices]);
 
 	const handleMenuCallback = React.useCallback((value, isNavigating) => {
 		if (isNavigating) {
@@ -390,7 +400,7 @@ const Toolbar = (props: any) => {
 	}, []);
 
 	const handleOutsideClick = React.useCallback(() => {
-		if ((document.querySelector(".testName") as HTMLInputElement)) {
+		if (document.querySelector(".testName") as HTMLInputElement) {
 			setTestName((document.querySelector(".testName") as HTMLInputElement).value);
 			setIsEditingTestName(false);
 		}
@@ -408,54 +418,142 @@ const Toolbar = (props: any) => {
 		setIsEditingTestName(true);
 		setTimeout(() => {
 			document.querySelector(".testName").focus();
-			document.execCommand('selectAll', false, null);
+			document.execCommand("selectAll", false, null);
 		}, 100);
-
 	}, []);
 
 	return (
 		<div css={containerStyle} {...props}>
-			<div css={css`display: flex; align-items: center;`}>
+			<div
+				css={css`
+					display: flex;
+					align-items: center;
+				`}
+			>
 				<MenuDropdown
 					isRecorder={true}
 					callback={handleMenuCallback}
 					hideDropdown={true}
 					css={css`
-							.crusher-hammer-icon {
-								margin-left: 18rem;
-							}
-						`}
+						.crusher-hammer-icon {
+							margin-left: 18rem;
+						}
+					`}
 				/>
-				<div className={"mt-6 ml-10"} css={css`display: flex; align-items: center; font-size: 13.5rem; color: #fff; font-family: Gilroy; font-weight: 400;`}>
-					<span css={css`font-size: 12rem; color: #606060;`}>tests/</span>
-					<div css={css`display: flex; align-items: center;`}>
+				<div
+					className={"mt-6 ml-10"}
+					css={css`
+						display: flex;
+						align-items: center;
+						font-size: 13.5rem;
+						color: #fff;
+						font-family: Gilroy;
+						font-weight: 400;
+					`}
+				>
+					<span
+						css={css`
+							font-size: 12rem;
+							color: #606060;
+						`}
+					>
+						tests/
+					</span>
+					<div
+						css={css`
+							display: flex;
+							align-items: center;
+						`}
+					>
 						<OnOutsideClick onOutsideClick={handleOutsideClick}>
 							{isEditingTestName ? (
-								<input onKeyDown={handleKeyPress} className={"testName"} css={[isEditingTestName ? css`margin-left: 5.75rem;  padding-top: 2rem; width: 90rem; height: 28rem; padding: 0rem; border-radius: 8px; padding-left: 8rem; padding-right: 8rem;  background: linear-gradient(0deg, rgba(176, 74, 255, 0.02), rgba(176, 74, 255, 0.02)), #0D0D0E;  border: 0.5px solid rgba(176, 74, 255, 0.54);` : null]} defaultValue={testName} />
+								<input
+									onKeyDown={handleKeyPress}
+									className={"testName"}
+									css={[
+										isEditingTestName
+											? css`
+													margin-left: 5.75rem;
+													padding-top: 2rem;
+													width: 90rem;
+													height: 28rem;
+													padding: 0rem;
+													border-radius: 8px;
+													padding-left: 8rem;
+													padding-right: 8rem;
+													background: linear-gradient(0deg, rgba(176, 74, 255, 0.02), rgba(176, 74, 255, 0.02)), #0d0d0e;
+													border: 0.5px solid rgba(176, 74, 255, 0.54);
+											  `
+											: null,
+									]}
+									defaultValue={testName}
+								/>
 							) : (
-								<span css={css`margin-left: 4.25rem; color: #D2D2D2;
-									border-radius: 8px;
-									padding: 0rem;
-									width: 94rem;
-									height: 28rem;
-								   background: transparent;`} onClick={handleTestNameClick}>{testName}</span>
+								<span
+									css={css`
+										margin-left: 4.25rem;
+										color: #d2d2d2;
+										border-radius: 8px;
+										padding: 0rem;
+										width: 94rem;
+										height: 28rem;
+										background: transparent;
+									`}
+									onClick={handleTestNameClick}
+								>
+									{testName}
+								</span>
 							)}
-
 						</OnOutsideClick>
-						<DroppdownIconV2 css={css`width: 9rem; height: 6rem; margin-left: 7rem;`} />
+						<DroppdownIconV2
+							css={css`
+								width: 9rem;
+								height: 6rem;
+								margin-left: 7rem;
+							`}
+						/>
 					</div>
 					<Conditional showIf={recorderInfo.url}>
-						<div title={[TRecorderState.RECORDING_ACTIONS].includes(recorderState.type) ? "recording actions" : "waiting for current actions to finish"} className={"flex items-center"}>
-							<RedDotIcon css={[css`width: 7rem; height: 7rem; margin-left: 10rem;`, [TRecorderState.RECORDING_ACTIONS].includes(recorderState.type) ? css`& > rect { fill: #90EE90; }` : undefined]} />
-							<span className={"ml-6"} css={recorderStatusTextCss}>{[TRecorderState.RECORDING_ACTIONS].includes(recorderState.type) ? "recording" : "waiting"}</span>
+						<div
+							title={
+								[TRecorderState.RECORDING_ACTIONS].includes(recorderState.type) ? "recording actions" : "waiting for current actions to finish"
+							}
+							className={"flex items-center"}
+						>
+							<RedDotIcon
+								css={[
+									css`
+										width: 7rem;
+										height: 7rem;
+										margin-left: 10rem;
+									`,
+									[TRecorderState.RECORDING_ACTIONS].includes(recorderState.type)
+										? css`
+												& > rect {
+													fill: #90ee90;
+												}
+										  `
+										: undefined,
+								]}
+							/>
+							<span className={"ml-6"} css={recorderStatusTextCss}>
+								{[TRecorderState.RECORDING_ACTIONS].includes(recorderState.type) ? "recording" : "waiting"}
+							</span>
 						</div>
 					</Conditional>
-
 				</div>
 			</div>
 			<div css={inputContainerStyle}>
-				<div css={css`	display: flex;
-	flex-direction: column; position: absolute; left: calc(50% + 36rem); top: 50%; transform: translate(-50%, -50%);`}>
+				<div
+					css={css`
+						display: flex;
+						flex-direction: column;
+						position: absolute;
+						left: calc(50% + 36rem);
+						top: 50%;
+						transform: translate(-50%, -50%);
+					`}
+				>
 					<NormalInput
 						placeholder={"Enter URL to test"}
 						onReturn={handleUrlReturn}
@@ -468,7 +566,6 @@ const Toolbar = (props: any) => {
 						<span css={inputErrorMessageStyle}>{urlInputError.message}</span>
 					</Conditional>
 				</div>
-
 			</div>
 
 			<Conditional showIf={isTestBeingVerified}>
@@ -521,11 +618,11 @@ const Toolbar = (props: any) => {
 };
 
 const recorderStatusTextCss = css`
-	font-family: 'Gilroy';
+	font-family: "Gilroy";
 	font-style: normal;
 	font-weight: 400;
 	font-size: 14rem;
-	color: #7C7C7C;
+	color: #7c7c7c;
 	:hover {
 		opacity: 0.8;
 	}
@@ -586,7 +683,7 @@ const containerStyle = css`
 	display: flex;
 	align-items: center;
 	padding: 8rem;
-	background-color: #09090A;
+	background-color: #09090a;
 	padding: 5rem;
 	padding-left: 11rem;
 	min-height: 70rem;
@@ -595,12 +692,12 @@ const containerStyle = css`
 	padding-right: 16rem;
 `;
 const buttonStyle = css`
-	background: #B341F9!important;
+	background: #b341f9 !important;
 	font-size: 14rem;
 	box-sizing: border-box;
-	border: .5px solid #B341F9 !important;
+	border: 0.5px solid #b341f9 !important;
 	border-radius: 8rem !important;
-    width: 77rem;
+	width: 77rem;
 	height: 36rem;
 `;
 

@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { useSelector, useStore } from "react-redux";
 import { AssertionFormTable, ASSERTION_OPERATION_TYPE } from "../../forms/assertionForm";
 import { iAssertionRow, iField } from "@shared/types/assertionRow";
@@ -7,7 +7,7 @@ import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { getSelectedElement } from "electron-app/src/store/selectors/recorder";
 import { enableJavascriptInDebugger, recordHoverDependencies, registerActionAsSavedStep } from "electron-app/src/_ui/commands/perform";
-import {setSelectedElement, updateRecordedStep} from "electron-app/src/store/actions/recorder";
+import { setSelectedElement, updateRecordedStep } from "electron-app/src/store/actions/recorder";
 import { Modal } from "@dyson/components/molecules/Modal";
 import { ModalTopBar } from "../topBar";
 import { css } from "@emotion/react";
@@ -26,21 +26,17 @@ interface iAssertElementModalProps {
 }
 
 const getValidationFields = (elementInfo: any): iField[] => {
-    if (!elementInfo) return [];
-    const {
-        innerHTML,
-        innerText,
-        attributes
-    } = elementInfo;
+	if (!elementInfo) return [];
+	const { innerHTML, innerText, attributes } = elementInfo;
 
-    const MetaTagsFields = attributes.map((attribute) => {
+	const MetaTagsFields = attributes.map((attribute) => {
 		return {
 			name: attribute.name,
 			value: attribute.value,
 			meta: { type: "ATTRIBUTE" },
 		};
 	});
-    return [
+	return [
 		{ name: "innerText", value: innerText, meta: { type: "innerText" } },
 		{ name: "innerHTML", value: innerHTML, meta: { type: "innerHTML" } },
 		...MetaTagsFields,
@@ -216,13 +212,15 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 
 	const handleCloseWrapper = (isAfterSave = false) => {
 		if (isOnboardingOpen) {
-			if(isAfterSave) {
+			if (isAfterSave) {
 				setCurrentStep(5);
 			} else {
 				// Timeout so that it can find the element to highlight,
 				// (which will be mounted after closing current modal)
-				setTimeout(() => { setCurrentStep(3) }, 50);
-			} 
+				setTimeout(() => {
+					setCurrentStep(3);
+				}, 50);
+			}
 		}
 		if (handleClose) {
 			handleClose();

@@ -59,11 +59,11 @@ export function getAllAttributes(element: HTMLElement): iElementAttributeInfo[] 
 	const attributeNamesArr: string[] = element.getAttributeNames();
 
 	return attributeNamesArr.map((attributeName) => {
-        return {
-            name: attributeName,
-            value: element.getAttribute(attributeName),
-        };
-    });
+		return {
+			name: attributeName,
+			value: element.getAttribute(attributeName),
+		};
+	});
 }
 
 export function getDevice(deviceId: string): iDevice | undefined {

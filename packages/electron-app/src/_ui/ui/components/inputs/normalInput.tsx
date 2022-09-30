@@ -2,37 +2,39 @@ import Input from "@dyson/components/atoms/input/Input";
 import { css } from "@emotion/react";
 import React, { useState, useCallback } from "react";
 
-const NormalInput = React.forwardRef(({ placeholder, handleUrlReturn, inputCss: _inputCss, inputWrapperCss, initialValue, className, rightIcon, ...props }, ref) => {
-	const [isInFocus, setIsInFocus] = useState(false);
-	const [url, setIsUrl] = useState(initialValue);
+const NormalInput = React.forwardRef(
+	({ placeholder, handleUrlReturn, inputCss: _inputCss, inputWrapperCss, initialValue, className, rightIcon, ...props }, ref) => {
+		const [isInFocus, setIsInFocus] = useState(false);
+		const [url, setIsUrl] = useState(initialValue);
 
-	React.useEffect(() => {
-		if(url === null) {
-			setIsUrl(initialValue);
-		}
-	}, [initialValue]);
-	const handleOnChange = useCallback((event) => {
-		setIsUrl(event.target.value);
-	}, []);
+		React.useEffect(() => {
+			if (url === null) {
+				setIsUrl(initialValue);
+			}
+		}, [initialValue]);
+		const handleOnChange = useCallback((event) => {
+			setIsUrl(event.target.value);
+		}, []);
 
-	const shouldShowRightIcon = isInFocus || !url?.length;
-	return (
-		<Input
-			placeholder={placeholder}
-			css={inputCss}
-			inputWrapperCss={inputWrapperCss}
-			inputCss={_inputCss}
-			onReturn={handleUrlReturn}
-			ref={ref}
-			rightIcon={shouldShowRightIcon ? rightIcon : null}
-			onBlur={setIsInFocus.bind(this, false)}
-			onFocus={setIsInFocus.bind(this, true)}
-			onChange={handleOnChange}
-			initialValue={initialValue}
-			{...props}
-		/>
-	);
-});
+		const shouldShowRightIcon = isInFocus || !url?.length;
+		return (
+			<Input
+				placeholder={placeholder}
+				css={inputCss}
+				inputWrapperCss={inputWrapperCss}
+				inputCss={_inputCss}
+				onReturn={handleUrlReturn}
+				ref={ref}
+				rightIcon={shouldShowRightIcon ? rightIcon : null}
+				onBlur={setIsInFocus.bind(this, false)}
+				onFocus={setIsInFocus.bind(this, true)}
+				onChange={handleOnChange}
+				initialValue={initialValue}
+				{...props}
+			/>
+		);
+	},
+);
 
 const inputCss = css`
 	height: 40rem;

@@ -20,9 +20,11 @@ class ProxyManager {
 
 		console.info("[ProxyManager]: Tunnel is ready and live");
 		// console.table
-		console.table(Object.entries(this._results).map((a: any) => {
-				return { name: a[0], tunnel: a[1].tunnel, intercept: a[1].intercept}
-		}));
+		console.table(
+			Object.entries(this._results).map((a: any) => {
+				return { name: a[0], tunnel: a[1].tunnel, intercept: a[1].intercept };
+			}),
+		);
 
 		this.store.dispatch(setProxyState(this._results));
 		this.store.dispatch(setProxyInitializing(false));

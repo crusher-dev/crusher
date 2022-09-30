@@ -3,7 +3,7 @@ import { appReducer, IAppReducer } from "./app";
 import { loggerReducer, ILoggerReducer } from "./logger";
 import { IOnboardingState, onboardingReducer } from "./onboarding";
 import { IRecorderReducer, recorderReducer } from "./recorder";
-import { buildsReducer, IBuildsReducer} from "./builds";
+import { buildsReducer, IBuildsReducer } from "./builds";
 
 export interface iReduxState {
 	onboarding: IOnboardingState;

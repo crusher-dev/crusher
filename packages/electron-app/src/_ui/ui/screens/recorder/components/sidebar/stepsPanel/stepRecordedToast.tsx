@@ -3,21 +3,23 @@ import { css } from "@emotion/react";
 import { AddedIcon, CloseIcon } from "electron-app/src/_ui/constants/icons";
 import { sendSnackBarEvent } from "electron-app/src/_ui/ui/containers/components/toast";
 
-const StepRecordedToast = ({meta}) => {
+const StepRecordedToast = ({ meta }) => {
 	const { action } = meta;
-	
+
 	const handleClose = () => {
 		sendSnackBarEvent(null);
 	};
 
 	return (
 		<div className={"flex items-center"} css={containerCss}>
-			<AddedIcon css={addedIconCss}/>
-			<div css={messageCss} className={"ml-8"}>added a <span css={actionTextCss}>{action}</span> step</div>
-			<CloseIcon onClick={handleClose} className={"ml-8"} css={closeIconCss}/>
+			<AddedIcon css={addedIconCss} />
+			<div css={messageCss} className={"ml-8"}>
+				added a <span css={actionTextCss}>{action}</span> step
+			</div>
+			<CloseIcon onClick={handleClose} className={"ml-8"} css={closeIconCss} />
 		</div>
 	);
-}
+};
 
 const closeIconCss = css`
 	width: 6rem;
@@ -49,7 +51,7 @@ const actionTextCss = css`
 	font-weight: 600;
 `;
 const messageCss = css`
-	font-family: 'Gilroy';
+	font-family: "Gilroy";
 	font-style: normal;
 	font-weight: 500;
 	font-size: 14rem;

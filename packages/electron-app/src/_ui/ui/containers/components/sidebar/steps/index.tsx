@@ -1,21 +1,21 @@
 import { css } from "@emotion/react";
 import React from "react";
 import { Text } from "@dyson/components/atoms/text/Text";
-import {CheckboxProps} from "@dyson/components/atoms/checkbox/checkbox";
+import { CheckboxProps } from "@dyson/components/atoms/checkbox/checkbox";
 import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
 import { Dropdown } from "@dyson/components/molecules/Dropdown";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { Conditional } from "@dyson/components/layouts";
 import { useDispatch, useSelector, useStore } from "react-redux";
 import { getIsStatusBarVisible, getRecorderState, getSavedSteps } from "electron-app/src/store/selectors/recorder";
-import {ConsoleIcon, GreenCheckboxIcon, MoreIcon, PointerArrowIcon} from "../../../../../constants/old_icons";
+import { ConsoleIcon, GreenCheckboxIcon, MoreIcon, PointerArrowIcon } from "../../../../../constants/old_icons";
 import { LoadingIcon, WarningIcon } from "electron-app/src/_ui/constants/old_icons";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
-import {deleteRecordedSteps, markRecordedStepsOptional, setStatusBarVisibility} from "electron-app/src/store/actions/recorder";
+import { deleteRecordedSteps, markRecordedStepsOptional, setStatusBarVisibility } from "electron-app/src/store/actions/recorder";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
-import {continueRemainingSteps} from "electron-app/src/_ui/commands/perform";
-import {getRemainingSteps} from "electron-app/src/store/selectors/app";
+import { continueRemainingSteps } from "electron-app/src/_ui/commands/perform";
+import { getRemainingSteps } from "electron-app/src/store/selectors/app";
 import { StepInfoEditor } from "../stepEditor";
 import { iAction } from "@shared/types/action";
 import { Tooltip } from "@dyson/components/atoms/tooltip/Tooltip";
@@ -96,30 +96,38 @@ let parseText = (text: string): { type: "normal" | "highlight"; value: string }[
 };
 
 const Step = ({
-    stepIndex,
-    action,
-    title,
-    subtitle,
-    isRunning,
-    isFailed,
-    isCompleted
-}: CheckboxProps & { action: iAction; isCompleted: boolean; stepIndex: string | number; title: string; subtitle: string; isRunning?: boolean; isFailed?: boolean }): JSX.Element => {
-    const [isHover, setIsHover] = React.useState(false);
-    const [, setShowStepActionDropdown] = React.useState(false);
-    const [isPinned, setIsPinned] = React.useState(false);
-    const dispatch = useDispatch();
-    const store = useStore();
+	stepIndex,
+	action,
+	title,
+	subtitle,
+	isRunning,
+	isFailed,
+	isCompleted,
+}: CheckboxProps & {
+	action: iAction;
+	isCompleted: boolean;
+	stepIndex: string | number;
+	title: string;
+	subtitle: string;
+	isRunning?: boolean;
+	isFailed?: boolean;
+}): JSX.Element => {
+	const [isHover, setIsHover] = React.useState(false);
+	const [, setShowStepActionDropdown] = React.useState(false);
+	const [isPinned, setIsPinned] = React.useState(false);
+	const dispatch = useDispatch();
+	const store = useStore();
 
-    React.useEffect(() => {
+	React.useEffect(() => {
 		setShowStepActionDropdown(false);
 	}, [isHover]);
 
-    const handleDeleteAndContinue = () => {
-        dispatch(deleteRecordedSteps([stepIndex]));
-        continueRemainingSteps();
-    };
+	const handleDeleteAndContinue = () => {
+		dispatch(deleteRecordedSteps([stepIndex]));
+		continueRemainingSteps();
+	};
 
-    const updateAndReRunStep = () => {
+	const updateAndReRunStep = () => {
 		const savedSteps = getSavedSteps(store.getState());
 
 		const step = savedSteps[stepIndex];
@@ -133,18 +141,17 @@ const Step = ({
 		]);
 	};
 
-    const finalIsRunning = isRunning;
+	const finalIsRunning = isRunning;
 
-    const handleSetIsPinned = (value) => {
+	const handleSetIsPinned = (value) => {
 		setIsPinned(value);
 		if (!value) {
 			setIsHover(false);
 		}
 	};
 
-    const titleTag =
-		title?.length
-			? parseText(title).map((a) => {
+	const titleTag = title?.length
+		? parseText(title).map((a) => {
 				if (a.type === "highlight") {
 					return (
 						<span className="highlight-box" title={a.value}>
@@ -154,10 +161,10 @@ const Step = ({
 				} else {
 					return <span title={a.value}>{a.value}</span>;
 				}
-			})
-			: null;
+		  })
+		: null;
 
-    return (
+	return (
 		<div
 			onMouseOver={() => {
 				setIsHover(true);
@@ -169,20 +176,32 @@ const Step = ({
 			data-status={action.status}
 		>
 			<div css={[stepStyle, isHover && hoverStepStyle, isFailed && failedStyle]}>
-
 				<Conditional showIf={finalIsRunning}>
-					<PointerArrowIcon css={css` 
-					width: 6rem;
-					height: 9rem;
-					position: absolute;
-					left: 7rem;
-					top: 10rem;`} />
+					<PointerArrowIcon
+						css={css`
+							width: 6rem;
+							height: 9rem;
+							position: absolute;
+							left: 7rem;
+							top: 10rem;
+						`}
+					/>
 				</Conditional>
-				<div className="flex flex-col">
-
-				</div>
+				<div className="flex flex-col"></div>
 				<div css={stepTextStyle}>
-					<TextBlock css={[stepTitleStyle, isFailed ? failedStepTitleStyle : null, finalIsRunning ? css`color: #A056FF !important;` : null]}>{titleTag}</TextBlock>
+					<TextBlock
+						css={[
+							stepTitleStyle,
+							isFailed ? failedStepTitleStyle : null,
+							finalIsRunning
+								? css`
+										color: #a056ff !important;
+								  `
+								: null,
+						]}
+					>
+						{titleTag}
+					</TextBlock>
 					<TextBlock css={stepSubtitleStyle}>{subtitle}</TextBlock>
 				</div>
 				<Conditional showIf={finalIsRunning}>
@@ -194,9 +213,13 @@ const Step = ({
 					/>
 				</Conditional>
 				<Conditional showIf={isCompleted}>
-					<GreenCheckboxIcon css={css`width: 14rem; height: 14rem;`} />
+					<GreenCheckboxIcon
+						css={css`
+							width: 14rem;
+							height: 14rem;
+						`}
+					/>
 				</Conditional>
-
 
 				<Conditional showIf={isFailed}>
 					<TextBlock css={stepWarningStyle}>
@@ -280,9 +303,7 @@ enum GroupActionsEnum {
 	DELETE = "DELETE",
 }
 
-const GroupActionsMenu = ({
-    callback
-}) => {
+const GroupActionsMenu = ({ callback }) => {
 	const ActionItem = ({ title, id, callback }) => {
 		return (
 			<div
@@ -307,22 +328,20 @@ const GroupActionsMenu = ({
 	);
 };
 
-const StepsPanel = ({
-    className
-}: any) => {
-    const [checkedSteps, setCheckedSteps] = React.useState(new Set());
-    const recordedSteps = useSelector(getSavedSteps);
-    const remainingSteps = useSelector(getRemainingSteps);
-    const recorderState = useSelector(getRecorderState);
-    const isStatusBarVisible = useSelector(getIsStatusBarVisible);
-    const [showGroupActionsDropdown, setShowGroupActionsDropDown] = React.useState(false);
-    const dispatch = useDispatch();
+const StepsPanel = ({ className }: any) => {
+	const [checkedSteps, setCheckedSteps] = React.useState(new Set());
+	const recordedSteps = useSelector(getSavedSteps);
+	const remainingSteps = useSelector(getRemainingSteps);
+	const recorderState = useSelector(getRecorderState);
+	const isStatusBarVisible = useSelector(getIsStatusBarVisible);
+	const [showGroupActionsDropdown, setShowGroupActionsDropDown] = React.useState(false);
+	const dispatch = useDispatch();
 
-    React.useEffect(() => {
+	React.useEffect(() => {
 		actionDescriptor.initActionHandlers();
 	}, []);
 
-    const toggleStep = React.useCallback(
+	const toggleStep = React.useCallback(
 		(index) => {
 			const selectedSteps = new Set(checkedSteps);
 			if (checkedSteps.has(index)) {
@@ -336,7 +355,7 @@ const StepsPanel = ({
 		[checkedSteps, recordedSteps.length],
 	);
 
-    const steps = recordedSteps.map((action, index) => {
+	const steps = recordedSteps.map((action, index) => {
 		return {
 			action: action,
 			id: index,
@@ -346,13 +365,13 @@ const StepsPanel = ({
 		};
 	});
 
-    React.useEffect(() => {
+	React.useEffect(() => {
 		const testListContainer: any = document.querySelector("#steps-list-container");
 		const elementHeight = testListContainer.scrollHeight;
 		testListContainer.scrollBy(0, elementHeight);
 	}, [recordedSteps.length]);
 
-    React.useEffect(() => {
+	React.useEffect(() => {
 		if (recorderState.type === TRecorderState.ACTION_REQUIRED) {
 			const testListContainer: any = document.querySelector("#steps-list-container");
 			const elementHeight = testListContainer.scrollHeight;
@@ -360,7 +379,7 @@ const StepsPanel = ({
 		}
 	}, [recorderState.type]);
 
-    const handleGrouActionSelected = React.useCallback(
+	const handleGrouActionSelected = React.useCallback(
 		(id) => {
 			setShowGroupActionsDropDown(false);
 			setCheckedSteps(new Set());
@@ -382,21 +401,46 @@ const StepsPanel = ({
 		[checkedSteps],
 	);
 
-    const handleContinueTest = () => {
+	const handleContinueTest = () => {
 		continueRemainingSteps();
 	};
 
-    const handleConsoleIconClick = React.useCallback(() => {
+	const handleConsoleIconClick = React.useCallback(() => {
 		dispatch(setStatusBarVisibility(!isStatusBarVisible));
 	}, [isStatusBarVisible]);
 
-    return (
-        (<div className={String(className)} id="steps-pane" css={containerStyle}>
-            <div css={stepsHeaderStyle}>
+	return (
+		<div className={String(className)} id="steps-pane" css={containerStyle}>
+			<div css={stepsHeaderStyle}>
 				{/* <Checkbox isSelected={recordedSteps.length === checkedSteps.size} callback={toggleAllSteps} /> */}
 				<Text css={stepsTextStyle}>{recordedSteps.length} Steps</Text>
-				<div css={css`margin-left: auto;`}>
-					<ConsoleIcon onClick={handleConsoleIconClick} css={[css`width: 11.7rem; height: 12.3rem; :hover { opacity: 0.7 }; path {fill: rgba(255, 255, 255, 1);}`, isStatusBarVisible ? css`path {fill: rgba(255, 255, 255, 0.35);}` : null]} />
+				<div
+					css={css`
+						margin-left: auto;
+					`}
+				>
+					<ConsoleIcon
+						onClick={handleConsoleIconClick}
+						css={[
+							css`
+								width: 11.7rem;
+								height: 12.3rem;
+								:hover {
+									opacity: 0.7;
+								}
+								path {
+									fill: rgba(255, 255, 255, 1);
+								}
+							`,
+							isStatusBarVisible
+								? css`
+										path {
+											fill: rgba(255, 255, 255, 0.35);
+										}
+								  `
+								: null,
+						]}
+					/>
 				</div>
 				<Conditional showIf={!!checkedSteps.size}>
 					<div css={stepDropdownStyle}>
@@ -422,20 +466,22 @@ const StepsPanel = ({
 					</div>
 				</Conditional>
 			</div>
-            <div className="custom-scroll" id={"steps-list-container"} css={stepsContainerStyle}>
-				{steps.map(step => (<Step
-                    isSelectAllType={false}
-                    key={step.id}
-                    action={step.action}
-                    stepIndex={step.id}
-                    isRunning={step.status === ActionStatusEnum.STARTED}
-                    isCompleted={step.status === ActionStatusEnum.COMPLETED}
-                    isFailed={step.status === ActionStatusEnum.FAILED}
-                    isSelected={checkedSteps.has(step.id)}
-                    callback={() => toggleStep(step.id)}
-                    title={step.title}
-                    subtitle={step.selector ? step.selector.substr(0, 25) : ""}
-                />))}
+			<div className="custom-scroll" id={"steps-list-container"} css={stepsContainerStyle}>
+				{steps.map((step) => (
+					<Step
+						isSelectAllType={false}
+						key={step.id}
+						action={step.action}
+						stepIndex={step.id}
+						isRunning={step.status === ActionStatusEnum.STARTED}
+						isCompleted={step.status === ActionStatusEnum.COMPLETED}
+						isFailed={step.status === ActionStatusEnum.FAILED}
+						isSelected={checkedSteps.has(step.id)}
+						callback={() => toggleStep(step.id)}
+						title={step.title}
+						subtitle={step.selector ? step.selector.substr(0, 25) : ""}
+					/>
+				))}
 
 				<Conditional showIf={remainingSteps && remainingSteps.length > 0}>
 					<div
@@ -462,8 +508,8 @@ const StepsPanel = ({
 					</div>
 				</Conditional>
 			</div>
-        </div>)
-    );
+		</div>
+	);
 };
 
 const containerStyle = css`
@@ -477,15 +523,15 @@ const containerStyle = css`
 const stepsHeaderStyle = css`
 	display: flex;
 	align-items: center;
-    padding: 14rem 18rem;
-    padding-top: 19rem;
+	padding: 14rem 18rem;
+	padding-top: 19rem;
 `;
 const stepsTextStyle = css`
 	font-family: Gilroy;
 	font-style: normal;
 	font-weight: 500;
 	font-size: 12rem;
-	color: #FFFFFF;
+	color: #ffffff;
 `;
 const stepDropdownStyle = css`
 	box-sizing: border-box;
@@ -549,7 +595,7 @@ const stepTitleStyle = css`
 	font-weight: 500 !important;
 	font-size: 12rem !important;
 	line-height: 13rem !important;
-	color: #FFFFFF !important;
+	color: #ffffff !important;
 	user-select: none !important;
 	margin-bottom: 2rem !important;
 `;

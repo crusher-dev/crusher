@@ -22,7 +22,7 @@ if (fs.existsSync(OUTPUT_DIR)) {
 
 const commonConfig = {
 	mode: process.env.NODE_ENV || "development",
-	plugins: [			new IgnorePlugin({ resourceRegExp: /^fsevents$/ }),	new MiniCssExtractPlugin()],
+	plugins: [new IgnorePlugin({ resourceRegExp: /^fsevents$/ }), new MiniCssExtractPlugin()],
 	module: {
 		rules: [
 			{
@@ -82,7 +82,7 @@ const finalConfig = [
 			new CopyPlugin({
 				patterns: [
 					{ from: path.dirname(require.resolve("playwright/package.json")), to: "playwright" },
-					{ from: path.dirname(require.resolve("playwright-core/package.json")), to: "playwright/node_modules/playwright-core" }
+					{ from: path.dirname(require.resolve("playwright-core/package.json")), to: "playwright/node_modules/playwright-core" },
 				],
 			}),
 			new CopyPlugin({

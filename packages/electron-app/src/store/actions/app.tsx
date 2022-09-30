@@ -12,7 +12,7 @@ export const SET_SELECTED_PROJECT = "SET_SELECTED_PROJECT";
 
 export const setSelectedProject = (projectId) => ({
 	type: SET_SELECTED_PROJECT,
-	payload: { projectId }
+	payload: { projectId },
 });
 
 export const setProxyState = (proxyState: IProxyState) => ({

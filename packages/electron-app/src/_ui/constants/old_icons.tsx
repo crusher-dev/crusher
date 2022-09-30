@@ -34,7 +34,6 @@ const NavigateRefreshIcon = (props: any) => {
 	);
 };
 
-
 const WarningIcon = (props) => (
 	<svg viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 		<g clipPath="url(#clip0_1539_948)">
@@ -570,7 +569,6 @@ function PlayV2Icon(props) {
 	);
 }
 
-
 const EditIcon = (props) => (
 	<svg viewBox={"0 0 13 13"} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 		<path
@@ -589,62 +587,38 @@ const PlayIcon = (props) => (
 );
 
 const LogoV2 = (props) => (
-	<svg
-		viewBox={"0 0 23 24"}
-		fill="none"
-		xmlns="http://www.w3.org/2000/svg"
-		{...props}
-	>
+	<svg viewBox={"0 0 23 24"} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 		<path
 			d="M5.183 6.661c-.417 0-.695.28-.695.699v5.59c0 .42.278.699.695.699H6.57V6.66H5.183ZM6.57 6.66v6.988l2.747-.699V7.36L6.57 6.66ZM15.521 17.84h-4.166v5.66h4.166v-5.66ZM21.007 14.556c-.139-4.611-2.846-7.896-6.179-7.896h-2.915l-1.944.7v5.59l1.18 1.187c.139.14.208.28.208.49v2.515h4.166v-2.656c0-.07 0-.21.07-.28l.416-.838c.139-.28.347-.419.625-.419 1.527.07 2.985.629 4.096 1.747.069.21.347.07.277-.14Z"
 			fill="#fff"
 		/>
 		<rect y={0.5} width={22.851} height={23} rx={6} fill="#292929" />
-		<path
-			d="M3.823 6.661c-.416 0-.694.28-.694.699v5.59c0 .42.278.699.694.699h1.389V6.66H3.823Z"
-			fill="#fff"
-		/>
+		<path d="M3.823 6.661c-.416 0-.694.28-.694.699v5.59c0 .42.278.699.694.699h1.389V6.66H3.823Z" fill="#fff" />
 		<path
 			d="M5.21 6.66v6.988l2.748-.699V7.36L5.21 6.66ZM14.164 17.339H9.93v6.16h4.234v-6.16ZM19.648 14.556c-.139-4.611-2.846-7.896-6.179-7.896h-2.916l-1.944.7v5.59l1.18 1.187c.14.14.209.28.209.49v2.515h4.165v-2.656c0-.07 0-.21.07-.28l.416-.838c.14-.28.348-.419.625-.419 1.528.07 2.985.629 4.096 1.747.148.178.278.08.278-.14Z"
 			fill="#fff"
 		/>
 	</svg>
-)
+);
 
 const DroppdownIconV2 = (props) => (
-	<svg
-		viewBox={"0 0 9 6"}
-		fill="none"
-		xmlns="http://www.w3.org/2000/svg"
-		{...props}
-	>
+	<svg viewBox={"0 0 9 6"} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 		<path
 			d="M4.851 5.319a.554.554 0 0 1-.396-.167l-3.44-3.498a.577.577 0 0 1 0-.806.554.554 0 0 1 .793 0L4.85 3.943 7.895.848a.554.554 0 0 1 .792 0 .576.576 0 0 1 0 .806l-3.44 3.498a.554.554 0 0 1-.396.167Z"
 			fill="#BDBDBD"
 			fillOpacity={0.7}
 		/>
 	</svg>
-)
-
+);
 
 const RedDotIcon = (props) => (
-	<svg
-		viewBox={"0 0 6 6"}
-		fill="none"
-		xmlns="http://www.w3.org/2000/svg"
-		{...props}
-	>
+	<svg viewBox={"0 0 6 6"} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 		<rect x={0.851} y={0.5} width={5} height={5} rx={2.5} fill="#FF506F" />
 	</svg>
 );
 
 const ActionHeadingIcon = (props) => (
-	<svg
-		viewBox={"0 0 12 10"}
-		fill="none"
-		xmlns="http://www.w3.org/2000/svg"
-		{...props}
-	>
+	<svg viewBox={"0 0 12 10"} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 		<path
 			fillRule="evenodd"
 			clipRule="evenodd"
@@ -654,30 +628,14 @@ const ActionHeadingIcon = (props) => (
 	</svg>
 );
 
-
 const PlayIconV3 = (props) => (
-	<svg
-		viewBox={"0 0 6 8"}
-		fill="none"
-		xmlns="http://www.w3.org/2000/svg"
-		{...props}
-	>
-		<path
-			d="M.667 7.726V.263c0-.21.289-.358.489-.19l4.71 3.647c.178.127.178.4 0 .527l-4.71 3.69c-.2.147-.49.02-.49-.211Z"
-			fill="#708AEC"
-		/>
+	<svg viewBox={"0 0 6 8"} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+		<path d="M.667 7.726V.263c0-.21.289-.358.489-.19l4.71 3.647c.178.127.178.4 0 .527l-4.71 3.69c-.2.147-.49.02-.49-.211Z" fill="#708AEC" />
 	</svg>
-)
-
-
+);
 
 const GreenCheckboxIcon = (props) => (
-	<svg
-		viewBox={"0 0 14 14"}
-		fill="none"
-		xmlns="http://www.w3.org/2000/svg"
-		{...props}
-	>
+	<svg viewBox={"0 0 14 14"} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 		<path
 			d="M10.078 0C12.427 0 14 1.666 14 4.144v5.72C14 12.334 12.427 14 10.078 14H4.07C1.72 14 .14 12.334.14 9.864v-5.72C.14 1.666 1.72 0 4.07 0h6.008Zm-.111 4.9a.606.606 0 0 0-.86 0L6.246 7.791 5.033 6.566a.606.606 0 0 0-.86 0 .621.621 0 0 0 0 .868l1.65 1.659a.59.59 0 0 0 .422.175c.16 0 .312-.056.43-.175l3.292-3.325a.621.621 0 0 0 0-.868Z"
 			fill="#9EF25B"
@@ -686,14 +644,8 @@ const GreenCheckboxIcon = (props) => (
 	</svg>
 );
 
-
 const FailedCheckboxIcon = (props) => (
-	<svg
-		viewBox={"0 0 14 14"}
-		fill="none"
-		xmlns="http://www.w3.org/2000/svg"
-		{...props}
-	>
+	<svg viewBox={"0 0 14 14"} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 		<path
 			fillRule="evenodd"
 			clipRule="evenodd"
@@ -701,31 +653,16 @@ const FailedCheckboxIcon = (props) => (
 			fill="#E0307A"
 		/>
 	</svg>
-)
-
+);
 
 const PointerArrowIcon = (props) => (
-	<svg
-		viewBox="0 0 6 9"
-		fill="none"
-		xmlns="http://www.w3.org/2000/svg"
-		{...props}
-	>
-		<path
-			d="M0 8.692V.296C0 .059.325-.107.55.082l5.3 4.103c.2.143.2.451 0 .593l-5.3 4.15c-.225.167-.55.024-.55-.236Z"
-			fill="#202020"
-		/>
+	<svg viewBox="0 0 6 9" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+		<path d="M0 8.692V.296C0 .059.325-.107.55.082l5.3 4.103c.2.143.2.451 0 .593l-5.3 4.15c-.225.167-.55.024-.55-.236Z" fill="#202020" />
 	</svg>
 );
 
 const AddIconV3 = (props) => (
-	<svg
-		viewBox={"0 0 12 12"}
-		fill="none"
-		className={"add-icon"}
-		xmlns="http://www.w3.org/2000/svg"
-		{...props}
-	>
+	<svg viewBox={"0 0 12 12"} fill="none" className={"add-icon"} xmlns="http://www.w3.org/2000/svg" {...props}>
 		<path
 			d="M10.825 4.608h-3.7V1.175a1.175 1.175 0 1 0-2.349 0v3.433H1.175a1.175 1.175 0 0 0 0 2.35h3.601v3.867a1.174 1.174 0 1 0 2.35 0V6.957h3.7a1.175 1.175 0 1 0 0-2.349Z"
 			fill="#fff"
@@ -735,13 +672,7 @@ const AddIconV3 = (props) => (
 
 export function GarbageIcon(props) {
 	return (
-		<svg
-			width={11}
-			height={12}
-			fill="none"
-			xmlns="http://www.w3.org/2000/svg"
-			{...props}
-		>
+		<svg width={11} height={12} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<path
 				fillRule="evenodd"
 				clipRule="evenodd"
@@ -785,7 +716,6 @@ export {
 	CreateIcon,
 	ConnectivityWarningIcon,
 	PlayV2Icon,
-
 	EditIcon,
 	PlayIcon,
 	LogoV2,
@@ -796,5 +726,5 @@ export {
 	GreenCheckboxIcon,
 	FailedCheckboxIcon,
 	PointerArrowIcon,
-	AddIconV3
+	AddIconV3,
 };

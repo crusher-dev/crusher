@@ -4,23 +4,23 @@ import { LogoAnimated } from "@dyson/components/atoms/logo/LogoAnimated";
 import { css } from "@emotion/react";
 import { Conditional } from "@dyson/components/layouts";
 
-function LoadingProgressBar({inAppLoading= true}) {
+function LoadingProgressBar({ inAppLoading = true }) {
 	const { ref, inView } = useInView();
-    const progressStyle = React.useMemo(() => loadingProgressPillCss(inView), [inView]);
+	const progressStyle = React.useMemo(() => loadingProgressPillCss(inView), [inView]);
 
 	return (
 		<div css={containerCss}>
-				<div ref={ref} css={loadingContainerCss}>
-					<Conditional showIf={!inAppLoading}>
-						<LogoAnimated/>
-					</Conditional>
-					<div css={loadingProgressBarCss}>
-						<div css={progressStyle}></div>
-					</div>
+			<div ref={ref} css={loadingContainerCss}>
+				<Conditional showIf={!inAppLoading}>
+					<LogoAnimated />
+				</Conditional>
+				<div css={loadingProgressBarCss}>
+					<div css={progressStyle}></div>
 				</div>
+			</div>
 		</div>
 	);
-};
+}
 
 const containerCss = css`
 	position: absolute;
@@ -32,11 +32,11 @@ const containerCss = css`
 	flex-direction: column;
 
 	flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    flex-direction: column;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+	flex-direction: column;
 `;
 
 const loadingContainerCss = css`
@@ -53,14 +53,14 @@ const loadingProgressBarCss = css`
 	margin-top: 20px;
 `;
 const loadingProgressPillCss = (isInView: boolean) => {
-    return css`
-        background: linear-gradient(180deg, rgba(230, 199, 255, 0) 0%, rgba(43, 37, 48, 0.03) 75.52%, rgba(0, 0, 0, 0.34) 100%), #c96af5;
-        border-radius: 4px;
-        transition-timing-function: ease;
-        height: 100%;
-        transition: width 0.85s;
-        width: ${isInView ? "100%": "1%"};
-    `;
-}
+	return css`
+		background: linear-gradient(180deg, rgba(230, 199, 255, 0) 0%, rgba(43, 37, 48, 0.03) 75.52%, rgba(0, 0, 0, 0.34) 100%), #c96af5;
+		border-radius: 4px;
+		transition-timing-function: ease;
+		height: 100%;
+		transition: width 0.85s;
+		width: ${isInView ? "100%" : "1%"};
+	`;
+};
 
 export { LoadingProgressBar };

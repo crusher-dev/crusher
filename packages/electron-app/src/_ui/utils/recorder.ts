@@ -4,19 +4,21 @@ import { goFullScreen, performReplayTestUrlAction } from "electron-app/src/_ui/c
 import historyInstance from "./history";
 
 const triggerLocalBuild = (testsList: number[] = undefined) => {
-    const store = getStore();
-    store.dispatch(createLocalBuild({
-        id: "CRU-123",
-        tests: testsList,
-        queuedTests: testsList,
-        time: Date.now()
-    }));
-    window["testsToRun"] = { list: testsList, count: testsList.length };
-    window["localRunCache"] = {};
+	const store = getStore();
+	store.dispatch(
+		createLocalBuild({
+			id: "CRU-123",
+			tests: testsList,
+			queuedTests: testsList,
+			time: Date.now(),
+		}),
+	);
+	window["testsToRun"] = { list: testsList, count: testsList.length };
+	window["localRunCache"] = {};
 
-    historyInstance.push("/recorder", "");
-    goFullScreen();
-    return performReplayTestUrlAction(window["testsToRun"].list[0], true);
+	historyInstance.push("/recorder", "");
+	goFullScreen();
+	return performReplayTestUrlAction(window["testsToRun"].list[0], true);
 };
 
 export { triggerLocalBuild };

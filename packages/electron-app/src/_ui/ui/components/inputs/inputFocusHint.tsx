@@ -3,37 +3,32 @@ import { css } from "@emotion/react";
 import { Input } from "@dyson/components/atoms";
 
 interface IProps {
-    hint?: string;
-    placeholder?: string;
-    className?: string;
-};
+	hint?: string;
+	placeholder?: string;
+	className?: string;
+}
 const InputFocusHint = ({ hint, placeholder, className, ...props }: IProps) => {
-    const ref = React.useRef(null);
+	const ref = React.useRef(null);
 	const [isFocused, setIsFocused] = React.useState(false);
 
-    const HintComponent = React.useMemo(() => {
-        if(!hint) return null;
-        return (
-            <div css={[hintCss, isFocused ? focusedHintCss : undefined]}>
-                {hint}
-            </div>
-        );
-    }, [isFocused, hint]);
+	const HintComponent = React.useMemo(() => {
+		if (!hint) return null;
+		return <div css={[hintCss, isFocused ? focusedHintCss : undefined]}>{hint}</div>;
+	}, [isFocused, hint]);
 
-    return (
-        <Input
-            placeholder={placeholder}
-            css={inputCss}
-            initialValue={""}
-            ref={ref}
-            rightIcon={HintComponent}
+	return (
+		<Input
+			placeholder={placeholder}
+			css={inputCss}
+			initialValue={""}
+			ref={ref}
+			rightIcon={HintComponent}
 			onFocus={() => setIsFocused(true)}
 			onBlur={() => setIsFocused(false)}
 			{...props}
-        />
-    );
-}
-
+		/>
+	);
+};
 
 const inputCss = css`
 	height: 36rem;
@@ -105,13 +100,13 @@ const inputCss = css`
 `;
 
 const hintCss = css`
-    font-family: Gilroy;
-    font-style: normal;
-    font-weight: 400;
-    font-size: 12.7rem;
+	font-family: Gilroy;
+	font-style: normal;
+	font-weight: 400;
+	font-size: 12.7rem;
 
 	color: #242424;
-    margin-right: 12rem;
+	margin-right: 12rem;
 `;
 const focusedHintCss = css`
 	color: #444444;

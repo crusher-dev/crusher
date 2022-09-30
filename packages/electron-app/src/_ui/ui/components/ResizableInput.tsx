@@ -4,68 +4,80 @@ import Input from "@dyson/components/atoms/input/Input";
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
 
 const ResizableInput = React.forwardRef(({ isEditingProp = false, onEditModeChange, selectAllOnDoubleClick = true, className, value, ...props }, ref) => {
-  const [, setWidth] = useState(0);
-  const [isEditing, setIsEditing] = useState(isEditingProp)
-  const span = useRef();
+	const [, setWidth] = useState(0);
+	const [isEditing, setIsEditing] = useState(isEditingProp);
+	const span = useRef();
 
+	useEffect(() => {
+		requestAnimationFrame(() => {
+			setWidth(span?.current?.offsetWidth);
+		});
+	}, [value]);
 
-  useEffect(() => {
-    requestAnimationFrame(() => {
-      setWidth(span?.current?.offsetWidth);
-    });
-  }, [value]);
+	// set width when span is set
+	useEffect(() => {
+		if (span?.current) {
+			setWidth(span?.current?.offsetWidth);
+		}
+	}, [span]);
 
-  // set width when span is set
-  useEffect(() => {
-    if (span?.current) {
-      setWidth(span?.current?.offsetWidth);
-    }
-  }, [span]);
+	React.useEffect(() => {
+		if (isEditing) {
+			requestAnimationFrame(() => {
+				ref.current.focus();
+				const totalLength = ref.current.value.length;
+				ref.current.setSelectionRange(selectAllOnDoubleClick ? 0 : totalLength, totalLength);
+			});
+		}
+		onEditModeChange(isEditing);
+	}, [isEditing]);
 
-  React.useEffect(() => {
-    if (isEditing) {
-      requestAnimationFrame(() => {
-        ref.current.focus();
-        const totalLength = ref.current.value.length;
-        ref.current.setSelectionRange(selectAllOnDoubleClick ? 0 : totalLength, totalLength);
-      });
-    }
-    onEditModeChange(isEditing)
-  }, [isEditing]);
+	React.useEffect(() => {
+		setIsEditing(isEditingProp);
+	}, [isEditingProp]);
 
-  React.useEffect(() => {
-    setIsEditing(isEditingProp);
-  }, [isEditingProp]);
+	if (!isEditing) {
+		return (
+			<div title="edit name" css={labelCSS} onDoubleClick={setIsEditing.bind(this, true)}>
+				{value}
+			</div>
+		);
+	}
 
-  if (!isEditing) {
-    return (<div title="edit name" css={labelCSS} onDoubleClick={setIsEditing.bind(this, true)}>
-      {value}
-    </div>)
-  }
-
-  return (
-    (<OnOutsideClick onClick={() => {
-      setIsEditing(false);
-      onEditModeChange(false);
-    }}>
-      <Input
-        onReturn={() => {
-          setIsEditing(false)
-          onEditModeChange(false);
-        }}
-        onBlur={() => {
-          setIsEditing(false);
-          onEditModeChange(isEditingProp);
-        }} title="" initialValue={value} size="small" className={String(className)} css={inputCss} ref={ref} type="text" {...props} />
-    </OnOutsideClick>)
-  );
+	return (
+		<OnOutsideClick
+			onClick={() => {
+				setIsEditing(false);
+				onEditModeChange(false);
+			}}
+		>
+			<Input
+				onReturn={() => {
+					setIsEditing(false);
+					onEditModeChange(false);
+				}}
+				onBlur={() => {
+					setIsEditing(false);
+					onEditModeChange(isEditingProp);
+				}}
+				title=""
+				initialValue={value}
+				size="small"
+				className={String(className)}
+				css={inputCss}
+				ref={ref}
+				type="text"
+				{...props}
+			/>
+		</OnOutsideClick>
+	);
 });
 
 const labelCSS = css`
-  padding-left: 12px;
-  font-size: 14px;
-  padding-top: 1px;
-`
+	padding-left: 12px;
+	font-size: 14px;
+	padding-top: 1px;
+`;
 
 const inputCss = css`
 min-width: fit-content;

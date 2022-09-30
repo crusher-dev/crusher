@@ -12,7 +12,7 @@ const LinkBox = ({ value, ...props }) => {
 	};
 	return (
 		<div css={linkContainerStyle} onClick={handleOnClick} {...props}>
-			<input ref={ref} css={inputCss} type={"text"} value={value}/>
+			<input ref={ref} css={inputCss} type={"text"} value={value} />
 		</div>
 	);
 };
@@ -31,10 +31,10 @@ const linkContainerStyle = css`
 	color: #888888;
 `;
 const inputCss = css`
-    background: transparent;
-    border: none;
-    outline: none;
-    width: 100%;
+	background: transparent;
+	border: none;
+	outline: none;
+	width: 100%;
 `;
 
 export { LinkBox };

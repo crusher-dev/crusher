@@ -15,7 +15,6 @@ const PlusIcon = (props) => (
 	</svg>
 );
 
-
 const CreateTestLink = (props) => {
 	return (
 		<span css={createTestLinkStyle} {...props}>
@@ -54,18 +53,18 @@ const createTestLinkStyle = css`
 `;
 
 const actionDropdownOptions = [
-    {
-        id: "run-local-tests",
-        content: "Run tests",
-    },
-    {
-        id: "run-cloud-tests",
-        content: "Run tests (cloud)",
-    },
-]
+	{
+		id: "run-local-tests",
+		content: "Run tests",
+	},
+	{
+		id: "run-cloud-tests",
+		content: "Run tests (cloud)",
+	},
+];
 
 const DashboardFooter = ({ tests }) => {
-    const [, setShowActionDropdown] = React.useState(false);
+	const [, setShowActionDropdown] = React.useState(false);
 	const navigate = useNavigate();
 
 	const handleCreateTest = React.useCallback(() => {
@@ -73,24 +72,27 @@ const DashboardFooter = ({ tests }) => {
 		goFullScreen();
 	}, []);
 
-    const handleDropdownCallback = React.useCallback((optionId) => {
-		if(!tests.length) {
-			alert("No tests present in the project.");
-			return;
-		}
-        if(optionId === "run-local-tests") {
-            const testIdArr = tests.map((a) => a.id);
-			triggerLocalBuild(testIdArr);
-        } else if (optionId === "run-cloud-tests") {
-			window["messageBarCallback"](-1);
+	const handleDropdownCallback = React.useCallback(
+		(optionId) => {
+			if (!tests.length) {
+				alert("No tests present in the project.");
+				return;
+			}
+			if (optionId === "run-local-tests") {
+				const testIdArr = tests.map((a) => a.id);
+				triggerLocalBuild(testIdArr);
+			} else if (optionId === "run-cloud-tests") {
+				window["messageBarCallback"](-1);
 
-			performRunTests(null).then((buildRes) => {
-				window["messageBarCallback"](buildRes.buildId);
-				// sendSnackBarEvent({ type: "success", message: "Test started successfully!" });
-			});
-			setShowActionDropdown(true);
-		}
-    }, [tests]);
+				performRunTests(null).then((buildRes) => {
+					window["messageBarCallback"](buildRes.buildId);
+					// sendSnackBarEvent({ type: "success", message: "Test started successfully!" });
+				});
+				setShowActionDropdown(true);
+			}
+		},
+		[tests],
+	);
 
 	return (
 		<div css={containerCss}>
@@ -105,15 +107,14 @@ const DashboardFooter = ({ tests }) => {
 						<CreateTestLink onClick={handleCreateTest} />
 					</div>
 					<div css={dropdownContainerCss}>
-						<ButtonDropdown options={actionDropdownOptions} primaryOption={"run-local-tests"} callback={handleDropdownCallback}/>
+						<ButtonDropdown options={actionDropdownOptions} primaryOption={"run-local-tests"} callback={handleDropdownCallback} />
 					</div>
 				</div>
 			</div>
 			<StatusMessageBar isLoadingScreen={false} />
 		</div>
-
 	);
-}
+};
 
 const containerCss = css`
 	display: flex;
@@ -145,7 +146,7 @@ const footerRightCss = css`
 	align-items: center;
 `;
 const dropdownContainerCss = css`
-    margin-left: 20px;				
+	margin-left: 20px;
 `;
 
-export { DashboardFooter }
+export { DashboardFooter };

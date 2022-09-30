@@ -6,18 +6,14 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { ActionSpecificInfo } from "./actionSpecificInfo";
 
-const StepInfoEditor = ({
-    action,
-    isPinned,
-    actionIndex
-}: { action: iAction; actionIndex: number }) => {
-    const [isStepNameEditable, setIsStepNameEditable] = React.useState(false);
-    const [stepName, setStepName] = React.useState(action.name || "Enter step name");
-    const stepNameRef: React.Ref<HTMLInputElement> = React.useRef(null);
+const StepInfoEditor = ({ action, isPinned, actionIndex }: { action: iAction; actionIndex: number }) => {
+	const [isStepNameEditable, setIsStepNameEditable] = React.useState(false);
+	const [stepName, setStepName] = React.useState(action.name || "Enter step name");
+	const stepNameRef: React.Ref<HTMLInputElement> = React.useRef(null);
 
-    const dispatch = useDispatch();
+	const dispatch = useDispatch();
 
-    const updateStepName = () => {
+	const updateStepName = () => {
 		setIsStepNameEditable(false);
 		dispatch(
 			updateRecordedStep(
@@ -30,20 +26,20 @@ const StepInfoEditor = ({
 		);
 	};
 
-    const handleNameDoubleClick = () => {
+	const handleNameDoubleClick = () => {
 		setIsStepNameEditable(true);
 		setTimeout(() => {
 			stepNameRef.current.focus();
 		});
 	};
 
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
 		if (e.keyCode === 13) {
 			updateStepName();
 		}
 	};
 
-    return (
+	return (
 		<div
 			className={"step-info-editor"}
 			onClick={setIsPinned!.bind(this, true)}

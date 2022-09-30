@@ -1,5 +1,5 @@
 const UndockCodeScreen = () => {
-    return null;
-}
+	return null;
+};
 
 export { UndockCodeScreen };

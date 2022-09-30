@@ -46,12 +46,7 @@ const ModalManager = () => {
 				isOpen={currentModal.type === "SHOW_ASSERT_MODAL"}
 				handleClose={closeModal}
 			/>
-			<WaitModal
-				stepIndex={currentModal.stepIndex}
-				stepAction={stepAction as any}
-				isOpen={currentModal.type === "WAIT"}
-				handleClose={closeModal}
-			/>
+			<WaitModal stepIndex={currentModal.stepIndex} stepAction={stepAction as any} isOpen={currentModal.type === "WAIT"} handleClose={closeModal} />
 			<RunAfterTestModal
 				stepAction={stepAction as any}
 				stepIndex={currentModal.stepIndex}

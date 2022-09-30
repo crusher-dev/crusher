@@ -1,6 +1,14 @@
 import { AnyAction } from "redux";
 import { iAction } from "@shared/types/action";
-import {SET_PROXY_INITIALIZING, SET_PROXY_STATE, SET_SELECTED_PROJECT, SET_SESSION_META, SET_SETTINGS, SET_SHOW_SHOULD_ONBOARDING_OVERLAY, SET_USER_ACCOUNT_INFO} from "../actions/app";
+import {
+	SET_PROXY_INITIALIZING,
+	SET_PROXY_STATE,
+	SET_SELECTED_PROJECT,
+	SET_SESSION_META,
+	SET_SETTINGS,
+	SET_SHOW_SHOULD_ONBOARDING_OVERLAY,
+	SET_USER_ACCOUNT_INFO,
+} from "../actions/app";
 
 export interface iSettings {
 	backendEndPoint: string;
@@ -78,7 +86,7 @@ const appReducer = (state: IAppReducer = initialState, action: AnyAction): IAppR
 			return {
 				...state,
 				selectedProject: action.payload.projectId,
-			}
+			};
 		default:
 			return state;
 	}

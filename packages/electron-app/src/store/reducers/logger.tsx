@@ -9,14 +9,14 @@ export interface ILog {
 	message: string;
 	args: any[];
 	time: number;
-};
+}
 
 interface ILoggerReducer {
 	logs: Map<string, ILog[]>;
 }
 
 const initialState: ILoggerReducer = {
-	logs: new Map([["_", []]])
+	logs: new Map([["_", []]]),
 };
 
 const loggerReducer = (state: ILoggerReducer = initialState, action: AnyAction) => {

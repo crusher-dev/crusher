@@ -26,22 +26,23 @@ import { linkOpen } from "electron-app/src/utils/url";
 import { resolveToFrontEndPath } from "@shared/utils/url";
 
 const TitleComponent = ({ project }) => {
-    const { name, id } = project;
-    return (
-        <div css={titleStyle}>
-            <b css={titleBoldStyle}>{name}</b>
-            <LinkPointer onClick={linkOpen.bind(this, resolveToFrontEndPath(`/${id}/dashboard`))} css={openAppCss}>app</LinkPointer>
-        </div>
-    );
+	const { name, id } = project;
+	return (
+		<div css={titleStyle}>
+			<b css={titleBoldStyle}>{name}</b>
+			<LinkPointer onClick={linkOpen.bind(this, resolveToFrontEndPath(`/${id}/dashboard`))} css={openAppCss}>
+				app
+			</LinkPointer>
+		</div>
+	);
 };
 
-
 const openAppCss = css`
-    font-family: Gilroy;
-    font-style: normal;
-    font-weight: 400;
-    font-size: 13px;
-    color: #828282;
+	font-family: Gilroy;
+	font-style: normal;
+	font-weight: 400;
+	font-size: 13px;
+	color: #828282;
 `;
 
 const titleBoldStyle = css`
@@ -60,143 +61,178 @@ const titleStyle = css`
 
 	display: flex;
 	align-items: center;
-    position: absolute;
-    top: 65%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+	position: absolute;
+	top: 65%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 
-    display: flex;
-    align-items: center;
-    gap: 2px;
+	display: flex;
+	align-items: center;
+	gap: 2px;
 `;
 const DashboardScreen = () => {
-    const [animationComplete, setAnimationComplete] = React.useState(false);
-    const { userInfo, projects } = useUser();
-    const {
-        data: tests,
-        mutate
-    } = useRequest(userInfo?.isUserLoggedIn ? getSelectedProjectTestsRequest : () => null, { refreshInterval: 5000 })
-    const [selectedProject, setSelectedProject] = React.useState(null);
-    const [showProxyWarning, setShowProxyWarning] = React.useState({ show: false, testId: null, startUrl: null });
-    const { addNotification } = useBuildNotifications();
+	const [animationComplete, setAnimationComplete] = React.useState(false);
+	const { userInfo, projects } = useUser();
+	const { data: tests, mutate } = useRequest(userInfo?.isUserLoggedIn ? getSelectedProjectTestsRequest : () => null, { refreshInterval: 5000 });
+	const [selectedProject, setSelectedProject] = React.useState(null);
+	const [showProxyWarning, setShowProxyWarning] = React.useState({ show: false, testId: null, startUrl: null });
+	const { addNotification } = useBuildNotifications();
 
-    const navigate = useNavigate();
-    const store = useStore();
+	const navigate = useNavigate();
+	const store = useStore();
 
-    React.useEffect(() => {
-        setTimeout(setAnimationComplete.bind(this, true), 2200)
-    }, [])
+	React.useEffect(() => {
+		setTimeout(setAnimationComplete.bind(this, true), 2200);
+	}, []);
 
-    const handleTestDelete = React.useCallback(
-        (idArr: any[]) => {
-            // setTests(tests.filter((a) => a.id != id));
-            if (!(window as any).deletedTest) {
-                (window as any).deletedTest = [];
-            }
-            (window as any).deletedTest.push(...idArr);
-            console.log("Id arr", idArr);
-            mutate({ ...tests, list: tests.list.filter(test => { return !((window as any).deletedTest || []).includes(test.id) }) });
-            for (let id of idArr) {
-                CloudCrusher.deleteTest(id).catch(() => {
-                    sendSnackBarEvent({ message: "Error deleting test", type: "error" });
-                });
-            }
-        },
-        [tests],
-    );
+	const handleTestDelete = React.useCallback(
+		(idArr: any[]) => {
+			// setTests(tests.filter((a) => a.id != id));
+			if (!(window as any).deletedTest) {
+				(window as any).deletedTest = [];
+			}
+			(window as any).deletedTest.push(...idArr);
+			console.log("Id arr", idArr);
+			mutate({
+				...tests,
+				list: tests.list.filter((test) => {
+					return !((window as any).deletedTest || []).includes(test.id);
+				}),
+			});
+			for (let id of idArr) {
+				CloudCrusher.deleteTest(id).catch(() => {
+					sendSnackBarEvent({ message: "Error deleting test", type: "error" });
+				});
+			}
+		},
+		[tests],
+	);
 
-    React.useEffect(() => {
-        const selectedProjectId = getCurrentSelectedProjct(store.getState());
-        if (!selectedProjectId)
-            return navigate("/select-project");
-        const proxyState = getProxyState(store.getState());
-        if (window["showProxyWarning"] && !Object.keys(proxyState).length) {
-            setShowProxyWarning({ show: true, testId: window["showProxyWarning"].testId, startUrl: window["showProxyWarning"].startUrl });
-            window["showProxyWarning"] = false;
-        }
+	React.useEffect(() => {
+		const selectedProjectId = getCurrentSelectedProjct(store.getState());
+		if (!selectedProjectId) return navigate("/select-project");
+		const proxyState = getProxyState(store.getState());
+		if (window["showProxyWarning"] && !Object.keys(proxyState).length) {
+			setShowProxyWarning({ show: true, testId: window["showProxyWarning"].testId, startUrl: window["showProxyWarning"].startUrl });
+			window["showProxyWarning"] = false;
+		}
 
-        turnOnProxyServers();
-        // @TODO: Cache this API
-        if (selectedProjectId && userInfo && userInfo.projects) {
-            const project = userInfo.projects.find((p) => (p.id === selectedProjectId));
-            if (project) {
-                setSelectedProject(project);
-            }
-        };
-    }, [projects]);
+		turnOnProxyServers();
+		// @TODO: Cache this API
+		if (selectedProjectId && userInfo && userInfo.projects) {
+			const project = userInfo.projects.find((p) => p.id === selectedProjectId);
+			if (project) {
+				setSelectedProject(project);
+			}
+		}
+	}, [projects]);
 
-    const handleCreateTest = React.useCallback(() => {
-        navigate("/recorder");
-        goFullScreen();
-    }, []);
+	const handleCreateTest = React.useCallback(() => {
+		navigate("/recorder");
+		goFullScreen();
+	}, []);
 
-    const handleRunCallback = (id) => {
-        if (id === "RUN_CLOUD") {
-            performRunTests(null).then((buildRes) => {
-                addNotification({ id: buildRes.buildId });
-                // sendSnackBarEvent({ type: "success", message: "Test started successfully!" });
-            });
-        } else if (id === "RUN_LOCAL") {
-            triggerLocalBuild(tests.list.map(test => test.id));
-        }
-    };
-    const headerComponent = React.useMemo(() => {
-        return (
-            <div css={headerComponentCss}>
-                <ButtonDropdown
-                    dropdownCss={buttonDropdownCss}
-                    hideDropdown={true}
-                    css={[buttonDropdownMainButtonCss, css`background: transparent !important; width: auto !important; border: none !important;`]}
-                    options={[
-                        {
-                            id: "SAVE", content: (<span css={createTestCss}>
-                                <AddIconV3 css={createIconCss} /> <span>new test</span>
-                            </span>)
-                        },
-                    ]}
-                    primaryOption={"SAVE"}
-                    callback={handleCreateTest}
-                />
-                <ButtonDropdown
-                    dropdownCss={buttonDropdownCss}
-                    css={[buttonDropdownMainButtonCss, css` background: #B341F9 !important;`]}
-                    options={[
-                        { id: "RUN_LOCAL", content: (<span>Run tests</span>) },
-                        { id: "RUN_CLOUD", content: (<span>In cloud</span>) },
+	const handleRunCallback = (id) => {
+		if (id === "RUN_CLOUD") {
+			performRunTests(null).then((buildRes) => {
+				addNotification({ id: buildRes.buildId });
+				// sendSnackBarEvent({ type: "success", message: "Test started successfully!" });
+			});
+		} else if (id === "RUN_LOCAL") {
+			triggerLocalBuild(tests.list.map((test) => test.id));
+		}
+	};
+	const headerComponent = React.useMemo(() => {
+		return (
+			<div css={headerComponentCss}>
+				<ButtonDropdown
+					dropdownCss={buttonDropdownCss}
+					hideDropdown={true}
+					css={[
+						buttonDropdownMainButtonCss,
+						css`
+							background: transparent !important;
+							width: auto !important;
+							border: none !important;
+						`,
+					]}
+					options={[
+						{
+							id: "SAVE",
+							content: (
+								<span css={createTestCss}>
+									<AddIconV3 css={createIconCss} /> <span>new test</span>
+								</span>
+							),
+						},
+					]}
+					primaryOption={"SAVE"}
+					callback={handleCreateTest}
+				/>
+				<ButtonDropdown
+					dropdownCss={buttonDropdownCss}
+					css={[
+						buttonDropdownMainButtonCss,
+						css`
+							background: #b341f9 !important;
+						`,
+					]}
+					options={[
+						{ id: "RUN_LOCAL", content: <span>Run tests</span> },
+						{ id: "RUN_CLOUD", content: <span>In cloud</span> },
+					]}
+					primaryOption={"RUN_LOCAL"}
+					callback={handleRunCallback}
+				/>
+			</div>
+		);
+	}, [handleRunCallback]);
+	const isLoading = React.useMemo(() => !tests, [tests]);
+	// To make delete experience fast
+	const filteredTests = tests?.list?.length
+		? tests.list.filter((test) => {
+				return !((window as any).deletedTest || []).includes(test.id);
+		  })
+		: [];
 
-                    ]}
-                    primaryOption={"RUN_LOCAL"}
-                    callback={handleRunCallback}
-                />
-            </div>
+	const testContent = filteredTests.length ? <TestList deleteTest={handleTestDelete} tests={filteredTests} /> : <CreateFirstTest />;
+	const content = showProxyWarning.show ? (
+		<ProxyWarningContainer testId={showProxyWarning.testId} exitCallback={setShowProxyWarning.bind(this, false)} startUrl={showProxyWarning.startUrl} />
+	) : (
+		testContent
+	);
 
-        );
-    }, [handleRunCallback]);
-    const isLoading = React.useMemo(() => (!tests), [tests]);
-    // To make delete experience fast
-    const filteredTests = tests?.list?.length ? tests.list.filter(test => { return !((window as any).deletedTest || []).includes(test.id) }) : [];
-
-    const testContent = filteredTests.length ? (<TestList deleteTest={handleTestDelete} tests={filteredTests} />) : (<CreateFirstTest />);
-    const content = showProxyWarning.show ? <ProxyWarningContainer testId={showProxyWarning.testId} exitCallback={setShowProxyWarning.bind(this, false)} startUrl={showProxyWarning.startUrl} /> : testContent;
-
-    const hasNotLoaded = isLoading || !animationComplete;
-    return (
-        (<CompactAppLayout footer={hasNotLoaded ? null : (<><Footer /><StickyFooter /></>)} headerRightSection={headerComponent} showHeader={!hasNotLoaded} css={loadingCSS()} title={selectedProject && !hasNotLoaded ? <TitleComponent project={selectedProject} /> : null}>
-            {hasNotLoaded ? (<LoadingProgressBar inAppLoading={false} />) : content}
-        </CompactAppLayout>)
-    );
+	const hasNotLoaded = isLoading || !animationComplete;
+	return (
+		<CompactAppLayout
+			footer={
+				hasNotLoaded ? null : (
+					<>
+						<Footer />
+						<StickyFooter />
+					</>
+				)
+			}
+			headerRightSection={headerComponent}
+			showHeader={!hasNotLoaded}
+			css={loadingCSS()}
+			title={selectedProject && !hasNotLoaded ? <TitleComponent project={selectedProject} /> : null}
+		>
+			{hasNotLoaded ? <LoadingProgressBar inAppLoading={false} /> : content}
+		</CompactAppLayout>
+	);
 };
 
 const headerComponentCss = css`
-    display: flex;
-    position: relative;
-    top: 22%;
-    .dropdown-icon {
-        background: transparent !important;
-    }
+	display: flex;
+	position: relative;
+	top: 22%;
+	.dropdown-icon {
+		background: transparent !important;
+	}
 `;
 const loadingCSS = () => css`
-    background: #080809;
+	background: #080809;
 `;
 const buttonDropdownCss = css`
 	left: 0rem !important;
@@ -204,40 +240,40 @@ const buttonDropdownCss = css`
 	top: calc(100% + 4rem) !important;
 `;
 const buttonDropdownMainButtonCss = css`
-    background: #A742F7;
-    border: 1px solid #7D41AD;
-    width: fit-content;
-    border-radius: 8px !important;
-    background: hsla(268, 100%, 60%, 1) !important;
+	background: #a742f7;
+	border: 1px solid #7d41ad;
+	width: fit-content;
+	border-radius: 8px !important;
+	background: hsla(268, 100%, 60%, 1) !important;
 
-    font-family: 'Gilroy' !important;
-    font-style: normal !important;
-    font-weight: 600 !important;
-    font-size: 13rem !important;
-    height: 30rpx;
-    color: #FFFFFF !important;
+	font-family: "Gilroy" !important;
+	font-style: normal !important;
+	font-weight: 600 !important;
+	font-size: 13rem !important;
+	height: 30rpx;
+	color: #ffffff !important;
 `;
 const createIconCss = css`
-    width: 11rem;
-    height: 11rem;
+	width: 11rem;
+	height: 11rem;
 `;
 const createTestCss = css`
-    display: flex;
-    gap: 6rem;
-    align-items: center;
-    font-family: 'Gilroy';
-    font-style: normal;
-    font-weight: 500;
-    font-size: 13rem;
+	display: flex;
+	gap: 6rem;
+	align-items: center;
+	font-family: "Gilroy";
+	font-style: normal;
+	font-weight: 500;
+	font-size: 13rem;
 
-    color: #FFFFFF;
+	color: #ffffff;
 
-    :hover {
-        color: #BC66FF !important;
-        svg path {
-            fill: #BC66FF !important;
-        }
-    }
+	:hover {
+		color: #bc66ff !important;
+		svg path {
+			fill: #bc66ff !important;
+		}
+	}
 `;
 
 export { DashboardScreen };

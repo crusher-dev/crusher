@@ -59,5 +59,3 @@ const contentDescriptionCss = css`
 	letter-spacing: 0.2px;
 	color: rgba(255, 255, 255, 0.64);
 `;
-
-

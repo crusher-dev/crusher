@@ -4,7 +4,7 @@ import { Toast } from "@dyson/components/atoms/toast/Toast";
 import { css } from "@emotion/react";
 import mitt from "mitt";
 import { shell } from "electron";
-import {resolveToFrontEndPath} from "@shared/utils/url";
+import { resolveToFrontEndPath } from "@shared/utils/url";
 import { getAppSettings } from "electron-app/src/store/selectors/app";
 import { useStore } from "react-redux";
 import { StepRecordedToast } from "electron-app/src/_ui/ui/screens/recorder/components/sidebar/stepsPanel/stepRecordedToast";
@@ -26,7 +26,7 @@ const TestReportToast = ({ meta }) => {
 
 	const handleViewReport = React.useCallback(() => {
 		const appSettings = getAppSettings(store.getState() as any);
-		shell.openExternal(resolveToFrontEndPath("/app/build/" + (window as any).localBuildReportId, appSettings.frontendEndPoint))
+		shell.openExternal(resolveToFrontEndPath("/app/build/" + (window as any).localBuildReportId, appSettings.frontendEndPoint));
 	}, []);
 
 	return (
@@ -37,7 +37,14 @@ const TestReportToast = ({ meta }) => {
 						font-weight: bold;
 					`}
 				>
-					Tests <span css={css`text-transform: lowercase;`}>{meta.buildReportStatus}</span>
+					Tests{" "}
+					<span
+						css={css`
+							text-transform: lowercase;
+						`}
+					>
+						{meta.buildReportStatus}
+					</span>
 				</div>
 				<div>{meta.totalCount} test</div>
 			</div>
@@ -52,15 +59,23 @@ const TestReportToast = ({ meta }) => {
 				]}
 				onClick={handleViewReport}
 			>
-				<div css={css`:hover { opacity: 0.8; cursor: default; }`}>View report</div>
+				<div
+					css={css`
+						:hover {
+							opacity: 0.8;
+							cursor: default;
+						}
+					`}
+				>
+					View report
+				</div>
 			</div>
 		</div>
 	);
 };
 
-
 const TestCreatedToast = () => {
-    return (
+	return (
 		<div css={reportToastContainerStyle}>
 			<div css={reportToastSectionContainerStyle}>
 				<div
@@ -68,7 +83,14 @@ const TestCreatedToast = () => {
 						font-weight: bold;
 					`}
 				>
-					Tests <span css={css`text-transform: lowercase;`}>Created</span>
+					Tests{" "}
+					<span
+						css={css`
+							text-transform: lowercase;
+						`}
+					>
+						Created
+					</span>
 				</div>
 			</div>
 			<div
@@ -107,13 +129,12 @@ const reportToastSectionContainerStyle = css`
 	padding: 10px 20px;
 	display: flex;
 	justify-content: space-between;
-
 `;
 export const ToastSnackbar = () => {
 	const [event, setEvent] = useState<SnackbarEvent | null>(null);
 	useEffect(() => {
 		snackBarEmitter.on("snackbar-notify", (e) => {
-			if(e === null) {
+			if (e === null) {
 				return setEvent(null);
 			}
 			setEvent(e as SnackbarEvent);
@@ -127,7 +148,7 @@ export const ToastSnackbar = () => {
 	if (event === null) return null;
 	if (event.type === "test_report") return <TestReportToast meta={event.meta} />;
 	if (event.type === "test_created") return <TestCreatedToast meta={event.meta} />;
-	if (event.type === 'step_recorded') return <StepRecordedToast meta={event.meta} />;
+	if (event.type === "step_recorded") return <StepRecordedToast meta={event.meta} />;
 
 	return (
 		<Toast type={event.type} onClose={setEvent.bind(this, null)}>

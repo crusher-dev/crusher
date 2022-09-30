@@ -4,8 +4,8 @@ import { useSelector, useStore } from "react-redux";
 import { css } from "@emotion/react";
 import { Conditional } from "@dyson/components/layouts";
 import { getLogs } from "electron-app/src/store/selectors/logger";
-import {MiniCrossIcon} from "../../../../constants/old_icons";
-import {ObjectInspector, chromeDark} from "react-inspector";
+import { MiniCrossIcon } from "../../../../constants/old_icons";
+import { ObjectInspector, chromeDark } from "react-inspector";
 import { BrowserButton } from "../buttons/browser.button";
 import { CustomCodeModal } from "../modals/page/customCodeModal";
 import { modalEmitter } from "../modals";
@@ -24,12 +24,7 @@ interface ITabButtonProps {
 	callback?: any;
 }
 const TabButton = (props: ITabButtonProps) => {
-	const {
-        className,
-        selected,
-        callback,
-        count
-    } = props;
+	const { className, selected, callback, count } = props;
 	if (count === 0) return null;
 	return (
 		<div
@@ -73,7 +68,6 @@ const SAMPLE_CONTEXT = {
 	userEmail: "itisha.mail@headout.com",
 	userPhone: "9876543210",
 };
-
 
 const ArrowRightIcon = (props) => (
 	<svg
@@ -120,9 +114,9 @@ const StatusBar = () => {
 	}, []);
 
 	const closeModal = () => {
-        setCurrentModal({ type: null, stepIndex: null });
-        window["openLogTime"] = performance.now();
-    };
+		setCurrentModal({ type: null, stepIndex: null });
+		window["openLogTime"] = performance.now();
+	};
 
 	React.useEffect(() => {
 		if (logs && logs.get("_").length > 0) {
@@ -134,28 +128,42 @@ const StatusBar = () => {
 		}
 	}, [logs]);
 
-	const LogItem = (props: {
-		log: ILog & { children: ILog[]; diff: string };
-		diff: string;
-		className?: string;
-		shouldShowChildren;
-	}) => {
+	const LogItem = (props: { log: ILog & { children: ILog[]; diff: string }; diff: string; className?: string; shouldShowChildren }) => {
 		const { log, shouldShowChildren } = props;
 		const [showChildrens, setShowChildrens] = React.useState(shouldShowChildren);
 
-		const hasChildrens = React.useMemo(() => (log.children?.length), [log]);
+		const hasChildrens = React.useMemo(() => log.children?.length, [log]);
 
 		return (
-            (<div className={String(props.className)}>
-                <div
+			<div className={String(props.className)}>
+				<div
 					css={css`
 						padding-top: 16rem;
 						display: flex;
 					`}
 				>
 					{hasChildrens ? (
-						<ArrowRightIcon onClick={setShowChildrens.bind(this, !showChildrens)} css={[css`width: 8rem; fill: #797979; margin-right: 4rem; :hover { opacity: 0.8 }`, showChildrens ? css`transform: rotate(90deg)` : undefined]} />
-					) : ""}
+						<ArrowRightIcon
+							onClick={setShowChildrens.bind(this, !showChildrens)}
+							css={[
+								css`
+									width: 8rem;
+									fill: #797979;
+									margin-right: 4rem;
+									:hover {
+										opacity: 0.8;
+									}
+								`,
+								showChildrens
+									? css`
+											transform: rotate(90deg);
+									  `
+									: undefined,
+							]}
+						/>
+					) : (
+						""
+					)}
 					<div>
 						<span
 							css={css`
@@ -179,27 +187,27 @@ const StatusBar = () => {
 						</span>
 					</div>
 				</div>
-                {showChildrens && log.children && log.children.length ?
-					log.children.map((child: ILog & { children: ILog[]; diff: string }) => {
-						return (
-							<LogItem
-								css={css`
+				{showChildrens && log.children && log.children.length
+					? log.children.map((child: ILog & { children: ILog[]; diff: string }) => {
+							return (
+								<LogItem
+									css={css`
 										padding-left: 20rem;
 									`}
-								key={child.id}
-								log={child}
-								diff={child.diff}
-							/>
-						);
-					}) : ""}
-            </div>)
-        );
+									key={child.id}
+									log={child}
+									diff={child.diff}
+								/>
+							);
+					  })
+					: ""}
+			</div>
+		);
 	};
 
 	const handleTabSelection = (tabType: TabsEnum) => {
 		setSelectedTab(tabType);
 	};
-
 
 	const lastLogMessage = logs && logs.get("_").length ? logs.get("_")[logs.get("_").length - 1] : null;
 	const stepAction = React.useMemo(() => {
@@ -210,28 +218,44 @@ const StatusBar = () => {
 		return null;
 	}, [currentModal]);
 
-
 	const getFormattedMessage = (logMessage) => {
-        const upperCase = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+		const upperCase = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 
-        return <div css={css`display: flex; align-items: center; font-family: 'Gilroy';
-		font-style: normal;
-		font-weight: 400;
-		font-size: 13.4rem;
-		`}>
-			<span css={css`color: rgba(90, 196, 255, 1); font-weight: 600;`}>{upperCase(logMessage.type)}:</span>
-			<span className={"ml-4"}>{(logMessage.message.length > 100 ? logMessage.message.substr(0, 100) + "..." : logMessage.message)}</span>
-		</div>;
-    };
+		return (
+			<div
+				css={css`
+					display: flex;
+					align-items: center;
+					font-family: "Gilroy";
+					font-style: normal;
+					font-weight: 400;
+					font-size: 13.4rem;
+				`}
+			>
+				<span
+					css={css`
+						color: rgba(90, 196, 255, 1);
+						font-weight: 600;
+					`}
+				>
+					{upperCase(logMessage.type)}:
+				</span>
+				<span className={"ml-4"}>{logMessage.message.length > 100 ? logMessage.message.substr(0, 100) + "..." : logMessage.message}</span>
+			</div>
+		);
+	};
 
-	const handleToggle = React.useCallback((e: any) => {
-		e.preventDefault();
-		e.stopPropagation();
-		setClicked(!clicked);
-	}, [clicked]);
+	const handleToggle = React.useCallback(
+		(e: any) => {
+			e.preventDefault();
+			e.stopPropagation();
+			setClicked(!clicked);
+		},
+		[clicked],
+	);
 
 	return (
-        (<div
+		<div
 			css={[
 				css`
 					position: absolute;
@@ -247,7 +271,7 @@ const StatusBar = () => {
 					: undefined,
 			]}
 		>
-            {currentModal && currentModal.type === "CUSTOM_CODE" ? (
+			{currentModal && currentModal.type === "CUSTOM_CODE" ? (
 				<div
 					css={css`
 						flex: 1;
@@ -270,7 +294,7 @@ const StatusBar = () => {
 			) : (
 				""
 			)}
-            <div
+			<div
 				id={`logsTab`}
 				className={String(clicked ? "expandBar" : "")}
 				css={[
@@ -283,27 +307,40 @@ const StatusBar = () => {
 				]}
 			>
 				<div
-					css={[css`
-						display: flex;
-						align-items: center;
-						height: 100%;
-						max-height: 38rem;
-						padding: 0rem 14rem;
-						padding-right: 0rem;
-					`,
-					lastLogMessage ? css`						:hover{
-						background: rgba(255, 255, 255, 0.02)
-					}` : undefined,
-					clicked ? css`
-					border-bottom: 0.5px solid #242424;
-					overflow: hidden;
-					` : undefined
+					css={[
+						css`
+							display: flex;
+							align-items: center;
+							height: 100%;
+							max-height: 38rem;
+							padding: 0rem 14rem;
+							padding-right: 0rem;
+						`,
+						lastLogMessage
+							? css`
+									:hover {
+										background: rgba(255, 255, 255, 0.02);
+									}
+							  `
+							: undefined,
+						clicked
+							? css`
+									border-bottom: 0.5px solid #242424;
+									overflow: hidden;
+							  `
+							: undefined,
 					]}
 					onClick={lastLogMessage ? handleToggle : undefined}
 				>
-					<div css={[css`width: 100%;`]} className={"flex items-center"}>
-
-						{lastLogMessage ? (<UpDownSizeIcon css={updownSizeIconCss} className={"updownSize-icon mr-7"} />) : ""}
+					<div
+						css={[
+							css`
+								width: 100%;
+							`,
+						]}
+						className={"flex items-center"}
+					>
+						{lastLogMessage ? <UpDownSizeIcon css={updownSizeIconCss} className={"updownSize-icon mr-7"} /> : ""}
 						<TabButton
 							selected={selectedTab === TabsEnum.LOGS}
 							title="Logs"
@@ -319,8 +356,9 @@ const StatusBar = () => {
 							<div css={logTextStyle} className={"ml-10 mt-2"}>
 								{lastLogMessage ? getFormattedMessage(lastLogMessage) : ""}
 							</div>
-						) : ""}
-
+						) : (
+							""
+						)}
 
 						<Conditional showIf={clicked}>
 							<div
@@ -335,13 +373,13 @@ const StatusBar = () => {
 									onClick={handleToggle}
 									className="flex items-center justify-center"
 									css={css`
-									height: 16rem;
-									width: 16rem;
+										height: 16rem;
+										width: 16rem;
 
-									border-radius: 4rem;
-								
+										border-radius: 4rem;
+
 										:hover {
-											path{
+											path {
 												fill: #fff;
 											}
 											background: #ffffff14;
@@ -360,14 +398,18 @@ const StatusBar = () => {
 					</div>
 
 					<HoverCard content={<HelpContent />} placement="top" type="hover" padding={8} offset={0}>
-						<div onClick={(e) => { e.preventDefault(); e.stopPropagation(); }} css={docsButtonCss}>
+						<div
+							onClick={(e) => {
+								e.preventDefault();
+								e.stopPropagation();
+							}}
+							css={docsButtonCss}
+						>
 							<DocsIcon css={docsIconCss} />
 							<span css={docsButtonTextCss}>Docs & help</span>
 						</div>
 					</HoverCard>
 				</div>
-
-
 
 				<Conditional showIf={clicked}>
 					<Conditional showIf={selectedTab === TabsEnum.LOGS}>
@@ -385,9 +427,16 @@ const StatusBar = () => {
 						>
 							{logs && logs.get("_").length
 								? logs.get("_").map((log: ILog, index: number) => {
-									// console.log("Log time", log.time,  window["openLogTime"]/1000, log.time - (window["openLogTime"]/1000) );
-									return <LogItem diff={"0"} shouldShowChildren={log.time - (window["openLogTime"]) >= 0 && index === logs.get("_").length - 1} log={{ ...log, children: logs.get(log.id) }} key={log.id} />;
-								})
+										// console.log("Log time", log.time,  window["openLogTime"]/1000, log.time - (window["openLogTime"]/1000) );
+										return (
+											<LogItem
+												diff={"0"}
+												shouldShowChildren={log.time - window["openLogTime"] >= 0 && index === logs.get("_").length - 1}
+												log={{ ...log, children: logs.get(log.id) }}
+												key={log.id}
+											/>
+										);
+								  })
 								: ""}
 						</div>
 					</Conditional>
@@ -452,42 +501,40 @@ const StatusBar = () => {
 					</Conditional>
 				</Conditional>
 			</div>
-            <style>
+			<style>
 				{`
 			.expandBar {
 				max-height: 369rem;
 			}
 		`}
 			</style>
-        </div>)
-    );
+		</div>
+	);
 };
 const docsButtonCss = css`
-background: #0F1010;
+	background: #0f1010;
 
-    font-family: 'Cera Pro';
-    font-style: normal;
-    font-weight: 500;
-    font-size: 12px;
+	font-family: "Cera Pro";
+	font-style: normal;
+	font-weight: 500;
+	font-size: 12px;
 
-
-    color: #FFFFFF;
-    width: 124px;
-    height: 38rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-left: auto;
-    border-left: 1px solid #242424;
+	color: #ffffff;
+	width: 124px;
+	height: 38rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-left: auto;
+	border-left: 1px solid #242424;
 	border-top: 0.5px solid #242424;
-
 `;
 const docsIconCss = css`
-    width: 16px;
-    height: 16px;
+	width: 16px;
+	height: 16px;
 `;
 const docsButtonTextCss = css`
-    margin-left: 7px;
+	margin-left: 7px;
 `;
 const logTextStyle = css`
 	color: #717171;
@@ -496,14 +543,14 @@ const logTextStyle = css`
 `;
 const logsCountStyle = css`
 	padding: 3rem 5rem;
-	font-family: 'Cera Pro';
-    font-style: normal;
-    font-weight: 500;
-    font-size: 12px;
-    text-align: center;
-    color: #58575A;
-    background: rgba(196, 196, 196, 0.1);
-    border-radius: 4rem;
+	font-family: "Cera Pro";
+	font-style: normal;
+	font-weight: 500;
+	font-size: 12px;
+	text-align: center;
+	color: #58575a;
+	background: rgba(196, 196, 196, 0.1);
+	border-radius: 4rem;
 `;
 
 const statusBarTabStyle = css`

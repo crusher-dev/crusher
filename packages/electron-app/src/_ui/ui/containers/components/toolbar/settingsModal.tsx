@@ -12,9 +12,9 @@ import { setSettngs } from "electron-app/src/store/actions/app";
 import { iReduxState } from "electron-app/src/store/reducers";
 import { sendSnackBarEvent } from "../toast";
 import { Conditional } from "@dyson/components/layouts";
-import {  LoadingIconV2 } from "../../../../constants/old_icons";
+import { LoadingIconV2 } from "../../../../constants/old_icons";
 import { shell } from "electron";
-import {waitForUserLogin } from "electron-app/src/utils";
+import { waitForUserLogin } from "electron-app/src/utils";
 import { resolveToFrontEndPath } from "@shared/utils/url";
 import { SettingsManager } from "electron-app/src/lib/settingsManager";
 
@@ -62,7 +62,6 @@ const SettingsModalContent = ({ className, ...props }: iStartupModalProps & { cl
 		setEnableMouseTracker(toggleValue);
 	};
 
-
 	const saveAction = () => {
 		const settings: iReduxState["app"]["settings"] = {
 			backendEndPoint,
@@ -99,7 +98,6 @@ const SettingsModalContent = ({ className, ...props }: iStartupModalProps & { cl
 		}
 	}, [userAccountInfo, connectToCloudStatus]);
 
-
 	const connectWordMap = {
 		[ConnectToCloudStatusEnum.CONNECTED]: "Connected",
 		[ConnectToCloudStatusEnum.WAITING]: "Connecting",
@@ -107,36 +105,36 @@ const SettingsModalContent = ({ className, ...props }: iStartupModalProps & { cl
 	};
 
 	return (
-        (<div css={formContainerStyle} className={String(className)}>
-            <div
+		<div css={formContainerStyle} className={String(className)}>
+			<div
 				css={css`
-				font-size: 15rem;
-				font-weight: 600;
-				color: #fff;
-				font-family: Cera Pro;
-			`}
+					font-size: 15rem;
+					font-weight: 600;
+					color: #fff;
+					font-family: Cera Pro;
+				`}
 			>
 				General
 			</div>
-            <hr
+			<hr
 				css={css`
-				margin-top: 8rem;
-				border-color: rgb(255, 255, 255, 0.1);
-				height: 0.1rem;
-			`}
+					margin-top: 8rem;
+					border-color: rgb(255, 255, 255, 0.1);
+					height: 0.1rem;
+				`}
 			/>
-            <div
+			<div
 				css={css`
-				margin-top: 16rem;
-			`}
+					margin-top: 16rem;
+				`}
 			>
 				<div css={inputContainerStyle}>
 					<div
 						css={css`
-						font-size: 13rem;
-						color: rgb(255, 255, 255, 0.7);
-						font-weight: 600;
-					`}
+							font-size: 13rem;
+							color: rgb(255, 255, 255, 0.7);
+							font-weight: 600;
+						`}
 					>
 						Backend endpoint
 					</div>
@@ -155,16 +153,16 @@ const SettingsModalContent = ({ className, ...props }: iStartupModalProps & { cl
 					css={[
 						inputContainerStyle,
 						css`
-						margin-top: 18rem;
-					`,
+							margin-top: 18rem;
+						`,
 					]}
 				>
 					<div
 						css={css`
-						font-size: 13rem;
-						color: rgb(255, 255, 255, 0.7);
-						font-weight: 600;
-					`}
+							font-size: 13rem;
+							color: rgb(255, 255, 255, 0.7);
+							font-weight: 600;
+						`}
 					>
 						Frontend endpoint
 					</div>
@@ -180,90 +178,84 @@ const SettingsModalContent = ({ className, ...props }: iStartupModalProps & { cl
 					/>
 				</div>
 			</div>
-            <div
+			<div
 				css={css`
-				font-size: 15rem;
-				font-weight: 600;
-				color: #fff;
-				margin-top: 30rem;
-				font-family: Cera Pro;
-			`}
+					font-size: 15rem;
+					font-weight: 600;
+					color: #fff;
+					margin-top: 30rem;
+					font-family: Cera Pro;
+				`}
 			>
 				Recorder
 			</div>
-            <hr
+			<hr
 				css={css`
-				margin-top: 8rem;
-				border-color: rgb(255, 255, 255, 0.1);
-				height: 0.1rem;
-			`}
+					margin-top: 8rem;
+					border-color: rgb(255, 255, 255, 0.1);
+					height: 0.1rem;
+				`}
 			/>
-            <div
+			<div
 				css={css`
-				margin-top: 16rem;
-			`}
+					margin-top: 16rem;
+				`}
 			>
 				<div css={inputContainerStyle} className="flex justify-between">
 					<div
 						css={css`
-						font-size: 13rem;
-						color: rgb(255, 255, 255, 0.7);
-						font-weight: 600;
-					`}
+							font-size: 13rem;
+							color: rgb(255, 255, 255, 0.7);
+							font-weight: 600;
+						`}
 					>
 						Auto-detect actions
 					</div>
 
-					<Switch
-						checked={autoDetectActions} onCheckedChange={setAutoDetctActions}
-						size={"small"}
-					/>
+					<Switch checked={autoDetectActions} onCheckedChange={setAutoDetctActions} size={"small"} />
 				</div>
 				<div
 					className="flex justify-between"
 					css={[
 						inputContainerStyle,
 						css`
-						margin-top: 18rem;
-					`,
+							margin-top: 18rem;
+						`,
 					]}
 				>
 					<div
 						css={css`
-						font-size: 13rem;
-						color: rgb(255, 255, 255, 0.7);
-						font-weight: 600;
-					`}
+							font-size: 13rem;
+							color: rgb(255, 255, 255, 0.7);
+							font-weight: 600;
+						`}
 					>
 						Enable mouse tracker
 					</div>
 
-					<Switch
-						checked={enableMouseTracker} onCheckedChange={handleEnableMouseTrackerCallback}
-						size={"small"}
-					/>
+					<Switch checked={enableMouseTracker} onCheckedChange={handleEnableMouseTrackerCallback} size={"small"} />
 				</div>
 			</div>
-            <div css={submitFormContainerStyle} className={"submit-action-button"}>
+			<div css={submitFormContainerStyle} className={"submit-action-button"}>
 				<div
 					onClick={handleConnectToCloud}
 					css={css`
-					display: flex;
-					align-items: center;
-					color: #fff;
-					font-size: 13rem;
-					:hover {
-						opacity: 0.9;
-					}
-				`}
+						display: flex;
+						align-items: center;
+						color: #fff;
+						font-size: 13rem;
+						:hover {
+							opacity: 0.9;
+						}
+					`}
 				>
 					<span>{connectWordMap[connectToCloudStatus]} to cloud</span>
 					<Conditional showIf={connectToCloudStatus === ConnectToCloudStatusEnum.WAITING}>
 						<LoadingIconV2
 							css={css`
-							height: 20rem;
-							margin-left: 6rem;
-						`}
+								height: 20rem;
+								margin-left: 6rem;
+							`}
 						/>
 					</Conditional>
 					<Conditional showIf={connectToCloudStatus === ConnectToCloudStatusEnum.CONNECTED}>
@@ -274,9 +266,9 @@ const SettingsModalContent = ({ className, ...props }: iStartupModalProps & { cl
 					Save
 				</Button>
 			</div>
-        </div>)
-    );
-}
+		</div>
+	);
+};
 
 const SettingsModal = (props: iStartupModalProps) => {
 	const { isOpen } = props;

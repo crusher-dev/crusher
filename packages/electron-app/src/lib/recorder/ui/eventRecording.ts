@@ -354,33 +354,31 @@ export default class EventRecording {
 
 	// eslint-disable-next-line consistent-return
 	async handleWindowClick(event: any) {
-        console.log("Event here", event);
-        const originalTimestamp = event.timeStamp;
-        event.timestamp = Date.now();
-        if (event.which === 3) {
+		console.log("Event here", event);
+		const originalTimestamp = event.timeStamp;
+		event.timestamp = Date.now();
+		if (event.which === 3) {
 			return this.onRightClick(event);
 		}
-        if (event.which === 2) return;
-        if (originalTimestamp - this.lastClick < 500) return;
-        this.lastClick = originalTimestamp;
+		if (event.which === 2) return;
+		if (originalTimestamp - this.lastClick < 500) return;
+		this.lastClick = originalTimestamp;
 
-        let [target] = event.composedPath();
-        if (target instanceof HTMLSlotElement)
-            [target] = target.assignedNodes();
-        if (target.nodeType === target.TEXT_NODE)
-            target = target.parentElement;
+		let [target] = event.composedPath();
+		if (target instanceof HTMLSlotElement) [target] = target.assignedNodes();
+		if (target.nodeType === target.TEXT_NODE) target = target.parentElement;
 
-        const mainAnchorNode = this.checkIfElementIsAnchored(target);
-        if (mainAnchorNode) target = mainAnchorNode;
+		const mainAnchorNode = this.checkIfElementIsAnchored(target);
+		if (mainAnchorNode) target = mainAnchorNode;
 
-        const inputNodeInfo = this._getInputNodeInfo(target);
+		const inputNodeInfo = this._getInputNodeInfo(target);
 
-        const tagName = target.tagName.toLowerCase();
-        if (["option", "select"].includes(tagName)) return;
+		const tagName = target.tagName.toLowerCase();
+		if (["option", "select"].includes(tagName)) return;
 
-        // If clientX and clientY is 0 it may mean that the event is not triggered
-        // by user. Found during creating tests for ielts search
-        if (!event.simulatedEvent && event.isTrusted && (event.clientX || event.clientY)) {
+		// If clientX and clientY is 0 it may mean that the event is not triggered
+		// by user. Found during creating tests for ielts search
+		if (!event.simulatedEvent && event.isTrusted && (event.clientX || event.clientY)) {
 			this._clickEvents.push(event);
 			await this.trackAndSaveRelevantHover(target, event.timeStamp);
 
@@ -392,19 +390,17 @@ export default class EventRecording {
 			});
 		}
 
-        // if (closestLink && closestLink.tagName.toLowerCase() === "a") {
-        // 	const href = closestLink.getAttribute("href");
-        // 	if (href) {
-        // 		window.location.href = href;
-        // 		return event.preventDefault();
-        // 	}
-        // }
-    }
+		// if (closestLink && closestLink.tagName.toLowerCase() === "a") {
+		// 	const href = closestLink.getAttribute("href");
+		// 	if (href) {
+		// 		window.location.href = href;
+		// 		return event.preventDefault();
+		// 	}
+		// }
+	}
 
 	handleKeyDown(event: KeyboardEvent) {
-		const {
-            key
-        } = event;
+		const { key } = event;
 		if (KEYS_TO_TRACK_FOR_INPUT.has(key)) {
 			this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.PRESS, event.composedPath()[0], key);
 		}
@@ -451,14 +447,14 @@ export default class EventRecording {
 			case "select": {
 				const selectElement = eventNode as HTMLSelectElement;
 				const selectedOptions = selectElement.selectedOptions ? Array.from(selectElement.selectedOptions) : [];
-				return { type: InputNodeTypeEnum.SELECT, value: selectedOptions.map(option => option.index), name: selectElement.name };
+				return { type: InputNodeTypeEnum.SELECT, value: selectedOptions.map((option) => option.index), name: selectElement.name };
 			}
 			case "input": {
-                const inputElement = eventNode as HTMLInputElement;
-                const inputType = inputElement.type;
-                const inputName = inputElement.name;
+				const inputElement = eventNode as HTMLInputElement;
+				const inputType = inputElement.type;
+				const inputName = inputElement.name;
 
-                switch (inputType) {
+				switch (inputType) {
 					case "file":
 						return null;
 					case "checkbox":
@@ -469,7 +465,7 @@ export default class EventRecording {
 						// color, date, datetime, datetime-local, email, month, number, password, range, search, tel, text, time, url, week
 						return { type: InputNodeTypeEnum.INPUT, value: inputElement.value, name: inputName, inputType: inputType.toLowerCase() };
 				}
-            }
+			}
 			case "textarea": {
 				const textAreaElement = eventNode as HTMLTextAreaElement;
 				return { type: InputNodeTypeEnum.TEXTAREA, value: textAreaElement.value, name: textAreaElement.name };

@@ -6,7 +6,7 @@ import { ExportsManager } from "../../../crusher-shared/lib/exports";
 import { CrusherCookieSetPayload } from "../../../crusher-shared/types/sdk/types";
 import { GlobalManagerPolyfill, LogManagerPolyfill, StorageManagerPolyfill } from "./polyfills";
 import { ActionDescriptor, CrusherRunnerActions, CrusherSdk, getMainActions } from "runner-utils/src/index";
-import {Browser, BrowserContext, ConsoleMessage, Page, ElementHandle, JSHandle} from "playwright";
+import { Browser, BrowserContext, ConsoleMessage, Page, ElementHandle, JSHandle } from "playwright";
 import { AppWindow } from "../main-process/app-window";
 import * as fs from "fs";
 import * as path from "path";
@@ -139,7 +139,7 @@ class PlaywrightInstance {
 		return page;
 	}
 
-	private async handleWebviewLogInfo(source, message: string) { 
+	private async handleWebviewLogInfo(source, message: string) {
 		console.log(message);
 	}
 
@@ -160,14 +160,14 @@ class PlaywrightInstance {
 		const parentFrame = await ownerFrame.parentFrame();
 		let parentFrameSelectors = null;
 		if (parentFrame && !(await ownerFrame.isDetached())) {
-            const ownerFrameElement = await ownerFrame.frameElement();
-            parentFrameSelectors = await parentFrame.evaluate(
-                (element) => {
-                    return (window as any).getSelectors(element[0]);
-                },
-                [ownerFrameElement],
-            );
-        }
+			const ownerFrameElement = await ownerFrame.frameElement();
+			parentFrameSelectors = await parentFrame.evaluate(
+				(element) => {
+					return (window as any).getSelectors(element[0]);
+				},
+				[ownerFrameElement],
+			);
+		}
 		if (elementHandle) {
 			this.elementsMap.set(uniqueElementId, { handle: elementHandle, parentFrameSelectors });
 			this.appWindow.reinstateElementSteps(uniqueElementId, this.elementsMap.get(uniqueElementId));
@@ -178,18 +178,17 @@ class PlaywrightInstance {
 		const debuggingPortFile = fs.readFileSync(path.join(app.getPath("userData"), "DevToolsActivePort"), "utf8");
 		const [debuggingPort] = debuggingPortFile.split("\n");
 		this.browser = await playwright.chromium.connectOverCDP(`http://localhost:${debuggingPort}/`, { customBrowserName: "electron-webview" });
-		[this.browserContext] = (await this.browser.contexts());
+		[this.browserContext] = await this.browser.contexts();
 		// @TODO: Look into this
 		this.page = await this._getWebViewPage();
 		this.sdkManager = new CrusherSdk(this.page, this._exportsManager as any, this._storageManager as any);
 
-		
 		try {
 			this.page.exposeBinding("crusherSdk.logInfo", this.handleWebviewLogInfo.bind(this));
 			this.page.exposeBinding("crusherSdk.click", this.handleWebviewClick.bind(this));
 			this.page.exposeBinding("crusherSdk.hover", this.handleWebviewHover.bind(this));
-			this.page.exposeBinding("crusherSdk.saveElementHandle", this.handleSaveElementHandle.bind(this), {handle: true});
-		} catch(e) {
+			this.page.exposeBinding("crusherSdk.saveElementHandle", this.handleSaveElementHandle.bind(this), { handle: true });
+		} catch (e) {
 			console.error("Error while exposing crusherSdk binding", e);
 		}
 		global.customLogger = {
@@ -211,19 +210,19 @@ class PlaywrightInstance {
 
 	/* Serves as an API to click/hover over elements through playwright */
 	private _handleConsoleMessage = async (msg: ConsoleMessage) => {
-        const [typeObj, valueObj] = msg.args();
-        if (!typeObj || !valueObj) return;
+		const [typeObj, valueObj] = msg.args();
+		if (!typeObj || !valueObj) return;
 
-        const type = await typeObj.jsonValue();
-        switch (type) {
-        case "CRUSHER_HOVER_ELEMENT":
-            await (valueObj as ElementHandle).hover();
-            break;
-        case "CRUSHER_CLICK_ELEMENT":
-            await (valueObj as ElementHandle).click();
-            break;
-        }
-    };
+		const type = await typeObj.jsonValue();
+		switch (type) {
+			case "CRUSHER_HOVER_ELEMENT":
+				await (valueObj as ElementHandle).hover();
+				break;
+			case "CRUSHER_CLICK_ELEMENT":
+				await (valueObj as ElementHandle).click();
+				break;
+		}
+	};
 
 	async runActions(actions: iAction[], shouldNotSave = false): Promise<void> {
 		const actionsArr = getMainActions(actions);
@@ -232,9 +231,7 @@ class PlaywrightInstance {
 		await this.appWindow.focusWebView();
 
 		await this.runnerManager.runActions(actionsArr, this.browser, this.page, (action: iAction, result: iActionResult) => {
-			const {
-                status
-            } = result;
+			const { status } = result;
 			switch (status) {
 				case ActionStatusEnum.STARTED:
 					this.lastAction = { id: uuidv4(), action };
@@ -251,9 +248,7 @@ class PlaywrightInstance {
 				case ActionStatusEnum.FAILED:
 				case ActionStatusEnum.STALLED:
 					this.lastAction = null;
-					const {
-                        failedReason
-                    } = result.meta;
+					const { failedReason } = result.meta;
 					const isStalled = status === ActionStatusEnum.STALLED;
 
 					const uniqueId = uuidv4();
@@ -288,7 +283,7 @@ class PlaywrightInstance {
 						type: "info",
 						args: [],
 						time: performance.now(),
-						parent: this.lastAction.id
+						parent: this.lastAction.id,
 					});
 					this.lastAction = null;
 					if (!shouldNotSave) this.appWindow.getRecorder().markRunningStepCompleted();
@@ -318,7 +313,6 @@ class PlaywrightInstance {
 			this._exportsManager,
 			this.sdkManager,
 		);
-
 	}
 
 	public dispose() {

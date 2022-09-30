@@ -16,12 +16,12 @@ import {
 	performCustomCode,
 	performUndockCode,
 	saveCodeTemplate,
-	updateCodeTemplate
+	updateCodeTemplate,
 } from "electron-app/src/_ui/commands/perform";
 import { DownIcon } from "electron-app/src/_ui/constants/old_icons";
 import { MenuItem } from "electron-app/src/_ui/ui/components/dropdown/menuItems";
 import * as fs from "fs";
-import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
+import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 import * as path from "path";
 import React, { useRef } from "react";
 import { useStore } from "react-redux";
@@ -57,13 +57,7 @@ const DropdownOption = ({ label }) => {
 	return <div css={{ padding: "7rem 8rem", width: "100%", cursor: "default" }}>{label}</div>;
 };
 
-function DropwdownContent({
-	setShowActionMenu,
-	callback,
-	selectedTemplate
-}) {
-
-
+function DropwdownContent({ setShowActionMenu, callback, selectedTemplate }) {
 	const handleDeteach = () => {
 		setShowActionMenu(false);
 		callback("detach");
@@ -133,9 +127,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 				const containerNode = (editorMainRef.current as monaco.editor.IStandaloneCodeEditor).getContainerDomNode();
 				const mainContainerNode = containerNode.parentNode.parentNode;
 
-				const {
-					childNodes
-				} = mainContainerNode.parentNode;
+				const { childNodes } = mainContainerNode.parentNode;
 				let occupiedHeight = 0;
 				for (let childNode of Array.from(childNodes)) {
 					if (childNode !== mainContainerNode) {
@@ -173,9 +165,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 		(shouldUpdate: boolean = true) => {
 			const recorderState = getRecorderState(store.getState());
 			if (shouldUpdate && recorderState.payload && (recorderState.payload as any).previousState) {
-				store.dispatch(
-					updateRecorderState((recorderState.payload as any).previousState.type, (recorderState.payload as any).previousState.payload),
-				);
+				store.dispatch(updateRecorderState((recorderState.payload as any).previousState.type, (recorderState.payload as any).previousState.payload));
 			}
 			props.handleClose();
 		},
@@ -330,7 +320,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 	}, []);
 
 	return (
-		(<div
+		<div
 			id="current-modal"
 			css={css`
 				background: black;
@@ -552,11 +542,13 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 						<span>Run with context</span>
 					</div> */}
 				</div>
-				<div css={css`
-					display: flex;
-					align-items: center;
-					margin-left: auto;
-				`}>
+				<div
+					css={css`
+						display: flex;
+						align-items: center;
+						margin-left: auto;
+					`}
+				>
 					{/* <div css={runLinkStyle} onClick={runCustomCode}>Run</div> */}
 
 					<Dropdown
@@ -578,20 +570,20 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 						}
 						callback={setShowActionMenu.bind(this)}
 						css={css`
-						margin-left: auto;
-						.showOnClick {
-							display: flex;
-							align-items: center;
-						}
-					`}
+							margin-left: auto;
+							.showOnClick {
+								display: flex;
+								align-items: center;
+							}
+						`}
 						dropdownCSS={css`
-						left: 0rem !important;
-						width: 162rem;
-						z-index: 123123123123123;
-						left: 47rem !important;
-						top: auto;
-						bottom: calc(100% + 4rem);
-					`}
+							left: 0rem !important;
+							width: 162rem;
+							z-index: 123123123123123;
+							left: 47rem !important;
+							top: auto;
+							bottom: calc(100% + 4rem);
+						`}
 					>
 						<Button
 							css={saveButtonStyle}
@@ -605,38 +597,38 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 								}
 							}}
 						>
-							{props.stepAction ? ('Save step') : "Save and run"}
+							{props.stepAction ? "Save step" : "Save and run"}
 						</Button>
 						<div
 							css={css`
-							background: #7353F5;
-							display: flex;
-							align-items: center;
-							padding: 0rem 9rem;
-							border-top-right-radius: 6rem;
-							border-bottom-right-radius: 6rem;
-							border-left-color: #4d37a7;
-							border-left-width: 2.5rem;
-							border-left-style: solid;
-							:hover {
-								filter: brightness(75%);
-								background: #6749de;
-								border-left-color: #6749de;
-							}
-							align-self: stretch;
-						`}
+								background: #7353f5;
+								display: flex;
+								align-items: center;
+								padding: 0rem 9rem;
+								border-top-right-radius: 6rem;
+								border-bottom-right-radius: 6rem;
+								border-left-color: #4d37a7;
+								border-left-width: 2.5rem;
+								border-left-style: solid;
+								:hover {
+									filter: brightness(75%);
+									background: #6749de;
+									border-left-color: #6749de;
+								}
+								align-self: stretch;
+							`}
 						>
 							<DownIcon
 								fill={"#fff"}
 								css={css`
-								width: 9rem;
-							`}
+									width: 9rem;
+								`}
 							/>
 						</div>
 					</Dropdown>
 				</div>
 			</div>
-		</div>)
+		</div>
 	);
 };
 
@@ -672,8 +664,8 @@ const saveButtonStyle = css`
 	height: 30rem;
 
 	border-right: 0px !important;
-    border-top-right-radius: 0px !important;
-    border-bottom-right-radius: 0px !important;
+	border-top-right-radius: 0px !important;
+	border-bottom-right-radius: 0px !important;
 `;
 
 export { CustomCodeModal };

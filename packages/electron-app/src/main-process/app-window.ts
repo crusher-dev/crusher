@@ -31,7 +31,14 @@ import { getBrowserActions, getMainActions } from "runner-utils/src";
 import { iElementInfo, TRecorderState } from "../store/reducers/recorder";
 import { iSeoMetaInformationMeta } from "../types";
 import { getUserAgentFromName } from "@shared/constants/userAgents";
-import { getAppEditingSessionMeta, getAppSessionMeta, getAppSettings, getCurrentSelectedProjct, getRemainingSteps, getUserAccountInfo } from "../store/selectors/app";
+import {
+	getAppEditingSessionMeta,
+	getAppSessionMeta,
+	getAppSettings,
+	getCurrentSelectedProjct,
+	getRemainingSteps,
+	getUserAccountInfo,
+} from "../store/selectors/app";
 import { resetAppSession, setSelectedProject, setSessionInfoMeta, setUserAccountInfo } from "../store/actions/app";
 import { resolveToFrontEndPath } from "@shared/utils/url";
 import { getGlobalAppConfig, writeGlobalAppConfig } from "../lib/global-config";
@@ -168,7 +175,7 @@ export class AppWindow {
 		});
 
 		// Disable zoom-in/zoom-out
-		this.window.webContents.on("did-finish-load", () => { });
+		this.window.webContents.on("did-finish-load", () => {});
 
 		this.window.webContents.on("did-fail-load", () => {
 			this.window.webContents.openDevTools();
@@ -267,7 +274,7 @@ export class AppWindow {
 		ipcMain.handle("exit-app", this.handleExitApp.bind(this));
 		ipcMain.handle("get-recorder-test-logs", this.handleGetRecorderTestLogs.bind(this));
 		ipcMain.handle("save-local-build", this.handleSaveLocalBuild.bind(this));
-		ipcMain.handle("goto-url", this.handleGotoUrl.bind(this));;
+		ipcMain.handle("goto-url", this.handleGotoUrl.bind(this));
 		ipcMain.on("get-var-context", this.handleGetVarContext.bind(this));
 		ipcMain.on("get-is-advanced-selector", this.handleGetVarContext.bind(this));
 		ipcMain.handle("turn-on-webview-dev-tools", this.handleTurnOnWebviewDevtools.bind(this));
@@ -281,20 +288,22 @@ export class AppWindow {
 
 		if (app.commandLine.hasSwitch("project-config-file") && projectId) {
 			const configFilePath = app.commandLine.getSwitchValue("project-config-file");
-			this.window.webContents.executeJavaScript("window.localStorage.getItem('projectConfigFile')").then((projectConfigs) => {
-				const projectConfigsObject = projectConfigs ? JSON.parse(projectConfigs) : {};
-				projectConfigsObject[projectId] = configFilePath;
-				this.window.webContents.executeJavaScript(
-					`window.localStorage.setItem('projectConfigFile', ${JSON.stringify(JSON.stringify(projectConfigsObject))})`,
-				);
-			}).catch((err) => console.error(err));
+			this.window.webContents
+				.executeJavaScript("window.localStorage.getItem('projectConfigFile')")
+				.then((projectConfigs) => {
+					const projectConfigsObject = projectConfigs ? JSON.parse(projectConfigs) : {};
+					projectConfigsObject[projectId] = configFilePath;
+					this.window.webContents.executeJavaScript(
+						`window.localStorage.setItem('projectConfigFile', ${JSON.stringify(JSON.stringify(projectConfigsObject))})`,
+					);
+				})
+				.catch((err) => console.error(err));
 			process.argv = process.argv.filter((a) => a.includes("--project-config-file"));
 		}
 		this.handle(projectId).catch((err) => console.error("Can't initialize project config in renderer process", err));
 	}
 
 	async handle(projectId) {
-
 		if (app.commandLine.hasSwitch("open-recorder")) {
 			this.window.maximize();
 		}
@@ -451,7 +460,7 @@ export class AppWindow {
 
 	private async handleGotoUrl(event, payload: { url: string }) {
 		let finalUrl = payload.url;
-		if (finalUrl[0] === '/') {
+		if (finalUrl[0] === "/") {
 			finalUrl = getAppURl() + (finalUrl[1] ? "#/" + payload.url.substring(1) + `?test=${Date.now()}` : "");
 		}
 		return this.window.webContents.loadURL(finalUrl);
@@ -667,7 +676,7 @@ export class AppWindow {
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore
 			this.store.dispatch(updateRecordedStep(a.step, a.index));
-		};
+		}
 	}
 
 	async continueRemainingSteps(event: Electron.IpcMainEvent, payload: { extraSteps?: iAction[] | null }) {
@@ -695,7 +704,7 @@ export class AppWindow {
 		if (!elementHandle) {
 			return null;
 		}
-		const attributes = await elementHandle.evaluate(element => {
+		const attributes = await elementHandle.evaluate((element) => {
 			const attributeNamesArr: string[] = (element as HTMLElement).getAttributeNames();
 			return attributeNamesArr.map((attributeName) => {
 				return {
@@ -794,10 +803,7 @@ export class AppWindow {
 		const editingSessionMeta = getAppEditingSessionMeta(this.store.getState() as any);
 		const recordedSteps = getSavedSteps(this.store.getState() as any);
 
-		return CloudCrusher.updateTestDirectly(
-			editingSessionMeta.testId,
-			{ events: recordedSteps as any, }
-		);
+		return CloudCrusher.updateTestDirectly(editingSessionMeta.testId, { events: recordedSteps as any });
 	}
 
 	private async handleGetBuildReport(event: Electron.IpcMainEvent, payload: { buildId: string }) {
@@ -814,10 +820,7 @@ export class AppWindow {
 	}
 
 	async handleRunDraftTest(event: Electron.IpcMainEvent, payload: { testId: number }) {
-		return CloudCrusher.runDraftTest(
-			String(payload.testId),
-			this.proxyManager._results
-		);
+		return CloudCrusher.runDraftTest(String(payload.testId), this.proxyManager._results);
 	}
 
 	async handleSaveTest(shouldNotRunTest: boolean = false) {
@@ -827,11 +830,7 @@ export class AppWindow {
 		const projectId = getCurrentSelectedProjct(this.store.getState() as any);
 		let testRecord = null;
 		if (app.commandLine.hasSwitch("exit-on-save")) {
-			testRecord = await CloudCrusher.saveTestDirectly(
-				{ events: recordedSteps as any, name: testName },
-				!shouldNotRunTest,
-				this.proxyManager._results
-			);
+			testRecord = await CloudCrusher.saveTestDirectly({ events: recordedSteps as any, name: testName }, !shouldNotRunTest, this.proxyManager._results);
 		} else {
 			const accountInfo = getUserAccountInfo(this.store.getState() as any);
 
@@ -839,7 +838,7 @@ export class AppWindow {
 				testRecord = await CloudCrusher.saveTestDirectly(
 					{ events: recordedSteps as any, name: testName },
 					!shouldNotRunTest,
-					this.proxyManager._results
+					this.proxyManager._results,
 				);
 			} else {
 				await CloudCrusher.saveTest(
@@ -854,10 +853,7 @@ export class AppWindow {
 	}
 
 	async handleVerifyTest(event, payload) {
-		const {
-			shouldAlsoSave,
-			autoSaveType
-		} = payload;
+		const { shouldAlsoSave, autoSaveType } = payload;
 		const recordedSteps = getSavedSteps(this.store.getState() as any);
 		await this.resetRecorder(TRecorderState.PERFORMING_ACTIONS);
 
@@ -882,9 +878,15 @@ export class AppWindow {
 		return this.handleReplayTestSteps(testSteps);
 	}
 
-	async handleRemoteReplayTestUrlAction(event: Electron.IpcMainInvokeEvent, payload: { testId: number; redirectAfterSuccess: boolean; selectedTests: any[] }) {
+	async handleRemoteReplayTestUrlAction(
+		event: Electron.IpcMainInvokeEvent,
+		payload: { testId: number; redirectAfterSuccess: boolean; selectedTests: any[] },
+	) {
 		this.sendMessage("url-action", {
-			action: { commandName: "replay-test", args: { testId: payload.testId, redirectAfterSuccess: payload.redirectAfterSuccess, selectedTests: payload.selectedTests } },
+			action: {
+				commandName: "replay-test",
+				args: { testId: payload.testId, redirectAfterSuccess: payload.redirectAfterSuccess, selectedTests: payload.selectedTests },
+			},
 		});
 	}
 
@@ -958,14 +960,14 @@ export class AppWindow {
 					await this.store.dispatch(setDevice(browserAction.payload.meta.device.id));
 					await this.handlePerformAction(null, { action: browserAction, shouldNotSave: !!(browserAction as any).shouldNotRecord });
 					if (reaminingSteps.length) {
-						await new Promise(resolve => {
+						await new Promise((resolve) => {
 							const intervalFun = () => {
 								if (this.webView?.playwrightInstance?.page) {
 									resolve(true);
 									return true;
 								}
-								return false
-							}
+								return false;
+							};
 							const result = intervalFun();
 							if (!result) {
 								const _interval = setInterval(() => {
@@ -1078,10 +1080,7 @@ export class AppWindow {
 			console.log("Starting action", payload.action.type);
 		}
 
-		const {
-			action,
-			shouldNotSave
-		} = payload;
+		const { action, shouldNotSave } = payload;
 
 		try {
 			switch (action.type) {

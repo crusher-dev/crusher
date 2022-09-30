@@ -21,15 +21,15 @@ const linkStyle = css`
 	}
 
 	font-size: 13px;
-    path{
-        fill: #D1D5DB;
-    }
-    color: #D1D5DB;
-    :hover{
-        color: #BC66FF;
-        opacity: 1;
-        path{
-            fill: #BC66FF;
-        }
-    }
+	path {
+		fill: #d1d5db;
+	}
+	color: #d1d5db;
+	:hover {
+		color: #bc66ff;
+		opacity: 1;
+		path {
+			fill: #bc66ff;
+		}
+	}
 `;

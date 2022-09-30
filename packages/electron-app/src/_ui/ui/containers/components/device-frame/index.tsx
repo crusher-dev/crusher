@@ -8,7 +8,7 @@ import {
 	isInspectElementSelectorModeOn,
 	isInspectModeOn,
 } from "electron-app/src/store/selectors/recorder";
-import {  useSelector, useStore } from "react-redux";
+import { useSelector, useStore } from "react-redux";
 import { Conditional } from "@dyson/components/layouts";
 import * as url from "url";
 import { IpcMessageEvent } from "electron";
@@ -267,17 +267,25 @@ const DeviceFrame = () => {
 				type: "menuItem",
 				value: item.label,
 				rightItem: item.shortcut,
-				onClick: handleMenuCallback.bind(this, item.id)
-			}
+				onClick: handleMenuCallback.bind(this, item.id),
+			};
 		});
 	}, []);
 
 	// Only when code is shown
 	return (
 		<div css={[topContainerStyle]}>
-
 			<RightClickMenu menuItems={menuItemsComponent}>
-				<div css={[containerStyle, !recorderInfo.device ? css`background: #070708` : undefined]}>
+				<div
+					css={[
+						containerStyle,
+						!recorderInfo.device
+							? css`
+									background: #070708;
+							  `
+							: undefined,
+					]}
+				>
 					{recorderInfo.device && (
 						<div
 							style={{
@@ -314,7 +322,6 @@ const DeviceFrame = () => {
 					)}
 				</div>
 			</RightClickMenu>
-
 		</div>
 	);
 };
@@ -335,7 +342,6 @@ const deviceOverlayStyle = css`
 	top: 0;
 	z-index: 998;
 `;
-
 
 const webviewStyle = css`
 	border: none;
@@ -359,10 +365,10 @@ const containerStyle = css`
 	justify-content: center;
 	position: relative;
 	flex: 1;
-	background: #1E1E1E;
-    border: 1rem solid #141414;
-    border-right: none;
-    border-bottom: none;
+	background: #1e1e1e;
+	border: 1rem solid #141414;
+	border-right: none;
+	border-bottom: none;
 `;
 
 export { DeviceFrame };

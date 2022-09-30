@@ -9,7 +9,7 @@ import { goFullScreen } from "../../../../commands/perform";
 
 export const ActionButton = ({ title, className, onClick }) => {
 	return (
-		(<Button
+		<Button
 			id={"verify-save-test"}
 			onClick={(e) => {
 				e.preventDefault();
@@ -21,7 +21,7 @@ export const ActionButton = ({ title, className, onClick }) => {
 			css={saveButtonStyle}
 		>
 			<span>{title}</span>
-		</Button>)
+		</Button>
 	);
 };
 

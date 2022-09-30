@@ -3,9 +3,8 @@ import HtmlWebpackPlugin from "html-webpack-plugin";
 import * as path from "path";
 import { IgnorePlugin } from "webpack";
 
-const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
-const ReactRefreshTypeScript = require('react-refresh-typescript');
-
+const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
+const ReactRefreshTypeScript = require("react-refresh-typescript");
 
 require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
@@ -23,18 +22,15 @@ const isDevelopment = true;
 
 const commonConfig = {
 	mode: process.env.NODE_ENV || "development",
-	plugins: [
-		isDevelopment && new ReactRefreshWebpackPlugin(),
-		new IgnorePlugin({ resourceRegExp: /^fsevents$/ }),	new MiniCssExtractPlugin()],
+	plugins: [isDevelopment && new ReactRefreshWebpackPlugin(), new IgnorePlugin({ resourceRegExp: /^fsevents$/ }), new MiniCssExtractPlugin()],
 	module: {
 		rules: [
-
 			{
 				test: /\.[jt]sx?$/,
 				exclude: /node_modules/,
 				use: [
 					{
-						loader: require.resolve('ts-loader'),
+						loader: require.resolve("ts-loader"),
 						options: {
 							getCustomTransformers: () => ({
 								before: [isDevelopment && ReactRefreshTypeScript()].filter(Boolean),
@@ -74,7 +70,6 @@ const commonConfig = {
 };
 
 const finalConfig = [
-
 	{
 		...commonConfig,
 		entry: { renderer: path.resolve(__dirname, "../src/_ui/index") },
@@ -85,7 +80,7 @@ const finalConfig = [
 		},
 		plugins: [
 			...commonConfig.plugins,
-			 new webpack.HotModuleReplacementPlugin(),
+			new webpack.HotModuleReplacementPlugin(),
 			new HtmlWebpackPlugin({
 				template: path.join(__dirname, "../static", "index.html"),
 				chunks: ["renderer"],

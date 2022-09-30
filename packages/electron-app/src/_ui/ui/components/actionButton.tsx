@@ -2,9 +2,9 @@ import React from "react";
 import { css } from "@emotion/react";
 import { Button } from "@dyson/components/atoms/button/Button";
 
-export const ActionButton = ({ title, className, onClick } :any) => {
+export const ActionButton = ({ title, className, onClick }: any) => {
 	return (
-        (<Button
+		<Button
 			id={"verify-save-test"}
 			onClick={(e) => {
 				e.preventDefault();
@@ -15,9 +15,9 @@ export const ActionButton = ({ title, className, onClick } :any) => {
 			bgColor="tertiary-outline"
 			css={saveButtonStyle}
 		>
-            <span>{title}</span>
-        </Button>)
-    );
+			<span>{title}</span>
+		</Button>
+	);
 };
 
 const saveButtonStyle = css`

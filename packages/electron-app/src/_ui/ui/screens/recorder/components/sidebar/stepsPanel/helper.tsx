@@ -40,36 +40,34 @@ let parseStepNameText = (text: string): { type: "normal" | "highlight"; value: s
 	return finalArr;
 };
 
-const TextHighlighter = ({text}, shouldStyle = false) => {
-	if (!text)
-        {}
+const TextHighlighter = ({ text }, shouldStyle = false) => {
 
-    return parseStepNameText(text).map((a) => {
-        if (a.type === "highlight") {
-            return (
-                <span className="highlight-box" style={{color: shouldStyle ? `rgba(121, 207, 255, 1)` : "auto"}} title={a.value}>
-                    {a.value.length > 15 ? `${a.value.substring(0, 15)}...` : a.value}
-                </span>
-            );
-        } else {
-            return <span title={a.value}>{a.value}</span>;
-        }
-  });
+	return parseStepNameText(text).map((a) => {
+		if (a.type === "highlight") {
+			return (
+				<span className="highlight-box" style={{ color: shouldStyle ? `rgba(121, 207, 255, 1)` : "auto" }} title={a.value}>
+					{a.value.length > 15 ? `${a.value.substring(0, 15)}...` : a.value}
+				</span>
+			);
+		} else {
+			return <span title={a.value}>{a.value}</span>;
+		}
+	});
 };
 
-const TextHighlighterText = ({text}) => {
-	if (!text)
-        {}
-    return parseStepNameText(text).map((a) => {
+const TextHighlighterText = ({ text }) => {
+	if (!text) {
+	}
+	return parseStepNameText(text).map((a) => {
 		return a.value;
-  });
+	});
 };
 
-const  transformStringSelectorsToArray = (selectors: string) => {
+const transformStringSelectorsToArray = (selectors: string) => {
 	const selectorsArray = selectors.split("\n");
 	return selectorsArray.map((selector) => {
 		return { type: SELECTOR_TYPE.PLAYWRIGHT, value: selector, uniquenessScore: 1 };
 	});
-}
+};
 
 export { parseStepNameText, TextHighlighter, transformStringSelectorsToArray, TextHighlighterText };

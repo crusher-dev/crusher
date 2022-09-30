@@ -12,11 +12,11 @@ import { Dropdown } from "@dyson/components/molecules/Dropdown";
 import { MenuItem } from "./dropdown/menuItems";
 
 export function Link({ children, ...props }) {
-    return (
-        <span css={[linkStyle]} {...props}>
-            {children}
-        </span>
-    );
+	return (
+		<span css={[linkStyle]} {...props}>
+			{children}
+		</span>
+	);
 }
 
 const linkStyle = css`
@@ -35,113 +35,108 @@ const linkStyle = css`
 
 export { Link };
 
+function DropwdownContent({ setShowActionMenu, isRecorder }) {
+	const navigate = useNavigate();
+	const store = useStore();
+	const [projectConfigFile, setProjectConfigFile] = React.useState(null);
 
-function DropwdownContent({
-    setShowActionMenu,
-    isRecorder
-}) {
-    const navigate = useNavigate();
-    const store = useStore();
-    const [projectConfigFile, setProjectConfigFile] = React.useState(null);
+	React.useEffect(() => {
+		try {
+			const projectId = getCurrentSelectedProjct(store.getState() as any);
+			const projectConfigFile = window.localStorage.getItem("projectConfigFile");
+			const projectConfigFileJson = JSON.parse(projectConfigFile);
+			if (projectConfigFileJson[projectId]) {
+				setProjectConfigFile(projectConfigFileJson[projectId]);
+			}
+		} catch {}
+	}, []);
 
-    React.useEffect(() => {
-        try {
-            const projectId = getCurrentSelectedProjct(store.getState() as any);
-            const projectConfigFile = window.localStorage.getItem("projectConfigFile");
-            const projectConfigFileJson = JSON.parse(projectConfigFile);
-            if (projectConfigFileJson[projectId]) {
-                setProjectConfigFile(projectConfigFileJson[projectId]);
-            }
-        } catch { }
-    }, []);
+	const handleOpenConfigFile = React.useCallback(() => {
+		setShowActionMenu(false);
+		shell.openPath(projectConfigFile);
+	}, [projectConfigFile]);
 
-    const handleOpenConfigFile = React.useCallback(() => {
-        setShowActionMenu(false);
-        shell.openPath(projectConfigFile);
-    }, [projectConfigFile]);
+	const handleSettings = () => {
+		setShowActionMenu(false);
+		navigate("/settings");
+	};
 
-    const handleSettings = () => {
-        setShowActionMenu(false);
-        navigate("/settings");
-    };
+	const handleExit = () => {
+		setShowActionMenu(false);
+		performExit();
+	};
 
+	const handleSelectProject = () => {
+		setShowActionMenu(false, true);
+		return navigate("/select-project");
+	};
 
-    const handleExit = () => {
-        setShowActionMenu(false);
-        performExit();
-    };
+	const handleGoBackToDashboard = () => {
+		setShowActionMenu(false, true);
+		return navigate("/");
+	};
 
-    const handleSelectProject = () => {
-        setShowActionMenu(false, true);
-        return navigate("/select-project");
-    };
+	const handleHelpAccount = () => {
+		shell.openExternal("https://docs.crusher.dev");
+	};
 
-    const handleGoBackToDashboard = () => {
-        setShowActionMenu(false, true);
-        return navigate("/");
-    };
-
-    const handleHelpAccount = () => {
-        shell.openExternal("https://docs.crusher.dev");
-    };
-
-    return (
-        <div
-            className={"flex flex-col justify-between h-full"}
-            css={css`
+	return (
+		<div
+			className={"flex flex-col justify-between h-full"}
+			css={css`
 				font-size: 13rem;
 				color: #fff;
 			`}
-        >
-            <div>
-                {isRecorder ? (
-                    <MenuItem onClick={handleGoBackToDashboard} label={<span>Go Back</span>} className={"close-on-click"} />
-                ) : (
-                    <MenuItem onClick={handleSelectProject} label={<span>Back to projects</span>} className={"close-on-click"} />
-                )}
-                {projectConfigFile ? <MenuItem onClick={handleOpenConfigFile} label={<span>Edit Project config</span>} className={"close-on-click"} /> : ""}
-                <MenuItem onClick={handleSettings} label={<span>Settings</span>} className={"close-on-click"} />
-                <MenuItem onClick={handleHelpAccount} label={<span>Help & account</span>} className={"close-on-click"} />
-                <MenuItem onClick={handleExit} label={<span>Exit</span>} className={"close-on-click"} />
-            </div>
-        </div>
-    );
+		>
+			<div>
+				{isRecorder ? (
+					<MenuItem onClick={handleGoBackToDashboard} label={<span>Go Back</span>} className={"close-on-click"} />
+				) : (
+					<MenuItem onClick={handleSelectProject} label={<span>Back to projects</span>} className={"close-on-click"} />
+				)}
+				{projectConfigFile ? <MenuItem onClick={handleOpenConfigFile} label={<span>Edit Project config</span>} className={"close-on-click"} /> : ""}
+				<MenuItem onClick={handleSettings} label={<span>Settings</span>} className={"close-on-click"} />
+				<MenuItem onClick={handleHelpAccount} label={<span>Help & account</span>} className={"close-on-click"} />
+				<MenuItem onClick={handleExit} label={<span>Exit</span>} className={"close-on-click"} />
+			</div>
+		</div>
+	);
 }
 
 export const MenuDropdown = ({ className, isRecorder, hideDropdown, callback }) => {
-    const [showAppMenu, setShowAppMenu] = React.useState(false);
+	const [showAppMenu, setShowAppMenu] = React.useState(false);
 
-    const handleCallback = React.useCallback(
-        (value, isNavigating = false) => {
-            setShowAppMenu(value);
-            if (callback) {
-                callback(value, isNavigating);
-            }
-        },
-        [callback],
-    );
+	const handleCallback = React.useCallback(
+		(value, isNavigating = false) => {
+			setShowAppMenu(value);
+			if (callback) {
+				callback(value, isNavigating);
+			}
+		},
+		[callback],
+	);
 
-    return (
-        <Dropdown
-            className={className}
-            initialState={showAppMenu}
-            component={<DropwdownContent isRecorder={isRecorder} setShowActionMenu={handleCallback.bind(this)} />}
-            callback={handleCallback.bind(this)}
-            dropdownCSS={css`
+	return (
+		<Dropdown
+			className={className}
+			initialState={showAppMenu}
+			component={<DropwdownContent isRecorder={isRecorder} setShowActionMenu={handleCallback.bind(this)} />}
+			callback={handleCallback.bind(this)}
+			dropdownCSS={css`
 				left: 38rem;
 				width: 162rem;
-                background: #0D0E0E;
-                border: 1px solid #1C1C1C;
-                box-shadow: 0px -1px 9px #000000;
-                border-radius: 10px;
+				background: #0d0e0e;
+				border: 1px solid #1c1c1c;
+				box-shadow: 0px -1px 9px #000000;
+				border-radius: 10px;
 			`}
-        >
-            <div css={crusherDropdownContainerStyle}>
-                <LogoV2 className={"crusher-hammer-icon"} css={[logoStyle]} />
-                {hideDropdown ? null : (<DropdownIconSVG />)}
-            </div>
-        </Dropdown>
-    );
+		>
+			<div css={crusherDropdownContainerStyle}>
+				<LogoV2 className={"crusher-hammer-icon"} css={[logoStyle]} />
+				{hideDropdown ? null : <DropdownIconSVG />}
+			</div>
+		</Dropdown>
+	);
 };
 
 const crusherDropdownContainerStyle = css`

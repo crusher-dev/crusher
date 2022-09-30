@@ -14,7 +14,7 @@ import { CloudCrusher } from "electron-app/src/lib/cloud";
 
 const CreateProjectBanner = ({ className, ...props }) => {
 	return (
-		(<div css={createProjectBannerContainerCss} className={String(className)} {...props}>
+		<div css={createProjectBannerContainerCss} className={String(className)} {...props}>
 			<div css={createProjecTitleCss}>
 				<RocketIcon css={rocketIconCss} />
 				<span css={createProjectTitleTextCss}>Create new project</span>
@@ -27,9 +27,9 @@ const CreateProjectBanner = ({ className, ...props }) => {
 					<span>run command</span>
 				</div>
 			</div>
-		</div>)
+		</div>
 	);
-}
+};
 
 const chooseDirButtonCss = css`
 	display: flex;
@@ -37,12 +37,12 @@ const chooseDirButtonCss = css`
 	justify-content: center;
 	width: 92px;
 	height: 32px;
-	font-family: 'Gilroy';
+	font-family: "Gilroy";
 	font-style: normal;
 	font-weight: 600;
 	font-size: 14px;
 	text-align: center;
-	color: #FFFFFF;
+	color: #ffffff;
 
 	background: rgba(53, 53, 53, 0.5);
 	border: 0.5px solid rgba(219, 222, 255, 0.16);
@@ -56,20 +56,20 @@ const runCommandButtonCss = css`
 	justify-content: center;
 	align-items: center;
 	gap: 4px;
-	background: #B12AF0;
+	background: #b12af0;
 
-	font-family: 'Gilroy';
+	font-family: "Gilroy";
 	font-style: normal;
 	font-weight: 600;
 	font-size: 14px;
 	text-align: center;
 
-	color: #FFFFFF;
+	color: #ffffff;
 	border-radius: 8px;
 `;
 
 const hoverButtonCss = css`
-	:hover { 
+	:hover {
 		opacity: 0.8;
 	}
 `;
@@ -102,32 +102,33 @@ const createProjecTitleCss = css`
 	align-items: center;
 	margin-right: 12px;
 `;
-const rocketIconCss = css`width: 20px; height:20px;`;
+const rocketIconCss = css`
+	width: 20px;
+	height: 20px;
+`;
 const createProjectTitleTextCss = css`
-	font-family: 'Gilroy';
+	font-family: "Gilroy";
 	font-style: normal;
 	font-weight: 700;
 	font-size: 17px;
 
-	color: #FFFFFF;
+	color: #ffffff;
 	margin-left: 8px;
 	margin-bottom: 1px;
 `;
 const createProjectDescriptionCss = css`
-	font-family: 'Gilroy';
+	font-family: "Gilroy";
 	font-style: normal;
 	font-weight: 400;
 	font-size: 12px;
 
 	letter-spacing: 0.03em;
-	color: #C5C5C5;
+	color: #c5c5c5;
 	margin-top: 13px;
 `;
 
 const ProjectsListScreen = () => {
-	const {
-		projects
-	} = useUser();
+	const { projects } = useUser();
 	const navigate = useNavigate();
 
 	React.useEffect(() => {
@@ -135,28 +136,26 @@ const ProjectsListScreen = () => {
 			navigate("/onboarding");
 		}
 	}, [projects]);
-	if (!projects) return (<LoadingScreen />);
+	if (!projects) return <LoadingScreen />;
 	return (
 		// <Wrapper figmaUrl={"https://www.figma.com/proto/lK8wsCW8hLzssu5Z987lky/Crusher-%7C-Aug-(Copy)?node-id=2201%3A3868&scaling=scale-down-width&page-id=988%3A3439&starting-point-node-id=988%3A3817"}>
 		// </Wrapper>
-		(<CompactAppLayout css={containerCss} title={"Project list"} footer={<Footer />}>
+		<CompactAppLayout css={containerCss} title={"Project list"} footer={<Footer />}>
 			<ProjectList projects={projects} />
-			{projects.length < 3 ? (<CreateProjectBanner css={createProjectBannerCss} />) : ""}
-		</CompactAppLayout>)
+			{projects.length < 3 ? <CreateProjectBanner css={createProjectBannerCss} /> : ""}
+		</CompactAppLayout>
 	);
-}
+};
 
 const createProjectBannerCss = css`
 	position: absolute;
 	bottom: 0;
 `;
 const containerCss = css`
-height: 100%;
-background: #080809;
-position: relative;
+	height: 100%;
+	background: #080809;
+	position: relative;
 `;
-
-
 
 const ProjectItem = ({ project, defaultEmoji }) => {
 	const [emoji, setEmoji] = React.useState(defaultEmoji);
@@ -168,47 +167,71 @@ const ProjectItem = ({ project, defaultEmoji }) => {
 		}
 	}, []);
 	return (
-		<div css={css`width: 100%; height: 100%; padding: 12px 17px; padding-right: 40px; display: flex; align-items: center;`}>
+		<div
+			css={css`
+				width: 100%;
+				height: 100%;
+				padding: 12px 17px;
+				padding-right: 40px;
+				display: flex;
+				align-items: center;
+			`}
+		>
 			<EmojiPicker onEmojiSelected={handleEmojiSelected}>
 				<div className={"emoji-block"} css={emojiBlock}>
 					{emoji ? (
 						<span css={emojiCSS}>{emoji}</span>
-					) : (<BasketBallIcon css={css`width: 18px; height: 18px; :hover { opacity: 0.8; }`} />)}
+					) : (
+						<BasketBallIcon
+							css={css`
+								width: 18px;
+								height: 18px;
+								:hover {
+									opacity: 0.8;
+								}
+							`}
+						/>
+					)}
 				</div>
 			</EmojiPicker>
-			<span css={css`margin-left: 13px;`}>{project.name}</span>
+			<span
+				css={css`
+					margin-left: 13px;
+				`}
+			>
+				{project.name}
+			</span>
 		</div>
 	);
 };
 
 const emojiBlock = css`
-display: flex;
-min-height: 22px;
-min-width: 22px;
-align-items: center;
-justify-content:center;
+	display: flex;
+	min-height: 22px;
+	min-width: 22px;
+	align-items: center;
+	justify-content: center;
 
-
-border-radius: 6px;
-:hover{
-	background: rgba(217, 217, 217, 0.12);
-	cursor: pointer;
-	path{
-		stroke: #fff;
+	border-radius: 6px;
+	:hover {
+		background: rgba(217, 217, 217, 0.12);
+		cursor: pointer;
+		path {
+			stroke: #fff;
+		}
 	}
-}
-`
+`;
 const emojiCSS = css`
-font-family: 'EmojiMart';
-    display: block;
-    font-size: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding-top: 2px;
+	font-family: "EmojiMart";
+	display: block;
+	font-size: 15px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding-top: 2px;
 	padding-left: 2px;
-    line-height: 13px;
-`
+	line-height: 13px;
+`;
 const ProjectList = ({ projects }) => {
 	const navigate = useNavigate();
 	const store = useStore();
@@ -218,25 +241,21 @@ const ProjectList = ({ projects }) => {
 		const isEmojiClicked = paths.some((path) => path.classList?.contains("emoji-block"));
 		if (isEmojiClicked) return;
 
-		store.dispatch(setSelectedProject(projectId))
+		store.dispatch(setSelectedProject(projectId));
 		setTimeout(() => navigate("/"), 50);
 	}, []);
 
 	const items: any[] = React.useMemo(() => {
-		return projects.map(project => {
+		return projects.map((project) => {
 			return {
 				id: project.id,
-				content: <ProjectItem defaultEmoji={project.emoji} project={project} />
+				content: <ProjectItem defaultEmoji={project.emoji} project={project} />,
 			};
 		});
 	}, [projects]);
 
-	return (
-		<NormalList hideCheckBoxTop={true} onClick={handleProjectItemClick} css={testItemStyle} items={items} />
-	);
-
-
-}
+	return <NormalList hideCheckBoxTop={true} onClick={handleProjectItemClick} css={testItemStyle} items={items} />;
+};
 
 const testItemStyle = css`
 	font-family: "Gilroy";

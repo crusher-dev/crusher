@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import { triggerLocalBuild } from "../../utils/recorder";
 import { StatusMessageBar } from "electron-app/src/_ui/ui/layout/modalContainer";
-import {ButtonDropdown} from "../../ui/components/buttonDropdown";
+import { ButtonDropdown } from "../../ui/components/buttonDropdown";
 
 const PlusIcon = (props) => (
 	<svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
@@ -15,7 +15,6 @@ const PlusIcon = (props) => (
 		/>
 	</svg>
 );
-
 
 const CreateTestLink = (props) => {
 	return (
@@ -63,7 +62,7 @@ const actionDropdownOptions = [
 		id: "run-cloud-tests",
 		content: "Run tests (cloud)",
 	},
-]
+];
 
 const DashboardFooter = ({ tests }) => {
 	const [, setShowActionDropdown] = React.useState(false);
@@ -74,24 +73,27 @@ const DashboardFooter = ({ tests }) => {
 		goFullScreen();
 	}, []);
 
-	const handleDropdownCallback = React.useCallback((optionId) => {
-		if (!tests.length) {
-			alert("No tests present in the project.");
-			return;
-		}
-		if (optionId === "run-local-tests") {
-			const testIdArr = tests.map((a) => a.id);
-			triggerLocalBuild(testIdArr);
-		} else if (optionId === "run-cloud-tests") {
-			window["messageBarCallback"](-1);
+	const handleDropdownCallback = React.useCallback(
+		(optionId) => {
+			if (!tests.length) {
+				alert("No tests present in the project.");
+				return;
+			}
+			if (optionId === "run-local-tests") {
+				const testIdArr = tests.map((a) => a.id);
+				triggerLocalBuild(testIdArr);
+			} else if (optionId === "run-cloud-tests") {
+				window["messageBarCallback"](-1);
 
-			performRunTests(null).then((buildRes) => {
-				window["messageBarCallback"](buildRes.buildId);
-				// sendSnackBarEvent({ type: "success", message: "Test started successfully!" });
-			});
-			setShowActionDropdown(true);
-		}
-	}, [tests]);
+				performRunTests(null).then((buildRes) => {
+					window["messageBarCallback"](buildRes.buildId);
+					// sendSnackBarEvent({ type: "success", message: "Test started successfully!" });
+				});
+				setShowActionDropdown(true);
+			}
+		},
+		[tests],
+	);
 
 	return (
 		<div css={containerCss}>
@@ -112,9 +114,8 @@ const DashboardFooter = ({ tests }) => {
 			</div>
 			<StatusMessageBar isLoadingScreen={false} />
 		</div>
-
 	);
-}
+};
 
 const containerCss = css`
 	display: flex;
@@ -146,7 +147,7 @@ const footerRightCss = css`
 	align-items: center;
 `;
 const dropdownContainerCss = css`
-    margin-left: 20px;				
+	margin-left: 20px;
 `;
 
-export { DashboardFooter }
+export { DashboardFooter };

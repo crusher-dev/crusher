@@ -20,8 +20,11 @@ const NetworkErrorContainer = () => {
 						<span css={highlightStyle}></span>Interenet it not working
 					</div>
 					<div css={descriptionStyle}>
-						is internet working? we're not able to reach backend server<br />
-						<NormalButton onClick={handleRetry} css={retryButtonCss}>Retry</NormalButton>
+						is internet working? we're not able to reach backend server
+						<br />
+						<NormalButton onClick={handleRetry} css={retryButtonCss}>
+							Retry
+						</NormalButton>
 					</div>
 				</div>
 			</div>
@@ -30,9 +33,9 @@ const NetworkErrorContainer = () => {
 };
 
 const containerCss = css`
-height: 100%;
-background: #080809;
-position: relative;
+	height: 100%;
+	background: #080809;
+	position: relative;
 `;
 
 const retryButtonCss = css`
@@ -80,7 +83,6 @@ const containerStyle = css`
 	height: 100%;
 	width: 100%;
 	justify-content: center;
-
 `;
 const iconStyle = css`
 	width: 43rem;

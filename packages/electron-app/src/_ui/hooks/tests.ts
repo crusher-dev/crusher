@@ -4,27 +4,43 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 const useBuildNotifications = () => {
-    const notifications = useSelector(getBuildNotifications);
-    const latestNotification = useSelector(getLastBuildNotification);
-    const dispatch = useDispatch();
+	const notifications = useSelector(getBuildNotifications);
+	const latestNotification = useSelector(getLastBuildNotification);
+	const dispatch = useDispatch();
 
-    const _addNotification = React.useCallback((notification) => {
-        dispatch(addBuildNotification(notification));
-    }, [notifications]);
+	const _addNotification = React.useCallback(
+		(notification) => {
+			dispatch(addBuildNotification(notification));
+		},
+		[notifications],
+	);
 
-    const _removeNotification = React.useCallback((notificationId) => {
-        dispatch(removeBuildNotification(notificationId));
-    }, [notifications]);
+	const _removeNotification = React.useCallback(
+		(notificationId) => {
+			dispatch(removeBuildNotification(notificationId));
+		},
+		[notifications],
+	);
 
-    const _updateNotification = React.useCallback((notificationId, notification) => {
-        dispatch(updateBuildNotification(notificationId, notification));
-    }, [notifications]);
+	const _updateNotification = React.useCallback(
+		(notificationId, notification) => {
+			dispatch(updateBuildNotification(notificationId, notification));
+		},
+		[notifications],
+	);
 
-    const _clearNotifications = React.useCallback(() => {
-        dispatch(clearBuildNotifications());
-    }, []);
+	const _clearNotifications = React.useCallback(() => {
+		dispatch(clearBuildNotifications());
+	}, []);
 
-    return { notifications, latestNotification, addNotification: _addNotification, removeNotification: _removeNotification, clearNotifications: _clearNotifications, updateNotification: _updateNotification };
+	return {
+		notifications,
+		latestNotification,
+		addNotification: _addNotification,
+		removeNotification: _removeNotification,
+		clearNotifications: _clearNotifications,
+		updateNotification: _updateNotification,
+	};
 };
 
 // const Test = () => {
@@ -59,13 +75,11 @@ const useBuildNotifications = () => {
 // Create redux state for storing progress
 // currentTest/totalTest =
 const useLocalBuild = () => {
-    const builds = useSelector(getBuilds);
-    const currentBuild = useSelector(getCurrentLocalBuild);
+	const builds = useSelector(getBuilds);
+	const currentBuild = useSelector(getCurrentLocalBuild);
 
-    const handleTestCompleted = () => {
-
-    };
-    return { handleTestCompleted, builds, currentBuild };
+	const handleTestCompleted = () => {};
+	return { handleTestCompleted, builds, currentBuild };
 };
 
 export { useBuildNotifications, useLocalBuild };

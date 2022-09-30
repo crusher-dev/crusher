@@ -118,12 +118,16 @@ function createWindow() {
 	console.log("Creating window now...");
 	const globalAppConfig = getGlobalAppConfig();
 	const _store = configureStore(undefined, "main", true);
-    const settings = SettingsManager.getSavedSettings();
+	const settings = SettingsManager.getSavedSettings();
 
-    // initialReduxState.app.shouldShowOnboardingOverlay = localStorage.getItem("app.showShouldOnboardingOverlay") === "false" ? false : true;
-   
-	if(!settings.backendEndPoint) { settings.backendEndPoint = process.env.BACKEND_URL; }
-	if(!settings.frontendEndPoint) { settings.frontendEndPoint = process.env.FRONTEND_URL; }
+	// initialReduxState.app.shouldShowOnboardingOverlay = localStorage.getItem("app.showShouldOnboardingOverlay") === "false" ? false : true;
+
+	if (!settings.backendEndPoint) {
+		settings.backendEndPoint = process.env.BACKEND_URL;
+	}
+	if (!settings.frontendEndPoint) {
+		settings.frontendEndPoint = process.env.FRONTEND_URL;
+	}
 
 	const initialState = {
 		...(_store.getState() as any),
@@ -131,13 +135,13 @@ function createWindow() {
 			...(_store.getState() as any).app,
 			settings: {
 				...(_store.getState() as any).app.settings,
-				...settings
+				...settings,
 			},
-			accountInfo: globalAppConfig?.userInfo ? globalAppConfig.userInfo : null
-		}
+			accountInfo: globalAppConfig?.userInfo ? globalAppConfig.userInfo : null,
+		},
 	};
 	const store = configureStore(initialState, "main");
-	
+
 	const window = new AppWindow(store);
 
 	if (!isProduction()) {

@@ -1,7 +1,7 @@
 import { applyMiddleware, createStore, compose, Store, StoreEnhancer } from "redux";
 
-import {rootReducer} from "./reducers";
-import {forwardToMain, forwardToRenderer, replayActionMain, replayActionRenderer} from "electron-redux";
+import { rootReducer } from "./reducers";
+import { forwardToMain, forwardToRenderer, replayActionMain, replayActionRenderer } from "electron-redux";
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -15,14 +15,14 @@ const composeEnhancers =
 let _store = undefined;
 
 export function getStore(): Store<unknown> {
-	if(_store) return _store;
+	if (_store) return _store;
 	throw new Error("Store not initialized yet!");
 }
 
 export default function configureStore(intialState: any, scope = "main", isTemporary = false): Store<unknown> {
 	let middlewares: any[] = [];
 
-	if(!isTemporary) {
+	if (!isTemporary) {
 		// if (!isProduction()) {
 		// middlewares.push(loggerMiddleware);
 		// }
@@ -46,7 +46,7 @@ export default function configureStore(intialState: any, scope = "main", isTempo
 		hotModule.accept("./reducers", () => store?.replaceReducer(rootReducer));
 	}
 
-	if(!isTemporary) {
+	if (!isTemporary) {
 		if (scope === "main") {
 			replayActionMain(store);
 		} else {

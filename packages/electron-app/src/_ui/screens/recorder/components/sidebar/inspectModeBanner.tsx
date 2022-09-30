@@ -2,7 +2,7 @@ import React from "react";
 import { css } from "@emotion/react";
 import { Text } from "@dyson/components/atoms/text/Text";
 import { useSelector } from "react-redux";
-import {isInspectModeOn as _isInspectModeOn} from "electron-app/src/store/selectors/recorder";
+import { isInspectModeOn as _isInspectModeOn } from "electron-app/src/store/selectors/recorder";
 import { turnOffElementSelectorInspectMode, turnOffInspectMode } from "electron-app/src/ui/commands/perform";
 
 const InspectModeBanner = () => {
@@ -58,7 +58,7 @@ const cancelCss = css`
 	font-size: 13rem;
 	line-height: 16rem;
 	text-decoration-line: underline;
-    :hover {
+	:hover {
 		opacity: 0.8;
 	}
 `;

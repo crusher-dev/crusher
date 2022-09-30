@@ -14,7 +14,7 @@ const Footer = () => {
         <div css={containerCss}>
             <div css={leftSectionCss}>
                 <Tooltip content={"walkthru"} placement="top" type="hover">
-                    <div> <LinkPointer css={resourcesCss} onClick={linkOpen.bind(this, "https://docs.crusher.dev")}>tutorials</LinkPointer></div>
+                    <div> <LinkPointer css={resourcesCss} onClick={linkOpen.bind(this, "https://docs.crusher.dev")}>tutorial</LinkPointer></div>
                 </Tooltip>
                 <Tooltip content={"crusher docs"} placement="top" type="hover">
                     <div><LinkPointer css={resourcesCss} onClick={linkOpen.bind(this, "https://docs.crusher.dev")}>docs</LinkPointer></div>

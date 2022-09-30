@@ -1,4 +1,3 @@
-import React from "react";
 import { css } from "@emotion/react";
 import { PointerIcon } from "../../constants/icons";
 import { Conditional } from "@dyson/components/layouts";

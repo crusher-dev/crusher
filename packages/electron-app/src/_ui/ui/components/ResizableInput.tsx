@@ -29,7 +29,7 @@ const ResizableInput = React.forwardRef(({ isEditingProp = false, onEditModeChan
 				ref.current.setSelectionRange(selectAllOnDoubleClick ? 0 : totalLength, totalLength);
 			});
 		}
-		onEditModeChange(isEditing);
+		onEditModeChange && onEditModeChange(isEditing);
 	}, [isEditing]);
 
 	React.useEffect(() => {
@@ -48,17 +48,17 @@ const ResizableInput = React.forwardRef(({ isEditingProp = false, onEditModeChan
 		<OnOutsideClick
 			onClick={() => {
 				setIsEditing(false);
-				onEditModeChange(false);
+				onEditModeChange && onEditModeChange(false);
 			}}
 		>
 			<Input
 				onReturn={() => {
 					setIsEditing(false);
-					onEditModeChange(false);
+					onEditModeChange && onEditModeChange(false);
 				}}
 				onBlur={() => {
 					setIsEditing(false);
-					onEditModeChange(isEditingProp);
+					onEditModeChange && onEditModeChange(isEditingProp);
 				}}
 				title=""
 				initialValue={value}

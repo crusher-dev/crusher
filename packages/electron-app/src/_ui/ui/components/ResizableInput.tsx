@@ -3,7 +3,7 @@ import { css } from "@emotion/react";
 import Input from "@dyson/components/atoms/input/Input";
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
 
-const ResizableInput = React.forwardRef(({ isEditingProp = false, onChange, selectAllOnDoubleClick = true, labelComponent = null, className, value, ...props }, ref) => {
+const ResizableInput = React.forwardRef(({ isEditingProp = false, onChange, selectAllOnDoubleClick = true, labelCss, labelComponent = null, className, value, ...props }, ref) => {
 	const [isEditing, setIsEditing] = useState(isEditingProp);
 	const inputRef = useRef();
 
@@ -23,7 +23,7 @@ const ResizableInput = React.forwardRef(({ isEditingProp = false, onChange, sele
 
 	if (!isEditing) {
 		return (
-			<div title="edit name" ref={inputRef} css={labelCSS} onDoubleClick={setIsEditing.bind(this, true)}>
+			<div title="edit name" ref={inputRef} css={[labelCSS, labelCss]} onDoubleClick={setIsEditing.bind(this, true)}>
 				{labelComponent || value}
 			</div>
 		);
@@ -59,7 +59,6 @@ const ResizableInput = React.forwardRef(({ isEditingProp = false, onChange, sele
 });
 
 const labelCSS = css`
-	padding-left: 12px;
 	font-size: 13px;
 	padding-top: 1px;
 `;

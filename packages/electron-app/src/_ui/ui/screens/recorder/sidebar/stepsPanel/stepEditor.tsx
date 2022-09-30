@@ -15,6 +15,8 @@ import { sendSnackBarEvent } from "electron-app/src/_ui/ui/containers/components
 import { ResizableInput } from "electron-app/src/_ui/ui/components/ResizableInput";
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
 import { EditableInput } from "electron-app/src/_ui/ui/components/inputs/editableInput";
+import { useAtom } from "jotai";
+import { editTestNameAtom } from "electron-app/src/_ui/store/jotai/testsPage";
 
 const limitString = (string, offset = null) => {
 	if(!string) return string;
@@ -159,6 +161,8 @@ const InputValueEditor = ({ step, stepId }) => {
 };
 
 const StepName = ({ stepId }) => {
+	const [stepName, setTestName] = useAtom(editTestNameAtom);
+
 	const stepInfo = useSelector(getStepInfo(stepId));
 	const steps = useSelector(getSavedSteps);
 	const step = steps[stepId];

@@ -98,6 +98,7 @@ const headerCss = css`
   padding: 8px 8px 2px 28px;
   align-items: center;
   position: relative;
+  height: rem;
   z-index: 23424234324234234;
 `;
 
@@ -112,6 +113,12 @@ const titleCss = css`
 	display: flex;
 	justify-content: center;
 	padding-top: 3rem;
+    font-family: Cera Pro;
+	font-style: normal;
+	font-weight: 500;
+	font-size: 13.4px;
+	color: #ffffff;
+	margin-left: 36rem;
 `;
 const headerRightSectionCss = css`
     position: relative;

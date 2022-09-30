@@ -1,11 +1,11 @@
 import { css } from "@emotion/react";
 import { CloudCrusher } from "electron-app/src/lib/cloud";
-import {getCurrentSelectedProjct, getProxyState} from "electron-app/src/store/selectors/app";
+import { getCurrentSelectedProjct, getProxyState } from "electron-app/src/store/selectors/app";
 import { ProxyWarningContainer } from "electron-app/src/_ui/ui/containers/components/proxy-warning";
 import { sendSnackBarEvent } from "electron-app/src/_ui/ui/containers/components/toast";
 import { turnOnProxyServers } from "electron-app/src/utils/renderer";
 import React from "react";
-import {useStore} from "react-redux";
+import { useStore } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getSelectedProjectTestsRequest } from "../../../api/tests/tests.request";
 import { useUser } from "../../../api/user/user";

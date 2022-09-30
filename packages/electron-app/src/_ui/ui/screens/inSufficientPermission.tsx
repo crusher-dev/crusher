@@ -11,7 +11,7 @@ export function InsufficientPermissionScreen() {
 	}, []);
 
 	return (
-		<CompactAppLayout title={<div css={titleCss}>Home</div>}>
+		<CompactAppLayout title={"."}>
 			<div css={containerCss}>
 				<div css={contentHeadingCss}>Insufficient permission</div>
 				<div css={contentDescriptionCss}>Not part of the team. Request access from admin of this project.</div>

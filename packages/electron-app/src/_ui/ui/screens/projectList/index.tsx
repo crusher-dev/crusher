@@ -2,7 +2,7 @@ import React from "react";
 import { css } from "@emotion/react";
 import { CompactAppLayout } from "../../layout/CompactAppLayout";
 import { Footer } from "../../layout/Footer";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useStore } from "react-redux";
 import { setSelectedProject } from "electron-app/src/store/actions/app";
 import { LoadingScreen } from "../loading";
@@ -14,21 +14,21 @@ import { CloudCrusher } from "electron-app/src/lib/cloud";
 
 const CreateProjectBanner = ({ className, ...props }) => {
 	return (
-        (<div css={createProjectBannerContainerCss} className={String(className)} {...props}>
-            <div css={createProjecTitleCss}>
+		(<div css={createProjectBannerContainerCss} className={String(className)} {...props}>
+			<div css={createProjecTitleCss}>
 				<RocketIcon css={rocketIconCss} />
 				<span css={createProjectTitleTextCss}>Create new project</span>
 			</div>
-            <div css={createProjectDescriptionCss}>running command in git repo is faster way</div>
-            <div css={createProjectActionsCss}>
+			<div css={createProjectDescriptionCss}>running command in git repo is faster way</div>
+			<div css={createProjectActionsCss}>
 				<div css={[chooseDirButtonCss, hoverButtonCss]}>Choose dir</div>
 				<div css={[runCommandButtonCss, hoverButtonCss]}>
 					<ConsoleIconV3 css={consoleIconCss} />
 					<span>run command</span>
 				</div>
 			</div>
-        </div>)
-    );
+		</div>)
+	);
 }
 
 const chooseDirButtonCss = css`
@@ -126,8 +126,8 @@ const createProjectDescriptionCss = css`
 
 const ProjectsListScreen = () => {
 	const {
-        projects
-    } = useUser();
+		projects
+	} = useUser();
 	const navigate = useNavigate();
 
 	React.useEffect(() => {
@@ -137,13 +137,13 @@ const ProjectsListScreen = () => {
 	}, [projects]);
 	if (!projects) return (<LoadingScreen />);
 	return (
-        // <Wrapper figmaUrl={"https://www.figma.com/proto/lK8wsCW8hLzssu5Z987lky/Crusher-%7C-Aug-(Copy)?node-id=2201%3A3868&scaling=scale-down-width&page-id=988%3A3439&starting-point-node-id=988%3A3817"}>
-        // </Wrapper>
-        (<CompactAppLayout css={containerCss} title={<div css={titleCss}>Select project</div>} footer={<Footer />}>
-            <ProjectList projects={projects} />
-            {projects.length < 3 ? (<CreateProjectBanner css={createProjectBannerCss} />) : ""}
-        </CompactAppLayout>)
-    );
+		// <Wrapper figmaUrl={"https://www.figma.com/proto/lK8wsCW8hLzssu5Z987lky/Crusher-%7C-Aug-(Copy)?node-id=2201%3A3868&scaling=scale-down-width&page-id=988%3A3439&starting-point-node-id=988%3A3817"}>
+		// </Wrapper>
+		(<CompactAppLayout css={containerCss} title={"Project list"} footer={<Footer />}>
+			<ProjectList projects={projects} />
+			{projects.length < 3 ? (<CreateProjectBanner css={createProjectBannerCss} />) : ""}
+		</CompactAppLayout>)
+	);
 }
 
 const createProjectBannerCss = css`
@@ -156,26 +156,18 @@ background: #080809;
 position: relative;
 `;
 
-const titleCss = css`
-	font-family: Cera Pro;
-	font-style: normal;
-	font-weight: 500;
-	font-size: 13.4px;
-	color: #ffffff;
-	margin-left: 36rem;
-`;
 
 
 const ProjectItem = ({ project, defaultEmoji }) => {
-    const [emoji, setEmoji] = React.useState(defaultEmoji);
+	const [emoji, setEmoji] = React.useState(defaultEmoji);
 
-    const handleEmojiSelected = React.useCallback((emoji) => {
+	const handleEmojiSelected = React.useCallback((emoji) => {
 		if (emoji) {
 			setEmoji(emoji.native);
 			CloudCrusher.updateProjectEmoji(project.id, emoji.native);
 		}
 	}, []);
-    return (
+	return (
 		<div css={css`width: 100%; height: 100%; padding: 12px 17px; padding-right: 40px; display: flex; align-items: center;`}>
 			<EmojiPicker onEmojiSelected={handleEmojiSelected}>
 				<div className={"emoji-block"} css={emojiBlock}>
@@ -245,8 +237,6 @@ const ProjectList = ({ projects }) => {
 
 
 }
-
-
 
 const testItemStyle = css`
 	font-family: "Gilroy";

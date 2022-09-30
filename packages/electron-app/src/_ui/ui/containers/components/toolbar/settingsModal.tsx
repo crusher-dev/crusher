@@ -17,6 +17,7 @@ import { shell } from "electron";
 import { waitForUserLogin } from "electron-app/src/utils";
 import { resolveToFrontEndPath } from "@shared/utils/url";
 import { SettingsManager } from "electron-app/src/lib/settingsManager";
+import { newButtonStyle } from "electron-app/src/_ui/constants/style";
 
 interface iStartupModalProps {
 	isOpen: boolean;
@@ -262,7 +263,7 @@ const SettingsModalContent = ({ className, ...props }: iStartupModalProps & { cl
 						<img src={"./static/assets/icons/correct.svg"} style={{ marginLeft: "6rem", height: "14rem", marginTop: "-2rem" }} />
 					</Conditional>
 				</div>
-				<Button onClick={saveAction} css={buttonStyle}>
+				<Button onClick={saveAction} css={[buttonStyle, newButtonStyle]}>
 					Save
 				</Button>
 			</div>
@@ -309,11 +310,8 @@ const modalStyle = css`
 `;
 
 const buttonStyle = css`
-	font-size: 13rem;
-	box-sizing: border-box;
-	border-radius: 4rem;
 	width: 93rem;
-	height: 30rem;
+
 	margin-left: 30rem;
 `;
 const inputStyle = css`

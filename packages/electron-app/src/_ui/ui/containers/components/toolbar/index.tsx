@@ -422,7 +422,13 @@ const Toolbar = (props: any) => {
 
 	const handleOutsideClick = React.useCallback(() => {
 		if (document.querySelector(".testName") as HTMLInputElement) {
-			setTestName((document.querySelector(".testName") as HTMLInputElement).value);
+			const currentTestInfo = getCurrentTestInfo(store.getState() as any);
+			const testName = (document.querySelector(".testName") as HTMLInputElement).value;
+
+			if (currentTestInfo) {
+				updateTestName(currentTestInfo.id, testName);
+			}
+			setTestName(testName);
 			setIsEditingTestName(false);
 		}
 		// Save the new test name somewhere
@@ -491,7 +497,7 @@ const Toolbar = (props: any) => {
 							align-items: center;
 						`}
 					>
-						<OnOutsideClick onOutsideClick={handleOutsideClick}>
+						<OnOutsideClick disable={!isEditingTestName} onOutsideClick={handleOutsideClick}>
 							{isEditingTestName ? (
 								<input
 									onKeyDown={handleKeyPress}
@@ -531,13 +537,6 @@ const Toolbar = (props: any) => {
 								</span>
 							)}
 						</OnOutsideClick>
-						<DroppdownIconV2
-							css={css`
-								width: 9rem;
-								height: 6rem;
-								margin-left: 7rem;
-							`}
-						/>
 					</div>
 					<Conditional showIf={recorderInfo.url}>
 						<div

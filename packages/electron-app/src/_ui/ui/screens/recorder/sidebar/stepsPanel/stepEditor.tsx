@@ -238,10 +238,10 @@ const StepMetaInfo = ({ stepId, setShowAdvanced }) => {
 				""
 			)}
 
-			<div css={metaInfoFooterCss} className={`flex ${hasSelectors || showFieldInput ? "mt-52" : "mt-30"}`}>
-				<div>took 1.9 sec</div>
+			{/* <div css={metaInfoFooterCss} className={`flex ${hasSelectors || showFieldInput ? "mt-52" : "mt-30"}`}> */}
+				{/* <div>took 1.9 sec</div> */}
 				{/* <div className={"ml-auto"}>view logs</div> */}
-			</div>
+			{/* </div> */}
 		</div>
 	);
 };

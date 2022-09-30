@@ -9,7 +9,7 @@ import { Button, Text } from "dyson/src/components/atoms";
 import { Conditional } from "dyson/src/components/layouts";
 
 
-import {PassedSVG} from "@svg/testReport";
+import { PassedSVG } from "@svg/testReport";
 import { backendRequest } from "@utils/common/backendRequest";
 import { sendSnackBarEvent } from "@utils/common/notify";
 
@@ -20,19 +20,19 @@ import { updateMeta } from "../../../store/mutators/metaData";
 import { PROJECT_META_KEYS, USER_META_KEYS } from "@constants/USER";
 import { ReviewSection } from "./testList";
 import { CorrentSVG } from "@svg/builds";
-import {GithubSquare} from "@svg/social";
-import {CommentIcon, PlayIcon, ReloadIcon} from "@svg/dashboard";
+import { GithubSquare } from "@svg/social";
+import { CommentIcon, PlayIcon, ReloadIcon } from "@svg/dashboard";
 import Download from "../dashboard/Download";
 import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 
 const ReportSection = dynamic(() => import("./testList"));
 function BuildInfoTop() {
-    const { query } = useRouter();
-    const { data } = useBuildReport(query.id);
+	const { query } = useRouter();
+	const { data } = useBuildReport(query.id);
 
-    const name = "feats: integrated test GTM #517";
+	const name = "feats: integrated test GTM #517";
 
-    return (
+	return (
 		<div>
 			<div className={"font-cera text-18 font-700 leading-none flex pt-8"} id={"title"}>
 				{name || `${data?.name} #${data?.id}`} <CorrentSVG height={18} width={18} className="ml-16" />
@@ -320,11 +320,11 @@ function TabBar() {
 }
 
 export const TestReportScreen = () => {
-    const [selectedTabIndex] = useAtom(selectedTabAtom);
-    const { query } = useRouter();
-    const [, updateMetaData] = useAtom(updateMeta);
+	const [selectedTabIndex] = useAtom(selectedTabAtom);
+	const { query } = useRouter();
+	const [, updateMetaData] = useAtom(updateMeta);
 
-    useEffect(() => {
+	useEffect(() => {
 		updateMetaData({
 			type: "user",
 			key: USER_META_KEYS.VIEW_REPORT,
@@ -339,8 +339,8 @@ export const TestReportScreen = () => {
 
 		// if (query.view_draft) setSelectedTabIndex(0);
 	}, [query.view_draft]);
-    return (
-		<div className={"pt-46"} css={css`background: #0C0C0C;`}>
+	return (
+		<div className={"pt-46 flex flex-col items-center"} css={css`background: #0C0C0C;`}>
 			<div css={buildContainerWidth}>
 				<ReportInfoTOp />
 

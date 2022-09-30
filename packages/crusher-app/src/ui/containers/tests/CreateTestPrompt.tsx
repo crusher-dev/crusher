@@ -1,7 +1,7 @@
 import { css } from "@emotion/react";
 import React, { useMemo } from "react";
 import { Input } from "dyson/src/components/atoms/input/Input";
-import {Text} from "dyson/src/components/atoms";
+import { Text } from "dyson/src/components/atoms";
 import Link from "next/link";
 import { LINUX_INFO, OS, OS_INFO } from "@constants/app";
 import useSWR from "swr";

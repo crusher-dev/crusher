@@ -854,7 +854,7 @@ export class AppWindow {
 		const { shouldAlsoSave, autoSaveType } = payload;
 		const recordedSteps = getSavedSteps(this.store.getState() as any);
 		await this.resetRecorder(TRecorderState.PERFORMING_ACTIONS);
-
+		console.log("Verifiyng");
 		const isSuccessful = await this.handleReplayTestSteps(recordedSteps as any);
 		this.store.dispatch(setIsTestVerified(true));
 		if (isSuccessful) {

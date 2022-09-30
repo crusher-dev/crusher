@@ -50,7 +50,7 @@ const Step = ({ className, isActive, onContextMenu, step, onClick, setIsActive, 
 		>
 			<div onContextMenu={onContextMenu} onClick={onClick} css={[containerCss(hasFailed), isActive ? activeItemCss : undefined]}>
 				<div className={"card"} css={contentCss}>
-					{true || stepInfo.isRunning ? <PointerArrowIcon css={runningPointerIconCss} /> : ""}
+					{stepInfo.isRunning ? <PointerArrowIcon css={runningPointerIconCss} /> : ""}
 					<div css={stepTextCss}>
 						<TextBlock css={[stepNameCss, stepInfo.isFailed ? failedTextNameCss : null, stepInfo.isRunning ? runningTextNameCss : null]}>
 							{title}

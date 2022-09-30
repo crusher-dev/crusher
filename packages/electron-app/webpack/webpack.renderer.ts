@@ -91,6 +91,7 @@ const finalConfig = [
 				"process.env": {
 					BACKEND_URL: JSON.stringify(process.env.BACKEND_URL ? process.env.BACKEND_URL : "https://backend.crusher.dev/"),
 					FRONTEND_URL: JSON.stringify(process.env.FRONTEND_URL ? process.env.FRONTEND_URL : "https://app.crusher.dev/"),
+					OUTPUT_DIR: JSON.stringify(OUTPUT_DIR),
 				},
 			}),
 		],

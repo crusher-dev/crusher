@@ -204,7 +204,7 @@ const DeviceFrame = () => {
 	const store = useStore();
 
 	const getPreloadScriptPath = () => {
-		return url.resolve(window.location.href, "./webview-preload.js");
+		return`file://${process.env.OUTPUT_DIR}/` +"webview-preload.js";
 	};
 
 	React.useEffect(() => {

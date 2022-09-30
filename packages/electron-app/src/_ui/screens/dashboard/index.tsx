@@ -38,8 +38,8 @@ const TitleComponent = ({ project }) => {
 };
 
 const openAppCss = css`
-	font-family: Gilroy;
-	font-style: normal;
+	
+	
 	font-weight: 400;
 	font-size: 13px;
 	color: #828282;
@@ -52,9 +52,7 @@ const titleBoldStyle = css`
 `;
 
 const titleStyle = css`
-	font-family: "Gilroy";
-	font-style: normal;
-	font-weight: 400;
+
 	font-size: 13rem;
 
 	color: rgba(255, 255, 255, 0.67);
@@ -261,8 +259,7 @@ const createTestCss = css`
 	display: flex;
 	gap: 6rem;
 	align-items: center;
-	font-family: "Gilroy";
-	font-style: normal;
+
 	font-weight: 500;
 	font-size: 13rem;
 

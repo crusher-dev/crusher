@@ -79,7 +79,7 @@ const createIconCss = css`
 const contentHeadingCss = css`
 	margin-top: 28rem;
 	font-family: Cera Pro;
-	font-style: normal;
+	
 	font-weight: 900;
 	font-size: 18rem;
 	text-align: center;
@@ -89,8 +89,8 @@ const contentHeadingCss = css`
 const contentDescriptionCss = css`
 	margin-top: 10rem;
 
-	font-family: Gilroy;
-	font-style: normal;
+	
+	
 	font-weight: 400;
 	font-size: 14rem;
 	text-align: center;

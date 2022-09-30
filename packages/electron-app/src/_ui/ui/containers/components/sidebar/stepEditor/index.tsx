@@ -113,7 +113,7 @@ const crossIconStyle = css`
 `;
 
 const actionInfoContainerStyle = css`
-	font-family: Gilroy;
+	
 	font-size: 12.8rem;
 	display: flex;
 	flex-direction: column;

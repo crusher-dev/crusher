@@ -111,25 +111,20 @@ const failedIconCss = css`
 	height: 18rem;
 `;
 const titleCss = css`
-	font-family: "Gilroy";
-	font-style: normal;
+
 	font-weight: 700;
 	font-size: 14rem;
 	color: #ffffff;
 `;
 const descriptionCss = css`
-	font-family: "Gilroy";
-	font-style: normal;
-	font-weight: 400;
+
 	font-size: 12rem;
 
 	color: rgba(255, 255, 255, 0.52);
 `;
 
 const linkCss = css`
-	font-family: "Gilroy";
-	font-style: normal;
-	font-weight: 400;
+
 	font-size: 12rem;
 	text-decoration-line: underline;
 

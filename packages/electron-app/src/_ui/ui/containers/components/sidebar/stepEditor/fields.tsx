@@ -47,9 +47,7 @@ const FieldInput = (props: IFieldInputProps) => {
 };
 
 const labelCss = css`
-	font-family: "Gilroy";
-	font-style: normal;
-	font-weight: 400;
+
 	font-size: 13rem;
 	color: rgba(215, 223, 225, 0.6);
 `;

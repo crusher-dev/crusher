@@ -527,8 +527,8 @@ const stepsHeaderStyle = css`
 	padding-top: 19rem;
 `;
 const stepsTextStyle = css`
-	font-family: Gilroy;
-	font-style: normal;
+	
+	
 	font-weight: 500;
 	font-size: 12rem;
 	color: #ffffff;
@@ -613,8 +613,8 @@ const stepWarningStyle = css`
 	display: flex;
 	align-items: center;
 	flex: 0 1 100%;
-	font-family: Gilroy;
-	font-style: normal;
+	
+	
 	font-weight: 600;
 	font-size: 13rem;
 	line-height: 13rem;
@@ -642,7 +642,7 @@ const failedToDoHeadStyle = css`
 	margin-bottom: 8rem;
 `;
 const whatTODOStyle = css`
-	font-family: Gilroy;
+	
 	font-weight: 800;
 	font-size: 12rem;
 `;

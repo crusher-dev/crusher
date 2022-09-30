@@ -114,7 +114,7 @@ const docsButtonCss = css`
 	background: #0f1010;
 	border-left: 0.5px solid #242424;
 	font-family: "Cera Pro";
-	font-style: normal;
+	
 	font-weight: 500;
 	font-size: 12px;
 

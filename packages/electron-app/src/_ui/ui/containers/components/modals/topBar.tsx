@@ -63,14 +63,14 @@ const headingStyle = css`
     display: flex;
 	font-family: Cera Pro;
     font-size: 17rem;
-    font-style: normal;
+    
     font-weight: 600;
 
 	marginBottom: 0,
 	color: #FFFFFF;
 `;
 const subHeadingStyle = css`
-	font-style: normal;
+	
 	font-size: 14rem;
 	color: #ffffff;
 	font-family: Cera Pro;

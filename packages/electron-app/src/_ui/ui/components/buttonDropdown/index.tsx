@@ -120,8 +120,8 @@ const saveButtonStyle = css`
 	height: 30rem;
 	background: #8e58ff;
 	border-radius: 6rem !important;
-	font-family: Gilroy;
-	font-style: normal;
+	
+	
 	font-weight: 600;
 	font-size: 14rem;
 	line-height: 17rem;

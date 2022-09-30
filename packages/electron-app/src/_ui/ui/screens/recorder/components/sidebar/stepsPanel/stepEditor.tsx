@@ -52,9 +52,7 @@ const mainSelectorCss = css`
 	color: rgba(255, 255, 255, 0.89);
 `;
 const selectorInfoContainerCss = css`
-	font-family: "Gilroy";
-	font-style: normal;
-	font-weight: 400;
+
 	font-size: 13rem;
 
 	color: rgba(255, 255, 255, 0.54);
@@ -241,8 +239,8 @@ const testInputCss = (isEditing, name) => {
 		width: ${isEditing ? Math.max(7.5 * name.length, 120) + "rem" : "fit-content"};
 		user-select: ${isEditing ? "auto" : "none"};
 
-		font-family: Gilroy;
-		font-style: normal;
+		
+		
 		font-weight: 500;
 		font-size: 13.25px;
 		letter-spacing: 0.05em;
@@ -258,9 +256,7 @@ const editUrlIconCss = css`
 `;
 
 const labelCss = css`
-	font-family: "Gilroy";
-	font-style: normal;
-	font-weight: 400;
+
 	font-size: 13rem;
 	color: rgba(215, 223, 225, 0.6);
 `;
@@ -278,17 +274,14 @@ const inputCss = (isEditMode) => css`
 	border-width: ${!isEditMode ? "0rem !important" : "0.5rem !important"};
 `;
 const metaInfoFooterCss = css`
-	font-family: "Gilroy";
-	font-style: normal;
-	font-weight: 400;
+
 	font-size: 12rem;
 
 	color: rgba(255, 255, 255, 0.56);
 `;
 
 const stepNameCss = css`
-	font-family: "Gilroy";
-	font-style: normal;
+
 	font-weight: 500;
 	font-size: 15rem;
 `;
@@ -362,9 +355,7 @@ const textAreaCss = css`
 	height: 132rem;
 	width: 68%;
 	resize: none;
-	font-family: "Gilroy";
-	font-style: normal;
-	font-weight: 400;
+
 	font-size: 12rem;
 
 	color: rgba(255, 255, 255, 0.54);
@@ -454,9 +445,7 @@ const buttonCss = css`
 	transform: translateX(-50%);
 `;
 const deleteCss = css`
-	font-family: "Gilroy";
-	font-style: normal;
-	font-weight: 400;
+
 	font-size: 12rem;
 	color: #db6e82;
 	:hover {
@@ -465,7 +454,7 @@ const deleteCss = css`
 `;
 const actionsListCss = css`
 	ont-family: "Gilroy";
-	font-style: normal;
+	
 	font-weight: 400;
 	font-size: 12rem;
 

@@ -80,8 +80,8 @@ const inputCss = css`
 		border: 0.5px solid rgba(55, 55, 55, 0.23);
 		border-radius: 10px;
 
-		font-family: Gilroy;
-		font-style: normal;
+		
+		
 		font-weight: 600;
 		font-size: 13.8rem;
 		color: rgba(255, 255, 255, 0.67);

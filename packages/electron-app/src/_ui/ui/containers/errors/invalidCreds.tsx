@@ -103,7 +103,7 @@ const contentContainerStyle = css`
 `;
 const headingStyle = css`
 	font-family: Cera Pro;
-	font-style: normal;
+	
 	font-weight: 900;
 	font-size: 18rem;
 	text-align: center;
@@ -116,8 +116,8 @@ const highlightStyle = css`
 const descriptionStyle = css`
 	margin-top: 12rem;
 
-	font-family: Gilroy;
-	font-style: normal;
+	
+	
 	font-weight: 400;
 	font-size: 14rem;
 	text-align: center;

@@ -74,8 +74,8 @@ const inputCss = css`
 		border: 0.5px solid rgba(55, 55, 55, 0.23) !important;
 		border-radius: 10px;
 
-		font-family: Gilroy;
-		font-style: normal;
+		
+		
 		font-weight: 400;
 		font-size: 13rem;
 		letter-spacing: 0.02em;
@@ -100,8 +100,8 @@ const inputCss = css`
 `;
 
 const hintCss = css`
-	font-family: Gilroy;
-	font-style: normal;
+	
+	
 	font-weight: 400;
 	font-size: 12.7rem;
 

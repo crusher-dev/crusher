@@ -58,8 +58,7 @@ const progressBarContainerCss = css`
 	overflow: hidden;
 `;
 const timeElapsedCss = css`
-	font-family: "Gilroy";
-	font-style: normal;
+
 	font-weight: 500;
 	font-size: 13rem;
 
@@ -71,8 +70,7 @@ const ellipseIconCss = css`
 	margin-top: -4rem;
 `;
 const stepsLengthCss = css`
-	font-family: "Gilroy";
-	font-style: normal;
+
 	font-weight: 500;
 	font-size: 13rem;
 	color: #ffffff;
@@ -80,9 +78,7 @@ const stepsLengthCss = css`
 const totalCountCss = css`
 	flex: 1;
 	justify-content: center;
-	font-family: "Gilroy";
-	font-style: normal;
-	font-weight: 400;
+
 	font-size: 12rem;
 	color: rgba(156, 156, 156, 1);
 `;
@@ -113,16 +109,13 @@ const ReplaySidebarHeader = ({ className }: IProps) => {
 };
 
 const titleCss = css`
-	font-family: "Gilroy";
-	font-style: normal;
+
 	font-weight: 700;
 	font-size: 15rem;
 	color: #fff;
 `;
 const testNameCss = css`
-	font-family: "Gilroy";
-	font-style: normal;
-	font-weight: 400;
+
 	font-size: 12rem;
 	color: rgb(156, 156, 156);
 `;

@@ -56,8 +56,8 @@ const heading = css`
 `;
 
 const text2Style = css`
-	font-family: Gilroy;
-	font-style: normal;
+	
+	
 	font-weight: normal;
 	font-size: 13rem;
 	line-height: 15rem;
@@ -70,7 +70,7 @@ const text2Style = css`
 `;
 const text1Style = css`
 	font-family: Cera Pro;
-	font-style: normal;
+	
 	font-weight: normal;
 	font-size: 14rem;
 	line-height: 18rem;

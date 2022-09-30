@@ -51,8 +51,7 @@ const actionTextCss = css`
 	font-weight: 600;
 `;
 const messageCss = css`
-	font-family: "Gilroy";
-	font-style: normal;
+
 	font-weight: 500;
 	font-size: 14rem;
 `;

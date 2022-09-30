@@ -23,9 +23,7 @@ const linkContainerStyle = css`
 	border-radius: 6px;
 	padding: 12rem 18rem;
 
-	font-family: "Gilroy";
-	font-style: normal;
-	font-weight: 400;
+
 	font-size: 11rem;
 
 	color: #888888;

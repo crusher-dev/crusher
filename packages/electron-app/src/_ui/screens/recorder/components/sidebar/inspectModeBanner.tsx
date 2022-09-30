@@ -37,15 +37,15 @@ const containerCss = css`
 `;
 const headingCss = css`
 	font-family: Cera Pro;
-	font-style: normal;
+	
 	font-weight: normal;
 	font-size: 15rem;
 	line-height: 19rem;
 	margin-bottom: 10rem;
 `;
 const mainTextCss = css`
-	font-family: Gilroy;
-	font-style: normal;
+	
+	
 	font-weight: normal;
 	font-size: 15rem;
 	line-height: 17rem;
@@ -53,7 +53,7 @@ const mainTextCss = css`
 `;
 const cancelCss = css`
 	font-family: Cera Pro;
-	font-style: normal;
+	
 	font-weight: normal;
 	font-size: 13rem;
 	line-height: 16rem;

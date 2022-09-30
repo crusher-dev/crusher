@@ -47,7 +47,7 @@ const CrashScreen = () => {
 			font-size: 14rem;
 			display: flex;
 			color: rgba(255, 255, 255, 0.57)
-			font-family: Gilroy;
+			
 		`}
 		>
 			<div
@@ -125,7 +125,7 @@ const PageLoadFailedScreen = () => {
 			font-size: 14rem;
 			display: flex;
 			color: rgba(255, 255, 255, 0.57)
-			font-family: Gilroy;
+			
 		`}
 		>
 			<div

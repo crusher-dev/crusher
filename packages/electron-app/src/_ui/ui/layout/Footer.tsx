@@ -25,9 +25,7 @@ function Footer() {
 
 const navBarCss = css`
 	display: flex;
-	font-family: "Gilroy";
-	font-style: normal;
-	font-weight: 400;
+
 	font-size: 13rem;
 	z-index: 99;
 	width: 100%;

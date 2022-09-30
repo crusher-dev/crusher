@@ -99,8 +99,8 @@ const headerCss = css`
 	height: 30px;
 `;
 const testsCountCss = css`
-	font-family: Gilroy;
-	font-style: normal;
+	
+	
 	font-weight: 400;
 	font-size: 12rem;
 
@@ -110,9 +110,7 @@ const testsCountCss = css`
 const listCss = css`
 	user-select: none;
 	height: 100%;
-	font-family: "Gilroy";
-	font-style: normal;
-	font-weight: 400;
+
 	font-size: 14px;
 	letter-spacing: 0.03em;
 

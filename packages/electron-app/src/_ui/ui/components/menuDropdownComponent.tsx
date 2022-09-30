@@ -20,8 +20,7 @@ export function Link({ children, ...props }) {
 }
 
 const linkStyle = css`
-	font-family: "Gilroy";
-	font-style: normal;
+
 	font-weight: 600;
 	font-size: 14px;
 	color: #ffffff;

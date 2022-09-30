@@ -26,7 +26,7 @@ const containerCss = css`
 
 const titleCss = css`
 	font-family: Cera Pro;
-	font-style: normal;
+	
 	font-weight: 500;
 	font-size: 13.4px;
 	color: #ffffff;

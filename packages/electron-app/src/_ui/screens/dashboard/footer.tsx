@@ -29,8 +29,7 @@ const CreateTestLink = (props) => {
 	);
 };
 const createTestLinkStyle = css`
-	font-family: "Gilroy";
-	font-style: normal;
+
 	font-weight: 500;
 	font-size: 14px;
 	line-height: 14px;
@@ -128,9 +127,7 @@ const contentCss = css`
 `;
 
 const infoTextCss = css`
-	font-family: "Gilroy";
-	font-style: normal;
-	font-weight: 400;
+
 	font-size: 13rem;
 
 	color: rgba(255, 255, 255, 0.67);

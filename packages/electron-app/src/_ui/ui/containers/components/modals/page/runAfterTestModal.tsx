@@ -90,7 +90,7 @@ const RunAfterTestModal = (props: iStartupModalProps) => {
 						isSearchable={true}
 						dropDownHeight={"auto"}
 						css={css`
-							font-family: Gilroy;
+							
 							input {
 								outline: none;
 								width: 80%;

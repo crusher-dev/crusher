@@ -32,8 +32,7 @@ const footerContentCss = css`
 	gap: 60rem;
 `;
 const footerLinkCss = css`
-	font-family: "Gilroy";
-	font-style: normal;
+
 	font-weight: 500;
 	font-size: 14.5px;
 	line-height: 16px;
@@ -95,8 +94,7 @@ const yesNoButtonContainerCss = css`
 const yesNoButtonCss = css`
 	border: 0.5px solid #212121;
 	border-radius: 23423px;
-	font-family: "Gilroy";
-	font-style: normal;
+
 	font-weight: 600;
 	font-size: 14px;
 	text-align: center;
@@ -219,8 +217,7 @@ const ClipboardIcon = (props) => (
 );
 
 const linkBoxCss = css`
-	font-family: "Gilroy";
-	font-style: normal;
+
 	font-weight: 500;
 	font-size: 16px;
 	text-align: center;
@@ -234,8 +231,7 @@ const linkBoxCss = css`
 
 const createButtonCss = css`
 	padding: 10px 24px;
-	font-family: "Gilroy";
-	font-style: normal;
+
 	font-weight: 600;
 	font-size: 14px;
 	text-align: center;
@@ -255,9 +251,7 @@ const inputCss = css`
 	border: 0.5px solid rgba(255, 255, 255, 0.4);
 	box-shadow: 0px 0px 1px 2px rgba(184, 94, 255, 0.03);
 	border-radius: 8px;
-	font-family: "Gilroy";
-	font-style: normal;
-	font-weight: 400;
+
 	caret-color: #bd6fe2;
 	font-size: 15px;
 	/* or 93% */
@@ -272,9 +266,7 @@ const inputFormContainerCss = css`
 `;
 
 const noteCss = css`
-	font-family: "Gilroy";
-	font-style: normal;
-	font-weight: 400;
+
 	font-size: 12px;
 	letter-spacing: 0.03em;
 	margin-top: 20px;
@@ -333,7 +325,7 @@ const developerQuestionCss = css`
 
 const headingCss = css`
 	font-family: "Cera Pro";
-	font-style: normal;
+	
 	font-weight: 900;
 	font-size: 18px;
 	/* identical to box height */

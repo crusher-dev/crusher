@@ -115,9 +115,7 @@ const rightSectionCss = css`
 	align-items: center;
 `;
 const socialIcon = css`
-	font-family: "Gilroy";
-	font-style: normal;
-	font-weight: 400;
+
 	font-size: 13px;
 
 	text-decoration-line: underline;
@@ -136,9 +134,7 @@ const socialIcon = css`
 	}
 `;
 const resourcesCss = css`
-	font-family: "Gilroy";
-	font-style: normal;
-	font-weight: 400;
+
 	font-size: 13.5px;
 	text-align: right;
 

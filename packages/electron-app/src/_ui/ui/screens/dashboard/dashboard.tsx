@@ -51,8 +51,7 @@ const CreateTestLink = (props) => {
 	);
 };
 const createTestLinkStyle = css`
-	font-family: "Gilroy";
-	font-style: normal;
+
 	font-weight: 500;
 	font-size: 14px;
 	line-height: 14px;
@@ -333,8 +332,7 @@ const EditIcon = (props) => (
 );
 
 const runTextStyle = css`
-	font-family: "Gilroy";
-	font-style: normal;
+
 	font-weight: 600;
 	font-size: 13rem;
 
@@ -355,9 +353,7 @@ const PlayIcon = (props) => (
 );
 
 const testItemStyle = css`
-	font-family: "Gilroy";
-	font-style: normal;
-	font-weight: 400;
+
 	font-size: 14px;
 	letter-spacing: 0.03em;
 
@@ -771,9 +767,7 @@ const titleCloudIconStyle = css`
 	margin-left: 12rem;
 `;
 const titleStyle = css`
-	font-family: "Gilroy";
-	font-style: normal;
-	font-weight: 400;
+
 	font-size: 13rem;
 
 	color: rgba(255, 255, 255, 0.67);
@@ -814,8 +808,8 @@ const saveButtonStyle = css`
 	height: 30rem;
 	background: linear-gradient(0deg, #9462ff, #9462ff);
 	border-radius: 6rem;
-	font-family: Gilroy;
-	font-style: normal;
+	
+	
 	font-weight: 600;
 	font-size: 14rem;
 	line-height: 17rem;
@@ -825,9 +819,7 @@ const saveButtonStyle = css`
 	}
 `;
 const infoTextStyle = css`
-	font-family: "Gilroy";
-	font-style: normal;
-	font-weight: 400;
+
 	font-size: 13rem;
 
 	color: rgba(255, 255, 255, 0.67);

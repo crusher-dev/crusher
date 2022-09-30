@@ -203,8 +203,7 @@ const emojiCSS = css`
 `;
 
 const runTextCss = css`
-	font-family: "Gilroy";
-	font-style: normal;
+
 	font-weight: 500;
 	font-size: 12rem;
 
@@ -215,8 +214,7 @@ const runTextCss = css`
 	color: #b061ff;
 `;
 const editTextCss = css`
-	font-family: "Gilroy";
-	font-style: normal;
+
 	font-weight: 500;
 	font-size: 12rem;
 	letter-spacing: 0.03em;

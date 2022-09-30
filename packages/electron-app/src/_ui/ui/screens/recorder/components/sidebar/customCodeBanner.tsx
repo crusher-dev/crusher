@@ -23,14 +23,14 @@ const containerCss = css`
 	padding: 30rem 24rem;
 `;
 const mainTextCss = css`
-	font-family: Gilroy;
-	font-style: normal;
+	
+	
 	font-weight: 700;
 	font-size: 15rem;
 `;
 const descriptionCss = css`
-	font-family: Gilroy;
-	font-style: normal;
+	
+	
 	font-weight: 400;
 	font-size: 12rem;
 	margin-top: 4rem;

@@ -151,8 +151,8 @@ const headerCss = css`
 	padding-top: 19rem;
 `;
 const sectionHeadingCss = css`
-	font-family: Gilroy;
-	font-style: normal;
+	
+	
 	font-weight: 500;
 	font-size: 12rem;
 	color: #ffffff;

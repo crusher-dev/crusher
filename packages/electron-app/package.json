@@ -111,7 +111,7 @@
 		"uuid": "^8.3.2",
 		"v8-compile-cache": "2.3.0",
 		"valid-url": "^1.0.9",
-		"webpack": "5.21.2",
+		"webpack": "5.41.1",
 		"worker-dom": "^0.1.0"
 	},
 	"devDependencies": {
@@ -121,6 +121,7 @@
 		"@babel/preset-react": "^7.10.4",
 		"@babel/preset-typescript": "^7.10.4",
 		"@playwright/test": "1.23.0",
+		"@pmmmwh/react-refresh-webpack-plugin": "^0.5.7",
 		"@types/body-scroll-lock": "^2.6.1",
 		"@types/chrome": "^0.0.122",
 		"@types/copy-webpack-plugin": "^6.4.0",
@@ -158,6 +159,7 @@
 		"postcss-preset-env": "^7.0.2",
 		"prettier": "^2.2.1",
 		"pug-loader": "^2.4.0",
+		"react-refresh": "^0.14.0",
 		"speed-measure-webpack-plugin": "^1.5.0",
 		"style-loader": "^2.0.0",
 		"tailwindcss": "^1.9.6",

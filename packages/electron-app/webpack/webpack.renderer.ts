@@ -69,12 +69,18 @@ const finalConfig = [
 		...commonConfig,
 		entry: { renderer: path.resolve(__dirname, "../src/_ui/index") },
 		target: "electron-renderer",
+		devServer: {
+			hot: true,
+			liveReload: false,
+		},
 		plugins: [
 			...commonConfig.plugins,
+			 new webpack.HotModuleReplacementPlugin(),
 			new HtmlWebpackPlugin({
 				template: path.join(__dirname, "../static", "index.html"),
 				chunks: ["renderer"],
 			}),
+
 			new webpack.DefinePlugin({
 				NODE_ENV: process.env.NODE_ENV === "development" ? "development" : "production",
 				"process.env": {

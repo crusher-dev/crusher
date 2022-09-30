@@ -1,10 +1,12 @@
 import React, { memo } from "react";
 import { css } from "@emotion/react";
 import {
+	getInspectElementSelectorMeta,
 	getIsStatusBarVisible,
 	getRecorderCrashState,
 	getRecorderInfo,
 	getRecorderState,
+	getSavedSteps,
 	getSelectedElement,
 	isInspectElementSelectorModeOn,
 	isInspectModeOn,
@@ -21,7 +23,7 @@ import {
 	turnOnInspectMode,
 	turnOnWebviewDevTools,
 } from "../../../../commands/perform";
-import { setSelectedElement, updateRecorderCrashState } from "electron-app/src/store/actions/recorder";
+import { setSelectedElement, updateRecordedStep, updateRecorderCrashState } from "electron-app/src/store/actions/recorder";
 import { saveAutoAction } from "../../../../commands/saveActions";
 import { TRecorderMessagesType } from "../../../../../lib/recorder/host-proxy";
 import { TRecorderCrashState, TRecorderState } from "electron-app/src/store/reducers/recorder";
@@ -29,6 +31,7 @@ import { StopIcon } from "../../../../constants/old_icons";
 import { Button } from "@dyson/components/atoms";
 
 import { RightClickMenu } from "@dyson/components/molecules/RightClick/RightClick";
+import { sendSnackBarEvent } from "../toast";
 
 const CrashScreen = () => {
 	const store = useStore();
@@ -230,7 +233,16 @@ const DeviceFrame = () => {
 							disableJavascriptInDebugger();
 						}
 						const { selectedElementInfo } = args[0].payload;
-						window.postMessage(JSON.stringify({ type: "selected-element-for-selectors", selectedElementInfo }));
+						const elementSelectInspectMetaInfo = getInspectElementSelectorMeta(store.getState() as any);
+						console.log(elementSelectInspectMetaInfo, selectedElementInfo, "ASAS");
+						if(elementSelectInspectMetaInfo.isOn && elementSelectInspectMetaInfo.stepId) {
+							const recordedSteps = getSavedSteps(store.getState() as any);
+							const step = recordedSteps[elementSelectInspectMetaInfo.stepId];
+							//@ts-ignore
+							step.payload.selectors = selectedElementInfo.selectors;
+							store.dispatch(updateRecordedStep(step as any, elementSelectInspectMetaInfo.stepId));
+							sendSnackBarEvent({ type: "success", message: "Selectors updated" });
+						}
 					}
 				}
 				if (recorderState.type !== TRecorderState.RECORDING_ACTIONS) return;

@@ -179,8 +179,8 @@ const turnOnInspectMode = (meta) => {
 	ipcRenderer.invoke("turn-on-recorder-inspect-mode", { meta });
 };
 
-const turnOnElementSelectorInspectMode = () => {
-	return ipcRenderer.invoke("turn-on-element-selector-inspect-mode");
+const turnOnElementSelectorInspectMode = (payload: {stepId?: any}) => {
+	return ipcRenderer.invoke("turn-on-element-selector-inspect-mode", payload);
 };
 
 const turnOffInspectMode = () => {

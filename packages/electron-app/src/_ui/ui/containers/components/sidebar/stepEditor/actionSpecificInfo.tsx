@@ -132,6 +132,7 @@ const ActionSpecificInfo = (props: IActionSpecificInfoProps) => {
 				</Conditional>
 				<Conditional showIf={isElementStep}>
 					<FieldSelectorPicker
+						stepId={stepId}
 						ref={textAreaRef}
 						onChange={saveSelectorsOnUserInput.bind(this)}
 						onSelectorsPicked={handleOnSelectorsPicked.bind(this)}

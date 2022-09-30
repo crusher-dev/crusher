@@ -14,7 +14,8 @@ export const getRecorderInfoUrl = (state: iReduxState) => ({
 });
 
 export const isInspectModeOn = (state: iReduxState) => state.recorder.isInspectModeOn;
-export const isInspectElementSelectorModeOn = (state: iReduxState) => state.recorder.isInspectElementSelectorModeOn;
+export const isInspectElementSelectorModeOn = (state: iReduxState) => state.recorder.elementInspectModeMeta?.isOn;
+export const getInspectElementSelectorMeta = (state: iReduxState) => state.recorder.elementInspectModeMeta;
 
 export const getSelectedElement = (state: iReduxState) => state.recorder.selectedElement;
 

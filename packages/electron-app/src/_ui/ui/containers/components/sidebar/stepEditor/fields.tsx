@@ -79,15 +79,17 @@ const FieldToggle = (props: IToggleProps) => {
 type IFieldSelectorPickerProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
 	label: string;
 	initialValue?: string;
+	stepId: any;
 	// Applies to the component's container
 	className?: string;
+	children?: any;
 	onSelectorsPicked: (selectors: iSelectorInfo[]) => any;
 };
 const FieldSelectorPicker = React.forwardRef((props: IFieldSelectorPickerProps) => {
-	const { className } = props;
+	const { className, stepId, children } = props;
 
 	const handleElementSelectorClick = () => {
-		turnOnElementSelectorInspectMode();
+		turnOnElementSelectorInspectMode({stepId});
 	};
 
 	React.useEffect(() => {
@@ -104,6 +106,13 @@ const FieldSelectorPicker = React.forwardRef((props: IFieldSelectorPickerProps) 
 		};
 	}, []);
 
+	if(children) {
+		return (
+			<div onClick={handleElementSelectorClick}>
+				{children}
+			</div>
+		)
+	}
 	return <InspectElementIcon className={className} onClick={handleElementSelectorClick} css={inspectElementIconStyle} />;
 });
 

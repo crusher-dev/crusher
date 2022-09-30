@@ -54,10 +54,10 @@ export const setInspectMode = (payload: any) => {
 	};
 };
 
-export const setInspectElementSelectorMode = (isOn: boolean) => {
+export const setInspectElementSelectorMode = (isOn: boolean, stepId?: any) => {
 	return {
 		type: SET_INSPECT_ELEMENT_SELECTOR_MODE,
-		payload: { isOn },
+		payload: { isOn, stepId: stepId },
 	};
 };
 

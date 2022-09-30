@@ -15,16 +15,32 @@ import { sendSnackBarEvent } from "electron-app/src/_ui/ui/containers/components
 import { ResizableInput } from "electron-app/src/_ui/ui/components/ResizableInput";
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
 
-const limitString = (string) => {
-	if (string.length > 25) {
-		return string.substring(0, 30) + "...";
+const limitString = (string, offset = null) => {
+	if(!string) return string;
+	const maxOffset = offset ? offset : 25;
+	if (string.length > maxOffset) {
+		return string.substring(0, maxOffset) + "...";
 	}
 	return string;
 };
 
 const SelectorInfo = ({ stepId, setShowAdvanced }) => {
 	const stepInfo = useSelector(getStepInfo(stepId));
+	const selectors = stepInfo.step?.payload?.selectors;
 
+	const description = React.useMemo(() => {
+		if(!selectors) return null;
+		const sortedSelectorsByLength = selectors;
+
+		const offset = 10;
+		if(sortedSelectorsByLength.length === 1) {
+			return `and ${limitString(sortedSelectorsByLength[0].value, offset)}`;
+		} else if(selectors.length === 2) {
+			return `${limitString(sortedSelectorsByLength[0].value, offset)} and ${limitString(sortedSelectorsByLength[1].value, offset)}`;
+		} else {
+			return `${limitString(sortedSelectorsByLength[0].value, offset)}, ${limitString(sortedSelectorsByLength[1].value, offset)} and ${sortedSelectorsByLength.length - 2} more`;
+		}
+	}, [selectors]);
 	return (
 		<div css={selectorInfoContainerCss}>
 			<div className={"flex items-center"}>
@@ -36,10 +52,10 @@ const SelectorInfo = ({ stepId, setShowAdvanced }) => {
 				</div>
 
 				<EditPencilIcon onClick={setShowAdvanced.bind(this, true)} className={"ml-10"} css={pencilIconCss} />
-				<FieldSelectorPicker className={"ml-10"} />
+				<FieldSelectorPicker stepId={stepId} className={"ml-10"} />
 			</div>
 			<div css={selectorExtraCss} className={"mt-7"}>
-				.class-name, etc, and 24 other
+				{description}
 			</div>
 		</div>
 	);
@@ -333,7 +349,7 @@ const StepAdvancedForm = ({ stepId }) => {
 				</textarea>
 				<div className={"ml-24"}>
 					<ul css={actionsListCss}>
-						<li>choose selector</li>
+						<li><FieldSelectorPicker stepId={stepId}>choose selector</FieldSelectorPicker></li>
 					</ul>
 				</div>
 			</div>

@@ -202,7 +202,7 @@ border-radius: 8rem !important;
 					color: rgba(215, 223, 225, 0.6) !important;
 				}`} labelComponent={<LabelComponent/> } defaultValue={TextHighlighterText({ text: title }).join(" ")} id={stepId + "-stepName"} onChange={handleOnChange.bind(this)} />
 			</div>
-			{isStepNameEditing == stepId ? (
+			{isStepNameEditing !== false && isStepNameEditing !== undefined && isStepNameEditing == stepId ? (
 				<div className={"ml-12"} css={css` font-size: 13rem; margin-top: 4rem;`}>
 					{TextHighlighter({text: stepInfo.actionDescription}, true)}
 				</div>

@@ -995,14 +995,14 @@ export class AppWindow {
 				});
 
 				// Need to wait until networkIdle for content script to initialize
-				if (savedStep.type === ActionsInTestEnum.NAVIGATE_URL || savedStep.payload.meta.value === "about:blank") {
+				if (savedStep.type === ActionsInTestEnum.NAVIGATE_URL && savedStep.payload.meta.value === "about:blank") {
 					await this.webView.playwrightInstance.page.waitForLoadState("networkidle");
 				}
 			}
 			this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
 			return true;
 		} catch(err) {
-			console.error("Error is", err);
+			console.error(err);
 			this.store.dispatch(updateRecorderState(TRecorderState.ACTION_REQUIRED, {}));
 			this.setRemainingSteps(reaminingSteps);
 			return false;

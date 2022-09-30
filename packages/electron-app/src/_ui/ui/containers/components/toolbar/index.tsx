@@ -4,8 +4,8 @@ import { Conditional } from "@dyson/components/layouts";
 import { DroppdownIconV2, LoadingIconV2, RedDotIcon, SettingsIcon } from "../../../../constants/old_icons";
 import { useDispatch, batch, useSelector, useStore } from "react-redux";
 import { devices } from "../../../../../devices";
-import { getRecorderInfo, getRecorderInfoUrl, getRecorderState, getSavedSteps, isTestVerified } from "electron-app/src/store/selectors/recorder";
-import { goFullScreen, performNavigation, performSteps, performVerifyTest, saveTest, updateTest } from "../../../../commands/perform";
+import { getRecorderInfo, getRecorderInfoUrl, getRecorderState, getSavedSteps, getTestName, isTestVerified } from "electron-app/src/store/selectors/recorder";
+import { goFullScreen, performNavigation, performSteps, performVerifyTest, saveTest, updateTest, updateTestName } from "../../../../commands/perform";
 import { addHttpToURLIfNotThere, isValidHttpUrl } from "../../../../../utils";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 import { getAppEditingSessionMeta, getCurrentTestInfo, getProxyState, shouldShowOnboardingOverlay } from "electron-app/src/store/selectors/app";
@@ -22,6 +22,7 @@ import { ButtonDropdown } from "electron-app/src/_ui/ui/components/buttonDropdow
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
 import { generateRandomTestName } from "electron-app/src/utils/renderer";
 import { NormalInput } from "electron-app/src/_ui/ui/components/inputs/normalInput";
+import { setTestName } from "electron-app/src/store/actions/recorder";
 
 const DeviceItem = ({ label }) => {
 	return (
@@ -271,15 +272,30 @@ const dropdownItemTextStyle = css`
 	padding: 6rem 16rem;
 `;
 
+const useTestName = () => {
+	const testName = useSelector(getTestName);
+	const dispatch = useDispatch();
+
+	React.useEffect(() => {
+		// initialize the test name with a random name
+		dispatch(setTestName(generateRandomTestName()));
+	}, []);
+
+	const updateTestName = (testName: string) => {
+		dispatch(setTestName(testName));
+	};
+
+	return { testName, setTestName: updateTestName }
+};
 const Toolbar = (props: any) => {
 	const [url, setUrl] = React.useState("" || null);
 	const [selectedDevice] = React.useState([recorderDevices[0]]);
 	const [showSettingsModal, setShowSettingsModal] = React.useState(false);
 	const [urlInputError, setUrlInputError] = React.useState({ value: false, message: "" });
 	const [isEditingTestName, setIsEditingTestName] = React.useState(false);
-	const [testName, setTestName] = React.useState(generateRandomTestName());
+	const { testName, setTestName } = useTestName();
 	const currentTestInfo = useSelector(getCurrentTestInfo)
-	
+
 	React.useEffect(() => {
 		if(currentTestInfo) {
 			setTestName(currentTestInfo.testName);
@@ -414,11 +430,16 @@ const Toolbar = (props: any) => {
 
 	const handleKeyPress = React.useCallback((e) => {
 		if (e.keyCode === 13) {
-			setTestName((document.querySelector(".testName") as HTMLInputElement).value);
+			const currentTestInfo = getCurrentTestInfo(store.getState() as any);
+			const testName = (document.querySelector(".testName") as HTMLInputElement).value;
+
+			if (currentTestInfo) {
+				updateTestName(currentTestInfo.id, testName);
+			}
+			setTestName(testName);
 			setIsEditingTestName(false);
 		}
 	});
-
 	const handleTestNameClick = React.useCallback(() => {
 		setIsEditingTestName(true);
 		setTimeout(() => {

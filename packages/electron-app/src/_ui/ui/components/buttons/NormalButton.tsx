@@ -2,18 +2,18 @@ import React from "react";
 import { css } from "@emotion/react";
 import { Button } from "@dyson/components/atoms";
 
-const NormalButton = ({className, onClick, children, ...props}) => {
+const NormalButton = ({ className, onClick, children, ...props }) => {
 	return (
-        (<Button
+		(<Button
 			onClick={onClick}
 			bgColor="tertiary-outline"
 			css={buttonCss}
 			className={String(className)}
 			{...props}
 		>
-            {children}
-        </Button>)
-    );
+			{children}
+		</Button>)
+	);
 };
 
 
@@ -22,7 +22,7 @@ const buttonCss = css`
 	display: flex;
 	align-items: center;
 	background: #B341F9!important;
-	border-radius: 6rem;
+	border-radius: 8rem !important;
 	font-family: Gilroy;
 	font-style: normal;
 	font-weight: normal;
@@ -31,7 +31,8 @@ const buttonCss = css`
 	color: #ffffff;
 	border: none;
     justify-content: center;
-    height: 28rem !important;
+    height: 30rem !important;
+	border-color: #B341F9 !important;
 	:hover {
 		background: #B341F9!important;
 		opacity: 0.8;

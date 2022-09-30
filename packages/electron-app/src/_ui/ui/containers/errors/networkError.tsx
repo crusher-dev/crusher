@@ -17,10 +17,10 @@ const NetworkErrorContainer = () => {
 				<div css={contentContainerStyle}>
 					<ConnectivityWarningIcon css={iconStyle} />
 					<div css={headingStyle}>
-						<span css={highlightStyle}></span>Facing issues with network connectivity!
+						<span css={highlightStyle}></span>Interenet it not working
 					</div>
 					<div css={descriptionStyle}>
-						Please check your internet connection and try again.<br />
+						is internet working? we're not able to reach backend server<br />
 						<NormalButton onClick={handleRetry} css={retryButtonCss}>Retry</NormalButton>
 					</div>
 				</div>
@@ -36,7 +36,7 @@ position: relative;
 `;
 
 const retryButtonCss = css`
-	margin-top: 16rem;
+	margin-top: 20rem;
 	width: 52rem;
 `;
 
@@ -60,14 +60,14 @@ const highlightStyle = css`
 	color: #ffec87;
 `;
 const descriptionStyle = css`
-	margin-top: 12rem;
+	margin-top: 10rem;
 
 	font-family: Gilroy;
 	font-style: normal;
 	font-weight: 400;
 	font-size: 14rem;
 	text-align: center;
-	letter-spacing: 0.2px;
+	letter-spacing: 0.3px;
 	color: rgba(255, 255, 255, 0.64);
 	display: flex;
 	flex-direction: column;

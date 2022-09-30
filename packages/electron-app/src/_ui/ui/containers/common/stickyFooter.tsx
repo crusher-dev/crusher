@@ -111,7 +111,7 @@ const containerCss = css`
 	border-top: 0.5px solid rgba(153, 153, 153, 0.12);
 `;
 const docsButtonCss = css`
-	background: #000000;
+	background: #0F1010;
 	border-left: 0.5px solid #242424;
 	font-family: "Cera Pro";
 

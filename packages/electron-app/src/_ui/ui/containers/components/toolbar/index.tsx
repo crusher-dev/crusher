@@ -513,7 +513,7 @@ const Toolbar = (props: any) => {
 													border-radius: 8px;
 													padding-left: 8rem;
 													padding-right: 8rem;
-													background: linear-gradient(0deg, rgba(176, 74, 255, 0.02), rgba(176, 74, 255, 0.02)), #0d0d0e;
+													background: linear-gradient(0deg, rgba(176, 74, 255, 0.02), rgba(176, 74, 255, 0.02)), #0d0d0d;
 													border: 0.5px solid rgba(176, 74, 255, 0.54);
 											  `
 											: null,

@@ -32,7 +32,7 @@ const navBarCss = css`
 	color: rgba(255, 255, 255, 0.67);
 	padding: 8rem 20rem;
 	border-top: 0.5px solid rgba(153, 153, 153, 0.12);
-	background: #0d0d0e;
+	background: #0d0d0d;
 `;
 const settingsCss = css`
 	margin-left: auto;

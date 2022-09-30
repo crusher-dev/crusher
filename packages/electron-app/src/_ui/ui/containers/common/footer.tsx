@@ -93,11 +93,11 @@ export const feedbackCSS = css`
 const containerCss = css`
 	display: flex;
 	align-items: center;
-	height: 46px;
+    height: 36px;
 	padding: 0px 24px;
 	padding-left: 22px;
 
-	background: #0d0d0e;
+	background: #0d0d0d;
 	display: flex;
 	align-items: center;
 	justify-content: center;

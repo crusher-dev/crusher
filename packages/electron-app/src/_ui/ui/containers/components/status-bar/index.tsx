@@ -498,7 +498,6 @@ const StatusBar = () => {
 	);
 };
 const docsButtonCss = css`
-	background: #0f1010;
 
 	font-family: "Cera Pro";
 

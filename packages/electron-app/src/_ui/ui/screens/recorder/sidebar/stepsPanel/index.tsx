@@ -8,7 +8,7 @@ import { Step } from "./step";
 import { useSelectableList } from "electron-app/src/_ui/hooks/list";
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
 import { RightClickMenu } from "@dyson/components/molecules/RightClick/RightClick";
-import { deleteRecordedSteps } from "electron-app/src/store/actions/recorder";
+import { deleteRecordedSteps, setStatusBarVisibility } from "electron-app/src/store/actions/recorder";
 import { performVerifyTest } from "electron-app/src/_ui/commands/perform";
 
 interface IProps {
@@ -24,7 +24,9 @@ const StepsPanel = ({ className }: IProps) => {
 	const isStatusBarVisible = useSelector(getIsStatusBarVisible);
 	const store = useStore();
 
-	const toggleStatusBar = React.useCallback(() => {}, []);
+	const toggleStatusBar = React.useCallback(() => {
+		store.dispatch(setStatusBarVisibility(!isStatusBarVisible));
+	}, [isStatusBarVisible]);
 
 	const handleStepClick = React.useCallback(
 		(stepId) => {
@@ -104,9 +106,9 @@ const StepsPanel = ({ className }: IProps) => {
 	return (
 		<div css={containerCss} className={String(className)}>
 			<div css={headerCss}>
-				<Text css={sectionHeadingCss}>{recordedSteps.length} Steps</Text>
+				<Text css={sectionHeadingCss}>{recordedSteps.length} Steps </Text>
 				<div css={sectionActionsCss}>
-					<ConsoleIcon onClick={toggleStatusBar} css={[consoleIconCss, isStatusBarVisible ? consoleActiveIconCss : null]} />
+					<ConsoleIcon onClick={toggleStatusBar} css={consoleIconCss(isStatusBarVisible)} />
 				</div>
 			</div>
 			<OnOutsideClick
@@ -154,19 +156,14 @@ const sectionActionsCss = css`
 	display: flex;
 	align-items: center;
 `;
-const consoleIconCss = css`
+const consoleIconCss = (isActive) => css`
 	width: 11.7rem;
 	height: 12.3rem;
 	path {
-		fill: rgba(255, 255, 255, 1);
+		fill: ${isActive ? "rgba(255, 255, 255, 0.8)" : "rgba(255, 255, 255, 0.35)"}; 
 	}
 	:hover {
 		opacity: 0.7;
-	}
-`;
-const consoleActiveIconCss = css`
-	path {
-		fill: rgba(255, 255, 255, 0.35);
 	}
 `;
 const contentCss = css`

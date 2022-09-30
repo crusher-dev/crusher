@@ -1,6 +1,7 @@
 import React, { memo } from "react";
 import { css } from "@emotion/react";
 import {
+	getIsStatusBarVisible,
 	getRecorderCrashState,
 	getRecorderInfo,
 	getRecorderState,
@@ -200,6 +201,7 @@ const DeviceFrame = () => {
 	const recorderInfo = useSelector(getRecorderInfo);
 	const recorderState = useSelector(getRecorderState);
 	const recorderCrashState = useSelector(getRecorderCrashState);
+	const isStatusBarVisible = useSelector(getIsStatusBarVisible);
 	const ref = React.useRef<HTMLWebViewElement>(null);
 	const store = useStore();
 
@@ -276,7 +278,7 @@ const DeviceFrame = () => {
 			<RightClickMenu menuItems={menuItemsComponent}>
 				<div
 					css={[
-						containerStyle,
+						containerStyle(isStatusBarVisible),
 						!recorderInfo.device
 							? css`
 									background: #070708;
@@ -355,9 +357,9 @@ const topContainerStyle = css`
 	overflow: hidden;
 	flex: 1;
 `;
-const containerStyle = css`
+const containerStyle = (isStatusBarVisible) => css`
 	width: 100%;
-	height: calc(100% - 30rem);
+	height: ${ isStatusBarVisible ? "calc(100% - 30rem)" : "100%" };
 	display: flex;
 	align-items: center;
 	justify-content: center;

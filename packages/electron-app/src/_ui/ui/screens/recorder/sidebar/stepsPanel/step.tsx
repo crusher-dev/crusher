@@ -8,6 +8,9 @@ import { TextHighlighter } from "./helper";
 import { HoverCard } from "@dyson/components/atoms/tooltip/Tooltip1";
 import { StepEditor } from "./stepEditor";
 import { FailedStepCard } from "./failedCard";
+import { stepHoverAtom } from "electron-app/src/_ui/store/jotai/steps";
+import { useAtom } from "jotai";
+import { editInputAtom } from "electron-app/src/_ui/store/jotai/testsPage";
 
 interface IProps {
 	className?: string;
@@ -18,20 +21,32 @@ interface IProps {
 	onContextMenu?: any;
 	isLast: boolean;
 
+	shouldOpenEditor?: boolean;
 	step?: any;
 }
 
-const Step = ({ className, isActive, onContextMenu, step, onClick, setIsActive, isLast, ...props }: IProps) => {
+const Step = ({ className, isActive, onContextMenu, shouldOpenEditor, step, onClick, setIsActive, isLast, ...props }: IProps) => {
 	const { stepId } = props;
-	const [, setIsEditorCardOpen] = React.useState(false);
+	const [stepHoverId, setStepHoverId] = useAtom(stepHoverAtom);
+	const [editInputId] = useAtom(editInputAtom);
+	const [isEditCardOpen, setIsEditorCardOpen] = React.useState(false);
 	const stepInfo = useSelector(getStepInfo(stepId));
 
 	const title = TextHighlighter({ text: stepInfo.name });
 	const hasFailed = stepInfo.isFailed;
 
+	React.useEffect(() => {
+		if(!editInputId && stepHoverId) {
+			setStepHoverId(null);
+		}
+	}, [editInputId === `${stepId}-stepName`])
+
+	console.log("Hover id are", stepHoverId, isEditCardOpen);
 	return (
 		<HoverCard
-			disabled={hasFailed}
+			disabled={hasFailed || (stepHoverId && stepHoverId !== stepId)}
+			autoHide={stepHoverId == stepId ? false : true}
+			state={stepHoverId === stepId}
 			callback={setIsEditorCardOpen.bind(this)}
 			wrapperCss={css`
 				z-index: 123123123 !important;

@@ -184,6 +184,8 @@ const StepName = ({ stepId }) => {
 		return <>{TextHighlighter({ text: title }, true)}</>;
 	};
 
+	console.log("Laa", isStepNameEditing);
+
 	return (
 		<div css={stepNameCss} className={"flex items-center"}>
 			<div css={css``}>
@@ -202,7 +204,7 @@ border-radius: 8rem !important;
 					color: rgba(215, 223, 225, 0.6) !important;
 				}`} labelComponent={<LabelComponent/> } defaultValue={TextHighlighterText({ text: title }).join(" ")} id={stepId + "-stepName"} onChange={handleOnChange.bind(this)} />
 			</div>
-			{isStepNameEditing !== false && isStepNameEditing !== undefined && isStepNameEditing == stepId ? (
+			{isStepNameEditing == `${stepId}-stepName` ? (
 				<div className={"ml-12"} css={css` font-size: 13rem; margin-top: 4rem;`}>
 					{TextHighlighter({text: stepInfo.actionDescription}, true)}
 				</div>
@@ -236,10 +238,10 @@ const StepMetaInfo = ({ stepId, setShowAdvanced }) => {
 				""
 			)}
 
-			<div css={metaInfoFooterCss} className={`flex ${hasSelectors || showFieldInput ? "mt-52" : "mt-30"}`}>
-				<div>took 1.9 sec</div>
+			{/* <div css={metaInfoFooterCss} className={`flex ${hasSelectors || showFieldInput ? "mt-52" : "mt-30"}`}> */}
+				{/* <div>took 1.9 sec</div> */}
 				{/* <div className={"ml-auto"}>view logs</div> */}
-			</div>
+			{/* </div> */}
 		</div>
 	);
 };

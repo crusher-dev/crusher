@@ -360,7 +360,7 @@ const StepsPanel = ({ className }: any) => {
 			action: action,
 			id: index,
 			title: action.name || actionDescriptor.describeAction(action as any),
-			selector: action.payload?.selectors?.length ? action.payload.selectors[0].value : "window",
+			selector: action.payload?.selectors?.length ? action.payload.selectors[0].value : null,
 			status: action.status,
 		};
 	});

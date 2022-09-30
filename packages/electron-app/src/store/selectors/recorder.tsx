@@ -22,7 +22,7 @@ export const getSavedSteps = (state: iReduxState) => state.recorder.savedSteps;
 export const getStepInfo = (stepId: any) => {
 	return (state: iReduxState) => {
 		const step = getSavedSteps(state)[stepId];
-		const selectors = step.payload?.selectors?.length ? step.payload.selectors[0].value : "window";
+		const selectors = step.payload?.selectors?.length ? step.payload.selectors[0].value : null;
 
 		const actionDescriptor = new ActionDescriptor();
 		actionDescriptor.initActionHandlers();

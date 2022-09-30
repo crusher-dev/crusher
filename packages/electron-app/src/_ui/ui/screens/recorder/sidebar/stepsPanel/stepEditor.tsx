@@ -3,7 +3,7 @@ import React from "react";
 import { css } from "@emotion/react";
 import { getSavedSteps, getStepInfo } from "electron-app/src/store/selectors/recorder";
 import { useSelector, useDispatch } from "react-redux";
-import { TextHighlighter, transformStringSelectorsToArray } from "./helper";
+import { TextHighlighter, TextHighlighterText, transformStringSelectorsToArray } from "./helper";
 import { deleteRecordedSteps, updateRecordedStep } from "electron-app/src/store/actions/recorder";
 import { FieldSelectorPicker } from "electron-app/src/_ui/ui/containers/components/sidebar/stepEditor/fields";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
@@ -14,6 +14,7 @@ import { iSelectorInfo } from "@shared/types/selectorInfo";
 import { sendSnackBarEvent } from "electron-app/src/_ui/ui/containers/components/toast";
 import { ResizableInput } from "electron-app/src/_ui/ui/components/ResizableInput";
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
+import { EditableInput } from "electron-app/src/_ui/ui/components/inputs/editableInput";
 
 const limitString = (string, offset = null) => {
 	if(!string) return string;
@@ -162,52 +163,34 @@ const StepName = ({ stepId }) => {
 	const steps = useSelector(getSavedSteps);
 	const step = steps[stepId];
 	const dispatch = useDispatch();
-	const [isEditMode, setIsEditMode] = React.useState(false);
 	const [title, setTitle] = React.useState(stepInfo.name);
-	const titleInputRef = React.useRef(null);
 
-	const updateStepName = () => {
+	const updateStepName = (stepName) => {
 		dispatch(
 			updateRecordedStep(
 				{
 					...step,
-					name: titleInputRef.current.value,
+					name: stepName,
 				},
 				stepId,
 			),
 		);
 	};
 
-	const handleOnChange = (e) => {
+	const handleOnChange = (value) => {
 		// console.log("INptu is", e.target.value);
-		setTitle(e.target.value);
+		setTitle(value);
+		updateStepName(value);
 	};
 
-	const handleOnBlur = () => {
-		updateStepName();
-		setIsEditMode(false);
+	const LabelComponent = () => {
+		return <>{TextHighlighter({ text: title }, true)}</>;
 	};
+
+
 	return (
-		<div css={stepNameCss} onDoubleClick={setIsEditMode.bind(this, true)}>
-			{isEditMode ? (
-				<OnOutsideClick onOutsideClick={handleOnBlur.bind(this)}>
-					<ResizableInput
-						ref={titleInputRef}
-						css={testInputCss(isEditMode, title)}
-						onChange={handleOnChange.bind(this)}
-						onKeyDown={(e) => {
-							if (e.key === "Enter") {
-								handleOnBlur();
-							}
-						}}
-						onBlur={handleOnBlur.bind(this)}
-						disabled={!isEditMode}
-						value={title}
-					/>{" "}
-				</OnOutsideClick>
-			) : (
-				TextHighlighter({ text: title }, true)
-			)}
+		<div css={stepNameCss}>
+			<EditableInput labelComponent={<LabelComponent/> } defaultValue={TextHighlighterText({ text: title }).join(" ")} id={stepId} onChange={handleOnChange.bind(this)} />
 		</div>
 	);
 };

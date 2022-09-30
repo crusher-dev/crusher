@@ -3,70 +3,55 @@ import { css } from "@emotion/react";
 import Input from "@dyson/components/atoms/input/Input";
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
 
-const ResizableInput = React.forwardRef(({ isEditingProp = false, onEditModeChange, selectAllOnDoubleClick = true, className, value, ...props }, ref) => {
-	const [, setWidth] = useState(0);
+const ResizableInput = React.forwardRef(({ isEditingProp = false, onChange, selectAllOnDoubleClick = true, labelComponent = null, className, value, ...props }, ref) => {
 	const [isEditing, setIsEditing] = useState(isEditingProp);
-	const span = useRef();
-
-	useEffect(() => {
-		requestAnimationFrame(() => {
-			setWidth(span?.current?.offsetWidth);
-		});
-	}, [value]);
-
-	// set width when span is set
-	useEffect(() => {
-		if (span?.current) {
-			setWidth(span?.current?.offsetWidth);
-		}
-	}, [span]);
-
-	React.useEffect(() => {
-		if (isEditing) {
-			requestAnimationFrame(() => {
-				ref.current.focus();
-				const totalLength = ref.current.value.length;
-				ref.current.setSelectionRange(selectAllOnDoubleClick ? 0 : totalLength, totalLength);
-			});
-		}
-		onEditModeChange && onEditModeChange(isEditing);
-	}, [isEditing]);
+	const inputRef = useRef();
 
 	React.useEffect(() => {
 		setIsEditing(isEditingProp);
 	}, [isEditingProp]);
 
+	React.useEffect(() => {
+		if (isEditing) {
+			requestAnimationFrame(() => {
+				inputRef.current.focus();
+				const totalLength = inputRef.current.value.length;
+				inputRef.current.setSelectionRange(selectAllOnDoubleClick ? 0 : totalLength, totalLength);
+			});
+		}
+	}, [isEditing]);
+
 	if (!isEditing) {
 		return (
-			<div title="edit name" css={labelCSS} onDoubleClick={setIsEditing.bind(this, true)}>
-				{value}
+			<div title="edit name" ref={inputRef} css={labelCSS} onDoubleClick={setIsEditing.bind(this, true)}>
+				{labelComponent || value}
 			</div>
 		);
 	}
 
 	return (
 		<OnOutsideClick
-			onClick={() => {
+			onOutsideClick={() => {
+				onChange && onChange(inputRef.current?.value || inputRef?.current.innerText);
 				setIsEditing(false);
-				onEditModeChange && onEditModeChange(false);
 			}}
 		>
 			<Input
-				onReturn={() => {
+				onReturn={(value) => {
 					setIsEditing(false);
-					onEditModeChange && onEditModeChange(false);
+					onChange && onChange(value);
 				}}
-				onBlur={() => {
+				onBlur={(e) => {
 					setIsEditing(false);
-					onEditModeChange && onEditModeChange(isEditingProp);
+					onChange && onChange(e.target.value);
 				}}
 				title=""
 				initialValue={value}
 				size="small"
 				className={String(className)}
 				css={inputCss}
-				ref={ref}
 				type="text"
+				ref={inputRef}
 				{...props}
 			/>
 		</OnOutsideClick>

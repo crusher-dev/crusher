@@ -10,6 +10,9 @@ import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsi
 import { RightClickMenu } from "@dyson/components/molecules/RightClick/RightClick";
 import { deleteRecordedSteps, setStatusBarVisibility } from "electron-app/src/store/actions/recorder";
 import { performVerifyTest } from "electron-app/src/_ui/commands/perform";
+import { useAtom } from "jotai";
+import { stepHoverAtom } from "electron-app/src/_ui/store/jotai/steps";
+import { editInputAtom } from "electron-app/src/_ui/store/jotai/testsPage";
 
 interface IProps {
 	className?: string;
@@ -23,6 +26,8 @@ const StepsPanel = ({ className }: IProps) => {
 	const recordedSteps = useSelector(getSavedSteps);
 	const isStatusBarVisible = useSelector(getIsStatusBarVisible);
 	const store = useStore();
+	const [stepHover, setStepHover] = useAtom(stepHoverAtom);
+	const [_, setCurrentEditInput] = useAtom(editInputAtom);
 
 	const toggleStatusBar = React.useCallback(() => {
 		store.dispatch(setStatusBarVisibility(!isStatusBarVisible));
@@ -70,6 +75,10 @@ const StepsPanel = ({ className }: IProps) => {
 	const handleCallback = React.useCallback(
 		(id) => {
 			switch (id) {
+				case "rename":
+					setStepHover(selectedList[0]);
+					setCurrentEditInput(`${selectedList[0]}-stepName`);
+					break;
 				case "delete":
 					store.dispatch(deleteRecordedSteps(selectedList));
 					break;

@@ -9,7 +9,7 @@ import { Conditional } from "dyson/src/components/layouts";
 
 import { Snackbar } from "@ui/containers/common/Snackbar";
 import { LoadingScreen } from "@ui/layout/LoadingScreen";
-import { loadGTM, loadCrisp, loadGA, loadSegment, loadUserLeap } from "@utils/common/scriptUtils";
+import { loadGTM, loadGA, loadSegment } from "@utils/common/scriptUtils";
 
 import { useBasicSEO } from "/src/hooks/seo";
 import { usePageSegmentAnalytics } from "/src/hooks/analytics";

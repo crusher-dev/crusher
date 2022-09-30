@@ -1,5 +1,8 @@
 {
-	"presets": ["next/babel", "@emotion/babel-preset-css-prop"],
+	"presets": [
+		"next/babel",
+		"@emotion/babel-preset-css-prop"
+	],
 	"plugins": [
 		[
 			"@emotion",
@@ -11,5 +14,6 @@
 			}
 		],
 		"inline-react-svg"
-	]
+	],
+	"compact": false,
 }

@@ -1,14 +1,11 @@
 const withBundleAnalyzer = require("@next/bundle-analyzer")({
 	enabled: process.env.ANALYZE === "true",
 });
-const DuplicatePackageCheckerPlugin = require("duplicate-package-checker-webpack-plugin");
 
 const withImages = require("next-images");
 const path = require("path");
 
-const IS_PRODUCTION = process.env.NODE_ENV === "production";
 const CopyPlugin = require("copy-webpack-plugin");
-const withPWA = require("next-pwa");
 
 module.exports = withImages(
 	withBundleAnalyzer({
@@ -19,12 +16,6 @@ module.exports = withImages(
 		},
 		webpack: function (config, { defaultLoaders }) {
 			const resolvedBaseUrl = path.resolve(config.context, "../");
-			if (IS_PRODUCTION) {
-				config.module.rules.filter(({ loader }) => loader === "babel-loader").map((l) => (l.options.cacheDirectory = false));
-
-				config.plugins.push(new DuplicatePackageCheckerPlugin());
-			}
-
 			config.module.rules = [
 				...config.module.rules,
 				{
@@ -73,6 +64,6 @@ module.exports = withImages(
 			// your currentProject has ESLint errors.
 			ignoreDuringBuilds: true,
 		},
-		productionBrowserSourceMaps: true,
+		productionBrowserSourceMaps: false,
 	}),
 );

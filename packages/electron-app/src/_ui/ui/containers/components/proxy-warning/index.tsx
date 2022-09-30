@@ -1,16 +1,16 @@
 import React from "react";
 import { css } from "@emotion/react";
 import { ConnectivityWarningIcon, LoadingIconV2, PlayV2Icon } from "../../../../constants/old_icons";
-import {Link} from "electron-app/src/_ui/ui/components/Link";
+import { Link } from "electron-app/src/_ui/ui/components/Link";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { shell } from "electron";
-import {performRunDraftTest, turnOnProxy} from "../../../../commands/perform";
+import { performRunDraftTest, turnOnProxy } from "../../../../commands/perform";
 import { getCurrentSelectedProjct, getProxyState } from "electron-app/src/store/selectors/app";
 import { useSelector, useStore } from "react-redux";
 
 const ReadDocsButton = ({ title, className, onClick }) => {
 	return (
-        (<Button
+		(<Button
 			id={"verify-save-test"}
 			onClick={(e) => {
 				e.preventDefault();
@@ -22,9 +22,9 @@ const ReadDocsButton = ({ title, className, onClick }) => {
 			size="x-small"
 			css={saveButtonStyle}
 		>
-            <span>{title}</span>
-        </Button>)
-    );
+			<span>{title}</span>
+		</Button>)
+	);
 };
 
 const saveButtonStyle = css`
@@ -117,7 +117,7 @@ const ProxyWarningContainer = ({ exitCallback, testId, startUrl }) => {
 				</Link>
 			</div>
 			<div css={waitingTextStyle}>
-				<Link onClick={isRetrying ? undefined : handleRetry}>{isRetrying ? (<span css={css`display: flex; align-items:center;`}>Retrying <LoadingIconV2 css={css`margin-left: 8rem; height: 18rem;`}/></span>) : "Retry"}</Link>
+				<Link onClick={isRetrying ? undefined : handleRetry}>{isRetrying ? (<span css={css`display: flex; align-items:center;`}>Retrying <LoadingIconV2 css={css`margin-left: 8rem; height: 18rem;`} /></span>) : "Retry"}</Link>
 			</div>
 			<div css={watch} onClick={handleOpenHelpVideo}>
 				<PlayV2Icon /> Watch video

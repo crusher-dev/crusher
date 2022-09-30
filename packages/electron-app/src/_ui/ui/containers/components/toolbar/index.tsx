@@ -1,11 +1,11 @@
 import React, { memo, useContext } from "react";
 import { css } from "@emotion/react";
 import { Conditional } from "@dyson/components/layouts";
-import {DroppdownIconV2, LoadingIconV2, RedDotIcon, SettingsIcon} from "../../../../constants/old_icons";
+import { DroppdownIconV2, LoadingIconV2, RedDotIcon, SettingsIcon } from "../../../../constants/old_icons";
 import { useDispatch, batch, useSelector, useStore } from "react-redux";
 import { devices } from "../../../../../devices";
 import { getRecorderInfo, getRecorderInfoUrl, getRecorderState, getSavedSteps, isTestVerified } from "electron-app/src/store/selectors/recorder";
-import {goFullScreen, performNavigation, performSteps, performVerifyTest, saveTest, updateTest} from "../../../../commands/perform";
+import { goFullScreen, performNavigation, performSteps, performVerifyTest, saveTest, updateTest } from "../../../../commands/perform";
 import { addHttpToURLIfNotThere, isValidHttpUrl } from "../../../../../utils";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 import { getAppEditingSessionMeta, getProxyState, shouldShowOnboardingOverlay } from "electron-app/src/store/selectors/app";
@@ -15,7 +15,7 @@ import { setShowShouldOnboardingOverlay } from "electron-app/src/store/actions/a
 import { sendSnackBarEvent } from "../toast";
 import { Button } from "@dyson/components/atoms"
 import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { MenuDropdown } from "../../../components/menuDropdownComponent";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { ButtonDropdown } from "electron-app/src/_ui/ui/components/buttonDropdown";
@@ -62,17 +62,17 @@ const UPDATE_TEST_ACTION_DROPDOWN_OPTIONS = [
 ];
 
 const SaveVerifyButton = ({ isTestVerificationComplete }) => {
-    const navigate = useNavigate();
-    const editingSessionMeta = useSelector(getAppEditingSessionMeta);
-    const {
-        isOpen,
-        setIsOpen
-    } = useTour();
+	const navigate = useNavigate();
+	const editingSessionMeta = useSelector(getAppEditingSessionMeta);
+	const {
+		isOpen,
+		setIsOpen
+	} = useTour();
 
-    const dispatch = useDispatch();
-    const store = useStore();
+	const dispatch = useDispatch();
+	const store = useStore();
 
-    const handleProxyWarning = React.useCallback(() => {
+	const handleProxyWarning = React.useCallback(() => {
 		const steps = getSavedSteps(store.getState());
 		const navigationStep = steps.find((step) => step.type === ActionsInTestEnum.NAVIGATE_URL);
 		const startNavigationUrl = navigationStep?.payload?.meta ? navigationStep.payload.meta.value : "";
@@ -87,7 +87,7 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 		return { shouldShow: false, startUrl };
 	}, []);
 
-    const verifyTest = (autoSaveType: "UPDATE" | "SAVE", shouldAutoSave: boolean = false) => {
+	const verifyTest = (autoSaveType: "UPDATE" | "SAVE", shouldAutoSave: boolean = false) => {
 		localStorage.setItem("app.showShouldOnboardingOverlay", "false");
 		dispatch(setShowShouldOnboardingOverlay(false));
 		const recorderState = getRecorderState(store.getState());
@@ -119,7 +119,7 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 		}
 	};
 
-    const saveTestToCloud = () => {
+	const saveTestToCloud = () => {
 		if (isOpen) {
 			setIsOpen(false);
 		}
@@ -145,7 +145,7 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 			});
 	};
 
-    const editTestInCloud = () => {
+	const editTestInCloud = () => {
 		if (isOpen) {
 			setIsOpen(false);
 		}
@@ -157,36 +157,36 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 		});
 	};
 
-    const handleCallback = React.useCallback(async (actionType: ITestActionEnum) => {
+	const handleCallback = React.useCallback(async (actionType: ITestActionEnum) => {
 		switch (actionType) {
 			case ITestActionEnum.UPDATE:
-                await updateTest().then(() => {
+				await updateTest().then(() => {
 					navigate("/");
 					goFullScreen(false);
 				});
-                sendSnackBarEvent({ type: "success", message: "Updating test" });
-                break;
+				sendSnackBarEvent({ type: "success", message: "Updating test" });
+				break;
 			case ITestActionEnum.SAVE:
-                await saveTestToCloud();
-                break;
+				await saveTestToCloud();
+				break;
 			case ITestActionEnum.VERIFY_UPDATE:
-                if (isTestVerificationComplete) {
+				if (isTestVerificationComplete) {
 					editTestInCloud();
 				} else {
 					verifyTest("UPDATE", true);
 				}
-                break;
+				break;
 			case ITestActionEnum.VERIFY_SAVE:
-                if (isTestVerificationComplete) {
+				if (isTestVerificationComplete) {
 					saveTestToCloud();
 				} else {
 					verifyTest("SAVE", true);
 				}
-                break;
+				break;
 		}
 	}, [isTestVerificationComplete]);
 
-    return editingSessionMeta ? (
+	return editingSessionMeta ? (
 		<ButtonDropdown
 			dropdownCss={buttonDropdownCss}
 			wrapperCss={css`background: #B341F9; border-radius: 8rem; .dropdown-icon { background: rgba(0, 0, 0, 0.2) !important; }`}
@@ -226,7 +226,7 @@ const buttonDropdownMainButtonCss = css`
 SaveVerifyButton.whyDidYouRender = true;
 
 const StepActionMenu = ({
-    callback
+	callback
 }) => {
 	const ActionItem = ({ title, id, callback }) => {
 		return (
@@ -258,38 +258,38 @@ const dropdownItemTextStyle = css`
 `;
 
 const Toolbar = (props: any) => {
-    const [url, setUrl] = React.useState("" || null);
-    const [selectedDevice] = React.useState([recorderDevices[0]]);
-    const [showSettingsModal, setShowSettingsModal] = React.useState(false);
-    const [urlInputError, setUrlInputError] = React.useState({ value: false, message: "" });
-    const [isEditingTestName, setIsEditingTestName] = React.useState(false);
-    const [testName, setTestName] = React.useState(generateRandomTestName());
+	const [url, setUrl] = React.useState("" || null);
+	const [selectedDevice] = React.useState([recorderDevices[0]]);
+	const [showSettingsModal, setShowSettingsModal] = React.useState(false);
+	const [urlInputError, setUrlInputError] = React.useState({ value: false, message: "" });
+	const [isEditingTestName, setIsEditingTestName] = React.useState(false);
+	const [testName, setTestName] = React.useState(generateRandomTestName());
 
-    const urlInputRef = React.useRef<HTMLInputElement>(null);
-    const recorderInfoUrl = useSelector(getRecorderInfoUrl);
-    const recorderInfo = useSelector(getRecorderInfo);
-    const recorderState = useSelector(getRecorderState);
-    const isTestVerificationComplete = useSelector(isTestVerified);
+	const urlInputRef = React.useRef<HTMLInputElement>(null);
+	const recorderInfoUrl = useSelector(getRecorderInfoUrl);
+	const recorderInfo = useSelector(getRecorderInfo);
+	const recorderState = useSelector(getRecorderState);
+	const isTestVerificationComplete = useSelector(isTestVerified);
 
-    const dispatch = useDispatch();
-    const store = useStore();
-    const tourCont = useContext(TourContext);
+	const dispatch = useDispatch();
+	const store = useStore();
+	const tourCont = useContext(TourContext);
 
-    React.useEffect(() => {
+	React.useEffect(() => {
 		if (recorderInfoUrl.url !== url) {
 			setUrl(recorderInfoUrl.url);
 		}
 	}, [recorderInfoUrl.url]);
 
-    const handleUrlReturn = React.useCallback(() => {
-        const {
-            setCurrentStep
-        } = tourCont;
+	const handleUrlReturn = React.useCallback(() => {
+		const {
+			setCurrentStep
+		} = tourCont;
 
-        const recorderInfo = getRecorderInfo(store.getState());
-        const isOnboardingOn = shouldShowOnboardingOverlay(store.getState());
+		const recorderInfo = getRecorderInfo(store.getState());
+		const isOnboardingOn = shouldShowOnboardingOverlay(store.getState());
 
-        if (urlInputRef.current?.value) {
+		if (urlInputRef.current?.value) {
 			const validUrl = addHttpToURLIfNotThere(urlInputRef.current?.value);
 			if (!isValidHttpUrl(validUrl)) {
 				setUrlInputError({ value: true, message: "Please enter a valid URL" });
@@ -354,16 +354,16 @@ const Toolbar = (props: any) => {
 			setUrlInputError({ value: true, message: "" });
 			urlInputRef.current.focus();
 		}
-    }, [selectedDevice]);
+	}, [selectedDevice]);
 
-    const isRecorderInInitialState = recorderState.type === TRecorderState.BOOTING;
+	const isRecorderInInitialState = recorderState.type === TRecorderState.BOOTING;
 
-    const handleCloseSettingsModal = () => {
+	const handleCloseSettingsModal = () => {
 		setShowSettingsModal(false);
 	};
 
-    const isTestBeingVerified = recorderState.type === TRecorderState.PERFORMING_ACTIONS;
-    const RightIconComponent = React.useMemo(
+	const isTestBeingVerified = recorderState.type === TRecorderState.PERFORMING_ACTIONS;
+	const RightIconComponent = React.useMemo(
 		() => {
 
 			return (
@@ -383,13 +383,13 @@ const Toolbar = (props: any) => {
 		[selectedDevice, recorderDevices],
 	);
 
-    const handleMenuCallback = React.useCallback((value, isNavigating) => {
+	const handleMenuCallback = React.useCallback((value, isNavigating) => {
 		if (isNavigating) {
 			goFullScreen(false);
 		}
 	}, []);
 
-    const handleOutsideClick = React.useCallback(() => {
+	const handleOutsideClick = React.useCallback(() => {
 		if ((document.querySelector(".testName") as HTMLInputElement)) {
 			setTestName((document.querySelector(".testName") as HTMLInputElement).value);
 			setIsEditingTestName(false);
@@ -397,14 +397,14 @@ const Toolbar = (props: any) => {
 		// Save the new test name somewhere
 	}, [isEditingTestName]);
 
-    const handleKeyPress = React.useCallback((e) => {
+	const handleKeyPress = React.useCallback((e) => {
 		if (e.keyCode === 13) {
 			setTestName((document.querySelector(".testName") as HTMLInputElement).value);
 			setIsEditingTestName(false);
 		}
 	});
 
-    const handleTestNameClick = React.useCallback(() => {
+	const handleTestNameClick = React.useCallback(() => {
 		setIsEditingTestName(true);
 		setTimeout(() => {
 			document.querySelector(".testName").focus();
@@ -413,7 +413,7 @@ const Toolbar = (props: any) => {
 
 	}, []);
 
-    return (
+	return (
 		<div css={containerStyle} {...props}>
 			<div css={css`display: flex; align-items: center;`}>
 				<MenuDropdown

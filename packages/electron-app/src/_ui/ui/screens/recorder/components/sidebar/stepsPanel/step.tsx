@@ -1,8 +1,8 @@
 import React from "react";
 import { css } from "@emotion/react";
 import { getStepInfo } from "electron-app/src/store/selectors/recorder";
-import {useSelector} from "react-redux";
-import {GreenCheckboxIcon, LoadingIcon, PointerArrowIcon} from "electron-app/src/_ui/constants/old_icons";
+import { useSelector } from "react-redux";
+import { GreenCheckboxIcon, LoadingIcon, PointerArrowIcon } from "electron-app/src/_ui/constants/old_icons";
 import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
 import { TextHighlighter } from "./helper";
 import { HoverCard } from "@dyson/components/atoms/tooltip/Tooltip1";

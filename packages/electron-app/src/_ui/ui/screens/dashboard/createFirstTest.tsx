@@ -49,7 +49,7 @@ const DocsGoBackActionBar = ({ buttonTitle, buttonCallback }) => {
 };
 
 /* ======== DocsGoBackActionBar.styles ======== */
-const actionsContainerCss  = css`
+const actionsContainerCss = css`
     display: flex;
     margin-top: 20rem;
     justify-content: center;

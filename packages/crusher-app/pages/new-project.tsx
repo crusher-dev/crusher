@@ -1,11 +1,12 @@
 import React from "react";
 
-import { usePageTitle } from "../src/hooks/seo";
 import NewProject from "@ui/containers/auth/newProject";
+
+import { usePageTitle } from "../src/hooks/seo";
+
 function Dashboard() {
 	usePageTitle("New project");
 	return <NewProject />;
 }
-
 
 export default Dashboard;

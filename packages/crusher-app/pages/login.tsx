@@ -1,5 +1,7 @@
 import React from "react";
+
 import LoginContainer from "@ui/containers/auth/login";
+
 import { usePageTitle } from "../src/hooks/seo";
 
 function LoginPage() {

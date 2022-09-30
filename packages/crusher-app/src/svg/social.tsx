@@ -11,14 +11,7 @@ export function GithubSVG(props) {
 
 export function GithubSquare(props) {
 	return (
-		<svg
-			width={14}
-			height={14}
-			fill="none"
-			viewBox="0 0 14 14"
-			xmlns="http://www.w3.org/2000/svg"
-			{...props}
-		>
+		<svg width={14} height={14} fill="none" viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<path
 				fillRule="evenodd"
 				clipRule="evenodd"
@@ -28,7 +21,6 @@ export function GithubSquare(props) {
 		</svg>
 	);
 }
-
 
 export function GoogleSVG(props) {
 	return (

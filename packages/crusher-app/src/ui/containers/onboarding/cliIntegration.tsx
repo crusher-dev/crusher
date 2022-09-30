@@ -1,7 +1,14 @@
-import { Card } from "@components/common/card";
-import { getTestListAPI } from "@constants/api";
-import { USER_META_KEYS } from "@constants/USER";
 import { css } from "@emotion/react";
+import Link from "next/link";
+import React from "react";
+
+import { useAtom } from "jotai";
+
+import { Button, Input, Text } from "dyson/src/components/atoms";
+
+import { Card } from "@components/common/card";
+import { USER_META_KEYS } from "@constants/USER";
+import { getTestListAPI } from "@constants/api";
 import { usePageTitle } from "@hooks/seo";
 import { currentProject } from "@store/atoms/global/project";
 import { onboardingStepAtom, OnboardingStepEnum } from "@store/atoms/pages/onboarding";
@@ -12,10 +19,6 @@ import { RequestMethod } from "@types/RequestOptions";
 import { backendRequest } from "@utils/common/backendRequest";
 import { sendSnackBarEvent } from "@utils/common/notify";
 import { resolvePathToBackendURI } from "@utils/common/url";
-import { Button, Input, Text } from "dyson/src/components/atoms";
-import { useAtom } from "jotai";
-import Link from "next/link";
-import React from "react";
 
 const CopyCommandInput = ({ command }: { command: string }) => {
 	const inputRef = React.useRef<HTMLInputElement>(null);

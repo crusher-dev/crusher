@@ -1,9 +1,9 @@
+import { css } from "@emotion/react";
 import React from "react";
 
-import { css } from "@emotion/react";
+import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 
 import NewProjectContainer from "./components/NewProjecContainer";
-import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 
 function TerminalIcon(props) {
 	return (

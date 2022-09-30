@@ -4,10 +4,10 @@ function getLocationOrigin() {
 
 export const resolvePathToBackendURI = (endpoint: string) => {
 	// If someone's using gitpod, then use dynamic host
-	const isCrusherBackend = process.env.NEXT_PUBLIC_INTERNAL_BACKEND_URL.includes("crusher.dev")
+	const isCrusherBackend = process.env.NEXT_PUBLIC_INTERNAL_BACKEND_URL.includes("crusher.dev");
 	const isGitpodDevEnv = typeof window !== "undefined" && window.location.origin.includes("gitpod");
-	
-	if (!isCrusherBackend && isGitpodDevEnv ) {
+
+	if (!isCrusherBackend && isGitpodDevEnv) {
 		return getPathWithHost(`${getLocationOrigin()}/server`, endpoint);
 	}
 

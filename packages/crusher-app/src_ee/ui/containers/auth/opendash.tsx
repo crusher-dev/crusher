@@ -1,9 +1,10 @@
 import { css } from "@emotion/react";
-import { Heading } from "dyson/src/components/atoms/heading/Heading";
-import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
-import { Text } from "dyson/src/components/atoms/text/Text";
-import { Button } from "dyson/src/components/atoms";
 import router from "next/router";
+
+import { Button } from "dyson/src/components/atoms";
+import { Heading } from "dyson/src/components/atoms/heading/Heading";
+import { Text } from "dyson/src/components/atoms/text/Text";
+import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 
 const Github = () => (
 	<svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">

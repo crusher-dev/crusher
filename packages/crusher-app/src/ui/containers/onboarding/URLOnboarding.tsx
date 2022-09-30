@@ -1,5 +1,13 @@
-import { getTestListAPI } from "@constants/api";
 import { css } from "@emotion/react";
+import React from "react";
+
+import { useAtom } from "jotai";
+
+import { Button, Input } from "dyson/src/components/atoms";
+import { Conditional } from "dyson/src/components/layouts";
+
+import { getTestListAPI } from "@constants/api";
+import { addHttpToURLIfNotThere, checkValidURL } from "@crusher-shared/utils/url";
 import { usePageTitle } from "@hooks/seo";
 import { appStateAtom } from "@store/atoms/global/appState";
 import { currentProject } from "@store/atoms/global/project";
@@ -8,22 +16,17 @@ import { LoadingSVG } from "@svg/dashboard";
 import { RequestMethod } from "@types/RequestOptions";
 import { backendRequest } from "@utils/common/backendRequest";
 import { resolvePathToBackendURI } from "@utils/common/url";
-import {Button, Input} from "dyson/src/components/atoms";
-import { Conditional } from "dyson/src/components/layouts";
-import { useAtom } from "jotai";
-import React from "react";
-import { addHttpToURLIfNotThere, checkValidURL } from "@crusher-shared/utils/url";
 
 const URLOnboarding = () => {
-    const [, setOnboardingStep] = useAtom(onboardingStepAtom);
-    const [project] = useAtom(currentProject);
-    const [, setCommnads] = React.useState(["", ""]);
-    const [websiteUrl, setWebsiteUrl] = React.useState(null);
-    const [isCreatingTest, setIsCreatingTest] = React.useState(false);
-    const [urlError, setUrlError] = React.useState(null);
-    const [{ selectedProjectId }] = useAtom(appStateAtom);
+	const [, setOnboardingStep] = useAtom(onboardingStepAtom);
+	const [project] = useAtom(currentProject);
+	const [, setCommnads] = React.useState(["", ""]);
+	const [websiteUrl, setWebsiteUrl] = React.useState(null);
+	const [isCreatingTest, setIsCreatingTest] = React.useState(false);
+	const [urlError, setUrlError] = React.useState(null);
+	const [{ selectedProjectId }] = useAtom(appStateAtom);
 
-    React.useEffect(() => {
+	React.useEffect(() => {
 		backendRequest(resolvePathToBackendURI("/integrations/cli/commands"), {
 			method: RequestMethod.GET,
 		}).then((res) => {
@@ -41,7 +44,7 @@ const URLOnboarding = () => {
 		}, 1000);
 	}, []);
 
-    const handleUrlSubmit = () => {
+	const handleUrlSubmit = () => {
 		if (!websiteUrl) {
 			setUrlError("Please enter a valid URL");
 			return;
@@ -70,9 +73,9 @@ const URLOnboarding = () => {
 			});
 	};
 
-    usePageTitle("Create & Run your first test");
+	usePageTitle("Create & Run your first test");
 
-    return (
+	return (
 		<>
 			<div
 				css={css`

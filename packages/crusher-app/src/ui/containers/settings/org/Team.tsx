@@ -1,6 +1,8 @@
 import { css } from "@emotion/react";
 import { useState } from "react";
 
+import useSWR from "swr";
+
 import { Card } from "../../../../../../dyson/src/components/layouts/Card/Card";
 import { Button } from "dyson/src/components/atoms";
 import { Heading } from "dyson/src/components/atoms/heading/Heading";
@@ -9,7 +11,6 @@ import { Conditional } from "dyson/src/components/layouts";
 
 import InviteMember from "@ui/containers/dashboard/InviteMember";
 import { SettingsLayout } from "@ui/layout/SettingsBase";
-import useSWR from "swr";
 import { resolvePathToBackendURI } from "@utils/common/url";
 
 export const TeamMembers = () => {

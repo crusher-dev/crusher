@@ -1,4 +1,5 @@
 import { resolvePathToBackendURI } from "@utils/common/url";
+
 import * as path from "path";
 
 const CLIENT_ID = process.env.NEXT_PUBLIC_GITHUB_APP_CLIENT_ID;
@@ -26,11 +27,11 @@ const getGithubOAuthURLLegacy = (alreadyAuthorized = false) => {
 
 export const getGithubLoginURL = (inviteType, inviteCode, sessionInviteCode) => {
 	const url = new URL(resolvePathToBackendURI("/users/actions/auth.github"));
-	if(inviteCode && inviteType) {
+	if (inviteCode && inviteType) {
 		url.searchParams.append("inviteCode", inviteCode);
 		url.searchParams.append("inviteType", inviteType);
 	}
-	if(sessionInviteCode) {
+	if (sessionInviteCode) {
 		url.searchParams.append("sessionInviteCode", sessionInviteCode);
 	}
 	return url.toString();

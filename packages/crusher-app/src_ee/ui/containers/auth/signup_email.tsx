@@ -1,20 +1,23 @@
 import { css } from "@emotion/react";
-import { Heading } from "dyson/src/components/atoms/heading/Heading";
-import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
-import { Text } from "dyson/src/components/atoms/text/Text";
 import { useRouter } from "next/router";
 import React, { useCallback, useState } from "react";
-import { loadUserDataAndRedirect } from "@hooks/user";
-import { validateEmail, validatePassword, validateName, validateSessionInviteCode } from "@utils/common/validationUtils";
-import { SubmitButton } from "./components/SubmitButton";
-import { FormInput } from "./components/FormInput";
 
+import { useAtom } from "jotai";
+
+import { Heading } from "dyson/src/components/atoms/heading/Heading";
+import { Text } from "dyson/src/components/atoms/text/Text";
+import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
+
+import { loadUserDataAndRedirect } from "@hooks/user";
+import { inviteCodeUserKeyAtom } from "@store/atoms/global/inviteCode";
+import { RequestMethod } from "@types/RequestOptions";
 import { LoginNavBar } from "@ui/containers/common/login/navbar";
 import { backendRequest } from "@utils/common/backendRequest";
-import { RequestMethod } from "@types/RequestOptions";
-import { inviteCodeUserKeyAtom } from "@store/atoms/global/inviteCode";
-import { useAtom } from "jotai";
+import { validateEmail, validatePassword, validateName, validateSessionInviteCode } from "@utils/common/validationUtils";
+
 import BaseContainer from "./components/BaseContainer";
+import { FormInput } from "./components/FormInput";
+import { SubmitButton } from "./components/SubmitButton";
 
 const registerUser = (
 	name: string,

@@ -12,16 +12,15 @@ import { Conditional } from "dyson/src/components/layouts";
 import { ConditionalLink } from "@components/common/ConditionalLink";
 import { getBuildsList } from "@constants/api";
 import { IProjectBuildListItem, IProjectBuildListResponse } from "@crusher-shared/types/response/iProjectBuildListResponse";
+import { useProjectDetails } from "@hooks/common";
 import { ClockIconSVG, CommentIconSVG, DangerIconSVG } from "@svg/builds";
 import { TestStatusSVG } from "@svg/testReport";
 import { getStringFromDuration, timeSince } from "@utils/common/dateTimeUtils";
-
 
 import { buildFiltersAtom } from "../../../store/atoms/pages/buildPage";
 import { SearchFilterBar } from "../common/searchFilterBar";
 
 const EmptyList = dynamic(() => import("@ui/components/common/EmptyList"));
-import { useProjectDetails } from "@hooks/common";
 
 interface IBuildItemCardProps {
 	info: IProjectBuildListItem;
@@ -29,7 +28,7 @@ interface IBuildItemCardProps {
 
 function BuildItemCard(props: IBuildItemCardProps) {
 	const { info }: { info: IProjectBuildListItem } = props;
-	const { currentProject } = useProjectDetails()
+	const { currentProject } = useProjectDetails();
 
 	const { id, createdAt, tests, status, reviewMessage, commentCount, triggeredBy, duration } = info;
 
@@ -100,8 +99,7 @@ const noCommentsStyle = css`
 `;
 
 function BuildSearchableList() {
-
-	const { currentProject: project } = useProjectDetails()
+	const { currentProject: project } = useProjectDetails();
 	const { query } = useRouter();
 	const [filters, setFilters] = useAtom(buildFiltersAtom);
 	const { data } = useSWR<IProjectBuildListResponse>(getBuildsList(project.id, query.trigger, filters), { suspense: true, refreshInterval: 10000 });

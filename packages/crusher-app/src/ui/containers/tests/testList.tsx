@@ -1,40 +1,38 @@
 import { css } from "@emotion/react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useState, useMemo, useEffect, useCallback } from "react";
 
 import { useAtom } from "jotai";
 import useSWR, { mutate } from "swr";
 
+import { LinkBlock } from "dyson/src/components/atoms/Link/Link";
+import { Tooltip } from "dyson/src/components/atoms/tooltip/Tooltip";
 import { Conditional } from "dyson/src/components/layouts";
 
-import {createFolderAPI, getTestListAPI} from "@constants/api";
+import { PROJECT_META_KEYS, USER_META_KEYS } from "@constants/USER";
+import { createFolderAPI, getTestListAPI } from "@constants/api";
+import { BuildTriggerEnum } from "@crusher-shared/types/response/iProjectBuildListResponse";
 import { IProjectTestsListResponse, IProjectTestItem } from "@crusher-shared/types/response/iProjectTestsListResponse";
+import { useProjectDetails } from "@hooks/common";
+import { tempTestTypeAtom } from "@store/atoms/global/temp/tempTestType";
+import { tempTestUpdateIdAtom } from "@store/atoms/global/temp/tempTestUpdateId";
+import { testFiltersAtom } from "@store/atoms/pages/testPage";
+import { updateMeta } from "@store/mutators/metaData";
+import { PlaySVG } from "@svg/dashboard";
 import { TestStatusSVG } from "@svg/testReport";
-import { backendRequest } from "@utils/common/backendRequest";
+import { EditIcon, Folder, TestIcon } from "@svg/tests";
+import CreateTestPrompt from "@ui/containers/tests/CreateTestPrompt";
 import { getBoolean } from "@utils/common";
+import { backendRequest } from "@utils/common/backendRequest";
 import { sendSnackBarEvent } from "@utils/common/notify";
+import { handleTestRun } from "@utils/core/testUtils";
 
 import { appStateAtom } from "../../../store/atoms/global/appState";
 import { tempTestAtom } from "../../../store/atoms/global/temp/tempTestId";
 import { tempTestNameAtom } from "../../../store/atoms/global/temp/tempTestName";
-
 import { RequestMethod } from "../../../types/RequestOptions";
-import { useRouter } from "next/router";
-import { testFiltersAtom } from "@store/atoms/pages/testPage";
-import { tempTestTypeAtom } from "@store/atoms/global/temp/tempTestType";
-import { tempTestUpdateIdAtom } from "@store/atoms/global/temp/tempTestUpdateId";
-import { EditIcon, Folder, TestIcon } from "@svg/tests";
-import { PlaySVG } from "@svg/dashboard";
-
-import { LinkBlock } from "dyson/src/components/atoms/Link/Link";
-import { updateMeta } from "@store/mutators/metaData";
-import { handleTestRun } from "@utils/core/testUtils";
-import { PROJECT_META_KEYS, USER_META_KEYS } from "@constants/USER";
-import { BuildTriggerEnum } from "@crusher-shared/types/response/iProjectBuildListResponse";
-import { Tooltip } from "dyson/src/components/atoms/tooltip/Tooltip";
-import CreateTestPrompt from "@ui/containers/tests/CreateTestPrompt";
-import { useProjectDetails } from "@hooks/common";
 
 interface IBuildItemCardProps {
 	id: number;
@@ -67,19 +65,9 @@ const updateTest = (tempTestId: string, mainTestId: string) => {
 };
 
 function TestCard(props: IBuildItemCardProps) {
-    const {
-        testData,
-        isRoot
-    } = props;
-    const {
-        testName,
-        isPassing,
-        id,
-        firstRunCompleted,
-        draftBuildId,
-        tags
-    } = testData;
-    const statusIcon = getBoolean(isPassing) ? (
+	const { testData, isRoot } = props;
+	const { testName, isPassing, id, firstRunCompleted, draftBuildId, tags } = testData;
+	const statusIcon = getBoolean(isPassing) ? (
 		<TestStatusSVG type={"PASSED"} height={"16rem"} />
 	) : (
 		<TestStatusSVG
@@ -91,9 +79,9 @@ function TestCard(props: IBuildItemCardProps) {
 		/>
 	);
 
-    const [showEditBox, setShowEditBox] = useState(false);
+	const [showEditBox, setShowEditBox] = useState(false);
 
-    return (
+	return (
 		<a href={`crusher://replay-test?testId=${id}`}>
 			<div
 				css={css`
@@ -163,7 +151,7 @@ function TestCard(props: IBuildItemCardProps) {
 function FolderItem(props: { folder: any; id: number }) {
 	const [isOpen, setIsOpen] = useState(false);
 	const [showEditBox, setShowEditBox] = useState(false);
-	const { currentProject: project } = useProjectDetails()
+	const { currentProject: project } = useProjectDetails();
 	const router = useRouter();
 	const [{ selectedProjectId }] = useAtom(appStateAtom);
 	const [, updateMetaData] = useAtom(updateMeta);
@@ -307,7 +295,7 @@ const folderBlock = css`
 	}
 `;
 function FolderList() {
-	const { currentProject: project } = useProjectDetails()
+	const { currentProject: project } = useProjectDetails();
 	const [filters] = useAtom(testFiltersAtom);
 	const [newTestCreated] = useState(false);
 	const { data } = useSWR<IProjectTestsListResponse>(getTestListAPI(project.id, filters), {
@@ -433,7 +421,7 @@ const wrapperCSS = css`
 `;
 
 function TestSearchableList() {
-	const { currentProject: project } = useProjectDetails()
+	const { currentProject: project } = useProjectDetails();
 	const [{ selectedProjectId }] = useAtom(appStateAtom);
 	const [tempTestId, setTempTest] = useAtom(tempTestAtom);
 	const [tempTestName, setTempTestName] = useAtom(tempTestNameAtom);

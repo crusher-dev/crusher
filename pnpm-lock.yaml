@@ -233,6 +233,7 @@ importers:
       perfect-scrollbar: ^1.5.0
       prettier: ^2.3.2
       prettier-plugin-tailwind: ^2.2.12
+      prettier-plugin-tailwindcss: ^0.1.13
       react: ^18.2.0
       react-avatar: ^3.9.7
       react-dom: 18.2.0
@@ -320,6 +321,7 @@ importers:
       next-transpile-modules: 6.4.1
       prettier: 2.3.2
       prettier-plugin-tailwind: 2.2.12_oxaym2ms6qfncwedb32pv23thq
+      prettier-plugin-tailwindcss: 0.1.13_prettier@2.3.2
       shelljs: 0.8.4_twnfxsg5hhjhrs4amdtgtidara
       tailwindcss: 1.9.6
       ts-jest: 27.1.3_k63pjaznknsshr3t2t7o2njo7e
@@ -26159,6 +26161,15 @@ packages:
       prettier: 2.3.2
       tailwind-classes-sorter: 0.2.5
       tailwindcss: 1.9.6
+    dev: true
+
+  /prettier-plugin-tailwindcss/0.1.13_prettier@2.3.2:
+    resolution: {integrity: sha512-/EKQURUrxLu66CMUg4+1LwGdxnz8of7IDvrSLqEtDqhLH61SAlNNUSr90UTvZaemujgl3OH/VHg+fyGltrNixw==}
+    engines: {node: '>=12.17.0'}
+    peerDependencies:
+      prettier: '>=2.2.0'
+    dependencies:
+      prettier: 2.3.2
     dev: true
 
   /prettier/2.2.1:

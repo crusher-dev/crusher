@@ -1,20 +1,22 @@
 import { css } from "@emotion/react";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useMemo, useState } from "react";
 
+import { useAtom } from "jotai";
+
+import { Button } from "dyson/src/components/atoms";
+import Input from "dyson/src/components/atoms/input/Input";
+import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
+import { Conditional } from "dyson/src/components/layouts";
+
+import { appStateItemMutator } from "@store/atoms/global/appState";
+import { projectsAtom } from "@store/atoms/global/project";
+import { Dolphin } from "@ui/containers/dashboard/icont";
 import { contentContainer, contentContainerScroll, SidebarTopBarLayout } from "@ui/layout/DashboardBase";
+import { getIdentifier } from "@utils/routing";
 
 import { usePageTitle } from "../src/hooks/seo";
-import { useAtom } from "jotai";
-import Input from "dyson/src/components/atoms/input/Input";
-import { Button } from "dyson/src/components/atoms";
-import { Dolphin } from "@ui/containers/dashboard/icont";
-import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
-import { projectsAtom } from "@store/atoms/global/project";
-import Link from "next/link";
-import { Conditional } from "dyson/src/components/layouts";
-import { appStateItemMutator } from "@store/atoms/global/appState";
-import { useRouter } from "next/router";
-import { getIdentifier } from "@utils/routing";
 
 function GitIcon(props) {
 	return (
@@ -114,7 +116,7 @@ const projectItem = css`
 	border: 0.5px solid #1b1b1b;
 	border: 0.5px solid #252525;
 	border-radius: 14px;
-	
+
 	transition: all 0ms ease;
 
 	.open {
@@ -202,20 +204,17 @@ const containerStyle = css`
 	color: #fff !important;
 `;
 
-
-
 function ProjectCard({ project }) {
 	const { id, name } = project;
 	const router = useRouter();
 	const [_, setAppStateItem] = useAtom(appStateItemMutator);
 
 	const selectProject = () => {
-		const getAlias = getIdentifier(name, id)
+		const getAlias = getIdentifier(name, id);
 		router.push(`/${getAlias}/dashboard`);
 		setAppStateItem({ key: "selectedProjectId", value: id });
-	}
+	};
 	return (
-
 		<div css={projectItem} onClick={selectProject.bind(this)} className={"flex flex-col justify-between pr-16 pl-20 pt-16 pb-22"}>
 			<div>
 				<div className="flex items-center justify-between">
@@ -236,6 +235,5 @@ function ProjectCard({ project }) {
 				<GitIcon className="mr-8" /> git not linked
 			</div>
 		</div>
-
 	);
 }

@@ -1,27 +1,29 @@
 import { css } from "@emotion/react";
-import React, {useCallback, useEffect, useState} from "react";
+import React, { useCallback, useEffect, useState } from "react";
+
+import { useAtom } from "jotai";
+import { atomWithImmer } from "jotai/immer";
+import useSWR, { mutate } from "swr";
 
 import { Card } from "../../../../../../dyson/src/components/layouts/Card/Card";
+import { SelectBox } from "../../../../../../dyson/src/components/molecules/Select/Select";
 import { Button } from "dyson/src/components/atoms";
 import { Heading } from "dyson/src/components/atoms/heading/Heading";
+import { Input } from "dyson/src/components/atoms/input/Input";
 import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import { Conditional } from "dyson/src/components/layouts";
 
-import { SettingsLayout } from "@ui/layout/SettingsBase";
-import useSWR, { mutate } from "swr";
-import { useAtom } from "jotai";
-import { currentProject } from "../../../../store/atoms/global/project";
 import { createProjectMonitoring, deleteProjectMonitoring, getProjectEnvironments, getProjectMonitoring, updateProjectMonitoing } from "@constants/api";
-import { ChevronRight } from "@svg/settings";
-import { atomWithImmer } from "jotai/immer";
-import { ChevronDown } from "@svg/testReport";
-import { Input } from "dyson/src/components/atoms/input/Input";
 import { LoadingSVG } from "@svg/dashboard";
+import { ChevronRight } from "@svg/settings";
+import { ChevronDown } from "@svg/testReport";
+import { SettingsLayout } from "@ui/layout/SettingsBase";
 import { backendRequest } from "@utils/common/backendRequest";
-import { RequestMethod } from "../../../../types/RequestOptions";
-import { converServerToClientSideStateMonitoring, convertToServerSideMonitoring } from "@utils/core/settings/environmentSettingUtils";
 import { sendSnackBarEvent } from "@utils/common/notify";
-import { SelectBox } from "../../../../../../dyson/src/components/molecules/Select/Select";
+import { converServerToClientSideStateMonitoring, convertToServerSideMonitoring } from "@utils/core/settings/environmentSettingUtils";
+
+import { currentProject } from "../../../../store/atoms/global/project";
+import { RequestMethod } from "../../../../types/RequestOptions";
 
 const selectBoxCSS = css`
 	.selectBox {

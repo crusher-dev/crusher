@@ -1,16 +1,15 @@
-import React from "react";
 import { css } from "@emotion/react";
+import { useRouter } from "next/router";
+import React from "react";
+
 import { useAtom } from "jotai";
+
+import { USER_META_KEYS } from "@constants/USER";
+import { appStateItemMutator } from "@store/atoms/global/appState";
 import { projectsAtom } from "@store/atoms/global/project";
 import { updateMeta } from "@store/mutators/metaData";
-import { USER_META_KEYS } from "@constants/USER";
-import { useRouter } from "next/router";
-import { appStateItemMutator } from "@store/atoms/global/appState";
 
-const ProjectList = ({
-    className,
-    projects
-}) => {
+const ProjectList = ({ className, projects }) => {
 	const [, updateOnboarding] = useAtom(updateMeta);
 	const [, setAppStateItem] = useAtom(appStateItemMutator);
 	const router = useRouter();
@@ -42,10 +41,10 @@ const ProjectList = ({
 	}, [projects]);
 
 	return (
-        (<ul css={ulListCss} className={String(className)}>
-            {projectItems}
-        </ul>)
-    );
+		<ul css={ulListCss} className={String(className)}>
+			{projectItems}
+		</ul>
+	);
 };
 
 const itemHeadingCss = css`

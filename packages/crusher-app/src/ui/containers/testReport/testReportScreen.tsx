@@ -6,24 +6,23 @@ import React, { useCallback, useEffect, useState } from "react";
 import { atom, useAtom } from "jotai";
 
 import { Button, Text } from "dyson/src/components/atoms";
+import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import { Conditional } from "dyson/src/components/layouts";
 
-
+import { PROJECT_META_KEYS, USER_META_KEYS } from "@constants/USER";
+import { CorrentSVG } from "@svg/builds";
+import { CommentIcon, PlayIcon, ReloadIcon } from "@svg/dashboard";
+import { GithubSquare } from "@svg/social";
 import { PassedSVG } from "@svg/testReport";
 import { backendRequest } from "@utils/common/backendRequest";
 import { sendSnackBarEvent } from "@utils/common/notify";
 
 import { usePageTitle } from "../../../hooks/seo";
+import { updateMeta } from "../../../store/mutators/metaData";
 import { useBuildReport } from "../../../store/serverState/buildReports";
 import { RequestMethod } from "../../../types/RequestOptions";
-import { updateMeta } from "../../../store/mutators/metaData";
-import { PROJECT_META_KEYS, USER_META_KEYS } from "@constants/USER";
-import { ReviewSection } from "./testList";
-import { CorrentSVG } from "@svg/builds";
-import { GithubSquare } from "@svg/social";
-import { CommentIcon, PlayIcon, ReloadIcon } from "@svg/dashboard";
 import Download from "../dashboard/Download";
-import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
+import { ReviewSection } from "./testList";
 
 const ReportSection = dynamic(() => import("./testList"));
 function BuildInfoTop() {
@@ -39,32 +38,43 @@ function BuildInfoTop() {
 			</div>
 			<div className="flex items-center mt-16" css={flexGap}>
 				<div className="flex items-center">
-					<Text color="#696969" fontSize={13}>Status : </Text>
-					<Text color="#E7E7E7" fontSize={13}>All passed</Text>
+					<Text color="#696969" fontSize={13}>
+						Status :{" "}
+					</Text>
+					<Text color="#E7E7E7" fontSize={13}>
+						All passed
+					</Text>
 				</div>
 				<div className="flex items-center">
 					<GithubSquare className="mr-8" />
-					<Text color="#E7E7E7" fontSize={13}>Github #2132</Text>
+					<Text color="#E7E7E7" fontSize={13}>
+						Github #2132
+					</Text>
 				</div>
 				<div className="flex items-center">
-					<Text color="#696969" fontSize={13}>duration : </Text>
-					<Text color="#E7E7E7" fontSize={13}>12s</Text>
+					<Text color="#696969" fontSize={13}>
+						duration :{" "}
+					</Text>
+					<Text color="#E7E7E7" fontSize={13}>
+						12s
+					</Text>
 				</div>
 				<div className="flex items-center">
-					<Text color="#696969" fontSize={13}>test count : </Text>
-					<Text color="#E7E7E7" fontSize={13}>12</Text>
+					<Text color="#696969" fontSize={13}>
+						test count :{" "}
+					</Text>
+					<Text color="#E7E7E7" fontSize={13}>
+						12
+					</Text>
 				</div>
 			</div>
-
 		</div>
 	);
 }
 
-
 const flexGap = css`
 	gap: 28rem;
-`
-
+`;
 
 function ReportInfoTOp() {
 	const { query } = useRouter();
@@ -74,7 +84,6 @@ function ReportInfoTOp() {
 	usePageTitle(title);
 	return (
 		<div className={"flex"}>
-
 			<ImageSection />
 
 			<div className="w-full">
@@ -88,53 +97,66 @@ function ReportInfoTOp() {
 	);
 }
 
-
-
 function BuildMainInfo() {
-	return <React.Fragment>
-		<div className="mt-32">
-			<TextBlock color="#696969" fontSize={13}>Failed for few configuration</TextBlock>
-		</div>
-		<div className="flex justify-between items-start mt-80">
-			<div className="flex" css={flexGapInfo}>
-				<div>
-					<TextBlock color="#696969" fontSize={13}>host</TextBlock>
-					<TextBlock color="#D0D0D0" fontSize={13} className="mt-8">crusher.dev</TextBlock>
+	return (
+		<React.Fragment>
+			<div className="mt-32">
+				<TextBlock color="#696969" fontSize={13}>
+					Failed for few configuration
+				</TextBlock>
+			</div>
+			<div className="flex justify-between items-start mt-80">
+				<div className="flex" css={flexGapInfo}>
+					<div>
+						<TextBlock color="#696969" fontSize={13}>
+							host
+						</TextBlock>
+						<TextBlock color="#D0D0D0" fontSize={13} className="mt-8">
+							crusher.dev
+						</TextBlock>
+					</div>
+					<div>
+						<TextBlock color="#696969" fontSize={13}>
+							host
+						</TextBlock>
+						<TextBlock color="#D0D0D0" fontSize={13} className="mt-8">
+							crusher.dev
+						</TextBlock>
+					</div>
 				</div>
-				<div>
-					<TextBlock color="#696969" fontSize={13}>host</TextBlock>
-					<TextBlock color="#D0D0D0" fontSize={13} className="mt-8">crusher.dev</TextBlock>
+				<div className="flex items-center">
+					<GithubSquare className="mr-12" />
+					<Text color="#696969" fontSize={13}>
+						by himanshu
+					</Text>
 				</div>
 			</div>
-			<div className="flex items-center">
-				<GithubSquare className="mr-12" />
-				<Text color="#696969" fontSize={13}>by himanshu</Text>
-			</div>
-		</div>
-	</React.Fragment>;
+		</React.Fragment>
+	);
 }
 
 const flexGapInfo = css`
 	gap: 40rem;
-`
+`;
 
 function BuildInfoButtons() {
-	return <div className="flex items-start" css={btnGap}>
-
-		<Reload />
-		<Review />
-		<RunLocally />
-	</div>;
+	return (
+		<div className="flex items-start" css={btnGap}>
+			<Reload />
+			<Review />
+			<RunLocally />
+		</div>
+	);
 }
 
 const btnGap = css`
 	gap: 12rem;
-`
+`;
 
 function Reload() {
-	const { query } = useRouter()
+	const { query } = useRouter();
 	const runProjectTest = useCallback(() => {
-		rerunBuild(query.id)
+		rerunBuild(query.id);
 	}, []);
 
 	return (
@@ -149,11 +171,9 @@ function Reload() {
 }
 
 function Review() {
-	const [showCreateTest, setShowCreateTest] = useState(false)
+	const [showCreateTest, setShowCreateTest] = useState(false);
 
-	const runProjectTest = useCallback(() => {
-
-	}, []);
+	const runProjectTest = useCallback(() => {}, []);
 
 	return (
 		<React.Fragment>
@@ -163,9 +183,7 @@ function Review() {
 			<Button size="medium" title="leave a comment/review" bgColor={"tertiary"} onClick={runProjectTest} css={creatTestCSS}>
 				<div className={"flex items-center"}>
 					<CommentIcon className={"mr-6"} />
-					<span className="mt-1">
-						review
-					</span>
+					<span className="mt-1">review</span>
 				</div>
 			</Button>
 		</React.Fragment>
@@ -182,13 +200,11 @@ function RunLocally() {
 	const runProjectTest = useCallback(() => {
 		(async () => {
 			// await handleTestRun(currentProject?.id, query, filters, router, updateMetaData);
-
 			// updateMetaData({
 			// 	type: "user",
 			// 	key: USER_META_KEYS.RAN_TEST,
 			// 	value: true,
 			// });
-
 			// updateMetaData({
 			// 	type: "project",
 			// 	key: PROJECT_META_KEYS.RAN_TEST,
@@ -201,9 +217,7 @@ function RunLocally() {
 		<Button size="medium" bgColor={"tertiary"} title="run test locally" onClick={runProjectTest} css={runTestCSS}>
 			<div className={"flex items-center"}>
 				<PlayIcon className={"mr-6"} />
-				<span className="mt-2">
-					run locally
-				</span>
+				<span className="mt-2">run locally</span>
 			</div>
 		</Button>
 	);
@@ -213,47 +227,46 @@ const runTestCSS = css`
 	padding: 0 10rem;
 	height: 30rpx;
 
-	font-family: 'Gilroy';
-font-style: normal;
-font-weight: 600;
-font-size: 13px;
+	font-family: "Gilroy";
+	font-style: normal;
+	font-weight: 600;
+	font-size: 13px;
 
-color: #FFFFFF;
+	color: #ffffff;
 
-width: max-content;
+	width: max-content;
 
+	background: #a742f7;
+	border: 1px solid #7d41ad;
+	border-radius: 8px;
 
-background: #A742F7;
-border: 1px solid #7D41AD;
-border-radius: 8px;
-
-:hover{
-	background: #A742F7;
-	filter: brighntess(.7);
-	border: 1px solid #7D41AD;
-}
-`
+	:hover {
+		background: #a742f7;
+		filter: brighntess(0.7);
+		border: 1px solid #7d41ad;
+	}
+`;
 
 const creatTestCSS = css`
-padding: 0 10rem;
-font-family: 'Gilroy';
-font-style: normal;
-font-weight: 600;
-font-size: 13px;
+	padding: 0 10rem;
+	font-family: "Gilroy";
+	font-style: normal;
+	font-weight: 600;
+	font-size: 13px;
 
-color: #FFFFFF;
+	color: #ffffff;
 
-width: max-content;
+	width: max-content;
 
-background: #0D0D0D;
-border: 0.5px solid rgba(219, 222, 255, 0.16);
-border-radius: 8px;
+	background: #0d0d0d;
+	border: 0.5px solid rgba(219, 222, 255, 0.16);
+	border-radius: 8px;
 
-:hover{
-	background: #313131;
-	filter: brighntess(.8);
-}
-`
+	:hover {
+		background: #313131;
+		filter: brighntess(0.8);
+	}
+`;
 const section = [
 	{
 		name: "Home",
@@ -263,12 +276,12 @@ const section = [
 	{
 		name: "Tests",
 		icon: null,
-		key: "insights"
+		key: "insights",
 	},
 	{
 		name: "Insights & Alert",
 		icon: null,
-		key: "insights"
+		key: "insights",
 	},
 	{
 		name: "log",
@@ -287,17 +300,19 @@ export const rerunBuild = async (buildId) => {
 };
 
 function ImageSection() {
-	return <div className="mr-46">
-		<img src="https://i.imgur.com/GT2hLO9.png" css={previewImgCss} />
-	</div>;
+	return (
+		<div className="mr-46">
+			<img src="https://i.imgur.com/GT2hLO9.png" css={previewImgCss} />
+		</div>
+	);
 }
 
 const previewImgCss = css`
 	min-width: 304rem;
-    height: 220rem;
-    border: 0.5px solid rgb(255 255 255 / 6%);
-    border-radius: 15px;
-`
+	height: 220rem;
+	border: 0.5px solid rgb(255 255 255 / 6%);
+	border-radius: 15px;
+`;
 function TabBar() {
 	const [selectedTabIndex, setSelectedTabIndex] = useAtom(selectedTabAtom);
 	return (
@@ -312,7 +327,11 @@ function TabBar() {
 					</div>
 				</div>
 			))}
-			<div css={css`margin-left: auto;`}>
+			<div
+				css={css`
+					margin-left: auto;
+				`}
+			>
 				<ReviewSection />
 			</div>
 		</div>
@@ -340,7 +359,12 @@ export const TestReportScreen = () => {
 		// if (query.view_draft) setSelectedTabIndex(0);
 	}, [query.view_draft]);
 	return (
-		<div className={"pt-46 flex flex-col items-center"} css={css`background: #0C0C0C;`}>
+		<div
+			className={"pt-46 flex flex-col items-center"}
+			css={css`
+				background: #0c0c0c;
+			`}
+		>
 			<div css={buildContainerWidth}>
 				<ReportInfoTOp />
 
@@ -381,9 +405,9 @@ export const TestReportScreen = () => {
 };
 
 export const buildContainerWidth = css`
-max-width: 1300rem;
-width: calc(100vw - 296rem) !important;
-// width: calc(100vw - 352rem) !important;
+	max-width: 1300rem;
+	width: calc(100vw - 296rem) !important;
+	// width: calc(100vw - 352rem) !important;
 	margin: 0 auto;
 `;
 const timeLine = css`

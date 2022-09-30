@@ -1,30 +1,27 @@
 import { css } from "@emotion/react";
-
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useCallback, useState } from "react";
 
 import { useAtom } from "jotai";
+
 import { Button } from "dyson/src/components/atoms";
+import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import { Conditional } from "dyson/src/components/layouts";
-import { External, PlayIcon, PlusCircle } from "@svg/dashboard";
 
 import { PROJECT_META_KEYS, USER_META_KEYS } from "@constants/USER";
+import { useProjectDetails } from "@hooks/common";
+import { BackSVG, CorrentSVG } from "@svg/builds";
+import { External, PlayIcon, PlusCircle } from "@svg/dashboard";
+import { ShowSidebar } from "@svg/onboarding";
+import Download from "@ui/containers/dashboard/Download";
+import { buildContainerWidth } from "@ui/containers/testReport/testReportScreen";
 import { handleTestRun } from "@utils/core/testUtils";
+
 import { projectsAtom } from "../../store/atoms/global/project";
 import { buildFiltersAtom } from "../../store/atoms/pages/buildPage";
 import { updateMeta } from "../../store/mutators/metaData";
-
-import { ShowSidebar } from "@svg/onboarding";
-import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
-
-import { useProjectDetails } from "@hooks/common";
-
-import Download from "@ui/containers/dashboard/Download";
-import { BackSVG, CorrentSVG } from "@svg/builds";
 import { LeftSection } from "./LeftSection";
-import { buildContainerWidth } from "@ui/containers/testReport/testReportScreen";
-
 
 export const iconCSS = css`
 	width: 16rem;
@@ -38,15 +35,15 @@ export const selectedCSS = css`
 	background: rgba(255, 255, 255, 0.04);
 	border: 0.5px solid rgba(255, 255, 255, 0.08);
 
-	.label,span {
-		color: #B960FF;
+	.label,
+	span {
+		color: #b960ff;
 	}
 
-	path{
-		fill: #B960FF;
+	path {
+		fill: #b960ff;
 	}
 `;
-
 
 export const dropDown = css`
 	bottom: -10px;
@@ -62,14 +59,11 @@ export const dropDown = css`
 	z-index: 1;
 `;
 
-
-
-
 function CreateTest() {
-	const [showCreateTest, setShowCreateTest] = useState(false)
+	const [showCreateTest, setShowCreateTest] = useState(false);
 
 	const runProjectTest = useCallback(() => {
-		setShowCreateTest(true)
+		setShowCreateTest(true);
 	}, []);
 
 	return (
@@ -80,9 +74,7 @@ function CreateTest() {
 			<Button title="Create a new test" bgColor={"tertiary"} onClick={runProjectTest} css={creatTestCSS}>
 				<div className={"flex items-center"}>
 					<PlusCircle className={"mr-6"} />
-					<span className="mt-1">
-						new test
-					</span>
+					<span className="mt-1">new test</span>
 				</div>
 			</Button>
 		</React.Fragment>
@@ -91,7 +83,7 @@ function CreateTest() {
 
 function RunTest() {
 	const router = useRouter();
-	const { currentProject } = useProjectDetails()
+	const { currentProject } = useProjectDetails();
 	const { query } = router;
 	const [filters] = useAtom(buildFiltersAtom);
 	const [, updateMetaData] = useAtom(updateMeta);
@@ -118,9 +110,7 @@ function RunTest() {
 		<Button title="Run test in this project" bgColor={"tertiary"} onClick={runProjectTest} css={runTestCSS}>
 			<div className={"flex items-center"}>
 				<PlayIcon className={"mr-6"} />
-				<span className="mt-2">
-					Run tests
-				</span>
+				<span className="mt-2">Run tests</span>
 			</div>
 		</Button>
 	);
@@ -130,54 +120,53 @@ const runTestCSS = css`
 	padding: 0 10rem;
 	height: 30rpx;
 
-	font-family: 'Gilroy';
-font-style: normal;
-font-weight: 600;
-font-size: 13px;
+	font-family: "Gilroy";
+	font-style: normal;
+	font-weight: 600;
+	font-size: 13px;
 
-color: #FFFFFF;
+	color: #ffffff;
 
-width: max-content;
+	width: max-content;
 
+	background: #a742f7;
+	border: 1px solid #7d41ad;
+	border-radius: 8px;
 
-background: #A742F7;
-border: 1px solid #7D41AD;
-border-radius: 8px;
-
-:hover{
-	background: #A742F7;
-	filter: brighntess(.7);
-	border: 1px solid #7D41AD;
-}
-`
+	:hover {
+		background: #a742f7;
+		filter: brighntess(0.7);
+		border: 1px solid #7d41ad;
+	}
+`;
 
 const creatTestCSS = css`
-padding: 0 10rem;
-font-family: 'Gilroy';
-font-style: normal;
-font-weight: 600;
-font-size: 13px;
+	padding: 0 10rem;
+	font-family: "Gilroy";
+	font-style: normal;
+	font-weight: 600;
+	font-size: 13px;
 
-color: #FFFFFF;
+	color: #ffffff;
 
-width: max-content;
+	width: max-content;
 
-background: #0D0D0D;
-border: 0.5px solid rgba(219, 222, 255, 0.16);
-border-radius: 8px;
+	background: #0d0d0d;
+	border: 0.5px solid rgba(219, 222, 255, 0.16);
+	border-radius: 8px;
 
-:hover{
-	background: #313131;
-	filter: brighntess(.8);
-}
-`
+	:hover {
+		background: #313131;
+		filter: brighntess(0.8);
+	}
+`;
 
 function TopNavbar({ children }) {
-	const { currentProject } = useProjectDetails()
+	const { currentProject } = useProjectDetails();
 	const isCurrentProject = !!currentProject;
-	const { asPath } = useRouter()
+	const { asPath } = useRouter();
 
-	const isBuildReport = isCurrentProject && asPath.includes('build/');
+	const isBuildReport = isCurrentProject && asPath.includes("build/");
 	return (
 		<div css={[nav]}>
 			<div css={[containerWidth, isBuildReport && buildContainerWidth, contentContainer]}>{children}</div>
@@ -186,14 +175,13 @@ function TopNavbar({ children }) {
 }
 
 function NavbarLeft() {
-	const { currentProject } = useProjectDetails()
+	const { currentProject } = useProjectDetails();
 	const [projects] = useAtom(projectsAtom);
 	const isCurrentProject = !!currentProject;
-	const { asPath, query } = useRouter()
+	const { asPath, query } = useRouter();
 
-	const isBuildReport = isCurrentProject && asPath.includes('build/');
+	const isBuildReport = isCurrentProject && asPath.includes("build/");
 	if (isBuildReport) {
-
 		return (
 			<div css={reportLabel} className={"flex items-center w-full"}>
 				<Link href={`/projects`}>
@@ -212,7 +200,7 @@ function NavbarLeft() {
 				</div>
 				<CorrentSVG className="ml-8" height={18} width={18} />
 			</div>
-		)
+		);
 	}
 	if (isCurrentProject) {
 		return (
@@ -221,48 +209,45 @@ function NavbarLeft() {
 					<span css={projectIcon}>projects</span>
 				</Link>
 				<span>/ {currentProject.name}</span>
-
 			</div>
-		)
+		);
 	}
 	return (
 		<div css={projectsLabel} className={"flex items-center w-full"}>
 			<span>projects</span>
 			<span className="badge flex items-center justify-center pt-1 ml-8">{projects.length}</span>
 		</div>
-	)
+	);
 }
 
 const projectIcon = css`
-
-font-size: 13rex;
-margin-right: 3px;
-:hover{
-	text-decoration: underline;
-	color: #fff;
-	transition: all 0ms linear;
-}
-`
+	font-size: 13rex;
+	margin-right: 3px;
+	:hover {
+		text-decoration: underline;
+		color: #fff;
+		transition: all 0ms linear;
+	}
+`;
 
 const sidebarIconCSS = css`
-position: absolute;
-    top: 18px;
-    left: 20px;
-    cursor: pointer;
-    z-index: 20;
-    /* padding: 8px 12px; */
-    height: 20px;
-    width: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+	position: absolute;
+	top: 18px;
+	left: 20px;
+	cursor: pointer;
+	z-index: 20;
+	/* padding: 8px 12px; */
+	height: 20px;
+	width: 20px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 
 	border-radius: 6px;
-	:hover{
+	:hover {
 		background: #323232;
 	}
-
-`
+`;
 
 export const SidebarTopBarLayout = ({ children, noContainerWidth = false, hideSidebar = false, setContainerWidth = true }): JSX.Element => {
 	const [showSidebar, setShowSidebar] = useState(hideSidebar);
@@ -271,7 +256,6 @@ export const SidebarTopBarLayout = ({ children, noContainerWidth = false, hideSi
 			<Conditional showIf={!showSidebar}>
 				<LeftSection />
 			</Conditional>
-
 
 			<div className={"w-full relative"} id="right-section">
 				<TopNavbar>
@@ -286,15 +270,7 @@ export const SidebarTopBarLayout = ({ children, noContainerWidth = false, hideSi
 						<NavbarRight />
 					</div>
 				</TopNavbar>
-				<div
-					css={[
-						scrollContainer,
-						noContainerWidth
-							? noContainerWidthCSS
-							: null,
-					]}
-					className={"custom-scroll relative"}
-				>
+				<div css={[scrollContainer, noContainerWidth ? noContainerWidthCSS : null]} className={"custom-scroll relative"}>
 					<div css={[!noContainerWidth ? setContainerWidth && containerWidth : null]}>{children}</div>
 				</div>
 			</div>
@@ -302,10 +278,9 @@ export const SidebarTopBarLayout = ({ children, noContainerWidth = false, hideSi
 	);
 };
 
-
 const noContainerWidthCSS = css`
-									overflow-y: overlay;
-							  `
+	overflow-y: overlay;
+`;
 const textLink = css`
 	:hover {
 		color: #d378fe;
@@ -344,14 +319,12 @@ const reportLabel = css`
 	letter-spacing: 0.06em;
 
 	height: 56rem;
-
 `;
 
 const background = css`
 	background: #080808;
 	min-height: 100vh;
 `;
-
 
 const nav = css`
 	width: 100%;
@@ -362,46 +335,45 @@ const containerWidth = css`
 	margin: 0 auto;
 `;
 
-
 export const contentContainer = css`
- max-width: 1280rem;
-width: calc(100vw - 352rem);
-margin: 0 auto;
-`
+	max-width: 1280rem;
+	width: calc(100vw - 352rem);
+	margin: 0 auto;
+`;
 
 export const contentContainerScroll = css`
-width: 1280rem;
-max-width: calc(100vw - 328rem);
-padding-left: 20rem;
-`
+	width: 1280rem;
+	max-width: calc(100vw - 328rem);
+	padding-left: 20rem;
+`;
 const scrollContainer = css`
 	overflow-y: scroll;
 	height: calc(100vh - 56rem);
 `;
 function NavbarRight(): JSX.Element {
-	const { asPath } = useRouter()
-	const { currentProject } = useProjectDetails()
+	const { asPath } = useRouter();
+	const { currentProject } = useProjectDetails();
 	const isCurrentProject = !!currentProject;
-	const isBuildReport = isCurrentProject && asPath.includes('build');
-	return <div className="flex items-center" css={rightNavbar}>
-		<Conditional showIf={isCurrentProject}>
-			<RunTest />
-			<CreateTest />
-		</Conditional>
+	const isBuildReport = isCurrentProject && asPath.includes("build");
+	return (
+		<div className="flex items-center" css={rightNavbar}>
+			<Conditional showIf={isCurrentProject}>
+				<RunTest />
+				<CreateTest />
+			</Conditional>
 
-		<Conditional showIf={!isBuildReport}>
-			<a href="https://docs.crusher.dev" target="_blank">
-				<TextBlock color={"#6b6565"} className={"flex ml-4"} css={textLink}>
-					<External className="mr-8" />
-					<span className="mt-1">Docs</span>
-				</TextBlock>
-			</a>
-		</Conditional>
-
-	</div>;
+			<Conditional showIf={!isBuildReport}>
+				<a href="https://docs.crusher.dev" target="_blank">
+					<TextBlock color={"#6b6565"} className={"flex ml-4"} css={textLink}>
+						<External className="mr-8" />
+						<span className="mt-1">Docs</span>
+					</TextBlock>
+				</a>
+			</Conditional>
+		</div>
+	);
 }
-
 
 const rightNavbar = css`
 	gap: 8px;
-`
+`;

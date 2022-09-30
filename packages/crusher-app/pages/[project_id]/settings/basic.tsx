@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
 
+import { useAtom } from "jotai";
+
+import { PROJECT_META_KEYS } from "@constants/USER";
 import { ProjectSettings } from "@ui/containers/settings/ProjectPage";
 
 import { usePageTitle } from "../../../src/hooks/seo";
-import { useAtom } from "jotai";
 import { updateMeta } from "../../../src/store/mutators/metaData";
-import { PROJECT_META_KEYS } from "@constants/USER";
 
 function Dashboard() {
 	usePageTitle("Dashboard");
@@ -18,9 +19,7 @@ function Dashboard() {
 			value: true,
 		});
 	}, []);
-	return (
-		<ProjectSettings />
-	);
+	return <ProjectSettings />;
 }
 
 export default Dashboard;

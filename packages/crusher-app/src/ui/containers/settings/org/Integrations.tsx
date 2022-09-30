@@ -1,42 +1,42 @@
 import { css } from "@emotion/react";
-import {useCallback, useEffect, useState} from "react";
+import { useCallback, useEffect, useState } from "react";
+import React from "react";
+
+import { useAtom } from "jotai";
+import { atomWithImmer } from "jotai/immer";
+import useSWR, { mutate } from "swr";
 
 import { Button, Input } from "dyson/src/components/atoms";
 import { Heading } from "dyson/src/components/atoms/heading/Heading";
 import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
+import Switch from "dyson/src/components/atoms/toggle/switch";
 import { Conditional } from "dyson/src/components/layouts";
+import { Card } from "dyson/src/components/layouts/Card/Card";
+import { SelectBox } from "dyson/src/components/molecules/Select/Select";
 
+import { addGithubRepo, getCIIntegrationCommnad, getGitIntegrations, getSlackIntegrations, unlinkGithubRepo } from "@constants/api";
+import { currentProject } from "@store/atoms/global/project";
+import { AddSVG } from "@svg/dashboard";
+import { CopyIconSVG } from "@svg/onboarding";
+import { GithubSVG } from "@svg/social";
+import { RequestMethod } from "@types/RequestOptions";
 import AddProjectModal from "@ui/containers/dashboard/AddProject";
 import { SettingsLayout } from "@ui/layout/SettingsBase";
-
-import Switch from "dyson/src/components/atoms/toggle/switch";
-import { GithubSVG } from "@svg/social";
-import { Card } from "dyson/src/components/layouts/Card/Card";
+import { backendRequest } from "@utils/common/backendRequest";
 import { openPopup } from "@utils/common/domUtils";
-import {getGithubOAuthURLLegacy} from "@utils/core/external";
-import { SelectBox } from "dyson/src/components/molecules/Select/Select";
-import { useAtom } from "jotai";
-import { atomWithImmer } from "jotai/immer";
+import { sendSnackBarEvent } from "@utils/common/notify";
+import { resolvePathToBackendURI, resolvePathToFrontendURI } from "@utils/common/url";
+import { getGithubOAuthURLLegacy } from "@utils/core/external";
 import { OctokitManager } from "@utils/core/external/ocktokit";
 import { convertToOrganisationInfo, getRepoData } from "@utils/core/settings/project/integrationUtils";
-import { AddSVG } from "@svg/dashboard";
-import { backendRequest } from "@utils/common/backendRequest";
-import { addGithubRepo, getCIIntegrationCommnad, getGitIntegrations, getSlackIntegrations, unlinkGithubRepo } from "@constants/api";
-import { RequestMethod } from "@types/RequestOptions";
-import { currentProject } from "@store/atoms/global/project";
-import useSWR, { mutate } from "swr";
-import { resolvePathToBackendURI, resolvePathToFrontendURI } from "@utils/common/url";
-import { sendSnackBarEvent } from "@utils/common/notify";
-import { CopyIconSVG } from "@svg/onboarding";
-import React from "react";
 
 const connectedToGitAtom = atomWithImmer<
 	| any
 	| {
-		token: string;
-		type: "github";
-		updateCount: number;
-	}
+			token: string;
+			type: "github";
+			updateCount: number;
+	  }
 >(null);
 
 const useGithubData = (gitInfo) => {
@@ -275,7 +275,16 @@ function ConnectionGithub() {
 						`}
 					>
 						<div className={"flex items-center"}>
-							<GithubSVG css={css`path { fill: #000 !important; }`} height={"12rem"} width={"12rem"} className={"mt-1"} />
+							<GithubSVG
+								css={css`
+									path {
+										fill: #000 !important;
+									}
+								`}
+								height={"12rem"}
+								width={"12rem"}
+								className={"mt-1"}
+							/>
 							<span className={"mt-2 ml-8"}>Github</span>
 						</div>
 					</Button>
@@ -452,7 +461,15 @@ function GitIntegration() {
 		<div className={"flex flex-col justify-between items-start mt-44 mb-24"}>
 			<div className={"flex justify-between items-center w-full"}>
 				<div className={"flex"}>
-					<GitSVG css={css`path { fill: #fff !important; }`} height={28} width={28} />
+					<GitSVG
+						css={css`
+							path {
+								fill: #fff !important;
+							}
+						`}
+						height={28}
+						width={28}
+					/>
 					<div className={"ml-16"}>
 						<Heading type={2} fontSize={"14"} className={"mb-8"}>
 							Git Integration
@@ -537,7 +554,8 @@ function SlackIntegration() {
 	const handleSwitch = useCallback((toggleState: boolean) => {
 		if (toggleState) {
 			const windowRef = openPopup(
-				`https://slack.com/oauth/v2/authorize?scope=chat:write,chat:write.public,channels:read,groups:read&client_id=${process.env.NEXT_PUBLIC_SLACK_CLIENT_ID
+				`https://slack.com/oauth/v2/authorize?scope=chat:write,chat:write.public,channels:read,groups:read&client_id=${
+					process.env.NEXT_PUBLIC_SLACK_CLIENT_ID
 				}&redirect_uri=${escape(resolvePathToBackendURI("/integrations/slack/actions/add"))}&state=${encodeURIComponent(
 					JSON.stringify({ projectId: project.id, redirectUrl: resolvePathToFrontendURI("/settings/project/integrations") }),
 				)}`,
@@ -548,10 +566,10 @@ function SlackIntegration() {
 
 				const isOnFEPage = windowRef?.location?.href?.includes(window.location.host);
 				if (isOnFEPage) {
-                    setIsConnected(true);
-                    windowRef.close();
-                    clearInterval(interval);
-                }
+					setIsConnected(true);
+					windowRef.close();
+					clearInterval(interval);
+				}
 			}, 200);
 		} else {
 			backendRequest(`/integrations/${project.id}/slack/actions/remove`)
@@ -587,9 +605,7 @@ function SlackIntegration() {
 		const normalChannel = channelTypeName === "normalChannel" ? selectedValues : integration.normalChannel;
 
 		const alertChannelInfo =
-			alertChannel?.[0] && alertChannel[0].label
-				? alertChannel
-				: getSlackChannelValues(slackChannels).filter((channel) => alertChannel[0] === channel.value);
+			alertChannel?.[0] && alertChannel[0].label ? alertChannel : getSlackChannelValues(slackChannels).filter((channel) => alertChannel[0] === channel.value);
 		const normalChannelInfo =
 			normalChannel?.[0] && normalChannel[0].label
 				? normalChannel
@@ -600,15 +616,15 @@ function SlackIntegration() {
 			payload: {
 				alertChannel: alertChannelInfo[0]
 					? {
-						name: alertChannelInfo[0].label,
-						value: alertChannelInfo[0].value,
-					}
+							name: alertChannelInfo[0].label,
+							value: alertChannelInfo[0].value,
+					  }
 					: null,
 				normalChannel: normalChannelInfo[0]
 					? {
-						name: normalChannelInfo[0].label,
-						value: normalChannelInfo[0].value,
-					}
+							name: normalChannelInfo[0].label,
+							value: normalChannelInfo[0].value,
+					  }
 					: null,
 			},
 		})
@@ -642,8 +658,8 @@ function SlackIntegration() {
 	}, [slackChannels, nextCursor]);
 
 	return (
-        (<div className={"justify-between items-start mt-40 mb-24"}>
-            <div className={"flex justify-between items-center w-full"}>
+		<div className={"justify-between items-start mt-40 mb-24"}>
+			<div className={"flex justify-between items-center w-full"}>
 				<div className={"flex"}>
 					<img src={"/svg/slack-icon.svg"} width={"24rem"} />
 					<div className={"ml-20"}>
@@ -651,18 +667,21 @@ function SlackIntegration() {
 							Slack Integration
 						</Heading>
 						<TextBlock fontSize={12.9} color={"#c1c1c1"}>
-							Get notifications  on build event
+							Get notifications on build event
 						</TextBlock>
 					</div>
 				</div>
-				<Switch disable={true} checked={isConnected} onClick={() => {
-					if (!isConnected) {
-						handleSwitch(true)
-					}
-				}} />
-
+				<Switch
+					disable={true}
+					checked={isConnected}
+					onClick={() => {
+						if (!isConnected) {
+							handleSwitch(true);
+						}
+					}}
+				/>
 			</div>
-            <Conditional showIf={isConnected}>
+			<Conditional showIf={isConnected}>
 				<div
 					css={css`
 						display: block;
@@ -711,8 +730,8 @@ function SlackIntegration() {
 					</Card>
 				</div>
 			</Conditional>
-        </div>)
-    );
+		</div>
+	);
 }
 
 const selectBoxCSS = css`

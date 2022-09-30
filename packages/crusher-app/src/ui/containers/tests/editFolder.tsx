@@ -1,21 +1,21 @@
 import { css } from "@emotion/react";
-import React, {useCallback, useState} from "react";
+import React, { useCallback, useState } from "react";
 
 import { useAtom } from "jotai";
-import {mutate} from "swr";
+import { mutate } from "swr";
 
 import { Button, Input } from "dyson/src/components/atoms";
 import { Conditional } from "dyson/src/components/layouts";
 import { Modal } from "dyson/src/components/molecules/Modal";
 
-import {deleteFolderAPI, getTestListAPI, updateFolderAPI} from "@constants/api";
+import { deleteFolderAPI, getTestListAPI, updateFolderAPI } from "@constants/api";
 import { LoadingSVG } from "@svg/dashboard";
 import { backendRequest } from "@utils/common/backendRequest";
 import { sendSnackBarEvent } from "@utils/common/notify";
+import { sentenceCase } from "@utils/common/textUtils";
 
 import { currentProject } from "../../../store/atoms/global/project";
 import { RequestMethod } from "../../../types/RequestOptions";
-import { sentenceCase } from "@utils/common/textUtils";
 
 const changeFolderData = (projectId: number, folderId: number, name: string) => {
 	return backendRequest(updateFolderAPI(projectId), {

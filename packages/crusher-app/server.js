@@ -29,10 +29,10 @@ server.use(async (req, res, next) => {
 	}
 
 	// Special case for build dynamic url
-	if(buildRegex.test(req.url)) {
+	if (buildRegex.test(req.url)) {
 		const filePath = "out/app/build/[id].html";
-			serveFile(filePath, res);
-			return;
+		serveFile(filePath, res);
+		return;
 	}
 
 	try {

@@ -1,11 +1,14 @@
 import { css } from "@emotion/react";
-import React, { useMemo } from "react";
-import { Input } from "dyson/src/components/atoms/input/Input";
-import { Text } from "dyson/src/components/atoms";
 import Link from "next/link";
-import { LINUX_INFO, OS, OS_INFO } from "@constants/app";
+import React, { useMemo } from "react";
+
 import useSWR from "swr";
+
+import { Text } from "dyson/src/components/atoms";
+import { Input } from "dyson/src/components/atoms/input/Input";
+
 import { RELEASE_API } from "@constants/api";
+import { LINUX_INFO, OS, OS_INFO } from "@constants/app";
 import { getOSType } from "@utils/common";
 
 export function RenderDownloadLink(props) {

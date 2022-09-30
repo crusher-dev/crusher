@@ -2,32 +2,32 @@ import { css } from "@emotion/react";
 import React from "react";
 
 import { useAtom } from "jotai";
+
 import { Conditional } from "dyson/src/components/layouts";
+
+import { QuestionPrompt } from "@components/molecules/QuestionPrompt";
+import { USER_META_KEYS } from "@constants/USER";
+import { getTestsAPI } from "@constants/api";
+import { projectsAtom } from "@store/atoms/global/project";
+import { onboardingStepAtom, OnboardingStepEnum } from "@store/atoms/pages/onboarding";
+import { updateMeta } from "@store/mutators/metaData";
+import { RequestMethod } from "@types/RequestOptions";
+import { backendRequest } from "@utils/common/backendRequest";
 import CrusherBase from "crusher-app/src/ui/layout/CrusherBase";
 
-import { onboardingStepAtom, OnboardingStepEnum } from "@store/atoms/pages/onboarding";
-import { QuestionPrompt } from "@components/molecules/QuestionPrompt";
 import { DeveloperInput } from "./DeveloperInput";
 import { NoDeveloperInput } from "./NoDeveloperInput";
-import { backendRequest } from "@utils/common/backendRequest";
-import {getTestsAPI} from "@constants/api";
-import { RequestMethod } from "@types/RequestOptions";
-import {projectsAtom} from "@store/atoms/global/project";
-import { USER_META_KEYS } from "@constants/USER";
-import { updateMeta } from "@store/mutators/metaData";
 import { SelectProjectContainer } from "./selectProject";
 
-const steps = [
-	{ id: OnboardingStepEnum.SURVEY, text: "Setup" },
-];
+const steps = [{ id: OnboardingStepEnum.SURVEY, text: "Setup" }];
 
 const CrusherOnboarding = () => {
-    const [selectedOnboardingStep, setOnBoardingStep] = useAtom(onboardingStepAtom);
-    const [isDeveloper, setIsDeveloper] = React.useState(true);
-    const [, updateOnboarding] = useAtom(updateMeta);
-    const [projects] = useAtom(projectsAtom);
+	const [selectedOnboardingStep, setOnBoardingStep] = useAtom(onboardingStepAtom);
+	const [isDeveloper, setIsDeveloper] = React.useState(true);
+	const [, updateOnboarding] = useAtom(updateMeta);
+	const [projects] = useAtom(projectsAtom);
 
-    React.useEffect(() => {
+	React.useEffect(() => {
 		const testCreatedPoll = setInterval(async () => {
 			const res = await backendRequest(getTestsAPI(), { method: RequestMethod.GET });
 			if (res.list?.length) {
@@ -39,31 +39,39 @@ const CrusherOnboarding = () => {
 					value: true,
 					callback: () => {
 						window.location.href = "/";
-					}
+					},
 				});
 			}
 		}, 5000);
 
 		return () => {
 			clearInterval(testCreatedPoll);
-		}
+		};
 	}, []);
-    const handleCallback = React.useCallback((value) => {
+	const handleCallback = React.useCallback((value) => {
 		setIsDeveloper(value);
 	}, []);
 
-    const NoProjectContainer = (				<div className="flex mt-60 flex-col">
-	<div>
-		<div css={welcomeHeadingCss}>Create test with Crusher</div>
-	</div>
-	<QuestionPrompt css={css`margin-top: 60rem;`} defaultValue={isDeveloper} callback={handleCallback}/>
+	const NoProjectContainer = (
+		<div className="flex mt-60 flex-col">
+			<div>
+				<div css={welcomeHeadingCss}>Create test with Crusher</div>
+			</div>
+			<QuestionPrompt
+				css={css`
+					margin-top: 60rem;
+				`}
+				defaultValue={isDeveloper}
+				callback={handleCallback}
+			/>
 
-	{isDeveloper ? ( <DeveloperInput/>) : (<NoDeveloperInput/>)}
-</div>);
+			{isDeveloper ? <DeveloperInput /> : <NoDeveloperInput />}
+		</div>
+	);
 
-    return (
-        (<CrusherBase>
-            <div css={contentContainer}>
+	return (
+		<CrusherBase>
+			<div css={contentContainer}>
 				<div className={"flex items-center"}>
 					{steps.map((_step, i) => (
 						<div className={"flex items-center"}>
@@ -100,19 +108,15 @@ const CrusherOnboarding = () => {
 						</div>
 					))}
 				</div>
-					
-					{projects?.length ? (
-						<SelectProjectContainer/>
-					) : NoProjectContainer}
-					
 
+				{projects?.length ? <SelectProjectContainer /> : NoProjectContainer}
 			</div>
-        </CrusherBase>)
-    );
+		</CrusherBase>
+	);
 };
 
 const welcomeHeadingCss = css`
-	font-family: 'Gilroy';
+	font-family: "Gilroy";
 	font-style: normal;
 	font-weight: 700;
 	font-size: 20rem;

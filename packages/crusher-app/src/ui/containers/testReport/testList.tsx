@@ -1,10 +1,14 @@
 import { css } from "@emotion/react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
+import { useTable, useBlockLayout } from "react-table";
+
+import { useAtom } from "jotai";
+import { atomWithImmer } from "jotai/immer";
 
 import { Button } from "dyson/src/components/atoms";
-
+import { LinkBlock } from "dyson/src/components/atoms/Link/Link";
 import { VideoComponent } from "dyson/src/components/atoms/video/video";
 import { Conditional } from "dyson/src/components/layouts";
 import { Dropdown } from "dyson/src/components/molecules/Dropdown";
@@ -12,21 +16,23 @@ import { Modal } from "dyson/src/components/molecules/Modal";
 
 import { MenuItem } from "@components/molecules/MenuItem";
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
+import { ActionStatusEnum } from "@crusher-shared/lib/runnerLog/interface";
 import { Test } from "@crusher-shared/types/response/iBuildReportResponse";
+import { FullImageView, ShowSidebySide } from "@svg/builds";
 import { LoadingSVG, PlaySVG } from "@svg/dashboard";
-import {ChevronDown, ExpandSVG, InfoSVG, TestStatusSVG} from "@svg/testReport";
-import {useTable, useBlockLayout} from "react-table";
-import {getActionLabel, getAllConfigurationForGivenTest, getBaseConfig, getFailedConfigurationForTest, getStepsFromInstanceData, getTestIndexByConfig} from "@utils/core/buildReportUtils";
+import { ChevronDown, ExpandSVG, InfoSVG, TestStatusSVG } from "@svg/testReport";
+import {
+	getActionLabel,
+	getAllConfigurationForGivenTest,
+	getBaseConfig,
+	getFailedConfigurationForTest,
+	getStepsFromInstanceData,
+	getTestIndexByConfig,
+} from "@utils/core/buildReportUtils";
+import { getAssetPath, getCollapsedTestSteps } from "@utils/helpers";
 
 import { useBuildReport } from "../../../store/serverState/buildReports";
 
-
-import { getAssetPath, getCollapsedTestSteps } from "@utils/helpers";
-import { atomWithImmer } from "jotai/immer";
-import { useAtom } from "jotai";
-import { FullImageView, ShowSidebySide } from "@svg/builds";
-import { ActionStatusEnum } from "@crusher-shared/lib/runnerLog/interface";
-import { LinkBlock } from "dyson/src/components/atoms/Link/Link";
 const ReviewButtonContent = dynamic(() => import("./components/reviewBuild"));
 const CompareImage = dynamic(() => import("./components/compareImages"));
 
@@ -44,21 +50,20 @@ export function ReviewSection() {
 					width: 108px;
 					background: rgba(255, 255, 255, 0.88);
 
-font-family: 'Gilroy';
-font-style: normal;
-font-weight: 600;
-font-size: 13px;
-/* or 131% */
+					font-family: "Gilroy";
+					font-style: normal;
+					font-weight: 600;
+					font-size: 13px;
+					/* or 131% */
 
-text-align: center;
-border: none;
-color: #000000;
-:hover {
-	border: none;
-	background: rgba(255, 255, 255, 0.88);
-	color: #000000;
-}
-
+					text-align: center;
+					border: none;
+					color: #000000;
+					:hover {
+						border: none;
+						background: rgba(255, 255, 255, 0.88);
+						color: #000000;
+					}
 				`}
 			>
 				Review
@@ -101,22 +106,22 @@ function ReportSection() {
 		<div
 			className={"mt-28"}
 			css={css`
-					width: 100%;
-					background: #0A0A0A;
-					min-height: 100vh;
-					display: flex;
-					border-top-color: rgba(255,255,255,0.04);
-					border-top-width: .5rem;
-					border-top-style: solid;
-				`}
+				width: 100%;
+				background: #0a0a0a;
+				min-height: 100vh;
+				display: flex;
+				border-top-color: rgba(255, 255, 255, 0.04);
+				border-top-width: 0.5rem;
+				border-top-style: solid;
+			`}
 		>
 			<div
 				css={css`
-						width: 300rem;
-						border-right-style: solid;
-						border-right-width: 1rem;
-						border-right-color: rgba(196, 196, 196, 0.08);
-					`}
+					width: 300rem;
+					border-right-style: solid;
+					border-right-width: 1rem;
+					border-right-color: rgba(196, 196, 196, 0.08);
+				`}
 			>
 				<div className="px-32 pt-32" css={testListHeadingStyle}>
 					Test list
@@ -128,14 +133,28 @@ function ReportSection() {
 							css={
 								i === selectedTest
 									? css`
-												color: #c071ff;
-										  `
+											color: #c071ff;
+									  `
 									: undefined
 							}
 							onClick={setSelectedTest.bind(this, i)}
 						>
-							<TestStatusSVG type={getStatusFromTestInstances(testData?.testInstances)} height={"20rem"} width={"20rem"} css={css`min-width: 20rem;`} />
-							<span css={css`white-space: nowrap; overflow: hidden;`}>{testData!.name}</span>
+							<TestStatusSVG
+								type={getStatusFromTestInstances(testData?.testInstances)}
+								height={"20rem"}
+								width={"20rem"}
+								css={css`
+									min-width: 20rem;
+								`}
+							/>
+							<span
+								css={css`
+									white-space: nowrap;
+									overflow: hidden;
+								`}
+							>
+								{testData!.name}
+							</span>
 						</li>
 					))}
 				</ul>
@@ -143,8 +162,8 @@ function ReportSection() {
 			<div
 				className={"px-24 py-4"}
 				css={css`
-						flex: 1;
-					`}
+					flex: 1;
+				`}
 			>
 				{data?.tests.length ? <TestCard key={selectedTest} id={selectedTest} testData={data.tests[selectedTest]} /> : ""}
 			</div>
@@ -213,8 +232,8 @@ function RenderImageInfo({ data, index }) {
 	if (!imageName) return null;
 
 	return (
-        (<div className={"  pl-44 mt-4 text-11"} css={imageTestStep}>
-            <div className={"flex justify-between text-12 mb-20 "}>
+		<div className={"  pl-44 mt-4 text-11"} css={imageTestStep}>
+			<div className={"flex justify-between text-12 mb-20 "}>
 				<span>{imageName}</span>
 				<div>
 					<div css={imageTabCSS} className={"flex relative"}>
@@ -227,7 +246,7 @@ function RenderImageInfo({ data, index }) {
 					</div>
 				</div>
 			</div>
-            <Conditional showIf={imageViewType === "side"}>
+			<Conditional showIf={imageViewType === "side"}>
 				<div className={"flex"}>
 					<img
 						src={currentImage}
@@ -244,13 +263,13 @@ function RenderImageInfo({ data, index }) {
 					/>
 				</div>
 			</Conditional>
-            <Conditional showIf={imageViewType === "compare"}>
+			<Conditional showIf={imageViewType === "compare"}>
 				<div>
 					<CompareImage leftImage={previousImage} rightImage={currentImage} />
 				</div>
 			</Conditional>
-        </div>)
-    );
+		</div>
+	);
 }
 
 const imageTestStep = css`
@@ -265,21 +284,21 @@ function ErrorComponent({ testInstanceData, actionType, actionName, message }) {
 	const isVideoAvailable = !!videoUrl;
 	const [openVideoModal, setOpenVideoModal] = useState(false);
 	return (
-        (<div className={"  py-16 px-22 mt-8"} css={errorBox}>
-            <Conditional showIf={isVideoAvailable && openVideoModal}>
+		<div className={"  py-16 px-22 mt-8"} css={errorBox}>
+			<Conditional showIf={isVideoAvailable && openVideoModal}>
 				<TestVideoUrl videoUrl={videoUrl} setOpenVideoModal={setOpenVideoModal.bind(this)} />
 			</Conditional>
-            <div className={"font-cera text-14 font-600 leading-none"}>Error at : {actionName || getActionLabel(actionType)}</div>
-            <div className={"text-13 mt-8"}>{message}</div>
-            <Conditional showIf={isVideoAvailable}>
+			<div className={"font-cera text-14 font-600 leading-none"}>Error at : {actionName || getActionLabel(actionType)}</div>
+			<div className={"text-13 mt-8"}>{message}</div>
+			<Conditional showIf={isVideoAvailable}>
 				<div className={"flex  mt-24"}>
 					<div className={"text-13 flex items-center"} id={"play-button"} onClick={setOpenVideoModal.bind(this, true)}>
 						<PlaySVG /> <span className={" ml-12 leading-none"}> Play To See Recording</span>
 					</div>
 				</div>
 			</Conditional>
-        </div>)
-    );
+		</div>
+	);
 }
 
 function RenderAssertElement({ logs }) {
@@ -387,8 +406,8 @@ function RenderStep({ data, testInstanceData, setIsShowingVideo, testId }) {
 	};
 
 	return (
-        (<div className={"relative mb-32"}>
-            <div className={" flex px-34"}>
+		<div className={"relative mb-32"}>
+			<div className={" flex px-34"}>
 				<div css={tick}>
 					<TestStatusSVG
 						css={
@@ -469,16 +488,16 @@ function RenderStep({ data, testInstanceData, setIsShowingVideo, testId }) {
 					</span>
 				</Conditional>
 			</div>
-            <Conditional showIf={[ActionsInTestEnum.ELEMENT_SCREENSHOT, ActionsInTestEnum.PAGE_SCREENSHOT, ActionsInTestEnum.CUSTOM_CODE].includes(actionType)}>
+			<Conditional showIf={[ActionsInTestEnum.ELEMENT_SCREENSHOT, ActionsInTestEnum.PAGE_SCREENSHOT, ActionsInTestEnum.CUSTOM_CODE].includes(actionType)}>
 				{data.meta?.outputs ? data.meta.outputs.map((_, index) => <RenderImageInfo data={data} index={index} />) : null}
 			</Conditional>
-            <div className={"px-34 mt-12"}>
+			<div className={"px-34 mt-12"}>
 				{[ActionsInTestEnum.ASSERT_ELEMENT].includes(actionType) &&
-					data.meta &&
-					data.meta.meta &&
-					data.meta.meta.meta &&
-					data.meta.meta.meta.logs &&
-					status === "FAILED" ? (
+				data.meta &&
+				data.meta.meta &&
+				data.meta.meta.meta &&
+				data.meta.meta.meta.logs &&
+				status === "FAILED" ? (
 					<RenderAssertElement logs={data.meta.meta.meta.logs} />
 				) : (
 					""
@@ -540,11 +559,11 @@ function RenderStep({ data, testInstanceData, setIsShowingVideo, testId }) {
 					</div>
 				</Conditional>
 			</div>
-            <Conditional showIf={showStepInfoModal}>
+			<Conditional showIf={showStepInfoModal}>
 				<StepInfoModal data={data} setOpenStepInfoModal={setShowStepInfoModal} />
 			</Conditional>
-        </div>)
-    );
+		</div>
+	);
 }
 
 const errorBox = css`
@@ -563,7 +582,7 @@ const errorBox = css`
 
 function Browsers({ browsers, setConfig }) {
 	return (
-		<div className={"flex flex-col justify-between h-full"} onClick={() => { }}>
+		<div className={"flex flex-col justify-between h-full"} onClick={() => {}}>
 			<div>
 				{browsers.map((name: string) => (
 					<MenuItem
@@ -600,12 +619,7 @@ const dropDownSelectionCSS = css`
 	Use Jotai for avoiding props drilling.
 	Make config much more streamline.
  */
-function TestConfigSection({
-    videoUrl,
-    allCofiguration,
-    setTestCardConfig,
-    testCardConfig
-}) {
+function TestConfigSection({ videoUrl, allCofiguration, setTestCardConfig, testCardConfig }) {
 	const [openVideoModal, setIsOpenVideoModal] = useState(false);
 
 	const setConfig = (key, value) => {
@@ -619,14 +633,34 @@ function TestConfigSection({
 	const browserInLowerCase = testCardConfig.browser.toLowerCase();
 
 	return (
-        (<div className={"flex justify-between items-center mt-6 "}>
-            <div className={"flex"}>
+		<div className={"flex justify-between items-center mt-6 "}>
+			<div className={"flex"}>
 				{videoUrl ? (
-					<div css={css`display: flex; align-items: center; gap: 10rem; margin-right: 24rem; :hover { opacity: 0.8 }`} onClick={setIsOpenVideoModal.bind(this, true)}>
+					<div
+						css={css`
+							display: flex;
+							align-items: center;
+							gap: 10rem;
+							margin-right: 24rem;
+							:hover {
+								opacity: 0.8;
+							}
+						`}
+						onClick={setIsOpenVideoModal.bind(this, true)}
+					>
 						<PlaySVG />
-						<span css={css`position: relative; top: 2px;`}>Play video</span>
+						<span
+							css={css`
+								position: relative;
+								top: 2px;
+							`}
+						>
+							Play video
+						</span>
 					</div>
-				) : ""}
+				) : (
+					""
+				)}
 
 				<Dropdown component={<Browsers setConfig={setConfig} browsers={allCofiguration.browser} />} dropdownCSS={dropDownSelectionCSS}>
 					<LinkBlock paddingY={4} paddingX={"12rem"}>
@@ -640,20 +674,20 @@ function TestConfigSection({
 					</LinkBlock>
 				</Dropdown>
 			</div>
-            <Conditional showIf={videoUrl && openVideoModal}>
+			<Conditional showIf={videoUrl && openVideoModal}>
 				<TestVideoUrl videoUrl={videoUrl} setOpenVideoModal={setIsOpenVideoModal.bind(this)} />
 			</Conditional>
-        </div>)
-    );
+		</div>
+	);
 }
 
 function getAllKeys() {
 	const keys: any = {};
 	{
-        for (const key of Object.keys(item)) {
+		for (const key of Object.keys(item)) {
 			keys[key] = true;
 		}
-    };
+	}
 
 	return Object.keys(sortObjectByPropertyKeyAsc(keys));
 }
@@ -747,28 +781,24 @@ function Table({ columns, data }) {
 }
 
 function StepInfoModal({ setOpenStepInfoModal, data }) {
-	const {
-        meta
-    } = data;
+	const { meta } = data;
 
-	const {
-        actionName
-    } = meta;
+	const { actionName } = meta;
 
 	const metaInfo = meta.meta || meta;
 
 	return (
-        (<Modal
+		<Modal
 			onClose={setOpenStepInfoModal.bind(this, false)}
 			onOutsideClick={setOpenStepInfoModal.bind(this, false)}
 			modalStyle={css`
 				padding: 28rem 36rem 36rem;
 			`}
 		>
-            <div className={"font-cera text-16 font-600 leading-none"}>Step Info 🦖</div>
-            <div className={"text-13 mt-8 mb-24"}>Debug info listed below</div>
-            <hr />
-            <div className={"mt-44"}>
+			<div className={"font-cera text-16 font-600 leading-none"}>Step Info 🦖</div>
+			<div className={"text-13 mt-8 mb-24"}>Debug info listed below</div>
+			<hr />
+			<div className={"mt-44"}>
 				<Conditional showIf={actionName}>
 					<div className={"text-13 mt-8 mb-24 flex text-bold"}>
 						<span css={{ fontWeight: "bold" }}>Step name</span>
@@ -789,27 +819,25 @@ function StepInfoModal({ setOpenStepInfoModal, data }) {
 				</Conditional>
 
 				<Conditional showIf={metaInfo?.result?.length}>
-					<div style={{ fontWeight: "bold", color: "#fff", fontSize: "13rem" }}>
-						Result (Total {metaInfo?.result ? metaInfo.result.length : 0} items):{" "}
-					</div>
+					<div style={{ fontWeight: "bold", color: "#fff", fontSize: "13rem" }}>Result (Total {metaInfo?.result ? metaInfo.result.length : 0} items): </div>
 					<div css={tableStyle}>
 						<Table
 							data={metaInfo?.result && metaInfo.result.map((t) => ({ ...t, exists: t.exists.toString() }))}
 							columns={
 								metaInfo?.result &&
-								getAllKeys().map(key => ({
-                                    id: key,
-                                    Header: key,
-                                    accessor: key,
-                                    key: key
-                                }))
+								getAllKeys().map((key) => ({
+									id: key,
+									Header: key,
+									accessor: key,
+									key: key,
+								}))
 							}
 						/>
 					</div>
 				</Conditional>
 			</div>
-        </Modal>)
-    );
+		</Modal>
+	);
 }
 
 const tableStyle = css`
@@ -871,19 +899,19 @@ function TestVideoUrl({ setOpenVideoModal, videoUrl }) {
 }
 
 function TestOverviewTabTopSection({
-    currentTestTab,
-    testInstanceData,
-    expand,
-    isShowingVideo,
-    setIsShowingVideo,
-    allConfiguration,
-    setTestCardConfig,
-    testCardConfig,
-    setCurrentTestTab
+	currentTestTab,
+	testInstanceData,
+	expand,
+	isShowingVideo,
+	setIsShowingVideo,
+	allConfiguration,
+	setTestCardConfig,
+	testCardConfig,
+	setCurrentTestTab,
 }) {
-    const videoUrl = testInstanceData?.output?.video;
+	const videoUrl = testInstanceData?.output?.video;
 
-    return (
+	return (
 		<div
 			css={css`
 				display: flex;
@@ -926,7 +954,13 @@ function TestOverviewTabTopSection({
 			{/*</Conditional>*/}
 
 			<div className={"flex items-center mr-60"}>
-				<TestConfigSection videoUrl={testInstanceData?.output?.video} expand={expand} allCofiguration={allConfiguration} setTestCardConfig={setTestCardConfig} testCardConfig={testCardConfig} />
+				<TestConfigSection
+					videoUrl={testInstanceData?.output?.video}
+					expand={expand}
+					allCofiguration={allConfiguration}
+					setTestCardConfig={setTestCardConfig}
+					testCardConfig={testCardConfig}
+				/>
 			</div>
 		</div>
 	);
@@ -1036,13 +1070,11 @@ function RenderSteps({ steps, testInstanceData, testId, setIsShowingVideo }: { s
 	);
 }
 
-function TestLogs({
-    testInstanceData
-}) {
+function TestLogs({ testInstanceData }) {
 	const steps = getStepsFromInstanceData(testInstanceData);
 
 	return (
-        (<textarea
+		<textarea
 			css={css`
 				margin-top: 50rem;
 				margin-left: 54rem;
@@ -1062,32 +1094,32 @@ function TestLogs({
 				})
 				.join("\n")}
 			readOnly={true}
-		></textarea>)
-    );
+		></textarea>
+	);
 }
 
 function TestCard({ id, testData }: { id: string; testData: Test }) {
-    const { name, testInstances } = testData;
-    const [expand, setExpand] = useState(false);
-    const [showLoading] = useState(false);
-    const allConfiguration = getAllConfigurationForGivenTest(testData);
-    const [testCardConfig, setTestCardConfig] = useState(getBaseConfig(allConfiguration));
-    const [isShowingVideo, setIsShowingVideo] = React.useState(false);
-    const [currentTestTab, setCurrentTestTab] = React.useState(TestTabEnum.OVERVIEW);
+	const { name, testInstances } = testData;
+	const [expand, setExpand] = useState(false);
+	const [showLoading] = useState(false);
+	const allConfiguration = getAllConfigurationForGivenTest(testData);
+	const [testCardConfig, setTestCardConfig] = useState(getBaseConfig(allConfiguration));
+	const [isShowingVideo, setIsShowingVideo] = React.useState(false);
+	const [currentTestTab, setCurrentTestTab] = React.useState(TestTabEnum.OVERVIEW);
 
-    const testIndexByFilteration = getTestIndexByConfig(testData, testCardConfig);
+	const testIndexByFilteration = getTestIndexByConfig(testData, testCardConfig);
 
-    const failedTestsConfiguration = getFailedConfigurationForTest(testData);
-    const testInstanceData = testInstances[testIndexByFilteration];
-    const steps = getStepsFromInstanceData(testInstanceData);
+	const failedTestsConfiguration = getFailedConfigurationForTest(testData);
+	const testInstanceData = testInstances[testIndexByFilteration];
+	const steps = getStepsFromInstanceData(testInstanceData);
 
-    useEffect(() => {
+	useEffect(() => {
 		if (failedTestsConfiguration.length >= 1) {
 			setExpand(true);
 		}
 	}, []);
 
-    return (
+	return (
 		<div css={testCard} className={" flex-col mt-24 "} id={`test-card-${id}`}>
 			<TestOverviewTabTopSection
 				isShowingVideo={isShowingVideo}

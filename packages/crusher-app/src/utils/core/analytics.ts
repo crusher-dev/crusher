@@ -1,11 +1,12 @@
 import { getAllCookies } from "crusher-app/src/utils/common/cookieUtils";
+
 export const waitForSegmentToLoad = () => {
 	return new Promise((res) => {
 		const timer = setInterval(() => {
 			if (window["analytics"]) {
 				res();
 				clearInterval(timer);
-			};
+			}
 		}, 100);
 	});
 };
@@ -29,7 +30,7 @@ export class Analytics {
 			window["analytics"].identify(CRUSHER_USER_ID, {
 				email,
 			});
-		};
+		}
 	}
 
 	static async trackPage() {

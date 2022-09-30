@@ -89,14 +89,7 @@ export function ShowSidebySide(props) {
 
 export function CorrentSVG(props) {
 	return (
-		<svg
-			width={14}
-			height={14}
-			viewBox="0 0 14 14"
-			fill="none"
-			xmlns="http://www.w3.org/2000/svg"
-			{...props}
-		>
+		<svg width={14} height={14} viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<path
 				d="M9.604 1C11.638 1 13 2.428 13 4.552v4.903C13 11.572 11.638 13 9.604 13H4.402C2.368 13 1 11.572 1 9.455V4.552C1 2.428 2.368 1 4.402 1h5.202zm-.096 4.2a.529.529 0 00-.744 0L6.286 7.678l-1.05-1.05a.529.529 0 00-.744 0 .529.529 0 000 .744L5.92 8.794c.102.102.234.15.366.15.138 0 .27-.048.372-.15l2.85-2.85a.529.529 0 000-.744z"
 				fill="#9EF25B"
@@ -105,6 +98,5 @@ export function CorrentSVG(props) {
 		</svg>
 	);
 }
-
 
 export { CommentIconSVG, DangerIconSVG, ClockIconSVG, DropdownIconSVG };

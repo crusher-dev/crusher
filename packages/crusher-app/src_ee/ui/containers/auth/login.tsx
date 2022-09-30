@@ -1,19 +1,20 @@
 import { css } from "@emotion/react";
-import { loadUserDataAndRedirect } from "@hooks/user";
-import { getGithubLoginURL } from "@utils/core/external";
-import { Button, Input } from "dyson/src/components/atoms";
-
-import { Text } from "dyson/src/components/atoms/text/Text";
-
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import React from "react";
+
+import { Button, Input } from "dyson/src/components/atoms";
+import { Text } from "dyson/src/components/atoms/text/Text";
 import { Conditional } from "dyson/src/components/layouts";
-import { validateEmail, validatePassword } from "@utils/common/validationUtils";
+
+import { loadUserDataAndRedirect } from "@hooks/user";
+import { LoadingSVG } from "@svg/dashboard";
 import { RequestMethod } from "@types/RequestOptions";
 import { backendRequest } from "@utils/common/backendRequest";
-import { LoadingSVG } from "@svg/dashboard";
+import { validateEmail, validatePassword } from "@utils/common/validationUtils";
+import { getGithubLoginURL } from "@utils/core/external";
+
 import BaseContainer from "./components/BaseContainer";
 
 const GitlabSVG = (props: any) => (

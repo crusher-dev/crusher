@@ -6,6 +6,7 @@ import { IUserAndSystemInfoResponse } from "@crusher-shared/types/response/IUser
 import { getBoolean } from "@utils/common";
 import { getEdition } from "@utils/helpers";
 import { isTempTestPending } from "@utils/user";
+
 import { resolvePathToBackendURI } from "./common/url";
 
 export const handleOpenSourceMounting = async (data: IUserAndSystemInfoResponse, router: NextRouter, loadCallback: any) => {
@@ -81,7 +82,6 @@ export const getGoogleAuthUrl = (query: any): string => {
 	return finalURL.toString();
 };
 
-
 export const getIdentifier = (name, id) => {
 	return String(id);
-}
+};

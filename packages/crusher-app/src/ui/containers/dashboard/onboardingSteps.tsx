@@ -2,18 +2,19 @@ import { css } from "@emotion/react";
 import dynamic from "next/dynamic";
 import React, { useMemo, useState } from "react";
 
+import { useAtom } from "jotai";
+
 import { Button } from "dyson/src/components/atoms/button/Button";
 import { Conditional } from "dyson/src/components/layouts";
 
 import { FullScreenSVG } from "@svg/dashboard";
 import { PlaySVG } from "@svg/dashboard";
 import { DownloadButton } from "@ui/containers/dashboard/Download";
-
-import { ExpandableList, ExpandableListItem } from "./expandableList";
-import { useAtom } from "jotai";
-import { currentProjectSelector } from "../../../store/selectors/getCurrentProject";
-import { userAtom } from "../../../store/atoms/global/user";
 import { getOnboardingStepIndex } from "@utils/core/dashboard/onboardingUtils";
+
+import { userAtom } from "../../../store/atoms/global/user";
+import { currentProjectSelector } from "../../../store/selectors/getCurrentProject";
+import { ExpandableList, ExpandableListItem } from "./expandableList";
 
 interface TTestIntegrationListProps {
 	className?: string;

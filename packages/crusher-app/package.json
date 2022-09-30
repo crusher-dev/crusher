@@ -11,7 +11,8 @@
 		"build": "next build",
 		"lint": "eslint --ext=jsx,ts,tsx src",
 		"export": "next export",
-		"prettify": "prettier --write . --plugin-search-dir=./node_modules/ --plugin=./node_modules/@trivago/prettier-plugin-sort-imports/",
+		"prettify:test": "prettier .",
+		"prettify": "prettier --write .",
 		"analyze:server": "cross-env BUNDLE_ANALYZE=server next build",
 		"analyze:browser": "cross-env ANALYZE=true ANALYZE=true next build",
 		"test": "jest"
@@ -87,6 +88,7 @@
 		"next-transpile-modules": "^6.0.0",
 		"prettier": "^2.3.2",
 		"prettier-plugin-tailwind": "^2.2.12",
+		"prettier-plugin-tailwindcss": "^0.1.13",
 		"shelljs": "^0.8.4",
 		"tailwindcss": "^1.9.6",
 		"ts-jest": "^27.1.0",

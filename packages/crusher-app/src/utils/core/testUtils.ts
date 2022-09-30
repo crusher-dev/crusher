@@ -1,9 +1,12 @@
-import { getBuildsList, getRunTestApi } from "@constants/api";
-import { PROJECT_META_KEYS, USER_META_KEYS } from "@constants/USER";
-import { mutate } from "swr";
 import { BaseRouter } from "next/dist/shared/lib/router/router";
-import { sendSnackBarEvent } from "@utils/common/notify";
+
+import { mutate } from "swr";
+
+import { PROJECT_META_KEYS, USER_META_KEYS } from "@constants/USER";
+import { getBuildsList, getRunTestApi } from "@constants/api";
 import { backendRequest } from "@utils/common/backendRequest";
+import { sendSnackBarEvent } from "@utils/common/notify";
+
 import { RequestMethod } from "../../types/RequestOptions";
 
 const runTests = (projectId: number, folder: string | null = null) => {

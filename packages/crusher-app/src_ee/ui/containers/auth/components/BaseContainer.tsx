@@ -1,9 +1,11 @@
 import { css } from "@emotion/react";
-import { LoginNavBar } from "@ui/containers/common/login/navbar";
+import React from "react";
+
 import { Heading } from "dyson/src/components/atoms/heading/Heading";
 import { Text } from "dyson/src/components/atoms/text/Text";
 import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
-import React from "react";
+
+import { LoginNavBar } from "@ui/containers/common/login/navbar";
 
 export default function BaseContainer({ children }) {
 	return (

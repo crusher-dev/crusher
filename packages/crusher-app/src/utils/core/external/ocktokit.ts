@@ -9,7 +9,7 @@ class OctokitManager {
 	getReposForInstallation(installationId) {
 		return this.octokit.apps.listInstallationReposForAuthenticatedUser({
 			installation_id: installationId,
-			per_page: 100
+			per_page: 100,
 		});
 	}
 

@@ -1,5 +1,6 @@
-import React from "react";
 import { css } from "@emotion/react";
+import React from "react";
+
 import { sendSnackBarEvent } from "@utils/common/notify";
 
 const LinkBox = ({ value, children, ...props }) => {

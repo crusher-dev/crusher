@@ -3,16 +3,17 @@ import { useEffect } from "react";
 
 import { useAtom } from "jotai";
 
-import { tempProjectAtom, tempTestAtom } from "../store/atoms/global/temp/tempTestId";
-import { tempTestNameAtom } from "../store/atoms/global/temp/tempTestName";
+import { cliLoginUserKeyAtom } from "@store/atoms/global/cliToken";
+import { githubTokenAtom } from "@store/atoms/global/githubToken";
+import { inviteCodeUserKeyAtom } from "@store/atoms/global/inviteCode";
 import { tempTestTypeAtom } from "@store/atoms/global/temp/tempTestType";
 import { tempTestUpdateIdAtom } from "@store/atoms/global/temp/tempTestUpdateId";
-import { githubTokenAtom } from "@store/atoms/global/githubToken";
-import { cliLoginUserKeyAtom } from "@store/atoms/global/cliToken";
+import { RequestMethod } from "@types/RequestOptions";
 import { backendRequest } from "@utils/common/backendRequest";
 import { resolvePathToBackendURI } from "@utils/common/url";
-import { RequestMethod } from "@types/RequestOptions";
-import { inviteCodeUserKeyAtom } from "@store/atoms/global/inviteCode";
+
+import { tempProjectAtom, tempTestAtom } from "../store/atoms/global/temp/tempTestId";
+import { tempTestNameAtom } from "../store/atoms/global/temp/tempTestName";
 
 export const useLoadTempData = () => {
 	const [, setTempTest] = useAtom(tempTestAtom);
@@ -45,23 +46,23 @@ export const useLoadTempData = () => {
 
 		if (urlQuery.get("project_id")) {
 			setProjectToRedirect(parseInt(urlQuery.get("project_id")));
-		};
+		}
 
 		if (loginKey) {
 			setLoginKey(loginKey);
 			backendRequest(resolvePathToBackendURI("/cli/actions/login.user"), { method: RequestMethod.POST, payload: { loginKey } }).catch(() => {
 				console.error("Request failed");
 			});
-		};
+		}
 		if (inviteCode) {
 			setInviteCode(inviteCode);
-		};
+		}
 		if (githubToken) {
 			setGithubToken(githubToken);
 		}
 
 		if (testId) {
 			setTempTestUpdateId(testId);
-		};
+		}
 	}, []);
 };

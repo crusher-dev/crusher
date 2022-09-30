@@ -1,30 +1,32 @@
 import { css } from "@emotion/react";
-import { usePageTitle } from "@hooks/seo";
-import { onboardingStepAtom, OnboardingStepEnum } from "@store/atoms/pages/onboarding";
-import { GitSVG } from "@svg/onboarding";
-import { GithubSVG, GitIconSVG } from "@svg/social";
-import { openPopup } from "@utils/common/domUtils";
-import { getGithubOAuthURL } from "@utils/core/external";
-import { OctokitManager } from "@utils/core/external/ocktokit";
+import Link from "next/link";
+import React from "react";
+
+import { atom, useAtom } from "jotai";
+import { atomWithImmer } from "jotai/immer";
+import { mutate } from "swr";
+
 import { Button, Input } from "dyson/src/components/atoms";
 import { Text } from "dyson/src/components/atoms";
 import { Conditional } from "dyson/src/components/layouts";
 import { SelectBox } from "dyson/src/components/molecules/Select/Select";
-import { atom, useAtom } from "jotai";
-import { atomWithImmer } from "jotai/immer";
-import { convertToOrganisationInfo, getRepoData } from "@utils/core/settings/project/integrationUtils";
 
-import React from "react";
-import { AddSVG } from "@svg/dashboard";
-import { currentProject } from "@store/atoms/global/project";
-import { mutate } from "swr";
-import { addGithubRepo, getGitIntegrations } from "@constants/api";
-import { backendRequest } from "@utils/common/backendRequest";
-import { RequestMethod } from "@types/RequestOptions";
-import { githubTokenAtom } from "@store/atoms/global/githubToken";
-import { updateMeta } from "@store/mutators/metaData";
 import { USER_META_KEYS } from "@constants/USER";
-import Link from "next/link";
+import { addGithubRepo, getGitIntegrations } from "@constants/api";
+import { usePageTitle } from "@hooks/seo";
+import { githubTokenAtom } from "@store/atoms/global/githubToken";
+import { currentProject } from "@store/atoms/global/project";
+import { onboardingStepAtom, OnboardingStepEnum } from "@store/atoms/pages/onboarding";
+import { updateMeta } from "@store/mutators/metaData";
+import { AddSVG } from "@svg/dashboard";
+import { GitSVG } from "@svg/onboarding";
+import { GithubSVG, GitIconSVG } from "@svg/social";
+import { RequestMethod } from "@types/RequestOptions";
+import { backendRequest } from "@utils/common/backendRequest";
+import { openPopup } from "@utils/common/domUtils";
+import { getGithubOAuthURL } from "@utils/core/external";
+import { OctokitManager } from "@utils/core/external/ocktokit";
+import { convertToOrganisationInfo, getRepoData } from "@utils/core/settings/project/integrationUtils";
 
 const connectedToGitAtom = atomWithImmer<
 	| any
@@ -298,11 +300,11 @@ const addGithubProject = (projectId: number, repoData) => {
 };
 
 const GitRepoIntegration = () => {
-    const [connectedGit, setConnectedGit] = useAtom(connectedToGitAtom);
-    const [githubToken] = useAtom(githubTokenAtom);
-    const [, updateOnboarding] = useAtom(updateMeta);
+	const [connectedGit, setConnectedGit] = useAtom(connectedToGitAtom);
+	const [githubToken] = useAtom(githubTokenAtom);
+	const [, updateOnboarding] = useAtom(updateMeta);
 
-    const onGithubConnectClick = (alreadAuthorized: boolean = false) => {
+	const onGithubConnectClick = (alreadAuthorized: boolean = false) => {
 		const windowRef = openPopup(getGithubOAuthURL(alreadAuthorized));
 		const interval = setInterval(() => {
 			const isOnFEPage = windowRef?.location?.href?.includes(window.location.host);
@@ -320,7 +322,7 @@ const GitRepoIntegration = () => {
 		}, 50);
 	};
 
-    const handleSkipOnboarding = () => {
+	const handleSkipOnboarding = () => {
 		updateOnboarding({
 			type: "user",
 			key: USER_META_KEYS.INITIAL_ONBOARDING,
@@ -328,7 +330,7 @@ const GitRepoIntegration = () => {
 		});
 	};
 
-    React.useEffect(() => {
+	React.useEffect(() => {
 		if (githubToken && githubToken !== "null" && githubToken.length) {
 			setConnectedGit({
 				...connectedGit,
@@ -338,9 +340,9 @@ const GitRepoIntegration = () => {
 		}
 	}, [githubToken]);
 
-    usePageTitle("Select github repo");
+	usePageTitle("Select github repo");
 
-    return (
+	return (
 		<>
 			<div
 				css={css`

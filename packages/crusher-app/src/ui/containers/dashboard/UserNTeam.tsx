@@ -4,16 +4,16 @@ import { useRouter } from "next/router";
 
 import { useAtom } from "jotai";
 
+import { HoverCard } from "dyson/src/components/atoms/tooltip/Tooltip1";
 import { UserIcon } from "dyson/src/components/atoms/userimage/UserImage";
 
 import { MenuItem } from "@components/molecules/MenuItem";
+import { backendRequest } from "@utils/common/backendRequest";
 import { resolvePathToBackendURI } from "@utils/common/url";
 
 import { teamAtom } from "../../../store/atoms/global/team";
 import { userAtom } from "../../../store/atoms/global/user";
-import { backendRequest } from "@utils/common/backendRequest";
 import { Dolphin, TopDown } from "./icont";
-import { HoverCard } from "dyson/src/components/atoms/tooltip/Tooltip1";
 
 const userDropdownItems = [
 	{
@@ -44,13 +44,7 @@ const userDropdownItems = [
 
 function Logout(props) {
 	return (
-		<svg
-			width={14}
-			height={14}
-			fill="none"
-			xmlns="http://www.w3.org/2000/svg"
-			{...props}
-		>
+		<svg width={14} height={14} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<path
 				d="M9.188 5.25V3.062A1.313 1.313 0 007.875 1.75h-3.5a1.313 1.313 0 00-1.313 1.313v7.874a1.313 1.313 0 001.313 1.313h3.5a1.313 1.313 0 001.313-1.313V8.75M7 5.25L5.25 7m0 0L7 8.75M5.25 7h7.438"
 				stroke="#868686"
@@ -60,7 +54,6 @@ function Logout(props) {
 		</svg>
 	);
 }
-
 
 function DropdownContent() {
 	const router = useRouter();
@@ -87,11 +80,12 @@ function DropdownContent() {
 						await backendRequest(resolvePathToBackendURI("/users/actions/logout"));
 						router.push("/login");
 					}}
-					label={(
+					label={
 						<div className="flex items-center">
-							<Logout className="mr-6" /><span>Logout</span>
+							<Logout className="mr-6" />
+							<span>Logout</span>
 						</div>
-					)}
+					}
 					rightLabel={""}
 				/>
 			</div>
@@ -117,14 +111,11 @@ export function UserNTeam() {
 				</div>
 			</div>
 
-
 			<HoverCard wrapperCSS={userDropdownCSS} content={<DropdownContent />} placement="bottom-start" type="click" padding={2} offset={0}>
-
 				<div className={"flex items-center pr"}>
 					<UserIcon initial={user.name[0]} />
 				</div>
 			</HoverCard>
-
 		</div>
 	);
 }
@@ -132,7 +123,7 @@ export function UserNTeam() {
 const userDropdownCSS = css`
 	min-height: 400rem;
 	margin-left: -12px;
-`
+`;
 
 export function MenuItemHorizontal({ children, selected, ...props }) {
 	return (
@@ -172,7 +163,7 @@ const orgName = css`
 	:hover {
 		background: rgba(255, 255, 255, 0.07);
 		border-radius: 8px;
-		.expand{
+		.expand {
 			fill: #fff;
 		}
 	}
@@ -188,12 +179,10 @@ const nameInitial = css`
 	width: 22rem;
 	height: 22rem;
 	border-radius: 4px;
-
 `;
 
 const name = css`
-letter-spacing: 0.02em;
+	letter-spacing: 0.02em;
 
-color: #CECECE;
+	color: #cecece;
 `;
-

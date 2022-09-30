@@ -1,14 +1,18 @@
 import { css } from "@emotion/react";
+import React from "react";
+
+import { useAtom } from "jotai";
+
+import { Button } from "dyson/src/components/atoms";
+
+import { setupOSS, USER_SYSTEM_API } from "@constants/api";
+import { usePageTitle } from "@hooks/seo";
 import { systemConfigAtom } from "@store/atoms/global/systemConfig";
 import { onboardingStepAtom, OnboardingStepEnum } from "@store/atoms/pages/onboarding";
 import { selectInitialProjectMutator, updateInitialDataMutator } from "@store/mutators/user";
 import { backendRequest } from "@utils/common/backendRequest";
-import { Button } from "dyson/src/components/atoms";
-import { useAtom } from "jotai";
-import React from "react";
+
 import { ModuleCard } from "./ModuleCard";
-import { setupOSS, USER_SYSTEM_API } from "@constants/api";
-import { usePageTitle } from "@hooks/seo";
 
 const setupOSSFn = () => {
 	return backendRequest(setupOSS);

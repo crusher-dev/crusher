@@ -175,16 +175,9 @@ export function NewTabSVG(props: any) {
 	);
 }
 
-
 export function HomeIcon(props: React.SVGProps<SVGSVGElement>) {
 	return (
-		<svg
-			width={14}
-			height={14}
-			fill="none"
-			xmlns="http://www.w3.org/2000/svg"
-			{...props}
-		>
+		<svg width={14} height={14} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<path
 				fillRule="evenodd"
 				clipRule="evenodd"
@@ -211,13 +204,7 @@ export function Slash(props: any) {
 
 export function Book(props: any) {
 	return (
-		<svg
-			width={14}
-			height={14}
-			fill="none"
-			xmlns="http://www.w3.org/2000/svg"
-			{...props}
-		>
+		<svg width={14} height={14} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<path
 				fillRule="evenodd"
 				clipRule="evenodd"
@@ -230,13 +217,7 @@ export function Book(props: any) {
 
 export function TestIcon(props: any) {
 	return (
-		<svg
-			width={14}
-			height={14}
-			fill="none"
-			xmlns="http://www.w3.org/2000/svg"
-			{...props}
-		>
+		<svg width={14} height={14} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<path
 				fillRule="evenodd"
 				clipRule="evenodd"
@@ -249,13 +230,7 @@ export function TestIcon(props: any) {
 
 export function BuildIcon(props: any) {
 	return (
-		<svg
-			width={14}
-			height={14}
-			fill="none"
-			xmlns="http://www.w3.org/2000/svg"
-			{...props}
-		>
+		<svg width={14} height={14} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<path
 				d="M9.724.5c2.008 0 3.126 1.157 3.126 3.14v6.714c0 2.015-1.118 3.146-3.126 3.146H4.276c-1.976 0-3.126-1.131-3.126-3.146V3.64C1.15 1.656 2.3.5 4.276.5h5.448zM4.452 9.431a.517.517 0 00-.488.787c.104.162.293.26.488.233h5.096a.509.509 0 00.455-.507.51.51 0 00-.455-.513H4.452zm5.096-2.965H4.452a.508.508 0 000 1.015h5.096a.508.508 0 000-1.015zM6.395 3.522H4.452v.007a.507.507 0 000 1.014h1.943a.51.51 0 000-1.02z"
 				fill="#BDBDBD"
@@ -264,16 +239,9 @@ export function BuildIcon(props: any) {
 	);
 }
 
-
 export function ClockIcon(props: any) {
 	return (
-		<svg
-			width={14}
-			height={14}
-			fill="none"
-			xmlns="http://www.w3.org/2000/svg"
-			{...props}
-		>
+		<svg width={14} height={14} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<path
 				fillRule="evenodd"
 				clipRule="evenodd"
@@ -284,16 +252,9 @@ export function ClockIcon(props: any) {
 	);
 }
 
-
 export function Gear(props: any) {
 	return (
-		<svg
-			width={14}
-			height={14}
-			fill="none"
-			xmlns="http://www.w3.org/2000/svg"
-			{...props}
-		>
+		<svg width={14} height={14} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<path
 				d="M1.05 7.982l.851.005c.128.656.38 1.293.762 1.871l-.605.6a.553.553 0 00-.005.78l.653.662a.553.553 0 00.78.005l.605-.6c.573.388 1.208.65 1.863.783l-.005.852a.552.552 0 00.55.555l.928.005a.552.552 0 00.555-.55l.005-.851a5.183 5.183 0 001.871-.762l.6.605a.553.553 0 00.78.005l.662-.653a.553.553 0 00.005-.78l-.6-.605c.388-.573.65-1.208.783-1.863l.852.005a.552.552 0 00.555-.55l.005-.928a.552.552 0 00-.55-.555l-.851-.005a5.183 5.183 0 00-.762-1.872l.605-.6a.553.553 0 00.005-.78l-.653-.66a.553.553 0 00-.78-.006l-.605.6a5.153 5.153 0 00-1.863-.783l.005-.852a.552.552 0 00-.55-.555L6.574.5a.552.552 0 00-.555.55L6.01 1.9a5.145 5.145 0 00-1.871.762l-.6-.605a.553.553 0 00-.78-.005l-.659.653a.553.553 0 00-.005.78l.6.605a5.153 5.153 0 00-.783 1.863L1.06 5.95a.552.552 0 00-.555.55L.5 7.426a.553.553 0 00.55.555zM5.258 5.24a2.47 2.47 0 013.495.019 2.47 2.47 0 01-.018 3.495 2.47 2.47 0 01-3.496-.018A2.47 2.47 0 015.26 5.24z"
 				fill="#343336"
@@ -304,13 +265,7 @@ export function Gear(props: any) {
 
 export function MapSVG(props: any) {
 	return (
-		<svg
-			width={14}
-			height={14}
-			fill="none"
-			xmlns="http://www.w3.org/2000/svg"
-			{...props}
-		>
+		<svg width={14} height={14} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<path
 				fillRule="evenodd"
 				clipRule="evenodd"
@@ -321,16 +276,9 @@ export function MapSVG(props: any) {
 	);
 }
 
-
 export function IntegrationSVG(props: any) {
 	return (
-		<svg
-			width={14}
-			height={14}
-			fill="none"
-			xmlns="http://www.w3.org/2000/svg"
-			{...props}
-		>
+		<svg width={14} height={14} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<path
 				d="M7.284 1.8c.21 0 .382.167.382.372v1.564c0 .25.214.458.472.458a.464.464 0 00.471-.458V2.172c0-.205.172-.372.384-.372h2.05C12.4 1.8 13.5 2.869 13.5 4.188v1.539c0 .122-.05.238-.138.323a.478.478 0 01-.334.135c-.465 0-.842.366-.842.812a.83.83 0 00.834.818c.26.003.48.178.48.43v1.567c0 1.319-1.1 2.388-2.458 2.388h-2.05a.378.378 0 01-.383-.373v-1.319a.46.46 0 00-.471-.458.464.464 0 00-.472.458v1.32a.378.378 0 01-.382.372H2.958C1.606 12.2.5 11.13.5 9.812V8.246c0-.253.22-.428.48-.43a.83.83 0 00.834-.82c0-.433-.365-.763-.843-.763A.478.478 0 01.638 6.1.451.451 0 01.5 5.775V4.194C.5 2.877 1.609 1.8 2.964 1.8h4.32zm.854 3.707a.468.468 0 00-.472.458v2.442c0 .25.214.458.472.458a.464.464 0 00.471-.458V5.965a.464.464 0 00-.471-.458z"
 				fill="#BDBDBD"
@@ -338,7 +286,6 @@ export function IntegrationSVG(props: any) {
 		</svg>
 	);
 }
-
 
 export function Chat(props: any) {
 	return (
@@ -362,17 +309,9 @@ export function NewPeople(props: any) {
 	);
 }
 
-
 export function ExternalIcon(props: any) {
 	return (
-		<svg
-			width={8}
-			height={8}
-			fill="none"
-			viewBox="0 0 8 8"
-			xmlns="http://www.w3.org/2000/svg"
-			{...props}
-		>
+		<svg width={8} height={8} fill="none" viewBox="0 0 8 8" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<path
 				fillRule="evenodd"
 				clipRule="evenodd"
@@ -389,7 +328,6 @@ export function ExternalIcon(props: any) {
 	);
 }
 
-
 export function External(props) {
 	return (
 		<svg width={11} height={11} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
@@ -401,18 +339,9 @@ export function External(props) {
 	);
 }
 
-
-
 export function PlayIcon(props: any) {
 	return (
-		<svg
-			width={14}
-			height={14}
-			fill="none"
-			viewBox="0 0 14 14"
-			xmlns="http://www.w3.org/2000/svg"
-			{...props}
-		>
+		<svg width={14} height={14} fill="none" viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<path
 				d="M3.266.787C2.094.114 1.143.665 1.143 2.016v9.967c0 1.352.95 1.902 2.123 1.23l8.712-4.996c1.172-.672 1.172-1.762 0-2.434L3.266.787z"
 				fill="#fff"
@@ -423,14 +352,7 @@ export function PlayIcon(props: any) {
 
 export function PlusCircle(props: any) {
 	return (
-		<svg
-			width={14}
-			height={14}
-			fill="none"
-			viewBox="0 0 14 14"
-			xmlns="http://www.w3.org/2000/svg"
-			{...props}
-		>
+		<svg width={14} height={14} fill="none" viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<path
 				fillRule="evenodd"
 				clipRule="evenodd"
@@ -441,16 +363,9 @@ export function PlusCircle(props: any) {
 	);
 }
 
-
 export function PlayIconCircleSVG(props: any) {
 	return (
-		<svg
-			width={14}
-			height={14}
-			fill="none"
-			xmlns="http://www.w3.org/2000/svg"
-			{...props}
-		>
+		<svg width={14} height={14} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<path
 				d="M7 .5c3.582 0 6.5 2.916 6.5 6.504 0 3.58-2.918 6.496-6.5 6.496-3.583 0-6.5-2.916-6.5-6.496C.5 3.416 3.417.5 7 .5zm-.74 3.92a.873.873 0 00-.396.094.813.813 0 00-.351.388 4.192 4.192 0 00-.113.458c-.069.37-.107.972-.107 1.637 0 .634.038 1.21.095 1.586.006.007.075.427.15.571a.79.79 0 00.697.427h.025c.188-.007.583-.17.583-.176.665-.276 1.976-1.135 2.504-1.706l.037-.037c.07-.07.157-.176.176-.201a.792.792 0 00-.013-.947c-.025-.025-.119-.132-.207-.22-.514-.551-1.857-1.454-2.56-1.73-.106-.044-.376-.138-.52-.145z"
 				fill="#5E5E5E"
@@ -461,13 +376,7 @@ export function PlayIconCircleSVG(props: any) {
 
 export function EditTestSVG(props: any) {
 	return (
-		<svg
-			width={14}
-			height={14}
-			fill="none"
-			xmlns="http://www.w3.org/2000/svg"
-			{...props}
-		>
+		<svg width={14} height={14} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<path
 				d="M10.032.507a3.46 3.46 0 012.552.902c.637.695.961 1.617.91 2.559v6.064a3.492 3.492 0 01-.903 2.559 3.475 3.475 0 01-2.559.902H3.968a3.466 3.466 0 01-2.559-.902 3.466 3.466 0 01-.902-2.559V3.968a3.466 3.466 0 01.902-2.559A3.466 3.466 0 013.968.507h6.064zm-.168 2.967a1.027 1.027 0 00-1.455 0l-.435.442a.173.173 0 000 .24l.035.035.16.159.324.322.392.393c.082.082.137.137.141.143a.44.44 0 01.117.299.428.428 0 01-.429.428.408.408 0 01-.285-.117L7.344 4.74a.141.141 0 00-.195 0L4.052 7.838a1.17 1.17 0 00-.344.805l-.039 1.539c0 .084.026.162.084.22a.31.31 0 00.221.091H5.5c.312 0 .61-.123.838-.344l4.37-4.383a1.03 1.03 0 000-1.448l-.844-.844z"
 				fill="#5E5E5E"
@@ -478,13 +387,7 @@ export function EditTestSVG(props: any) {
 
 export function UpgradeIcon(props: any) {
 	return (
-		<svg
-			width={17}
-			height={17}
-			fill="none"
-			xmlns="http://www.w3.org/2000/svg"
-			{...props}
-		>
+		<svg width={17} height={17} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<path
 				fillRule="evenodd"
 				clipRule="evenodd"
@@ -495,16 +398,9 @@ export function UpgradeIcon(props: any) {
 	);
 }
 
-
 export function HappyFace(props) {
 	return (
-		<svg
-			width={20}
-			height={20}
-			fill="none"
-			xmlns="http://www.w3.org/2000/svg"
-			{...props}
-		>
+		<svg width={20} height={20} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<g opacity={1} clipPath="url(#prefix__clip0_981_3307)">
 				<path
 					d="M10 18.749c5.833 0 8.749-3.918 8.749-8.75S15.833 1.25 9.999 1.25 1.25 5.167 1.25 10c0 4.831 2.915 8.749 8.75 8.749z"
@@ -539,14 +435,8 @@ export function HappyFace(props) {
 					d="M10 18.749c5.833 0 8.749-3.918 8.749-8.75S15.833 1.25 9.999 1.25 1.25 5.167 1.25 10c0 4.831 2.915 8.749 8.75 8.749z"
 					fill="url(#prefix__paint7_radial_981_3307)"
 				/>
-				<path
-					d="M10 15.625C4.375 15.625 4.375 10 4.375 10h11.25s0 5.625-5.625 5.625z"
-					fill="url(#prefix__paint8_radial_981_3307)"
-				/>
-				<path
-					d="M14.063 10.938H5.937A.937.937 0 015 10h10c0 .518-.42.938-.938.938z"
-					fill="url(#prefix__paint9_linear_981_3307)"
-				/>
+				<path d="M10 15.625C4.375 15.625 4.375 10 4.375 10h11.25s0 5.625-5.625 5.625z" fill="url(#prefix__paint8_radial_981_3307)" />
+				<path d="M14.063 10.938H5.937A.937.937 0 015 10h10c0 .518-.42.938-.938.938z" fill="url(#prefix__paint9_linear_981_3307)" />
 				<path
 					d="M6.563 9.688s-1.876-.313-3.157-1.792C2.1 6.39 3.32 4.23 5.626 5.313c.985-1.608 3.43-1.014 3.105.937-.312 1.875-2.168 3.438-2.168 3.438z"
 					fill="url(#prefix__paint10_radial_981_3307)"
@@ -563,37 +453,10 @@ export function HappyFace(props) {
 					d="M13.709 8.806c.655-.247 1.555-.71 2.27-1.535 1.307-1.507.087-3.666-2.218-2.583-.986-1.608-3.432-1.014-3.106.937.19 1.138.947 2.16 1.514 2.788.392.435.991.6 1.54.393z"
 					fill="url(#prefix__paint13_linear_981_3307)"
 				/>
-				<ellipse
-					cx={5.895}
-					cy={5.819}
-					rx={0.938}
-					ry={1.875}
-					transform="rotate(-45 5.895 5.82)"
-					fill="url(#prefix__paint14_radial_981_3307)"
-				/>
-				<ellipse
-					cx={13.075}
-					cy={5.749}
-					rx={1.25}
-					ry={1.875}
-					transform="rotate(-12.966 13.075 5.75)"
-					fill="url(#prefix__paint15_radial_981_3307)"
-				/>
-				<circle
-					cx={8.174}
-					cy={4.765}
-					transform="rotate(45 8.174 4.765)"
-					fill="url(#prefix__paint16_radial_981_3307)"
-					r={0.938}
-				/>
-				<ellipse
-					cx={15.232}
-					cy={5.39}
-					rx={0.625}
-					ry={1.25}
-					transform="rotate(45 15.232 5.39)"
-					fill="url(#prefix__paint17_radial_981_3307)"
-				/>
+				<ellipse cx={5.895} cy={5.819} rx={0.938} ry={1.875} transform="rotate(-45 5.895 5.82)" fill="url(#prefix__paint14_radial_981_3307)" />
+				<ellipse cx={13.075} cy={5.749} rx={1.25} ry={1.875} transform="rotate(-12.966 13.075 5.75)" fill="url(#prefix__paint15_radial_981_3307)" />
+				<circle cx={8.174} cy={4.765} transform="rotate(45 8.174 4.765)" fill="url(#prefix__paint16_radial_981_3307)" r={0.938} />
+				<ellipse cx={15.232} cy={5.39} rx={0.625} ry={1.25} transform="rotate(45 15.232 5.39)" fill="url(#prefix__paint17_radial_981_3307)" />
 			</g>
 			<defs>
 				<radialGradient
@@ -764,36 +627,15 @@ export function HappyFace(props) {
 					<stop stopColor="#EC6686" />
 					<stop offset={1} stopColor="#EC6686" stopOpacity={0} />
 				</radialGradient>
-				<linearGradient
-					id="prefix__paint9_linear_981_3307"
-					x1={10}
-					y1={10}
-					x2={10}
-					y2={10.938}
-					gradientUnits="userSpaceOnUse"
-				>
+				<linearGradient id="prefix__paint9_linear_981_3307" x1={10} y1={10} x2={10} y2={10.938} gradientUnits="userSpaceOnUse">
 					<stop stopColor="#ECCDFF" />
 					<stop offset={1} stopColor="#fff" />
 				</linearGradient>
-				<linearGradient
-					id="prefix__paint12_linear_981_3307"
-					x1={8.116}
-					y1={4.375}
-					x2={6.241}
-					y2={8.75}
-					gradientUnits="userSpaceOnUse"
-				>
+				<linearGradient id="prefix__paint12_linear_981_3307" x1={8.116} y1={4.375} x2={6.241} y2={8.75} gradientUnits="userSpaceOnUse">
 					<stop stopColor="#CA0B4A" />
 					<stop offset={1} stopColor="#F70A8D" />
 				</linearGradient>
-				<linearGradient
-					id="prefix__paint13_linear_981_3307"
-					x1={15}
-					y1={4.375}
-					x2={11.875}
-					y2={9.375}
-					gradientUnits="userSpaceOnUse"
-				>
+				<linearGradient id="prefix__paint13_linear_981_3307" x1={15} y1={4.375} x2={11.875} y2={9.375} gradientUnits="userSpaceOnUse">
 					<stop stopColor="#CA0B4A" />
 					<stop offset={1} stopColor="#F70A8D" />
 				</linearGradient>
@@ -807,13 +649,7 @@ export function HappyFace(props) {
 
 export function ExcitedFace(props) {
 	return (
-		<svg
-			width={20}
-			height={20}
-			fill="none"
-			xmlns="http://www.w3.org/2000/svg"
-			{...props}
-		>
+		<svg width={20} height={20} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<g opacity={1} clipPath="url(#prefix__clip0_981_3393)">
 				<path
 					d="M10 18.749c5.833 0 8.749-3.918 8.749-8.75S15.833 1.25 9.999 1.25 1.25 5.167 1.25 10c0 4.831 2.915 8.749 8.75 8.749z"
@@ -849,28 +685,12 @@ export function ExcitedFace(props) {
 					fill="url(#prefix__paint7_radial_981_3393)"
 				/>
 				<g opacity={0.5} filter="url(#prefix__filter0_f_981_3393)">
-					<path
-						d="M4.688 7.188s.156-1.25 1.562-1.25a1.485 1.485 0 011.563 1.25"
-						stroke="#9A4609"
-						strokeWidth={2}
-						strokeLinecap="round"
-					/>
+					<path d="M4.688 7.188s.156-1.25 1.562-1.25a1.485 1.485 0 011.563 1.25" stroke="#9A4609" strokeWidth={2} strokeLinecap="round" />
 				</g>
 				<g opacity={0.5} filter="url(#prefix__filter1_f_981_3393)">
-					<path
-						d="M11.563 7.188s.312-1.25 1.562-1.25 1.563 1.25 1.563 1.25"
-						stroke="#9A4609"
-						strokeWidth={2}
-						strokeLinecap="round"
-					/>
+					<path d="M11.563 7.188s.312-1.25 1.562-1.25 1.563 1.25 1.563 1.25" stroke="#9A4609" strokeWidth={2} strokeLinecap="round" />
 				</g>
-				<path
-					d="M5 6.875s.156-1.25 1.563-1.25a1.485 1.485 0 011.562 1.25"
-					stroke="#43273B"
-					strokeWidth={2}
-					strokeLinecap="round"
-					strokeLinejoin="round"
-				/>
+				<path d="M5 6.875s.156-1.25 1.563-1.25a1.485 1.485 0 011.562 1.25" stroke="#43273B" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
 				<g opacity={0.26} filter="url(#prefix__filter2_f_981_3393)">
 					<path
 						d="M5.156 6.719s.157-1.25 1.563-1.25a1.485 1.485 0 011.562 1.25"
@@ -880,13 +700,7 @@ export function ExcitedFace(props) {
 						strokeLinejoin="round"
 					/>
 				</g>
-				<path
-					d="M11.875 6.875s.313-1.25 1.563-1.25S15 6.875 15 6.875"
-					stroke="#43273B"
-					strokeWidth={2}
-					strokeLinecap="round"
-					strokeLinejoin="round"
-				/>
+				<path d="M11.875 6.875s.313-1.25 1.563-1.25S15 6.875 15 6.875" stroke="#43273B" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
 				<g opacity={0.26} filter="url(#prefix__filter3_f_981_3393)">
 					<path
 						d="M12.031 6.719s.156-1.25 1.563-1.25a1.485 1.485 0 011.562 1.25"
@@ -896,14 +710,8 @@ export function ExcitedFace(props) {
 						strokeLinejoin="round"
 					/>
 				</g>
-				<path
-					d="M10 15.625C4.375 15.625 4.375 10 4.375 10h11.25s0 5.625-5.625 5.625z"
-					fill="url(#prefix__paint8_radial_981_3393)"
-				/>
-				<path
-					d="M14.063 10.938H5.937A.937.937 0 015 10h10c0 .518-.42.938-.938.938z"
-					fill="url(#prefix__paint9_linear_981_3393)"
-				/>
+				<path d="M10 15.625C4.375 15.625 4.375 10 4.375 10h11.25s0 5.625-5.625 5.625z" fill="url(#prefix__paint8_radial_981_3393)" />
+				<path d="M14.063 10.938H5.937A.937.937 0 015 10h10c0 .518-.42.938-.938.938z" fill="url(#prefix__paint9_linear_981_3393)" />
 			</g>
 			<defs>
 				<radialGradient
@@ -1007,78 +815,27 @@ export function ExcitedFace(props) {
 					<stop stopColor="#F70A8D" />
 					<stop offset={1} stopColor="#89029C" />
 				</radialGradient>
-				<filter
-					id="prefix__filter0_f_981_3393"
-					x={2.187}
-					y={3.438}
-					width={8.125}
-					height={6.25}
-					filterUnits="userSpaceOnUse"
-					colorInterpolationFilters="sRGB"
-				>
+				<filter id="prefix__filter0_f_981_3393" x={2.187} y={3.438} width={8.125} height={6.25} filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
 					<feFlood floodOpacity={0} result="BackgroundImageFix" />
 					<feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
-					<feGaussianBlur
-						stdDeviation={0.75}
-						result="effect1_foregroundBlur_981_3393"
-					/>
+					<feGaussianBlur stdDeviation={0.75} result="effect1_foregroundBlur_981_3393" />
 				</filter>
-				<filter
-					id="prefix__filter1_f_981_3393"
-					x={9.062}
-					y={3.438}
-					width={8.125}
-					height={6.25}
-					filterUnits="userSpaceOnUse"
-					colorInterpolationFilters="sRGB"
-				>
+				<filter id="prefix__filter1_f_981_3393" x={9.062} y={3.438} width={8.125} height={6.25} filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
 					<feFlood floodOpacity={0} result="BackgroundImageFix" />
 					<feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
-					<feGaussianBlur
-						stdDeviation={0.75}
-						result="effect1_foregroundBlur_981_3393"
-					/>
+					<feGaussianBlur stdDeviation={0.75} result="effect1_foregroundBlur_981_3393" />
 				</filter>
-				<filter
-					id="prefix__filter2_f_981_3393"
-					x={3.281}
-					y={3.594}
-					width={6.875}
-					height={5}
-					filterUnits="userSpaceOnUse"
-					colorInterpolationFilters="sRGB"
-				>
+				<filter id="prefix__filter2_f_981_3393" x={3.281} y={3.594} width={6.875} height={5} filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
 					<feFlood floodOpacity={0} result="BackgroundImageFix" />
 					<feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
-					<feGaussianBlur
-						stdDeviation={0.75}
-						result="effect1_foregroundBlur_981_3393"
-					/>
+					<feGaussianBlur stdDeviation={0.75} result="effect1_foregroundBlur_981_3393" />
 				</filter>
-				<filter
-					id="prefix__filter3_f_981_3393"
-					x={10.156}
-					y={3.594}
-					width={6.875}
-					height={5}
-					filterUnits="userSpaceOnUse"
-					colorInterpolationFilters="sRGB"
-				>
+				<filter id="prefix__filter3_f_981_3393" x={10.156} y={3.594} width={6.875} height={5} filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
 					<feFlood floodOpacity={0} result="BackgroundImageFix" />
 					<feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
-					<feGaussianBlur
-						stdDeviation={0.75}
-						result="effect1_foregroundBlur_981_3393"
-					/>
+					<feGaussianBlur stdDeviation={0.75} result="effect1_foregroundBlur_981_3393" />
 				</filter>
-				<linearGradient
-					id="prefix__paint9_linear_981_3393"
-					x1={10}
-					y1={10}
-					x2={10}
-					y2={10.938}
-					gradientUnits="userSpaceOnUse"
-				>
+				<linearGradient id="prefix__paint9_linear_981_3393" x1={10} y1={10} x2={10} y2={10.938} gradientUnits="userSpaceOnUse">
 					<stop stopColor="#ECCDFF" />
 					<stop offset={1} stopColor="#fff" />
 				</linearGradient>
@@ -1092,13 +849,7 @@ export function ExcitedFace(props) {
 
 export function AngryFace(props) {
 	return (
-		<svg
-			width={20}
-			height={20}
-			fill="none"
-			xmlns="http://www.w3.org/2000/svg"
-			{...props}
-		>
+		<svg width={20} height={20} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<g clipPath="url(#prefix__clip0_981_3014)">
 				<path
 					d="M10 18.749c5.833 0 8.749-3.918 8.749-8.75S15.833 1.25 9.999 1.25 1.25 5.167 1.25 10c0 4.831 2.915 8.749 8.75 8.749z"
@@ -1140,13 +891,7 @@ export function AngryFace(props) {
 					fill="url(#prefix__paint8_linear_981_3014)"
 				/>
 				<g filter="url(#prefix__filter0_f_981_3014)">
-					<path
-						d="M7.813 7.188c-.625.937-2.188 1.25-3.125.625"
-						stroke="#CE7C25"
-						strokeWidth={2}
-						strokeLinecap="round"
-						strokeLinejoin="round"
-					/>
+					<path d="M7.813 7.188c-.625.937-2.188 1.25-3.125.625" stroke="#CE7C25" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
 				</g>
 				<path
 					d="M8.125 6.875C7.5 7.813 5.937 8.125 5 7.5"
@@ -1156,13 +901,7 @@ export function AngryFace(props) {
 					strokeLinejoin="round"
 				/>
 				<g opacity={0.7} filter="url(#prefix__filter1_f_981_3014)">
-					<path
-						d="M11.563 7.188c.624.937 2.187 1.25 3.124.625"
-						stroke="#F4B158"
-						strokeWidth={2}
-						strokeLinecap="round"
-						strokeLinejoin="round"
-					/>
+					<path d="M11.563 7.188c.624.937 2.187 1.25 3.124.625" stroke="#F4B158" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
 				</g>
 				<path
 					d="M11.875 6.875c.625.938 2.188 1.25 3.125.625"
@@ -1172,33 +911,13 @@ export function AngryFace(props) {
 					strokeLinejoin="round"
 				/>
 				<g opacity={0.8} filter="url(#prefix__filter2_f_981_3014)">
-					<path
-						d="M5.781 3.953c1.094-.518 2.211 0 2.5 1.044"
-						stroke="#AA7013"
-						strokeLinecap="round"
-						strokeLinejoin="round"
-					/>
+					<path d="M5.781 3.953c1.094-.518 2.211 0 2.5 1.044" stroke="#AA7013" strokeLinecap="round" strokeLinejoin="round" />
 				</g>
-				<path
-					d="M5.938 3.644c1.093-.519 2.21 0 2.5 1.044"
-					stroke="url(#prefix__paint11_radial_981_3014)"
-					strokeLinecap="round"
-					strokeLinejoin="round"
-				/>
+				<path d="M5.938 3.644c1.093-.519 2.21 0 2.5 1.044" stroke="url(#prefix__paint11_radial_981_3014)" strokeLinecap="round" strokeLinejoin="round" />
 				<g opacity={0.8} filter="url(#prefix__filter3_f_981_3014)">
-					<path
-						d="M13.781 4.203c-1.046-.61-2.203-.188-2.58.828"
-						stroke="#D59A25"
-						strokeLinecap="round"
-						strokeLinejoin="round"
-					/>
+					<path d="M13.781 4.203c-1.046-.61-2.203-.188-2.58.828" stroke="#D59A25" strokeLinecap="round" strokeLinejoin="round" />
 				</g>
-				<path
-					d="M14.063 3.644c-1.094-.519-2.211 0-2.5 1.044"
-					stroke="url(#prefix__paint12_radial_981_3014)"
-					strokeLinecap="round"
-					strokeLinejoin="round"
-				/>
+				<path d="M14.063 3.644c-1.094-.519-2.211 0-2.5 1.044" stroke="url(#prefix__paint12_radial_981_3014)" strokeLinecap="round" strokeLinejoin="round" />
 				<g filter="url(#prefix__filter4_i_981_3014)">
 					<path
 						fillRule="evenodd"
@@ -1207,19 +926,10 @@ export function AngryFace(props) {
 						fill="url(#prefix__paint13_radial_981_3014)"
 					/>
 				</g>
-				<path
-					d="M3.125 15a1.875 1.875 0 100-3.75 1.875 1.875 0 000 3.75z"
-					fill="url(#prefix__paint14_radial_981_3014)"
-				/>
-				<path
-					d="M6.25 18.125a1.875 1.875 0 100-3.75 1.875 1.875 0 000 3.75z"
-					fill="url(#prefix__paint15_radial_981_3014)"
-				/>
+				<path d="M3.125 15a1.875 1.875 0 100-3.75 1.875 1.875 0 000 3.75z" fill="url(#prefix__paint14_radial_981_3014)" />
+				<path d="M6.25 18.125a1.875 1.875 0 100-3.75 1.875 1.875 0 000 3.75z" fill="url(#prefix__paint15_radial_981_3014)" />
 				<g filter="url(#prefix__filter5_i_981_3014)">
-					<path
-						d="M4.063 18.125a2.813 2.813 0 100-5.625 2.813 2.813 0 000 5.625z"
-						fill="url(#prefix__paint16_radial_981_3014)"
-					/>
+					<path d="M4.063 18.125a2.813 2.813 0 100-5.625 2.813 2.813 0 000 5.625z" fill="url(#prefix__paint16_radial_981_3014)" />
 				</g>
 				<path
 					fillRule="evenodd"
@@ -1227,19 +937,10 @@ export function AngryFace(props) {
 					d="M16.875 15a1.875 1.875 0 10-1.592-2.866l-2.618-1.628c-.607-.377-1.348.227-1.1.897l1.201 3.25a1.874 1.874 0 00.984 3.472 1.875 1.875 0 001.769-2.5h1.356V15z"
 					fill="url(#prefix__paint17_linear_981_3014)"
 				/>
-				<path
-					d="M16.875 15a1.875 1.875 0 100-3.75 1.875 1.875 0 000 3.75z"
-					fill="url(#prefix__paint18_radial_981_3014)"
-				/>
-				<path
-					d="M13.75 18.125a1.875 1.875 0 100-3.75 1.875 1.875 0 000 3.75z"
-					fill="url(#prefix__paint19_radial_981_3014)"
-				/>
+				<path d="M16.875 15a1.875 1.875 0 100-3.75 1.875 1.875 0 000 3.75z" fill="url(#prefix__paint18_radial_981_3014)" />
+				<path d="M13.75 18.125a1.875 1.875 0 100-3.75 1.875 1.875 0 000 3.75z" fill="url(#prefix__paint19_radial_981_3014)" />
 				<g filter="url(#prefix__filter6_i_981_3014)">
-					<path
-						d="M15.938 18.125a2.813 2.813 0 100-5.625 2.813 2.813 0 000 5.625z"
-						fill="url(#prefix__paint20_radial_981_3014)"
-					/>
+					<path d="M15.938 18.125a2.813 2.813 0 100-5.625 2.813 2.813 0 000 5.625z" fill="url(#prefix__paint20_radial_981_3014)" />
 				</g>
 			</g>
 			<defs>
@@ -1444,166 +1145,65 @@ export function AngryFace(props) {
 					<stop offset={0.157} stopColor="#FFF6FF" />
 					<stop offset={0.741} stopColor="#E88DFF" />
 				</radialGradient>
-				<filter
-					id="prefix__filter0_f_981_3014"
-					x={2.187}
-					y={4.687}
-					width={8.125}
-					height={5.95}
-					filterUnits="userSpaceOnUse"
-					colorInterpolationFilters="sRGB"
-				>
+				<filter id="prefix__filter0_f_981_3014" x={2.187} y={4.687} width={8.125} height={5.95} filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
 					<feFlood floodOpacity={0} result="BackgroundImageFix" />
 					<feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
-					<feGaussianBlur
-						stdDeviation={0.75}
-						result="effect1_foregroundBlur_981_3014"
-					/>
+					<feGaussianBlur stdDeviation={0.75} result="effect1_foregroundBlur_981_3014" />
 				</filter>
-				<filter
-					id="prefix__filter1_f_981_3014"
-					x={9.562}
-					y={5.187}
-					width={7.125}
-					height={4.95}
-					filterUnits="userSpaceOnUse"
-					colorInterpolationFilters="sRGB"
-				>
+				<filter id="prefix__filter1_f_981_3014" x={9.562} y={5.187} width={7.125} height={4.95} filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
 					<feFlood floodOpacity={0} result="BackgroundImageFix" />
 					<feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
-					<feGaussianBlur
-						stdDeviation={0.5}
-						result="effect1_foregroundBlur_981_3014"
-					/>
+					<feGaussianBlur stdDeviation={0.5} result="effect1_foregroundBlur_981_3014" />
 				</filter>
-				<filter
-					id="prefix__filter2_f_981_3014"
-					x={3.781}
-					y={1.751}
-					width={6.5}
-					height={5.246}
-					filterUnits="userSpaceOnUse"
-					colorInterpolationFilters="sRGB"
-				>
+				<filter id="prefix__filter2_f_981_3014" x={3.781} y={1.751} width={6.5} height={5.246} filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
 					<feFlood floodOpacity={0} result="BackgroundImageFix" />
 					<feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
-					<feGaussianBlur
-						stdDeviation={0.75}
-						result="effect1_foregroundBlur_981_3014"
-					/>
+					<feGaussianBlur stdDeviation={0.75} result="effect1_foregroundBlur_981_3014" />
 				</filter>
-				<filter
-					id="prefix__filter3_f_981_3014"
-					x={8.951}
-					y={1.671}
-					width={7.08}
-					height={5.61}
-					filterUnits="userSpaceOnUse"
-					colorInterpolationFilters="sRGB"
-				>
+				<filter id="prefix__filter3_f_981_3014" x={8.951} y={1.671} width={7.08} height={5.61} filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
 					<feFlood floodOpacity={0} result="BackgroundImageFix" />
 					<feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
-					<feGaussianBlur
-						stdDeviation={0.875}
-						result="effect1_foregroundBlur_981_3014"
-					/>
+					<feGaussianBlur stdDeviation={0.875} result="effect1_foregroundBlur_981_3014" />
 				</filter>
-				<filter
-					id="prefix__filter4_i_981_3014"
-					x={1.25}
-					y={10.389}
-					width={7.734}
-					height={8.236}
-					filterUnits="userSpaceOnUse"
-					colorInterpolationFilters="sRGB"
-				>
+				<filter id="prefix__filter4_i_981_3014" x={1.25} y={10.389} width={7.734} height={8.236} filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
 					<feFlood floodOpacity={0} result="BackgroundImageFix" />
 					<feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
-					<feColorMatrix
-						in="SourceAlpha"
-						values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-						result="hardAlpha"
-					/>
+					<feColorMatrix in="SourceAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
 					<feOffset dx={0.5} dy={0.5} />
 					<feGaussianBlur stdDeviation={1} />
 					<feComposite in2="hardAlpha" operator="arithmetic" k2={-1} k3={1} />
 					<feColorMatrix values="0 0 0 0 0.784314 0 0 0 0 0.745098 0 0 0 0 0.764706 0 0 0 1 0" />
 					<feBlend in2="shape" result="effect1_innerShadow_981_3014" />
 				</filter>
-				<filter
-					id="prefix__filter5_i_981_3014"
-					x={1.25}
-					y={12.5}
-					width={7.125}
-					height={6.125}
-					filterUnits="userSpaceOnUse"
-					colorInterpolationFilters="sRGB"
-				>
+				<filter id="prefix__filter5_i_981_3014" x={1.25} y={12.5} width={7.125} height={6.125} filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
 					<feFlood floodOpacity={0} result="BackgroundImageFix" />
 					<feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
-					<feColorMatrix
-						in="SourceAlpha"
-						values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-						result="hardAlpha"
-					/>
+					<feColorMatrix in="SourceAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
 					<feOffset dx={1.5} dy={0.5} />
 					<feGaussianBlur stdDeviation={1} />
 					<feComposite in2="hardAlpha" operator="arithmetic" k2={-1} k3={1} />
 					<feColorMatrix values="0 0 0 0 0.749966 0 0 0 0 0.634228 0 0 0 0 0.878564 0 0 0 1 0" />
 					<feBlend in2="shape" result="effect1_innerShadow_981_3014" />
 				</filter>
-				<filter
-					id="prefix__filter6_i_981_3014"
-					x={13.125}
-					y={12.5}
-					width={7.125}
-					height={6.125}
-					filterUnits="userSpaceOnUse"
-					colorInterpolationFilters="sRGB"
-				>
+				<filter id="prefix__filter6_i_981_3014" x={13.125} y={12.5} width={7.125} height={6.125} filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
 					<feFlood floodOpacity={0} result="BackgroundImageFix" />
 					<feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
-					<feColorMatrix
-						in="SourceAlpha"
-						values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-						result="hardAlpha"
-					/>
+					<feColorMatrix in="SourceAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
 					<feOffset dx={1.5} dy={0.5} />
 					<feGaussianBlur stdDeviation={1} />
 					<feComposite in2="hardAlpha" operator="arithmetic" k2={-1} k3={1} />
 					<feColorMatrix values="0 0 0 0 0.749966 0 0 0 0 0.634228 0 0 0 0 0.878564 0 0 0 0.8 0" />
 					<feBlend in2="shape" result="effect1_innerShadow_981_3014" />
 				</filter>
-				<linearGradient
-					id="prefix__paint8_linear_981_3014"
-					x1={10}
-					y1={11.204}
-					x2={10}
-					y2={12.493}
-					gradientUnits="userSpaceOnUse"
-				>
+				<linearGradient id="prefix__paint8_linear_981_3014" x1={10} y1={11.204} x2={10} y2={12.493} gradientUnits="userSpaceOnUse">
 					<stop stopColor="#4F3C43" />
 					<stop offset={1} stopColor="#512756" />
 				</linearGradient>
-				<linearGradient
-					id="prefix__paint10_linear_981_3014"
-					x1={13.438}
-					y1={6.563}
-					x2={13.149}
-					y2={8.07}
-					gradientUnits="userSpaceOnUse"
-				>
+				<linearGradient id="prefix__paint10_linear_981_3014" x1={13.438} y1={6.563} x2={13.149} y2={8.07} gradientUnits="userSpaceOnUse">
 					<stop stopColor="#52383E" />
 					<stop offset={1} stopColor="#432A35" />
 				</linearGradient>
-				<linearGradient
-					id="prefix__paint17_linear_981_3014"
-					x1={16.64}
-					y1={12.175}
-					x2={13.672}
-					y2={15.783}
-					gradientUnits="userSpaceOnUse"
-				>
+				<linearGradient id="prefix__paint17_linear_981_3014" x1={16.64} y1={12.175} x2={13.672} y2={15.783} gradientUnits="userSpaceOnUse">
 					<stop stopColor="#FFF8FF" />
 					<stop offset={0.455} stopColor="#D0C1DB" />
 					<stop offset={0.874} stopColor="#C28EEC" />
@@ -1616,16 +1216,9 @@ export function AngryFace(props) {
 	);
 }
 
-
 export function CryFace(props) {
 	return (
-		<svg
-			width={20}
-			height={20}
-			fill="none"
-			xmlns="http://www.w3.org/2000/svg"
-			{...props}
-		>
+		<svg width={20} height={20} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<g opacity={1} clipPath="url(#prefix__clip0_981_3349)">
 				<path
 					d="M10 18.749c5.833 0 8.749-3.918 8.749-8.75S15.833 1.25 9.999 1.25 1.25 5.167 1.25 10c0 4.831 2.915 8.749 8.75 8.749z"
@@ -1680,14 +1273,7 @@ export function CryFace(props) {
 					strokeLinecap="round"
 					strokeLinejoin="round"
 				/>
-				<rect
-					x={7.5}
-					y={6.875}
-					width={5}
-					height={6.25}
-					rx={2.5}
-					fill="url(#prefix__paint11_radial_981_3349)"
-				/>
+				<rect x={7.5} y={6.875} width={5} height={6.25} rx={2.5} fill="url(#prefix__paint11_radial_981_3349)" />
 			</g>
 			<defs>
 				<radialGradient
@@ -1817,14 +1403,7 @@ export function CryFace(props) {
 					<stop stopColor="#F70A8D" />
 					<stop offset={1} stopColor="#89029C" />
 				</radialGradient>
-				<linearGradient
-					id="prefix__paint8_linear_981_3349"
-					x1={14.688}
-					y1={5}
-					x2={14.688}
-					y2={18.75}
-					gradientUnits="userSpaceOnUse"
-				>
+				<linearGradient id="prefix__paint8_linear_981_3349" x1={14.688} y1={5} x2={14.688} y2={18.75} gradientUnits="userSpaceOnUse">
 					<stop stopColor="#6D9DFF" />
 					<stop offset={1} stopColor="#4864FF" />
 				</linearGradient>
@@ -1836,16 +1415,9 @@ export function CryFace(props) {
 	);
 }
 
-
 export function ReloadIcon(props) {
 	return (
-		<svg
-			width={14}
-			height={14}
-			fill="none"
-			xmlns="http://www.w3.org/2000/svg"
-			{...props}
-		>
+		<svg width={14} height={14} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<path
 				fillRule="evenodd"
 				clipRule="evenodd"
@@ -1860,13 +1432,7 @@ export function ReloadIcon(props) {
 
 export function CommentIcon(props) {
 	return (
-		<svg
-			width={14}
-			height={15}
-			fill="none"
-			xmlns="http://www.w3.org/2000/svg"
-			{...props}
-		>
+		<svg width={14} height={15} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<path
 				fillRule="evenodd"
 				clipRule="evenodd"

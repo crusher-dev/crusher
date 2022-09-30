@@ -1,5 +1,4 @@
 // import { getUserCLIToken } from "@services/cli";
-
 import { EditionTypeEnum } from "@crusher-shared/types/common/general";
 
 export function getEdition() {
@@ -86,7 +85,7 @@ export function getCollapsedTestSteps(steps: any) {
 		if (index === 0) {
 			return [{ type: "show", from: 0, to: 1 }];
 		}
-		if( index === 1) return step;
+		if (index === 1) return step;
 		if (index + 1 === steps.length) {
 			step.push({ type: "show", from: index, to: index, count: 1 });
 

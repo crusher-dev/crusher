@@ -1,25 +1,28 @@
-import { USER_META_KEYS } from "@constants/USER";
 import { css } from "@emotion/react";
+import React, { useState } from "react";
+
+import { useAtom } from "jotai";
+
+import { Button, Input } from "dyson/src/components/atoms";
+import { Conditional } from "dyson/src/components/layouts";
+
+import { USER_META_KEYS } from "@constants/USER";
 import { usePageTitle } from "@hooks/seo";
 import { onboardingStepAtom, OnboardingStepEnum } from "@store/atoms/pages/onboarding";
 import { updateMeta } from "@store/mutators/metaData";
 import { RequestMethod } from "@types/RequestOptions";
 import { backendRequest } from "@utils/common/backendRequest";
 import { resolvePathToBackendURI } from "@utils/common/url";
-import {Button, Input} from "dyson/src/components/atoms";
-import { useAtom } from "jotai";
-import React, { useState } from "react";
-import { Conditional } from "dyson/src/components/layouts";
 
 const SurveyContainer = () => {
-    const [, setOnboardingStep] = useAtom(onboardingStepAtom);
-    const [, setCommnads] = React.useState(["", ""]);
+	const [, setOnboardingStep] = useAtom(onboardingStepAtom);
+	const [, setCommnads] = React.useState(["", ""]);
 
-    const [profileType, setProfileType] = useState(null);
-    const [otherProfile, setOtherProfile] = useState(false);
-    const [, updateMetaData] = useAtom(updateMeta);
+	const [profileType, setProfileType] = useState(null);
+	const [otherProfile, setOtherProfile] = useState(false);
+	const [, updateMetaData] = useAtom(updateMeta);
 
-    React.useEffect(() => {
+	React.useEffect(() => {
 		backendRequest(resolvePathToBackendURI("/integrations/cli/commands"), {
 			method: RequestMethod.GET,
 		}).then((res) => {
@@ -29,9 +32,9 @@ const SurveyContainer = () => {
 		});
 	}, []);
 
-    usePageTitle("Create & Run your first test");
+	usePageTitle("Create & Run your first test");
 
-    const handleNext = () => {
+	const handleNext = () => {
 		updateMetaData({
 			type: "user",
 			key: USER_META_KEYS.SURVEY,
@@ -40,11 +43,11 @@ const SurveyContainer = () => {
 		setOnboardingStep(OnboardingStepEnum.URL_ONBOARDING);
 	};
 
-    const handleRoleInputChange = (value) => {
+	const handleRoleInputChange = (value) => {
 		setProfileType(value);
 	};
 
-    return (
+	return (
 		<>
 			<div
 				css={css`

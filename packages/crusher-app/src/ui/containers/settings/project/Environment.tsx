@@ -1,29 +1,31 @@
 import { css } from "@emotion/react";
 import React, { useCallback, useEffect, useState } from "react";
 
+import { useAtom } from "jotai";
+import { atomWithImmer } from "jotai/immer";
+import useSWR, { mutate } from "swr";
+
 import { Card } from "../../../../../../dyson/src/components/layouts/Card/Card";
 import { Button } from "dyson/src/components/atoms";
 import { Heading } from "dyson/src/components/atoms/heading/Heading";
-import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
-import { Conditional } from "dyson/src/components/layouts";
-
-import { SettingsLayout } from "@ui/layout/SettingsBase";
-import useSWR, { mutate } from "swr";
-import { useAtom } from "jotai";
-import { currentProject } from "../../../../store/atoms/global/project";
-import { createProjectEnvironment, deleteProjectEnv, getProjectEnvironments, updateProjectEnv } from "@constants/api";
-import { ChevronRight } from "@svg/settings";
-import { atomWithImmer } from "jotai/immer";
-import { ChevronDown } from "@svg/testReport";
 import { Input } from "dyson/src/components/atoms/input/Input";
-import { AddSVG, LoadingSVG } from "@svg/dashboard";
+import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import { CloseSVG } from "dyson/src/components/icons/CloseSVG";
-import { backendRequest } from "@utils/common/backendRequest";
-import { RequestMethod } from "../../../../types/RequestOptions";
-import { converServerToClientSideState, convertEnvToServerSide } from "@utils/core/settings/environmentSettingUtils";
-import { sendSnackBarEvent } from "@utils/common/notify";
+import { Conditional } from "dyson/src/components/layouts";
 import { SelectBox } from "dyson/src/components/molecules/Select/Select";
+
+import { createProjectEnvironment, deleteProjectEnv, getProjectEnvironments, updateProjectEnv } from "@constants/api";
+import { AddSVG, LoadingSVG } from "@svg/dashboard";
+import { ChevronRight } from "@svg/settings";
+import { ChevronDown } from "@svg/testReport";
+import { SettingsLayout } from "@ui/layout/SettingsBase";
+import { backendRequest } from "@utils/common/backendRequest";
+import { sendSnackBarEvent } from "@utils/common/notify";
 import { sentenceCase } from "@utils/common/textUtils";
+import { converServerToClientSideState, convertEnvToServerSide } from "@utils/core/settings/environmentSettingUtils";
+
+import { currentProject } from "../../../../store/atoms/global/project";
+import { RequestMethod } from "../../../../types/RequestOptions";
 
 function VariableSection({ envId }) {
 	const [environmentsInStore, setEnvironment] = useAtom(environmentsAtom);

@@ -18,8 +18,8 @@ export function MenuItemHorizontal({ children, selected, ...props }) {
 }
 
 const menuLink = css`
-display: flex;
-align-items: center;
+	display: flex;
+	align-items: center;
 
 	font-size: 13.5rem;
 	font-weight: 500;
@@ -38,15 +38,13 @@ align-items: center;
 	padding: 0 10rem;
 	color: rgba(255, 255, 255, 0.8);
 
-
-
 	:hover {
 		background: rgba(255, 255, 255, 0.05);
 	}
 `;
 
 const menuSelected = css`
-background: rgba(255, 255, 255, 0.04);
+	background: rgba(255, 255, 255, 0.04);
 	border: 0.5px solid rgba(255, 255, 255, 0.08);
 `;
 
@@ -126,10 +124,10 @@ function LinksSection({ links, label }) {
 }
 
 const linkSection = css`
-display:flex;
-flex-direction: column;
-gap: 8rem;
-`
+	display: flex;
+	flex-direction: column;
+	gap: 8rem;
+`;
 
 const clickableCSS = css`
 	padding: 4px 8rem;
@@ -151,8 +149,10 @@ function LeftSection() {
 							router.push("/app/dashboard");
 						}}
 					>
-
-						← <span className={" leading-none mr-8 "} css={hoverCSS}>go back</span>
+						←{" "}
+						<span className={" leading-none mr-8 "} css={hoverCSS}>
+							go back
+						</span>
 					</span>
 				</div>
 				<LinksSection label={"Project settings"} links={projectLinks} />
@@ -170,11 +170,11 @@ function LeftSection() {
 }
 
 const hoverCSS = css`
-	:hover{
+	:hover {
 		color: #d378fe;
 		text-decoration: underline;
 	}
-`
+`;
 
 export const SettingsLayout = ({ children, hideSidebar = false }) => {
 	return (
@@ -193,17 +193,17 @@ export const SettingsLayout = ({ children, hideSidebar = false }) => {
 };
 
 const background = css`
-background: #080808;
-min-height: 100vh;
+	background: #080808;
+	min-height: 100vh;
 `;
 
 const sidebar = css`
-width: 303rem;
-height: 100vh;
-border-right: 0.5px solid #1b1b1b;
-box-sizing: border-box;
-background: #0b0b0c;
-justify-content: flex-start;
+	width: 303rem;
+	height: 100vh;
+	border-right: 0.5px solid #1b1b1b;
+	box-sizing: border-box;
+	background: #0b0b0c;
+	justify-content: flex-start;
 `;
 
 const containerWidth = css`

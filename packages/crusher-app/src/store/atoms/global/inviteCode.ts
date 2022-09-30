@@ -7,7 +7,7 @@ export const inviteCodeUserKeyAtom = atom(
 	(get) => get(primitiveInviteCodeUserKeyAtom),
 	(_get, set, newValue: any) => {
 		set(primitiveInviteCodeUserKeyAtom, newValue);
-		if(newValue == null) {
+		if (newValue == null) {
 			window.localStorage.removeItem(LOCAL_STORAGE_KEY);
 		}
 		window.localStorage.setItem(LOCAL_STORAGE_KEY, newValue);

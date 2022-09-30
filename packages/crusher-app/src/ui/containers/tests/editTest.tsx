@@ -5,22 +5,22 @@ import React from "react";
 import { useAtom } from "jotai";
 import useSWR, { mutate } from "swr";
 
+import { TextBlock } from "../../../../../dyson/src/components/atoms/textBlock/TextBlock";
+import { SelectBox } from "../../../../../dyson/src/components/molecules/Select/Select";
 import { Button, Input } from "dyson/src/components/atoms";
 import { Conditional } from "dyson/src/components/layouts";
 import { Modal } from "dyson/src/components/molecules/Modal";
 
 import { changeTestInfoAPI, deleteTestApi, getTestListAPI } from "@constants/api";
+import { IProjectTestsListResponse } from "@crusher-shared/types/response/iProjectTestsListResponse";
+import { testFiltersAtom } from "@store/atoms/pages/testPage";
 import { LoadingSVG } from "@svg/dashboard";
 import { backendRequest } from "@utils/common/backendRequest";
 import { sendSnackBarEvent } from "@utils/common/notify";
+import { sentenceCase } from "@utils/common/textUtils";
 
 import { currentProject } from "../../../store/atoms/global/project";
 import { RequestMethod } from "../../../types/RequestOptions";
-import { SelectBox } from "../../../../../dyson/src/components/molecules/Select/Select";
-import { TextBlock } from "../../../../../dyson/src/components/atoms/textBlock/TextBlock";
-import { IProjectTestsListResponse } from "@crusher-shared/types/response/iProjectTestsListResponse";
-import { sentenceCase } from "@utils/common/textUtils";
-import { testFiltersAtom } from "@store/atoms/pages/testPage";
 
 const changeTestData = (testId: number, name: string, selectedFolder: string | null) => {
 	return backendRequest(changeTestInfoAPI(testId), {
@@ -43,12 +43,7 @@ export const getOptions = ({ list }, id) => {
 	return list.filter((listItem) => listItem.id !== id).map((listItem) => ({ label: sentenceCase(listItem.testName), value: listItem.id }));
 };
 
-export const EditTestModal = ({
-    name,
-    folderId,
-    id,
-    onClose
-}) => {
+export const EditTestModal = ({ name, folderId, id, onClose }) => {
 	const [testName, changeTestName] = useState(name);
 	const [processing, setProcessing] = useState(false);
 	const [processingDelete, setProcessingDelete] = useState(false);

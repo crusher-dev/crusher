@@ -1,5 +1,5 @@
 {
-    "rules": {
-        "remove-console": "off"
-    }
+	"rules": {
+		"remove-console": "off"
+	}
 }

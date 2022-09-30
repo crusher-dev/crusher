@@ -5,13 +5,12 @@ import { useAtom } from "jotai";
 
 import { USER_SYSTEM_API } from "@constants/api";
 import { IUserAndSystemInfoResponse } from "@crusher-shared/types/response/IUserAndSystemInfoResponse";
-import { backendRequest } from "@utils/common/backendRequest";
-import { redirectUserOnMount } from "@utils/routing";
-
-import { updateInitialDataMutator } from "@store/mutators/user";
 import { cliLoginUserKeyAtom } from "@store/atoms/global/cliToken";
-import { resolvePathToBackendURI } from "@utils/common/url";
+import { updateInitialDataMutator } from "@store/mutators/user";
 import { RequestMethod } from "@types/RequestOptions";
+import { backendRequest } from "@utils/common/backendRequest";
+import { resolvePathToBackendURI } from "@utils/common/url";
+import { redirectUserOnMount } from "@utils/routing";
 
 /*
 	Two scenarios to check for
@@ -39,19 +38,20 @@ export function loadUserDataAndRedirect({ fetchData = true, userAndSystemData = 
 			updateInitialData(dataToConsider);
 
 			if (loginKey && loginKey !== "null" && dataToConsider.isUserLoggedIn) {
-				backendRequest(resolvePathToBackendURI("/cli/actions/login.user"), { method: RequestMethod.POST, payload: { loginKey } }).then(() => {
-					setLoginKey(null);
-					window.location.href = "/login_sucessful";
-				}).catch((err) => {
-					if (err.message.includes("Invalid login key")) {
+				backendRequest(resolvePathToBackendURI("/cli/actions/login.user"), { method: RequestMethod.POST, payload: { loginKey } })
+					.then(() => {
 						setLoginKey(null);
-						redirectUserOnMount(dataToConsider, router, setDataLoaded.bind(this, true));
-					}
-				});
+						window.location.href = "/login_sucessful";
+					})
+					.catch((err) => {
+						if (err.message.includes("Invalid login key")) {
+							setLoginKey(null);
+							redirectUserOnMount(dataToConsider, router, setDataLoaded.bind(this, true));
+						}
+					});
 			} else {
 				await redirectUserOnMount(dataToConsider, router, setDataLoaded.bind(this, true));
 			}
-
 		})();
 	}, [userAndSystemData]);
 

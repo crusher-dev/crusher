@@ -11,8 +11,8 @@ import { Snackbar } from "@ui/containers/common/Snackbar";
 import { LoadingScreen } from "@ui/layout/LoadingScreen";
 import { loadGTM, loadGA, loadSegment } from "@utils/common/scriptUtils";
 
-import { useBasicSEO } from "/src/hooks/seo";
 import { usePageSegmentAnalytics } from "/src/hooks/analytics";
+import { useBasicSEO } from "/src/hooks/seo";
 import { useLoadTempData } from "/src/hooks/tempTest";
 import { loadUserDataAndRedirect } from "/src/hooks/user";
 import { rootGlobalAtom } from "/src/store/atoms/global/rootAtom";

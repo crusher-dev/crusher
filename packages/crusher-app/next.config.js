@@ -32,7 +32,6 @@ module.exports = withImages(
 				},
 			];
 
-
 			return config;
 		},
 		env: {

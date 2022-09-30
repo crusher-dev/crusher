@@ -1,12 +1,14 @@
 import { css } from "@emotion/react";
-import { Text } from "dyson/src/components/atoms/text/Text";
 import { useRouter } from "next/router";
+import React from "react";
 
+import { useAtom } from "jotai";
+
+import { Text } from "dyson/src/components/atoms/text/Text";
+
+import { inviteCodeUserKeyAtom } from "@store/atoms/global/inviteCode";
 import { getGithubLoginURL } from "@utils/core/external";
 
-import React from "react";
-import { useAtom } from "jotai";
-import { inviteCodeUserKeyAtom } from "@store/atoms/global/inviteCode";
 import BaseContainer from "./components/BaseContainer";
 import { Line, NewButton, purpleButton } from "./login";
 

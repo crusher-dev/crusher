@@ -1,10 +1,11 @@
 import React from "react";
 
+import { Conditional } from "dyson/src/components/layouts";
+
+import SignupInitial from "@ui/containers/auth/signup";
 import SignupContainer from "@ui/containers/auth/signup_email";
 
 import { usePageTitle } from "../src/hooks/seo";
-import { Conditional } from "dyson/src/components/layouts";
-import SignupInitial from "@ui/containers/auth/signup";
 
 function SignupPage() {
 	usePageTitle("Signup");

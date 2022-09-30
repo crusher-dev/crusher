@@ -1,27 +1,30 @@
-import { usePageTitle } from "@hooks/seo";
-import { addScript } from "@utils/common/scriptUtils";
-import { useAtom } from "jotai";
-import React from "react";
-import { Button, Text } from "dyson/src/components/atoms";
-import { GithubSVG } from "@svg/social";
-import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import { css } from "@emotion/react";
-import { updateMeta } from "@store/mutators/metaData";
-import { USER_META_KEYS } from "@constants/USER";
 import Link from "next/link";
+import React from "react";
+
+import { useAtom } from "jotai";
+
+import { Button, Text } from "dyson/src/components/atoms";
+import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
+
+import { USER_META_KEYS } from "@constants/USER";
+import { usePageTitle } from "@hooks/seo";
+import { updateMeta } from "@store/mutators/metaData";
+import { GithubSVG } from "@svg/social";
+import { addScript } from "@utils/common/scriptUtils";
 
 const SupportCrusher = () => {
-    const [, updateOnboarding] = useAtom(updateMeta);
+	const [, updateOnboarding] = useAtom(updateMeta);
 
-    usePageTitle("Support crusher");
+	usePageTitle("Support crusher");
 
-    React.useEffect(() => {
+	React.useEffect(() => {
 		addScript("github-start", {
 			src: "https://buttons.github.io/buttons.js",
 		});
 	}, []);
 
-    const handleOpenApp = () => {
+	const handleOpenApp = () => {
 		updateOnboarding({
 			type: "user",
 			values: [
@@ -37,7 +40,7 @@ const SupportCrusher = () => {
 		});
 	};
 
-    return (
+	return (
 		<>
 			<div className={"w-full"}>
 				<div className={"flex justify-between item-center"}>

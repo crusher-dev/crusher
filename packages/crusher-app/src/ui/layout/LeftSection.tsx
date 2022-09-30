@@ -1,113 +1,109 @@
-import Link from "next/link";
 import { css } from "@emotion/react";
+import dynamic from "next/dynamic";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { Conditional } from "dyson/src/components/layouts";
-import { Book, Gear, NewPeople } from "@svg/dashboard";
-import { UserNTeam } from "@ui/containers/dashboard/UserNTeam";
+
+import { LinkBlock } from "dyson/src/components/atoms/Link/Link";
 import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import { Tooltip } from "dyson/src/components/atoms/tooltip/Tooltip";
 import { HoverCard } from "dyson/src/components/atoms/tooltip/Tooltip1";
+import { Conditional } from "dyson/src/components/layouts";
+
 import { useProjectDetails } from "@hooks/common";
-import { GiveFeedback } from "../containers/dashboard/GiveFeedback";
-import dynamic from "next/dynamic";
-import { LinkBlock } from "dyson/src/components/atoms/Link/Link";
+import { Book, Gear, NewPeople } from "@svg/dashboard";
 import { BuildIcon, ClockIcon, ExternalIcon, HomeIcon, IntegrationSVG, MapSVG, TestIcon, UpgradeIcon } from "@svg/dashboard";
 import { DiscordSVG } from "@svg/onboarding";
 import { GithubSVG } from "@svg/social";
+import { UserNTeam } from "@ui/containers/dashboard/UserNTeam";
+
+import { GiveFeedback } from "../containers/dashboard/GiveFeedback";
 
 export const InviteMembers = dynamic(() => import("@ui/containers/dashboard/InviteMember"));
 
-
 export function LeftSection() {
-    const [inviteTeammates, setInviteTeamMates] = useState(false);
-    const { route } = useRouter();
-    const { currentProject: project } = useProjectDetails();
+	const [inviteTeammates, setInviteTeamMates] = useState(false);
+	const { route } = useRouter();
+	const { currentProject: project } = useProjectDetails();
 
+	const menuItems = project ? projectMenu : leftMenu;
 
-    const menuItems = project ? projectMenu : leftMenu;
+	return (
+		<div css={sidebar} className={"flex flex-col justify-between pb-18"} id="left-section">
+			<UserNTeam />
+			<div className="flex flex-col justify-between h-full">
+				<div>
+					<div className="px-14 mt-38 mb-24">
+						<ResourceBar />
+					</div>
+					<div className="px-14">
+						{menuItems.map((item) => {
+							const selected = route.includes(item.link);
+							const { isProject } = item;
 
-    return (
-        <div css={sidebar} className={"flex flex-col justify-between pb-18"} id="left-section">
-            <UserNTeam />
-            <div className="flex flex-col justify-between h-full">
-                <div>
-                    <div className="px-14 mt-38 mb-24">
-                        <ResourceBar />
-                    </div>
-                    <div className="px-14">
-                        {menuItems.map((item) => {
-                            const selected = route.includes(item.link);
-                            const { isProject } = item;
+							const link = isProject ? `/${project?.id}${item.link}` : item.link;
 
-                            const link = isProject ? `/${project?.id}${item.link}` : item.link;
+							const isLabelString = typeof item.label === "string";
 
-                            const isLabelString = typeof (item.label) === 'string';
+							return (
+								<Link href={link} key={item.link}>
+									<div className="flex items-center pl-8 mb-8" css={[menuItem, selected && selectedCSS]}>
+										<div css={iconCSS}>{item.icon}</div>
+										<Conditional showIf={isLabelString}>
+											<span className="label mt-1 leading-none">{item.label}</span>
+										</Conditional>
+										<Conditional showIf={!isLabelString}>{item.label}</Conditional>
+									</div>
+								</Link>
+							);
+						})}
+					</div>
+				</div>
 
-                            return (
-                                <Link href={link} key={item.link}>
-                                    <div className="flex items-center pl-8 mb-8" css={[menuItem, selected && selectedCSS]}>
-                                        <div css={iconCSS}>{item.icon}</div>
-                                        <Conditional showIf={isLabelString}>
-                                            <span className="label mt-1 leading-none">{item.label}</span>
-                                        </Conditional>
-                                        <Conditional showIf={!isLabelString}>
-                                            {item.label}
-                                        </Conditional>
-                                    </div>
-                                </Link>
-                            );
-                        })}
-                    </div>
-                </div>
+				<div className="px-16">
+					<div className="flex" css={inviteBoxCSS}>
+						<NewPeople />
+						<Conditional showIf={inviteTeammates}>
+							<InviteMembers onClose={setInviteTeamMates.bind(this, false)} />
+						</Conditional>
+						<div className="ml-6">
+							<TextBlock color="#BC66FF" fontSize={13} weight={600} id="invite" onClick={setInviteTeamMates.bind(this, true)}>
+								Invite
+							</TextBlock>
+							<TextBlock color="#3E3E3E" fontSize={12} className="mt-5">
+								get +2 testing hrs
+							</TextBlock>
+						</div>
+					</div>
 
-                <div className="px-16">
-                    <div className="flex" css={inviteBoxCSS}>
-                        <NewPeople />
-                        <Conditional showIf={inviteTeammates}>
-                            <InviteMembers onClose={setInviteTeamMates.bind(this, false)} />
-                        </Conditional>
-                        <div className="ml-6">
-                            <TextBlock color="#BC66FF" fontSize={13} weight={600} id="invite" onClick={setInviteTeamMates.bind(this, true)}>
-                                Invite
-                            </TextBlock>
-                            <TextBlock color="#3E3E3E" fontSize={12} className="mt-5">
-                                get +2 testing hrs
-                            </TextBlock>
-                        </div>
-                    </div>
+					<div className="flex justify-between mt-20">
+						<GiveFeedback />
+					</div>
 
-                    <div className="flex justify-between mt-20">
-                        <GiveFeedback />
+					<div css={leftBottomBar} className="w-full flex mt-20">
+						<Tooltip content={"Org settings"} placement="top" type="hover">
+							<div css={[menuItemCSS, border]}>
+								<Link href="/settings/org/team-members">
+									<div className="h-full w-full flex items-center justify-center">
+										<Gear />
+									</div>
+								</Link>
+							</div>
+						</Tooltip>
 
-
-                    </div>
-
-                    <div css={leftBottomBar} className="w-full flex mt-20">
-                        <Tooltip content={"Org settings"} placement="top" type="hover">
-                            <div css={[menuItemCSS, border]}>
-                                <Link href="/settings/org/team-members">
-                                    <div className="h-full w-full flex items-center justify-center">
-                                        <Gear />
-                                    </div>
-                                </Link>
-                            </div>
-                        </Tooltip>
-
-                        <HoverCard content={<HelpContent />} placement="top" type="hover" padding={8} offset={0}>
-
-                            <div css={[menuItemCSS]} className="flex items-center justify-center">
-                                <Book />
-                            </div>
-                        </HoverCard>
-                        {/* <div css={[menuItemCSS]} className="flex items-center justify-center">
+						<HoverCard content={<HelpContent />} placement="top" type="hover" padding={8} offset={0}>
+							<div css={[menuItemCSS]} className="flex items-center justify-center">
+								<Book />
+							</div>
+						</HoverCard>
+						{/* <div css={[menuItemCSS]} className="flex items-center justify-center">
                 <Slash />
             </div> */}
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
+					</div>
+				</div>
+			</div>
+		</div>
+	);
 }
 
 const sidebar = css`
@@ -120,116 +116,108 @@ const sidebar = css`
 `;
 
 export const leftMenu = [
-    {
-        icon: <MapSVG />,
-        label: "projects",
-        link: "/projects",
-    },
-    {
-        icon: <IntegrationSVG />,
-        label: "integrations",
-        link: "/add_project",
-    }
+	{
+		icon: <MapSVG />,
+		label: "projects",
+		link: "/projects",
+	},
+	{
+		icon: <IntegrationSVG />,
+		label: "integrations",
+		link: "/add_project",
+	},
 ];
-
-
 
 export const projectMenu = [
-    {
-        icon: <HomeIcon />,
-        label: (<span className="mt-3">home</span>),
-        link: "/dashboard",
-        isProject: true
-    },
-    {
-        icon: <TestIcon />,
-        label: "tests",
-        link: "/tests",
-        isProject: true
-    },
-    {
-        icon: <BuildIcon />,
+	{
+		icon: <HomeIcon />,
+		label: <span className="mt-3">home</span>,
+		link: "/dashboard",
+		isProject: true,
+	},
+	{
+		icon: <TestIcon />,
+		label: "tests",
+		link: "/tests",
+		isProject: true,
+	},
+	{
+		icon: <BuildIcon />,
 
-        label: (<span className="mt-3">builds</span>),
-        link: "/builds",
-        isProject: true
-    },
-    {
-        icon: <ClockIcon />,
-        label: "monitoring",
-        link: "/builds?trigger=CRON",
-        isProject: true
-    },
-    {
-        icon: <Gear />,
-        label: "settings",
-        link: "/settings/basic",
-        isProject: true
-    },
+		label: <span className="mt-3">builds</span>,
+		link: "/builds",
+		isProject: true,
+	},
+	{
+		icon: <ClockIcon />,
+		label: "monitoring",
+		link: "/builds?trigger=CRON",
+		isProject: true,
+	},
+	{
+		icon: <Gear />,
+		label: "settings",
+		link: "/settings/basic",
+		isProject: true,
+	},
 ];
 
-
-
-
-
 export function HelpContent() {
-    return (
-        <div className=" pt-3 pb-6">
-
-            <a href="https://docs.crusher.dev" target="_blank">
-                <TextBlock fontSize={13.4} color={"#8F8F8F"} css={linkCSS}>
-                    Documentation <ExternalIcon className="ml-3" />
-                </TextBlock>
-            </a>
-            <a href="https://github.com/crusher-dev/crusher" target="_blank">
-                <TextBlock fontSize={13.4} color={"#8F8F8F"} className={"mt-1"} css={linkCSS}>
-                    <GithubSVG height={11} width={11} className={"mr-6"} /> <span className="mt-2">Github</span><ExternalIcon className="ml-4" />
-                </TextBlock>
-            </a>
-            <a href="https://discord.com/invite/dHZkSNXQrg" target="_blank">
-                <TextBlock fontSize={13.4} color={"#8F8F8F"} className={"mt-1"} css={linkCSS}>
-                    <DiscordSVG height={12} width={13} className={"mr-6"} css={discordIcons} /> <span className="mt-1">Discord</span><ExternalIcon className="ml-3" />
-                </TextBlock>
-            </a>
-        </div>
-    );
+	return (
+		<div className=" pt-3 pb-6">
+			<a href="https://docs.crusher.dev" target="_blank">
+				<TextBlock fontSize={13.4} color={"#8F8F8F"} css={linkCSS}>
+					Documentation <ExternalIcon className="ml-3" />
+				</TextBlock>
+			</a>
+			<a href="https://github.com/crusher-dev/crusher" target="_blank">
+				<TextBlock fontSize={13.4} color={"#8F8F8F"} className={"mt-1"} css={linkCSS}>
+					<GithubSVG height={11} width={11} className={"mr-6"} /> <span className="mt-2">Github</span>
+					<ExternalIcon className="ml-4" />
+				</TextBlock>
+			</a>
+			<a href="https://discord.com/invite/dHZkSNXQrg" target="_blank">
+				<TextBlock fontSize={13.4} color={"#8F8F8F"} className={"mt-1"} css={linkCSS}>
+					<DiscordSVG height={12} width={13} className={"mr-6"} css={discordIcons} /> <span className="mt-1">Discord</span>
+					<ExternalIcon className="ml-3" />
+				</TextBlock>
+			</a>
+		</div>
+	);
 }
-
 
 const discordIcons = css`
-margin-left: -1rem;
-`
+	margin-left: -1rem;
+`;
 
 const linkCSS = css`
-display: flex;
-align-items: center;
-padding-left: 8rem;
-padding-right: 8rem;
-path{
-	fill: #D1D5DB;
-}
-color: #D1D5DB;
-:hover{
-	background: rgba(43, 43, 43, 0.4);
-	color: #BC66FF;
-	path{
-		fill: #BC66FF;
+	display: flex;
+	align-items: center;
+	padding-left: 8rem;
+	padding-right: 8rem;
+	path {
+		fill: #d1d5db;
 	}
-}
-height:28rem;
-width: 148rem;
-border-radius: 6px;
-padding-top:1rem;
+	color: #d1d5db;
+	:hover {
+		background: rgba(43, 43, 43, 0.4);
+		color: #bc66ff;
+		path {
+			fill: #bc66ff;
+		}
+	}
+	height: 28rem;
+	width: 148rem;
+	border-radius: 6px;
+	padding-top: 1rem;
 
-transition: all 0ms linear;
+	transition: all 0ms linear;
 
-path, *{
-	transition: all 0ms;
-}
-
-
-`
-
+	path,
+	* {
+		transition: all 0ms;
+	}
+`;
 
 export const menuItemCSS = css`
 	flex: 1;
@@ -275,15 +263,15 @@ export const selectedCSS = css`
 	background: rgba(255, 255, 255, 0.04);
 	border: 0.5px solid rgba(255, 255, 255, 0.08);
 
-	.label,span {
-		color: #B960FF;
+	.label,
+	span {
+		color: #b960ff;
 	}
 
-	path{
-		fill: #B960FF;
+	path {
+		fill: #b960ff;
 	}
 `;
-
 
 export const menuItem = css`
 	height: 28rem;
@@ -299,21 +287,19 @@ export const menuItem = css`
 		border: 0.5px solid rgba(255, 255, 255, 0.08);
 	}
 
-	path{
-		fill: #BDBDBD;
+	path {
+		fill: #bdbdbd;
 	}
 `;
-
 
 const badgeStyle = css`
 	border: 0.5rem solid #222225;
 	background: black;
 	.test-count,
 	.hours-count {
-
 		width: 50%;
 		height: 28rem;
-	
+
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -333,38 +319,41 @@ const badgeStyle = css`
 	overflow: hidden;
 `;
 export const ResourceBar = () => {
-    return (
-        <React.Fragment>
+	return (
+		<React.Fragment>
+			<Tooltip content={"You have 2 more tests and 5 hr limit\ncontact support@crusher.dev"} placement="top-end" type="hover">
+				<div>
+					<div css={badgeStyle} className="flex">
+						<div className="test-count pl-2">2/3</div>
+						<div className="hours-count">5 hrs</div>
+					</div>
+					<div className="flex justify-center mt-8 item-center px-6">
+						<TextBlock color="#597eff" fontSize={12.6} weight={500} className="mt-3 lowercase mr-8">
+							Free plan
+						</TextBlock>
 
-            <Tooltip content={"You have 2 more tests and 5 hr limit\ncontact support@crusher.dev"} placement="top-end" type="hover">
-                <div>
-                    <div css={badgeStyle} className="flex">
-                        <div className="test-count pl-2">2/3</div>
-                        <div className="hours-count">5 hrs</div>
-                    </div>
-                    <div className="flex justify-center mt-8 item-center px-6">
-                        <TextBlock color="#597eff" fontSize={12.6} weight={500} className="mt-3 lowercase mr-8">Free plan</TextBlock>
-
-                        <div className="flex">
-                            <UpgradeIcon className="mr-4" />
-                            <LinkBlock color="#" type="plain" paddingX={0} paddingY={0} css={linkCSSBlock} external={false}>upgrade</LinkBlock>
-                        </div>
-                    </div>
-                </div>
-            </Tooltip>
-        </React.Fragment>
-    )
+						<div className="flex">
+							<UpgradeIcon className="mr-4" />
+							<LinkBlock color="#" type="plain" paddingX={0} paddingY={0} css={linkCSSBlock} external={false}>
+								upgrade
+							</LinkBlock>
+						</div>
+					</div>
+				</div>
+			</Tooltip>
+		</React.Fragment>
+	);
 };
 
 const linkCSSBlock = css`
-	color: #5F5F5F;
+	color: #5f5f5f;
 	font-size: 12.6rem;
-	:hover{
+	:hover {
 		color: #ffffff;
-		path{
-			fill:  #ffffff;
+		path {
+			fill: #ffffff;
 		}
 	}
-	
+
 	transition: all 0ms linear;
-`
+`;

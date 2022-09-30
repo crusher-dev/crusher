@@ -1,10 +1,10 @@
 import { css } from "@emotion/react";
+import dynamic from "next/dynamic";
 import React from "react";
 
 import { Conditional } from "dyson/src/components/layouts";
 
 import { CompleteStatusIconSVG } from "@svg/dashboard";
-import dynamic from "next/dynamic";
 
 interface IExpandableListItemProps {
 	index?: number;

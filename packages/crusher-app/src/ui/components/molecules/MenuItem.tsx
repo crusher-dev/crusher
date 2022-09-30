@@ -38,7 +38,7 @@ const dropDownItem = css`
 	height: 28rem;
 	width: 176rem;
 	border-radius: 6rem;
-	
+
 	transition: all 0ms;
 	.name {
 		font-size: 12.5rem;
@@ -51,7 +51,7 @@ const dropDownItem = css`
 
 	:hover {
 		background: #a438f8;
-		path{
+		path {
 			stroke: white;
 			transition: all 0ms;
 		}

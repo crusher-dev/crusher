@@ -325,13 +325,9 @@ const developerQuestionCss = css`
 
 const headingCss = css`
 	font-family: "Cera Pro";
-	
 	font-weight: 900;
 	font-size: 18px;
-	/* identical to box height */
-
 	letter-spacing: -0.02em;
-
 	color: #ffffff;
 `;
 const footerCss = css`

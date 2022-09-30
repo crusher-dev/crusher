@@ -103,8 +103,8 @@ const headerCss = css`
 	padding: 8px 8px 2px 28px;
 	align-items: center;
 	position: relative;
-	height: rem;
-	z-index: 23424234324234234;
+	height: 38rem;
+	z-index: 1000000;
 `;
 
 const headerLeftSectionCss = css`

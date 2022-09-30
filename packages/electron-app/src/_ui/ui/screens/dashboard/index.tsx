@@ -38,8 +38,7 @@ const TitleComponent = ({ project }) => {
 };
 
 const openAppCss = css`
-	
-	
+	margin-top: -3px;
 	font-weight: 400;
 	font-size: 13px;
 	color: #828282;

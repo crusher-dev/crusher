@@ -29,27 +29,6 @@ module.exports = withImages(
 				},
 			];
 
-			config.plugins.push(
-				new CopyPlugin({
-					patterns: [
-						{
-							from: "./package.json",
-							to: "../package.json",
-						},
-						{
-							from: "./server.js",
-							to: "../server.js",
-						},
-						{
-							from: "./public",
-							to: "./public",
-						},
-					],
-				}),
-				new CopyPlugin({
-					patterns: [{ from: path.resolve(__dirname, ".env") }],
-				}),
-			);
 
 			return config;
 		},

@@ -668,16 +668,14 @@ export class AppWindow {
 	}
 
 	reinstateElementSteps(uniqueElementId, elementInfo) {
-		{
-			a.step.payload.meta = {
-				...(a.step.payload.meta || {}),
-				parentFrameSelectors: elementInfo.parentFrameSelectors,
-			};
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
-			this.store.dispatch(updateRecordedStep(a.step, a.index));
-		}
-	}
+        a.step.payload.meta = {
+            ...(a.step.payload.meta || {}),
+            parentFrameSelectors: elementInfo.parentFrameSelectors,
+        };
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        this.store.dispatch(updateRecordedStep(a.step, a.index));
+    }
 
 	async continueRemainingSteps(event: Electron.IpcMainEvent, payload: { extraSteps?: iAction[] | null }) {
 		const { extraSteps } = payload;

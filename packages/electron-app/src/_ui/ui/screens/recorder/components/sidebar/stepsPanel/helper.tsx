@@ -55,9 +55,7 @@ const TextHighlighter = ({ text }, shouldStyle = false) => {
 };
 
 const TextHighlighterText = ({ text }) => {
-	if (!text) {
-	}
-	return parseStepNameText(text).map((a) => {
+    return parseStepNameText(text).map((a) => {
 		return a.value;
 	});
 };

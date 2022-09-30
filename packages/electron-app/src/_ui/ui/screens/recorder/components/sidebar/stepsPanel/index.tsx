@@ -128,14 +128,6 @@ const StepsPanel = ({ className }: IProps) => {
 	);
 };
 
-const resetIconCss = css`
-	width: 12rem;
-	height: 12rem;
-	margin-right: 12rem;
-	:hover {
-		opacity: 0.8;
-	}
-`;
 const containerCss = css`
 	border-radius: 4px 4px 0px 0px;
 	border-top: 0.5rem solid #141414;

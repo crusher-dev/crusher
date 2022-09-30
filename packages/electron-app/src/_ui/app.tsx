@@ -151,11 +151,11 @@ const App = () => {
 	}, [recorderState]);
 
 	return (
-		// <Wrapper figmaUrl={"https://www.figma.com/proto/MsJZCnY5NvrDF4kL1oczZq/Crusher-%7C-Aug?node-id=2305%3A6559&scaling=min-zoom&page-id=2305%3A5930"}>
-		// </Wrapper>
-		<div>
-			<div css={dragableStyle} className={"drag"}></div>
-			<div css={contentStyle}>
+        // <Wrapper figmaUrl={"https://www.figma.com/proto/MsJZCnY5NvrDF4kL1oczZq/Crusher-%7C-Aug?node-id=2305%3A6559&scaling=min-zoom&page-id=2305%3A5930"}>
+        // </Wrapper>
+        (<div>
+            <div css={dragableStyle} className={"drag"}></div>
+            <div css={contentStyle}>
 				<Sidebar css={sidebarCss} />
 				<div css={bodyCss}>
 					<Toolbar css={toolbarStyle} />
@@ -163,10 +163,10 @@ const App = () => {
 					{isStatusBarVisible ? <StatusBar /> : ""}
 				</div>
 			</div>
-			<Global styles={globalCss} />
-			<InfoOverLay />
-		</div>
-	);
+            <Global styles={globalCss} />
+            <InfoOverLay />
+        </div>)
+    );
 };
 
 const dragableCss = () => {

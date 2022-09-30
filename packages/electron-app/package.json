@@ -14,6 +14,7 @@
 		"build": "NODE_ENV=production webpack --config webpack/webpack.config.ts",
 		"release": "pnpm build && node scripts/release.js",
 		"extract:deps": "node scripts/extract-binaries.js",
+		"putout": "npx putout src --fix",
 		"prettify": "prettier --write .",
 		"tests": "jest --runInBand --detectOpenHandles --verbose"
 	},

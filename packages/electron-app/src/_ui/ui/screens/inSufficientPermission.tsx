@@ -30,14 +30,6 @@ const containerCss = css`
 	padding-bottom: 120rem;
 `;
 
-const titleCss = css`
-	font-family: Cera Pro;
-
-	font-weight: 500;
-	font-size: 13.4px;
-	color: #ffffff;
-`;
-
 const contentHeadingCss = css`
 	margin-top: 28rem;
 	font-family: Cera Pro;

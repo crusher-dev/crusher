@@ -14,6 +14,7 @@ module.exports = withImages(
 		typescript: {
 			ignoreBuildErrors: true,
 		},
+		experimental: { esmExternals: false },
 		webpack: function (config, { defaultLoaders }) {
 			const resolvedBaseUrl = path.resolve(config.context, "../");
 			config.module.rules = [

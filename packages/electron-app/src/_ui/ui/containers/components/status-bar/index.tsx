@@ -14,6 +14,8 @@ import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 import { HoverCard } from "@dyson/components/atoms/tooltip/Tooltip1";
 import { DocsIcon, UpDownSizeIcon } from "electron-app/src/_ui/constants/icons";
 import { HelpContent } from "electron-app/src/_ui/ui/containers/common/stickyFooter";
+import { useAtom } from "jotai";
+import { statusBarMaximiseAtom } from "electron-app/src/_ui/store/jotai/statusBar";
 
 interface ITabButtonProps {
 	title: string;
@@ -86,7 +88,7 @@ const StatusBar = () => {
 	const [currentModal, setCurrentModal] = React.useState({ type: null, stepIndex: null });
 	const store = useStore();
 
-	const [clicked, setClicked] = React.useState(false);
+	const [clicked, setClicked] = useAtom(statusBarMaximiseAtom);
 	const [selectedTab, setSelectedTab] = React.useState(TabsEnum.LOGS);
 	const logs: ILoggerReducer["logs"] = useSelector(getLogs);
 

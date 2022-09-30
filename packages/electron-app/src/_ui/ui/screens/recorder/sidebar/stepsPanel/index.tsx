@@ -13,6 +13,7 @@ import { performVerifyTest } from "electron-app/src/_ui/commands/perform";
 import { useAtom } from "jotai";
 import { stepHoverAtom } from "electron-app/src/_ui/store/jotai/steps";
 import { editInputAtom } from "electron-app/src/_ui/store/jotai/testsPage";
+import { statusBarMaximiseAtom } from "electron-app/src/_ui/store/jotai/statusBar";
 
 interface IProps {
 	className?: string;
@@ -28,10 +29,11 @@ const StepsPanel = ({ className }: IProps) => {
 	const store = useStore();
 	const [stepHover, setStepHover] = useAtom(stepHoverAtom);
 	const [_, setCurrentEditInput] = useAtom(editInputAtom);
+	const [isStatusBarMaximised, setIsStatusBarMaximised] = useAtom(statusBarMaximiseAtom);
 
 	const toggleStatusBar = React.useCallback(() => {
-		store.dispatch(setStatusBarVisibility(!isStatusBarVisible));
-	}, [isStatusBarVisible]);
+		setIsStatusBarMaximised(!isStatusBarMaximised);
+	}, [isStatusBarMaximised]);
 
 	const handleStepClick = React.useCallback(
 		(stepId) => {

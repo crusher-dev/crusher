@@ -175,7 +175,7 @@ export class AppWindow {
 		});
 
 		// Disable zoom-in/zoom-out
-		this.window.webContents.on("did-finish-load", () => {});
+		this.window.webContents.on("did-finish-load", () => { });
 
 		this.window.webContents.on("did-fail-load", () => {
 			this.window.webContents.openDevTools();
@@ -910,9 +910,9 @@ export class AppWindow {
 			this.window.setPosition(screenSize.bounds.x, screenSize.bounds.y, false);
 		} else {
 			return new Promise((resolve) => {
-				if (this.window.isMaximized) {
-					this.window.unmaximize();
-				}
+				// if (this.window.isMaximized) {
+				// 	this.window.unmaximize();
+				// }
 				this.window.setFullScreen(false);
 				setImmediate(() => {
 					if (process.platform === "darwin") {

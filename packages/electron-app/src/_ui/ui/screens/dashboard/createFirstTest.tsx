@@ -6,6 +6,7 @@ import { css } from "@emotion/react";
 import { shell } from "electron";
 import { Link } from "../../components/Link";
 import { NormalButton } from "electron-app/src/_ui/ui/containers/components/buttons/normalButton";
+import { newButtonStyle } from "electron-app/src/_ui/constants/style";
 
 const CreateFirstTest = () => {
 	const navigate = useNavigate();
@@ -36,14 +37,11 @@ const CreateFirstTest = () => {
 };
 
 const DocsGoBackActionBar = ({ buttonTitle, buttonCallback }) => {
-	const openDocs = React.useCallback(() => {
-		shell.openExternal("https://docs.crusher.dev");
-	}, []);
 
 	return (
 		<div css={actionsContainerCss}>
-			<Link onClick={openDocs}>Docs</Link>
-			<NormalButton title={buttonTitle} onClick={buttonCallback} css={actionButtonCss} />
+
+			<NormalButton title={buttonTitle} onClick={buttonCallback} css={[newButtonStyle]} />
 		</div>
 	);
 };
@@ -54,9 +52,6 @@ const actionsContainerCss = css`
 	margin-top: 20rem;
 	justify-content: center;
 	align-items: center;
-`;
-const actionButtonCss = css`
-	margin-left: 12rem;
 `;
 
 /* ======== CreateFirstTest.styles ======== */

@@ -47,8 +47,6 @@ loader.config({
 interface iElementCustomScriptModalContent {
 	isOpen: boolean;
 	handleClose: any;
-
-	// For editing
 	stepIndex?: number;
 	stepAction?: iAction;
 }
@@ -627,10 +625,11 @@ const bottomBarStyle = css`
 	background: #080809;
 `;
 const saveButtonStyle = css`
-	border-radius: 8px;
-	background: #b341f9 !important;
+
 	font-size: 14rem;
 	box-sizing: border-box;
+	border-radius: 8px;
+	background: #b341f9 !important;
 	border: 0.5px solid #b341f9 !important;
 	border-radius: 8rem 0 0 8rem !important;
 	height: 36rem;

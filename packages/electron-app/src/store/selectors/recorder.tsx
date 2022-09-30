@@ -34,6 +34,7 @@ export const getStepInfo = (stepId: any) => {
 			isCompleted: step.status === ActionStatusEnum.COMPLETED,
 			isFailed: step.status === ActionStatusEnum.FAILED,
 			name: stepName,
+			actionDescription: actionDescriptor.describeAction(step as any),
 			description: selectors,
 			step: step,
 		};

@@ -12,10 +12,10 @@ import Checkbox from "@dyson/components/atoms/checkbox/checkbox";
 import { ResizableInput } from "../../components/ResizableInput";
 import { Conditional } from "@dyson/components/layouts";
 import { useAtom } from "jotai";
-import { editTestNameAtom } from "electron-app/src/_ui/store/jotai/testsPage";
+import { editInputAtom } from "electron-app/src/_ui/store/jotai/testsPage";
 
 const EditableTestName = ({ testName, testId }) => {
-	const [testEditName, setTestEditName] = useAtom(editTestNameAtom);
+	const [testEditName, setTestEditName] = useAtom(editInputAtom);
 	const [name, setName] = React.useState(testName);
 	const inputRef = React.useRef<HTMLInputElement>(null);
 
@@ -29,6 +29,8 @@ const EditableTestName = ({ testName, testId }) => {
 
 	return (
 		<ResizableInput
+			id={testId}
+			labelCss={css`padding-left: 12px;`}
 			ref={inputRef}
 			onChange={handleOnChange}
 			value={name}
@@ -266,7 +268,7 @@ const MULTI_SELECTED_MENU = [
 ];
 
 const TestList = ({ tests, deleteTest }) => {
-	const [, setTestEditName] = useAtom(editTestNameAtom);
+	const [, setTestEditName] = useAtom(editInputAtom);
 	const navigate = useNavigate();
 
 	const items: any[] = React.useMemo(() => {

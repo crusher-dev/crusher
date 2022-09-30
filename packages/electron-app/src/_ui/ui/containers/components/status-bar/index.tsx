@@ -6,7 +6,6 @@ import { Conditional } from "@dyson/components/layouts";
 import { getLogs } from "electron-app/src/store/selectors/logger";
 import { MiniCrossIcon } from "../../../../constants/old_icons";
 import { ObjectInspector, chromeDark } from "react-inspector";
-import { BrowserButton } from "../buttons/browser.button";
 import { CustomCodeModal } from "../modals/page/customCodeModal";
 import { modalEmitter } from "../modals";
 import { getRecorderState, getSavedSteps } from "electron-app/src/store/selectors/recorder";
@@ -14,7 +13,7 @@ import { updateRecorderState } from "electron-app/src/store/actions/recorder";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 import { HoverCard } from "@dyson/components/atoms/tooltip/Tooltip1";
 import { DocsIcon, UpDownSizeIcon } from "electron-app/src/_ui/constants/icons";
-import { HelpContent } from "electron-app/src/_ui/ui/components/stickyFooter";
+import { HelpContent } from "electron-app/src/_ui/ui/containers/common/stickyFooter";
 
 interface ITabButtonProps {
 	title: string;
@@ -484,18 +483,7 @@ const StatusBar = () => {
 									data={SAMPLE_CONTEXT}
 								/>
 							</div>
-							<BrowserButton
-								size={"x-small"}
-								css={css`
-									background: #8860de;
-									margin-right: 18rem;
-									padding: 0rem 16rem;
-									border: 0.5px solid #8860de;
-									margin-left: auto;
-								`}
-							>
-								Re-Run with custom context
-							</BrowserButton>
+
 						</div>
 					</Conditional>
 				</Conditional>

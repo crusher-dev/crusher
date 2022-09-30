@@ -1,7 +1,7 @@
 import React from "react";
 import { css } from "@emotion/react";
 import { CreateIcon, PlayV2Icon } from "../../../../constants/old_icons";
-import { Link } from "../../../components/menuDropdownComponent";
+import { Link } from "../../../components/Link";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { shell } from "electron";
 import { useNavigate } from "react-router-dom";

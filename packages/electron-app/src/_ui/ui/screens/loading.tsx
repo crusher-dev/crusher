@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { CompactAppLayout } from "../layout/CompactAppLayout";
 import { Footer } from "../layout/Footer";
-import { LoadingProgressBar } from "../components/LoadingProgressBar";
+import { LoadingProgressBar } from "../containers/common/LoadingProgressBar";
 import { css } from "@emotion/react";
 
 function LoadingScreen() {

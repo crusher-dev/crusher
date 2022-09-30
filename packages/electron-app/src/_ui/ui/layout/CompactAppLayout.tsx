@@ -1,7 +1,7 @@
 import React from "react";
 import { css } from "@emotion/react";
 import { shell } from "electron";
-import { MenuDropdown } from "electron-app/src/_ui/ui/components/menuDropdownComponent";
+import { MenuDropdown } from "electron-app/src/_ui/ui/containers/dashboard/dashboardTopMenu";
 import { LinkPointer } from "../components/LinkPointer";
 import { Conditional } from "@dyson/components/layouts";
 

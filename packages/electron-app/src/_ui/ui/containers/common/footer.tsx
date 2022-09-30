@@ -1,7 +1,7 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { Link } from "./Link";
-import { LinkPointer } from "./LinkPointer";
+import { Link } from "../../components/Link";
+import { LinkPointer } from "../../components/LinkPointer";
 import { DiscordSVG, GithubSVG } from "./stickyFooter";
 import { linkOpen } from "electron-app/src/utils/url";
 import { Tooltip } from "@dyson/components/atoms/tooltip/Tooltip";

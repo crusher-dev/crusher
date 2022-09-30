@@ -3,7 +3,7 @@ import { css } from "@emotion/react";
 import { useSelector } from "react-redux";
 import { getRecorderInfo, getRecorderState } from "../../../../../store/selectors/recorder";
 import { Conditional } from "@dyson/components/layouts";
-import { ActionsPanel } from "../../../screens/recorder/components/sidebar/actionsPanel";
+import { ActionsPanel } from "../../../screens/recorder/sidebar/actionsPanel";
 import { StepsPanel } from "./steps";
 import { TemplatesModal } from "./steps/templatesModal";
 import { ModalManager } from "../modals";

@@ -16,7 +16,7 @@ import { sendSnackBarEvent } from "../toast";
 import { Button } from "@dyson/components/atoms";
 import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
 import { useNavigate } from "react-router-dom";
-import { MenuDropdown } from "../../../components/menuDropdownComponent";
+import { MenuDropdown } from "../../dashboard/dashboardTopMenu";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { ButtonDropdown } from "electron-app/src/_ui/ui/components/buttonDropdown";
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";

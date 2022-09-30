@@ -125,13 +125,13 @@ const ProjectsListScreen = () => {
 	}, [projects]);
 	if (!projects) return <LoadingScreen />;
 	return (
-		// <Wrapper figmaUrl={"https://www.figma.com/proto/lK8wsCW8hLzssu5Z987lky/Crusher-%7C-Aug-(Copy)?node-id=2201%3A3868&scaling=scale-down-width&page-id=988%3A3439&starting-point-node-id=988%3A3817"}>
-		// </Wrapper>
-		<CompactAppLayout css={containerCss} title={"Project list"} footer={<Footer />}>
-			<ProjectList projects={projects} />
-			{projects.length < 3 ? <CreateProjectBanner css={createProjectBannerCss} /> : ""}
-		</CompactAppLayout>
-	);
+        // <Wrapper figmaUrl={"https://www.figma.com/proto/lK8wsCW8hLzssu5Z987lky/Crusher-%7C-Aug-(Copy)?node-id=2201%3A3868&scaling=scale-down-width&page-id=988%3A3439&starting-point-node-id=988%3A3817"}>
+        // </Wrapper>
+        (<CompactAppLayout css={containerCss} title={"Project list"} footer={<Footer />}>
+            <ProjectList projects={projects} />
+            {projects.length < 3 ? <CreateProjectBanner css={createProjectBannerCss} /> : ""}
+        </CompactAppLayout>)
+    );
 };
 
 const createProjectBannerCss = css`

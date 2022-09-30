@@ -1,39 +1,18 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { LogoV2 } from "../../constants/old_icons";
+import { LogoV2 } from "../../../constants/old_icons";
 import { shell } from "electron";
 import { DropdownIconSVG } from "@dyson/assets/icons";
 import { useNavigate } from "react-router-dom";
-import { performExit } from "../../commands/perform";
+import { performExit } from "../../../commands/perform";
 
 import { useStore } from "react-redux";
 import { getCurrentSelectedProjct } from "electron-app/src/store/selectors/app";
 import { Dropdown } from "@dyson/components/molecules/Dropdown";
-import { MenuItem } from "./dropdown/menuItems";
+import { MenuItem } from "../../components/dropdown/menuItems";
 
-export function Link({ children, ...props }) {
-	return (
-		<span css={[linkStyle]} {...props}>
-			{children}
-		</span>
-	);
-}
 
-const linkStyle = css`
-	font-weight: 600;
-	font-size: 14px;
-	color: #ffffff;
-	:hover {
-		opacity: 0.8;
-	}
-
-	font-weight: 500;
-	font-size: 13px;
-`;
-
-export { Link };
-
-function DropwdownContent({ setShowActionMenu, isRecorder }) {
+function DashboardTopDropdownContent({ setShowActionMenu, isRecorder }) {
 	const navigate = useNavigate();
 	const store = useStore();
 	const [projectConfigFile, setProjectConfigFile] = React.useState(null);
@@ -118,7 +97,7 @@ export const MenuDropdown = ({ className, isRecorder, hideDropdown, callback }) 
 		<Dropdown
 			className={className}
 			initialState={showAppMenu}
-			component={<DropwdownContent isRecorder={isRecorder} setShowActionMenu={handleCallback.bind(this)} />}
+			component={<DashboardTopDropdownContent isRecorder={isRecorder} setShowActionMenu={handleCallback.bind(this)} />}
 			callback={handleCallback.bind(this)}
 			dropdownCSS={css`
 				left: 38rem;

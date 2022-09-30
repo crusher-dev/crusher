@@ -187,8 +187,8 @@ const DashboardScreen = () => {
 	// To make delete experience fast
 	const filteredTests = tests?.list?.length
 		? tests.list.filter((test) => {
-			return !((window as any).deletedTest || []).includes(test.id);
-		})
+				return !((window as any).deletedTest || []).includes(test.id);
+		  })
 		: [];
 
 	const testContent = filteredTests.length ? <TestList deleteTest={handleTestDelete} tests={filteredTests} /> : <CreateFirstTest />;

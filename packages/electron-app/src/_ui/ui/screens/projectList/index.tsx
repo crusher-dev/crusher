@@ -8,7 +8,7 @@ import { setSelectedProject } from "electron-app/src/store/actions/app";
 import { LoadingScreen } from "../loading";
 import { useUser } from "../../../api/user/user";
 import { NormalList } from "../../components/NormalList";
-import { BasketBallIcon, ConsoleIconV3, RocketIcon } from "../../../constants/icons";
+import { BasketBallIcon, ConsoleIconV3 } from "../../../constants/icons";
 import { EmojiPicker } from "../../components/emojiPicker";
 import { CloudCrusher } from "electron-app/src/lib/cloud";
 
@@ -16,7 +16,6 @@ const CreateProjectBanner = ({ className, ...props }) => {
 	return (
 		<div css={createProjectBannerContainerCss} className={String(className)} {...props}>
 			<div css={createProjecTitleCss}>
-				<RocketIcon css={rocketIconCss} />
 				<span css={createProjectTitleTextCss}>Create new project</span>
 			</div>
 			<div css={createProjectDescriptionCss}>running command in git repo is faster way</div>
@@ -99,10 +98,6 @@ const createProjecTitleCss = css`
 	align-items: center;
 	margin-right: 12px;
 `;
-const rocketIconCss = css`
-	width: 20px;
-	height: 20px;
-`;
 const createProjectTitleTextCss = css`
 	font-weight: 700;
 	font-size: 17px;
@@ -130,13 +125,13 @@ const ProjectsListScreen = () => {
 	}, [projects]);
 	if (!projects) return <LoadingScreen />;
 	return (
-        // <Wrapper figmaUrl={"https://www.figma.com/proto/lK8wsCW8hLzssu5Z987lky/Crusher-%7C-Aug-(Copy)?node-id=2201%3A3868&scaling=scale-down-width&page-id=988%3A3439&starting-point-node-id=988%3A3817"}>
-        // </Wrapper>
-        (<CompactAppLayout css={containerCss} title={"Project list"} footer={<Footer />}>
-            <ProjectList projects={projects} />
-            {projects.length < 3 ? <CreateProjectBanner css={createProjectBannerCss} /> : ""}
-        </CompactAppLayout>)
-    );
+		// <Wrapper figmaUrl={"https://www.figma.com/proto/lK8wsCW8hLzssu5Z987lky/Crusher-%7C-Aug-(Copy)?node-id=2201%3A3868&scaling=scale-down-width&page-id=988%3A3439&starting-point-node-id=988%3A3817"}>
+		// </Wrapper>
+		<CompactAppLayout css={containerCss} title={"Project list"} footer={<Footer />}>
+			<ProjectList projects={projects} />
+			{projects.length < 3 ? <CreateProjectBanner css={createProjectBannerCss} /> : ""}
+		</CompactAppLayout>
+	);
 };
 
 const createProjectBannerCss = css`

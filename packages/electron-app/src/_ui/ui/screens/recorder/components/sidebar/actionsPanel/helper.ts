@@ -53,18 +53,18 @@ const tranformActionsToList = (): IActionItem[] => {
 };
 
 const transformResultsToActions = () => {
-    const finalObj = {};
-    if (!finalObj[item.category]) {
-        finalObj[item.category] = {};
-    }
-    const itemId = item.id;
-    const itemCategory = item.category;
-    if (itemId) {
-        finalObj[itemCategory][itemId] = item;
-    } else {
-        finalObj[itemCategory] = item;
-    }
-    return finalObj;
+	const finalObj = {};
+	if (!finalObj[item.category]) {
+		finalObj[item.category] = {};
+	}
+	const itemId = item.id;
+	const itemCategory = item.category;
+	if (itemId) {
+		finalObj[itemCategory][itemId] = item;
+	} else {
+		finalObj[itemCategory] = item;
+	}
+	return finalObj;
 };
 
 const filterActionsItems = (filter: string) => {

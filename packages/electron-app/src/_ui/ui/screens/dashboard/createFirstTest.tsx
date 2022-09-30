@@ -25,9 +25,10 @@ const CreateFirstTest = () => {
 			<div css={contentCss}>
 				<CreateIcon css={createIconCss} />
 				<div css={contentHeadingCss}>Create your first test</div>
-				<div css={contentDescriptionCss}>Start with low-code browser to create a test</div>
+				<div css={contentDescriptionCss}>use low-code to create a test</div>
 			</div>
-			<DocsGoBackActionBar buttonTitle={"Create"} buttonCallback={handleCreateTest} />
+
+			<DocsGoBackActionBar buttonTitle={"+ New test"} buttonCallback={handleCreateTest} />
 
 			<div css={watchCss} onClick={handleOpenHelpVideo}>
 				<PlayV2Icon /> Watch video
@@ -80,12 +81,9 @@ const contentHeadingCss = css`
 	color: #ffffff;
 `;
 const contentDescriptionCss = css`
-	margin-top: 10rem;
-
-	font-weight: 400;
+	margin-top: 8rem;
 	font-size: 14rem;
 	text-align: center;
-	letter-spacing: 0.2px;
 	color: rgba(255, 255, 255, 0.64);
 `;
 const watchCss = css`

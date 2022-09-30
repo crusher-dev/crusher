@@ -15,7 +15,7 @@ export const isChildOfOnCloseClass = (element, root) => {
 export const OnOutsideClick = ({ onOutsideClick, disable, blackListClassNames = [], children, className, ...props }) => {
 	const ref = useRef();
 	useEffect(() => {
-		if(!disable) {
+		if (!disable) {
 			const handleMouseDown = (e: React.MouseEvent) => {
 				const insideClick = ref?.current?.contains(e.target) || ref.current === e.target;
 				if (!insideClick || isChildOfOnCloseClass(e.target, ref.current)) {
@@ -23,7 +23,7 @@ export const OnOutsideClick = ({ onOutsideClick, disable, blackListClassNames = 
 						return blackListClassNames.some((className) => element.classList?.contains(className));
 					});
 
-					if (!isBlackListed) return onOutsideClick();
+					if (!isBlackListed) return !!onOutsideClick && onOutsideClick();
 				}
 			};
 			window.addEventListener("mousedown", handleMouseDown, { capture: true });

@@ -4,7 +4,7 @@ import { Dropdown } from "@dyson/components/molecules/Dropdown";
 import { ActionButton } from "electron-app/src/_ui/ui/containers/components/buttons/action.button";
 import { SaveButtonDownIcon } from "../../../constants/icons";
 
-const ActionButtonDropdown = ({ options, callback }) => {
+const DropwdownContent = ({ options, callback }) => {
     const handleClick = React.useCallback((optionId: string) => {
         callback(optionId);
     }, [callback]);
@@ -70,7 +70,7 @@ const ButtonDropdown = ({ options, id, hideDropdown, primaryOption, wrapperCss, 
         <Dropdown
             css={wrapperCss}
             initialState={showActionDropdown}
-            component={<ActionButtonDropdown options={dropdownOptions} callback={handleCallback} />}
+            component={<DropwdownContent options={dropdownOptions} callback={handleCallback} />}
             callback={setShowActionDropdown.bind(this)}
             dropdownCSS={[props.dropdownCss, dropdownCss(buttonRef.current)]}
         >

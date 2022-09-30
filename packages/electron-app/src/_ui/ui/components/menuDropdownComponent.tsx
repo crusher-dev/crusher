@@ -4,17 +4,18 @@ import { LogoV2 } from "../../constants/old_icons";
 import { shell } from "electron";
 import { DropdownIconSVG } from "@dyson/assets/icons";
 import { useNavigate } from "react-router-dom";
-import {  performExit } from "../../commands/perform";
+import { performExit } from "../../commands/perform";
 
 import { useStore } from "react-redux";
 import { getCurrentSelectedProjct } from "electron-app/src/store/selectors/app";
 import { Dropdown } from "@dyson/components/molecules/Dropdown";
+import { MenuItem } from "./dropdown/menuItems";
 
 export function Link({ children, ...props }) {
     return (
         <span css={[linkStyle]} {...props}>
-			{children}
-		</span>
+            {children}
+        </span>
     );
 }
 
@@ -36,7 +37,8 @@ export { Link };
 
 
 
-function ActionButtonDropdown({
+
+function DropwdownContent({
     setShowActionMenu,
     isRecorder
 }) {
@@ -52,33 +54,8 @@ function ActionButtonDropdown({
             if (projectConfigFileJson[projectId]) {
                 setProjectConfigFile(projectConfigFileJson[projectId]);
             }
-        } catch {}
+        } catch { }
     }, []);
-
-    const MenuItem = ({
-        label,
-        onClick
-    }) => {
-        return (
-            <div
-                css={css`
-					padding: 6rem 13rem;
-					color: #fcfcfc;
-					font-family: Cera Pro;
-					font-style: normal;
-					font-weight: 400;
-					font-size: 13rem;
-					:hover {
-						background: #8b63ff !important;
-						color: #fffbfb !important;
-					}
-				`}
-                onClick={onClick}
-            >
-                {label}
-            </div>
-        );
-    };
 
     const handleOpenConfigFile = React.useCallback(() => {
         setShowActionMenu(false);
@@ -150,17 +127,20 @@ export const MenuDropdown = ({ className, isRecorder, hideDropdown, callback }) 
         <Dropdown
             className={className}
             initialState={showAppMenu}
-            component={<ActionButtonDropdown isRecorder={isRecorder} setShowActionMenu={handleCallback.bind(this)} />}
+            component={<DropwdownContent isRecorder={isRecorder} setShowActionMenu={handleCallback.bind(this)} />}
             callback={handleCallback.bind(this)}
             dropdownCSS={css`
 				left: 38rem;
 				width: 162rem;
-				background: linear-gradient(0deg, #1e1e1f, #1e1e1f), #151516;
+                background: #0D0E0E;
+                border: 1px solid #1C1C1C;
+                box-shadow: 0px -1px 9px #000000;
+                border-radius: 10px;
 			`}
         >
             <div css={crusherDropdownContainerStyle}>
                 <LogoV2 className={"crusher-hammer-icon"} css={[logoStyle]} />
-                { hideDropdown ? null : (<DropdownIconSVG />)}
+                {hideDropdown ? null : (<DropdownIconSVG />)}
             </div>
         </Dropdown>
     );

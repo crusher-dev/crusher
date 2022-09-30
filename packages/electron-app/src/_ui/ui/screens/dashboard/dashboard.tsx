@@ -26,8 +26,8 @@ import { ProxyWarningContainer } from "../../containers/components/proxy-warning
 import { setSelectedProject } from "electron-app/src/store/actions/app";
 import { getUserAccountProjects } from "electron-app/src/utils";
 import { checkIfLoggedIn, resolveToFrontend } from "electron-app/src/utils/url";
-import {CompactAppLayout} from "../../layout/CompactAppLayout";
-import {InsufficientPermissionScreen} from "../inSufficientPermission";
+import { CompactAppLayout } from "../../layout/CompactAppLayout";
+import { InsufficientPermissionScreen } from "../inSufficientPermission";
 
 const PlusIcon = (props) => (
 	<svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
@@ -76,14 +76,14 @@ const createTestLinkStyle = css`
 `;
 
 function TestListItem({ test, isActive, deleteItem, setLockState, projectId, onMouseEnterCallback }) {
-    const [isEditMode, setIsEditMode] = React.useState(false);
-    const [testName, setTestName] = React.useState(test.testName);
-    const [showMenu, setShowMenu] = React.useState({ shouldShow: false, pos: null });
-    const inputRef = React.useRef(null);
-    const navigate = useNavigate();
-    const containerRef = React.useRef(null);
+	const [isEditMode, setIsEditMode] = React.useState(false);
+	const [testName, setTestName] = React.useState(test.testName);
+	const [showMenu, setShowMenu] = React.useState({ shouldShow: false, pos: null });
+	const inputRef = React.useRef(null);
+	const navigate = useNavigate();
+	const containerRef = React.useRef(null);
 
-    const handleDoubleClick = React.useCallback(() => {
+	const handleDoubleClick = React.useCallback(() => {
 		setIsEditMode(true);
 		setTimeout(() => {
 			inputRef.current.focus();
@@ -91,29 +91,29 @@ function TestListItem({ test, isActive, deleteItem, setLockState, projectId, onM
 		});
 	}, [inputRef]);
 
-    const handleSave = () => {
+	const handleSave = () => {
 		setIsEditMode(false);
 
 		updateTestName(test.id, testName);
 	};
 
-    const handleKeyDown = () => {
+	const handleKeyDown = () => {
 		if (event.key === "Enter") {
 			handleSave();
 		}
 	};
 
-    const handleRun = React.useCallback(() => {
+	const handleRun = React.useCallback(() => {
 		navigate("/recorder");
 		goFullScreen();
 		performReplayTestUrlAction(test.id, true);
 	}, [test, projectId]);
 
-    const handleOutsideClick = React.useCallback(() => {
+	const handleOutsideClick = React.useCallback(() => {
 		handleSave();
 	}, [inputRef]);
 
-    const handleRightClick = (e) => {
+	const handleRightClick = (e) => {
 		const pos = { x: e.clientX, y: e.clientY };
 		const constainerRects = containerRef.current.getBoundingClientRect();
 
@@ -122,7 +122,7 @@ function TestListItem({ test, isActive, deleteItem, setLockState, projectId, onM
 		setLockState(true);
 	};
 
-    const InnerComponent = (
+	const InnerComponent = (
 		<span onDoubleClick={handleDoubleClick}>
 			<input
 				size={isEditMode ? 20 : testName.length}
@@ -150,7 +150,7 @@ function TestListItem({ test, isActive, deleteItem, setLockState, projectId, onM
 		</span>
 	);
 
-    const handleDropdownCallack = React.useCallback(
+	const handleDropdownCallack = React.useCallback(
 		(val) => {
 			setLockState(val);
 			if (!val) {
@@ -163,8 +163,8 @@ function TestListItem({ test, isActive, deleteItem, setLockState, projectId, onM
 		[showMenu],
 	);
 
-    return (
-        (<li
+	return (
+		(<li
 			ref={containerRef}
 			css={[
 				css`
@@ -175,8 +175,8 @@ function TestListItem({ test, isActive, deleteItem, setLockState, projectId, onM
 			onContextMenu={handleRightClick}
 			onMouseEnter={onMouseEnterCallback.bind(this, showMenu)}
 		>
-            {isEditMode ? <OnOutsideClick onOutsideClick={handleOutsideClick}>{InnerComponent}</OnOutsideClick> : InnerComponent}
-            {showMenu?.pos ? (
+			{isEditMode ? <OnOutsideClick onOutsideClick={handleOutsideClick}>{InnerComponent}</OnOutsideClick> : InnerComponent}
+			{showMenu?.pos ? (
 				<Dropdown
 					initialState={true}
 					css={css`
@@ -204,7 +204,7 @@ function TestListItem({ test, isActive, deleteItem, setLockState, projectId, onM
 					{" "}
 				</Dropdown>
 			) : undefined}
-            {!test.firstRunCompleted ? (
+			{!test.firstRunCompleted ? (
 				<LoadingIconV2
 					css={[
 						css`
@@ -222,7 +222,7 @@ function TestListItem({ test, isActive, deleteItem, setLockState, projectId, onM
 			) : (
 				""
 			)}
-            <div
+			<div
 				className={"action-buttons"}
 				css={[
 					css`
@@ -282,18 +282,18 @@ function TestListItem({ test, isActive, deleteItem, setLockState, projectId, onM
 					</div>
 				</div>
 			</div>
-        </li>)
-    );
+		</li>)
+	);
 }
 function TestList({ userTests, deleteTest, projectId }) {
-    const [lastHoverItem, setLastHoverItem] = React.useState(0);
-    const [lockState, setLockState] = React.useState(false);
+	const [lastHoverItem, setLastHoverItem] = React.useState(0);
+	const [lockState, setLockState] = React.useState(false);
 
-    const handleSetLockState = (value) => {
+	const handleSetLockState = (value) => {
 		setLockState(value);
 	};
 
-    const onMouseEnterCallback = React.useCallback(
+	const onMouseEnterCallback = React.useCallback(
 		(index) => {
 			if (!lockState) {
 				setLastHoverItem(index);
@@ -302,7 +302,7 @@ function TestList({ userTests, deleteTest, projectId }) {
 		[lockState],
 	);
 
-    return (
+	return (
 		<ul css={testItemStyle}>
 			{userTests
 				? userTests.map((test, index) => {
@@ -379,16 +379,16 @@ const testItemHoverStyle = css`
 `;
 
 function TestItemMenuDropdown({
-    testId,
-    draftJobId,
-    setShowActionMenu,
-    setIsEditMode,
-    deleteTest
+	testId,
+	draftJobId,
+	setShowActionMenu,
+	setIsEditMode,
+	deleteTest
 }) {
 	const MenuItem = ({
-        label,
-        onClick
-    }) => {
+		label,
+		onClick
+	}) => {
 		return (
 			<div
 				css={css`
@@ -435,13 +435,13 @@ function TestItemMenuDropdown({
 		</div>
 	);
 }
-function ActionButtonDropdown({
-    setShowActionMenu
+function DropwdownContent({
+	setShowActionMenu
 }) {
 	const MenuItem = ({
-        label,
-        onClick
-    }) => {
+		label,
+		onClick
+	}) => {
 		return (
 			<div
 				css={css`
@@ -527,7 +527,7 @@ const DashboardFooter = ({ userTests, projectId }) => {
 				>
 					<Dropdown
 						initialState={showActionMenu}
-						component={<ActionButtonDropdown projectId={projectId} setShowActionMenu={setShowActionMenu.bind(this)} />}
+						component={<DropwdownContent projectId={projectId} setShowActionMenu={setShowActionMenu.bind(this)} />}
 						callback={setShowActionMenu.bind(this)}
 						dropdownCSS={css`
 							left: 0rem;
@@ -613,43 +613,43 @@ function DashboardScreen() {
 	}, []);
 
 	React.useEffect(() => {
-        document.querySelector("html").style.fontSize = "1px";
-        const userInfo = getUserAccountInfo(store.getState());
-        if (!userInfo) {
+		document.querySelector("html").style.fontSize = "1px";
+		const userInfo = getUserAccountInfo(store.getState());
+		if (!userInfo) {
 			setTimeout(() => {
 				navigate("/login");
 			}, 1000);
 		}
 
-        if (window["showProxyWarning"] && !Object.keys(proxyState).length) {
+		if (window["showProxyWarning"] && !Object.keys(proxyState).length) {
 			setShowProxyWarning({ show: true, testId: window["showProxyWarning"].testId, startUrl: window["showProxyWarning"].startUrl });
 
 			window["showProxyWarning"] = false;
 		}
 
-        const userAccountInfo = getUserAccountInfo(store.getState());
-        const projectId = getCurrentSelectedProjct(store.getState() as any);
+		const userAccountInfo = getUserAccountInfo(store.getState());
+		const projectId = getCurrentSelectedProjct(store.getState() as any);
 
-        if (projectId && userAccountInfo) {
+		if (projectId && userAccountInfo) {
 			getUserTests(projectId).then((tests) => {
 				setUserTests(tests.list);
 			});
 		}
 
-        const interval = setInterval(() => {
-            const userAccountInfo = getUserAccountInfo(store.getState());
-            const projectId = getCurrentSelectedProjct(store.getState() as any);
+		const interval = setInterval(() => {
+			const userAccountInfo = getUserAccountInfo(store.getState());
+			const projectId = getCurrentSelectedProjct(store.getState() as any);
 
-            if (projectId && userAccountInfo) {
+			if (projectId && userAccountInfo) {
 				getUserTests(projectId).then((tests) => {
 					setUserTests(tests.list.filter((a) => { return !((window as any).deletedTest || []).includes(a.id) }));
 				});
 			}
-        }, 5000);
-        return () => {
+		}, 5000);
+		return () => {
 			clearInterval(interval);
 		};
-    }, []);
+	}, []);
 
 	React.useEffect(() => {
 		if (userAccountInfo) {
@@ -675,10 +675,10 @@ function DashboardScreen() {
 	const userProject = React.useMemo(() => {
 		const selectedProject = getCurrentSelectedProjct(store.getState() as any);
 		if (userInfo?.projects && !userInfo.projects.find((project) => project.id === selectedProject)) {
-            console.log("Unauthorized", userInfo, selectedProject);
-            store.dispatch(setSelectedProject(null));
-            setIsUnauthorized(true);
-        }
+			console.log("Unauthorized", userInfo, selectedProject);
+			store.dispatch(setSelectedProject(null));
+			setIsUnauthorized(true);
+		}
 		return userInfo?.projects ? userInfo.projects.find((p) => p.id === selectedProject) : null;
 	}, [userInfo]);
 

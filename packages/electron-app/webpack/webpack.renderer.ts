@@ -11,7 +11,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const fs = require("fs");
 const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
-
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 // Remove output directory
 const OUTPUT_DIR = path.resolve(__dirname, "../../../output/crusher-electron-app/");
 
@@ -19,7 +19,9 @@ const isDevelopment = true;
 
 const commonConfig = {
 	mode: process.env.NODE_ENV || "development",
-	plugins: [isDevelopment && new ReactRefreshWebpackPlugin(), new IgnorePlugin({ resourceRegExp: /^fsevents$/ }), new MiniCssExtractPlugin()],
+	plugins: [isDevelopment && new ReactRefreshWebpackPlugin(), new IgnorePlugin({ resourceRegExp: /^fsevents$/ }),
+	new MonacoWebpackPlugin(),
+	new MiniCssExtractPlugin()],
 	module: {
 		rules: [
 			{

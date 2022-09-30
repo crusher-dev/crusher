@@ -187,17 +187,17 @@ const StatusBar = () => {
 				</div>
 				{showChildrens && log.children && log.children.length
 					? log.children.map((child: ILog & { children: ILog[]; diff: string }) => {
-							return (
-								<LogItem
-									css={css`
+						return (
+							<LogItem
+								css={css`
 										padding-left: 20rem;
 									`}
-									key={child.id}
-									log={child}
-									diff={child.diff}
-								/>
-							);
-					  })
+								key={child.id}
+								log={child}
+								diff={child.diff}
+							/>
+						);
+					})
 					: ""}
 			</div>
 		);
@@ -425,16 +425,16 @@ const StatusBar = () => {
 						>
 							{logs && logs.get("_").length
 								? logs.get("_").map((log: ILog, index: number) => {
-										// console.log("Log time", log.time,  window["openLogTime"]/1000, log.time - (window["openLogTime"]/1000) );
-										return (
-											<LogItem
-												diff={"0"}
-												shouldShowChildren={log.time - window["openLogTime"] >= 0 && index === logs.get("_").length - 1}
-												log={{ ...log, children: logs.get(log.id) }}
-												key={log.id}
-											/>
-										);
-								  })
+									// console.log("Log time", log.time,  window["openLogTime"]/1000, log.time - (window["openLogTime"]/1000) );
+									return (
+										<LogItem
+											diff={"0"}
+											shouldShowChildren={log.time - window["openLogTime"] >= 0 && index === logs.get("_").length - 1}
+											log={{ ...log, children: logs.get(log.id) }}
+											key={log.id}
+										/>
+									);
+								})
 								: ""}
 						</div>
 					</Conditional>

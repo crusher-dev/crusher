@@ -31,8 +31,6 @@ const Step = ({ className, isActive, onContextMenu, step, onClick, setIsActive, 
 
 	return (
 		<HoverCard
-			state={stepId as any == 1}
-			autoHide={false}
 			disabled={hasFailed}
 			callback={setIsEditorCardOpen.bind(this)}
 			wrapperCss={css`

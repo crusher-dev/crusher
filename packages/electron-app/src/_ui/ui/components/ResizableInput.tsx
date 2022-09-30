@@ -2,14 +2,31 @@ import React, { useEffect, useState, useRef } from "react";
 import { css } from "@emotion/react";
 import Input from "@dyson/components/atoms/input/Input";
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
+import { editInputAtom } from "../../store/jotai/testsPage";
+import { useAtom } from "jotai";
 
-const ResizableInput = React.forwardRef(({ isEditingProp = false, onChange, selectAllOnDoubleClick = true, labelCss, labelComponent = null, className, value, ...props }, ref) => {
+const ResizableInput = React.forwardRef(({ isEditingProp = false, id, onChange, inputCSS, selectAllOnDoubleClick = true, labelCss, labelComponent = null, className, value, ...props }, ref) => {
+	const [currentItemId, setTestEditName] = useAtom(editInputAtom);
+
 	const [isEditing, setIsEditing] = useState(isEditingProp);
 	const inputRef = useRef();
 
+	// Hacky way to get around
 	React.useEffect(() => {
-		setIsEditing(isEditingProp);
-	}, [isEditingProp]);
+		return () => {
+			if(isEditing) {
+				setTestEditName(false as any);
+			}
+		};
+	}, [isEditing]);
+
+	React.useEffect(() => {
+		if(currentItemId === id) {
+			setIsEditing(true);
+		} else {
+			setIsEditing(false);
+		}
+	}, [currentItemId]);
 
 	React.useEffect(() => {
 		if (isEditing) {
@@ -23,7 +40,7 @@ const ResizableInput = React.forwardRef(({ isEditingProp = false, onChange, sele
 
 	if (!isEditing) {
 		return (
-			<div title="edit name" ref={inputRef} css={[labelCSS, labelCss]} onDoubleClick={setIsEditing.bind(this, true)}>
+			<div title="edit name" ref={inputRef} css={[labelCSS, labelCss]} onDoubleClick={setTestEditName.bind(this, id)}>
 				{labelComponent || value}
 			</div>
 		);
@@ -33,23 +50,23 @@ const ResizableInput = React.forwardRef(({ isEditingProp = false, onChange, sele
 		<OnOutsideClick
 			onOutsideClick={() => {
 				onChange && onChange(inputRef.current?.value || inputRef?.current.innerText);
-				setIsEditing(false);
+				setTestEditName(null);
 			}}
 		>
 			<Input
 				onReturn={(value) => {
-					setIsEditing(false);
+					setTestEditName(null);
 					onChange && onChange(value);
 				}}
 				onBlur={(e) => {
-					setIsEditing(false);
+					setTestEditName(null);
 					onChange && onChange(e.target.value);
 				}}
 				title=""
 				initialValue={value}
 				size="small"
 				className={String(className)}
-				css={inputCss}
+				css={[inputCss, inputCSS]}
 				type="text"
 				ref={inputRef}
 				{...props}

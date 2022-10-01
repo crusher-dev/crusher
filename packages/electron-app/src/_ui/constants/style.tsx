@@ -7,3 +7,13 @@ export const newButtonStyle = css`
 	border-radius: 8rem !important;
 	min-width: fit-content !important;
 `;
+
+export const hoverStyle = css`
+	color: #909090;
+	:hover{
+		color: #fff;
+		path{
+			stroke: #fff;
+		}
+	}
+`;

@@ -273,16 +273,46 @@ const InfoIcon = React.forwardRef((props, ref) => (
 	</svg>
 ));
 
-const GoBackIcon = (props) => (
-	<svg viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-		<path
-			fillRule="evenodd"
-			clipRule="evenodd"
-			d="M10 5a.75.75 0 0 1-.75.75H2.612L4.77 7.71a.75.75 0 1 1-1.04 1.08L.23 5.54a.75.75 0 0 1 0-1.08l3.5-3.25a.75.75 0 1 1 1.04 1.08L2.612 4.25H9.25A.75.75 0 0 1 10 5Z"
-			fill="#ADADAD"
-		/>
-	</svg>
-);
+export function SelectedSVG(props) {
+	return (
+		<svg
+			width={14}
+			height={14}
+			fill="none"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
+			<path
+				fillRule="evenodd"
+				clipRule="evenodd"
+				d="M4.15 1.233C4.93 1.06 5.875 1 7 1s2.07.06 2.85.233c.786.174 1.44.473 1.942.975.502.503.8 1.156.975 1.942.174.78.233 1.725.233 2.85s-.06 2.07-.233 2.85c-.174.786-.473 1.44-.975 1.942-.503.502-1.156.8-1.942.975C9.07 12.941 8.125 13 7 13s-2.07-.06-2.85-.233c-.786-.174-1.44-.473-1.942-.975-.502-.503-.8-1.156-.975-1.942C1.06 9.07 1 8.125 1 7s.06-2.07.233-2.85c.174-.786.473-1.44.975-1.942.503-.502 1.156-.8 1.942-.975zm1.954 2.559c.308-.832 1.484-.832 1.792 0l.377 1.016a.6.6 0 00.562.392h.881c.86 0 1.292 1.04.683 1.65l-.92.92a.6.6 0 00-.165.542l.222 1.107c.16.805-.716 1.413-1.414.981l-.806-.499a.6.6 0 00-.632 0l-.806.5c-.698.431-1.575-.177-1.414-.982l.222-1.107a.6.6 0 00-.164-.542l-.946-.946c-.6-.6-.175-1.624.672-1.624h.917a.6.6 0 00.562-.392l.377-1.016z"
+				fill="#C140FD"
+			/>
+		</svg>
+	);
+}
+
+
+const GoBackIcon = (props) => {
+	return (
+		<svg
+			width={14}
+			height={14}
+			fill="none"
+			viewBox="0 0 14 14"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
+			<path
+				d="M2 7h10M5.75 3.25L2.109 6.891a.154.154 0 000 .218l3.64 3.641"
+				stroke="#919191"
+				strokeWidth={1.5}
+				strokeLinecap="round"
+				strokeLinejoin="round"
+			/>
+		</svg>
+	);
+}
 
 const CloseIcon = (props) => (
 	<svg viewBox={"0 0 8 8"} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>

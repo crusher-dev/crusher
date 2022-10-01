@@ -169,13 +169,13 @@ export class AppWindow {
 
 			identify(4);
 
-			console.log("Telemetry sent!");
+			console.log("Telemetry sent");
 
 			this.maybeEmitDidLoad();
 		});
 
 		// Disable zoom-in/zoom-out
-		this.window.webContents.on("did-finish-load", () => {});
+		this.window.webContents.on("did-finish-load", () => { });
 
 		this.window.webContents.on("did-fail-load", () => {
 			this.window.webContents.openDevTools();

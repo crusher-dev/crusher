@@ -285,8 +285,7 @@ const SettingsModal = (props: iStartupModalProps) => {
 };
 
 const formContainerStyle = css`
-	margin-top: 3.375rem;
-	padding: 26rem 34rem;
+	padding: 22rem 44rem;
 `;
 const submitFormContainerStyle = css`
 	display: flex;

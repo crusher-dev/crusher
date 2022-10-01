@@ -7,9 +7,14 @@ import { GoBackIcon, SelectedSVG } from "electron-app/src/_ui/constants/icons";
 import { hoverStyle } from "electron-app/src/_ui/constants/style";
 import { TextBlock } from "@dyson/components/atoms";
 import { Conditional } from "@dyson/components/layouts";
+import { useNavigate } from "react-router-dom";
 
+const goBackToProjectPage = (navigate) => {
+	navigate("/");
+}
 const SettingLabel = () => {
-	return (<div className="flex item-center" css={hoverStyle}>
+	const navigate = useNavigate();
+	return (<div className="flex item-center" css={hoverStyle} onClick={goBackToProjectPage.bind(this, navigate)}>
 		<GoBackIcon height={14} />
 		<span css={titleCss} className="ml-4">Settings</span>
 	</div>)
@@ -39,8 +44,11 @@ const titleCss = css`
 export { SettingsScreen };
 
 const GoBack = () => {
+	const navigate = useNavigate();
 	return (
-		<div className="flex item-center pl-8" css={hoverStyle}>
+		<div
+			title="go back"
+			className="flex item-center pl-8" css={hoverStyle} onClick={goBackToProjectPage.bind(this, navigate)}>
 			<GoBackIcon height={14} />
 			<span className="ml-4 mt-1"> back</span>
 		</div>
@@ -112,6 +120,7 @@ hr{
 
 export const SettingsLayout = (props: any) => {
 	const { children } = props;
+
 	return (
 		<div css={container} className="flex">
 			<div css={leftSection} className="py-22 px-16">

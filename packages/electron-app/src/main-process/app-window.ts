@@ -90,7 +90,7 @@ export class AppWindow {
 		const windowOptions: Electron.BrowserWindowConstructorOptions = {
 			title: APP_NAME,
 			titleBarStyle: "hidden",
-			trafficLightPosition: { x: 10, y: 15 },
+			trafficLightPosition: { x: 12, y: 16 },
 			width: this.minWidth,
 			height: this.minHeight,
 			minWidth: this.minWidth,

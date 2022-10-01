@@ -17,8 +17,9 @@ import { shell } from "electron";
 import { waitForUserLogin } from "electron-app/src/utils";
 import { resolveToFrontEndPath } from "@shared/utils/url";
 import { SettingsManager } from "electron-app/src/lib/settingsManager";
-import { newButtonStyle } from "electron-app/src/_ui/constants/style";
+import { newButtonStyle, underlineOnHover } from "electron-app/src/_ui/constants/style";
 import ConfirmDialog from "@dyson/components/sharedComponets/ConfirmModal";
+import { TextBlock } from "@dyson/components/atoms";
 
 interface iStartupModalProps {
 	isOpen: boolean;
@@ -30,6 +31,25 @@ enum ConnectToCloudStatusEnum {
 	WAITING = "WAITING",
 	CONNECTED = "CONNECTED",
 }
+
+const linkCSS = css`
+color: #6CB7FC !important;
+`
+
+const Info = <div className="flex items-center mt-28">
+	<TextBlock color="#909090">
+		<span>Crusher version:</span>
+		<span className="ml-4" css={[linkCSS]}>~v1.0.2</span>
+	</TextBlock>
+
+	<TextBlock color="#909090" className="ml-48">
+		<span>Global config dir:</span>
+		<span className="ml-4" css={[linkCSS, underlineOnHover]}>~/crusher/crusher.json</span>
+	</TextBlock>
+</div>;
+
+
+
 
 const SettingsModalContent = ({ className, ...props }: iStartupModalProps & { className?: string }) => {
 	const appSettings = useSelector(getAppSettings);
@@ -112,24 +132,21 @@ const SettingsModalContent = ({ className, ...props }: iStartupModalProps & { cl
 				css={css`
 					font-size: 15rem;
 					font-weight: 600;
-					color: #fff;
+					color: #C9C9C9;
 					font-family: Cera Pro;
 				`}
 			>
-				General
+				Info
 			</div>
-			<hr
-				css={css`
-					margin-top: 8rem;
-					border-color: rgb(255, 255, 255, 0.1);
-					height: 0.1rem;
-				`}
-			/>
+
+			{Info}
+
 			<div
 				css={css`
 					margin-top: 16rem;
 				`}
 			>
+				<div></div>
 				<div css={inputContainerStyle}>
 					<div
 						css={css`
@@ -315,11 +332,9 @@ const buttonStyle = css`
 	margin-left: 30rem;
 `;
 const inputStyle = css`
-	background: #1a1a1c;
-	border-radius: 6rem;
 
 	font-size: 14rem;
-	min-width: 358rem;
+	min-width: 258rem;
 	color: #fff;
 	outline: none;
 	margin-left: auto;

@@ -17,3 +17,11 @@ export const hoverStyle = css`
 		}
 	}
 `;
+
+
+export const underlineOnHover = css`
+	:hover{
+		text-decoration: underline;
+	}
+	text-underline-offset: 2px;
+`;

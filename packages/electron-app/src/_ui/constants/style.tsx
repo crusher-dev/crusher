@@ -1,4 +1,4 @@
-import { css, Global } from "@emotion/react";
+import {css} from "@emotion/react";
 
 export const newButtonStyle = css`
 border-radius: 8px;

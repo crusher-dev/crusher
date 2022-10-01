@@ -1,7 +1,7 @@
 import React, { memo, useContext } from "react";
 import { css } from "@emotion/react";
 import { Conditional } from "@dyson/components/layouts";
-import { DroppdownIconV2, LoadingIconV2, RedDotIcon, SettingsIcon } from "../../../../constants/old_icons";
+import {LoadingIconV2, RedDotIcon, SettingsIcon} from "../../../../constants/old_icons";
 import { useDispatch, batch, useSelector, useStore } from "react-redux";
 import { devices } from "../../../../../devices";
 import { getRecorderInfo, getRecorderInfoUrl, getRecorderState, getSavedSteps, getTestName, isTestVerified } from "electron-app/src/store/selectors/recorder";
@@ -11,7 +11,7 @@ import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 import { getAppEditingSessionMeta, getCurrentTestInfo, getProxyState, shouldShowOnboardingOverlay } from "electron-app/src/store/selectors/app";
 import { SettingsModal } from "./settingsModal";
 import { TourContext, useTour } from "@reactour/tour";
-import { setCurrentTestInfo, setShowShouldOnboardingOverlay } from "electron-app/src/store/actions/app";
+import {setShowShouldOnboardingOverlay} from "electron-app/src/store/actions/app";
 import { sendSnackBarEvent } from "../toast";
 import { Button } from "@dyson/components/atoms";
 import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";

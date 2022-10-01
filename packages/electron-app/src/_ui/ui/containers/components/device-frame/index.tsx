@@ -13,7 +13,6 @@ import {
 } from "electron-app/src/store/selectors/recorder";
 import { useSelector, useStore } from "react-redux";
 import { Conditional } from "@dyson/components/layouts";
-import * as url from "url";
 import { IpcMessageEvent } from "electron";
 import {
 	disableJavascriptInDebugger,

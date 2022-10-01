@@ -4,7 +4,6 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { css } from "@emotion/react";
 import { shell } from "electron";
-import { Link } from "../../components/Link";
 import { NormalButton } from "electron-app/src/_ui/ui/containers/components/buttons/normalButton";
 import { newButtonStyle } from "electron-app/src/_ui/constants/style";
 

@@ -2,13 +2,10 @@ import React from "react";
 import { css } from "@emotion/react";
 import { CompactAppLayout } from "../../layout/CompactAppLayout";
 import { SettingsModalContent } from "../../containers/components/toolbar/settingsModal";
-import { useNavigate } from "react-router-dom";
 import { StickyFooter } from "../../containers/common/stickyFooter";
 
 const SettingsScreen = () => {
-	const navigate = useNavigate();
-
-	return (
+    return (
 		<CompactAppLayout
 			footer={<StickyFooter />}
 			title={<span css={titleCss}>Settings</span>} css={containerCss}>

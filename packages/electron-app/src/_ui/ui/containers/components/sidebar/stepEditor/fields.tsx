@@ -3,7 +3,6 @@ import { css } from "@emotion/react";
 import { InspectElementIcon } from "../../../../../constants/old_icons";
 import { turnOnElementSelectorInspectMode } from "electron-app/src/_ui/commands/perform";
 import { iSelectorInfo } from "@shared/types/selectorInfo";
-import {  ButtonProps } from "@dyson/components/atoms/button/Button";
 
 
 type IFieldSelectorPickerProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
@@ -45,13 +44,6 @@ const FieldSelectorPicker = React.forwardRef((props: IFieldSelectorPickerProps) 
 	}
 	return <InspectElementIcon className={className} onClick={handleElementSelectorClick} css={inspectElementIconStyle} />;
 });
-
-type IFieldEditModeButtonProps = Omit<ButtonProps, "children"> & {
-	label: string;
-
-	// Applies to the component's container
-	className?: string;
-};
 
 
 const inspectElementIconStyle = css`

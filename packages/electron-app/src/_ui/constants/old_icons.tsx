@@ -70,8 +70,8 @@ const DeleteIcon = (props: any) => {
 		setIsHover(false);
 	};
 
-	const customStyle = props.style ? props.style : {};
-	const customContainerStyle = props.containerStyle ? props.containerStyle : {};
+	const customStyle = props.style || {};
+	const customContainerStyle = props.containerStyle || {};
 
 	return (
 		<div

@@ -25,7 +25,7 @@ interface IProps {
 	step?: any;
 }
 
-const Step = ({ className, isActive, onContextMenu, shouldOpenEditor, step, onClick, setIsActive, isLast, ...props }: IProps) => {
+const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, step, onClick, setIsActive, isLast, ...props }: IProps) => {
 	const { stepId } = props;
 	const [stepHoverId, setStepHoverId] = useAtom(stepHoverAtom);
 	const [editInputId] = useAtom(editInputAtom);
@@ -41,10 +41,9 @@ const Step = ({ className, isActive, onContextMenu, shouldOpenEditor, step, onCl
 		}
 	}, [editInputId === `${stepId}-stepName`]);
 
-	console.log("Hover id are", stepHoverId, isEditCardOpen);
 	return (
 		<HoverCard
-			disabled={hasFailed || (stepHoverId && stepHoverId !== stepId)}
+			disabled={disabled || hasFailed || (stepHoverId && stepHoverId !== stepId)}
 			autoHide={!(stepHoverId === stepId)}
 			state={stepHoverId === stepId}
 			callback={setIsEditorCardOpen.bind(this)}
@@ -63,17 +62,17 @@ const Step = ({ className, isActive, onContextMenu, shouldOpenEditor, step, onCl
 			padding={8}
 			offset={0}
 		>
-			<div onContextMenu={onContextMenu} onClick={onClick} css={[containerCss(hasFailed), isActive ? activeItemCss : undefined]}>
+			<div onContextMenu={onContextMenu} onClick={onClick} css={[containerCss(hasFailed || disabled), isActive  ? activeItemCss : undefined]}>
 				<div className={"card"} css={contentCss}>
 					{stepInfo.isRunning ? <PointerArrowIcon css={runningPointerIconCss} /> : ""}
 					<div css={stepTextCss}>
-						<TextBlock css={[stepNameCss, stepInfo.isFailed ? failedTextNameCss : null, stepInfo.isRunning ? runningTextNameCss : null]}>
+						<TextBlock css={[stepNameCss, stepInfo.isFailed ? failedTextNameCss : null, stepInfo.isRunning ? runningTextNameCss : null, disabled ? css`color: rgba(255, 255, 255, 0.85);` : null]}>
 							{title}
 						</TextBlock>
 						<TextBlock css={stepDescriptionCss}>{stepInfo.description}</TextBlock>
 					</div>
-					{stepInfo.isRunning ? <LoadingIcon style={{}} css={runningIconCss} /> : ""}
-					{stepInfo.isCompleted ? <GreenCheckboxIcon css={[completedIconCss, !isLast ? inActiveIconCss : null]} /> : ""}
+					{stepInfo.isRunning && !disabled ? <LoadingIcon style={{}} css={runningIconCss} /> : ""}
+					{stepInfo.isCompleted && !disabled ? <GreenCheckboxIcon css={[completedIconCss, !isLast ? inActiveIconCss : null]} /> : ""}
 				</div>
 				{hasFailed ? <FailedStepCard stepId={stepId} /> : ""}
 			</div>

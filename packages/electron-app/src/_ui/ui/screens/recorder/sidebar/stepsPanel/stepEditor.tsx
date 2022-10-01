@@ -1,7 +1,7 @@
 import { EditPencilIcon } from "electron-app/src/_ui/constants/icons";
 import React from "react";
 import { css } from "@emotion/react";
-import { getSavedSteps, getStepInfo } from "electron-app/src/store/selectors/recorder";
+import { getAllSteps, getSavedSteps, getStepInfo } from "electron-app/src/store/selectors/recorder";
 import { useSelector, useDispatch } from "react-redux";
 import { TextHighlighter, TextHighlighterText, transformStringSelectorsToArray } from "./helper";
 import { deleteRecordedSteps, updateRecordedStep } from "electron-app/src/store/actions/recorder";
@@ -171,7 +171,7 @@ const StepName = ({ stepId }) => {
 	const [isStepNameEditing, setIsStepNameEditing] = useAtom(editInputAtom);
 
 	const stepInfo = useSelector(getStepInfo(stepId));
-	const steps = useSelector(getSavedSteps);
+	const steps = useSelector(getAllSteps);
 	const step = steps[stepId];
 	const dispatch = useDispatch();
 	const [title, setTitle] = React.useState(stepInfo.name);
@@ -243,7 +243,7 @@ const StepName = ({ stepId }) => {
 };
 
 const StepMetaInfo = ({ stepId, setShowAdvanced }) => {
-	const steps = useSelector(getSavedSteps);
+	const steps = useSelector(getAllSteps);
 
 	const hasSelectors = steps[stepId].type.startsWith("ELEMENT");
 	const showFieldInput = [ActionsInTestEnum.NAVIGATE_URL, ActionsInTestEnum.WAIT_FOR_NAVIGATION, ActionsInTestEnum.ADD_INPUT].includes(steps[stepId].type);
@@ -307,7 +307,7 @@ const EDIT_MODE_MAP = {
 
 const StepAdvancedForm = ({ stepId }) => {
 	const textAreaRef = React.useRef(null);
-	const steps = useSelector(getSavedSteps);
+	const steps = useSelector(getAllSteps);
 	const stepInfo = useSelector(getStepInfo(stepId));
 	const title = TextHighlighter({ text: stepInfo.name }, true);
 	const step = steps[stepId];
@@ -373,7 +373,7 @@ const StepEditor = ({ stepId }) => {
 	const [showAdvanced, setShowAdvanced] = React.useState({ show: false, containerHeight: null });
 	const containerRef = React.useRef(null);
 
-	const steps = useSelector(getSavedSteps);
+	const steps = useSelector(getAllSteps);
 	const dispatch = useDispatch();
 	const showPreview = ![ActionsInTestEnum.SET_DEVICE, ActionsInTestEnum.RUN_AFTER_TEST].includes(steps[stepId].type);
 

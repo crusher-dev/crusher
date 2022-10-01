@@ -4,7 +4,6 @@ import { InspectElementIcon } from "../../../../../constants/old_icons";
 import { turnOnElementSelectorInspectMode } from "electron-app/src/_ui/commands/perform";
 import { iSelectorInfo } from "@shared/types/selectorInfo";
 
-
 type IFieldSelectorPickerProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
 	label: string;
 	initialValue?: string;
@@ -18,7 +17,7 @@ const FieldSelectorPicker = React.forwardRef((props: IFieldSelectorPickerProps) 
 	const { className, stepId, children } = props;
 
 	const handleElementSelectorClick = () => {
-		turnOnElementSelectorInspectMode({stepId});
+		turnOnElementSelectorInspectMode({ stepId });
 	};
 
 	React.useEffect(() => {
@@ -35,16 +34,11 @@ const FieldSelectorPicker = React.forwardRef((props: IFieldSelectorPickerProps) 
 		};
 	}, []);
 
-	if(children) {
-		return (
-			<div onClick={handleElementSelectorClick}>
-				{children}
-			</div>
-		)
+	if (children) {
+		return <div onClick={handleElementSelectorClick}>{children}</div>;
 	}
 	return <InspectElementIcon className={className} onClick={handleElementSelectorClick} css={inspectElementIconStyle} />;
 });
-
 
 const inspectElementIconStyle = css`
 	width: 16rem;

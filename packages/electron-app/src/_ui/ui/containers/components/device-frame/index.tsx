@@ -234,7 +234,7 @@ const DeviceFrame = () => {
 						const { selectedElementInfo } = args[0].payload;
 						const elementSelectInspectMetaInfo = getInspectElementSelectorMeta(store.getState() as any);
 						console.log(elementSelectInspectMetaInfo, selectedElementInfo, "ASAS");
-						if(elementSelectInspectMetaInfo.isOn && elementSelectInspectMetaInfo.stepId) {
+						if (elementSelectInspectMetaInfo.isOn && elementSelectInspectMetaInfo.stepId) {
 							const recordedSteps = getSavedSteps(store.getState() as any);
 							const step = recordedSteps[elementSelectInspectMetaInfo.stepId];
 							//@ts-ignore

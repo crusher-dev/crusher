@@ -2,7 +2,6 @@ import React from "react";
 import { css } from "@emotion/react";
 import { Button } from "@dyson/components/atoms/button/Button";
 
-
 export const ActionButton = ({ title, className, onClick }) => {
 	return (
 		<Button
@@ -38,7 +37,6 @@ const saveButtonStyle = css`
 `;
 
 export const DocsGoBackActionBar = ({ buttonTitle, buttonCallback }) => {
-
 	return (
 		<div css={actionsContainerStyle}>
 			<ActionButton title={buttonTitle} onClick={buttonCallback} css={createButtonStyle} />
@@ -46,12 +44,9 @@ export const DocsGoBackActionBar = ({ buttonTitle, buttonCallback }) => {
 	);
 };
 
-
-
 const createButtonStyle = css`
 	margin-left: 12rem;
 `;
-
 
 const actionsContainerStyle = css`
 	display: flex;
@@ -59,4 +54,3 @@ const actionsContainerStyle = css`
 	justify-content: center;
 	align-items: center;
 `;
-

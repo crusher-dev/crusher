@@ -24,7 +24,7 @@ function DashboardTopDropdownContent({ setShowActionMenu, isRecorder }) {
 			if (projectConfigFileJson[projectId]) {
 				setProjectConfigFile(projectConfigFileJson[projectId]);
 			}
-		} catch { }
+		} catch {}
 	}, []);
 
 	const handleOpenConfigFile = React.useCallback(() => {

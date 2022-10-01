@@ -6,7 +6,7 @@ import { continueRemainingSteps } from "electron-app/src/_ui/commands/perform";
 const PausedStepCard = () => {
 	const handleContinue = () => {
 		continueRemainingSteps();
-	}
+	};
 	return (
 		<div css={containerCss} className={"px-12 py-16"}>
 			<div css={notifyCardCss} className="flex px-16 py-11">
@@ -27,7 +27,6 @@ const PausedStepCard = () => {
 	);
 };
 
-
 const retryButtonCss = css`
 	width: 52rem !important;
 	height: 26rem !important;
@@ -45,7 +44,7 @@ const containerCss = css`
 `;
 const notifyCardCss = css`
 	background: linear-gradient(0deg, rgba(90, 196, 255, 0.12), rgba(90, 196, 255, 0.12));
-	border: 0.5px solid #5AC4FF;
+	border: 0.5px solid #5ac4ff;
 	border-radius: 12rem;
 `;
 const cardTextCss = css`

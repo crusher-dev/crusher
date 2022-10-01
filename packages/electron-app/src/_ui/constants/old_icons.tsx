@@ -309,13 +309,7 @@ const PlayIcon = (props) => (
 
 const LogoV2 = (props) => {
 	return (
-		<svg
-			width={23}
-			height={24}
-			fill="none"
-			xmlns="http://www.w3.org/2000/svg"
-			{...props}
-		>
+		<svg width={23} height={24} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<path
 				d="M0 7.688A7.187 7.187 0 017.188.5h8.476a7.187 7.187 0 017.188 7.188v8.625a7.187 7.187 0 01-7.188 7.187H7.188A7.188 7.188 0 010 16.312V7.688z"
 				fill="#545454"
@@ -330,7 +324,7 @@ const LogoV2 = (props) => {
 			/>
 		</svg>
 	);
-}
+};
 
 const DroppdownIconV2 = (props) => (
 	<svg viewBox={"0 0 9 6"} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>

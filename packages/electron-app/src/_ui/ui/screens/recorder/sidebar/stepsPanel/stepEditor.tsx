@@ -16,7 +16,7 @@ import { useAtom } from "jotai";
 import { editInputAtom } from "electron-app/src/_ui/store/jotai/testsPage";
 
 const limitString = (string, offset = null) => {
-	if(!string) return string;
+	if (!string) return string;
 	const maxOffset = offset || 25;
 	if (string.length > maxOffset) {
 		return string.substring(0, maxOffset) + "...";
@@ -29,16 +29,18 @@ const SelectorInfo = ({ stepId, setShowAdvanced }) => {
 	const selectors = stepInfo.step?.payload?.selectors;
 
 	const description = React.useMemo(() => {
-		if(!selectors) return null;
+		if (!selectors) return null;
 		const sortedSelectorsByLength = selectors;
 
 		const offset = 10;
-		if(sortedSelectorsByLength.length === 1) {
+		if (sortedSelectorsByLength.length === 1) {
 			return `and ${limitString(sortedSelectorsByLength[0].value, offset)}`;
-		} else if(selectors.length === 2) {
+		} else if (selectors.length === 2) {
 			return `${limitString(sortedSelectorsByLength[0].value, offset)} and ${limitString(sortedSelectorsByLength[1].value, offset)}`;
 		} else {
-			return `${limitString(sortedSelectorsByLength[0].value, offset)}, ${limitString(sortedSelectorsByLength[1].value, offset)} and ${sortedSelectorsByLength.length - 2} more`;
+			return `${limitString(sortedSelectorsByLength[0].value, offset)}, ${limitString(sortedSelectorsByLength[1].value, offset)} and ${
+				sortedSelectorsByLength.length - 2
+			} more`;
 		}
 	}, [selectors]);
 	return (
@@ -83,11 +85,11 @@ const pencilIconCss = css`
 `;
 
 const InputValueEditor = ({ step, stepId }) => {
-    const [, setIsEditMode] = React.useState(false);
-    const dispatch = useDispatch();
-    const [isStepNameEditing, setIsStepNameEditing] = useAtom(editInputAtom);
+	const [, setIsEditMode] = React.useState(false);
+	const dispatch = useDispatch();
+	const [isStepNameEditing, setIsStepNameEditing] = useAtom(editInputAtom);
 
-    const getInfo = (step) => {
+	const getInfo = (step) => {
 		if (step.type === ActionsInTestEnum.ADD_INPUT) {
 			const updateInputValue = (value: string) => {
 				if (step.payload.meta.value.value !== value) {
@@ -116,36 +118,53 @@ const InputValueEditor = ({ step, stepId }) => {
 		return null;
 	};
 
-    const fieldInfo = getInfo(step);
-    const handleUpdate = (value) => {
+	const fieldInfo = getInfo(step);
+	const handleUpdate = (value) => {
 		fieldInfo.updateCallback(value);
 		setIsEditMode(false);
 	};
-    if (!fieldInfo) return null;
+	if (!fieldInfo) return null;
 
-    return (
-        (<div className={"flex items-center mt-20"}>
-            <div css={[labelCss, isStepNameEditing === `${stepId}-nav-url` ? css`margin-top: 4rem` : undefined]} className={"mr-7"}>
+	return (
+		<div className={"flex items-center mt-20"}>
+			<div
+				css={[
+					labelCss,
+					isStepNameEditing === `${stepId}-nav-url`
+						? css`
+								margin-top: 4rem;
+						  `
+						: undefined,
+				]}
+				className={"mr-7"}
+			>
 				{fieldInfo.label}
 			</div>
-            <EditableInput inputCss={css`input {
-            
-            width: 180rem; min-width: 180rem !important;
-            font-family: 'Gilroy' !important;
-            font-style: normal !important;
-            font-weight: 400 !important;
-            font-size: 13rem !important;
-            height: 24rem !important;
-            /* or 93% */
-            background: rgba(177, 79, 254, 0.04) !important;
-            border: 0.5px solid #B14FFE !important;
-            border-radius: 8rem !important;
-            
-            color: rgba(215, 223, 225, 0.93) !important;
-        }`} defaultValue={fieldInfo.value} id={stepId + "-nav-url"} onChange={handleUpdate.bind(this)} />
-            <EditPencilIcon onClick={setIsStepNameEditing.bind(this, stepId + "-nav-url")} className={"ml-10"} css={editUrlIconCss} />
-        </div>)
-    );
+			<EditableInput
+				inputCss={css`
+					input {
+						width: 180rem;
+						min-width: 180rem !important;
+						font-family: "Gilroy" !important;
+						font-style: normal !important;
+						font-weight: 400 !important;
+						font-size: 13rem !important;
+						height: 24rem !important;
+						/* or 93% */
+						background: rgba(177, 79, 254, 0.04) !important;
+						border: 0.5px solid #b14ffe !important;
+						border-radius: 8rem !important;
+
+						color: rgba(215, 223, 225, 0.93) !important;
+					}
+				`}
+				defaultValue={fieldInfo.value}
+				id={stepId + "-nav-url"}
+				onChange={handleUpdate.bind(this)}
+			/>
+			<EditPencilIcon onClick={setIsStepNameEditing.bind(this, stepId + "-nav-url")} className={"ml-10"} css={editUrlIconCss} />
+		</div>
+	);
 };
 
 const StepName = ({ stepId }) => {
@@ -182,32 +201,45 @@ const StepName = ({ stepId }) => {
 	console.log("Laa", isStepNameEditing);
 
 	return (
-        (<div css={stepNameCss} className={"flex items-center"}>
-            <div css={css``}>
-				<EditableInput inputCss={css`input {
-					
-					width: 180rem; min-width: 180rem !important;
-					font-family: 'Gilroy' !important;
-					font-style: normal !important;
-					font-weight: 400 !important;
-					font-size: 14rem !important;
-					/* or 93% */
-					border: 0.5px solid #B14FFE !important;
-border-radius: 8rem !important;
+		<div css={stepNameCss} className={"flex items-center"}>
+			<div css={css``}>
+				<EditableInput
+					inputCss={css`
+						input {
+							width: 180rem;
+							min-width: 180rem !important;
+							font-family: "Gilroy" !important;
+							font-style: normal !important;
+							font-weight: 400 !important;
+							font-size: 14rem !important;
+							/* or 93% */
+							border: 0.5px solid #b14ffe !important;
+							border-radius: 8rem !important;
 
-					
-					color: rgba(215, 223, 225, 0.6) !important;
-				}`} labelComponent={<LabelComponent/> } defaultValue={TextHighlighterText({ text: title }).join(" ")} id={stepId + "-stepName"} onChange={handleOnChange.bind(this)} />
+							color: rgba(215, 223, 225, 0.6) !important;
+						}
+					`}
+					labelComponent={<LabelComponent />}
+					defaultValue={TextHighlighterText({ text: title }).join(" ")}
+					id={stepId + "-stepName"}
+					onChange={handleOnChange.bind(this)}
+				/>
 			</div>
-            {isStepNameEditing === `${stepId}-stepName` ? (
-				<div className={"ml-12"} css={css` font-size: 13rem; margin-top: 4rem;`}>
-					{TextHighlighter({text: stepInfo.actionDescription}, true)}
+			{isStepNameEditing === `${stepId}-stepName` ? (
+				<div
+					className={"ml-12"}
+					css={css`
+						font-size: 13rem;
+						margin-top: 4rem;
+					`}
+				>
+					{TextHighlighter({ text: stepInfo.actionDescription }, true)}
 				</div>
 			) : (
 				<EditPencilIcon onClick={setIsStepNameEditing.bind(this, stepId + "-stepName")} className={"ml-10"} css={pencilIconCss} />
 			)}
-        </div>)
-    );
+		</div>
+	);
 };
 
 const StepMetaInfo = ({ stepId, setShowAdvanced }) => {
@@ -234,8 +266,8 @@ const StepMetaInfo = ({ stepId, setShowAdvanced }) => {
 			)}
 
 			{/* <div css={metaInfoFooterCss} className={`flex ${hasSelectors || showFieldInput ? "mt-52" : "mt-30"}`}> */}
-				{/* <div>took 1.9 sec</div> */}
-				{/* <div className={"ml-auto"}>view logs</div> */}
+			{/* <div>took 1.9 sec</div> */}
+			{/* <div className={"ml-auto"}>view logs</div> */}
 			{/* </div> */}
 		</div>
 	);
@@ -313,7 +345,9 @@ const StepAdvancedForm = ({ stepId }) => {
 				</textarea>
 				<div className={"ml-24"}>
 					<ul css={actionsListCss}>
-						<li><FieldSelectorPicker stepId={stepId}>choose selector</FieldSelectorPicker></li>
+						<li>
+							<FieldSelectorPicker stepId={stepId}>choose selector</FieldSelectorPicker>
+						</li>
 					</ul>
 				</div>
 			</div>

@@ -5,11 +5,9 @@ import { SettingsModalContent } from "../../containers/components/toolbar/settin
 import { StickyFooter } from "../../containers/common/stickyFooter";
 
 const SettingsScreen = () => {
-    return (
-		<CompactAppLayout
-			footer={<StickyFooter />}
-			title={<span css={titleCss}>Settings</span>} css={containerCss}>
-			<SettingsLayout >
+	return (
+		<CompactAppLayout footer={<StickyFooter />} title={<span css={titleCss}>Settings</span>} css={containerCss}>
+			<SettingsLayout>
 				<SettingsModalContent />
 			</SettingsLayout>
 		</CompactAppLayout>
@@ -30,9 +28,7 @@ const titleCss = css`
 	color: #ffffff;
 `;
 
-
 export { SettingsScreen };
-
 
 export const SettingsLayout = (props: any) => {
 	const { children } = props;
@@ -41,26 +37,23 @@ export const SettingsLayout = (props: any) => {
 			<div css={leftSection} className="py-16 px-16">
 				sd
 			</div>
-			<div className="w-full">
-				{children}
-			</div>
+			<div className="w-full">{children}</div>
 		</div>
-	)
-}
+	);
+};
 
 const container = css`
-background: #080808;
-border-width: 0.5px 0.5px 0px 0.5px;
-border-style: solid;
-border-color:  rgba(153, 153, 153, 0.12);
-font-size: 13px;
-min-height: 568px;
-margin-top:-10px;
-`
+	background: #080808;
+	border-width: 0.5px 0.5px 0px 0.5px;
+	border-style: solid;
+	border-color: rgba(153, 153, 153, 0.12);
+	font-size: 13px;
+	min-height: 568px;
+	margin-top: -10px;
+`;
 
 const leftSection = css`
 	background: #080808;
-	border-right: .5px solid rgba(153, 153, 153, 0.12);
+	border-right: 0.5px solid rgba(153, 153, 153, 0.12);
 	min-width: 220px;
-
-`
+`;

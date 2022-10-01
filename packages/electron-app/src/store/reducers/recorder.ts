@@ -90,7 +90,7 @@ interface IRecorderReducer {
 	};
 	crashState: { type: TRecorderCrashState; payload: any } | null;
 	isInspectModeOn: any;
-	elementInspectModeMeta: {isOn: boolean; stepId?: any};
+	elementInspectModeMeta: { isOn: boolean; stepId?: any };
 
 	selectedElement: iElementInfo | null;
 	savedSteps: Omit<iAction, "status"> & { status: ActionStatusEnum; time: number }[];
@@ -106,7 +106,7 @@ const initialState: IRecorderReducer = {
 
 	state: { type: TRecorderState.BOOTING, payload: null },
 	isInspectModeOn: false,
-	elementInspectModeMeta: {isOn: false, stepId: null},
+	elementInspectModeMeta: { isOn: false, stepId: null },
 	selectedElement: null,
 	savedSteps: [],
 	isVerified: false,
@@ -145,7 +145,7 @@ const recorderReducer = (state: IRecorderReducer = initialState, action: AnyActi
 		case SET_INSPECT_ELEMENT_SELECTOR_MODE:
 			return {
 				...state,
-				elementInspectModeMeta: { isOn: action.payload.isOn, stepId: action.payload.stepId } ,
+				elementInspectModeMeta: { isOn: action.payload.isOn, stepId: action.payload.stepId },
 			};
 		case SET_SELECTED_ELEMENT:
 			return {

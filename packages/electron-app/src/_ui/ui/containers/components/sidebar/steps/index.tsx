@@ -25,5 +25,3 @@ export const ACTION_DESCRIPTIONS = {
 	[ActionsInTestEnum.BACK_PAGE]: "Go back page",
 	[ActionsInTestEnum.ASSERT_ELEMENT_VISIBILITY]: "Assert element visibility",
 };
-
-

@@ -38,7 +38,6 @@ export default function configureStore(intialState: any, scope = "main", isTempo
 
 	const store = createStore(rootReducer, intialState, composedEnhancers);
 
-
 	if (!isTemporary) {
 		if (scope === "main") {
 			replayActionMain(store);

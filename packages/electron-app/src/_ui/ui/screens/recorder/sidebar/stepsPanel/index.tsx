@@ -8,7 +8,7 @@ import { Step } from "./step";
 import { useSelectableList } from "electron-app/src/_ui/hooks/list";
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
 import { RightClickMenu } from "@dyson/components/molecules/RightClick/RightClick";
-import {deleteRecordedSteps} from "electron-app/src/store/actions/recorder";
+import { deleteRecordedSteps } from "electron-app/src/store/actions/recorder";
 import { performJumpTo, performVerifyTest } from "electron-app/src/_ui/commands/perform";
 import { useAtom } from "jotai";
 import { stepHoverAtom } from "electron-app/src/_ui/store/jotai/steps";
@@ -29,9 +29,7 @@ const menuItems = [
 	{ id: "delete", label: "Delete", shortcut: <div>⌘+D</div> },
 ];
 
-const multiMenuItems = [
-	{ id: "delete", label: "Delete", shortcut: <div>⌘+D</div> },
-];
+const multiMenuItems = [{ id: "delete", label: "Delete", shortcut: <div>⌘+D</div> }];
 const StepsPanel = ({ className }: IProps) => {
 	const { isItemSelected, selectedList, resetSelected, toggleSelectItem, selectItem } = useSelectableList();
 	const recordedSteps = useSelector(getSavedSteps);
@@ -90,7 +88,7 @@ const StepsPanel = ({ className }: IProps) => {
 	const handleCallback = React.useCallback(
 		(id) => {
 			switch (id) {
-				case "jump-to": 
+				case "jump-to":
 					performJumpTo(selectedList[0]);
 					break;
 				case "rename":
@@ -106,8 +104,8 @@ const StepsPanel = ({ className }: IProps) => {
 	);
 
 	const menuItemsComponent = React.useMemo(() => {
-		if(selectedList.length === 0) return [];
-		return ((selectedList.length > 1) ? multiMenuItems : menuItems).map((item) => {
+		if (selectedList.length === 0) return [];
+		return (selectedList.length > 1 ? multiMenuItems : menuItems).map((item) => {
 			return {
 				type: "menuItem",
 				value: item.label,
@@ -137,11 +135,11 @@ const StepsPanel = ({ className }: IProps) => {
 			<div css={headerCss} title={""}>
 				<Text css={sectionHeadingCss}>{recordedSteps.length} Steps </Text>
 				<div css={sectionActionsCss}>
-					<HoverButton title={"reload test"}  onClick={handleResetTest}>
-						<ResetIcon css={resetIconCss}/>
+					<HoverButton title={"reload test"} onClick={handleResetTest}>
+						<ResetIcon css={resetIconCss} />
 					</HoverButton>
-					<HoverButton title={"open logs"}  onClick={toggleStatusBar} className={"ml-2"}>
-						<ConsoleIcon css={consoleIconCss}/>
+					<HoverButton title={"open logs"} onClick={toggleStatusBar} className={"ml-2"}>
+						<ConsoleIcon css={consoleIconCss} />
 					</HoverButton>
 				</div>
 			</div>
@@ -157,9 +155,7 @@ const StepsPanel = ({ className }: IProps) => {
 				<RightClickMenu onOpenChange={handleMenuOpenChange} menuItems={menuItemsComponent}>
 					<div className={`custom-scroll`} css={contentCss}>
 						{steps}
-						{remainingSteps && remainingSteps.length && [TRecorderState.RECORDING_ACTIONS].includes(recorderState.type)  ? (
-							<PausedStepCard/>
-						) : ""}
+						{remainingSteps && remainingSteps.length && [TRecorderState.RECORDING_ACTIONS].includes(recorderState.type) ? <PausedStepCard /> : ""}
 					</div>
 				</RightClickMenu>
 			</OnOutsideClick>

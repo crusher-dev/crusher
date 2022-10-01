@@ -62,7 +62,10 @@ export const StickyFooter = ({ className }: IProps) => {
 					<div css={notificationContainerCss}>
 						<div css={notificationContentCss}>
 							<ConsoleIcon css={consoleIconCss} />
-							<span css={notificationTextCss} className="pt-2"> Last build {statusMessage}</span>
+							<span css={notificationTextCss} className="pt-2">
+								{" "}
+								Last build {statusMessage}
+							</span>
 							<Conditional showIf={latestNotification?.status === "PASSED"}>
 								<GreenCheckboxIcon className={"ml-6"} css={greenCheckboxCss} />
 							</Conditional>
@@ -72,7 +75,7 @@ export const StickyFooter = ({ className }: IProps) => {
 						</div>
 						<div css={notificationActionCss}>
 							<Link css={linkCss} className="flex items-center" onClick={handleViewReport.bind(this, latestNotification.id)}>
-								<span className="mt-1">	 report</span> <ExternalIcon className="ml-4" />
+								<span className="mt-1"> report</span> <ExternalIcon className="ml-4" />
 							</Link>
 						</div>
 					</div>
@@ -117,14 +120,14 @@ const greenCheckboxCss = css`
 `;
 
 const containerCss = css`
-	background: #0D0D0D;
+	background: #0d0d0d;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	border-top: 0.5px solid rgba(153, 153, 153, 0.12);
 `;
 const docsButtonCss = css`
-	background: #0F1010;
+	background: #0f1010;
 	border-left: 0.5px solid #242424;
 	font-family: "Cera Pro";
 

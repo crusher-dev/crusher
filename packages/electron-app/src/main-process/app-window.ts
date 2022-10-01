@@ -1015,7 +1015,7 @@ export class AppWindow {
 		// this.webView.webContents.focus();
 	}
 
-	private turnOnElementSelectorInspectMode(event: Electron.IpcMainEvent, payload: {stepId?: any}) {
+	private turnOnElementSelectorInspectMode(event: Electron.IpcMainEvent, payload: { stepId?: any }) {
 		this.store.dispatch(setInspectElementSelectorMode(true, payload?.stepId));
 		this.useAdvancedSelectorPicker = true;
 

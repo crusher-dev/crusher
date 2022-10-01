@@ -625,7 +625,6 @@ const bottomBarStyle = css`
 	background: #080808;
 `;
 const saveButtonStyle = css`
-
 	font-size: 14rem;
 	box-sizing: border-box;
 	border-radius: 8px;

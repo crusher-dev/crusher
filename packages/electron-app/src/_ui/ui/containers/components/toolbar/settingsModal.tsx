@@ -118,7 +118,6 @@ const SettingsModalContent = ({ className, ...props }: iStartupModalProps & { cl
 			>
 				General
 			</div>
-			<ConfirmDialog action="close" />
 			<hr
 				css={css`
 					margin-top: 8rem;

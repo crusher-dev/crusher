@@ -6,7 +6,6 @@ import { iSelectorInfo } from "@shared/types/selectorInfo";
 import {  ButtonProps } from "@dyson/components/atoms/button/Button";
 
 
-
 type IFieldSelectorPickerProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
 	label: string;
 	initialValue?: string;

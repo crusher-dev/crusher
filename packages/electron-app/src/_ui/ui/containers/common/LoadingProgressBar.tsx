@@ -54,7 +54,7 @@ const loadingProgressBarCss = css`
 `;
 const loadingProgressPillCss = (isInView: boolean) => {
 	return css`
-		background: linear-gradient(180deg, rgba(230, 199, 255, 0) 0%, rgba(43, 37, 48, 0.03) 75.52%, rgba(0, 0, 0, 0.34) 100%), #c96af5;
+		background: linear-gradient(180deg, rgba(230, 199, 255, 0) 0%, rgba(43, 37, 48, 0.03) 75.52%, rgba(0, 0, 0, 0.34) 100%), #b341f9;
 		border-radius: 4px;
 		transition-timing-function: ease;
 		height: 100%;

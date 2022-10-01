@@ -468,7 +468,6 @@ const Toolbar = (props: any) => {
 				<MenuDropdown
 					isRecorder={true}
 					callback={handleMenuCallback}
-					hideDropdown={true}
 					css={css`
 						.crusher-hammer-icon {
 							margin-left: 18rem;

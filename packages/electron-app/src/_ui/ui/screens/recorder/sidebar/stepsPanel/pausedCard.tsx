@@ -39,7 +39,10 @@ const retryButtonCss = css`
 	color: #ffffff !important;
 `;
 const containerCss = css`
-	background: #000;
+	background: #080809;
+	border-width: 0.5px 0px;
+	border-style: solid;
+	border-color: rgba(255, 255, 255, 0.1);
 `;
 const notifyCardCss = css`
 	background: linear-gradient(0deg, rgba(90, 196, 255, 0.12), rgba(90, 196, 255, 0.12));

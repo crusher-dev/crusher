@@ -13,7 +13,7 @@ const PausedStepCard = () => {
 				<div css={cardTextCss}>
 					<div css={titleCss}>step paused</div>
 					<div css={descriptionCss} className={"mt-5"}>
-						element info couldn't be found
+						you can add steps & then continue
 					</div>
 				</div>
 			</div>

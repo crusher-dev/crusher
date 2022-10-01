@@ -5,7 +5,7 @@ import { LoadingIconV2, RedDotIcon, SettingsIcon } from "../../../../constants/o
 import { useDispatch, batch, useSelector, useStore } from "react-redux";
 import { devices } from "../../../../../devices";
 import { getRecorderInfo, getRecorderInfoUrl, getRecorderState, getSavedSteps, getTestName, isTestVerified } from "electron-app/src/store/selectors/recorder";
-import { goFullScreen, performNavigation, performSteps, performVerifyTest, saveTest, updateTest, updateTestName } from "../../../../commands/perform";
+import { goFullScreen, performExit, performNavigation, performSteps, performVerifyTest, saveTest, updateTest, updateTestName } from "../../../../commands/perform";
 import { addHttpToURLIfNotThere, isValidHttpUrl } from "../../../../../utils";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 import { getAppEditingSessionMeta, getCurrentTestInfo, getProxyState, shouldShowOnboardingOverlay } from "electron-app/src/store/selectors/app";
@@ -23,6 +23,7 @@ import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsi
 import { generateRandomTestName } from "electron-app/src/utils/renderer";
 import { NormalInput } from "electron-app/src/_ui/ui/components/inputs/normalInput";
 import { setTestName } from "electron-app/src/store/actions/recorder";
+import ConfirmDialog from "dyson/src/components/sharedComponets/ConfirmModal";
 
 const DeviceItem = ({ label }) => {
 	return (
@@ -295,6 +296,7 @@ const Toolbar = (props: any) => {
 	const [isEditingTestName, setIsEditingTestName] = React.useState(false);
 	const { testName, setTestName } = useTestName();
 	const currentTestInfo = useSelector(getCurrentTestInfo);
+	const [showConfirmDialog, setShowConfirmDialog] = React.useState(null);
 
 	React.useEffect(() => {
 		if (currentTestInfo) {
@@ -311,6 +313,7 @@ const Toolbar = (props: any) => {
 	const dispatch = useDispatch();
 	const store = useStore();
 	const tourCont = useContext(TourContext);
+	const navigate = useNavigate();
 
 	React.useEffect(() => {
 		if (recorderInfoUrl.url !== url) {
@@ -414,14 +417,26 @@ const Toolbar = (props: any) => {
 		);
 	}, [selectedDevice, recorderDevices]);
 
-	const handleMenuCallback = React.useCallback((value, id, isNavigating) => {
-		if (isNavigating) {
-			goFullScreen(false);
+	const handleMenuCallback = React.useCallback((value, evt) => {
+		if(evt?.id === "exit" && recorderInfo.url) {
+			evt.preventDefault();
+			setShowConfirmDialog({evt});
 		}
-		if(id === "settings") {
-			setShowSettingsModal(true);
+
+		if (evt?.isNavigating) {
+			if(evt?.id === "settings") {
+				evt.preventDefault();
+				setShowSettingsModal(true);
+			} else {
+				if(recorderInfo.url) {
+					evt.preventDefault();
+					setShowConfirmDialog({evt});
+				} else {
+					goFullScreen(false);
+				}
+			}
 		}
-	}, []);
+	}, [recorderInfo]);
 
 	const handleOutsideClick = React.useCallback(() => {
 		if (document.querySelector(".testName") as HTMLInputElement) {
@@ -457,8 +472,23 @@ const Toolbar = (props: any) => {
 		}, 100);
 	}, []);
 
+	const handleConfirmAccept = React.useCallback(() => {
+		const evt = showConfirmDialog.evt;
+		setShowConfirmDialog(null);
+		console.log("Evt accept", evt);
+		if(evt.id === "exit") {
+			performExit();
+		} 
+		if(evt.id === "back-to-dashboard") {
+			navigate("/");
+		}
+		if(evt.isNavigating) {
+			goFullScreen(false);
+		}
+	}, [showConfirmDialog]);
 	return (
 		<div css={containerStyle} {...props}>
+			{showConfirmDialog ? (<ConfirmDialog action={showConfirmDialog.evt.action} onAcceptClick={handleConfirmAccept} onOpenChange={(isOpen) => { if(!isOpen) setShowConfirmDialog(null); }}/>) : ""}
 			<div
 				css={css`
 					display: flex;

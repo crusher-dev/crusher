@@ -11,6 +11,16 @@ import { getCurrentSelectedProjct } from "electron-app/src/store/selectors/app";
 import { Dropdown } from "@dyson/components/molecules/Dropdown";
 import { MenuItem } from "../../components/dropdown/menuItems";
 
+const createEvent = (props) => {
+	let _isCanceled = false;
+	return {
+		preventDefault: () => {
+			_isCanceled = true;
+		},
+		isCanceled: () => _isCanceled,
+		...props
+	}
+}
 function DashboardTopDropdownContent({ setShowActionMenu, isRecorder }) {
 	const navigate = useNavigate();
 	const store = useStore();
@@ -28,31 +38,47 @@ function DashboardTopDropdownContent({ setShowActionMenu, isRecorder }) {
 	}, []);
 
 	const handleOpenConfigFile = React.useCallback(() => {
-		setShowActionMenu(false, "open-config-file");
-		shell.openPath(projectConfigFile);
+		const evt = createEvent({ id: "open-config-file", action: "Open config file", isNavigating: false });
+
+		setShowActionMenu(false, evt);
+		if(!evt.isCanceled()) {
+			shell.openPath(projectConfigFile);
+		}
 	}, [projectConfigFile]);
 
 	const handleSettings = () => {
-		setShowActionMenu(false, "settings");
-		// recorder settings will be handled by the recorder
-		if(!isRecorder) {
+		const evt = createEvent({ id: "settings", action: "Open settings", isNavigating: true });
+		setShowActionMenu(false, evt);
+		if(!evt.isCanceled()) {
 			navigate("/settings");
 		}
 	};
 
 	const handleExit = () => {
-		setShowActionMenu(false, "exit");
-		performExit();
+		const evt = createEvent({ id: "exit", action: "Exit", isNavigating: false });
+		setShowActionMenu(false, evt);
+
+		if(!evt.isCanceled()) {
+			performExit();
+		}
 	};
 
 	const handleSelectProject = () => {
-		setShowActionMenu(false, "back-to-projects", true);
-		return navigate("/select-project");
+		const evt = createEvent({ id: "back-to-projects", action: "Go back", isNavigating: true });
+		setShowActionMenu(false, evt);
+
+		if(!evt.isCanceled()) {
+			return navigate("/select-project");
+		}
 	};
 
 	const handleGoBackToDashboard = () => {
-		setShowActionMenu(false, "back-to-dashboard", true);
-		return navigate("/");
+		const evt = createEvent({ id: "back-to-dashboard", action: "Go back", isNavigating: true });
+		setShowActionMenu(false, evt);
+
+		if(!evt.isCanceled()) {
+			return navigate("/");
+		}
 	};
 
 	const handleHelpAccount = () => {
@@ -86,10 +112,12 @@ export const MenuDropdown = ({ className, isRecorder, hideDropdown, callback }) 
 	const [showAppMenu, setShowAppMenu] = React.useState(false);
 
 	const handleCallback = React.useCallback(
-		(value, id, isNavigating = false) => {
-			setShowAppMenu(value);
+		(value, event) => {
 			if (callback) {
-				callback(value, id, isNavigating);
+				callback(value, event);
+			}
+			if(event && !event?.isCanceled()) {
+				setShowAppMenu(value);
 			}
 		},
 		[callback],

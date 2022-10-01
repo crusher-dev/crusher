@@ -198,7 +198,7 @@ const StepName = ({ stepId }) => {
 		return <>{TextHighlighter({ text: title }, true)}</>;
 	};
 
-	console.log("Laa", isStepNameEditing);
+	const showStepDescriptionHelper = isStepNameEditing === `${stepId}-stepName` || stepInfo.hasCustomName;
 
 	return (
 		<div css={stepNameCss} className={"flex items-center"}>
@@ -225,7 +225,7 @@ const StepName = ({ stepId }) => {
 					onChange={handleOnChange.bind(this)}
 				/>
 			</div>
-			{isStepNameEditing === `${stepId}-stepName` ? (
+			{showStepDescriptionHelper ? (
 				<div
 					className={"ml-12"}
 					css={css`

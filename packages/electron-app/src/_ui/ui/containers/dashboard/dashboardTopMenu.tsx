@@ -103,7 +103,7 @@ export const MenuDropdown = ({ className, isRecorder, hideDropdown, callback }) 
 				width: 162rem;
 				background: #0d0e0e;
 				border: 1px solid #1c1c1c;
-				box-shadow: 0px -1px 9px #000000;
+				box-shadow: 0px 0px 2px #000000;
 				border-radius: 10px;
 			`}
 		>

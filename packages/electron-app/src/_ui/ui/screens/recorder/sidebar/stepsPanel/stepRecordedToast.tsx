@@ -39,7 +39,7 @@ const containerCss = css`
 	padding: 14rem 16rem;
 	background: #171718;
 	border: 0.5px solid rgba(50, 50, 50, 0.78);
-	box-shadow: 0px 0px 7px 3px rgba(0, 0, 0, 0.88);
+	box-shadow: 0px 0px 7px -3px rgba(0, 0, 0, 0.88);
 	border-radius: 12px;
 	z-index: 9999;
 	left: 50%;

@@ -15,7 +15,7 @@ import { stepHoverAtom } from "electron-app/src/_ui/store/jotai/steps";
 import { editInputAtom } from "electron-app/src/_ui/store/jotai/testsPage";
 import { statusBarMaximiseAtom } from "electron-app/src/_ui/store/jotai/statusBar";
 import { ResetIcon } from "electron-app/src/_ui/constants/icons";
-import { HoverIcon } from "electron-app/src/_ui/ui/components/hoverIcon";
+import { HoverButton } from "electron-app/src/_ui/ui/components/hoverButton";
 import { getRemainingSteps } from "electron-app/src/store/selectors/app";
 import { PausedStepCard } from "./pausedCard";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
@@ -134,11 +134,15 @@ const StepsPanel = ({ className }: IProps) => {
 
 	return (
 		<div css={containerCss} className={String(className)}>
-			<div css={headerCss}>
+			<div css={headerCss} title={""}>
 				<Text css={sectionHeadingCss}>{recordedSteps.length} Steps </Text>
 				<div css={sectionActionsCss}>
-					<HoverIcon Component={ResetIcon} css={resetIconCss} onClick={handleResetTest}/>
-					<HoverIcon Component={ConsoleIcon} wrapperCss={css`margin-left: 13rem;`} css={consoleIconCss} onClick={toggleStatusBar}/>
+					<HoverButton title={"reload test"}  onClick={handleResetTest}>
+						<ResetIcon css={resetIconCss}/>
+					</HoverButton>
+					<HoverButton title={"open logs"}  onClick={toggleStatusBar} className={"ml-2"}>
+						<ConsoleIcon css={consoleIconCss}/>
+					</HoverButton>
 				</div>
 			</div>
 			<OnOutsideClick
@@ -162,9 +166,10 @@ const StepsPanel = ({ className }: IProps) => {
 		</div>
 	);
 };
+
 const resetIconCss = css`
-	width: 13rem;
-	height: 13rem;
+	width: 12rem;
+	height: 12rem;
 `;
 const containerCss = css`
 	border-radius: 4px 4px 0px 0px;

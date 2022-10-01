@@ -22,7 +22,6 @@ const PausedStepCard = () => {
 				<NormalButton CSS={retryButtonCss} className={"ml-8"} onClick={handleContinue}>
 					continue
 				</NormalButton>
-				{/* <div className={"ml-auto"} onClick={handleMore}><OptionsIcon css={optionsIconCss} /></div> */}
 			</div>
 		</div>
 	);
@@ -60,7 +59,6 @@ const titleCss = css`
 `;
 const descriptionCss = css`
 	font-size: 12rem;
-
 	color: rgba(255, 255, 255, 0.52);
 `;
 

@@ -24,7 +24,6 @@ import { triggerLocalBuild } from "../../../utils/recorder";
 import { LinkPointer } from "../../components/LinkPointer";
 import { linkOpen } from "electron-app/src/utils/url";
 import { resolveToFrontEndPath } from "@shared/utils/url";
-import ConfirmDialog from "dyson/src/components/sharedComponets/ConfirmModal";
 
 const TitleComponent = ({ project }) => {
 	const { name, id } = project;

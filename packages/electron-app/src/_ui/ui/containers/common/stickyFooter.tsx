@@ -62,17 +62,17 @@ export const StickyFooter = ({ className }: IProps) => {
 					<div css={notificationContainerCss}>
 						<div css={notificationContentCss}>
 							<ConsoleIcon css={consoleIconCss} />
-							<span css={notificationTextCss}> Last build {statusMessage}</span>
+							<span css={notificationTextCss} className="pt-2"> Last build {statusMessage}</span>
 							<Conditional showIf={latestNotification?.status === "PASSED"}>
-								<GreenCheckboxIcon className={"ml-6"} css={greenCheckboxCss}/>
+								<GreenCheckboxIcon className={"ml-6"} css={greenCheckboxCss} />
 							</Conditional>
 							<Conditional showIf={latestNotification?.status === "FAILED"}>
-								<FailedCheckboxIcon className={"ml-6"} css={greenCheckboxCss}/>
+								<FailedCheckboxIcon className={"ml-6"} css={greenCheckboxCss} />
 							</Conditional>
 						</div>
 						<div css={notificationActionCss}>
-							<Link css={linkCss} onClick={handleViewReport.bind(this, latestNotification.id)}>
-								view report
+							<Link css={linkCss} className="flex items-center" onClick={handleViewReport.bind(this, latestNotification.id)}>
+								<span className="mt-1">	 report</span> <ExternalIcon className="ml-4" />
 							</Link>
 						</div>
 					</div>
@@ -111,9 +111,9 @@ export const StickyFooter = ({ className }: IProps) => {
 	);
 };
 
-const greenCheckboxCss  =css`
-	width: 16px;
-	height: 16px;
+const greenCheckboxCss = css`
+	width: 14px;
+	height: 14px;
 `;
 
 const containerCss = css`
@@ -191,7 +191,7 @@ const notificationTextCss = css`
 	font-weight: 400;
 	font-size: 13px;
 	letter-spacing: 0.027em;
-	margin-left: 8px;
+	margin-left: 10px;
 	color: rgba(255, 255, 255, 0.69);
 `;
 
@@ -202,8 +202,7 @@ const footerBottomLabel = css`
 `;
 
 const notificationActionCss = css`
-	margin-left: auto;
-	padding-right: 12px;
+	margin-left: 16px;
 `;
 const linkCss = css`
 	font-weight: 400;

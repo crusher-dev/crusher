@@ -15,6 +15,7 @@ import { stepHoverAtom } from "electron-app/src/_ui/store/jotai/steps";
 import { editInputAtom } from "electron-app/src/_ui/store/jotai/testsPage";
 import { statusBarMaximiseAtom } from "electron-app/src/_ui/store/jotai/statusBar";
 import { ResetIcon } from "electron-app/src/_ui/constants/icons";
+import { HoverIcon } from "electron-app/src/_ui/ui/components/hoverIcon";
 
 interface IProps {
 	className?: string;
@@ -121,9 +122,9 @@ const StepsPanel = ({ className }: IProps) => {
 			<div css={headerCss}>
 				<Text css={sectionHeadingCss}>{recordedSteps.length} Steps </Text>
 				<div css={sectionActionsCss}>
-					<ResetIcon onClick={handleResetTest} css={[resetIconCss]} />
+					<HoverIcon Component={ResetIcon} css={resetIconCss} onClick={handleResetTest}/>
+					<HoverIcon Component={ConsoleIcon} wrapperCss={css`margin-left: 13rem;`} css={consoleIconCss} onClick={toggleStatusBar}/>
 
-					<ConsoleIcon className={"ml-13"} onClick={toggleStatusBar} css={consoleIconCss(isStatusBarVisible)} />
 				</div>
 			</div>
 			<OnOutsideClick
@@ -147,10 +148,6 @@ const StepsPanel = ({ className }: IProps) => {
 const resetIconCss = css`
 	width: 13rem;
 	height: 13rem;
-	margin-left: 12rem;
-	:hover {
-		opacity: 0.8;
-	}
 `;
 const containerCss = css`
 	border-radius: 4px 4px 0px 0px;

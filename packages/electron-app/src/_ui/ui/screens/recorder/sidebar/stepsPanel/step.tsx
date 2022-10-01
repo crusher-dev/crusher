@@ -11,6 +11,7 @@ import { FailedStepCard } from "./failedCard";
 import { stepHoverAtom } from "electron-app/src/_ui/store/jotai/steps";
 import { useAtom } from "jotai";
 import { editInputAtom } from "electron-app/src/_ui/store/jotai/testsPage";
+import { Conditional } from "@dyson/components/layouts";
 
 interface IProps {
 	className?: string;
@@ -62,14 +63,16 @@ const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, 
 			padding={8}
 			offset={0}
 		>
-			<div onContextMenu={onContextMenu} onClick={onClick} css={[containerCss(hasFailed || disabled), isActive  ? activeItemCss : undefined]}>
+			<div onContextMenu={onContextMenu} onClick={onClick} css={[containerCss(hasFailed || disabled), isActive ? activeItemCss : undefined]}>
 				<div className={"card"} css={contentCss}>
 					{stepInfo.isRunning ? <PointerArrowIcon css={runningPointerIconCss} /> : ""}
-					<div css={stepTextCss}>
+					<div css={stepTextCss} className="flex flex-col justify-center">
 						<TextBlock css={[stepNameCss, stepInfo.isFailed ? failedTextNameCss : null, stepInfo.isRunning ? runningTextNameCss : null, disabled ? css`color: rgba(255, 255, 255, 0.85);` : null]}>
 							{title}
 						</TextBlock>
-						<TextBlock css={stepDescriptionCss}>{stepInfo.description}</TextBlock>
+						<Conditional showIf={!!stepInfo?.description}>
+							<TextBlock css={stepDescriptionCss}>{stepInfo?.description?.substring(0, 40)}</TextBlock>
+						</Conditional>
 					</div>
 					{stepInfo.isRunning && !disabled ? <LoadingIcon style={{}} css={runningIconCss} /> : ""}
 					{stepInfo.isCompleted && !disabled ? <GreenCheckboxIcon css={[completedIconCss, !isLast ? inActiveIconCss : null]} /> : ""}
@@ -86,26 +89,27 @@ const inActiveIconCss = css`
 	}
 `;
 const containerCss = (isDisabled) => css`
-	border-radius: 2rem;
-	border-width: 0.5px 0px;
-	border-style: solid;
-	border-color: #1c1b1b;
+	border-top: 0.5px solid #1c1b1b;
+	border-bottom: 0.5px solid #1c1b1b;
+
 	&:not(:first-child) {
 		border-top: none;
 	}
+	border-top: .5px solid transparent !important;
 	:hover {
 		background: ${isDisabled ? `inherit` : `rgba(199, 81, 255, 0.14)`};
 	}
 `;
 const activeItemCss = css`
-	background: rgba(199, 81, 255, 0.14);
+	background: rgba(199, 81, 255, 0.1);
+	border-top: .5px solid #582B98 !important;
+	border-bottom: .5px solid #582B98;
 `;
 const contentCss = css`
 	display: flex;
 	flex-wrap: wrap;
 	align-items: flex-start;
 	box-sizing: border-box;
-	border: 1.5rem solid rgba(255, 255, 255, 0);
 	border-left: none;
 	border-right: none;
 	padding: 10rem 20rem;
@@ -129,9 +133,9 @@ const stepNameCss = css`
 	font-weight: 500 !important;
 	font-size: 12.4rem !important;
 	line-height: 13rem !important;
-	color: #dadada !important;
+	color: #DADADA !important;
 	user-select: none !important;
-	margin-bottom: 2rem !important;
+	margin-top: 1rem;
 `;
 const failedTextNameCss = css`
 	font-weight: 800;
@@ -145,9 +149,9 @@ const stepDescriptionCss = css`
 	font-weight: 400;
 	font-size: 10rem !important;
 	line-height: 10rem !important;
-	margin-top: 7rem !important;
-	color: #4b4b52 !important;
+	color: #4B4B52 !important;
 	user-select: none !important;
+	margin-top: 8rem;
 `;
 const runningIconCss = css`
 	width: 16rem;

@@ -70,13 +70,13 @@ const StepsPanel = ({ className }: IProps) => {
 	}, [selectedList, selectItem, handleStepClick, recordedSteps]);
 
 	const remainingStepsList = React.useMemo(() => {
-		if(!remainingSteps) return [];
+		if (!remainingSteps) return [];
 		return remainingSteps.map((step, index) => {
 			return (
 				<Step
 					disabled={true}
 					step={step}
-	
+
 					stepId={index + steps.length}
 					isLast={index === remainingSteps.length - 1}
 				/>
@@ -97,7 +97,7 @@ const StepsPanel = ({ className }: IProps) => {
 		}, 100);
 	}, [resetSelected]);
 
-	const handleMenuOpenChange = () => {};
+	const handleMenuOpenChange = () => { };
 
 	const handleCallback = React.useCallback(
 		(id) => {
@@ -148,8 +148,8 @@ const StepsPanel = ({ className }: IProps) => {
 
 	return (
 		<div css={containerCss} className={String(className)}>
-			<div css={headerCss} title={""}>
-				<Text css={sectionHeadingCss}>{recordedSteps.length} Steps </Text>
+			<div css={headerCss} title={""} className="flex items-center">
+				<Text css={sectionHeadingCss} className="mt-3">{recordedSteps.length} steps</Text>
 				<div css={sectionActionsCss}>
 					<HoverButton title={"reload test"} onClick={handleResetTest}>
 						<ResetIcon css={resetIconCss} />
@@ -188,6 +188,14 @@ font-size: 12rem;color: #DCDCDC;`}>next steps</div>
 const resetIconCss = css`
 	width: 12rem;
 	height: 12rem;
+	path{
+		fill: #5f5f60;
+	}
+	:hover{
+		path{
+			fill: #fff;
+		}	
+	}
 `;
 const containerCss = css`
 	border-radius: 4px 4px 0px 0px;
@@ -200,13 +208,13 @@ const containerCss = css`
 const headerCss = css`
 	display: flex;
 	align-items: center;
-	padding: 14rem 18rem;
-	padding-top: 19rem;
+	padding: 12rem 16rem 12rem 20rem;
+	border-bottom: .5px solid #1c1b1b;
 `;
 const sectionHeadingCss = css`
 	font-weight: 500;
-	font-size: 12rem;
-	color: #ffffff;
+	font-size: 13rem;
+	color: #BDBDBD;
 `;
 const sectionActionsCss = css`
 	margin-left: auto;
@@ -218,6 +226,7 @@ const sectionActionsCss = css`
 const consoleIconCss = (isActive) => css`
 	width: 11.7rem;
 	height: 12.3rem;
+	padding-top: 1px;
 	path {
 		fill: ${isActive ? "rgba(255, 255, 255, 0.8)" : "rgba(255, 255, 255, 0.35)"};
 	}
@@ -226,9 +235,7 @@ const consoleIconCss = (isActive) => css`
 	}
 `;
 const contentCss = css`
-	padding-top: 0rem;
 	height: 100%;
-	padding-bottom: 0rem;
 `;
 
 export { StepsPanel };

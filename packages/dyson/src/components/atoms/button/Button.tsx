@@ -47,7 +47,7 @@ const getColor = (color: string, impact: string): { main: Color; hover: Color } 
 	switch (finalColor) {
 		case "primary-high":
 			return {
-				main: { background: "#7353F5", border: "#7353F5", color: "#fff" },
+				main: { background: "#b341f9", border: "#b341f9", color: "#fff" },
 				hover: { background: "#6749de", border: "#6749de", color: "#fff" },
 			};
 			break;
@@ -121,8 +121,8 @@ const getColor = (color: string, impact: string): { main: Color; hover: Color } 
 	switch (finalColor) {
 		case "primary-high":
 			return {
-				main: { background: "#7353F5", border: "#7353F5", color: "#fff" },
-				hover: { background: "#6749de", border: "#6749de", color: "#fff" },
+				main: { background: "#b341f9", border: "#b341f9", color: "#fff" },
+				hover: { background: "#b341f9", border: "#b341f9", color: "#fff" },
 			};
 			break;
 		case "primary-medium":

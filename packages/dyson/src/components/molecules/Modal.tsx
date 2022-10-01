@@ -44,13 +44,12 @@ const primaryModalStyle = css`
 	min-width: 612rem;
 	min-height: 271rem;
 
-
 	box-sizing: border-box;
 	margin-top: -200rem;
 
-background: #0D0E0E;
-	// background: #080808;
-    border: 0.5px solid #1e1e1e;
+	background: #0D0E0E;
+    border: .5px solid rgba(142, 142, 142, 0.1);
+	
     box-shadow: 0px -1px 9px #000000;
     border-radius: 14px;
 

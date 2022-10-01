@@ -37,7 +37,7 @@ const overlay = css`
 	z-index: 100000;
 	top: 0;
 	left: 0;
-	backdrop-filter: blur(2px);
+	backdrop-filter: blur(3px);
 `;
 
 const lightOverlayStyle = css`

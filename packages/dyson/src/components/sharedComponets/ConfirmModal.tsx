@@ -20,6 +20,7 @@ const StyledOverlay = styled(DialogPrimitive.Overlay, {
     backgroundColor: blackA.blackA9,
     position: "fixed",
     inset: 0,
+    zIndex: 237864823743,
     "@media (prefers-reduced-motion: no-preference)": {
         animation: `${overlayShow} 70ms cubic-bezier(0.16, 1, 0.3, 1)`
     }
@@ -83,13 +84,14 @@ const IconButton = styled("button", {
 
 const ConfirmDialog = ({
     open = true,
+    action,
     onOpenChange = () => { },
     onAcceptClick = () => { },
-    onReject = () => { }
+    onReject = () => { },
 }) => (
     <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent>
-            <Heading fontSize={15}>Are you sure you want to go back?</Heading>
+        <DialogContent style={{zIndex: "237864823744"}}>
+            <Heading fontSize={15}>Are you sure you want to {action.toLowerCase()}?</Heading>
             <TextBlock fontSize={14} color="#454545" className="mt-12">You'll lose all the actions</TextBlock>
             <Flex css={{ marginTop: 25, justifyContent: "flex-end" }}>
                 <DialogClose asChild>
@@ -99,7 +101,7 @@ const ConfirmDialog = ({
                             no
                         </Button>
                         <Button bgColor="danger" onClick={onAcceptClick}>
-                            Go back
+                            {action}
                         </Button>
                     </div>
                 </DialogClose>

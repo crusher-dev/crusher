@@ -47,15 +47,20 @@ const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, 
 			disabled={disabled || hasFailed || (stepHoverId && stepHoverId !== stepId)}
 			autoHide={!(stepHoverId === stepId)}
 			state={stepHoverId === stepId}
+
 			callback={setIsEditorCardOpen.bind(this)}
 			wrapperCss={css`
 				z-index: 123123123 !important;
+				box-shadow: none;
 			`}
 			css={css`
 				padding: 0rem !important;
-				background: rgb(5, 5, 5) !important;
-				margin-left: -22rem !important;
+			
+			`}
+			tooltipCSS={css`
+				border-radius: 16px;
 				overflow: hidden !important;
+				border: .5px solid #1C1C1C;
 			`}
 			content={<StepEditor stepId={stepId} />}
 			placement="right"

@@ -27,6 +27,8 @@ import Toolbar from "./ui/containers/components/toolbar";
 import historyInstance from "./utils/history";
 import { useBuildNotifications } from "./hooks/tests";
 import { addBuildNotification, clearCurrentLocalBuild, updateCurrentLocalBuild } from "../store/actions/builds";
+import { useAtom } from "jotai";
+import { isStepHoverAtom } from "./store/jotai/testsPage";
 
 const handleCompletion = async (store: Store, action: IDeepLinkAction, addNotification) => {
 	// @TODO: Change `redirectAfterSuccess` to `isLocalBuild`
@@ -160,7 +162,8 @@ const App = () => {
 			<div css={dragableStyle} className={"drag"}></div>
 			<div css={contentStyle}>
 				<Sidebar css={sidebarCss} />
-				<div css={bodyCss}>
+				<div css={bodyCss} className="relative">
+					<StepHoverOverlay />
 					<Toolbar css={toolbarStyle} />
 					<DeviceFrame css={deviceFrameContainerCss} />
 					{isStatusBarVisible ? <StatusBar /> : ""}
@@ -171,6 +174,24 @@ const App = () => {
 		</div>
 	);
 };
+
+const StepHoverOverlay = () => {
+	const [isStepHovered] = useAtom(isStepHoverAtom)
+	if (!isStepHovered) {
+		return null
+	}
+	return (<div css={overLayCSS}></div>)
+}
+
+const overLayCSS = css`
+	position: absolute;
+	top: 0;
+	width: 100%;
+	min-height: 100vh;
+	background: rgba(0, 0, 0, 0.55);
+	z-index: 22;
+    backdrop-filter: blur(1px);
+`
 
 const dragableCss = () => {
 	return css`

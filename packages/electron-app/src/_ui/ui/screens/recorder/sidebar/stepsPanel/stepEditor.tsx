@@ -1,5 +1,5 @@
 import { EditPencilIcon } from "electron-app/src/_ui/constants/icons";
-import React from "react";
+import React, { useEffect } from "react";
 import { css } from "@emotion/react";
 import { getAllSteps, getSavedSteps, getStepInfo } from "electron-app/src/store/selectors/recorder";
 import { useSelector, useDispatch } from "react-redux";
@@ -13,7 +13,7 @@ import { iSelectorInfo } from "@shared/types/selectorInfo";
 import { sendSnackBarEvent } from "electron-app/src/_ui/ui/containers/components/toast";
 import { EditableInput } from "electron-app/src/_ui/ui/components/inputs/editableInput";
 import { useAtom } from "jotai";
-import { editInputAtom } from "electron-app/src/_ui/store/jotai/testsPage";
+import { editInputAtom, isStepHoverAtom } from "electron-app/src/_ui/store/jotai/testsPage";
 
 const limitString = (string, offset = null) => {
 	if (!string) return string;
@@ -38,9 +38,8 @@ const SelectorInfo = ({ stepId, setShowAdvanced }) => {
 		} else if (selectors.length === 2) {
 			return `${limitString(sortedSelectorsByLength[0].value, offset)} and ${limitString(sortedSelectorsByLength[1].value, offset)}`;
 		} else {
-			return `${limitString(sortedSelectorsByLength[0].value, offset)}, ${limitString(sortedSelectorsByLength[1].value, offset)} and ${
-				sortedSelectorsByLength.length - 2
-			} more`;
+			return `${limitString(sortedSelectorsByLength[0].value, offset)}, ${limitString(sortedSelectorsByLength[1].value, offset)} and ${sortedSelectorsByLength.length - 2
+				} more`;
 		}
 	}, [selectors]);
 	return (
@@ -292,7 +291,7 @@ const stepNameCss = css`
 	font-size: 15rem;
 `;
 const stepMetaInfoContainerCss = css`
-	background: rgb(5, 5, 5);
+	background: #000000;
 `;
 
 // Actions map with modal types
@@ -369,9 +368,10 @@ const textAreaCss = css`
 	color: rgba(255, 255, 255, 0.54);
 `;
 
-const StepEditor = ({ stepId }) => {
+const StepOverlayEditor = ({ stepId }) => {
 	const [showAdvanced, setShowAdvanced] = React.useState({ show: false, containerHeight: null });
 	const containerRef = React.useRef(null);
+	const [, setStepHovered] = useAtom(isStepHoverAtom)
 
 	const steps = useSelector(getAllSteps);
 	const dispatch = useDispatch();
@@ -394,6 +394,14 @@ const StepEditor = ({ stepId }) => {
 		if (shouldShow) setShowAdvanced({ show: true, containerHeight: containerRef.current.clientHeight });
 		else setShowAdvanced({ show: false, containerHeight: null });
 	};
+
+	useEffect(() => {
+		setStepHovered(true)
+		return () => {
+			setStepHovered(false)
+		}
+	}, [])
+
 
 	return (
 		<div
@@ -481,11 +489,11 @@ const elementImageCss = css`
 	border-radius: 17rem;
 `;
 const stepMainContentCss = css`
-	background: rgb(11, 11, 11);
+	background: #0C0C0D;
 `;
 
 const containerCss = css`
 	width: 412rem;
 `;
 
-export { StepEditor };
+export { StepOverlayEditor as StepEditor };

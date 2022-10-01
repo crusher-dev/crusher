@@ -155,7 +155,7 @@ const StepsPanel = ({ className }: IProps) => {
 						<ResetIcon css={resetIconCss} />
 					</HoverButton>
 					<HoverButton title={"open logs"} onClick={toggleStatusBar} className={"ml-2"}>
-						<ConsoleIcon css={consoleIconCss} />
+						<ConsoleIcon css={consoleIconCss(isStatusBarMaximised)} />
 					</HoverButton>
 				</div>
 			</div>

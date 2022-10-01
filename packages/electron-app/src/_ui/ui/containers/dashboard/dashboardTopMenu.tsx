@@ -28,27 +28,30 @@ function DashboardTopDropdownContent({ setShowActionMenu, isRecorder }) {
 	}, []);
 
 	const handleOpenConfigFile = React.useCallback(() => {
-		setShowActionMenu(false);
+		setShowActionMenu(false, "open-config-file");
 		shell.openPath(projectConfigFile);
 	}, [projectConfigFile]);
 
 	const handleSettings = () => {
-		setShowActionMenu(false);
-		navigate("/settings");
+		setShowActionMenu(false, "settings");
+		// recorder settings will be handled by the recorder
+		if(!isRecorder) {
+			navigate("/settings");
+		}
 	};
 
 	const handleExit = () => {
-		setShowActionMenu(false);
+		setShowActionMenu(false, "exit");
 		performExit();
 	};
 
 	const handleSelectProject = () => {
-		setShowActionMenu(false, true);
+		setShowActionMenu(false, "back-to-projects", true);
 		return navigate("/select-project");
 	};
 
 	const handleGoBackToDashboard = () => {
-		setShowActionMenu(false, true);
+		setShowActionMenu(false, "back-to-dashboard", true);
 		return navigate("/");
 	};
 
@@ -83,10 +86,10 @@ export const MenuDropdown = ({ className, isRecorder, hideDropdown, callback }) 
 	const [showAppMenu, setShowAppMenu] = React.useState(false);
 
 	const handleCallback = React.useCallback(
-		(value, isNavigating = false) => {
+		(value, id, isNavigating = false) => {
 			setShowAppMenu(value);
 			if (callback) {
-				callback(value, isNavigating);
+				callback(value, id, isNavigating);
 			}
 		},
 		[callback],

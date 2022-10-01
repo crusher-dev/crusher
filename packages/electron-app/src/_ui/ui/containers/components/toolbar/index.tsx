@@ -414,9 +414,12 @@ const Toolbar = (props: any) => {
 		);
 	}, [selectedDevice, recorderDevices]);
 
-	const handleMenuCallback = React.useCallback((value, isNavigating) => {
+	const handleMenuCallback = React.useCallback((value, id, isNavigating) => {
 		if (isNavigating) {
 			goFullScreen(false);
+		}
+		if(id === "settings") {
+			setShowSettingsModal(true);
 		}
 	}, []);
 

@@ -60,7 +60,7 @@ const inputCss = css`
 		}
 	}
 	& > input {
-		width: 247rem;
+
 		/* border: 1px solid #9462ff; */
 		outline-color: #9462ff;
 		outline-width: 1px;

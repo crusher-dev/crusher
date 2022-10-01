@@ -1,6 +1,5 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { FailedStepIcon } from "electron-app/src/_ui/constants/icons";
 import { NormalButton } from "electron-app/src/_ui/ui/components/buttons/NormalButton";
 import { continueRemainingSteps } from "electron-app/src/_ui/commands/perform";
 
@@ -16,9 +15,6 @@ const PausedStepCard = () => {
 					<div css={descriptionCss} className={"mt-5"}>
 						element info couldn't be found
 					</div>
-				</div>
-				<div className={"ml-auto"}>
-					<FailedStepIcon css={failedIconCss} />
 				</div>
 			</div>
 
@@ -53,13 +49,7 @@ const notifyCardCss = css`
 const cardTextCss = css`
 	flex: 1;
 `;
-const failedIconCss = css`
-	width: 18rem;
-	height: 18rem;
-	path {
-		fill: #5AC4FF;
-	}
-`;
+
 const titleCss = css`
 	font-weight: 700;
 	font-size: 14rem;

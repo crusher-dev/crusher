@@ -13,6 +13,8 @@ import { Tooltip } from "@dyson/components/atoms/tooltip/Tooltip";
 import { resolveToFrontEndPath } from "@shared/utils/url";
 import { shell } from "electron";
 import { CloudCrusher } from "electron-app/src/lib/cloud";
+import { FailedCheckboxIcon, GreenCheckboxIcon } from "electron-app/src/_ui/constants/old_icons";
+import { Conditional } from "@dyson/components/layouts";
 
 interface IProps {
 	className?: string;
@@ -60,7 +62,13 @@ export const StickyFooter = ({ className }: IProps) => {
 					<div css={notificationContainerCss}>
 						<div css={notificationContentCss}>
 							<ConsoleIcon css={consoleIconCss} />
-							<span css={notificationTextCss}>2: Last build {statusMessage}</span>
+							<span css={notificationTextCss}> Last build {statusMessage}</span>
+							<Conditional showIf={latestNotification?.status === "PASSED"}>
+								<GreenCheckboxIcon className={"ml-6"} css={greenCheckboxCss}/>
+							</Conditional>
+							<Conditional showIf={latestNotification?.status === "FAILED"}>
+								<FailedCheckboxIcon className={"ml-6"} css={greenCheckboxCss}/>
+							</Conditional>
 						</div>
 						<div css={notificationActionCss}>
 							<Link css={linkCss} onClick={handleViewReport.bind(this, latestNotification.id)}>
@@ -102,6 +110,11 @@ export const StickyFooter = ({ className }: IProps) => {
 		</div>
 	);
 };
+
+const greenCheckboxCss  =css`
+	width: 16px;
+	height: 16px;
+`;
 
 const containerCss = css`
 	background: #0D0D0D;

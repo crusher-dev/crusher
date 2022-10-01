@@ -63,12 +63,10 @@ const ActionsPanel = ({ className }: IProps) => {
 	const handleOnChange = (event) => {
 		setSearchFilter(event.target.value);
 	};
-	const handleResetTest = () => performVerifyTest(false);
 	return (
 		<div className={String(className)} css={containerCss}>
 			<div css={headerCss}>
 				<InputFocusHint onChange={handleOnChange} hint={`⌘ + k`} placeholder={"search actions"} />
-				<ResetIcon onClick={handleResetTest} css={[resetIconCss]} />
 			</div>
 			<div css={contentCss} className="custom-scroll">
 				{isInspectModeOn || isElementSelectorInspectModeOn ? <InspectModeBanner /> : content}
@@ -107,14 +105,6 @@ const focusedListCss = css`
 		border-width: 0.5px 0px;
 		border-style: solid;
 		border-color: #d662ff;
-	}
-`;
-const resetIconCss = css`
-	width: 13rem;
-	height: 13rem;
-	margin-left: 12rem;
-	:hover {
-		opacity: 0.8;
 	}
 `;
 const topBorderCss = css`

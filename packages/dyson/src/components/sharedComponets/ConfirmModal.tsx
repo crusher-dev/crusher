@@ -1,9 +1,9 @@
 import React from "react";
 import { styled, keyframes } from "@stitches/react";
-import { blackA, mauve, green, red, whiteA } from "@radix-ui/colors";
+import { blackA, whiteA } from "@radix-ui/colors";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { TextBlock } from "../atoms";
+import { Button, TextBlock } from "../atoms";
 import { Heading } from "../atoms/heading/Heading";
 
 const overlayShow = keyframes({
@@ -64,53 +64,6 @@ export const DialogClose = DialogPrimitive.Close;
 // Your app...
 const Flex = styled("div", { display: "flex" });
 
-const Button = styled("button", {
-    all: "unset",
-    display: "inline-flex",
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 8,
-    padding: "0 15px",
-    fontSize: 15,
-    lineHeight: 1,
-    fontWeight: 500,
-    height: 35,
-
-    variants: {
-        variant: {
-            violet: {
-                backgroundColor: "#0D0E0E",
-                color: "#fff",
-                border: " 0.5px solid rgba(61, 61, 62, 0.4)",
-                "&:hover": { opacity: ".8" }
-            },
-            green: {
-                backgroundColor: green.green4,
-                color: green.green11,
-                "&:hover": { backgroundColor: green.green5 },
-                "&:focus": { boxShadow: `0 0 0 2px ${green.green7}` }
-            },
-            grey: {
-                backgroundColor: "#101010",
-                color: "#8A8A8A",
-                border: "0.5px solid rgba(94, 94, 94, 0.16)",
-                "&:hover": { filter: "brightness(125%)" }
-            },
-            red: {
-                backgroundColor: red.red4,
-                color: red.red11,
-                marginLeft: 12,
-                "&:hover": { filter: "brightness(75%)" },
-                "&:focus": { boxShadow: `0 0 0 2px ${red.red7}` }
-            }
-        }
-    },
-
-    defaultVariants: {
-        variant: "violet"
-    }
-});
-
 const IconButton = styled("button", {
     all: "unset",
     fontFamily: "inherit",
@@ -141,8 +94,13 @@ const ConfirmDialog = ({
             <Flex css={{ marginTop: 25, justifyContent: "flex-end" }}>
                 <DialogClose asChild>
                     <div>
-                        <Button variant="grey" onClick={onReject}>No</Button>
-                        <Button variant="red" onClick={onAcceptClick}>Go back</Button>
+
+                        <Button bgColor="tertiary-dark" className="mr-12" onClick={onReject}>
+                            no
+                        </Button>
+                        <Button bgColor="danger" onClick={onAcceptClick}>
+                            Go back
+                        </Button>
                     </div>
                 </DialogClose>
             </Flex>

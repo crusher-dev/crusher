@@ -1,5 +1,6 @@
 import React from "react";
 import { css, SerializedStyles } from "@emotion/react";
+import { colors } from "../../../constant/color";
 
 const getStyleBySize = (
 	size: string,
@@ -100,14 +101,11 @@ const getColor = (color: string, impact: string): { main: Color; hover: Color } 
 			break;
 		case "danger-high":
 			return {
-				main: { background: "#E1566E", border: "#E1566E", color: "#fff" },
-				hover: { background: "#d5546a", border: "#d5546a", color: "#fff" },
-			};
-			break;
-		case "danger-low":
-			return {
-				main: { background: "rgba(0,0,0,0)", border: "#E1566E", color: "#E1566E" },
-				hover: { background: "rgba(0,0,0,0)", border: "#E1566E", color: "#E1566E" },
+				main: {
+					background: colors.RED[600],
+					border: colors.RED[600], color: "#fff"
+				},
+				hover: { background: colors.RED[700], border: colors.RED[700], color: "#fff" },
 			};
 			break;
 		default:
@@ -184,27 +182,11 @@ export const Button: React.FC<ButtonProps> = React.forwardRef(
 
 const buttonCSS = css`
 	cursor: default;
-	border-radius: 4rem;
+	border-radius: 8rem;
 	color: white;
 	font-weight: 600;
 	height: 32rem;
 	padding: 0 12rem;
-
-	// border-radius: 10rem;
-
-	// background: #191919;
-	// border: 0.5px solid rgba(56, 56, 56, 0.35);
-	// box-shadow: 0px 4px 4px rgba(0, 0, 0, 0) !important;
-
-	// :hover {
-	// 	background: #202020;
-	// 	border: 0.5px solid rgba(56, 56, 56, 0.35);
-	// 	filter: brightness(100%);
-	// }
-
-	// :focus {
-	// 	outline: 1px solid #ae47ff;
-	// }
 `;
 
 const getColorCSS = (color: string, impact: string, disabled: boolean) => css`
@@ -232,7 +214,6 @@ const getSize = (size: string) => css`
 `;
 
 const disabledButton = css`
-	//opacity: 0.1;
 	background: ${getColor("tertiary", "").main.background};
 	color: ${getColor("tertiary", "").main.color};
 	border: 1px solid ${getColor("tertiary", "impact").main.border};

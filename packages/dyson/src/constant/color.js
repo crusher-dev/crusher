@@ -27,9 +27,13 @@ const COLOR = {
 		400: "#CCFF98",
 	},
 	RED: {
-		500: "#D0547A",
-		600: "#C9436C",
+		500: "linear-gradient(0deg, rgba(0, 0, 0, 0.00), rgba(0, 0, 0, 0.00)), #E3345E;",
+		600: "linear-gradient(0deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05)), #E3345E;",
+		700: "linear-gradient(0deg, rgba(0, 0, 0, 0.10), rgba(0, 0, 0, 0.10)), #E3345E;",
 	},
+	PRIMARY: {
+		500: "linear-gradient(0deg, rgba(0, 0, 0, 0.00), rgba(0, 0, 0, 0.00)), #B341F9;",
+	}
 };
 
 const background = {};

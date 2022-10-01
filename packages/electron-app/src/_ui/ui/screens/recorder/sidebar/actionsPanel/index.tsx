@@ -123,6 +123,9 @@ const headerCss = css`
 	display: flex;
 	align-items: center;
 	padding: 0rem 14rem;
+	div{
+		flex: 1;
+	}
 `;
 
 const contentCss = css`

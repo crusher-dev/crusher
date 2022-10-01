@@ -103,7 +103,7 @@ const hintCss = css`
 	font-weight: 400;
 	font-size: 12.7rem;
 
-	color: #242424;
+	color: #717171;
 	margin-right: 12rem;
 `;
 const focusedHintCss = css`

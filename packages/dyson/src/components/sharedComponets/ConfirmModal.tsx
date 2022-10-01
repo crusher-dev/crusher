@@ -5,6 +5,7 @@ import { Cross2Icon } from "@radix-ui/react-icons";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { Button, TextBlock } from "../atoms";
 import { Heading } from "../atoms/heading/Heading";
+import { css } from "@emotion/react";
 
 const overlayShow = keyframes({
     "0%": { opacity: 0 },
@@ -17,10 +18,11 @@ const contentShow = keyframes({
 });
 
 const StyledOverlay = styled(DialogPrimitive.Overlay, {
-    backgroundColor: blackA.blackA9,
+    backgroundColor: "rgb(0 0 0 / 64%)",
     position: "fixed",
     inset: 0,
-    zIndex: 237864823743,
+    backdropFilter: "blur(3px)",
+    zIndex: 200,
     "@media (prefers-reduced-motion: no-preference)": {
         animation: `${overlayShow} 70ms cubic-bezier(0.16, 1, 0.3, 1)`
     }
@@ -30,7 +32,7 @@ const StyledContent = styled(DialogPrimitive.Content, {
     backgroundColor: "#0D0E0E",
     marginTop: -100,
     color: "#fff",
-    border: ".5px solid rgb(179 179 179 / 10%);",
+    border: ".5px solid rgba(142, 142, 142, 0.1)",
     boxShadow:
         "hsl(206 22% 7% / 35%) 0px 10px 38px -10px, hsl(206 22% 7% / 20%) 0px 10px 20px -15px",
     position: "fixed",
@@ -82,6 +84,7 @@ const IconButton = styled("button", {
     "&:hover": { color: whiteA.whiteA10 }
 });
 
+
 const ConfirmDialog = ({
     open = true,
     action,
@@ -90,7 +93,8 @@ const ConfirmDialog = ({
     onReject = () => { },
 }) => (
     <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent style={{zIndex: "237864823744"}}>
+
+        <DialogContent style={{ zIndex: "237864823744" }} >
             <Heading fontSize={15}>Are you sure you want to {action.toLowerCase()}?</Heading>
             <TextBlock fontSize={14} color="#454545" className="mt-12">You'll lose all the actions</TextBlock>
             <Flex css={{ marginTop: 25, justifyContent: "flex-end" }}>
@@ -112,7 +116,21 @@ const ConfirmDialog = ({
                 </IconButton>
             </DialogClose>
         </DialogContent>
+
     </Dialog>
 );
 
 export default ConfirmDialog;
+
+// background: rgba(15,14,14,0.95);
+// width: 100vw;
+// height: 100vh;
+// position: fixed;
+// z-index: 100000;
+// top: 0;
+// left: 0;
+// -webkit-backdrop-filter: blur(2px);
+// backdrop-filter: blur(2px);
+// background: rgb(0 0 0 / 64%);
+// -webkit-backdrop-filter: blur(2px);
+// backdrop-filter: blur(2px);

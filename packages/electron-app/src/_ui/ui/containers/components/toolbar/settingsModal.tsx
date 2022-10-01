@@ -18,6 +18,7 @@ import { waitForUserLogin } from "electron-app/src/utils";
 import { resolveToFrontEndPath } from "@shared/utils/url";
 import { SettingsManager } from "electron-app/src/lib/settingsManager";
 import { newButtonStyle } from "electron-app/src/_ui/constants/style";
+import ConfirmDialog from "@dyson/components/sharedComponets/ConfirmModal";
 
 interface iStartupModalProps {
 	isOpen: boolean;
@@ -117,6 +118,7 @@ const SettingsModalContent = ({ className, ...props }: iStartupModalProps & { cl
 			>
 				General
 			</div>
+			<ConfirmDialog action="close" />
 			<hr
 				css={css`
 					margin-top: 8rem;

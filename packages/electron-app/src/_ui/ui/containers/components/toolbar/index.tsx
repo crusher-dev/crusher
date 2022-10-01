@@ -418,19 +418,19 @@ const Toolbar = (props: any) => {
 	}, [selectedDevice, recorderDevices]);
 
 	const handleMenuCallback = React.useCallback((value, evt) => {
-		if(evt?.id === "exit" && recorderInfo.url) {
+		if (evt?.id === "exit" && recorderInfo.url) {
 			evt.preventDefault();
-			setShowConfirmDialog({evt});
+			setShowConfirmDialog({ evt });
 		}
 
 		if (evt?.isNavigating) {
-			if(evt?.id === "settings") {
+			if (evt?.id === "settings") {
 				evt.preventDefault();
 				setShowSettingsModal(true);
 			} else {
-				if(recorderInfo.url) {
+				if (recorderInfo.url) {
 					evt.preventDefault();
-					setShowConfirmDialog({evt});
+					setShowConfirmDialog({ evt });
 				} else {
 					goFullScreen(false);
 				}
@@ -476,19 +476,19 @@ const Toolbar = (props: any) => {
 		const evt = showConfirmDialog.evt;
 		setShowConfirmDialog(null);
 		console.log("Evt accept", evt);
-		if(evt.id === "exit") {
+		if (evt.id === "exit") {
 			performExit();
-		} 
-		if(evt.id === "back-to-dashboard") {
+		}
+		if (evt.id === "back-to-dashboard") {
 			navigate("/");
 		}
-		if(evt.isNavigating) {
+		if (evt.isNavigating) {
 			goFullScreen(false);
 		}
 	}, [showConfirmDialog]);
 	return (
 		<div css={containerStyle} {...props}>
-			{showConfirmDialog ? (<ConfirmDialog action={showConfirmDialog.evt.action} onAcceptClick={handleConfirmAccept} onOpenChange={(isOpen) => { if(!isOpen) setShowConfirmDialog(null); }}/>) : ""}
+			{showConfirmDialog ? (<ConfirmDialog action={showConfirmDialog.evt.action} onAcceptClick={handleConfirmAccept} onOpenChange={(isOpen) => { if (!isOpen) setShowConfirmDialog(null); }} />) : ""}
 			<div
 				css={css`
 					display: flex;
@@ -504,31 +504,10 @@ const Toolbar = (props: any) => {
 						}
 					`}
 				/>
-				<div
-					className={"mt-6 ml-10"}
-					css={css`
-						display: flex;
-						align-items: center;
-						font-size: 13.5rem;
-						color: #fff;
+				<div className={"mt-2 ml-10 flex items-center"}>
 
-						font-weight: 400;
-					`}
-				>
-					<span
-						css={css`
-							font-size: 12rem;
-							color: #606060;
-						`}
-					>
-						tests/
-					</span>
-					<div
-						css={css`
-							display: flex;
-							align-items: center;
-						`}
-					>
+					<TextBlock fontSize={13} color="#606060">tests/</TextBlock>
+					<div className="flex items-center">
 						<OnOutsideClick disable={!isEditingTestName} onOutsideClick={handleOutsideClick}>
 							{isEditingTestName ? (
 								<input
@@ -542,6 +521,7 @@ const Toolbar = (props: any) => {
 													width: 90rem;
 													height: 28rem;
 													padding: 0rem;
+													font-size: 13rem;
 													border-radius: 8px;
 													padding-left: 8rem;
 													padding-right: 8rem;
@@ -553,20 +533,8 @@ const Toolbar = (props: any) => {
 									defaultValue={testName}
 								/>
 							) : (
-								<span
-									css={css`
-										margin-left: 4.25rem;
-										color: #d2d2d2;
-										border-radius: 8px;
-										padding: 0rem;
-										width: 94rem;
-										height: 28rem;
-										background: transparent;
-									`}
-									onClick={handleTestNameClick}
-								>
-									{testName}
-								</span>
+								<TextBlock className="ml-4" onClick={handleTestNameClick} fontSize={13} color="#d2d2d2">{testName}</TextBlock>
+
 							)}
 						</OnOutsideClick>
 					</div>
@@ -575,19 +543,20 @@ const Toolbar = (props: any) => {
 							title={
 								[TRecorderState.RECORDING_ACTIONS].includes(recorderState.type) ? "recording actions" : "waiting for current actions to finish"
 							}
+							css={css`    margin-top: -2px;`}
 							className={"flex items-center"}
 						>
 							<RedDotIcon
 								css={[
 									css`
-										width: 7rem;
-										height: 7rem;
+										width: 8rem;
+										height: 8rem;
 										margin-left: 10rem;
 									`,
 									[TRecorderState.RECORDING_ACTIONS].includes(recorderState.type)
 										? css`
 												& > rect {
-													fill: #90ee90;
+													fill: #83EA5E;
 												}
 										  `
 										: undefined,
@@ -670,7 +639,7 @@ const Toolbar = (props: any) => {
 				</Conditional>
 			</Conditional>
 			<SettingsModal isOpen={showSettingsModal} handleClose={handleCloseSettingsModal} />
-		</div>
+		</div >
 	);
 };
 

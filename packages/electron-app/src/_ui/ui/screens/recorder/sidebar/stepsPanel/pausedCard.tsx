@@ -17,9 +17,6 @@ const PausedStepCard = () => {
 						element info couldn't be found
 					</div>
 				</div>
-				<div className={"ml-auto"}>
-					<FailedStepIcon css={failedIconCss} />
-				</div>
 			</div>
 
 			<div className={"flex mt-18 items-center justify-end"}>

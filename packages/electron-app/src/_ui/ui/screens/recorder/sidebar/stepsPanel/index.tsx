@@ -3,25 +3,33 @@ import { css } from "@emotion/react";
 import { Text } from "@dyson/components/atoms/text/Text";
 import { ConsoleIcon } from "electron-app/src/_ui/constants/old_icons";
 import { useSelector, useStore } from "react-redux";
-import { getIsStatusBarVisible, getSavedSteps } from "electron-app/src/store/selectors/recorder";
+import { getIsStatusBarVisible, getRecorderState, getSavedSteps } from "electron-app/src/store/selectors/recorder";
 import { Step } from "./step";
 import { useSelectableList } from "electron-app/src/_ui/hooks/list";
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
 import { RightClickMenu } from "@dyson/components/molecules/RightClick/RightClick";
 import {deleteRecordedSteps} from "electron-app/src/store/actions/recorder";
-import { performVerifyTest } from "electron-app/src/_ui/commands/perform";
+import { performJumpTo, performVerifyTest } from "electron-app/src/_ui/commands/perform";
 import { useAtom } from "jotai";
 import { stepHoverAtom } from "electron-app/src/_ui/store/jotai/steps";
 import { editInputAtom } from "electron-app/src/_ui/store/jotai/testsPage";
 import { statusBarMaximiseAtom } from "electron-app/src/_ui/store/jotai/statusBar";
 import { ResetIcon } from "electron-app/src/_ui/constants/icons";
 import { HoverIcon } from "electron-app/src/_ui/ui/components/hoverIcon";
+import { getRemainingSteps } from "electron-app/src/store/selectors/app";
+import { PausedStepCard } from "./pausedCard";
+import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 
 interface IProps {
 	className?: string;
 }
 const menuItems = [
 	{ id: "rename", label: "Rename", shortcut: <div>Enter</div> },
+	{ id: "jump-to", label: "Jump to", shortcut: <div>Jump to</div> },
+	{ id: "delete", label: "Delete", shortcut: <div>⌘+D</div> },
+];
+
+const multiMenuItems = [
 	{ id: "delete", label: "Delete", shortcut: <div>⌘+D</div> },
 ];
 const StepsPanel = ({ className }: IProps) => {
@@ -32,6 +40,9 @@ const StepsPanel = ({ className }: IProps) => {
 	const [, setStepHover] = useAtom(stepHoverAtom);
 	const [, setCurrentEditInput] = useAtom(editInputAtom);
 	const [isStatusBarMaximised, setIsStatusBarMaximised] = useAtom(statusBarMaximiseAtom);
+	const remainingSteps = useSelector(getRemainingSteps);
+
+	const recorderState = useSelector(getRecorderState);
 
 	const toggleStatusBar = React.useCallback(() => {
 		setIsStatusBarMaximised(!isStatusBarMaximised);
@@ -79,6 +90,9 @@ const StepsPanel = ({ className }: IProps) => {
 	const handleCallback = React.useCallback(
 		(id) => {
 			switch (id) {
+				case "jump-to": 
+					performJumpTo(selectedList[0]);
+					break;
 				case "rename":
 					setStepHover(selectedList[0]);
 					setCurrentEditInput(`${selectedList[0]}-stepName`);
@@ -92,7 +106,8 @@ const StepsPanel = ({ className }: IProps) => {
 	);
 
 	const menuItemsComponent = React.useMemo(() => {
-		return menuItems.map((item) => {
+		if(selectedList.length === 0) return [];
+		return ((selectedList.length > 1) ? multiMenuItems : menuItems).map((item) => {
 			return {
 				type: "menuItem",
 				value: item.label,
@@ -100,7 +115,7 @@ const StepsPanel = ({ className }: IProps) => {
 				onClick: handleCallback.bind(this, item.id),
 			};
 		});
-	}, [handleCallback]);
+	}, [selectedList, handleCallback]);
 
 	React.useEffect(() => {
 		const keyPressListener = function (e: Event) {
@@ -124,7 +139,6 @@ const StepsPanel = ({ className }: IProps) => {
 				<div css={sectionActionsCss}>
 					<HoverIcon Component={ResetIcon} css={resetIconCss} onClick={handleResetTest}/>
 					<HoverIcon Component={ConsoleIcon} wrapperCss={css`margin-left: 13rem;`} css={consoleIconCss} onClick={toggleStatusBar}/>
-
 				</div>
 			</div>
 			<OnOutsideClick
@@ -132,13 +146,16 @@ const StepsPanel = ({ className }: IProps) => {
 				id={"steps-list-container"}
 				css={css`
 					height: 100%;
-					overflow-y: overlay;
+					overflow-y: auto;
 				`}
 				onOutsideClick={handleOutSideClick}
 			>
 				<RightClickMenu onOpenChange={handleMenuOpenChange} menuItems={menuItemsComponent}>
 					<div className={`custom-scroll`} css={contentCss}>
 						{steps}
+						{remainingSteps && remainingSteps.length && [TRecorderState.RECORDING_ACTIONS].includes(recorderState.type)  ? (
+							<PausedStepCard/>
+						) : ""}
 					</div>
 				</RightClickMenu>
 			</OnOutsideClick>

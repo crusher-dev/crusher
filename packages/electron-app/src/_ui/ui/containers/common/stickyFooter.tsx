@@ -107,7 +107,7 @@ export const StickyFooter = ({ className }: IProps) => {
 			<HoverCard content={<HelpContent />} placement="top" type="hover" padding={8} offset={0}>
 				<div css={docsButtonCss}>
 					<DocsIcon css={docsIconCss} />
-					<span css={docsButtonTextCss}>Docs & help</span>
+					<span css={docsButtonTextCss}>docs & help</span>
 				</div>
 			</HoverCard>
 		</div>

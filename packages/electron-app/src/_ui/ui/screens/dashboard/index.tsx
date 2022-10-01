@@ -24,6 +24,7 @@ import { triggerLocalBuild } from "../../../utils/recorder";
 import { LinkPointer } from "../../components/LinkPointer";
 import { linkOpen } from "electron-app/src/utils/url";
 import { resolveToFrontEndPath } from "@shared/utils/url";
+import ConfirmDialog from "dyson/src/components/sharedComponets/ConfirmModal";
 
 const TitleComponent = ({ project }) => {
 	const { name, id } = project;
@@ -190,8 +191,8 @@ const DashboardScreen = () => {
 	// To make delete experience fast
 	const filteredTests = tests?.list?.length
 		? tests.list.filter((test) => {
-				return !((window as any).deletedTest || []).includes(test.id);
-		  })
+			return !((window as any).deletedTest || []).includes(test.id);
+		})
 		: [];
 
 	const testContent = filteredTests.length ? <TestList deleteTest={handleTestDelete} tests={filteredTests} /> : <CreateFirstTest />;
@@ -218,6 +219,7 @@ const DashboardScreen = () => {
 			title={selectedProject && !hasNotLoaded ? <TitleComponent project={selectedProject} /> : null}
 		>
 			{hasNotLoaded ? <LoadingProgressBar inAppLoading={false} /> : content}
+			{/* {hasNotLoaded ? <LoadingProgressBar inAppLoading={false} /> : <ConfirmDialog />} */}
 		</CompactAppLayout>
 	);
 };

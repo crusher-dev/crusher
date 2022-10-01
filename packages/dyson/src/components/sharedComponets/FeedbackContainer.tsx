@@ -169,23 +169,22 @@ const cancel = css`
 	padding: 0 10rem;
 
 	font-family: 'Gilroy';
-font-style: normal;
-font-weight: 600;
-font-size: 13rem;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 13rem;
 
-color: #FFFFFF;
+    color: #FFFFFF;
+    width: max-content;
 
-width: max-content;
 
+    background: #101010;
+    border: 0.5rem solid rgba(94, 94, 94, 0.16);
+    border-radius: 8rem;
 
-background: #101010;
-border: 0.5rem solid rgba(94, 94, 94, 0.16);
-border-radius: 8rem;
-
-:hover{
-    color: #fff;
-    background: #1D1D1D;
-	filter: brighntess(.7);
-	border: 0.5rem solid rgba(94, 94, 94, 0.16);
-}
+    :hover{
+        color: #fff;
+        background: #1D1D1D;
+        filter: brighntess(.7);
+        border: 0.5rem solid rgba(94, 94, 94, 0.16);
+    }
 `

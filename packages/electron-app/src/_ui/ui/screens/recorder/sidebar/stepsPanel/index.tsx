@@ -69,6 +69,20 @@ const StepsPanel = ({ className }: IProps) => {
 		});
 	}, [selectedList, selectItem, handleStepClick, recordedSteps]);
 
+	const remainingStepsList = React.useMemo(() => {
+		if(!remainingSteps) return [];
+		return remainingSteps.map((step, index) => {
+			return (
+				<Step
+					disabled={true}
+					step={step}
+	
+					stepId={index + steps.length}
+					isLast={index === remainingSteps.length - 1}
+				/>
+			);
+		});
+	}, [steps]);
 	React.useEffect(() => {
 		const testListContainer: any = document.querySelector("#steps-list-container");
 		const elementHeight = testListContainer.scrollHeight;
@@ -130,6 +144,8 @@ const StepsPanel = ({ className }: IProps) => {
 	}, [recordedSteps, selectedList]);
 	const handleResetTest = () => performVerifyTest(false);
 
+	const showFailedCard = remainingSteps && remainingSteps.length && [TRecorderState.RECORDING_ACTIONS].includes(recorderState.type);
+
 	return (
 		<div css={containerCss} className={String(className)}>
 			<div css={headerCss} title={""}>
@@ -155,7 +171,13 @@ const StepsPanel = ({ className }: IProps) => {
 				<RightClickMenu onOpenChange={handleMenuOpenChange} menuItems={menuItemsComponent}>
 					<div className={`custom-scroll`} css={contentCss}>
 						{steps}
-						{remainingSteps && remainingSteps.length && [TRecorderState.RECORDING_ACTIONS].includes(recorderState.type) ? <PausedStepCard /> : ""}
+						{showFailedCard ? <PausedStepCard /> : ""}
+						{showFailedCard ? (<div>
+							<div className={"px-16 pt-32 pb-20"} css={css`font-style: normal;
+font-weight: 400;
+font-size: 12rem;color: #DCDCDC;`}>next steps</div>
+							{remainingStepsList}
+						</div>) : ""}
 					</div>
 				</RightClickMenu>
 			</OnOutsideClick>

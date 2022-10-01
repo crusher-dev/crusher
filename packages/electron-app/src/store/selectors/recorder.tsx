@@ -20,9 +20,10 @@ export const getInspectElementSelectorMeta = (state: iReduxState) => state.recor
 export const getSelectedElement = (state: iReduxState) => state.recorder.selectedElement;
 
 export const getSavedSteps = (state: iReduxState) => state.recorder.savedSteps;
+export const getAllSteps = (state: iReduxState) => state.recorder.savedSteps.concat(state.app.sessionMeta?.remainingSteps ? state.app.sessionMeta.remainingSteps : []);
 export const getStepInfo = (stepId: any) => {
 	return (state: iReduxState) => {
-		const step = getSavedSteps(state)[stepId];
+		const step = getAllSteps(state)[stepId];
 		const selectors = step.payload?.selectors?.length ? step.payload.selectors[0].value : null;
 
 		const actionDescriptor = new ActionDescriptor();

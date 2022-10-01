@@ -1,8 +1,6 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { Link } from "../../../components/Link";
 import { Button } from "@dyson/components/atoms/button/Button";
-import { shell } from "electron";
 
 
 export const ActionButton = ({ title, className, onClick }) => {

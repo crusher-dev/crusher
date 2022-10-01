@@ -43,9 +43,9 @@ const Step = ({ className, isActive, onContextMenu, shouldOpenEditor, step, onCl
 
 	console.log("Hover id are", stepHoverId, isEditCardOpen);
 	return (
-		<HoverCard
+        (<HoverCard
 			disabled={hasFailed || (stepHoverId && stepHoverId !== stepId)}
-			autoHide={stepHoverId == stepId ? false : true}
+			autoHide={!(stepHoverId === stepId)}
 			state={stepHoverId === stepId}
 			callback={setIsEditorCardOpen.bind(this)}
 			wrapperCss={css`
@@ -63,7 +63,7 @@ const Step = ({ className, isActive, onContextMenu, shouldOpenEditor, step, onCl
 			padding={8}
 			offset={0}
 		>
-			<div onContextMenu={onContextMenu} onClick={onClick} css={[containerCss(hasFailed), isActive ? activeItemCss : undefined]}>
+            <div onContextMenu={onContextMenu} onClick={onClick} css={[containerCss(hasFailed), isActive ? activeItemCss : undefined]}>
 				<div className={"card"} css={contentCss}>
 					{stepInfo.isRunning ? <PointerArrowIcon css={runningPointerIconCss} /> : ""}
 					<div css={stepTextCss}>
@@ -77,8 +77,8 @@ const Step = ({ className, isActive, onContextMenu, shouldOpenEditor, step, onCl
 				</div>
 				{hasFailed ? <FailedStepCard stepId={stepId} /> : ""}
 			</div>
-		</HoverCard>
-	);
+        </HoverCard>)
+    );
 };
 
 const inActiveIconCss = css`

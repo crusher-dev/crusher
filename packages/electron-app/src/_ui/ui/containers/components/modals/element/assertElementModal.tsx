@@ -49,7 +49,7 @@ const getElementFieldValue = (fieldInfo: iField) => {
 
 const AssertElementModal = (props: iAssertElementModalProps) => {
 	const { handleClose, isOpen } = props;
-	const [elementInfo, setElementInfo] = useState(null);
+	const [, setElementInfo] = useState(null);
 	const store = useStore();
 	const selectedElement = useSelector(getSelectedElement);
 	const { isOpen: isOnboardingOpen, setCurrentStep } = useTour();

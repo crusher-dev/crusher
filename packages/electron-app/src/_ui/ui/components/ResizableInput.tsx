@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, {useState, useRef} from "react";
 import { css } from "@emotion/react";
 import Input from "@dyson/components/atoms/input/Input";
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
 import { editInputAtom } from "../../store/jotai/testsPage";
 import { useAtom } from "jotai";
 
-const ResizableInput = React.forwardRef(({ isEditingProp = false, id, onChange, inputCSS, selectAllOnDoubleClick = true, labelCss, labelComponent = null, className, value, ...props }, ref) => {
+const ResizableInput = React.forwardRef(({ isEditingProp = false, id, onChange, inputCSS, selectAllOnDoubleClick = true, labelCss, labelComponent = null, className, value, ...props }) => {
 	const [currentItemId, setTestEditName] = useAtom(editInputAtom);
 
 	const [isEditing, setIsEditing] = useState(isEditingProp);

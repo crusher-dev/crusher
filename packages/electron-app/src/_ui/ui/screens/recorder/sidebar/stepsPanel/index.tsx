@@ -8,7 +8,7 @@ import { Step } from "./step";
 import { useSelectableList } from "electron-app/src/_ui/hooks/list";
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
 import { RightClickMenu } from "@dyson/components/molecules/RightClick/RightClick";
-import { deleteRecordedSteps, setStatusBarVisibility } from "electron-app/src/store/actions/recorder";
+import {deleteRecordedSteps} from "electron-app/src/store/actions/recorder";
 import { performVerifyTest } from "electron-app/src/_ui/commands/perform";
 import { useAtom } from "jotai";
 import { stepHoverAtom } from "electron-app/src/_ui/store/jotai/steps";
@@ -27,8 +27,8 @@ const StepsPanel = ({ className }: IProps) => {
 	const recordedSteps = useSelector(getSavedSteps);
 	const isStatusBarVisible = useSelector(getIsStatusBarVisible);
 	const store = useStore();
-	const [stepHover, setStepHover] = useAtom(stepHoverAtom);
-	const [_, setCurrentEditInput] = useAtom(editInputAtom);
+	const [, setStepHover] = useAtom(stepHoverAtom);
+	const [, setCurrentEditInput] = useAtom(editInputAtom);
 	const [isStatusBarMaximised, setIsStatusBarMaximised] = useAtom(statusBarMaximiseAtom);
 
 	const toggleStatusBar = React.useCallback(() => {

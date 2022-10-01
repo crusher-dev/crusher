@@ -1,4 +1,3 @@
-import React from "react";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 
 export const ACTION_DESCRIPTIONS = {

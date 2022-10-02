@@ -41,16 +41,16 @@ export const Modal = ({ modalStyle, id, children, onClose, lightOverlay, onOutsi
 };
 
 const primaryModalStyle = css`
-	min-width: 612rem;
+	min-width: 452rem;
 	min-height: 271rem;
 
 	box-sizing: border-box;
 	margin-top: -200rem;
 
-	background: #0D0E0E;
+	background: rgb(13, 14, 14);
     border: .5px solid rgba(142, 142, 142, 0.1);
 	
-    box-shadow: 0px -1px 9px #000000;
+	box-shadow: rgb(14 18 22 / 35%) 0px 10px 38px -10px, rgb(14 18 22 / 20%) 0px 10px 20px -15px;
     border-radius: 14px;
 
 	padding: 28rem 36rem 44rem;

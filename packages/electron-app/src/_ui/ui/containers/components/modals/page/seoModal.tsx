@@ -202,7 +202,7 @@ const SeoModalContent = (props: iSEOModalProps) => {
 				>
 					<div style={formButtonStyle}>
 						<Text css={linkStyle} onClick={createNewSeoAssertionRow}>
-							Add a check
+							+ Add a check
 						</Text>
 						<Text
 							css={[
@@ -247,7 +247,7 @@ const buttonStyle = css`
 `;
 
 const modalStyle = css`
-	width: 720rem;
+	width: 700rem;
 	min-height: auto !important;
 	position: absolute;
 	top: 50%;
@@ -256,7 +256,8 @@ const modalStyle = css`
 	display: flex;
 	flex-direction: column;
 	padding: 0rem;
-	background: linear-gradient(0deg, rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.42)), #111213;
+	background: #0D0E0E;
+    border: 1px solid rgba(142, 142, 142, 0.1);
 `;
 
 const bottomBarStyle = {

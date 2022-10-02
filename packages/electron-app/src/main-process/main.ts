@@ -45,7 +45,7 @@ function setupElectronApp() {
 		applicationName: APP_NAME,
 		applicationVersion: app.getVersion(),
 		copyright: "Copyright © 2021",
-		credits: "Made with ❤️ by Crusher team",
+		credits: "Made with ❤️ by crusher team",
 	});
 	app.setAsDefaultProtocolClient("crusher");
 }
@@ -154,7 +154,7 @@ function createWindow() {
 		for (const extension of extensions) {
 			try {
 				installExtension(extension, { loadExtensionOptions: { allowFileAccess: true } });
-			} catch {}
+			} catch { }
 		}
 	}
 

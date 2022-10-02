@@ -6,7 +6,7 @@ import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
 import { HoverCard } from "@dyson/components/atoms/tooltip/Tooltip1";
 
 import { linkOpen } from "electron-app/src/utils/url";
-import { getAppSettings, getIsProxyInitializing, getProxyState } from "electron-app/src/store/selectors/app";
+import { getAppSettings, getCurrentSelectedProjct, getIsProxyInitializing, getProxyState } from "electron-app/src/store/selectors/app";
 import { useSelector, useStore } from "react-redux";
 import { useBuildNotifications } from "../../../hooks/tests";
 import { Tooltip } from "@dyson/components/atoms/tooltip/Tooltip";
@@ -15,6 +15,8 @@ import { shell } from "electron";
 import { CloudCrusher } from "electron-app/src/lib/cloud";
 import { FailedCheckboxIcon, GreenCheckboxIcon } from "electron-app/src/_ui/constants/old_icons";
 import { Conditional } from "@dyson/components/layouts";
+import { LinkPointer } from "../../components/LinkPointer";
+import { getCurrentProjectConfigPath } from "electron-app/src/_ui/utils/project";
 
 interface IProps {
 	className?: string;
@@ -24,6 +26,12 @@ export const StickyFooter = ({ className }: IProps) => {
 	const store = useStore();
 	const proxyIsInitializing = useSelector(getIsProxyInitializing);
 	const proxyState = useSelector(getProxyState);
+	const [projectConfigFile, setProjectConfigFile] = React.useState(null);
+
+	React.useEffect(() => {
+			const projectConfigFile = getCurrentProjectConfigPath();
+			setProjectConfigFile(projectConfigFile);
+	}, []);
 
 	const isProxyWorking = Object.keys(proxyState).length;
 
@@ -52,6 +60,14 @@ export const StickyFooter = ({ className }: IProps) => {
 			};
 		}
 	}, [latestNotification?.id]);
+
+	const openConfig = () => {
+		if(!projectConfigFile) {
+			alert("Project not linked locally");
+			return;
+		}
+		shell.openPath(projectConfigFile);
+	};
 
 	const statusMessage =
 		latestNotification?.status && latestNotification?.status !== "RUNNING" ? "has " + latestNotification.status.toLowerCase() : "is running";
@@ -84,7 +100,7 @@ export const StickyFooter = ({ className }: IProps) => {
 				)}
 
 				<div css={contextContainerCss}>
-					<Tooltip content={isProxyDisabled ? "disabled" : proxyIsInitializing ? "initializng" : "active"} placement="top" type="hover">
+					<Tooltip content={isProxyDisabled ? (<div className={"flex items-center"}>Not configured <div className={"ml-8"} css={css`min-width: 2px; height: 20px; background: rgba(255,255,255,0.15)`}></div><LinkPointer css={css`.pointer-icon { path { fill: rgba(255, 255, 255, 0.35); } } `} onClick={openConfig} className={"ml-8"}>Open config</LinkPointer></div>) : proxyIsInitializing ? "initializng" : "active"} placement="top" type="hover">
 						{!proxyIsInitializing && !isProxyWorking ? (
 							<DisabledCloudIcon
 								css={[

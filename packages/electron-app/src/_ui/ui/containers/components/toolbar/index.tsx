@@ -24,6 +24,7 @@ import { generateRandomTestName } from "electron-app/src/utils/renderer";
 import { NormalInput } from "electron-app/src/_ui/ui/components/inputs/normalInput";
 import { setTestName } from "electron-app/src/store/actions/recorder";
 import ConfirmDialog from "dyson/src/components/sharedComponets/ConfirmModal";
+import { getCurrentProjectConfig, getCurrentProjectConfigPath, writeProjectConfig } from "electron-app/src/_ui/utils/project";
 
 const DeviceItem = ({ label }) => {
 	return (
@@ -95,16 +96,43 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 		}
 		if (recorderState.type === TRecorderState.RECORDING_ACTIONS) {
 			const proxyWarning = handleProxyWarning();
-			const shouldSkipWarning = localStorage.getItem("skipProxyWarning");
+			let shouldSkipWarning: any = false;
+			// Modify project config here <----
+			const projectConfig = getCurrentProjectConfig();
+			if(projectConfig && proxyWarning?.startUrl) {
+				const hasProxySetup = projectConfig.proxy && Object.keys(projectConfig.proxy).find((item: any) => item.url === proxyWarning.startUrl.origin);
+				if(hasProxySetup) {
+					shouldSkipWarning = true;
+				}
+			}
+			if(proxyWarning?.startUrl && !shouldSkipWarning) {
+				projectConfig["proxy"] = projectConfig["proxy"] ? [
+					...projectConfig["proxy"],
+					{
+						name: "frontend-" + projectConfig["proxy"].length + "-" + Math.floor(Math.random() * 100),
+						url: proxyWarning.startUrl.origin,
+						intercept: proxyWarning.startUrl.host
+					}
+				] : [
+					{
+						name: "frontend",
+						url: proxyWarning.startUrl.origin,
+						intercept: proxyWarning.startUrl.host
+					}
+				]
+				writeProjectConfig(projectConfig);
+			}
 
-			performVerifyTest(shouldAutoSave, autoSaveType, proxyWarning.shouldShow && !shouldSkipWarning).then((res) => {
+			
+			performVerifyTest(shouldAutoSave, autoSaveType, false).then((res) => {
 				if (res) {
 					if (res.draftJobId) {
 						window["triggeredTest"] = {
 							id: res.draftJobId,
 						};
 					}
-					if (proxyWarning.shouldShow && !shouldSkipWarning && res) {
+					if (proxyWarning.shouldShow && !shouldSkipWarning && getCurrentProjectConfigPath() && res) {
+						// sendSnackBarEvent({type: "proxy-config-modified", message: "Proxy config modified", meta: {}});
 						window["showProxyWarning"] = { testId: res.id, startUrl: proxyWarning.startUrl };
 					}
 					sendSnackBarEvent({ type: "test_created", message: null });

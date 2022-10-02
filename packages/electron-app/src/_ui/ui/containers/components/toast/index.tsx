@@ -8,12 +8,13 @@ import { resolveToFrontEndPath } from "@shared/utils/url";
 import { getAppSettings } from "electron-app/src/store/selectors/app";
 import { useStore } from "react-redux";
 import { StepRecordedToast } from "electron-app/src/_ui/ui/screens/recorder/sidebar/stepsPanel/stepRecordedToast";
+import { ProxyConfigModifedToast } from "../../../screens/projectList/proxyConfigModifiedToast";
 
 export const snackBarEmitter = mitt();
 
 export type SnackbarEvent = {
 	message: string;
-	type?: "normal" | "success" | "info" | "error" | "test_report" | "test_created" | "step_recorded";
+	type?: "normal" | "success" | "info" | "error" | "test_report" | "test_created" | "step_recorded" | "proxy-config-modified";
 	meta?: any;
 };
 
@@ -130,18 +131,25 @@ const reportToastSectionContainerStyle = css`
 	display: flex;
 	justify-content: space-between;
 `;
+
+let lastInterval = null;
+
 export const ToastSnackbar = () => {
 	const [event, setEvent] = useState<SnackbarEvent | null>(null);
 	useEffect(() => {
 		snackBarEmitter.on("snackbar-notify", (e) => {
+			if(lastInterval) clearInterval(lastInterval);
 			if (e === null) {
 				return setEvent(null);
 			}
 			setEvent(e as SnackbarEvent);
-
-			setTimeout(() => {
-				setEvent(null);
-			}, 7000);
+			
+			if((e as SnackbarEvent).type !== "proxy-config-modified") {
+				lastInterval = setTimeout(() => {
+					setEvent(null);
+				}, 7000);
+			}
+	
 		});
 	}, []);
 

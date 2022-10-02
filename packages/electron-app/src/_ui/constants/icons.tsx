@@ -336,7 +336,26 @@ const UpDownSizeIcon = (props) => (
 	</svg>
 );
 
+
+const BackIconV3 = (props) => (
+	<svg
+	  viewBox={"0 0 12 10"}
+	  fill="none"
+	  xmlns="http://www.w3.org/2000/svg"
+	  {...props}
+	>
+	  <path
+		d="M1 5h10M4.75 1.25 1.109 4.891a.154.154 0 0 0 0 .218l3.64 3.641"
+		stroke="#919191"
+		strokeWidth={1.5}
+		strokeLinecap="round"
+		strokeLinejoin="round"
+	  />
+	</svg>
+  )
+
 export {
+	BackIconV3,
 	DisabledCloudIcon,
 	CloudIcon,
 	NotepadIcon,

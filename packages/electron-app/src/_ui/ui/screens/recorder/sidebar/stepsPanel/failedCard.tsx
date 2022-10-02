@@ -7,9 +7,12 @@ import { deleteRecordedSteps } from "electron-app/src/store/actions/recorder";
 import { getSavedSteps } from "electron-app/src/store/selectors/recorder";
 import { ActionStatusEnum } from "@shared/types/action";
 import { useStore } from "react-redux";
+import { useAtom } from "jotai";
+import { stepHoverAtom } from "electron-app/src/_ui/store/jotai/steps";
 
 const FailedStepCard = ({ stepId }) => {
 	const store = useStore();
+	const [stepHoverId, setStepHoverId] = useAtom(stepHoverAtom);
 
 	const handleRetry = () => {
 		const savedSteps = getSavedSteps(store.getState());
@@ -25,7 +28,7 @@ const FailedStepCard = ({ stepId }) => {
 	};
 
 	const handleEdit = () => {
-		console.log("edit");
+		setStepHoverId(stepId);
 	};
 	const handleDeleteAndContinue = () => {
 		store.dispatch(deleteRecordedSteps([stepId]));

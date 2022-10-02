@@ -128,14 +128,9 @@ const InputValueEditor = ({ step, stepId }) => {
 		<div className={"flex items-center mt-20"}>
 			<div
 				css={[
-					labelCss,
-					isStepNameEditing === `${stepId}-nav-url`
-						? css`
-								margin-top: 0rem;
-						  `
-						: undefined,
+					labelCss
 				]}
-				className={"mr-7"}
+				className={"mr-7" + (isStepNameEditing ? "mt-2" : "")}
 			>
 				{fieldInfo.label}
 			</div>
@@ -143,7 +138,7 @@ const InputValueEditor = ({ step, stepId }) => {
 				inputCss={css`
 					input {
 						width: 180rem;
-						min-width: 180rem !important;
+s						min-width: 180rem !important;
 						font-family: "Gilroy" !important;
 						font-style: normal !important;
 						font-weight: 400 !important;

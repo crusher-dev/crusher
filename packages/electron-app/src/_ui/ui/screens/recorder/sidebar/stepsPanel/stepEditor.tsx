@@ -205,10 +205,10 @@ const StepName = ({ stepId }) => {
 
 	return (
 		<>
-		<div css={stepNameCss} className={"flex items-center"}>
-			<div css={css``}>
-				<EditableInput
-					inputCss={css`
+			<div css={stepNameCss} className={"flex items-center"}>
+				<div css={css``}>
+					<EditableInput
+						inputCss={css`
 						input {
 							width: 180rem;
 							min-width: 180rem !important;
@@ -225,7 +225,7 @@ const StepName = ({ stepId }) => {
 							height: 26rem !important;
 						}
 					`}
-					labelCss={css`
+						labelCss={css`
 						font-family: "Gilroy" !important;
 						font-style: normal !important;
 						font-weight: 400 !important;
@@ -233,25 +233,25 @@ const StepName = ({ stepId }) => {
 						border: 0.5px solid transparent !important;
 						padding: 4rem 0rem !important;
 					`}
-					labelComponent={<LabelComponent />}
-					defaultValue={TextHighlighterText({ text: title }).join(" ")}
-					id={stepId + "-stepName"}
-					onChange={handleOnChange.bind(this)}
-				/>
-			</div>
-			<EditPencilIcon onClick={setIsStepNameEditing.bind(this, stepId + "-stepName")} className={"ml-10"} css={pencilIconCss} />
-			{showStepDescriptionHelper ? (
-				<div
-					className={"ml-10"}
-					css={css`
+						labelComponent={<LabelComponent />}
+						defaultValue={TextHighlighterText({ text: title }).join(" ")}
+						id={stepId + "-stepName"}
+						onChange={handleOnChange.bind(this)}
+					/>
+				</div>
+				<EditPencilIcon onClick={setIsStepNameEditing.bind(this, stepId + "-stepName")} className={"ml-10"} css={pencilIconCss} />
+				{showStepDescriptionHelper ? (
+					<div
+						className={"ml-10"}
+						css={css`
 						font-size: 13rem;
 						margin-top: 4rem;
 					`}
-				>
-					{TextHighlighter({ text: stepInfo.actionDescription }, true)}
-				</div>
-			) : ""}
-		</div>
+					>
+						{TextHighlighter({ text: stepInfo.actionDescription }, true)}
+					</div>
+				) : ""}
+			</div>
 
 		</>
 	);
@@ -449,7 +449,7 @@ const StepOverlayEditor = ({ stepId }) => {
 
 						{shouldShowEditButton ? (
 							<Button onClick={handleEditModeClick.bind(this)} bgColor="tertiary-outline" css={buttonCss}>
-								Open edit
+								see checks
 							</Button>
 						) : (
 							""
@@ -467,6 +467,7 @@ const StepOverlayEditor = ({ stepId }) => {
 };
 const buttonCss = css`
 	background: #b341f9 !important;
+	border-color: #b341f9 !important;
 	font-size: 14rem;
 	box-sizing: border-box;
 	border-radius: 8rem !important;

@@ -12,7 +12,7 @@ const InputFocusHint = React.forwardRef(({ hint, placeholder, className, ...prop
 
 	const HintComponent = React.useMemo(() => {
 		if (!hint) return null;
-		return <div css={[hintCss, isFocused ? focusedHintCss : undefined]}>{hint}</div>;
+		return <div css={[hintCss, isFocused ? focusedHintCss : undefined]} className="pt-4">{hint}</div>;
 	}, [isFocused, hint]);
 
 	return (

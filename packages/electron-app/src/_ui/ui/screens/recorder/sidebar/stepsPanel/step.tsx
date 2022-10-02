@@ -44,8 +44,8 @@ const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, 
 
 	return (
 		<HoverCard
-			disabled={disabled || hasFailed || (stepHoverId && stepHoverId !== stepId)}
-			autoHide={!(stepHoverId === stepId)}
+			disabled={disabled || (hasFailed && !stepHoverId)  || (stepHoverId && stepHoverId !== stepId)}
+			autoHide={true}
 			state={stepHoverId === stepId}
 
 			callback={setIsEditorCardOpen.bind(this)}

@@ -9,6 +9,7 @@ import {
 	SET_SETTINGS,
 	SET_SHOW_SHOULD_ONBOARDING_OVERLAY,
 	SET_USER_ACCOUNT_INFO,
+	UPDATE_CURRENT_TEST_INFO,
 } from "../actions/app";
 
 export interface iSettings {
@@ -95,6 +96,17 @@ const appReducer = (state: IAppReducer = initialState, action: AnyAction): IAppR
 				sessionMeta: {
 					...state.sessionMeta,
 					selectedTest: action.payload.testInfo,
+				},
+			};
+		case UPDATE_CURRENT_TEST_INFO:
+			return {
+				...state,
+				sessionMeta: {
+					...state.sessionMeta,
+					selectedTest: {
+						...state.sessionMeta.selectedTest,
+						...action.payload,
+					},
 				},
 			};
 		default:

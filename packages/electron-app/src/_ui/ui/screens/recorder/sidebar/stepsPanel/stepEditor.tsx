@@ -138,7 +138,7 @@ const InputValueEditor = ({ step, stepId }) => {
 				inputCss={css`
 					input {
 						width: 180rem;
-s						min-width: 180rem !important;
+						min-width: 180rem !important;
 						font-family: "Gilroy" !important;
 						font-style: normal !important;
 						font-weight: 400 !important;

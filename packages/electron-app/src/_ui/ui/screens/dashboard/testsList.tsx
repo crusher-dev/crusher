@@ -65,7 +65,7 @@ const TestItem = ({ test, isItemSelected, isEditingName, setIsEditingName }) => 
 		}
 	}, []);
 
-	const handleSelectAll = React.useCallback(() => {}, []);
+	const handleSelectAll = React.useCallback(() => { }, []);
 
 	return (
 		<div css={testItem(isItemSelected)} title={`Run test - ${test.testName}`}>
@@ -99,7 +99,7 @@ const TestItem = ({ test, isItemSelected, isEditingName, setIsEditingName }) => 
 			/>
 			<Conditional showIf={!test.firstRunCompleted}>
 				<div css={loadingContainerCss} title={"verifying..."}>
-					<span className="pt-1">verifying</span>
+					<span className="pt-1 ml-10">verifying</span>
 					<LoadingIconV2 css={loadingIconCss} />
 				</div>
 			</Conditional>

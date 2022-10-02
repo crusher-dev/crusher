@@ -141,27 +141,18 @@ const SettingsModalContent = ({ className, ...props }: iStartupModalProps & { cl
 
 			{Info}
 
-			<div
-				css={css`
-					margin-top: 16rem;
-				`}
-			>
-				<div></div>
+			<div className="mt-32">
+
 				<div css={inputContainerStyle}>
-					<div
-						css={css`
-							font-size: 13rem;
-							color: rgb(255, 255, 255, 0.7);
-							font-weight: 600;
-						`}
-					>
+
+					<TextBlock fontWeight={500} color="rgb(255, 255, 255, 0.7)">
 						Backend endpoint
-					</div>
+					</TextBlock>
 					<Input
 						css={inputStyle}
 						placeholder={"Enter backend endpoint"}
 						pattern="[0-9]*"
-						size={"medium"}
+						size={"small"}
 						initialValue={backendEndPoint}
 						autoFocus={true}
 						onReturn={saveAction}
@@ -176,20 +167,15 @@ const SettingsModalContent = ({ className, ...props }: iStartupModalProps & { cl
 						`,
 					]}
 				>
-					<div
-						css={css`
-							font-size: 13rem;
-							color: rgb(255, 255, 255, 0.7);
-							font-weight: 600;
-						`}
-					>
+
+					<TextBlock fontWeight={500} color="rgb(255, 255, 255, 0.7)">
 						Frontend endpoint
-					</div>
+					</TextBlock>
 					<Input
 						css={inputStyle}
 						placeholder={"Enter frontend endpoint"}
 						pattern="[0-9]*"
-						size={"medium"}
+						size={"small"}
 						initialValue={frontendEndPoint}
 						autoFocus={true}
 						onReturn={saveAction}
@@ -333,8 +319,7 @@ const buttonStyle = css`
 `;
 const inputStyle = css`
 
-	font-size: 14rem;
-	min-width: 258rem;
+	min-width: 228rem;
 	color: #fff;
 	outline: none;
 	margin-left: auto;

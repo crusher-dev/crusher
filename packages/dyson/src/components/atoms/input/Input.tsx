@@ -7,7 +7,7 @@ export type InputProps = {
 	/**
 	 * Size of the component
 	 */
-	size?: "small" | "tiny" | "x-small" | "small" | "medium" | "big-medium" | "large" | "x-large";
+	size?: "x-tiny" | "tiny" | "x-small" | "small" | "medium" | "big-medium" | "large" | "x-large";
 
 	/**
 	 * Is error
@@ -167,8 +167,8 @@ const errorState = css`
 
 function getSizePropery(size: InputProps["size"]) {
 	switch (size) {
-		case "small":
-			return { height: 26, fontSize: 12 };
+		case "x-tiny":
+			return { height: 22, fontSize: 12 };
 			break;
 		case "tiny":
 			return { height: 26, fontSize: 12 };

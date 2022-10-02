@@ -5,13 +5,13 @@ import { sendSnackBarEvent } from "electron-app/src/_ui/ui/containers/components
 import { LinkPointer } from "../../components/LinkPointer";
 import { HoverButton } from "../../components/hoverButton";
 import { shell } from "electron";
-import { getCurrentProjectConfig } from "electron-app/src/_ui/utils/project";
+import { getCurrentProjectConfigPath } from "electron-app/src/_ui/utils/project";
 
 const ProxyConfigModifedToast = ({ meta, onClose }) => {
 	const [projectConfigFile, setProjectConfigFile] = React.useState(null);
 
 	React.useEffect(() => {
-		const projectConfigFile = getCurrentProjectConfig();
+		const projectConfigFile = getCurrentProjectConfigPath();
 		setProjectConfigFile(projectConfigFile);
 	}, []);
 	const handleOpenConfig = () => {

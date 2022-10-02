@@ -16,7 +16,7 @@ import { CloudCrusher } from "electron-app/src/lib/cloud";
 import { FailedCheckboxIcon, GreenCheckboxIcon } from "electron-app/src/_ui/constants/old_icons";
 import { Conditional } from "@dyson/components/layouts";
 import { LinkPointer } from "../../components/LinkPointer";
-import { getCurrentProjectConfig } from "electron-app/src/_ui/utils/project";
+import { getCurrentProjectConfigPath } from "electron-app/src/_ui/utils/project";
 
 interface IProps {
 	className?: string;
@@ -29,7 +29,7 @@ export const StickyFooter = ({ className }: IProps) => {
 	const [projectConfigFile, setProjectConfigFile] = React.useState(null);
 
 	React.useEffect(() => {
-			const projectConfigFile = getCurrentProjectConfig();
+			const projectConfigFile = getCurrentProjectConfigPath();
 			setProjectConfigFile(projectConfigFile);
 	}, []);
 

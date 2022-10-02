@@ -10,7 +10,7 @@ import { useStore } from "react-redux";
 import { getCurrentSelectedProjct } from "electron-app/src/store/selectors/app";
 import { Dropdown } from "@dyson/components/molecules/Dropdown";
 import { MenuItem } from "../../components/dropdown/menuItems";
-import { getCurrentProjectConfig } from "electron-app/src/_ui/utils/project";
+import { getCurrentProjectConfigPath } from "electron-app/src/_ui/utils/project";
 
 const createEvent = (props) => {
 	let _isCanceled = false;
@@ -28,7 +28,7 @@ function DashboardTopDropdownContent({ setShowActionMenu, isRecorder }) {
 	const [projectConfigFile, setProjectConfigFile] = React.useState(null);
 
 	React.useEffect(() => {
-		const projectConfigFile = getCurrentProjectConfig();
+		const projectConfigFile = getCurrentProjectConfigPath();
 		setProjectConfigFile(projectConfigFile);
 	}, []);
 

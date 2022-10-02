@@ -131,7 +131,7 @@ const InputValueEditor = ({ step, stepId }) => {
 					labelCss,
 					isStepNameEditing === `${stepId}-nav-url`
 						? css`
-								margin-top: 4rem;
+								margin-top: 0rem;
 						  `
 						: undefined,
 				]}
@@ -156,6 +156,15 @@ const InputValueEditor = ({ step, stepId }) => {
 
 						color: rgba(215, 223, 225, 0.93) !important;
 					}
+				`}
+
+				labelCss={css`
+					font-family: "Gilroy" !important;
+					font-style: normal !important;
+					font-weight: 400 !important;
+					font-size: 13rem !important;
+					border: 0.5px solid transparent !important;
+					padding: 4rem 0rem !important;
 				`}
 				defaultValue={fieldInfo.value}
 				id={stepId + "-nav-url"}
@@ -200,6 +209,7 @@ const StepName = ({ stepId }) => {
 	const showStepDescriptionHelper = isStepNameEditing === `${stepId}-stepName` || stepInfo.hasCustomName;
 
 	return (
+		<>
 		<div css={stepNameCss} className={"flex items-center"}>
 			<div css={css``}>
 				<EditableInput
@@ -214,9 +224,19 @@ const StepName = ({ stepId }) => {
 							/* or 93% */
 							border: 0.5px solid #b14ffe !important;
 							border-radius: 8rem !important;
-
+							padding: 0rem 8rem !important;
 							color: rgba(215, 223, 225, 0.6) !important;
+							margin-left: 0rem !important;
+							height: 26rem !important;
 						}
+					`}
+					labelCss={css`
+						font-family: "Gilroy" !important;
+						font-style: normal !important;
+						font-weight: 400 !important;
+						font-size: 14rem !important;
+						border: 0.5px solid transparent !important;
+						padding: 4rem 0rem !important;
 					`}
 					labelComponent={<LabelComponent />}
 					defaultValue={TextHighlighterText({ text: title }).join(" ")}
@@ -224,9 +244,10 @@ const StepName = ({ stepId }) => {
 					onChange={handleOnChange.bind(this)}
 				/>
 			</div>
+			<EditPencilIcon onClick={setIsStepNameEditing.bind(this, stepId + "-stepName")} className={"ml-10"} css={pencilIconCss} />
 			{showStepDescriptionHelper ? (
 				<div
-					className={"ml-12"}
+					className={"ml-10"}
 					css={css`
 						font-size: 13rem;
 						margin-top: 4rem;
@@ -234,10 +255,10 @@ const StepName = ({ stepId }) => {
 				>
 					{TextHighlighter({ text: stepInfo.actionDescription }, true)}
 				</div>
-			) : (
-				<EditPencilIcon onClick={setIsStepNameEditing.bind(this, stepId + "-stepName")} className={"ml-10"} css={pencilIconCss} />
-			)}
+			) : ""}
 		</div>
+
+		</>
 	);
 };
 
@@ -248,7 +269,7 @@ const StepMetaInfo = ({ stepId, setShowAdvanced }) => {
 	const showFieldInput = [ActionsInTestEnum.NAVIGATE_URL, ActionsInTestEnum.WAIT_FOR_NAVIGATION, ActionsInTestEnum.ADD_INPUT].includes(steps[stepId].type);
 
 	return (
-		<div css={stepMetaInfoContainerCss} className={"px-20 py-24"}>
+		<div css={stepMetaInfoContainerCss} className={"px-20 py-24 pt-20"}>
 			<StepName stepId={stepId} />
 
 			{showFieldInput ? <InputValueEditor stepId={stepId} step={steps[stepId]} /> : ""}

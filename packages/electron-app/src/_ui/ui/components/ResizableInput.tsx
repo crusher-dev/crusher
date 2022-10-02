@@ -53,6 +53,7 @@ const ResizableInput = React.forwardRef(
 					onChange && onChange(inputRef.current?.value || inputRef?.current.innerText);
 					setTestEditName(null);
 				}}
+				className={className}
 			>
 				<Input
 					onReturn={(value) => {
@@ -71,6 +72,7 @@ const ResizableInput = React.forwardRef(
 					type="text"
 					ref={inputRef}
 					{...props}
+					// onBlur={() =>{}}
 				/>
 			</OnOutsideClick>
 		);

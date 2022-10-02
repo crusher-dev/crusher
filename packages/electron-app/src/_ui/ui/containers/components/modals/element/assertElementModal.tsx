@@ -251,7 +251,6 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 				<div
 					style={bottomBarStyle}
 					css={css`
-						margin-bottom: 22rem;
 						margin-top: 38rem;
 					`}
 				>
@@ -308,8 +307,10 @@ const modalStyle = css`
 	transform: translate(-50%, -20%);
 	display: flex;
 	flex-direction: column;
+	justify-content: space-between;
 	padding: 0rem !important;
 	min-height: 214rem;
+	padding-bottom: 28rem !important;
 	background: rgb(10 10 10) !important;
 	border: .5px solid rgb(142 142 142 / 15%) !important;
 `;

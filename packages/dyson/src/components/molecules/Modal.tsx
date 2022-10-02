@@ -51,7 +51,7 @@ const primaryModalStyle = css`
     border: .5px solid rgba(142, 142, 142, 0.1);
 	
 	box-shadow: rgb(14 18 22 / 35%) 0px 10px 38px -10px, rgb(14 18 22 / 20%) 0px 10px 20px -15px;
-    border-radius: 14px;
+    border-radius: 20px;
 
 	padding: 28rem 36rem 44rem;
 `;

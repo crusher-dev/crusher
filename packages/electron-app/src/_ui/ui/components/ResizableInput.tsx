@@ -88,11 +88,13 @@ min-width: fit-content;
 input{
   padding-right 8px !important;
 min-width: 200px;
-font-size: 14px;
+font-size: 13px;
 margin-left: 2px;
 height: 28px;
-padding-left: calc(10rem + 0rem);
-letter-spacing 0.42px
+padding-left: calc(9rem + 0rem);
+
+font-size: 13px;
+padding-top: 1px;
 }
 `;
 export { ResizableInput };

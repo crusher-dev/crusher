@@ -16,6 +16,7 @@ import { CloudCrusher } from "electron-app/src/lib/cloud";
 import { FailedCheckboxIcon, GreenCheckboxIcon } from "electron-app/src/_ui/constants/old_icons";
 import { Conditional } from "@dyson/components/layouts";
 import { LinkPointer } from "../../components/LinkPointer";
+import { getCurrentProjectConfig } from "electron-app/src/_ui/utils/project";
 
 interface IProps {
 	className?: string;
@@ -28,14 +29,8 @@ export const StickyFooter = ({ className }: IProps) => {
 	const [projectConfigFile, setProjectConfigFile] = React.useState(null);
 
 	React.useEffect(() => {
-		try {
-			const projectId = getCurrentSelectedProjct(store.getState() as any);
-			const projectConfigFile = window.localStorage.getItem("projectConfigFile");
-			const projectConfigFileJson = JSON.parse(projectConfigFile);
-			if (projectConfigFileJson[projectId]) {
-				setProjectConfigFile(projectConfigFileJson[projectId]);
-			}
-		} catch {}
+			const projectConfigFile = getCurrentProjectConfig();
+			setProjectConfigFile(projectConfigFile);
 	}, []);
 
 	const isProxyWorking = Object.keys(proxyState).length;
@@ -105,7 +100,7 @@ export const StickyFooter = ({ className }: IProps) => {
 				)}
 
 				<div css={contextContainerCss}>
-					<Tooltip content={isProxyDisabled ? (<div className={"flex items-center"}>Not configured <div className={"ml-8"} css={css`min-width: 2px; height: 20px; background: rgba(0,0,0,0.075)`}></div><LinkPointer onClick={openConfig} className={"ml-8"}>Open config</LinkPointer></div>) : proxyIsInitializing ? "initializng" : "active"} placement="top" type="hover">
+					<Tooltip content={isProxyDisabled ? (<div className={"flex items-center"}>Not configured <div className={"ml-8"} css={css`min-width: 2px; height: 20px; background: rgba(255,255,255,0.15)`}></div><LinkPointer css={css`.pointer-icon { path { fill: rgba(255, 255, 255, 0.35); } } `} onClick={openConfig} className={"ml-8"}>Open config</LinkPointer></div>) : proxyIsInitializing ? "initializng" : "active"} placement="top" type="hover">
 						{!proxyIsInitializing && !isProxyWorking ? (
 							<DisabledCloudIcon
 								css={[

@@ -14,7 +14,7 @@ const LinkPointer = ({ children, showExternalIcon = true, className, ...props }:
 		<div className={String(className)} onClick={onClick} css={containerCss}>
 			{children}
 			<Conditional showIf={showExternalIcon}>
-				<PointerIcon css={pointerIconCss} />
+				<PointerIcon className={"pointer-icon"} css={pointerIconCss} />
 			</Conditional>
 		</div>
 	);

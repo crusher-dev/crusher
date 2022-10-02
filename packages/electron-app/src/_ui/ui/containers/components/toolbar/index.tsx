@@ -24,6 +24,7 @@ import { generateRandomTestName } from "electron-app/src/utils/renderer";
 import { NormalInput } from "electron-app/src/_ui/ui/components/inputs/normalInput";
 import { setTestName } from "electron-app/src/store/actions/recorder";
 import ConfirmDialog from "dyson/src/components/sharedComponets/ConfirmModal";
+import { getCurrentProjectConfig } from "electron-app/src/_ui/utils/project";
 
 const DeviceItem = ({ label }) => {
 	return (
@@ -96,15 +97,17 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 		if (recorderState.type === TRecorderState.RECORDING_ACTIONS) {
 			const proxyWarning = handleProxyWarning();
 			const shouldSkipWarning = localStorage.getItem("skipProxyWarning");
+			// Modify project config here <----
 
-			performVerifyTest(shouldAutoSave, autoSaveType, proxyWarning.shouldShow && !shouldSkipWarning).then((res) => {
+			performVerifyTest(shouldAutoSave, autoSaveType, false).then((res) => {
 				if (res) {
 					if (res.draftJobId) {
 						window["triggeredTest"] = {
 							id: res.draftJobId,
 						};
 					}
-					if (proxyWarning.shouldShow && !shouldSkipWarning && res) {
+					if (proxyWarning.shouldShow && !shouldSkipWarning && getCurrentProjectConfig() && res) {
+						// sendSnackBarEvent({type: "proxy-config-modified", message: "Proxy config modified", meta: {}});
 						window["showProxyWarning"] = { testId: res.id, startUrl: proxyWarning.startUrl };
 					}
 					sendSnackBarEvent({ type: "test_created", message: null });

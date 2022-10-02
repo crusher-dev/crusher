@@ -24,6 +24,7 @@ import { triggerLocalBuild } from "../../../utils/recorder";
 import { LinkPointer } from "../../components/LinkPointer";
 import { linkOpen } from "electron-app/src/utils/url";
 import { resolveToFrontEndPath } from "@shared/utils/url";
+import { ProxyConfigModifedToast } from "../projectList/proxyConfigModifiedToast";
 
 const TitleComponent = ({ project }) => {
 	const { name, id } = project;
@@ -194,12 +195,14 @@ const DashboardScreen = () => {
 		: [];
 
 	const testContent = filteredTests.length ? <TestList deleteTest={handleTestDelete} tests={filteredTests} /> : <CreateFirstTest />;
-	const content = showProxyWarning.show ? (
-		<ProxyWarningContainer testId={showProxyWarning.testId} exitCallback={setShowProxyWarning.bind(this, false)} startUrl={showProxyWarning.startUrl} />
-	) : (
-		testContent
-	);
-
+	const content = <>
+		{
+			showProxyWarning.show ? (
+				<ProxyConfigModifedToast onClose={() => setShowProxyWarning(false)} />
+			) : ""
+		}
+		{testContent}
+	</>;
 	const hasNotLoaded = isLoading || !animationComplete;
 	return (
 		<CompactAppLayout

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { css } from "@emotion/react";
 import { useSelector, useStore } from "react-redux";
 import { getSelectedElement, isInspectElementSelectorModeOn, isInspectModeOn as _isInspectModeOn } from "electron-app/src/store/selectors/recorder";
@@ -11,6 +11,7 @@ import { GoBackIcon, InfoIcon, ResetIcon } from "electron-app/src/_ui/constants/
 import { enableJavascriptInDebugger, performVerifyTest } from "electron-app/src/_ui/commands/perform";
 import { setSelectedElement } from "electron-app/src/store/actions/recorder";
 import { filterActionsItems } from "./helper";
+import { debounce, throttle } from "lodash";
 
 interface IProps {
 	className?: string;
@@ -18,10 +19,12 @@ interface IProps {
 
 const ActionsPanel = ({ className }: IProps) => {
 	const [searchFilter, setSearchFilter] = React.useState(null);
+	const ref = useRef()
 
 	const isInspectModeOn = useSelector(_isInspectModeOn);
 	const isElementSelectorInspectModeOn = useSelector(isInspectElementSelectorModeOn);
 	const store = useStore();
+
 
 	const selectedElement = useSelector(getSelectedElement);
 	const turnOffElementMode = React.useCallback(async () => {
@@ -63,10 +66,34 @@ const ActionsPanel = ({ className }: IProps) => {
 	const handleOnChange = (event) => {
 		setSearchFilter(event.target.value);
 	};
+
+	useEffect(() => {
+		const functionToTrack = debounce(
+			(evt) => {
+				console.log(evt, evt.metaKey, ref)
+				if (!evt) evt = event;
+
+				const commandKey = evt.metaKey;
+				const key = evt.key.toLocaleLowerCase();
+				if (commandKey && key === "s") {
+					ref?.current?.focus()
+				}
+			}, 200
+		);
+
+		window.addEventListener('keydown', functionToTrack)
+
+		return () => {
+			window.removeEventListener('keydown', functionToTrack)
+		}
+	}, [])
+
 	return (
 		<div className={String(className)} css={containerCss}>
 			<div css={headerCss}>
-				<InputFocusHint onChange={handleOnChange} hint={`⌘ + k`} placeholder={"search actions"} />
+				<InputFocusHint
+					ref={ref}
+					onChange={handleOnChange} hint={`⌘ + s`} placeholder={"search actions"} />
 			</div>
 			<div css={contentCss} className="custom-scroll">
 				{isInspectModeOn || isElementSelectorInspectModeOn ? <InspectModeBanner /> : content}

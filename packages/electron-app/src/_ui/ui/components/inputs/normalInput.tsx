@@ -66,8 +66,7 @@ const inputCss = css`
 		}
 	}
 	& > input {
-		width: 359rem;
-		/* border: 1px solid #9462ff; */
+		width: 360rem !important;
 		outline-color: #9462ff;
 		outline-width: 1px;
 		box-sizing: border-box;

@@ -1,4 +1,4 @@
-import React, { memo, useContext } from "react";
+import React, { memo, useContext, useEffect } from "react";
 import { css } from "@emotion/react";
 import { Conditional } from "@dyson/components/layouts";
 import { LoadingIconV2, RedDotIcon, SettingsIcon } from "../../../../constants/old_icons";
@@ -486,6 +486,12 @@ const Toolbar = (props: any) => {
 			goFullScreen(false);
 		}
 	}, [showConfirmDialog]);
+
+	useEffect(() => {
+		requestAnimationFrame(() => {
+			urlInputRef.current.focus()
+		})
+	}, [])
 	return (
 		<div css={containerStyle} {...props}>
 			{showConfirmDialog ? (<ConfirmDialog action={showConfirmDialog.evt.action} onAcceptClick={handleConfirmAccept} onOpenChange={(isOpen) => { if (!isOpen) setShowConfirmDialog(null); }} />) : ""}
@@ -642,6 +648,7 @@ const Toolbar = (props: any) => {
 		</div >
 	);
 };
+
 
 const recorderStatusTextCss = css`
 	font-size: 14rem;

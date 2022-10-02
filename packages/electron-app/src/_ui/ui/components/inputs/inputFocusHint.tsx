@@ -7,8 +7,7 @@ interface IProps {
 	placeholder?: string;
 	className?: string;
 }
-const InputFocusHint = ({ hint, placeholder, className, ...props }: IProps) => {
-	const ref = React.useRef(null);
+const InputFocusHint = React.forwardRef(({ hint, placeholder, className, ...props }: IProps, ref) => {
 	const [isFocused, setIsFocused] = React.useState(false);
 
 	const HintComponent = React.useMemo(() => {
@@ -28,7 +27,7 @@ const InputFocusHint = ({ hint, placeholder, className, ...props }: IProps) => {
 			{...props}
 		/>
 	);
-};
+});
 
 const inputCss = css`
 	height: 36rem;
@@ -60,7 +59,7 @@ const inputCss = css`
 		}
 	}
 	& > input {
-
+		min-width: 247rem;
 		/* border: 1px solid #9462ff; */
 		outline-color: #9462ff;
 		outline-width: 1px;

@@ -68,11 +68,11 @@ function isValidHttpUrl(str: string) {
 
 	const pattern = new RegExp(
 		"^(https?:\\/\\/)?" + // protocol
-			"((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
-			"((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
-			"(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
-			"(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
-			"(\\#[-a-z\\d_]*)?$",
+		"((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
+		"((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
+		"(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
+		"(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
+		"(\\#[-a-z\\d_]*)?$",
 		"i",
 	); // fragment locator
 	return !!pattern.test(str);
@@ -121,6 +121,8 @@ const getSelectedProjectTests: () => Promise<any> = createAuthorizedRequestFunc(
 const getUserAccountProjects: () => Promise<any> = createAuthorizedRequestFunc((authorizationOptions: any) => {
 	return axios.get(resolveToBackend("/users/actions/getUserAndSystemInfo"), authorizationOptions).then((res) => res.data);
 });
+
+
 
 export {
 	isProduction,

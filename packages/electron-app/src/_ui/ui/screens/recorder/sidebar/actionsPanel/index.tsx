@@ -70,12 +70,11 @@ const ActionsPanel = ({ className }: IProps) => {
 	useEffect(() => {
 		const functionToTrack = debounce(
 			(evt) => {
-				console.log(evt, evt.metaKey, ref)
 				if (!evt) evt = event;
 
-				const commandKey = evt.metaKey;
+				const commandKey = evt.metaKey || evt.ctrlKey;
 				const key = evt.key.toLocaleLowerCase();
-				if (commandKey && key === "s") {
+				if (commandKey && key === "f") {
 					ref?.current?.focus()
 				}
 			}, 200
@@ -93,7 +92,7 @@ const ActionsPanel = ({ className }: IProps) => {
 			<div css={headerCss}>
 				<InputFocusHint
 					ref={ref}
-					onChange={handleOnChange} hint={`⌘ + s`} placeholder={"search actions"} />
+					onChange={handleOnChange} hint={process.platform == "linux" ? "ctrl + f" : `⌘ + f`} placeholder={"search actions"} />
 			</div>
 			<div css={contentCss} className="custom-scroll">
 				{isInspectModeOn || isElementSelectorInspectModeOn ? <InspectModeBanner /> : content}

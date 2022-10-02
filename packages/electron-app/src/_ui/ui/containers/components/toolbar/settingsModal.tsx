@@ -13,13 +13,15 @@ import { iReduxState } from "electron-app/src/store/reducers";
 import { sendSnackBarEvent } from "../toast";
 import { Conditional } from "@dyson/components/layouts";
 import { LoadingIconV2 } from "../../../../constants/old_icons";
-import { shell } from "electron";
+import { app, shell } from "electron";
 import { waitForUserLogin } from "electron-app/src/utils";
 import { resolveToFrontEndPath } from "@shared/utils/url";
 import { SettingsManager } from "electron-app/src/lib/settingsManager";
 import { newButtonStyle, underlineOnHover } from "electron-app/src/_ui/constants/style";
 import ConfirmDialog from "@dyson/components/sharedComponets/ConfirmModal";
 import { TextBlock } from "@dyson/components/atoms";
+import path from "path";
+import os from "os";
 
 interface iStartupModalProps {
 	isOpen: boolean;
@@ -39,12 +41,12 @@ color: #6CB7FC !important;
 const Info = <div className="flex items-center mt-28">
 	<TextBlock color="#909090">
 		<span>Crusher version:</span>
-		<span className="ml-4" css={[linkCSS]}>~v1.0.2</span>
+		<span className="ml-4" css={[linkCSS]}>~v{require('electron').remote.app.getVersion()}</span>
 	</TextBlock>
 
 	<TextBlock color="#909090" className="ml-48">
 		<span>Global config dir:</span>
-		<span className="ml-4" css={[linkCSS, underlineOnHover]}>~/crusher/crusher.json</span>
+		<span onClick={() => { shell.openPath(path.resolve(os.homedir(), ".crusher/crusher.json")); }} className="ml-4" css={[linkCSS, underlineOnHover]}>~/.crusher/crusher.json</span>
 	</TextBlock>
 </div>;
 

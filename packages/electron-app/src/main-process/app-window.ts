@@ -39,7 +39,7 @@ import {
 	getRemainingSteps,
 	getUserAccountInfo,
 } from "../store/selectors/app";
-import { resetAppSession, setSelectedProject, setSessionInfoMeta, setUserAccountInfo } from "../store/actions/app";
+import { resetAppSession, setSelectedProject, setSessionInfoMeta, setUserAccountInfo, updateCurrentTestInfo } from "../store/actions/app";
 import { resolveToFrontEndPath } from "@shared/utils/url";
 import { getGlobalAppConfig, writeGlobalAppConfig } from "../lib/global-config";
 import template from "@crusher-shared/utils/templateString";
@@ -873,6 +873,7 @@ export class AppWindow {
 
 		await this.resetRecorder();
 		const testSteps = await CloudCrusher.getTest(String(payload.testId));
+		this.store.dispatch(updateCurrentTestInfo({steps: testSteps}));
 		return this.handleReplayTestSteps(testSteps);
 	}
 

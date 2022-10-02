@@ -1,9 +1,10 @@
 import React, { ChangeEvent } from "react";
 import { iAssertionRow, iField } from "@shared/types/assertionRow";
-import { DeleteIcon } from "electron-app/src/_ui/constants/old_icons";
+import { DeleteIcon, FailedCheckboxIcon, GreenCheckboxIcon } from "electron-app/src/_ui/constants/old_icons";
 import { css } from "@emotion/react";
 import { SelectBox } from "@dyson/components/molecules/Select/Select";
 import { Input } from "@dyson/components/atoms/input/Input";
+import { Conditional } from "@dyson/components/layouts";
 
 interface iAssertionFormTableProps {
 	rowItems: iAssertionRow[];
@@ -78,11 +79,13 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 						width: 80%;
 					}
 					.selectBox {
-						height: 34rem;
+						height: 38rem !important;
+						border-radius: 10rem;
 					}
 					.selectBox__value {
 						margin-right: 10rem;
 						font-size: 13rem;
+						padding-top: 3px;
 					}
 					width: 160rem;
 					.dropdown-box .dropdown-label {
@@ -90,7 +93,7 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 						padding-bottom: 4rem !important;
 					}
 				`}
-				size={"large"}
+				size={"medium"}
 				selected={[selectedOption]}
 				values={fieldOptions}
 				callback={handleOnFieldChange}
@@ -125,11 +128,13 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 						width: 80%;
 					}
 					.selectBox {
-						height: 34rem;
+						height: 38rem !important;
+						border-radius: 10rem;
 					}
 					.selectBox__value {
 						margin-right: 10rem;
 						font-size: 13rem;
+						padding-top: 3px;
 					}
 					width: 100%;
 					.dropdown-box .dropdown-label {
@@ -137,7 +142,7 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 						padding-bottom: 4rem !important;
 					}
 				`}
-				size={"large"}
+				size={"medium"}
 				selected={[selectedOption]}
 				values={operationOptions}
 				callback={handleOnOperationChange}
@@ -167,14 +172,15 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 				css={css`
 					display: grid;
 					grid-template-columns: repeat(3, minmax(0, 1fr));
-					gap: 4rem;
-					margin-bottom: 25rem;
+					gap: 12rem;
+					margin-bottom: 20rem;
+					align-items: center;
 				`}
 			>
-				<div style={inputTableItemFieldContainerStyle}>
+				<div style={inputTableItemFieldContainerStyle} className="flex items-center">
 					<DeleteIcon
 						onClick={handleDeleteRow.bind(this, row.id)}
-						style={{ height: "10rem", marginTop: "11rem" }}
+						style={{ height: "10rem" }}
 						containerStyle={{ marginRight: "18rem" }}
 					/>
 					{renderFieldInput(row.field.name, row.id)}
@@ -188,10 +194,16 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 					`}
 				>
 					<div>{renderValidationInput(row.validation, row.id)}</div>
-					<img
-						src={isValidationCorrect ? "./static/assets/icons/correct.svg" : "./static/assets/icons/cross.svg"}
-						style={{ marginLeft: "18rem", height: "15rem" }}
-					/>
+
+					<div className="flex ml-12">
+						<Conditional showIf={isValidationCorrect}>
+							<GreenCheckboxIcon height={14} />
+						</Conditional>
+
+						<Conditional showIf={!isValidationCorrect}>
+							<FailedCheckboxIcon height={14} />
+						</Conditional>
+					</div>
 				</div>
 			</div>
 		);
@@ -231,7 +243,8 @@ const inputTableItemFieldContainerStyle = {
 
 const inputStyle = css`
 	outline: none;
-	height: 34rem;
+	height: 36rem;
+	margin-top: -2px;
 `;
 
 export { AssertionFormTable };

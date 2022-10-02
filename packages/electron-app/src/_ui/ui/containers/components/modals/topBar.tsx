@@ -52,7 +52,7 @@ const topBarStyle = css`
 	display: flex;
 	justify-content: space-between;
 	margin-bottom: 1rem;
-	padding: 26rem 34rem;
+	padding: 28rem ;
 `;
 
 const topLeftSectionStyle = {

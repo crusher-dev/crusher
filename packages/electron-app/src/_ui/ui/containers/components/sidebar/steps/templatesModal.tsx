@@ -248,7 +248,7 @@ const TemplatesModal = (props: iStartupModalProps) => {
 
 const formContainerStyle = css`
 	margin-top: 3.375rem;
-	padding: 26rem 34rem;
+	padding: 28rem ;
 	padding-top: 0rem;
 `;
 const submitFormContainerStyle = css`

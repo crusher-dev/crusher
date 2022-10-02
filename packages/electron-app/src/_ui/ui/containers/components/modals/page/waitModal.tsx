@@ -88,7 +88,7 @@ const WaitModal = (props: iStartupModalProps) => {
 				className="flex flex-col"
 				style={{ marginTop: 40 }}
 				css={css`
-					padding: 26rem 34rem;
+					padding: 28rem ;
 				`}
 			>
 				<div

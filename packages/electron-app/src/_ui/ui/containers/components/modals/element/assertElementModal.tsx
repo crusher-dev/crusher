@@ -271,7 +271,7 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 							Generate Checks!
 						</Text>
 					</div>
-					<Button css={buttonStyle} onClick={props.stepAction ? updateSeoValidationAction : saveElementValidationAction}>
+					<Button bgColor="primary" css={buttonStyle} onClick={props.stepAction ? updateSeoValidationAction : saveElementValidationAction}>
 						{props.stepAction ? "Update" : "Save"}
 					</Button>
 				</div>
@@ -310,7 +310,8 @@ const modalStyle = css`
 	flex-direction: column;
 	padding: 0rem !important;
 	min-height: 214rem;
-	background: linear-gradient(0deg, rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.42)), #111213;
+	background: rgb(10 10 10) !important;
+	border: .5px solid rgb(142 142 142 / 15%) !important;
 `;
 
 const bottomBarStyle = {

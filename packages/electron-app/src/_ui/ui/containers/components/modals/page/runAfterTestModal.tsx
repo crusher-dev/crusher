@@ -82,7 +82,7 @@ const RunAfterTestModal = (props: iStartupModalProps) => {
 				css={formContainerStyle}
 				css={css`
 					display: flex;
-					padding: 26rem 34rem;
+					padding: 28rem ;
 				`}
 			>
 				<div style={inputContainerStyle}>

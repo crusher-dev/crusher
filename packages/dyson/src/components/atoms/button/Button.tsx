@@ -48,7 +48,7 @@ const getColor = (color: string, impact: string): { main: Color; hover: Color } 
 		case "primary-high":
 			return {
 				main: { background: "#b341f9", border: "#b341f9", color: "#fff" },
-				hover: { background: "#6749de", border: "#6749de", color: "#fff" },
+				hover: { background: "#b341f9", border: "#b341f9", color: "#fff" },
 			};
 			break;
 		case "primary-medium":

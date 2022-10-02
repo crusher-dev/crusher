@@ -39,9 +39,18 @@ const StepsPanel = ({ className }: IProps) => {
 	const [, setCurrentEditInput] = useAtom(editInputAtom);
 	const [isStatusBarMaximised, setIsStatusBarMaximised] = useAtom(statusBarMaximiseAtom);
 	const remainingSteps = useSelector(getRemainingSteps);
+	const failedCard = recordedSteps.some((step) => step.status === "FAILED");
 
 	const recorderState = useSelector(getRecorderState);
-
+	React.useEffect(() => {
+		if(failedCard) { 
+			requestAnimationFrame(() => {
+			const testListContainer: any = document.querySelector("#steps-list-container");
+			const elementHeight = testListContainer.scrollHeight;
+			testListContainer.scrollBy(0, elementHeight);
+		});
+	}
+	}, [failedCard]);
 	const toggleStatusBar = React.useCallback(() => {
 		setIsStatusBarMaximised(!isStatusBarMaximised);
 	}, [isStatusBarMaximised]);
@@ -52,7 +61,7 @@ const StepsPanel = ({ className }: IProps) => {
 		},
 		[toggleSelectItem],
 	);
-
+ 
 	const steps = React.useMemo(() => {
 		return recordedSteps.map((step, index) => {
 			return (
@@ -144,7 +153,7 @@ const StepsPanel = ({ className }: IProps) => {
 	}, [recordedSteps, selectedList]);
 	const handleResetTest = () => performVerifyTest(false);
 
-	const showFailedCard = remainingSteps && remainingSteps.length && [TRecorderState.RECORDING_ACTIONS].includes(recorderState.type);
+	const showPausedCard = remainingSteps && remainingSteps.length && [TRecorderState.RECORDING_ACTIONS].includes(recorderState.type);
 
 	return (
 		<div css={containerCss} className={String(className)}>
@@ -171,8 +180,8 @@ const StepsPanel = ({ className }: IProps) => {
 				<RightClickMenu onOpenChange={handleMenuOpenChange} menuItems={menuItemsComponent}>
 					<div className={`custom-scroll`} css={contentCss}>
 						{steps}
-						{showFailedCard ? <PausedStepCard /> : ""}
-						{showFailedCard ? (<div>
+						{showPausedCard ? <PausedStepCard /> : ""}
+						{showPausedCard ? (<div>
 							<div className={"px-16 pt-32 pb-20"} css={css`font-style: normal;
 font-weight: 400;
 font-size: 12rem;color: #DCDCDC;`}>next steps</div>

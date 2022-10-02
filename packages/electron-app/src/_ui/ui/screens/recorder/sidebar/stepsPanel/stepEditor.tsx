@@ -130,7 +130,7 @@ const InputValueEditor = ({ step, stepId }) => {
 				css={[
 					labelCss
 				]}
-				className={"mr-7" + (isStepNameEditing ? "mt-2" : "")}
+				className={"mr-7" + (isStepNameEditing === stepId + "-nav-url" ? "mt-2" : "")}
 			>
 				{fieldInfo.label}
 			</div>

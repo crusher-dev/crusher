@@ -35,14 +35,15 @@ const UnAuthorizedErrorContainer = () => {
 		<CompactAppLayout title={null} footer={<Footer />} css={containerCss}>
 			<div css={containerStyle}>
 				<div css={contentContainerStyle}>
-					<LockIconSvg css={iconStyle} />
+					<LockIconSvg height={24} width={24} className="mb-16" />
 					<div css={headingStyle}>
 						<span css={highlightStyle}></span>Facing issues with authorization!
 					</div>
 					<div css={descriptionStyle}>
 						You don't have authorization to access this resource.
-						<br />
+
 						<div
+							className="mt-20"
 							css={css`
 								display: flex;
 								gap: 20rem;
@@ -69,9 +70,10 @@ const containerCss = css`
 `;
 
 const LockIconSvg = (props) => (
-	<svg viewBox="0 0 752 752" xmlns="http://www.w3.org/2000/svg" {...props}>
-		<path d="M467.36 342.46h-10.148v-61.648c0-44.785-36.43-81.219-81.203-81.219-44.785 0-81.219 36.434-81.219 81.219v61.652h-10.148c-17.465 0-31.625 14.156-31.625 31.625v146.71c0 17.465 14.16 31.625 31.625 31.625h182.72c17.465 0 31.629-14.16 31.629-31.625v-146.71c0-17.469-14.168-31.625-31.633-31.625zM323.2 280.812c0-29.117 23.688-52.805 52.805-52.805 29.105 0 52.789 23.688 52.789 52.805v61.652l-105.59-.004zm68.98 165.03v39.488c0 8.938-7.242 16.176-16.184 16.176-8.937 0-16.176-7.242-16.176-16.176v-39.488c-7.578-5.172-12.551-13.875-12.551-23.734 0-15.875 12.863-28.738 28.727-28.738s28.727 12.867 28.727 28.738c.004 9.86-4.969 18.555-12.543 23.734z" />
+	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" {...props}>
+		<path fill="#4E4E4E" fill-rule="evenodd" d="M12 1.5a5.25 5.25 0 00-5.25 5.25v3a3 3 0 00-3 3v6.75a3 3 0 003 3h10.5a3 3 0 003-3v-6.75a3 3 0 00-3-3v-3c0-2.9-2.35-5.25-5.25-5.25zm3.75 8.25v-3a3.75 3.75 0 10-7.5 0v3h7.5z" clip-rule="evenodd" />
 	</svg>
+
 );
 
 const logoutButtonCss = css`

@@ -17,7 +17,7 @@ const NetworkErrorContainer = () => {
 				<div css={contentContainerStyle}>
 					<ConnectivityWarningIcon css={iconStyle} />
 					<div css={headingStyle}>
-						<span css={highlightStyle}></span>Interenet it not working
+						<span css={highlightStyle}></span>Internet it not working
 					</div>
 					<div css={descriptionStyle}>
 						is internet working? we're not able to reach backend server

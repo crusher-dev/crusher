@@ -37,7 +37,7 @@ const UnAuthorizedErrorContainer = () => {
 				<div css={contentContainerStyle}>
 					<LockIconSvg height={24} width={24} className="mb-16" />
 					<div css={headingStyle}>
-						<span css={highlightStyle}></span>Facing issues with authorization!
+						Authorization error
 					</div>
 					<div css={descriptionStyle}>
 						You don't have authorization to access this resource.
@@ -95,10 +95,9 @@ const contentContainerStyle = css`
 const headingStyle = css`
 	font-family: Cera Pro;
 
-	font-weight: 900;
+	font-weight: 800;
 	font-size: 18rem;
 	text-align: center;
-	letter-spacing: -0.1px;
 	color: #ffffff;
 `;
 const highlightStyle = css`

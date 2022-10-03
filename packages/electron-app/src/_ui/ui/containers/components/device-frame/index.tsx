@@ -31,6 +31,7 @@ import { Button } from "@dyson/components/atoms";
 
 import { RightClickMenu } from "@dyson/components/molecules/RightClick/RightClick";
 import { sendSnackBarEvent } from "../toast";
+import { CrashErrorDialog } from "../../../screens/recorder/crashErrorDialog";
 
 const CrashScreen = () => {
 	const store = useStore();
@@ -319,12 +320,14 @@ const DeviceFrame = () => {
 								allowpopups
 								nodeintegration={true}
 							/>
+								<CrashErrorDialog/>
 
 							<Conditional showIf={recorderCrashState && recorderCrashState.type === TRecorderCrashState.CRASHED}>
 								<CrashScreen />
 							</Conditional>
 							<Conditional showIf={recorderCrashState && recorderCrashState.type === TRecorderCrashState.PAGE_LOAD_FAILED}>
-								<PageLoadFailedScreen />
+								<>
+								<PageLoadFailedScreen /></>
 							</Conditional>
 							<Conditional showIf={[TRecorderState.PERFORMING_ACTIONS, TRecorderState.PERFORMING_RECORDER_ACTIONS].includes(recorderState.type)}>
 								<div css={deviceOverlayStyle}></div>

@@ -1055,7 +1055,7 @@ export class AppWindow {
 	}
 
 	private async handleResetStorage() {
-		console.log("Resetting webview storage");
+		console.log("Cleared webview session");
 		await this.clearWebViewStorage();
 	}
 

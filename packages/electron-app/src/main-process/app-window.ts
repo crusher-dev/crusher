@@ -464,7 +464,7 @@ export class AppWindow {
 			finalUrl = getAppURl() + (finalUrl[1] ? "#/" + payload.url.substring(1) + `?test=${Date.now()}` : "");
 		}
 		try {
-		 this.window.webContents.loadURL(finalUrl);
+		 await this.window.webContents.loadURL(finalUrl);
 		} catch(ex) { console.error("Error when going to url: " + payload.url)}
 
 		return;

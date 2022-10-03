@@ -856,6 +856,7 @@ export class AppWindow {
 
 	async handleVerifyTest(event, payload) {
 		const { shouldAlsoSave, autoSaveType } = payload;
+		this.store.dispatch(updateRecorderCrashState(null));
 		const recordedSteps = getSavedSteps(this.store.getState() as any);
 		await this.resetRecorder(TRecorderState.PERFORMING_ACTIONS);
 		console.log("Verifiyng");

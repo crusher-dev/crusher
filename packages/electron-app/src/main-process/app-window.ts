@@ -463,7 +463,11 @@ export class AppWindow {
 		if (finalUrl[0] === "/") {
 			finalUrl = getAppURl() + (finalUrl[1] ? "#/" + payload.url.substring(1) + `?test=${Date.now()}` : "");
 		}
-		return this.window.webContents.loadURL(finalUrl);
+		try {
+		 this.window.webContents.loadURL(finalUrl);
+		} catch(ex) { console.error("Error when going to url: " + payload.url)}
+
+		return;
 	}
 
 	private async handleGetRecorderTestLogs() {

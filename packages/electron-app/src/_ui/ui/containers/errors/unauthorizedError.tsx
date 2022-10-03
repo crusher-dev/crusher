@@ -37,10 +37,10 @@ const UnAuthorizedErrorContainer = () => {
 				<div css={contentContainerStyle}>
 					<LockIconSvg height={24} width={24} className="mb-16" />
 					<div css={headingStyle}>
-						Authorization error
+						You are not authorized to access this project
 					</div>
 					<div css={descriptionStyle}>
-						You don't have authorization to access this resource.
+						You'll need to logout and login with a proper account to access this project.
 
 						<div
 							className="mt-20"

@@ -12,6 +12,7 @@ import { enableJavascriptInDebugger, performVerifyTest } from "electron-app/src/
 import { setSelectedElement } from "electron-app/src/store/actions/recorder";
 import { filterActionsItems } from "./helper";
 import { debounce, throttle } from "lodash";
+import { LinkPointer } from "electron-app/src/_ui/ui/components/LinkPointer";
 
 interface IProps {
 	className?: string;
@@ -39,14 +40,18 @@ const ActionsPanel = ({ className }: IProps) => {
 				<>
 					<div className={"ml-16 mb-18"} css={elementSelectedInfoCss}>
 						<div onClick={turnOffElementMode} className={"flex items-center"}>
-							<GoBackIcon css={goBackIconCss} />
-							<span className={"ml-7"} css={goBackCss}>
-								go back
-							</span>
+							<LinkPointer showExternalIcon={false}>
+								<>
+									<GoBackIcon css={goBackIconCss} />
+									<span className={"ml-7"} css={goBackCss}>
+										go back
+									</span>
+								</>
+							</LinkPointer>
+						
 						</div>
 						<div className={"flex items-center mt-7 pl-17"}>
 							<span css={elementSelectedTextCss}>Element selected, choose an action</span>
-							<InfoIcon className={"ml-auto mr-22"} css={infoIconCss} />
 						</div>
 					</div>
 					<ElementActions filteredList={filteredList} defaultExpanded={true} css={[topBorderCss, focusedListCss]} />

@@ -32,6 +32,9 @@ import { Button } from "@dyson/components/atoms";
 import { RightClickMenu } from "@dyson/components/molecules/RightClick/RightClick";
 import { sendSnackBarEvent } from "../toast";
 import { CrashErrorDialog } from "../../../screens/recorder/crashErrorDialog";
+import { useAtom } from "jotai";
+import { crashAtom } from "electron-app/src/_ui/store/jotai/crashAtom";
+import { stepHoverAtom } from "electron-app/src/_ui/store/jotai/steps";
 
 const CrashScreen = () => {
 	const store = useStore();
@@ -207,6 +210,8 @@ const DeviceFrame = () => {
 	const isStatusBarVisible = useSelector(getIsStatusBarVisible);
 	const ref = React.useRef<HTMLWebViewElement>(null);
 	const store = useStore();
+    const [, setCrash] = useAtom(crashAtom);
+	const [stepHoverId, setStepHoverId] = useAtom(stepHoverAtom);
 
 	const getPreloadScriptPath = () => {
 		return `file://${process.env.OUTPUT_DIR}/` + "webview-preload.js";
@@ -284,6 +289,13 @@ const DeviceFrame = () => {
 		});
 	}, []);
 
+	const isPageFailedCrash = recorderCrashState && recorderCrashState.type === TRecorderCrashState.PAGE_LOAD_FAILED;
+	
+	React.useEffect(() => {
+		if(isPageFailedCrash) {
+			setCrash("PAGE_LOAD_FAILED");
+		}
+	}, [isPageFailedCrash]);
 	// Only when code is shown
 	return (
 		<div css={[topContainerStyle]}>
@@ -320,15 +332,12 @@ const DeviceFrame = () => {
 								allowpopups
 								nodeintegration={true}
 							/>
-								<CrashErrorDialog/>
 
 							<Conditional showIf={recorderCrashState && recorderCrashState.type === TRecorderCrashState.CRASHED}>
 								<CrashScreen />
 							</Conditional>
-							<Conditional showIf={recorderCrashState && recorderCrashState.type === TRecorderCrashState.PAGE_LOAD_FAILED}>
-								<>
-								<PageLoadFailedScreen /></>
-							</Conditional>
+							<CrashErrorDialog/>
+				
 							<Conditional showIf={[TRecorderState.PERFORMING_ACTIONS, TRecorderState.PERFORMING_RECORDER_ACTIONS].includes(recorderState.type)}>
 								<div css={deviceOverlayStyle}></div>
 							</Conditional>

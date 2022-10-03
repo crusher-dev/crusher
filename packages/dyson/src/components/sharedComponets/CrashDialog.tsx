@@ -85,10 +85,10 @@ const IconButton = styled("button", {
 });
 
 
-const CrashDialog = ({
+const DialogModal = ({
     open = true,
-    action,
     heading,
+    children,
     onOpenChange = () => { },
     onAcceptClick = () => { },
     onReject = () => { },
@@ -100,13 +100,8 @@ const CrashDialog = ({
                {heading}
             </Heading>
             <TextBlock fontSize={14} color="rgba(255, 255, 255, 0.52)" className="mt-12 text-center">page is not reachable</TextBlock>
-            <Flex css={{ marginTop: 25, justifyContent: "center" }}>
-                 <Button bgColor="tertiary-dark" className="mr-12" onClick={onReject}>
-                            edit step
-                        </Button>
-                        <Button bgColor="danger" onClick={onAcceptClick}>
-                            retry
-                        </Button>
+            <Flex className={"mt-60"} css={{justifyContent: "center" }}>
+                {children}
             </Flex>
   
         </DialogContent>
@@ -114,4 +109,4 @@ const CrashDialog = ({
     </Dialog>
 );
 
-export default CrashDialog;
+export default DialogModal;

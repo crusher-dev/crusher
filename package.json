@@ -20,7 +20,7 @@
     "docker:build:heroku": "sh scripts/build/build-oss.sh && yarn docker:heroku",
     "db:migration": "node setup/dbMigration.js",
     "crusher:run": "npx crusher-cli test:run",
-    "crusher:create": "npx crusher-cli test:createz"
+    "crusher:create": "npx crusher-cli test:create"
   },
   "devDependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.0.20",

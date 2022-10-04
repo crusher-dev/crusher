@@ -202,7 +202,7 @@ function ProjectBox() {
 				))}
 			</Card>
 
-			<TextBlock className={"mt-16"} fontSize={"12"} color={"#A7A7A8"}>
+			<TextBlock className={"mt-08"} fontSize={"12"} color={"#787878"}>
 				Learn more about login for connection
 			</TextBlock>
 		</div>
@@ -242,33 +242,31 @@ function ConnectionGithub() {
 			className={"w-full"}
 		>
 			<Card
-				className={"mt-28"}
+				className={"mt-40"}
 				css={css`
-					padding: 16rem 20rem 18rem;
-					background: #101215;
+					padding: 20rem 28rem 24rem !important;
 				`}
 			>
 				<div
-					className={"font-cera font-700 mb-10 leading-none"}
+					className={"font-cera font-700 mb-8 leading-none"}
 					css={css`
-						font-size: 13.5rem;
+						font-size: 15rem;
 						color: white;
 					`}
 				>
 					Connect a git repository
 				</div>
-				<TextBlock fontSize={12.4} color={"#E4E4E4"}>
+				<TextBlock fontSize={12} color={"#787878"}>
 					Seamless test builds for commits pushed to your repository.
 				</TextBlock>
 
-				<div className={"mt-16"}>
+				<div className={"mt-24"}>
 					<Button
 						bgColor={"tertiary-white"}
 						onClick={onGithubClick.bind(this, false)}
 						css={css`
 							border-width: 0;
 							background: #fff !important;
-							//
 							:hover {
 								border-width: 0;
 								background: #fff !important;
@@ -292,8 +290,8 @@ function ConnectionGithub() {
 				</div>
 			</Card>
 
-			<TextBlock className={"mt-16"} fontSize={"12"} color={"#A7A7A8"}>
-				Learn more about login for connection
+			<TextBlock className={"mt-12 ml-28"} fontSize={"12"} color={"#787878"}>
+				Docs for gihub integration
 			</TextBlock>
 		</div>
 	);
@@ -420,7 +418,7 @@ function CISection() {
 			<Heading type={1} fontSize={"16"} className={"mb-12 mt-16"}>
 				CI/CD
 			</Heading>
-			<TextBlock fontSize={12.4} color={"#787878"}>
+			<TextBlock fontSize={12} color={"#787878"}>
 				Easily integrate and trigger tests from your CI/CD workflow
 			</TextBlock>
 
@@ -475,7 +473,7 @@ function GitIntegration() {
 						<Heading type={2} fontSize={"14"} className={"mb-8"}>
 							Git Integration
 						</Heading>
-						<TextBlock fontSize={12.4} color={"#787878"}>
+						<TextBlock fontSize={12} color={"#787878"}>
 							Integrate with Github, Gitlab to get checks with each commit
 						</TextBlock>
 					</div>

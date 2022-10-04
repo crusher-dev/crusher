@@ -88,9 +88,9 @@ export const addCrusherCommandsToPackageJSON = (gitInfo: {location?: string} | n
 		packageJSON.scripts = {};
 	}
 	packageJSON.scripts = {
-		...packageJSON.scripts,
 		"crusher:run": "npx crusher-cli test:run",
 		"crusher:create": "npx crusher-cli test:create",
+		...packageJSON.scripts,
 	}
 
 	console.log(" " + chalk.green("✔") + " Added crusher commands to package.json");

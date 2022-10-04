@@ -1,3 +1,3 @@
 export const readProjectConfig = (configPath: string) => {
-    return require(configPath);
+    return eval("require")(configPath);
 };

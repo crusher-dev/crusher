@@ -6,7 +6,7 @@ import * as fs from "fs";
 import * as path from "path";
 import { getRecorderBuildForPlatfrom, recorderVersion } from "../constants";
 
-import { getProjectConfig, getSuggestedProjectConfigPath, setProjectConfig } from "../utils/projectConfig";
+import { addCrusherCommandsToPackageJSON, getProjectConfig, getSuggestedProjectConfigPath, setProjectConfig } from "../utils/projectConfig";
 import { execSync } from "child_process";
 import * as inquirer from "inquirer";
 import { getProjectsOfCurrentUser, createProject, getUserInfoFromToken } from "../utils/apiUtils";
@@ -181,6 +181,8 @@ export async function makeSureSetupIsCorrect(projectId: string | null = null, as
           ...projectConfig,
         });
       }
+
+      addCrusherCommandsToPackageJSON(suggestedGitInfo);
     }
 
 

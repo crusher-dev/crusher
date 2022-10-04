@@ -73,9 +73,33 @@ const getProjectNameFromGitInfo = () : { projectName, gitInfo} => {
   }
 };
 
+const findClosestPackageJson = (start = null, finalDir = null) => {
+  let dir = start || process.cwd();
+  if (typeof dir === "string") {
+    if (dir[dir.length - 1] !== path.sep) {
+      dir += path.sep;
+    }
+    dir = path.normalize(dir);
+    dir = dir.split(path.sep);
+  }
+  if (!dir.length) {
+    return null;
+  }
+  dir.pop();
+  const fullPath = path.join(dir.join(path.sep), "package.json");
+  if (fs.existsSync(fullPath)) {
+    return fullPath;
+  }
+  if (dir.join(path.sep) === finalDir) {
+    return null;
+  }
+  return findClosestPackageJson(dir, finalDir);
+};
+
 export {
   getLoggedInUser,
   isUserLoggedIn,
   findGitRoot,
   getProjectNameFromGitInfo,
+  findClosestPackageJson
 };

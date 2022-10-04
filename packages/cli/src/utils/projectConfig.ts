@@ -2,6 +2,7 @@
 import chalk from 'chalk';
 import * as fs from 'fs';
 import * as path from 'path';
+import { findClosestPackageJson } from '.';
 import { APP_DIRECTORY } from '../constants';
 import { createDirIfNotExist } from '../utils/utils';
 import { BlankMessage, Message } from './messages';
@@ -76,3 +77,27 @@ export const getProjectConfig = (verbose: boolean = true) => {
 	}
 	return JSON.parse(fs.readFileSync(configPath, 'utf8'));
 };
+
+export const addCrusherCommandsToPackageJSON = (gitInfo: {location?: string} | null) => {
+	let closestPackageJSONpath = null;
+	if(gitInfo) {
+		closestPackageJSONpath = findClosestPackageJson(null, gitInfo.location);
+	} else {
+		closestPackageJSONpath = findClosestPackageJson(null, process.cwd());
+	}
+
+	if(!closestPackageJSONpath) return;
+
+	const packageJSON = JSON.parse(fs.readFileSync(closestPackageJSONpath, 'utf8'));
+	if(!packageJSON.scripts) {
+		packageJSON.scripts = {};
+	}
+	packageJSON.scripts = {
+		...packageJSON.scripts,
+		"crusher:run": "npx crusher-cli test:run",
+		"crusher:create": "npx crusher-cli test:create",
+	}
+
+	console.log(" " + chalk.green("✔") + " Added crusher commands to package.json");
+	fs.writeFileSync(closestPackageJSONpath, JSON.stringify(packageJSON, null, 2));
+}

@@ -6,6 +6,7 @@ import { loadUserInfoOnLoad } from "../../utils/hooks";
 import { getUserInfo } from "../../state/userInfo";
 import { Cloudflare } from "../../module/cloudflare";
 import { BROWSERS_MAP } from "../../constants";
+import { ChildProcess, exec, execSync } from "child_process";
 
 export default class CommandBase {
   program: Command;
@@ -23,6 +24,7 @@ export default class CommandBase {
       .option("-b, --browsers <string>", "Browsers to run test on")
       .option("-host, --host <string>", "Browsers to run test on")
       .option("-C, --disable-project-config", "Disable project config", false)
+      .option("-p, --pre-script <string>", "Script to run before running tests")
       .parse(process.argv);
   }
 
@@ -64,7 +66,11 @@ export default class CommandBase {
     const disableProjectConfig = flags["disable-project-config"];
 
     const projectConfig = !disableProjectConfig ? getProjectConfig() : null;
-    const { testId, testGroup, browser, token,host } = flags;
+    const { testId, testGroup, browser, token,host, p: preScript } = flags;
+
+    if(preScript) {
+      execSync(preScript, { stdio: 'inherit' });
+    }
     let proxyUrls = null;
 
     if (projectConfig  && !!projectConfig.proxy && projectConfig.proxy.length > 0) {

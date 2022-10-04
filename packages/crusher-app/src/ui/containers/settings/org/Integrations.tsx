@@ -14,7 +14,7 @@ import { Conditional } from "dyson/src/components/layouts";
 import { Card } from "dyson/src/components/layouts/Card/Card";
 import { SelectBox } from "dyson/src/components/molecules/Select/Select";
 
-import { addGithubRepo, getCIIntegrationCommnad, getGitIntegrations, getSlackIntegrations, unlinkGithubRepo } from "@constants/api";
+import { addGithubRepo, getCIIntegrationCommnad, getGitIntegrations, getIntegrations, saveWebhookUrlAPI, unlinkGithubRepo } from "@constants/api";
 import { currentProject } from "@store/atoms/global/project";
 import { AddSVG } from "@svg/dashboard";
 import { CopyIconSVG } from "@svg/onboarding";
@@ -403,7 +403,7 @@ const GitSVG = (props) => (
 
 function CISection() {
 	const { currentProject: project } = useProjectDetails()
-	const { data } = useSWR(getCIIntegrationCommnad(project.id));
+	const { data } = useSWR(getCIIntegrationCommnad(project?.id));
 	const inputRef = React.useRef(null);
 
 	const copyCommand = React.useCallback(() => {
@@ -511,7 +511,7 @@ function SlackIntegration() {
 	const [isConnected, setIsConnected] = useState(false);
 	const [slackChannels, setSlackChannels] = useState(null);
 	const [nextCursor, setNextCursor] = useState(null);
-	const { data: integrations } = useSWR(getSlackIntegrations(project.id));
+	const { data: integrations } = useSWR(getIntegrations(project?.id));
 
 	const [integration, setSlackIntegration] = useState({
 		normalChannel: [],
@@ -732,12 +732,45 @@ function SlackIntegration() {
 	);
 }
 
+const updateWebhookUrl = (webhook: string, projectId: number) => {
+	return backendRequest(saveWebhookUrlAPI(projectId), {
+		method: RequestMethod.POST,
+		payload: {
+			webhook: webhook
+		},
+	});
+};
+
 function WebHookIntegration() {
 	const { currentProject: project } = useProjectDetails()
+	const { data: integrations } = useSWR(getIntegrations(project?.id));
+	const [webhookUrl, setWebhookUrl] = useState(null);
 
-	const [isConnected, setIsConnected] = useState(false);
 	const [added, setAdded] = useState(false);
-	const [url, setURl] = useState("");
+	const [isEditable, setIsEditable] = useState(false);
+
+	useEffect(() => {
+		if (integrations?.webhook){
+			setWebhookUrl(integrations.webhook);
+			setAdded(true);
+		}
+	}, [integrations]);
+
+	const handleSaveWebhook = () => {
+		setIsEditable(false);
+		updateWebhookUrl(webhookUrl, project.id).then((res) => {
+			sendSnackBarEvent({
+				type: "success",
+				message: "Webhook saved successfully",
+			})
+		}).catch((ex) => {
+			sendSnackBarEvent({
+				type: "error",
+				message: "Failed to save webhook",
+			})
+		});
+	};
+
 	return (
 		<div className={"justify-between items-start mt-24 mb-24"}>
 			<div className={"flex justify-between items-center w-full"}>
@@ -755,14 +788,25 @@ function WebHookIntegration() {
 				<Conditional showIf={added}>
 					<div className="flex items-center">
 						<Input
+							disabled={!isEditable}
 							size={"medium"}
-							value="URl"
+							initialValue={webhookUrl}
+							css={webhookInputCss(!isEditable)}
+							onChange={(evt) => setWebhookUrl(evt.target.value)}
+							onReturn={handleSaveWebhook.bind(this)}
 							size="small"
 							placeholder="enter webhook"
 						/>
-						<Button
-							disabled={url.length < 1}
-							onClick={() => { setAdded(true) }} size="small" className="ml-4" >save</Button>
+						<Conditional showIf={isEditable}>
+							<Button
+								disabled={webhookUrl && webhookUrl.length < 1}
+								onClick={handleSaveWebhook} size="small" className="ml-4" >save</Button>
+						</Conditional>
+						<Conditional showIf={!isEditable}>
+							<Button
+								disabled={false}
+								onClick={() => { setIsEditable(true) }} size="small" className="ml-4" >edit</Button>
+						</Conditional>
 					</div>
 				</Conditional>
 				<Conditional showIf={!added}>
@@ -771,7 +815,8 @@ function WebHookIntegration() {
 
 							placeholder="enter the URl"
 							onClick={() => {
-								setAdded(true)
+								setAdded(true);
+								setIsEditable(true);
 							}} size="small" className="ml-4" >+ Add</Button>
 					</div>
 				</Conditional>
@@ -781,6 +826,11 @@ function WebHookIntegration() {
 	);
 }
 
+const webhookInputCss = (isDisabled: boolean) => css`
+	input {
+		cursor: ${isDisabled ? "not-allowed" : "auto"};
+	}
+`
 const selectBoxCSS = css`
 	width: 200rem;
 `;

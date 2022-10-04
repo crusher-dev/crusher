@@ -14,6 +14,7 @@ import { sendSnackBarEvent } from "@utils/common/notify";
 import { appStateAtom } from "../../../store/atoms/global/appState";
 import { currentProject, projectsAtom, updateCurrentProjectInfoAtom } from "../../../store/atoms/global/project";
 import { RequestMethod } from "../../../types/RequestOptions";
+import { useProjectDetails } from "@hooks/common";
 
 const deleteProject = (projectId) => {
 	return backendRequest(`/projects/${projectId}/actions/delete`, {

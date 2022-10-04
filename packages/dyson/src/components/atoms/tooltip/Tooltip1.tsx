@@ -50,7 +50,7 @@ export const TooltipBox = ({ children, className = "tooltip-box", el = "div" }) 
  * Unified tolltip component for Dyson UI system
  */
 export const HoverCard: React.FC<TooltipWrapperProps> = ({
-    children, state, onStateChange, autoHide = "true", timer = 0, placement, type, content, padding = 0, className, disabled = false, ...props }) => {
+    children, state, onStateChange, autoHide = "true", timer = 0, placement, type, content, padding = 0, className, disableStateManagement = false, disabled = false, ...props }) => {
 
 
     const [show, setShow] = useState(false);
@@ -67,7 +67,7 @@ export const HoverCard: React.FC<TooltipWrapperProps> = ({
         if (type === "hover") {
             return {
                 onMouseOver: () => {
-                    setShow(true);
+                    !disableStateManagement && setShow(true!);
                     !!callback && callback(true);
                 },
                 onMouseLeave: (e) => {
@@ -75,7 +75,7 @@ export const HoverCard: React.FC<TooltipWrapperProps> = ({
                     const movedToToolip = (isElement && refs.floating?.current?.contains(e.relatedTarget)) || refs.floating.current === e.relatedTarget;
                     if (movedToToolip) return;
                     if (autoHide) {
-                        setShow(false);
+                        !disableStateManagement && setShow(false);
                         !!callback && callback(false);
                     }
                 },
@@ -84,7 +84,7 @@ export const HoverCard: React.FC<TooltipWrapperProps> = ({
 
         return {
             onClick: (e) => {
-                setShow(true);
+                !disableStateManagement && setShow(true);
                 !!callback && callback(true);
             },
         };

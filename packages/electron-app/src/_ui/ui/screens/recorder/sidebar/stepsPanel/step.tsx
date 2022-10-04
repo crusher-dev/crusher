@@ -42,13 +42,21 @@ const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, 
 		}
 	}, [editInputId === `${stepId}-stepName`]);
 
+	const handleHoverCallback = React.useCallback((shouldShow: boolean) => {
+		if(shouldShow) {
+			setStepHoverId(stepId);
+		} else if(!shouldShow && stepHoverId === stepId) {
+			setStepHoverId(null);
+		}
+	}, [stepHoverId]);
 	return (
 		<HoverCard
 			disabled={disabled || (hasFailed && !stepHoverId)  || (stepHoverId && stepHoverId !== stepId)}
+			disableStateManagement={true}
 			autoHide={true}
 			state={stepHoverId === stepId}
 
-			callback={setIsEditorCardOpen.bind(this)}
+			callback={handleHoverCallback}
 			wrapperCss={css`
 				z-index: 123123123 !important;
 				box-shadow: none;

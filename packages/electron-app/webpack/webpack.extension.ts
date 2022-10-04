@@ -20,7 +20,7 @@ const virtualModules = new VirtualModulesPlugin({
   let pwQuerySelector, pwQuerySelectorAll;
   (() => {
     ${injectedScriptSource.source}
-    const injected = new pwExport(1, false, []);
+    const injected = new InjectedScript(false,1, "chromium", []);
     window.injected = injected;
     pwQuerySelector = (selector, root) => {
       const parsed = injected.parseSelector(selector);

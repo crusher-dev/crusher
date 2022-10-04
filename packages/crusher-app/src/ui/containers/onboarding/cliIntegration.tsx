@@ -19,6 +19,7 @@ import { RequestMethod } from "@types/RequestOptions";
 import { backendRequest } from "@utils/common/backendRequest";
 import { sendSnackBarEvent } from "@utils/common/notify";
 import { resolvePathToBackendURI } from "@utils/common/url";
+import { useProjectDetails } from "@hooks/common";
 
 const CopyCommandInput = ({ command }: { command: string }) => {
 	const inputRef = React.useRef<HTMLInputElement>(null);
@@ -67,7 +68,7 @@ const CopyCommandInput = ({ command }: { command: string }) => {
 
 const CliRepoIntegration = () => {
 	const [, setOnboardingStep] = useAtom(onboardingStepAtom);
-	const [project] = useAtom(currentProject);
+	const { currentProject: project } = useProjectDetails()
 	const [commands, setCommnads] = React.useState(["", ""]);
 	const [, updateOnboarding] = useAtom(updateMeta);
 

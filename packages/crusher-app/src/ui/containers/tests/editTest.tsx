@@ -47,7 +47,7 @@ export const EditTestModal = ({ name, folderId, id, onClose }) => {
 	const [testName, changeTestName] = useState(name);
 	const [processing, setProcessing] = useState(false);
 	const [processingDelete, setProcessingDelete] = useState(false);
-	const [project] = useAtom(currentProject);
+	const { currentProject: project } = useProjectDetails()
 	const [selectedFolder, setSelectedFolder] = useState(folderId ? [folderId] : []);
 
 	const selectedFolderId = selectedFolder.length > 0 && selectedFolder[0];

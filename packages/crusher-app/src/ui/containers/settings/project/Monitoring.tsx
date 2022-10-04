@@ -24,6 +24,7 @@ import { converServerToClientSideStateMonitoring, convertToServerSideMonitoring 
 
 import { currentProject } from "../../../../store/atoms/global/project";
 import { RequestMethod } from "../../../../types/RequestOptions";
+import { useProjectDetails } from "@hooks/common";
 
 const selectBoxCSS = css`
 	.selectBox {
@@ -39,7 +40,7 @@ const getValues = (environments) => {
 };
 
 function MonitoringForm({ id }) {
-	const [project] = useAtom(currentProject);
+	const { currentProject: project } = useProjectDetails()
 	const [monitoringInStore, setMonitoring] = useAtom(monitoringAtom);
 	const [savingEnv, setSavingEnv] = useState(false);
 	const { notSavedInDB, environmentId, testInterval } = monitoringInStore[id];
@@ -158,7 +159,7 @@ function MonitoringCard({ monitoringData, id }) {
 	const { isOpen, testInterval, environmentId } = monitoringData;
 	const [environmentsInStore, setEnvironment] = useAtom(monitoringAtom);
 	const { notSavedInDB } = environmentsInStore[id];
-	const [project] = useAtom(currentProject);
+	const { currentProject: project } = useProjectDetails()
 	const { data: environments } = useSWR(getProjectEnvironments(project.id));
 
 	const onClick = () => {
@@ -209,7 +210,7 @@ type TMonitoringCard = {
 const monitoringAtom = atomWithImmer<TMonitoringCard[]>([]);
 
 export const Monitoring = () => {
-	const [project] = useAtom(currentProject);
+	const { currentProject: project } = useProjectDetails()
 
 	const { data: monitoring } = useSWR(getProjectMonitoring(project.id));
 

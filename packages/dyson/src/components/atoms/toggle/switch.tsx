@@ -65,10 +65,14 @@ const smallSize = {
   `
 }
 
-const switchBackground = css`background: #343538;
+const switchBackground = css`
+    
+    background: #343538 !important;
+    border: .5px solid #ffffff15;
       &[data-state="checked"]{
           background: #A843F6;
       }
+      
 `
 
 const disabledCSS = css`

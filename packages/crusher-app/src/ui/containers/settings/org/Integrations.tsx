@@ -29,14 +29,15 @@ import { resolvePathToBackendURI, resolvePathToFrontendURI } from "@utils/common
 import { getGithubOAuthURLLegacy } from "@utils/core/external";
 import { OctokitManager } from "@utils/core/external/ocktokit";
 import { convertToOrganisationInfo, getRepoData } from "@utils/core/settings/project/integrationUtils";
+import { useProjectDetails } from "@hooks/common";
 
 const connectedToGitAtom = atomWithImmer<
 	| any
 	| {
-			token: string;
-			type: "github";
-			updateCount: number;
-	  }
+		token: string;
+		type: "github";
+		updateCount: number;
+	}
 >(null);
 
 const useGithubData = (gitInfo) => {
@@ -84,7 +85,7 @@ const addGithubProject = (projectId: number, repoData) => {
 };
 
 function RepoBar({ repo }) {
-	const [project] = useAtom(currentProject);
+	const { currentProject: project } = useProjectDetails()
 
 	const onSelect = useCallback(async () => {
 		await addGithubProject(project.id, repo);
@@ -299,6 +300,7 @@ function ConnectionGithub() {
 }
 
 const unlinkRepo = (projectId: number, id) => {
+
 	return backendRequest(unlinkGithubRepo(projectId), {
 		method: RequestMethod.POST,
 		payload: {
@@ -308,15 +310,14 @@ const unlinkRepo = (projectId: number, id) => {
 };
 
 function LinkedRepo() {
-	const [project] = useAtom(currentProject);
+	const { currentProject: project } = useProjectDetails()
 	const { data: linkedRepos } = useSWR(getGitIntegrations(project.id));
 
 	const { repoName, projectId, repoLink, id: id } = linkedRepos.linkedRepo;
 
 	const unlinkRepoCallback = useCallback(async () => {
-		console.log("LInked repos are", linkedRepos);
 		await unlinkRepo(projectId, id);
-		mutate(getGitIntegrations(project.id));
+		mutate(getGitIntegrations(project?.id));
 	}, [linkedRepos]);
 
 	return (
@@ -403,7 +404,7 @@ const GitSVG = (props) => (
 );
 
 function CISection() {
-	const [project] = useAtom(currentProject);
+	const { currentProject: project } = useProjectDetails()
 	const { data } = useSWR(getCIIntegrationCommnad(project.id));
 	const inputRef = React.useRef(null);
 
@@ -419,7 +420,7 @@ function CISection() {
 			<Heading type={1} fontSize={"16"} className={"mb-12 mt-16"}>
 				CI/CD
 			</Heading>
-			<TextBlock fontSize={12.4} color={"#c1c1c1"}>
+			<TextBlock fontSize={12.4} color={"#787878"}>
 				Easily integrate and trigger tests from your CI/CD workflow
 			</TextBlock>
 
@@ -453,8 +454,8 @@ function CISection() {
 
 function GitIntegration() {
 	const [connectedToGit] = useAtom(connectedToGitAtom);
-	const [project] = useAtom(currentProject);
-	const { data: linkedRepo } = useSWR(getGitIntegrations(project.id));
+	const { currentProject: project } = useProjectDetails()
+	const { data: linkedRepo } = useSWR(getGitIntegrations(project?.id));
 
 	const hadLinkedRepo = !!linkedRepo?.linkedRepo;
 	return (
@@ -474,7 +475,7 @@ function GitIntegration() {
 						<Heading type={2} fontSize={"14"} className={"mb-8"}>
 							Git Integration
 						</Heading>
-						<TextBlock fontSize={12.4} color={"#c1c1c1"}>
+						<TextBlock fontSize={12.4} color={"#787878"}>
 							Integrate with Github, Gitlab to get checks with each commit
 						</TextBlock>
 					</div>
@@ -507,7 +508,7 @@ const getSlackChannelValues = (channels: { name: string; id: string }[] | null) 
 };
 
 function SlackIntegration() {
-	const [project] = useAtom(currentProject);
+	const { currentProject: project } = useProjectDetails()
 
 	const [isConnected, setIsConnected] = useState(false);
 	const [slackChannels, setSlackChannels] = useState(null);
@@ -554,8 +555,7 @@ function SlackIntegration() {
 	const handleSwitch = useCallback((toggleState: boolean) => {
 		if (toggleState) {
 			const windowRef = openPopup(
-				`https://slack.com/oauth/v2/authorize?scope=chat:write,chat:write.public,channels:read,groups:read&client_id=${
-					process.env.NEXT_PUBLIC_SLACK_CLIENT_ID
+				`https://slack.com/oauth/v2/authorize?scope=chat:write,chat:write.public,channels:read,groups:read&client_id=${process.env.NEXT_PUBLIC_SLACK_CLIENT_ID
 				}&redirect_uri=${escape(resolvePathToBackendURI("/integrations/slack/actions/add"))}&state=${encodeURIComponent(
 					JSON.stringify({ projectId: project.id, redirectUrl: resolvePathToFrontendURI("/settings/project/integrations") }),
 				)}`,
@@ -616,15 +616,15 @@ function SlackIntegration() {
 			payload: {
 				alertChannel: alertChannelInfo[0]
 					? {
-							name: alertChannelInfo[0].label,
-							value: alertChannelInfo[0].value,
-					  }
+						name: alertChannelInfo[0].label,
+						value: alertChannelInfo[0].value,
+					}
 					: null,
 				normalChannel: normalChannelInfo[0]
 					? {
-							name: normalChannelInfo[0].label,
-							value: normalChannelInfo[0].value,
-					  }
+						name: normalChannelInfo[0].label,
+						value: normalChannelInfo[0].value,
+					}
 					: null,
 			},
 		})
@@ -659,14 +659,14 @@ function SlackIntegration() {
 
 	return (
 		<div className={"justify-between items-start mt-40 mb-24"}>
-			<div className={"flex justify-between items-center w-full"}>
+			<div className={"flex justify-between items-start w-full"}>
 				<div className={"flex"}>
-					<img src={"/svg/slack-icon.svg"} width={"24rem"} />
+					<img src={"/svg/slack-icon.svg"} width={"20rem"} />
 					<div className={"ml-20"}>
 						<Heading type={2} fontSize={"14"} className={"mb-8"}>
 							Slack Integration
 						</Heading>
-						<TextBlock fontSize={12.9} color={"#c1c1c1"}>
+						<TextBlock fontSize={12} color={"#787878"}>
 							Get notifications on build event
 						</TextBlock>
 					</div>
@@ -734,6 +734,55 @@ function SlackIntegration() {
 	);
 }
 
+function WebHookIntegration() {
+	const { currentProject: project } = useProjectDetails()
+
+	const [isConnected, setIsConnected] = useState(false);
+	const [added, setAdded] = useState(false);
+	const [url, setURl] = useState("");
+	return (
+		<div className={"justify-between items-start mt-40 mb-24"}>
+			<div className={"flex justify-between items-center w-full"}>
+				<div className={"flex"}>
+
+					<div className={"ml-44"}>
+						<Heading type={2} fontSize={"14"} className={"mb-8"}>
+							Webhook
+						</Heading>
+						<TextBlock fontSize={12} color={"#787878"}>
+							Get alerts on test fail and important evens
+						</TextBlock>
+					</div>
+				</div>
+				<Conditional showIf={added}>
+					<div className="flex items-center">
+						<Input
+							size={"medium"}
+							value="URl"
+							size="small"
+							placeholder="enter webhook"
+						/>
+						<Button
+							disabled={url.length < 1}
+							onClick={() => { setAdded(true) }} size="small" className="ml-4" >save</Button>
+					</div>
+				</Conditional>
+				<Conditional showIf={!added}>
+					<div className="flex items-center">
+						<Button
+
+							placeholder="enter the URl"
+							onClick={() => {
+								setAdded(true)
+							}} size="small" className="ml-4" >+ Add</Button>
+					</div>
+				</Conditional>
+			</div>
+
+		</div>
+	);
+}
+
 const selectBoxCSS = css`
 	width: 200rem;
 `;
@@ -749,11 +798,13 @@ export const Integrations = () => {
 				<Heading type={1} fontSize={"18"} className={"mb-12"}>
 					Integrations
 				</Heading>
-				<TextBlock fontSize={"12.5"} className={"mb-24"} color={"#c1c1c1"}>
+				<TextBlock fontSize={"12.5"} className={"mb-24"} color={"#787878"}>
 					Make sure you have selected all the configuration you want
 				</TextBlock>
 				<hr css={basicHR} />
 				<SlackIntegration />
+
+				<WebHookIntegration />
 				{/* <hr css={basicHR} /> */}
 				<GitIntegration />
 				<hr css={basicHR} className={"mt-40"} />

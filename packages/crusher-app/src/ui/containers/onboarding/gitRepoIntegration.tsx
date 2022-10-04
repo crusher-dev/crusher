@@ -27,14 +27,15 @@ import { openPopup } from "@utils/common/domUtils";
 import { getGithubOAuthURL } from "@utils/core/external";
 import { OctokitManager } from "@utils/core/external/ocktokit";
 import { convertToOrganisationInfo, getRepoData } from "@utils/core/settings/project/integrationUtils";
+import { useProjectDetails } from "@hooks/common";
 
 const connectedToGitAtom = atomWithImmer<
 	| any
 	| {
-			token: string;
-			type: "github";
-			updateCount: number;
-	  }
+		token: string;
+		type: "github";
+		updateCount: number;
+	}
 >(null);
 
 const selectedRepoAtom = atom<string | number>(null);
@@ -137,7 +138,7 @@ const GithubRepoBox = () => {
 	const RepoItem = ({ repository }) => {
 		const [connectedRepo, setConnectdRepo] = useAtom(selectedRepoAtom);
 		const [, setOnBoardingStep] = useAtom(onboardingStepAtom);
-		const [project] = useAtom(currentProject);
+		const { currentProject: project } = useProjectDetails()
 
 		const handleRepoClick = async () => {
 			await addGithubProject(project.id, repository);

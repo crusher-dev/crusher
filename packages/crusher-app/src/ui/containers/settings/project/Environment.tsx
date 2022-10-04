@@ -26,6 +26,7 @@ import { converServerToClientSideState, convertEnvToServerSide } from "@utils/co
 
 import { currentProject } from "../../../../store/atoms/global/project";
 import { RequestMethod } from "../../../../types/RequestOptions";
+import { useProjectDetails } from "@hooks/common";
 
 function VariableSection({ envId }) {
 	const [environmentsInStore, setEnvironment] = useAtom(environmentsAtom);
@@ -125,7 +126,8 @@ const getBrowserValues = () => {
 };
 
 function EnvironmentForm({ id }) {
-	const [project] = useAtom(currentProject);
+
+	const { currentProject: project } = useProjectDetails()
 	const [environmentsInStore, setEnvironment] = useAtom(environmentsAtom);
 	const [savingEnv, setSavingEnv] = useState(false);
 	const [deleting, setDeleting] = useState(false);
@@ -319,9 +321,10 @@ type TEnvironment = {
 const environmentsAtom = atomWithImmer<TEnvironment[]>([]);
 
 export const Environment = () => {
-	const [project] = useAtom(currentProject);
 
-	const { data: environments } = useSWR(getProjectEnvironments(project.id));
+	const { currentProject } = useProjectDetails()
+
+	const { data: environments } = useSWR(getProjectEnvironments(currentProject.id));
 	const [environmentsInStore, setEnvironment] = useAtom(environmentsAtom);
 
 	useEffect(() => {
@@ -359,9 +362,7 @@ export const Environment = () => {
 					<div>
 						<Button
 							onClick={addEmptyEnvToStore.bind(this)}
-							css={css`
-								width: 164rem;
-							`}
+
 						>
 							Add environment
 						</Button>

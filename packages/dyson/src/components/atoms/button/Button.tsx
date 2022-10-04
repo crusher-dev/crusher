@@ -271,7 +271,7 @@ const buttonCSS = css`
 const getColorCSS = (color: string, impact: string, disabled: boolean) => css`
 	background: ${getColor(color, impact).main.background};
 	color: ${getColor(color, impact).main.color};
-	border: 1px solid ${getColor(color, impact).main.border};
+	border: .5px solid ${getColor(color, impact).main.border};
 	${disabled !== true &&
 	`
 			:hover {

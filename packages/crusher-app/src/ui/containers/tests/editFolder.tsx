@@ -1,7 +1,6 @@
 import { css } from "@emotion/react";
 import React, { useCallback, useState } from "react";
 
-import { useAtom } from "jotai";
 import { mutate } from "swr";
 
 import { Button, Input } from "dyson/src/components/atoms";
@@ -14,8 +13,8 @@ import { backendRequest } from "@utils/common/backendRequest";
 import { sendSnackBarEvent } from "@utils/common/notify";
 import { sentenceCase } from "@utils/common/textUtils";
 
-import { currentProject } from "../../../store/atoms/global/project";
 import { RequestMethod } from "../../../types/RequestOptions";
+import { useProjectDetails } from "@hooks/common";
 
 const changeFolderData = (projectId: number, folderId: number, name: string) => {
 	return backendRequest(updateFolderAPI(projectId), {
@@ -42,7 +41,7 @@ export const EditFolderModal = ({ name, id, onClose }) => {
 	const [folderName, changeFolderName] = useState(name);
 	const [processing, setProcessing] = useState(false);
 	const [processingDelete, setProcessingDelete] = useState(false);
-	const [project] = useAtom(currentProject);
+	const { currentProject: project } = useProjectDetails()
 
 	const isFormChanged = name !== folderName;
 	const changeTestNameCallback = useCallback(() => {

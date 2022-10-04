@@ -73,18 +73,22 @@ const projectLinks = [
 	{
 		label: "General",
 		link: "/settings/basic",
+		isProjectLink: true
 	},
 	{
 		label: "Environments",
 		link: "/settings/environments",
+		isProjectLink: true
 	},
 	{
 		label: "Monitoring",
 		link: "/settings/monitoring",
+		isProjectLink: true
 	},
 	{
 		label: "Integrations",
 		link: "/settings/integrations",
+		isProjectLink: true
 	},
 ];
 
@@ -96,15 +100,19 @@ const orgLinks = [
 ];
 
 function LinksSection({ links, label }) {
-	const { pathname } = useRouter();
+	const { query, pathname } = useRouter();
+	const { project_id } = query;
+
 	return (
 		<>
 			<CompressibleMenu name={label}>
 				<div className={"mt-6 mb-32"} css={linkSection}>
-					{links.map(({ link, label }) => {
+					{links.map(({ link, label, isProjectLink }) => {
+						const finalLink = isProjectLink ? `/${project_id}/${link}` : link;
+
 						return (
-							<Link href={link}>
-								<MenuItemHorizontal selected={pathname === link}>
+							<Link href={finalLink}>
+								<MenuItemHorizontal selected={pathname.includes(link)}>
 									<span
 										css={css`
 											font-size: 12.5rem;
@@ -134,6 +142,7 @@ const clickableCSS = css`
 `;
 function LeftSection() {
 	const router = useRouter();
+	const { query } = router;
 
 	const [showModal, setShowModal] = useState(false);
 

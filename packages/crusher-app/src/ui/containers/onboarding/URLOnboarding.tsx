@@ -16,10 +16,11 @@ import { LoadingSVG } from "@svg/dashboard";
 import { RequestMethod } from "@types/RequestOptions";
 import { backendRequest } from "@utils/common/backendRequest";
 import { resolvePathToBackendURI } from "@utils/common/url";
+import { useProjectDetails } from "@hooks/common";
 
 const URLOnboarding = () => {
 	const [, setOnboardingStep] = useAtom(onboardingStepAtom);
-	const [project] = useAtom(currentProject);
+	const { currentProject: project } = useProjectDetails()
 	const [, setCommnads] = React.useState(["", ""]);
 	const [websiteUrl, setWebsiteUrl] = React.useState(null);
 	const [isCreatingTest, setIsCreatingTest] = React.useState(false);

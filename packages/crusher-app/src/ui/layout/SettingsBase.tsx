@@ -136,6 +136,11 @@ function LeftSection() {
 	const router = useRouter();
 
 	const [showModal, setShowModal] = useState(false);
+
+	const { project_id } = query;
+
+	const isProject = !!project_id;
+	const backLink = isProject ? `/${project_id}/dashboard` : "/projects";
 	return (
 		<div css={sidebar} className={"flex flex-col justify-between py-16 px-23"}>
 			<Conditional showIf={showModal}>
@@ -146,7 +151,7 @@ function LeftSection() {
 					<span
 						css={clickableCSS}
 						onClick={() => {
-							router.push("/app/dashboard");
+							router.push(backLink);
 						}}
 					>
 						←{" "}

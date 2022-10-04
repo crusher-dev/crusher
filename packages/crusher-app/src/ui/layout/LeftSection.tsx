@@ -28,6 +28,12 @@ export function LeftSection() {
 
 	const menuItems = project ? projectMenu : leftMenu;
 
+	const { query } = useRouter()
+	const { project_id } = query;
+
+	const isProject = !!project_id;
+	const settingsLink = isProject ? `/${project_id}/settings/basic` : "/settings/org/team-members";
+
 	return (
 		<div css={sidebar} className={"flex flex-col justify-between pb-18"} id="left-section">
 			<UserNTeam />
@@ -81,9 +87,9 @@ export function LeftSection() {
 					</div>
 
 					<div css={leftBottomBar} className="w-full flex mt-20">
-						<Tooltip content={"Org settings"} placement="top" type="hover">
+						<Tooltip content={"settings"} placement="top" type="hover">
 							<div css={[menuItemCSS, border]}>
-								<Link href="/settings/org/team-members">
+								<Link href={settingsLink}>
 									<div className="h-full w-full flex items-center justify-center">
 										<Gear />
 									</div>

@@ -17,11 +17,19 @@ import { Dolphin, TopDown } from "./icont";
 
 const userDropdownItems = [
 	{
+		leftLabel: "Project settings",
+		rightLabel: "",
+		link: "/settings/basic",
+		target: "",
+		isProjectLink: true
+	},
+	{
 		leftLabel: "Org settings",
 		rightLabel: "",
 		link: "/settings/org/team-members",
 		target: "",
 	},
+
 	{
 		leftLabel: "Changelog",
 		rightLabel: "",
@@ -57,16 +65,28 @@ function Logout(props) {
 
 function DropdownContent() {
 	const router = useRouter();
+	const { query } = router;
 	return (
 		<div className={"flex flex-col justify-between h-full"}>
 			<div>
-				{userDropdownItems.map(({ leftLabel, rightLabel, link, target }) => (
-					<Link href={link}>
-						<a href={link} target={target} className={"close-on-click"}>
-							<MenuItem label={leftLabel} rightLabel={rightLabel} />
-						</a>
-					</Link>
-				))}
+				{userDropdownItems.map(({ leftLabel, rightLabel, link, target, isProjectLink }) => {
+					const project_id = query.project_id
+
+					const isProjectIdPresent = !!project_id;
+
+					if (!isProjectIdPresent && isProjectLink) {
+						return null
+					}
+
+					const finalLink = isProjectLink ? `/${project_id}${link}` : link
+					return (
+						<Link href={finalLink}>
+							<a href={finalLink} target={target} className={"close-on-click"}>
+								<MenuItem label={leftLabel} rightLabel={rightLabel} />
+							</a>
+						</Link>
+					)
+				})}
 			</div>
 
 			<div className={"mt-66	"}>

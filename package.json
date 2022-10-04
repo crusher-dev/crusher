@@ -7,6 +7,7 @@
   ],
   "description": "Mono repository for crusher.dev",
   "scripts": {
+    "hello": "echo 'hello';",
     "setup:oss": "node setup/index.js -m open-source",
     "setup:ee": "node setup/index.js -m enterprise",
     "setup:prod": "node setup/index.js -m enterprise --sm aws --ah crusher.dev --bd https://backend.crusher.dev/ --fd https://app.crusher.dev/",

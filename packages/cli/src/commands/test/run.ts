@@ -66,7 +66,7 @@ export default class CommandBase {
     const disableProjectConfig = flags["disable-project-config"];
 
     const projectConfig = !disableProjectConfig ? getProjectConfig() : null;
-    const { testId, testGroup, browser, token,host, p: preScript } = flags;
+    const { testId, testGroup, browser, token,host, preScript } = flags;
 
     if(preScript) {
       execSync(preScript, { stdio: 'inherit' });

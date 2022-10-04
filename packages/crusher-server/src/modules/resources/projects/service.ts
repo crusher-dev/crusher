@@ -14,6 +14,25 @@ class ProjectsService {
 		return this.dbManager.fetchAllRows("SELECT * FROM public.project_hosts WHERE project_id = ?", [projectId]);
 	}
 
+	async updateWebhook(webhook: string, projectId: number) {
+		const project = await this.getProject(projectId);
+		let meta: any = {};
+		try { 
+			meta = JSON.parse(project.meta);
+		} catch(ex) {}
+		meta["webhook"] = webhook;
+		return this.dbManager.update("UPDATE public.projects SET meta = ? WHERE id = ?", [JSON.stringify(meta), projectId]);
+	}
+
+	async getProjectWebhook(projectId: number) {
+		const project = await this.getProject(projectId);
+		let meta: any = {};
+		try {
+			meta = JSON.parse(project.meta);
+		} catch(ex) {}
+		return meta["webhook"];
+	}
+
 	async createProjectEnvironment(environmentInfo: ICreateProjectEnvironmentPayload): Promise<{ insertId: number }> {
 		return this.dbManager.insert("INSERT INTO public.project_hosts (url, host_name, project_id, user_id) VALUES (?, ?, ?, ?)", [
 			environmentInfo.url,

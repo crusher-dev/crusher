@@ -1,54 +1,56 @@
 {
-	"version": "1.0.0",
-	"name": "crusher",
-	"private": true,
-	"workspaces": [
-		"packages/*"
-	],
-	"description": "Mono repository for crusher.dev",
-	"scripts": {
-		"setup:oss": "node setup/index.js -m open-source",
-		"setup:ee": "node setup/index.js -m enterprise",
-		"setup:prod": "node setup/index.js -m enterprise --sm aws --ah crusher.dev --bd https://backend.crusher.dev/ --fd https://app.crusher.dev/",
-		"setup:local": "node setup/index.js -m enterprise --sm local --ah localhost --bd http://localhost:8000/ --fd http://localhost:3000/",
-		"setup:docker": "node setup/index.js -m enterprise --sm local --ah localhost --bd http://localhost:3000/server/ --fd http://localhost:3000/",
-		"build:oss": "sh scripts/build/build-oss.sh && cd docker/oss/ && docker-compose up --build -d",
-		"start": "pm2 start",
-		"log:app": "pm2 logs crusher-app",
-		"lint": "lerna run prettify",
-		"docker:heroku": "cd docker/oss/ && docker-compose up --build -d",
-		"docker:build:heroku": "sh scripts/build/build-oss.sh && yarn docker:heroku",
-		"db:migration": "node setup/dbMigration.js"
-	},
-	"devDependencies": {
-		"@ffmpeg-installer/ffmpeg": "^1.0.20",
-		"pm2": "^5.1.2"
-	},
-	"dependencies": {
-		"@octokit/rest": "^18.0.14",
-		"@swc/core": "^1.2.218",
-		"@swc/helpers": "^0.4.3",
-		"dotenv": "^10.0.0",
-		"ejs": "^3.1.6",
-		"enquirer": "^2.3.6",
-		"mysql2": "^2.2.5",
-		"patch-package": "^6.2.2",
-		"pg": "^8.7.1",
-		"postinstall-postinstall": "^2.1.0",
-		"putout": "^18.16.0",
-		"regenerator-runtime": "^0.13.9",
-		"semver": "^7.3.7",
-		"shelljs": "^0.8.4",
-		"source-map-support": "^0.5.20",
-		"yargs": "^17.0.1"
-	},
-	"license": "MIT",
-	"pnpm": {
-		"patchedDependencies": {
-			"playwright-core@1.23.3": "patches/playwright-core@1.23.3.patch",
-			"bullmq@1.67.1": "patches/bullmq@1.67.1.patch",
-			"shelljs@0.8.4": "patches/shelljs@0.8.4.patch",
-			"@reactour/tour@2.7.1": "patches/@reactour__tour@2.7.1.patch"
-		}
-	}
+  "version": "1.0.0",
+  "name": "crusher",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "description": "Mono repository for crusher.dev",
+  "scripts": {
+    "setup:oss": "node setup/index.js -m open-source",
+    "setup:ee": "node setup/index.js -m enterprise",
+    "setup:prod": "node setup/index.js -m enterprise --sm aws --ah crusher.dev --bd https://backend.crusher.dev/ --fd https://app.crusher.dev/",
+    "setup:local": "node setup/index.js -m enterprise --sm local --ah localhost --bd http://localhost:8000/ --fd http://localhost:3000/",
+    "setup:docker": "node setup/index.js -m enterprise --sm local --ah localhost --bd http://localhost:3000/server/ --fd http://localhost:3000/",
+    "build:oss": "sh scripts/build/build-oss.sh && cd docker/oss/ && docker-compose up --build -d",
+    "start": "pm2 start",
+    "log:app": "pm2 logs crusher-app",
+    "lint": "lerna run prettify",
+    "docker:heroku": "cd docker/oss/ && docker-compose up --build -d",
+    "docker:build:heroku": "sh scripts/build/build-oss.sh && yarn docker:heroku",
+    "db:migration": "node setup/dbMigration.js",
+    "crusher": "npx crusher-cli",
+    "crusher:run": "npx crusher-cli test:run"
+  },
+  "devDependencies": {
+    "@ffmpeg-installer/ffmpeg": "^1.0.20",
+    "pm2": "^5.1.2"
+  },
+  "dependencies": {
+    "@octokit/rest": "^18.0.14",
+    "@swc/core": "^1.2.218",
+    "@swc/helpers": "^0.4.3",
+    "dotenv": "^10.0.0",
+    "ejs": "^3.1.6",
+    "enquirer": "^2.3.6",
+    "mysql2": "^2.2.5",
+    "patch-package": "^6.2.2",
+    "pg": "^8.7.1",
+    "postinstall-postinstall": "^2.1.0",
+    "putout": "^18.16.0",
+    "regenerator-runtime": "^0.13.9",
+    "semver": "^7.3.7",
+    "shelljs": "^0.8.4",
+    "source-map-support": "^0.5.20",
+    "yargs": "^17.0.1"
+  },
+  "license": "MIT",
+  "pnpm": {
+    "patchedDependencies": {
+      "playwright-core@1.23.3": "patches/playwright-core@1.23.3.patch",
+      "bullmq@1.67.1": "patches/bullmq@1.67.1.patch",
+      "shelljs@0.8.4": "patches/shelljs@0.8.4.patch",
+      "@reactour/tour@2.7.1": "patches/@reactour__tour@2.7.1.patch"
+    }
+  }
 }

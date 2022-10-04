@@ -8,10 +8,11 @@ export const resolvePathToBackendURI = (endpoint: string) => {
 	const isGitpodDevEnv = typeof window !== "undefined" && window.location.origin.includes("gitpod");
 
 	if (!isCrusherBackend && isGitpodDevEnv) {
-		return getPathWithHost(`${getLocationOrigin()}/server`, endpoint);
+		const gitPodBackendURL = `${window.location.origin}`.replaceAll("3000", "8000");
+		return getPathWithHost(gitPodBackendURL, endpoint);
 	}
 
-	return getPathWithHost(process.env.NEXT_PUBLIC_INTERNAL_BACKEND_URL || `${getLocationOrigin()}/server`, endpoint);
+	return getPathWithHost(process.env.NEXT_PUBLIC_INTERNAL_BACKEND_URL || `https://backend.crusher.dev`, endpoint);
 };
 
 export const resolvePathToFrontendURI = (endpoint: string) => getPathWithHost(getLocationOrigin(), endpoint);

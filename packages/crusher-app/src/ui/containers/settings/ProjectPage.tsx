@@ -144,7 +144,7 @@ export const ProjectSettings = () => {
 					</Button>
 				</div>
 				<hr css={basicHR} className={"mt-54"} />
-				<Heading type={2} fontSize={"16"} className={"mb-12 mt-56"}>
+				<Heading type={2} fontSize={"16"} className={"mb-08 mt-56"}>
 					Delete this project
 				</Heading>
 				<TextBlock fontSize={13} className={"mb-24"} color={"#c1c1c1"}>

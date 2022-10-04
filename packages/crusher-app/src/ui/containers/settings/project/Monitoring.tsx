@@ -240,7 +240,7 @@ export const Monitoring = () => {
 			<div className={"text-24 mb-100"} css={maxWidthContainer}>
 				<div className={"flex justify-between items-start mt-16"}>
 					<div>
-						<Heading type={2} fontSize={"16"} className={"mb-12"}>
+						<Heading type={2} fontSize={"16"} className={"mb-08"}>
 							Monitoring
 						</Heading>
 						<TextBlock fontSize={13} className={"mb-24"} color={"#c1c1c1"}>

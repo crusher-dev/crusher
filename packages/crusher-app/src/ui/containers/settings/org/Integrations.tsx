@@ -415,7 +415,7 @@ function CISection() {
 
 	return (
 		<div>
-			<Heading type={1} fontSize={"16"} className={"mb-12 mt-16"}>
+			<Heading type={1} fontSize={"16"} className={"mb-08 mt-16"}>
 				CI/CD
 			</Heading>
 			<TextBlock fontSize={12} color={"#787878"}>
@@ -739,7 +739,7 @@ function WebHookIntegration() {
 	const [added, setAdded] = useState(false);
 	const [url, setURl] = useState("");
 	return (
-		<div className={"justify-between items-start mt-40 mb-24"}>
+		<div className={"justify-between items-start mt-24 mb-24"}>
 			<div className={"flex justify-between items-center w-full"}>
 				<div className={"flex"}>
 
@@ -802,10 +802,13 @@ export const Integrations = () => {
 				<hr css={basicHR} />
 				<SlackIntegration />
 
-				<WebHookIntegration />
+
 				{/* <hr css={basicHR} /> */}
 				<GitIntegration />
 				<hr css={basicHR} className={"mt-40"} />
+
+				<WebHookIntegration />
+				<hr css={basicHR} className={"mt-24 mb-24"} />
 				<CISection />
 				{/* <CiIntegration /> */}
 			</div>

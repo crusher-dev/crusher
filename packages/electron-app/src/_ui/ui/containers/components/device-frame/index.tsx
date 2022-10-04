@@ -35,6 +35,7 @@ import { CrashErrorDialog } from "../../../screens/recorder/crashErrorDialog";
 import { useAtom } from "jotai";
 import { crashAtom } from "electron-app/src/_ui/store/jotai/crashAtom";
 import { stepHoverAtom } from "electron-app/src/_ui/store/jotai/steps";
+import { remote } from "electron";
 
 const CrashScreen = () => {
 	const store = useStore();
@@ -214,7 +215,7 @@ const DeviceFrame = () => {
 	const [stepHoverId, setStepHoverId] = useAtom(stepHoverAtom);
 
 	const getPreloadScriptPath = () => {
-		return `file://${process.env.OUTPUT_DIR}/` + "webview-preload.js";
+		return `file://` + remote.app.getAppPath() + "/webview-preload.js";
 	};
 
 	React.useEffect(() => {

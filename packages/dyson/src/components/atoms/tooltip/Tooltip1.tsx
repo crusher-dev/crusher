@@ -195,7 +195,7 @@ const tooltipBox = css`
 
     background: #0D0E0E;
     border: 1px solid #1C1C1C;
-    box-shadow: 0px -1px 9px #000000;
+    box-shadow: 0px -1px 9px #0000001c;
     border-radius: 10px;
 
 

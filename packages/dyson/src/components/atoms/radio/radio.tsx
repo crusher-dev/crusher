@@ -31,14 +31,14 @@ const radioContainer = () => css`
 
 const selectedState = css`
 	#ellipsis {
-		background: #687ef2;
+		background: #b341f9;
 	}
 `;
 
 const notSelectedState = css`
 	:hover {
 		#ellipsis {
-			background: #687ef2;
+			background: #b341f9;
 		}
 	}
 `;
@@ -74,7 +74,7 @@ export function Radio(props: RadioProps): ReactElement {
 	};
 
 	return (
-		<div className={"flex items-center "}>
+		<div className={"flex items-start "}>
 			<div
 				css={[radioContainer(), isSelected && selectedState, !isSelected && notSelectedState, disabled && disabledState(isSelected)]}
 				onClick={handleClick}

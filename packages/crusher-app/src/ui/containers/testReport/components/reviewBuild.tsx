@@ -2,7 +2,7 @@ import { css } from "@emotion/react";
 import { useRouter } from "next/router";
 import React, { useCallback, useState } from "react";
 
-import { Button } from "dyson/src/components/atoms";
+import { Button, TextBlock } from "dyson/src/components/atoms";
 import Radio from "dyson/src/components/atoms/radio/radio";
 
 import { CloseSVG } from "@svg/dashboard";
@@ -70,8 +70,9 @@ export const ReviewButtonContent = ({ closeModal }) => {
 									callback={selectOption.bind(this, i)}
 									label={
 										<div className={"ml-12"}>
-											<div className={"text-12 font-700"}>{label}</div>
-											<div>{subLabel}</div>
+											<TextBlock fontSize={12} weight={700} className="mb-4">{label}</TextBlock>
+
+											<TextBlock fontSize={11} weight={400} color="#696969" className="lowercase">{subLabel}</TextBlock>
 										</div>
 									}
 								/>

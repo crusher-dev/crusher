@@ -94,7 +94,7 @@ export default function NewProject() {
 						border-radius: 20rem;
 						margin-bottom: 42rem;
 						flex-direction: column;
-						background-color: rgb(13,14,14);
+						background-color: rgb(12 12 12);
 					}
 
 					.run-headline {

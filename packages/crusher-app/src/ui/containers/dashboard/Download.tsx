@@ -170,7 +170,7 @@ function CreateTest() {
 						border-radius: 20rem;
 						margin-bottom: 42rem;
 						flex-direction: column;
-						background-color: rgb(13,14,14);
+						background-color: rgb(12 12 12);
 					}
 
 					.run-headline {
@@ -362,7 +362,8 @@ export function Download({ onClose }: { onClose: Function }) {
 }
 
 const overLayCSS = css`
-	background: rgb(0 0 0 / 77%);
+	background: rgb(0 0 0 / 75%) !important;
+	backdrop-filter: blur(3px);
 `
 
 export default Download;

@@ -28,7 +28,7 @@ export function LeftSection() {
 
 	const menuItems = project ? projectMenu : leftMenu;
 
-	const { query } = useRouter()
+	const { query } = useRouter();
 	const { project_id } = query;
 
 	const isProject = !!project_id;

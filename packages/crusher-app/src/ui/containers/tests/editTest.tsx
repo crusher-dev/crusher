@@ -13,6 +13,7 @@ import { Modal } from "dyson/src/components/molecules/Modal";
 
 import { changeTestInfoAPI, deleteTestApi, getTestListAPI } from "@constants/api";
 import { IProjectTestsListResponse } from "@crusher-shared/types/response/iProjectTestsListResponse";
+import { useProjectDetails } from "@hooks/common";
 import { testFiltersAtom } from "@store/atoms/pages/testPage";
 import { LoadingSVG } from "@svg/dashboard";
 import { backendRequest } from "@utils/common/backendRequest";
@@ -20,7 +21,6 @@ import { sendSnackBarEvent } from "@utils/common/notify";
 import { sentenceCase } from "@utils/common/textUtils";
 
 import { RequestMethod } from "../../../types/RequestOptions";
-import { useProjectDetails } from "@hooks/common";
 
 const changeTestData = (testId: number, name: string, selectedFolder: string | null) => {
 	return backendRequest(changeTestInfoAPI(testId), {
@@ -47,7 +47,7 @@ export const EditTestModal = ({ name, folderId, id, onClose }) => {
 	const [testName, changeTestName] = useState(name);
 	const [processing, setProcessing] = useState(false);
 	const [processingDelete, setProcessingDelete] = useState(false);
-	const { currentProject: project } = useProjectDetails()
+	const { currentProject: project } = useProjectDetails();
 	const [selectedFolder, setSelectedFolder] = useState(folderId ? [folderId] : []);
 
 	const selectedFolderId = selectedFolder.length > 0 && selectedFolder[0];

@@ -65,8 +65,6 @@ export default function Dashboard() {
 		return projects.filter(({ name }) => name.includes(searchProject));
 	}, [searchProject]);
 
-
-
 	return (
 		<SidebarTopBarLayout>
 			<div css={[containerStyle, contentContainer]} className=" pt-36 ">
@@ -231,7 +229,8 @@ function ProjectCard({ project }) {
 			</div>
 			<Conditional showIf={!!gitIntegration}>
 				<div className="flex items-center">
-					<GitIcon className="mr-8" css={normalGitIcon} /> <a href={`https://github.com/${gitIntegration?.repoName}`} css={hoverRepoLink}>
+					<GitIcon className="mr-8" css={normalGitIcon} />{" "}
+					<a href={`https://github.com/${gitIntegration?.repoName}`} css={hoverRepoLink}>
 						{gitIntegration?.repoName}
 					</a>
 				</div>
@@ -245,19 +244,16 @@ function ProjectCard({ project }) {
 	);
 }
 
-
 const normalGitIcon = css`
-	path{
-	fill: #838383;
+	path {
+		fill: #838383;
 	}
-
-`
+`;
 
 const hoverRepoLink = css`
 	text-decoration: none;
 	color: #777;
-	:hover{
-			text-decoration: underline !important;
+	:hover {
+		text-decoration: underline !important;
 	}
-
-`
+`;

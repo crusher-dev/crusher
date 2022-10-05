@@ -4,6 +4,7 @@ import React, { useCallback, useMemo, useState } from "react";
 import useSWR from "swr";
 
 import { Button } from "dyson/src/components/atoms";
+import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import { CenterLayout } from "dyson/src/components/layouts";
 import { OverlayTransparent } from "dyson/src/components/layouts/OverlayTransparent/OverlayTransparent";
 
@@ -11,7 +12,6 @@ import { RELEASE_API } from "@constants/api";
 import { LINUX_INFO, OS, OS_INFO } from "@constants/app";
 import { AppleSVG } from "@svg/dashboard";
 import { getOSType } from "@utils/common";
-
 
 export function DownloadButton(props) {
 	const osType = useMemo(getOSType, []);
@@ -75,11 +75,6 @@ export function DownloadButton(props) {
 		</div>
 	);
 }
-
-
-
-import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
-
 
 function TerminalIcon(props) {
 	return (
@@ -162,7 +157,7 @@ function CreateTest() {
 						position: relative;
 
 						align-items: flex-start;
-						border: 0.5px solid rgba(142,142,142,0.1);
+						border: 0.5px solid rgba(142, 142, 142, 0.1);
 						border-style: solid;
 						max-width: 680rem;
 						border-width: 0.5rem;
@@ -364,6 +359,6 @@ export function Download({ onClose }: { onClose: Function }) {
 const overLayCSS = css`
 	background: rgb(0 0 0 / 75%) !important;
 	backdrop-filter: blur(3px);
-`
+`;
 
 export default Download;

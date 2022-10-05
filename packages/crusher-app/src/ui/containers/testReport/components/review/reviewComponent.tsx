@@ -1,11 +1,11 @@
 import { css } from "@emotion/react";
 import dynamic from "next/dynamic";
-
 import React, { useState } from "react";
-import { Button } from "dyson/src/components/atoms";
 
-import { CommentIcon, } from "@svg/dashboard";
+import { Button } from "dyson/src/components/atoms";
 import { Dropdown } from "dyson/src/components/molecules/Dropdown";
+
+import { CommentIcon } from "@svg/dashboard";
 
 const ReviewButtonContent = dynamic(() => import("./reviewBuild"));
 
@@ -14,7 +14,6 @@ export function ReviewSection() {
 
 	return (
 		<Dropdown component={<ReviewButtonContent closeModal={setOpen.bind(this, false)} />} callback={setOpen} initialState={open} dropdownCSS={reviewCss}>
-
 			<Button size="medium" title="leave a comment/review" bgColor={"tertiary"} onClick={setOpen.bind(this, true)} css={reviewButtonCSS}>
 				<div className={"flex items-center"}>
 					<CommentIcon className={"mr-6"} />
@@ -24,8 +23,6 @@ export function ReviewSection() {
 		</Dropdown>
 	);
 }
-
-
 
 const reviewButtonCSS = css`
 	padding: 0 10rem;
@@ -57,6 +54,6 @@ const reviewCss = css`
 	left: unset !important;
 
 	border-radius: 12rem !important;
-	background: #0D0E0E;
-    border: 1px solid #1C1C1C;
+	background: #0d0e0e;
+	border: 1px solid #1c1c1c;
 `;

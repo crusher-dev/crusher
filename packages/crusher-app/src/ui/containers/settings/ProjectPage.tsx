@@ -7,6 +7,7 @@ import { Button, Input } from "dyson/src/components/atoms";
 import { Heading } from "dyson/src/components/atoms/heading/Heading";
 import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 
+import { useProjectDetails } from "@hooks/common";
 import { SettingsLayout } from "@ui/layout/SettingsBase";
 import { backendRequest } from "@utils/common/backendRequest";
 import { sendSnackBarEvent } from "@utils/common/notify";
@@ -14,7 +15,6 @@ import { sendSnackBarEvent } from "@utils/common/notify";
 import { appStateAtom } from "../../../store/atoms/global/appState";
 import { projectsAtom, updateCurrentProjectInfoAtom } from "../../../store/atoms/global/project";
 import { RequestMethod } from "../../../types/RequestOptions";
-import { useProjectDetails } from "@hooks/common";
 
 const deleteProject = (projectId) => {
 	return backendRequest(`/projects/${projectId}/actions/delete`, {
@@ -31,7 +31,7 @@ const updateProjectSettings = (projectId, name, visualBaseline) => {
 
 export const ProjectSettings = () => {
 	const [{ selectedProjectId }] = useAtom(appStateAtom);
-	const { currentProject: project } = useProjectDetails()
+	const { currentProject: project } = useProjectDetails();
 	const [, updateCurrentProject] = useAtom(updateCurrentProjectInfoAtom);
 	const [projectsList] = useAtom(projectsAtom);
 	const [projectName, setProjectName] = useState(project?.name);
@@ -145,7 +145,7 @@ export const ProjectSettings = () => {
 					</Button>
 				</div>
 				<hr css={basicHR} className={"mt-54"} />
-				<div className="flex align-items center mt-56 justify-between" >
+				<div className="flex align-items center mt-56 justify-between">
 					<div>
 						<Heading type={2} fontSize={"14"} className={"mb-8"}>
 							Delete this project
@@ -157,8 +157,8 @@ export const ProjectSettings = () => {
 					<Button
 						bgColor={"danger"}
 						css={css`
-						width: 124rem;
-					`}
+							width: 124rem;
+						`}
 						onClick={deleteProjectCallback}
 					>
 						Delete project

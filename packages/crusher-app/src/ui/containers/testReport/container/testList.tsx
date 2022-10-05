@@ -12,10 +12,9 @@ import { VideoComponent } from "dyson/src/components/atoms/video/video";
 import { Conditional } from "dyson/src/components/layouts";
 import { Modal } from "dyson/src/components/molecules/Modal";
 
-
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { ActionStatusEnum } from "@crusher-shared/lib/runnerLog/interface";
-
+import { useBuildReport } from "@store/serverState/buildReports";
 import { FullImageView, ShowSidebySide } from "@svg/builds";
 import { LoadingSVG, PlaySVG } from "@svg/dashboard";
 import { ExpandSVG, InfoSVG, TestStatusSVG } from "@svg/testReport";
@@ -28,11 +27,9 @@ import {
 	getTestIndexByConfig,
 } from "@utils/core/buildReportUtils";
 import { getAssetPath, getCollapsedTestSteps } from "@utils/helpers";
-import { useBuildReport } from "@store/serverState/buildReports";
+
 import { selectedTestAtom, testCardConfigAtom } from "../atoms";
 import { useBasicTestData } from "../hooks";
-
-
 
 const CompareImage = dynamic(() => import("../components/compareImages"));
 
@@ -40,7 +37,6 @@ enum TestTabEnum {
 	OVERVIEW = "overview",
 	LOGS = "logs",
 }
-
 
 /*
 	How reports will work
@@ -56,7 +52,6 @@ const getStatusFromTestInstances = (testInstances) => {
 
 	return "PASSED";
 };
-
 
 function ReportSection() {
 	const [selectedTest, setSelectedTest] = useAtom(selectedTestAtom);
@@ -230,9 +225,7 @@ function RenderImageInfo({ data, index }) {
 	);
 }
 
-const imageTestStep = css`
-
-`;
+const imageTestStep = css``;
 
 function ErrorComponent({ testInstanceData, actionType, actionName, message }) {
 	const videoUrl = testInstanceData?.output?.video;
@@ -448,11 +441,11 @@ function RenderStep({ data, testInstanceData, setIsShowingVideo, testId }) {
 			</Conditional>
 			<div className={"px-34 mt-12"}>
 				{[ActionsInTestEnum.ASSERT_ELEMENT].includes(actionType) &&
-					data.meta &&
-					data.meta.meta &&
-					data.meta.meta.meta &&
-					data.meta.meta.meta.logs &&
-					status === "FAILED" ? (
+				data.meta &&
+				data.meta.meta &&
+				data.meta.meta.meta &&
+				data.meta.meta.meta.logs &&
+				status === "FAILED" ? (
 					<RenderAssertElement logs={data.meta.meta.meta.logs} />
 				) : (
 					""
@@ -535,8 +528,6 @@ const errorBox = css`
 	}
 `;
 
-
-
 /*
 	Use Jotai for avoiding props drilling.
 	Make config much more streamline.
@@ -573,7 +564,6 @@ function PlayVideo({ videoUrl }) {
 				) : (
 					""
 				)}
-
 			</div>
 			<Conditional showIf={videoUrl && openVideoModal}>
 				<TestVideoUrl videoUrl={videoUrl} setOpenVideoModal={setIsOpenVideoModal.bind(this)} />
@@ -799,14 +789,7 @@ function TestVideoUrl({ setOpenVideoModal, videoUrl }) {
 	);
 }
 
-function TestOverviewTabTopSection({
-	currentTestTab,
-	testInstanceData,
-	expand,
-	isShowingVideo,
-	setIsShowingVideo,
-	setCurrentTestTab,
-}) {
+function TestOverviewTabTopSection({ currentTestTab, testInstanceData, expand, isShowingVideo, setIsShowingVideo, setCurrentTestTab }) {
 	const videoUrl = testInstanceData?.output?.video;
 
 	return (
@@ -845,12 +828,8 @@ function TestOverviewTabTopSection({
 				<div css={testNavBarItemStyle}>Actions</div>
 			</div>
 
-
 			<div className={"flex items-center mr-60"}>
-				<PlayVideo
-					videoUrl={testInstanceData?.output?.video}
-					expand={expand}
-				/>
+				<PlayVideo videoUrl={testInstanceData?.output?.video} expand={expand} />
 			</div>
 		</div>
 	);
@@ -988,19 +967,16 @@ function TestLogs({ testInstanceData }) {
 	);
 }
 
-
-
 function TestCard() {
-	const [selectedTest,] = useAtom(selectedTestAtom);
+	const [selectedTest] = useAtom(selectedTestAtom);
 
-	const { testData } = useBasicTestData()
+	const { testData } = useBasicTestData();
 	const id = selectedTest;
 
 	const { name, testInstances } = testData;
 	const [expand, setExpand] = useState(false);
 	const [showLoading] = useState(false);
 	const allConfiguration = getAllConfigurationForGivenTest(testData);
-
 
 	const [testCardConfig, setTestCardConfig] = useAtom(testCardConfigAtom);
 	const [isShowingVideo, setIsShowingVideo] = React.useState(false);
@@ -1017,7 +993,7 @@ function TestCard() {
 			setExpand(true);
 		}
 
-		setTestCardConfig(getBaseConfig(allConfiguration))
+		setTestCardConfig(getBaseConfig(allConfiguration));
 	}, []);
 
 	return (

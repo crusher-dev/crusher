@@ -8,13 +8,13 @@ import { Conditional } from "dyson/src/components/layouts";
 import { Modal } from "dyson/src/components/molecules/Modal";
 
 import { deleteFolderAPI, getTestListAPI, updateFolderAPI } from "@constants/api";
+import { useProjectDetails } from "@hooks/common";
 import { LoadingSVG } from "@svg/dashboard";
 import { backendRequest } from "@utils/common/backendRequest";
 import { sendSnackBarEvent } from "@utils/common/notify";
 import { sentenceCase } from "@utils/common/textUtils";
 
 import { RequestMethod } from "../../../types/RequestOptions";
-import { useProjectDetails } from "@hooks/common";
 
 const changeFolderData = (projectId: number, folderId: number, name: string) => {
 	return backendRequest(updateFolderAPI(projectId), {
@@ -41,7 +41,7 @@ export const EditFolderModal = ({ name, id, onClose }) => {
 	const [folderName, changeFolderName] = useState(name);
 	const [processing, setProcessing] = useState(false);
 	const [processingDelete, setProcessingDelete] = useState(false);
-	const { currentProject: project } = useProjectDetails()
+	const { currentProject: project } = useProjectDetails();
 
 	const isFormChanged = name !== folderName;
 	const changeTestNameCallback = useCallback(() => {

@@ -8,6 +8,7 @@ import { Conditional } from "dyson/src/components/layouts";
 
 import { getTestListAPI } from "@constants/api";
 import { addHttpToURLIfNotThere, checkValidURL } from "@crusher-shared/utils/url";
+import { useProjectDetails } from "@hooks/common";
 import { usePageTitle } from "@hooks/seo";
 import { appStateAtom } from "@store/atoms/global/appState";
 import { currentProject } from "@store/atoms/global/project";
@@ -16,11 +17,10 @@ import { LoadingSVG } from "@svg/dashboard";
 import { RequestMethod } from "@types/RequestOptions";
 import { backendRequest } from "@utils/common/backendRequest";
 import { resolvePathToBackendURI } from "@utils/common/url";
-import { useProjectDetails } from "@hooks/common";
 
 const URLOnboarding = () => {
 	const [, setOnboardingStep] = useAtom(onboardingStepAtom);
-	const { currentProject: project } = useProjectDetails()
+	const { currentProject: project } = useProjectDetails();
 	const [, setCommnads] = React.useState(["", ""]);
 	const [websiteUrl, setWebsiteUrl] = React.useState(null);
 	const [isCreatingTest, setIsCreatingTest] = React.useState(false);

@@ -6,11 +6,10 @@ import { Button, Text, TextBlock } from "dyson/src/components/atoms";
 import Radio from "dyson/src/components/atoms/radio/radio";
 
 import { CloseSVG } from "@svg/dashboard";
+import { RequestMethod } from "@types/RequestOptions";
 import { backendRequest } from "@utils/common/backendRequest";
 import { sendSnackBarEvent } from "@utils/common/notify";
 import { useBuildReport } from "crusher-app/src/store/serverState/buildReports";
-import { RequestMethod } from "@types/RequestOptions";
-
 
 export const radioContent = [
 	{ label: "Leave feedback", subLabel: "Approve without approval" },
@@ -48,7 +47,9 @@ export const ReviewButtonContent = ({ closeModal }) => {
 	return (
 		<div>
 			<div css={[topReview, bottomSection]} className={"font-700 py-12 px-16 leading-none flex justify-between pt-14"}>
-				<Text fontSize={14} color="#E7E7E7" weight={700} >Share feedback</Text>
+				<Text fontSize={14} color="#E7E7E7" weight={700}>
+					Share feedback
+				</Text>
 				<CloseSVG height={"12"} onClick={closeModal} />
 			</div>
 			<div css={middleSection} className={"px-16 pt-16 pb-4"}>
@@ -70,9 +71,13 @@ export const ReviewButtonContent = ({ closeModal }) => {
 									callback={selectOption.bind(this, i)}
 									label={
 										<div className={"ml-12"}>
-											<TextBlock fontSize={12} weight={700} className="mb-4">{label}</TextBlock>
+											<TextBlock fontSize={12} weight={700} className="mb-4">
+												{label}
+											</TextBlock>
 
-											<TextBlock fontSize={11} weight={400} color="#696969" className="lowercase">{subLabel}</TextBlock>
+											<TextBlock fontSize={11} weight={400} color="#696969" className="lowercase">
+												{subLabel}
+											</TextBlock>
 										</div>
 									}
 								/>
@@ -81,11 +86,8 @@ export const ReviewButtonContent = ({ closeModal }) => {
 					})}
 				</div>
 			</div>
-			<div className={"px-16 py-12 flex justify-end"} >
-				<Button
-					size={"small"}
-					onClick={handleSubmit}
-				>
+			<div className={"px-16 py-12 flex justify-end"}>
+				<Button size={"small"} onClick={handleSubmit}>
 					Submit
 				</Button>
 			</div>
@@ -101,20 +103,15 @@ const radioGroup = css`
 const topReview = css`
 	color: #fff;
 	font-size: 13.4rem;
-	
 `;
 
-
 const bottomSection = css`
-background: rgb(255 255 255 / 2%);
-`
+	background: rgb(255 255 255 / 2%);
+`;
 const middleSection = css`
-	border-top:.5px solid rgba(255, 255, 255, 0.05);
+	border-top: 0.5px solid rgba(255, 255, 255, 0.05);
 
-	border-bottom: .5px solid rgba(255, 255, 255, 0.05);
-
-	
-
+	border-bottom: 0.5px solid rgba(255, 255, 255, 0.05);
 
 	#text-area {
 		height: 104rem;

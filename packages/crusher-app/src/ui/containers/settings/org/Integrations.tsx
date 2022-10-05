@@ -15,6 +15,7 @@ import { Card } from "dyson/src/components/layouts/Card/Card";
 import { SelectBox } from "dyson/src/components/molecules/Select/Select";
 
 import { addGithubRepo, getCIIntegrationCommnad, getGitIntegrations, getIntegrations, saveWebhookUrlAPI, unlinkGithubRepo } from "@constants/api";
+import { useProjectDetails } from "@hooks/common";
 import { currentProject } from "@store/atoms/global/project";
 import { AddSVG } from "@svg/dashboard";
 import { CopyIconSVG } from "@svg/onboarding";
@@ -29,15 +30,14 @@ import { resolvePathToBackendURI, resolvePathToFrontendURI } from "@utils/common
 import { getGithubOAuthURLLegacy } from "@utils/core/external";
 import { OctokitManager } from "@utils/core/external/ocktokit";
 import { convertToOrganisationInfo, getRepoData } from "@utils/core/settings/project/integrationUtils";
-import { useProjectDetails } from "@hooks/common";
 
 const connectedToGitAtom = atomWithImmer<
 	| any
 	| {
-		token: string;
-		type: "github";
-		updateCount: number;
-	}
+			token: string;
+			type: "github";
+			updateCount: number;
+	  }
 >(null);
 
 const useGithubData = (gitInfo) => {
@@ -85,7 +85,7 @@ const addGithubProject = (projectId: number, repoData) => {
 };
 
 function RepoBar({ repo }) {
-	const { currentProject: project } = useProjectDetails()
+	const { currentProject: project } = useProjectDetails();
 
 	const onSelect = useCallback(async () => {
 		await addGithubProject(project.id, repo);
@@ -298,7 +298,6 @@ function ConnectionGithub() {
 }
 
 const unlinkRepo = (projectId: number, id) => {
-
 	return backendRequest(unlinkGithubRepo(projectId), {
 		method: RequestMethod.POST,
 		payload: {
@@ -308,7 +307,7 @@ const unlinkRepo = (projectId: number, id) => {
 };
 
 function LinkedRepo() {
-	const { currentProject: project } = useProjectDetails()
+	const { currentProject: project } = useProjectDetails();
 	const { data: linkedRepos } = useSWR(getGitIntegrations(project.id));
 
 	const { repoName, projectId, repoLink, id: id } = linkedRepos.linkedRepo;
@@ -402,7 +401,7 @@ const GitSVG = (props) => (
 );
 
 function CISection() {
-	const { currentProject: project } = useProjectDetails()
+	const { currentProject: project } = useProjectDetails();
 	const { data } = useSWR(getCIIntegrationCommnad(project?.id));
 	const inputRef = React.useRef(null);
 
@@ -452,7 +451,7 @@ function CISection() {
 
 function GitIntegration() {
 	const [connectedToGit] = useAtom(connectedToGitAtom);
-	const { currentProject: project } = useProjectDetails()
+	const { currentProject: project } = useProjectDetails();
 	const { data: linkedRepo } = useSWR(getGitIntegrations(project?.id));
 
 	const hadLinkedRepo = !!linkedRepo?.linkedRepo;
@@ -506,7 +505,7 @@ const getSlackChannelValues = (channels: { name: string; id: string }[] | null) 
 };
 
 function SlackIntegration() {
-	const { currentProject: project } = useProjectDetails()
+	const { currentProject: project } = useProjectDetails();
 
 	const [isConnected, setIsConnected] = useState(false);
 	const [slackChannels, setSlackChannels] = useState(null);
@@ -553,7 +552,8 @@ function SlackIntegration() {
 	const handleSwitch = useCallback((toggleState: boolean) => {
 		if (toggleState) {
 			const windowRef = openPopup(
-				`https://slack.com/oauth/v2/authorize?scope=chat:write,chat:write.public,channels:read,groups:read&client_id=${process.env.NEXT_PUBLIC_SLACK_CLIENT_ID
+				`https://slack.com/oauth/v2/authorize?scope=chat:write,chat:write.public,channels:read,groups:read&client_id=${
+					process.env.NEXT_PUBLIC_SLACK_CLIENT_ID
 				}&redirect_uri=${escape(resolvePathToBackendURI("/integrations/slack/actions/add"))}&state=${encodeURIComponent(
 					JSON.stringify({ projectId: project.id, redirectUrl: resolvePathToFrontendURI("/settings/project/integrations") }),
 				)}`,
@@ -614,15 +614,15 @@ function SlackIntegration() {
 			payload: {
 				alertChannel: alertChannelInfo[0]
 					? {
-						name: alertChannelInfo[0].label,
-						value: alertChannelInfo[0].value,
-					}
+							name: alertChannelInfo[0].label,
+							value: alertChannelInfo[0].value,
+					  }
 					: null,
 				normalChannel: normalChannelInfo[0]
 					? {
-						name: normalChannelInfo[0].label,
-						value: normalChannelInfo[0].value,
-					}
+							name: normalChannelInfo[0].label,
+							value: normalChannelInfo[0].value,
+					  }
 					: null,
 			},
 		})
@@ -736,13 +736,13 @@ const updateWebhookUrl = (webhook: string, projectId: number) => {
 	return backendRequest(saveWebhookUrlAPI(projectId), {
 		method: RequestMethod.POST,
 		payload: {
-			webhook: webhook
+			webhook: webhook,
 		},
 	});
 };
 
 function WebHookIntegration() {
-	const { currentProject: project } = useProjectDetails()
+	const { currentProject: project } = useProjectDetails();
 	const { data: integrations } = useSWR(getIntegrations(project?.id));
 	const [webhookUrl, setWebhookUrl] = useState(null);
 
@@ -750,7 +750,7 @@ function WebHookIntegration() {
 	const [isEditable, setIsEditable] = useState(false);
 
 	useEffect(() => {
-		if (integrations?.webhook){
+		if (integrations?.webhook) {
 			setWebhookUrl(integrations.webhook);
 			setAdded(true);
 		}
@@ -758,24 +758,25 @@ function WebHookIntegration() {
 
 	const handleSaveWebhook = () => {
 		setIsEditable(false);
-		updateWebhookUrl(webhookUrl, project.id).then((res) => {
-			sendSnackBarEvent({
-				type: "success",
-				message: "Webhook saved successfully",
+		updateWebhookUrl(webhookUrl, project.id)
+			.then((res) => {
+				sendSnackBarEvent({
+					type: "success",
+					message: "Webhook saved successfully",
+				});
 			})
-		}).catch((ex) => {
-			sendSnackBarEvent({
-				type: "error",
-				message: "Failed to save webhook",
-			})
-		});
+			.catch((ex) => {
+				sendSnackBarEvent({
+					type: "error",
+					message: "Failed to save webhook",
+				});
+			});
 	};
 
 	return (
 		<div className={"justify-between items-start mt-24 mb-24"}>
 			<div className={"flex justify-between items-center w-full"}>
 				<div className={"flex"}>
-
 					<div className={"ml-44"}>
 						<Heading type={2} fontSize={"14"} className={"mb-8"}>
 							Webhook
@@ -798,30 +799,40 @@ function WebHookIntegration() {
 							placeholder="enter webhook"
 						/>
 						<Conditional showIf={isEditable}>
-							<Button
-								disabled={webhookUrl && webhookUrl.length < 1}
-								onClick={handleSaveWebhook} size="small" className="ml-4" >save</Button>
+							<Button disabled={webhookUrl && webhookUrl.length < 1} onClick={handleSaveWebhook} size="small" className="ml-4">
+								save
+							</Button>
 						</Conditional>
 						<Conditional showIf={!isEditable}>
 							<Button
 								disabled={false}
-								onClick={() => { setIsEditable(true) }} size="small" className="ml-4" >edit</Button>
+								onClick={() => {
+									setIsEditable(true);
+								}}
+								size="small"
+								className="ml-4"
+							>
+								edit
+							</Button>
 						</Conditional>
 					</div>
 				</Conditional>
 				<Conditional showIf={!added}>
 					<div className="flex items-center">
 						<Button
-
 							placeholder="enter the URl"
 							onClick={() => {
 								setAdded(true);
 								setIsEditable(true);
-							}} size="small" className="ml-4" >+ Add</Button>
+							}}
+							size="small"
+							className="ml-4"
+						>
+							+ Add
+						</Button>
 					</div>
 				</Conditional>
 			</div>
-
 		</div>
 	);
 }
@@ -830,7 +841,7 @@ const webhookInputCss = (isDisabled: boolean) => css`
 	input {
 		cursor: ${isDisabled ? "not-allowed" : "auto"};
 	}
-`
+`;
 const selectBoxCSS = css`
 	width: 200rem;
 `;
@@ -851,7 +862,6 @@ export const Integrations = () => {
 				</TextBlock>
 				<hr css={basicHR} />
 				<SlackIntegration />
-
 
 				{/* <hr css={basicHR} /> */}
 				<GitIntegration />

@@ -20,9 +20,8 @@ import { usePageTitle } from "../../../hooks/seo";
 import { updateMeta } from "../../../store/mutators/metaData";
 import { useBuildReport } from "../../../store/serverState/buildReports";
 import { RequestMethod } from "../../../types/RequestOptions";
-
-import { ReviewSection } from "./components/review/reviewComponent";
 import { ConfigChange } from "./components/common/config";
+import { ReviewSection } from "./components/review/reviewComponent";
 
 const ReportSection = dynamic(() => import("./container/testList"));
 function BuildInfoTop() {
@@ -138,11 +137,10 @@ function BuildMainInfo() {
 }
 
 const link = css`
-	:hover{
+	:hover {
 		text-decoration: underline !important;
 	}
-
-`
+`;
 
 const flexGapInfo = css`
 	gap: 40rem;
@@ -178,7 +176,6 @@ function Reload() {
 		</React.Fragment>
 	);
 }
-
 
 function RunLocally() {
 	// const router = useRouter();
@@ -317,8 +314,6 @@ function TabBar() {
 					</div>
 				</div>
 			))}
-
-
 		</div>
 	);
 }
@@ -367,7 +362,6 @@ export const TestReportScreen = () => {
 	);
 };
 
-
 export const buildContainerWidth = css`
 	max-width: 1300rem;
 	width: calc(100vw - 296rem) !important;
@@ -375,18 +369,16 @@ export const buildContainerWidth = css`
 	margin: 0 auto;
 `;
 
-
 const Tab = css``;
 
 const TabItem = css`
 	position: relative;
 	height: 26rem;
-    margin-right: 12rem;
+	margin-right: 12rem;
 	padding: 0 12rem;
 
-
-	color: #A7A7A7;
-	letter-spacing: .4px;
+	color: #a7a7a7;
+	letter-spacing: 0.4px;
 	border-radius: 8rem;
 	:hover {
 		background: rgba(255, 255, 255, 0.12);

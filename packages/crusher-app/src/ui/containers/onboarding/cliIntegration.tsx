@@ -9,6 +9,7 @@ import { Button, Input, Text } from "dyson/src/components/atoms";
 import { Card } from "@components/common/card";
 import { USER_META_KEYS } from "@constants/USER";
 import { getTestListAPI } from "@constants/api";
+import { useProjectDetails } from "@hooks/common";
 import { usePageTitle } from "@hooks/seo";
 import { currentProject } from "@store/atoms/global/project";
 import { onboardingStepAtom, OnboardingStepEnum } from "@store/atoms/pages/onboarding";
@@ -19,7 +20,6 @@ import { RequestMethod } from "@types/RequestOptions";
 import { backendRequest } from "@utils/common/backendRequest";
 import { sendSnackBarEvent } from "@utils/common/notify";
 import { resolvePathToBackendURI } from "@utils/common/url";
-import { useProjectDetails } from "@hooks/common";
 
 const CopyCommandInput = ({ command }: { command: string }) => {
 	const inputRef = React.useRef<HTMLInputElement>(null);
@@ -68,7 +68,7 @@ const CopyCommandInput = ({ command }: { command: string }) => {
 
 const CliRepoIntegration = () => {
 	const [, setOnboardingStep] = useAtom(onboardingStepAtom);
-	const { currentProject: project } = useProjectDetails()
+	const { currentProject: project } = useProjectDetails();
 	const [commands, setCommnads] = React.useState(["", ""]);
 	const [, updateOnboarding] = useAtom(updateMeta);
 

@@ -154,14 +154,7 @@ export default function Signup_email({ loginWithEmailHandler }) {
 							placeholder={"Enter name"}
 							onBlur={verifyInfo.bind(this, false)}
 						/>
-						<FormInput
-							onReturn={signupUser.bind(this)}
-							data={email}
-							onChange={emailChange}
-
-							placeholder={"Enter email"}
-							onBlur={verifyInfo.bind(this, false)}
-						/>
+						<FormInput onReturn={signupUser.bind(this)} data={email} onChange={emailChange} placeholder={"Enter email"} onBlur={verifyInfo.bind(this, false)} />
 						<FormInput
 							type={"password"}
 							data={password}

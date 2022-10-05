@@ -73,22 +73,22 @@ const projectLinks = [
 	{
 		label: "General",
 		link: "/settings/basic",
-		isProjectLink: true
+		isProjectLink: true,
 	},
 	{
 		label: "Environments",
 		link: "/settings/environments",
-		isProjectLink: true
+		isProjectLink: true,
 	},
 	{
 		label: "Monitoring",
 		link: "/settings/monitoring",
-		isProjectLink: true
+		isProjectLink: true,
 	},
 	{
 		label: "Integrations",
 		link: "/settings/integrations",
-		isProjectLink: true
+		isProjectLink: true,
 	},
 ];
 
@@ -171,7 +171,6 @@ function LeftSection() {
 				</div>
 				<Conditional showIf={isProject}>
 					<LinksSection label={"Project settings"} links={projectLinks} />
-
 				</Conditional>
 
 				<LinksSection label={"Org settings"} links={orgLinks} />

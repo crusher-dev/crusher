@@ -15,6 +15,7 @@ import { Conditional } from "dyson/src/components/layouts";
 import { SelectBox } from "dyson/src/components/molecules/Select/Select";
 
 import { createProjectEnvironment, deleteProjectEnv, getProjectEnvironments, updateProjectEnv } from "@constants/api";
+import { useProjectDetails } from "@hooks/common";
 import { AddSVG, LoadingSVG } from "@svg/dashboard";
 import { ChevronRight } from "@svg/settings";
 import { ChevronDown } from "@svg/testReport";
@@ -26,7 +27,6 @@ import { converServerToClientSideState, convertEnvToServerSide } from "@utils/co
 
 import { currentProject } from "../../../../store/atoms/global/project";
 import { RequestMethod } from "../../../../types/RequestOptions";
-import { useProjectDetails } from "@hooks/common";
 
 function VariableSection({ envId }) {
 	const [environmentsInStore, setEnvironment] = useAtom(environmentsAtom);
@@ -126,8 +126,7 @@ const getBrowserValues = () => {
 };
 
 function EnvironmentForm({ id }) {
-
-	const { currentProject: project } = useProjectDetails()
+	const { currentProject: project } = useProjectDetails();
 	const [environmentsInStore, setEnvironment] = useAtom(environmentsAtom);
 	const [savingEnv, setSavingEnv] = useState(false);
 	const [deleting, setDeleting] = useState(false);
@@ -321,8 +320,7 @@ type TEnvironment = {
 const environmentsAtom = atomWithImmer<TEnvironment[]>([]);
 
 export const Environment = () => {
-
-	const { currentProject } = useProjectDetails()
+	const { currentProject } = useProjectDetails();
 
 	const { data: environments } = useSWR(getProjectEnvironments(currentProject.id));
 	const [environmentsInStore, setEnvironment] = useAtom(environmentsAtom);
@@ -360,12 +358,7 @@ export const Environment = () => {
 						</TextBlock>
 					</div>
 					<div>
-						<Button
-							onClick={addEmptyEnvToStore.bind(this)}
-
-						>
-							Add environment
-						</Button>
+						<Button onClick={addEmptyEnvToStore.bind(this)}>Add environment</Button>
 					</div>
 				</div>
 

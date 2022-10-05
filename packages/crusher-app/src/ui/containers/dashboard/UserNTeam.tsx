@@ -21,7 +21,7 @@ const userDropdownItems = [
 		rightLabel: "",
 		link: "/settings/basic",
 		target: "",
-		isProjectLink: true
+		isProjectLink: true,
 	},
 	{
 		leftLabel: "Org settings",
@@ -70,22 +70,22 @@ function DropdownContent() {
 		<div className={"flex flex-col justify-between h-full"}>
 			<div>
 				{userDropdownItems.map(({ leftLabel, rightLabel, link, target, isProjectLink }) => {
-					const project_id = query.project_id
+					const project_id = query.project_id;
 
 					const isProjectIdPresent = !!project_id;
 
 					if (!isProjectIdPresent && isProjectLink) {
-						return null
+						return null;
 					}
 
-					const finalLink = isProjectLink ? `/${project_id}${link}` : link
+					const finalLink = isProjectLink ? `/${project_id}${link}` : link;
 					return (
 						<Link href={finalLink}>
 							<a href={finalLink} target={target} className={"close-on-click"}>
 								<MenuItem label={leftLabel} rightLabel={rightLabel} />
 							</a>
 						</Link>
-					)
+					);
 				})}
 			</div>
 

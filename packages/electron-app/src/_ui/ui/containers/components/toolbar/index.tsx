@@ -96,16 +96,16 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 		}
 		if (recorderState.type === TRecorderState.RECORDING_ACTIONS) {
 			const proxyWarning = handleProxyWarning();
-			let shouldSkipWarning: any = false;
+			let shouldNotSetupProxy: any = false;
 			// Modify project config here <----
 			const projectConfig = getCurrentProjectConfig();
 			if(projectConfig && proxyWarning?.startUrl) {
-				const hasProxySetup = projectConfig.proxy && Object.keys(projectConfig.proxy).find((item: any) => item.url === proxyWarning.startUrl.origin);
+				const hasProxySetup = projectConfig.proxy && projectConfig.proxy.find((item: any) => item.url === proxyWarning.startUrl.origin);
 				if(hasProxySetup) {
-					shouldSkipWarning = true;
+					shouldNotSetupProxy = true;
 				}
 			}
-			if(proxyWarning?.startUrl && !shouldSkipWarning) {
+			if(proxyWarning.shouldShow && proxyWarning?.startUrl && !shouldNotSetupProxy) {
 				projectConfig["proxy"] = projectConfig["proxy"] ? [
 					...projectConfig["proxy"],
 					{
@@ -131,7 +131,7 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 							id: res.draftJobId,
 						};
 					}
-					if (proxyWarning.shouldShow && !shouldSkipWarning && getCurrentProjectConfigPath() && res) {
+					if (proxyWarning.shouldShow && !shouldNotSetupProxy && getCurrentProjectConfigPath() && res) {
 						// sendSnackBarEvent({type: "proxy-config-modified", message: "Proxy config modified", meta: {}});
 						window["showProxyWarning"] = { testId: res.id, startUrl: proxyWarning.startUrl };
 					}

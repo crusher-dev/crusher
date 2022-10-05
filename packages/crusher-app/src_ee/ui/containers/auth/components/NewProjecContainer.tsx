@@ -27,8 +27,6 @@ export default function NewProjectContainer({ children }) {
 
 const containerCSS = css(`
 height: 100vh;
-// background: linear-gradient(180deg, #0A0A0A 0%, #0A0A0A 100%);
-// background: linear-gradient(180deg,#0c0c0c 0%,#0A0A0A 100%);
 background: #080808;
 width: 100vw;
 `);

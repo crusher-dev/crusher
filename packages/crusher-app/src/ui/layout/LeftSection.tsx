@@ -127,11 +127,11 @@ export const leftMenu = [
 		label: "projects",
 		link: "/projects",
 	},
-	{
-		icon: <IntegrationSVG />,
-		label: "integrations",
-		link: "/add_project",
-	},
+	// {
+	// 	icon: <IntegrationSVG />,
+	// 	label: "integrations",
+	// 	link: "/add_project",
+	// },
 ];
 
 export const projectMenu = [

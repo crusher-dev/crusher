@@ -33,6 +33,8 @@ import { routingControllersToSpec } from "routing-controllers-openapi";
 import { getMetadataArgsStorage } from "routing-controllers";
 import * as swaggerUi from "swagger-ui-express";
 import { validationMetadatasToSchemas } from "class-validator-jsonschema";
+import { DiscordWebhookManager } from "@modules/webhook/sources/discord";
+import { TWebHookMessage, WebhookManager } from "@modules/webhook";
 
 const chalk = require("chalk");
 
@@ -128,3 +130,23 @@ const port = process.env.PORT || 8000;
 httpServer.listen(port);
 
 console.info("App", chalk.hex("#ec2e6a").bold(`Starting at ${port}`));
+
+// setInterval(() => {
+
+// 	const message: TWebHookMessage = {
+// 		eventType: "buildTrigger",
+// 		payload: {
+// 			reportStatus: "Passed",
+// 			buildId: 3232,
+// 			host: "https://google.com	",
+// 			triggeredBy: "utkarsh",
+// 			totalTests: 20,
+// 			buildReportUrl: "https://crusher.dev",
+// 			projectName: "Crusher"
+// 		}
+// 	}
+// 	WebhookManager.send(
+// 		"https://discord.com/api/webhooks/1027065849003122688/nFGkqj8oatEM0R700Zp8ISmTvlYWL0mwdy5AFVpbP0_ve1ZP2Ts4FfvpprpSelEA8MNT",
+// 		message
+// 	)
+// }, 5000)

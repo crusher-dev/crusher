@@ -49,5 +49,5 @@ module.exports = {
 		// your currentProject has ESLint errors.
 		ignoreDuringBuilds: true,
 	},
-	productionBrowserSourceMaps: false,
+	productionBrowserSourceMaps: true,
 };

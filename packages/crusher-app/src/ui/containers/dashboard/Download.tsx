@@ -120,7 +120,7 @@ function CreateTest() {
 							<div className="wexdsf-frame420">
 								<span className="run-headline06 flex items-center " css={commandBox}>
 									<span className="next-sign mr-8">&gt;</span>
-									<TextBlock color="#acec6d" weight={"700"} fontSize={17.5} className="command">
+									<TextBlock color="#acec6d" weight={"600"} fontSize={17} className="command">
 										npx crusher-cli test:create
 									</TextBlock>
 								</span>

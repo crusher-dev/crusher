@@ -2,7 +2,7 @@ import { css } from "@emotion/react";
 import { useRouter } from "next/router";
 import React, { useCallback, useState } from "react";
 
-import { Button, TextBlock } from "dyson/src/components/atoms";
+import { Button, Text, TextBlock } from "dyson/src/components/atoms";
 import Radio from "dyson/src/components/atoms/radio/radio";
 
 import { CloseSVG } from "@svg/dashboard";
@@ -47,8 +47,8 @@ export const ReviewButtonContent = ({ closeModal }) => {
 
 	return (
 		<div>
-			<div css={[topReview, bottomSection]} className={"font-700 py-12 px-16 leading-none flex justify-between"}>
-				<div>Submit feedback</div>
+			<div css={[topReview, bottomSection]} className={"font-700 py-12 px-16 leading-none flex justify-between pt-14"}>
+				<Text fontSize={14} color="#E7E7E7" weight={700} >Share feedback</Text>
 				<CloseSVG height={"12"} onClick={closeModal} />
 			</div>
 			<div css={middleSection} className={"px-16 pt-16 pb-4"}>
@@ -81,12 +81,9 @@ export const ReviewButtonContent = ({ closeModal }) => {
 					})}
 				</div>
 			</div>
-			<div className={"px-16 py-12"} css={bottomSection}>
+			<div className={"px-16 py-12 flex justify-end"} >
 				<Button
 					size={"small"}
-					css={css`
-						width: 120rem;
-					`}
 					onClick={handleSubmit}
 				>
 					Submit

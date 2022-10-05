@@ -1,7 +1,7 @@
 import { css } from "@emotion/react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect } from "react";
 
 import { atom, useAtom } from "jotai";
 
@@ -11,9 +11,8 @@ import { Conditional } from "dyson/src/components/layouts";
 
 import { PROJECT_META_KEYS, USER_META_KEYS } from "@constants/USER";
 import { CorrentSVG } from "@svg/builds";
-import { CommentIcon, PlayIcon, ReloadIcon } from "@svg/dashboard";
+import { PlayIcon, ReloadIcon } from "@svg/dashboard";
 import { GithubSquare } from "@svg/social";
-import { PassedSVG } from "@svg/testReport";
 import { backendRequest } from "@utils/common/backendRequest";
 import { sendSnackBarEvent } from "@utils/common/notify";
 
@@ -179,20 +178,6 @@ function Reload() {
 	);
 }
 
-function Review() {
-
-
-	return (
-		<React.Fragment>
-			<Button size="medium" title="leave a comment/review" bgColor={"tertiary"} onClick={runProjectTest} css={creatTestCSS}>
-				<div className={"flex items-center"}>
-					<CommentIcon className={"mr-6"} />
-					<span className="mt-1">review</span>
-				</div>
-			</Button>
-		</React.Fragment>
-	);
-}
 
 function RunLocally() {
 	// const router = useRouter();
@@ -282,15 +267,15 @@ const section = [
 		icon: null,
 		key: "insights",
 	},
-	{
-		name: "Insights & Alert",
-		icon: null,
-		key: "insights",
-	},
-	{
-		name: "log",
-		icon: null,
-	},
+	// {
+	// 	name: "Insights & Alert",
+	// 	icon: null,
+	// 	key: "insights",
+	// },
+	// {
+	// 	name: "log",
+	// 	icon: null,
+	// },
 ];
 
 const selectedTabAtom = atom(0);
@@ -320,7 +305,7 @@ const previewImgCss = css`
 function TabBar() {
 	const [selectedTabIndex, setSelectedTabIndex] = useAtom(selectedTabAtom);
 	return (
-		<div css={Tab} className={"flex mt-88	 "}>
+		<div css={Tab} className={"flex mt-84"}>
 			{section.map(({ name, icon, key }, i) => (
 				<div onClick={setSelectedTabIndex.bind(this, i)} key={key}>
 					<div css={[TabItem, selectedTabIndex === i && selected]} className={`flex items-center justify-center text-14`}>
@@ -366,37 +351,12 @@ export const TestReportScreen = () => {
 		>
 			<div css={buildContainerWidth}>
 				<ReportInfoTOp />
-
-				<Conditional showIf={selectedTabIndex === 1}>
-					<div className={"flex leading-none mt-56 mb-52  items-center invisible"}>
-						<div
-							className={"text-13"}
-							css={css`
-								width: 100px;
-								line-height: 19rem;
-							`}
-						>
-							Last build
-						</div>
-						<div css={timeLine} className={"ml-40 relative"}>
-							<div className={"absolute flex flex-col items-center"} css={currentSelected}>
-								<div className={"mb-8 text-12"}>12Jun</div>
-								<div>
-									<PassedSVG />
-								</div>
-							</div>
-
-							<div className={"absolute flex flex-col items-center"} css={timelineItem}>
-								<div>
-									<PassedSVG />
-								</div>
-							</div>
-						</div>
-					</div>
-				</Conditional>
 				<TabBar />
 			</div>
 			<Conditional showIf={selectedTabIndex === 0}>
+				<ReportSection />
+			</Conditional>
+			<Conditional showIf={selectedTabIndex === 1}>
 				<ReportSection />
 			</Conditional>
 		</div>
@@ -409,33 +369,20 @@ export const buildContainerWidth = css`
 	// width: calc(100vw - 352rem) !important;
 	margin: 0 auto;
 `;
-const timeLine = css`
-	height: 2px;
-	width: 100%;
-	background: #1e242c;
-`;
 
-const currentSelected = css`
-	position: absolute;
-	transform: translateY(-72%);
-`;
-
-const timelineItem = css`
-	position: absolute;
-	transform: translateY(-50%);
-	left: 50%;
-`;
 
 const Tab = css``;
 
 const TabItem = css`
 	position: relative;
-	height: 28rem;
-	padding: 0 16rem;
-	padding-top: 1rem !important;
+	height: 26rem;
+    margin-right: 12rem;
+	padding: 0 12rem;
 
-	margin-right: 4rem;
-	border-radius: 6rem;
+
+	color: #A7A7A7;
+	letter-spacing: .4px;
+	border-radius: 8rem;
 	:hover {
 		background: rgba(255, 255, 255, 0.12);
 	}

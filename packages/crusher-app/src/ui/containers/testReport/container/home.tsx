@@ -5,14 +5,14 @@ import React, { useEffect, useState } from "react";
 import { useTable, useBlockLayout } from "react-table";
 
 
-function HomeSection() {
+export function HomeSection() {
 
 	return (
 		<div
 			className={"mt-20"}
 			css={container}
 		>
-
+			sdf
 		</div>
 	);
 }
@@ -36,4 +36,4 @@ const container = css`
 
 
 
-export default Home Section;
+export default HomeSection;

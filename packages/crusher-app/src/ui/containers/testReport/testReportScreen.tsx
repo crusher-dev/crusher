@@ -22,6 +22,7 @@ import { useBuildReport } from "../../../store/serverState/buildReports";
 import { RequestMethod } from "../../../types/RequestOptions";
 import { ConfigChange } from "./components/common/config";
 import { ReviewSection } from "./components/review/reviewComponent";
+import { HomeSection } from "./container/home";
 
 const ReportSection = dynamic(() => import("./container/testList"));
 function BuildInfoTop() {
@@ -353,7 +354,7 @@ export const TestReportScreen = () => {
 				</div>
 			</div>
 			<Conditional showIf={selectedTabIndex === 0}>
-				<ReportSection />
+				<HomeSection />
 			</Conditional>
 			<Conditional showIf={selectedTabIndex === 1}>
 				<ReportSection />

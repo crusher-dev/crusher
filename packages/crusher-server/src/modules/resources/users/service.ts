@@ -17,6 +17,7 @@ import { RedisManager } from "@modules/redis";
 import { IUserAndSystemInfoResponse, TSystemInfo } from "@crusher-shared/types/response/IUserAndSystemInfoResponse";
 import { v4 as uuidv4 } from "uuid";
 import { EditionTypeEnum, HostingTypeEnum } from "@crusher-shared/types/common/general";
+import { GithubIntegrationService } from "../integrations/githubIntegration.service";
 @Service()
 class UsersService {
 	@Inject()
@@ -35,6 +36,8 @@ class UsersService {
 	private teamsService: TeamsService;
 	@Inject()
 	private redisManager: RedisManager;
+	@Inject()
+	private githubIntegrationService: GithubIntegrationService;
 	// @TODO: Shift this to a new module
 
 	@CamelizeResponse()
@@ -138,6 +141,15 @@ class UsersService {
 
 		const teamInfo = userInfo ? await this.teamsService.getTeam(userInfo.teamId) : null;
 		const teamProjects = userInfo && teamInfo ? await this.projectsService.getProjects(teamInfo.id) : null;
+		const projectsGitInfo = await this.githubIntegrationService.getIntegrationsForProjectList((teamProjects || []).map((project)=>project.id));
+		const projectsGitInfoMap = projectsGitInfo.reduce((acc, curr) => {
+			acc[curr.projectId] = curr;
+			return acc;
+		}, {} as any);
+
+		teamProjects.forEach((project) => {
+			project.gitIntegration = projectsGitInfoMap[project.id];
+		});
 
 		const getUserData = (userInfo: KeysToCamelCase<IUserTable>) => {
 			return {

@@ -34,7 +34,7 @@ class RunnerIntegrationsService {
     ) {
         const userInfo = await this.usersService.getUserInfo(buildRecord.userId);
         const projectRecord = await this.projectsService.getProject(buildRecord.projectId);
-    
+        const webhookUrl  = await this.projectsService.getProjectWebhook(buildRecord.projectId);
         // Github Integration
         await this.buildService.markGithubCheckFlowFinished(reportStatus, buildRecord.id);
         // Slack Integration
@@ -44,15 +44,17 @@ class RunnerIntegrationsService {
             reportStatus === BuildReportStatusEnum.PASSED ? "normal" : "alert",
         );
 
-        await WebhookManager.send("http://localhost.com/", {
-            reportStatus: reportStatus,
-            buildId: buildRecord.id,
-            host: buildRecord.host,
-            triggeredBy: userInfo.name,
-            totalTests: buildReportRecord.totalTestCount,
-            buildReportUrl: resolvePathToFrontendURI(`/app/build/${buildRecord.id}`),
-            projectName: projectRecord.name
-        });
+        if(webhookUrl) {
+            await WebhookManager.send(webhookUrl, {
+                reportStatus: reportStatus,
+                buildId: buildRecord.id,
+                host: buildRecord.host,
+                triggeredBy: userInfo.name,
+                totalTests: buildReportRecord.totalTestCount,
+                buildReportUrl: resolvePathToFrontendURI(`/app/build/${buildRecord.id}`),
+                projectName: projectRecord.name
+            });
+        }
         
         const buildRecordMeta: { vercel: { checkId: string; deploymentId: string; teamId: string;}, github: { repoName: string; commitId: string;}} = buildRecord.meta ? JSON.parse(buildRecord.meta) : null;
         if(buildRecordMeta && buildRecordMeta.vercel && buildRecordMeta.github) {

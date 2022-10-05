@@ -2,12 +2,24 @@ import { KeysToCamelCase } from "@modules/common/typescript/interface";
 import { DBManager } from "@modules/db";
 import { CamelizeResponse } from "@modules/decorators/camelizeResponse";
 import { Inject, Service } from "typedi";
+import { IProjectTable } from "../projects/interface";
 import { IGitIntegrations } from "./interface";
 
 @Service()
 export class GithubIntegrationService {
 	@Inject()
 	private dbManager: DBManager;
+
+	@CamelizeResponse()
+	async getIntegrationsForProjectList(projectIds: Array<number>) : Promise<Array<KeysToCamelCase<IGitIntegrations>>>  {
+		if(!projectIds?.length) return[];
+		let query = "SELECT * FROM public.git_integrations WHERE project_id IN ";
+		if(projectIds) {
+			query += "(" + new Array(projectIds.length).fill("?").join(",") + ")";
+		}
+		const integrations = await this.dbManager.fetchAllRows(query, projectIds);
+		return integrations;
+	}
 
 	@CamelizeResponse()
 	async linkRepo(repoId: number, repoName: string, installationId: string, repoLink: string, projectId: number, userId: number) {

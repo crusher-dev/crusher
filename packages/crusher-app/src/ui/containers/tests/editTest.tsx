@@ -19,8 +19,8 @@ import { backendRequest } from "@utils/common/backendRequest";
 import { sendSnackBarEvent } from "@utils/common/notify";
 import { sentenceCase } from "@utils/common/textUtils";
 
-import { currentProject } from "../../../store/atoms/global/project";
 import { RequestMethod } from "../../../types/RequestOptions";
+import { useProjectDetails } from "@hooks/common";
 
 const changeTestData = (testId: number, name: string, selectedFolder: string | null) => {
 	return backendRequest(changeTestInfoAPI(testId), {

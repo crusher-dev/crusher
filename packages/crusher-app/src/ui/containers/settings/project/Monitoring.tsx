@@ -23,7 +23,6 @@ import { backendRequest } from "@utils/common/backendRequest";
 import { sendSnackBarEvent } from "@utils/common/notify";
 import { converServerToClientSideStateMonitoring, convertToServerSideMonitoring } from "@utils/core/settings/environmentSettingUtils";
 
-import { currentProject } from "../../../../store/atoms/global/project";
 import { RequestMethod } from "../../../../types/RequestOptions";
 
 const selectBoxCSS = css`

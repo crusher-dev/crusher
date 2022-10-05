@@ -8,7 +8,7 @@ export const resolvePathToBackendURI = (endpoint: string) => {
 	const isGitpodDevEnv = typeof window !== "undefined" && window.location.origin.includes("gitpod");
 
 	if (!isCrusherBackend && isGitpodDevEnv) {
-		const gitPodBackendURL = `${window.location.origin}`.replaceAll("3000", "8000");
+		const gitPodBackendURL = String(window.location.origin).replaceAll("3000", "8000");
 		return getPathWithHost(gitPodBackendURL, endpoint);
 	}
 

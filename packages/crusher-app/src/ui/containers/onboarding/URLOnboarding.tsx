@@ -11,7 +11,6 @@ import { addHttpToURLIfNotThere, checkValidURL } from "@crusher-shared/utils/url
 import { useProjectDetails } from "@hooks/common";
 import { usePageTitle } from "@hooks/seo";
 import { appStateAtom } from "@store/atoms/global/appState";
-import { currentProject } from "@store/atoms/global/project";
 import { onboardingStepAtom, OnboardingStepEnum } from "@store/atoms/pages/onboarding";
 import { LoadingSVG } from "@svg/dashboard";
 import { RequestMethod } from "@types/RequestOptions";

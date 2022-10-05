@@ -25,7 +25,6 @@ import { sendSnackBarEvent } from "@utils/common/notify";
 import { sentenceCase } from "@utils/common/textUtils";
 import { converServerToClientSideState, convertEnvToServerSide } from "@utils/core/settings/environmentSettingUtils";
 
-import { currentProject } from "../../../../store/atoms/global/project";
 import { RequestMethod } from "../../../../types/RequestOptions";
 
 function VariableSection({ envId }) {

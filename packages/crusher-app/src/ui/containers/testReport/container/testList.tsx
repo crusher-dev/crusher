@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useTable, useBlockLayout } from "react-table";
 
-import { atom, useAtom } from "jotai";
+import {useAtom} from "jotai";
 import { atomWithImmer } from "jotai/immer";
 
 import { Button } from "dyson/src/components/atoms";
@@ -573,14 +573,12 @@ function PlayVideo({ videoUrl }) {
 }
 
 function getAllKeys() {
-	const keys: any = {};
-	{
-		for (const key of Object.keys(item)) {
-			keys[key] = true;
-		}
-	}
+    const keys: any = {};
+    for (const key of Object.keys(item)) {
+        keys[key] = true;
+    }
 
-	return Object.keys(sortObjectByPropertyKeyAsc(keys));
+    return Object.keys(sortObjectByPropertyKeyAsc(keys));
 }
 
 function sortObjectByPropertyKeyAsc(obj: any) {

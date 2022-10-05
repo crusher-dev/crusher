@@ -16,7 +16,6 @@ import { addGithubRepo, getGitIntegrations } from "@constants/api";
 import { useProjectDetails } from "@hooks/common";
 import { usePageTitle } from "@hooks/seo";
 import { githubTokenAtom } from "@store/atoms/global/githubToken";
-import { currentProject } from "@store/atoms/global/project";
 import { onboardingStepAtom, OnboardingStepEnum } from "@store/atoms/pages/onboarding";
 import { updateMeta } from "@store/mutators/metaData";
 import { AddSVG } from "@svg/dashboard";

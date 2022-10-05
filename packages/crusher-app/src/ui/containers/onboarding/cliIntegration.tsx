@@ -11,7 +11,6 @@ import { USER_META_KEYS } from "@constants/USER";
 import { getTestListAPI } from "@constants/api";
 import { useProjectDetails } from "@hooks/common";
 import { usePageTitle } from "@hooks/seo";
-import { currentProject } from "@store/atoms/global/project";
 import { onboardingStepAtom, OnboardingStepEnum } from "@store/atoms/pages/onboarding";
 import { updateMeta } from "@store/mutators/metaData";
 import { LoadingSVG } from "@svg/dashboard";

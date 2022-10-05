@@ -1,5 +1,4 @@
 import { css } from "@emotion/react";
-import { useRouter } from "next/router";
 
 import { useAtom } from "jotai";
 
@@ -7,11 +6,10 @@ import { LinkBlock } from "dyson/src/components/atoms/Link/Link";
 import { Dropdown } from "dyson/src/components/molecules/Dropdown";
 
 import { MenuItem } from "@components/molecules/MenuItem";
-import { useBuildReport } from "@store/serverState/buildReports";
 import { ChevronDown } from "@svg/testReport";
 import { getAllConfigurationForGivenTest } from "@utils/core/buildReportUtils";
 
-import { selectedTestAtom, testCardConfigAtom } from "../../atoms";
+import {testCardConfigAtom} from "../../atoms";
 import { useBasicTestData } from "../../hooks";
 
 function Browsers({ browsers, setConfig }) {

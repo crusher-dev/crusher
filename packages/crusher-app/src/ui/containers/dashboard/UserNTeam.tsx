@@ -13,7 +13,7 @@ import { resolvePathToBackendURI } from "@utils/common/url";
 
 import { teamAtom } from "../../../store/atoms/global/team";
 import { userAtom } from "../../../store/atoms/global/user";
-import { Dolphin, TopDown } from "./icont";
+import {Dolphin} from "./icont";
 
 const userDropdownItems = [
 	{
@@ -67,10 +67,12 @@ function DropdownContent() {
 	const router = useRouter();
 	const { query } = router;
 	return (
-		<div className={"flex flex-col justify-between h-full"}>
-			<div>
+        (<div className={"flex flex-col justify-between h-full"}>
+            <div>
 				{userDropdownItems.map(({ leftLabel, rightLabel, link, target, isProjectLink }) => {
-					const project_id = query.project_id;
+					const {
+                        project_id
+                    } = query;
 
 					const isProjectIdPresent = !!project_id;
 
@@ -88,8 +90,7 @@ function DropdownContent() {
 					);
 				})}
 			</div>
-
-			<div className={"mt-66	"}>
+            <div className={"mt-66	"}>
 				<hr
 					css={css`
 						color: #1a1d26;
@@ -109,8 +110,8 @@ function DropdownContent() {
 					rightLabel={""}
 				/>
 			</div>
-		</div>
-	);
+        </div>)
+    );
 }
 
 export function UserNTeam() {

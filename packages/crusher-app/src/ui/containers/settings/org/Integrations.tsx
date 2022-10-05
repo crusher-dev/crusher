@@ -16,7 +16,6 @@ import { SelectBox } from "dyson/src/components/molecules/Select/Select";
 
 import { addGithubRepo, getCIIntegrationCommnad, getGitIntegrations, getIntegrations, saveWebhookUrlAPI, unlinkGithubRepo } from "@constants/api";
 import { useProjectDetails } from "@hooks/common";
-import { currentProject } from "@store/atoms/global/project";
 import { AddSVG } from "@svg/dashboard";
 import { CopyIconSVG } from "@svg/onboarding";
 import { GithubSVG } from "@svg/social";
@@ -759,13 +758,13 @@ function WebHookIntegration() {
 	const handleSaveWebhook = () => {
 		setIsEditable(false);
 		updateWebhookUrl(webhookUrl, project.id)
-			.then((res) => {
+			.then(() => {
 				sendSnackBarEvent({
 					type: "success",
 					message: "Webhook saved successfully",
 				});
 			})
-			.catch((ex) => {
+			.catch(() => {
 				sendSnackBarEvent({
 					type: "error",
 					message: "Failed to save webhook",

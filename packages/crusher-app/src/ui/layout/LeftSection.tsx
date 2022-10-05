@@ -330,7 +330,7 @@ export const ResourceBar = () => {
 			<Tooltip content={"contact support@crusher.dev for plan upgrade"} placement="top-end" type="hover">
 				<div>
 					<div css={badgeStyle} className="flex">
-						<div className="test-count pl-2">2/3</div>
+						<div className="test-count pl-2">3</div>
 						<div className="hours-count">5 hrs</div>
 					</div>
 					<div className="flex justify-center mt-8 item-center px-6">

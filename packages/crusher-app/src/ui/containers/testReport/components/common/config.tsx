@@ -61,7 +61,6 @@ export const ConfigChange = () => {
     };
 
     const browserInLowerCase = testCardConfig?.browser.toLowerCase();
-    // return <div>dsf</div>
     return (
         <Dropdown component={<Browsers setConfig={setConfig} browsers={allConfiguration.browser} />} dropdownCSS={dropDownSelectionCSS}>
             <LinkBlock css={browserStyle}>
@@ -79,4 +78,5 @@ export const ConfigChange = () => {
 const browserStyle = css`
     padding: 6px 8px;
     border-radius: 6px;
+    margin-right: -8pxl
 `

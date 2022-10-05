@@ -132,11 +132,10 @@ httpServer.listen(port);
 console.info("App", chalk.hex("#ec2e6a").bold(`Starting at ${port}`));
 
 // setInterval(() => {
-
 // 	const message: TWebHookMessage = {
 // 		eventType: "buildTrigger",
 // 		payload: {
-// 			reportStatus: "Passed",
+// 			reportStatus: "failed",
 // 			buildId: 3232,
 // 			host: "https://google.com	",
 // 			triggeredBy: "utkarsh",
@@ -149,4 +148,4 @@ console.info("App", chalk.hex("#ec2e6a").bold(`Starting at ${port}`));
 // 		"https://discord.com/api/webhooks/1027065849003122688/nFGkqj8oatEM0R700Zp8ISmTvlYWL0mwdy5AFVpbP0_ve1ZP2Ts4FfvpprpSelEA8MNT",
 // 		message
 // 	)
-// }, 5000)
+// }, 20000)

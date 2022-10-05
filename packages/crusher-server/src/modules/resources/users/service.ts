@@ -141,7 +141,7 @@ class UsersService {
 
 		const teamInfo = userInfo ? await this.teamsService.getTeam(userInfo.teamId) : null;
 		const teamProjects = userInfo && teamInfo ? await this.projectsService.getProjects(teamInfo.id) : null;
-		const projectsGitInfo = await this.githubIntegrationService.getIntegrationsForProjectList(teamProjects.map((project)=>project.id));
+		const projectsGitInfo = await this.githubIntegrationService.getIntegrationsForProjectList((teamProjects || []).map((project)=>project.id));
 		const projectsGitInfoMap = projectsGitInfo.reduce((acc, curr) => {
 			acc[curr.projectId] = curr;
 			return acc;
@@ -150,7 +150,7 @@ class UsersService {
 		teamProjects.forEach((project) => {
 			project.gitIntegration = projectsGitInfoMap[project.id];
 		});
-		
+
 		const getUserData = (userInfo: KeysToCamelCase<IUserTable>) => {
 			return {
 				userId: userInfo.id,

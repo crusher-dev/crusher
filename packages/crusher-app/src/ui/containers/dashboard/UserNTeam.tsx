@@ -119,14 +119,14 @@ export function UserNTeam() {
 
 	return (
 		<div className={"flex justify-between leading-none relative items-center px-12 pl-8"} css={userCard}>
-			<div className={"flex"} css={orgName}>
+			<div className={"flex"} css={orgName} title={team.name}>
 				<div css={nameInitial} className={"flex items-center justify-center uppercase font-700 mr-10"}>
 					<Dolphin height={20} width={20} css={icon} />
 				</div>
 				<div className="flex items-center pb-2">
 					<div className={"font-cera mb-1 font-600 flex items-center"} css={name}>
 						<span className="mr-6">{team.name.substr(0, 8)}</span>
-						<TopDown className="mb-1" />
+						{/* <TopDown className="mb-1" /> */}
 					</div>
 				</div>
 			</div>
@@ -180,13 +180,13 @@ const menuSelected = css`
 const orgName = css`
 	padding: 8rem 12rem 6rem 8rem;
 	border-radius: 6px;
-	:hover {
-		background: rgba(255, 255, 255, 0.07);
-		border-radius: 8px;
-		.expand {
-			fill: #fff;
-		}
-	}
+	// :hover {
+	// 	background: rgba(255, 255, 255, 0.07);
+	// 	border-radius: 8px;
+	// 	.expand {
+	// 		fill: #fff;
+	// 	}
+	// }
 `;
 const userCard = css`
 	border-bottom: 0.5px solid #1b1b1b;

@@ -327,7 +327,7 @@ const badgeStyle = css`
 export const ResourceBar = () => {
 	return (
 		<React.Fragment>
-			<Tooltip content={"You have 2 more tests and 5 hr limit\ncontact support@crusher.dev"} placement="top-end" type="hover">
+			<Tooltip content={"contact support@crusher.dev for plan upgrade"} placement="top-end" type="hover">
 				<div>
 					<div css={badgeStyle} className="flex">
 						<div className="test-count pl-2">2/3</div>

@@ -207,7 +207,7 @@ function ProjectCard({ project }) {
 
 	const selectProject = () => {
 		const getAlias = getIdentifier(name, id);
-		router.push(`/${getAlias}/dashboard`);
+		router.push(`/${getAlias}/tests`);
 		setAppStateItem({ key: "selectedProjectId", value: id });
 	};
 	return (

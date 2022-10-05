@@ -125,7 +125,7 @@ export function UserNTeam() {
 				</div>
 				<div className="flex items-center pb-2">
 					<div className={"font-cera mb-1 font-600 flex items-center"} css={name}>
-						<span className="mr-6">{team.name.substr(0, 8)}</span>
+						<span className="mr-6">{team.name.substr(0, 20)}</span>
 						{/* <TopDown className="mb-1" /> */}
 					</div>
 				</div>

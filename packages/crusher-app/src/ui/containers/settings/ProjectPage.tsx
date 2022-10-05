@@ -12,8 +12,9 @@ import { backendRequest } from "@utils/common/backendRequest";
 import { sendSnackBarEvent } from "@utils/common/notify";
 
 import { appStateAtom } from "../../../store/atoms/global/appState";
-import { currentProject, projectsAtom, updateCurrentProjectInfoAtom } from "../../../store/atoms/global/project";
+import { projectsAtom, updateCurrentProjectInfoAtom } from "../../../store/atoms/global/project";
 import { RequestMethod } from "../../../types/RequestOptions";
+import { useProjectDetails } from "@hooks/common";
 
 const deleteProject = (projectId) => {
 	return backendRequest(`/projects/${projectId}/actions/delete`, {
@@ -78,12 +79,12 @@ export const ProjectSettings = () => {
 				<Heading type={1} fontSize={"20"} className={"mb-8"}>
 					Overview
 				</Heading>
-				<TextBlock fontSize={13} color={"#c1c1c1"}>
+				<TextBlock fontSize={13} color={"#787878"}>
 					Basic configuration for your test
 				</TextBlock>
 				<hr css={basicHR} className={"mt-36"} />
 
-				<Heading type={2} fontSize={"16"} className={"mb-24 mt-38"}>
+				<Heading type={2} fontSize={"15"} className={"mb-16 mt-38"}>
 					Project name
 				</Heading>
 				<div>
@@ -100,7 +101,7 @@ export const ProjectSettings = () => {
 					/>
 				</div>
 
-				<Heading type={2} fontSize={"16"} className={"mb-24 mt-38"}>
+				<Heading type={2} fontSize={"15"} className={"mb-16 mt-38"}>
 					Visual Baseline
 				</Heading>
 				<div>
@@ -144,21 +145,25 @@ export const ProjectSettings = () => {
 					</Button>
 				</div>
 				<hr css={basicHR} className={"mt-54"} />
-				<Heading type={2} fontSize={"16"} className={"mb-08 mt-56"}>
-					Delete this project
-				</Heading>
-				<TextBlock fontSize={13} className={"mb-24"} color={"#c1c1c1"}>
-					This action can't be undone.
-				</TextBlock>
-				<Button
-					bgColor={"danger"}
-					css={css`
+				<div className="flex align-items center mt-56 justify-between" >
+					<div>
+						<Heading type={2} fontSize={"14"} className={"mb-8"}>
+							Delete this project
+						</Heading>
+						<TextBlock fontSize={12} className={"mb-24"} color={"#787878"}>
+							This action can't be undone.
+						</TextBlock>
+					</div>
+					<Button
+						bgColor={"danger"}
+						css={css`
 						width: 124rem;
 					`}
-					onClick={deleteProjectCallback}
-				>
-					Delete project
-				</Button>
+						onClick={deleteProjectCallback}
+					>
+						Delete project
+					</Button>
+				</div>
 			</div>
 		</SettingsLayout>
 	);

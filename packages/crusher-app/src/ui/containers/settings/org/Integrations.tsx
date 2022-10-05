@@ -415,7 +415,7 @@ function CISection() {
 
 	return (
 		<div>
-			<Heading type={1} fontSize={"16"} className={"mb-08 mt-16"}>
+			<Heading type={1} fontSize={"16"} className={"mb-8 mt-16"}>
 				CI/CD
 			</Heading>
 			<TextBlock fontSize={12} color={"#787878"}>

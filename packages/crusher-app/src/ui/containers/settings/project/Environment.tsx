@@ -352,11 +352,11 @@ export const Environment = () => {
 			<div className={"text-24 mb-100"} css={maxWidthContainer}>
 				<div className={"flex justify-between items-start mt-16"}>
 					<div>
-						<Heading type={2} fontSize={"16"} className={"mb-08"}>
+						<Heading type={2} fontSize={"18"} className={"mb-8"}>
 							Environments
 						</Heading>
-						<TextBlock fontSize={13} className={"mb-24"} color={"#c1c1c1"}>
-							Make sure you have selected all the configuration you want
+						<TextBlock fontSize={13} className={"mb-24"} color={"#787878"}>
+							manage environment for crusher
 						</TextBlock>
 					</div>
 					<div>

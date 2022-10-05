@@ -65,6 +65,8 @@ export default function Dashboard() {
 		return projects.filter(({ name }) => name.includes(searchProject));
 	}, [searchProject]);
 
+
+
 	return (
 		<SidebarTopBarLayout>
 			<div css={[containerStyle, contentContainer]} className=" pt-36 ">
@@ -201,7 +203,7 @@ const containerStyle = css`
 `;
 
 function ProjectCard({ project }) {
-	const { id, name } = project;
+	const { id, name, gitIntegration } = project;
 	const router = useRouter();
 	const [_, setAppStateItem] = useAtom(appStateItemMutator);
 
@@ -227,9 +229,35 @@ function ProjectCard({ project }) {
 					Add github action
 				</TextBlock>
 			</div>
-			<div className="flex items-center">
-				<GitIcon className="mr-8" /> git not linked
-			</div>
+			<Conditional showIf={!!gitIntegration}>
+				<div className="flex items-center">
+					<GitIcon className="mr-8" css={normalGitIcon} /> <a href={`https://github.com/${gitIntegration?.repoName}`} css={hoverRepoLink}>
+						{gitIntegration?.repoName}
+					</a>
+				</div>
+			</Conditional>
+			<Conditional showIf={!gitIntegration}>
+				<div className="flex items-center">
+					<GitIcon className="mr-8" /> git not linked
+				</div>
+			</Conditional>
 		</div>
 	);
 }
+
+
+const normalGitIcon = css`
+	path{
+	fill: #838383;
+	}
+
+`
+
+const hoverRepoLink = css`
+	text-decoration: none;
+	color: #777;
+	:hover{
+			text-decoration: underline !important;
+	}
+
+`

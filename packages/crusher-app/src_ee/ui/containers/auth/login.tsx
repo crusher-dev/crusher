@@ -176,7 +176,7 @@ export default function Login() {
 					<Conditional showIf={emailState === 0}>
 						<Input
 							className="bg"
-							autoComplete={"email"}
+
 							value={email.value}
 							initialValue={email.value}
 							onChange={emailChange}

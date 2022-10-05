@@ -100,7 +100,7 @@ export default function ForgotPassword() {
 								<div className="mt-20">
 									<Input
 										className="md-20 bg"
-										autoComplete={"email"}
+
 										value={email.value}
 										onChange={emailChange}
 										placeholder={"Enter email"}

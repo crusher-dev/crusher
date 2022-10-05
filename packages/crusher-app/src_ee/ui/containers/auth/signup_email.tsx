@@ -158,7 +158,7 @@ export default function Signup_email({ loginWithEmailHandler }) {
 							onReturn={signupUser.bind(this)}
 							data={email}
 							onChange={emailChange}
-							autoComplete={"email"}
+
 							placeholder={"Enter email"}
 							onBlur={verifyInfo.bind(this, false)}
 						/>

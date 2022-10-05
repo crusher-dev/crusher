@@ -114,14 +114,17 @@ html {
 	0% {
 		-webkit-transform: rotate(0deg);
 	}
+
 	100% {
 		-webkit-transform: rotate(360deg);
 	}
 }
+
 @keyframes nprogress-spinner {
 	0% {
 		transform: rotate(0deg);
 	}
+
 	100% {
 		transform: rotate(360deg);
 	}
@@ -167,6 +170,7 @@ button {
 	-ms-transition: all 0.1s ease;
 	transition: all 0.1s ease;
 }
+
 a:hover {
 	cursor: pointer;
 }

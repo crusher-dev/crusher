@@ -169,7 +169,10 @@ function LeftSection() {
 						</span>
 					</span>
 				</div>
-				<LinksSection label={"Project settings"} links={projectLinks} />
+				<Conditional showIf={isProject}>
+					<LinksSection label={"Project settings"} links={projectLinks} />
+
+				</Conditional>
 
 				<LinksSection label={"Org settings"} links={orgLinks} />
 			</div>

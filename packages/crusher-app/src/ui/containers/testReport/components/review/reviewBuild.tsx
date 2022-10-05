@@ -9,8 +9,8 @@ import { CloseSVG } from "@svg/dashboard";
 import { backendRequest } from "@utils/common/backendRequest";
 import { sendSnackBarEvent } from "@utils/common/notify";
 import { useBuildReport } from "crusher-app/src/store/serverState/buildReports";
+import { RequestMethod } from "@types/RequestOptions";
 
-import { RequestMethod } from "../../../../types/RequestOptions";
 
 export const radioContent = [
 	{ label: "Leave feedback", subLabel: "Approve without approval" },
@@ -47,7 +47,7 @@ export const ReviewButtonContent = ({ closeModal }) => {
 
 	return (
 		<div>
-			<div css={topReview} className={"font-700 py-12 px-16 leading-none mt-2 flex justify-between"}>
+			<div css={[topReview, bottomSection]} className={"font-700 py-12 px-16 leading-none flex justify-between"}>
 				<div>Submit feedback</div>
 				<CloseSVG height={"12"} onClick={closeModal} />
 			</div>
@@ -81,7 +81,7 @@ export const ReviewButtonContent = ({ closeModal }) => {
 					})}
 				</div>
 			</div>
-			<div className={"px-16 py-12"}>
+			<div className={"px-16 py-12"} css={bottomSection}>
 				<Button
 					size={"small"}
 					css={css`
@@ -104,13 +104,20 @@ const radioGroup = css`
 const topReview = css`
 	color: #fff;
 	font-size: 13.4rem;
+	
 `;
 
-const middleSection = css`
-	border-top: 1px solid #22262b;
 
-	border-bottom: 1px solid #22262b;
-	background: rgba(0, 0, 0, 0.25);
+const bottomSection = css`
+background: rgb(255 255 255 / 2%);
+`
+const middleSection = css`
+	border-top:.5px solid rgba(255, 255, 255, 0.05);
+
+	border-bottom: .5px solid rgba(255, 255, 255, 0.05);
+
+	
+
 
 	#text-area {
 		height: 104rem;

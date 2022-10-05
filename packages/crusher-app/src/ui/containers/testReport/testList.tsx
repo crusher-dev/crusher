@@ -33,55 +33,13 @@ import { getAssetPath, getCollapsedTestSteps } from "@utils/helpers";
 
 import { useBuildReport } from "../../../store/serverState/buildReports";
 
-const ReviewButtonContent = dynamic(() => import("./components/reviewBuild"));
 const CompareImage = dynamic(() => import("./components/compareImages"));
 
 enum TestTabEnum {
 	OVERVIEW = "overview",
 	LOGS = "logs",
 }
-export function ReviewSection() {
-	const [open, setOpen] = useState(false);
 
-	return (
-		<Dropdown component={<ReviewButtonContent closeModal={setOpen.bind(this, false)} />} callback={setOpen} initialState={open} dropdownCSS={reviewCss}>
-			<Button
-				css={css`
-					width: 108px;
-					background: rgba(255, 255, 255, 0.88);
-
-					font-family: "Gilroy";
-					font-style: normal;
-					font-weight: 600;
-					font-size: 13px;
-					/* or 131% */
-
-					text-align: center;
-					border: none;
-					color: #000000;
-					:hover {
-						border: none;
-						background: rgba(255, 255, 255, 0.88);
-						color: #000000;
-					}
-				`}
-			>
-				Review
-			</Button>
-		</Dropdown>
-	);
-}
-
-const reviewCss = css`
-	padding: 0;
-	height: fit-content;
-	width: 380rem;
-	top: calc(100% + 9rem) !important;
-	right: 0px !important;
-	background: #1e2126;
-	z-index: 110;
-	left: unset !important;
-`;
 
 /*
 	How reports will work
@@ -493,11 +451,11 @@ function RenderStep({ data, testInstanceData, setIsShowingVideo, testId }) {
 			</Conditional>
 			<div className={"px-34 mt-12"}>
 				{[ActionsInTestEnum.ASSERT_ELEMENT].includes(actionType) &&
-				data.meta &&
-				data.meta.meta &&
-				data.meta.meta.meta &&
-				data.meta.meta.meta.logs &&
-				status === "FAILED" ? (
+					data.meta &&
+					data.meta.meta &&
+					data.meta.meta.meta &&
+					data.meta.meta.meta.logs &&
+					status === "FAILED" ? (
 					<RenderAssertElement logs={data.meta.meta.meta.logs} />
 				) : (
 					""
@@ -582,7 +540,7 @@ const errorBox = css`
 
 function Browsers({ browsers, setConfig }) {
 	return (
-		<div className={"flex flex-col justify-between h-full"} onClick={() => {}}>
+		<div className={"flex flex-col justify-between h-full"} onClick={() => { }}>
 			<div>
 				{browsers.map((name: string) => (
 					<MenuItem

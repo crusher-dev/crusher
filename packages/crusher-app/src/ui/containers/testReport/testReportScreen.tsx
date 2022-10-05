@@ -21,8 +21,8 @@ import { usePageTitle } from "../../../hooks/seo";
 import { updateMeta } from "../../../store/mutators/metaData";
 import { useBuildReport } from "../../../store/serverState/buildReports";
 import { RequestMethod } from "../../../types/RequestOptions";
-import Download from "../dashboard/Download";
-import { ReviewSection } from "./testList";
+
+import { ReviewSection } from "./components/review/reviewComponent";
 
 const ReportSection = dynamic(() => import("./testList"));
 function BuildInfoTop() {
@@ -112,7 +112,9 @@ function BuildMainInfo() {
 							host
 						</TextBlock>
 						<TextBlock color="#D0D0D0" fontSize={13} className="mt-8">
-							crusher.dev
+							<a href={"https://crusher.dev"} css={link}>
+								crusher.dev
+							</a>
 						</TextBlock>
 					</div>
 					<div>
@@ -135,6 +137,13 @@ function BuildMainInfo() {
 	);
 }
 
+const link = css`
+	:hover{
+		text-decoration: underline !important;
+	}
+
+`
+
 const flexGapInfo = css`
 	gap: 40rem;
 `;
@@ -143,7 +152,7 @@ function BuildInfoButtons() {
 	return (
 		<div className="flex items-start" css={btnGap}>
 			<Reload />
-			<Review />
+			<ReviewSection />
 			<RunLocally />
 		</div>
 	);
@@ -171,15 +180,10 @@ function Reload() {
 }
 
 function Review() {
-	const [showCreateTest, setShowCreateTest] = useState(false);
 
-	const runProjectTest = useCallback(() => {}, []);
 
 	return (
 		<React.Fragment>
-			<Conditional showIf={showCreateTest}>
-				<Download onClose={setShowCreateTest.bind(this, false)} />
-			</Conditional>
 			<Button size="medium" title="leave a comment/review" bgColor={"tertiary"} onClick={runProjectTest} css={creatTestCSS}>
 				<div className={"flex items-center"}>
 					<CommentIcon className={"mr-6"} />
@@ -327,13 +331,8 @@ function TabBar() {
 					</div>
 				</div>
 			))}
-			<div
-				css={css`
-					margin-left: auto;
-				`}
-			>
-				<ReviewSection />
-			</div>
+
+			{/* add config edit here */}
 		</div>
 	);
 }

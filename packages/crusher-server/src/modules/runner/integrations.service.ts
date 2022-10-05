@@ -10,6 +10,7 @@ import { UsersService } from "@modules/resources/users/service";
 import { getTemplateFileContent } from "@utils/helper";
 import { resolvePathToFrontendURI } from "@utils/uri";
 import { Inject, Service } from "typedi";
+import { WebhookManager } from "../webhook";
 
 @Service()
 class RunnerIntegrationsService {
@@ -42,6 +43,16 @@ class RunnerIntegrationsService {
             await this.integrationsService.getSlackMessageBlockForBuildReport(buildRecord, projectRecord, buildReportRecord, userInfo, reportStatus),
             reportStatus === BuildReportStatusEnum.PASSED ? "normal" : "alert",
         );
+
+        await WebhookManager.send("http://localhost.com/", {
+            reportStatus: reportStatus,
+            buildId: buildRecord.id,
+            host: buildRecord.host,
+            triggeredBy: userInfo.name,
+            totalTests: buildReportRecord.totalTestCount,
+            buildReportUrl: resolvePathToFrontendURI(`/app/build/${buildRecord.id}`),
+            projectName: projectRecord.name
+        });
         
         const buildRecordMeta: { vercel: { checkId: string; deploymentId: string; teamId: string;}, github: { repoName: string; commitId: string;}} = buildRecord.meta ? JSON.parse(buildRecord.meta) : null;
         if(buildRecordMeta && buildRecordMeta.vercel && buildRecordMeta.github) {
@@ -54,6 +65,7 @@ class RunnerIntegrationsService {
     
             const vercelIntegrationMeta : {accessToken: string; userId: number;} = vercelIntegrationRecord.meta;
             const detailsUrl = `${resolvePathToFrontendURI(`/app/build/${buildRecord.id}`)}`;
+    
             await this.vercelService.finishDeploymentChecks(
                 vercelIntegrationMeta.accessToken,
                 buildRecordMeta.vercel.deploymentId,

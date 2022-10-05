@@ -78,7 +78,7 @@ class ProjectsController {
 
 	@Authorized()
 	@Post("/projects/:project_id/actions/update.settings")
-	async setDiffBaseOffset(@Param("project_id") projectId: number, @Body() body: { visualBaseline: number; name: string }) {
+	async setDiffBaseOffset(@Param("project_id") projectId: number, @Body() body: { visualBaseline: number; name: string; }) {
 		console.log("Body is", body);
 		if (!body.visualBaseline) throw new BadRequestError("No diff base offset provided");
 		if (!body.name) throw new BadRequestError("No name provided");
@@ -87,6 +87,7 @@ class ProjectsController {
 		await this.projectsService.updateVisualBaseline(body.visualBaseline, projectId);
 		return "Successful";
 	}
+
 
 	@Authorized()
 	@Post("/projects/:project_id/actions/generate.tests")

@@ -13,6 +13,7 @@ import { fetch } from "@utils/fetch";
 import { UserAuthService } from "../users/auth.service";
 import { v4 as uuidv4 } from "uuid";
 import { UsersService } from "../users/service";
+import { ProjectsService } from "../projects/service";
 @Service()
 @JsonController("")
 class IntegrationsController {
@@ -28,6 +29,8 @@ class IntegrationsController {
 	private userAuthService: UserAuthService;
 	@Inject()
 	private userService: UsersService;
+	@Inject()
+	private projectsService: ProjectsService;
 
 	@Authorized()
 	@Get("/integrations/slack/actions/add")
@@ -76,10 +79,12 @@ class IntegrationsController {
 	async getIntegrations(@CurrentUser({ required: true }) user, @Param("project_id") projectId: number) {
 		const integrationsList = await this.integrationsService.getListOfIntegrations(projectId);
 		const slackIntegration = integrationsList.find((item) => item.integrationName === IntegrationServiceEnum.SLACK);
+		const webhook = await this.projectsService.getProjectWebhook(projectId);
 
 		return {
 			emailIntegration: true,
 			slackIntegration: slackIntegration,
+			webhook: webhook,
 		};
 	}
 
@@ -248,6 +253,15 @@ class IntegrationsController {
 		const githubUserToken = generateToken(user_id, team_id);
 
 		return `npx crusher-cli test:run --token=${githubUserToken} --projectid=${projectId}`;
+	}
+
+
+	@Authorized()
+	@Post("/integrations/:project_id/actions/save.webhook")
+	async saveWebhook(@Param("project_id") projectId: number, @Body() body: { webhook: string }) {
+		if (!body.webhook) throw new BadRequestError("No webhook provided");
+		await this.projectsService.updateWebhook(body.webhook, projectId);
+		return "Successful";
 	}
 }
 

@@ -22,8 +22,9 @@ import { useBuildReport } from "../../../store/serverState/buildReports";
 import { RequestMethod } from "../../../types/RequestOptions";
 
 import { ReviewSection } from "./components/review/reviewComponent";
+import { ConfigChange } from "./components/common/config";
 
-const ReportSection = dynamic(() => import("./testList"));
+const ReportSection = dynamic(() => import("./container/testList"));
 function BuildInfoTop() {
 	const { query } = useRouter();
 	const { data } = useBuildReport(query.id);
@@ -305,7 +306,7 @@ const previewImgCss = css`
 function TabBar() {
 	const [selectedTabIndex, setSelectedTabIndex] = useAtom(selectedTabAtom);
 	return (
-		<div css={Tab} className={"flex mt-84"}>
+		<div css={Tab} className={"flex"}>
 			{section.map(({ name, icon, key }, i) => (
 				<div onClick={setSelectedTabIndex.bind(this, i)} key={key}>
 					<div css={[TabItem, selectedTabIndex === i && selected]} className={`flex items-center justify-center text-14`}>
@@ -317,7 +318,7 @@ function TabBar() {
 				</div>
 			))}
 
-			{/* add config edit here */}
+
 		</div>
 	);
 }
@@ -351,7 +352,10 @@ export const TestReportScreen = () => {
 		>
 			<div css={buildContainerWidth}>
 				<ReportInfoTOp />
-				<TabBar />
+				<div className="flex justify-between mt-84 items-center">
+					<TabBar />
+					<ConfigChange />
+				</div>
 			</div>
 			<Conditional showIf={selectedTabIndex === 0}>
 				<ReportSection />

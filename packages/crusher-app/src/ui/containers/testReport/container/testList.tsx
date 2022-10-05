@@ -4,20 +4,18 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useTable, useBlockLayout } from "react-table";
 
-import { useAtom } from "jotai";
+import { atom, useAtom } from "jotai";
 import { atomWithImmer } from "jotai/immer";
 
 import { Button } from "dyson/src/components/atoms";
-import { LinkBlock } from "dyson/src/components/atoms/Link/Link";
 import { VideoComponent } from "dyson/src/components/atoms/video/video";
 import { Conditional } from "dyson/src/components/layouts";
-import { Dropdown } from "dyson/src/components/molecules/Dropdown";
 import { Modal } from "dyson/src/components/molecules/Modal";
 
-import { MenuItem } from "@components/molecules/MenuItem";
+
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { ActionStatusEnum } from "@crusher-shared/lib/runnerLog/interface";
-import { Test } from "@crusher-shared/types/response/iBuildReportResponse";
+
 import { FullImageView, ShowSidebySide } from "@svg/builds";
 import { LoadingSVG, PlaySVG } from "@svg/dashboard";
 import { ChevronDown, ExpandSVG, InfoSVG, TestStatusSVG } from "@svg/testReport";
@@ -30,10 +28,11 @@ import {
 	getTestIndexByConfig,
 } from "@utils/core/buildReportUtils";
 import { getAssetPath, getCollapsedTestSteps } from "@utils/helpers";
+import { useBuildReport } from "@store/serverState/buildReports";
 
-import { useBuildReport } from "../../../store/serverState/buildReports";
 
-const CompareImage = dynamic(() => import("./components/compareImages"));
+
+const CompareImage = dynamic(() => import("../components/compareImages"));
 
 enum TestTabEnum {
 	OVERVIEW = "overview",
@@ -55,14 +54,16 @@ const getStatusFromTestInstances = (testInstances) => {
 
 	return "PASSED";
 };
+
+export const selectedTestAtom = atom<number>(0)
 function ReportSection() {
-	const [selectedTest, setSelectedTest] = React.useState(0);
+	const [selectedTest, setSelectedTest] = useAtom(selectedTestAtom);
 	const { query } = useRouter();
 	const { data } = useBuildReport(query.id);
 
 	return (
 		<div
-			className={"mt-28"}
+			className={"mt-20"}
 			css={css`
 				width: 100%;
 				background: #0a0a0a;
@@ -123,11 +124,8 @@ function ReportSection() {
 					flex: 1;
 				`}
 			>
-				{data?.tests.length ? <TestCard key={selectedTest} id={selectedTest} testData={data.tests[selectedTest]} /> : ""}
+				{data?.tests.length ? <TestCard /> : ""}
 			</div>
-			{/* {data?.tests.map((testData, i) => (
-					<TestCard key={i} id={i} testData={testData} />
-				))} */}
 		</div>
 	);
 }
@@ -538,57 +536,14 @@ const errorBox = css`
 	}
 `;
 
-function Browsers({ browsers, setConfig }) {
-	return (
-		<div className={"flex flex-col justify-between h-full"} onClick={() => { }}>
-			<div>
-				{browsers.map((name: string) => (
-					<MenuItem
-						css={css`
-							padding: 12rem 10rem;
-						`}
-						label={
-							<div className={"flex items-center"}>
-								<img src={`/assets/img/build/browser/${name.toLowerCase()}.png`} width={"12rem"} className={"mr-12"} />
-								<div>{name.toLowerCase()}</div>
-							</div>
-						}
-						key={name}
-						className={"close-on-click"}
-						onClick={() => {
-							setConfig("browser", name);
-						}}
-					/>
-				))}
-			</div>
-		</div>
-	);
-}
 
-const dropDownSelectionCSS = css`
-	height: fit-content;
-	width: 180rem;
-	top: calc(100% + 4rem) !important;
-	right: 8px !important;
-	left: unset !important;
-`;
 
 /*
 	Use Jotai for avoiding props drilling.
 	Make config much more streamline.
  */
-function TestConfigSection({ videoUrl, allCofiguration, setTestCardConfig, testCardConfig }) {
+function PlayVideo({ videoUrl }) {
 	const [openVideoModal, setIsOpenVideoModal] = useState(false);
-
-	const setConfig = (key, value) => {
-		const config = allCofiguration;
-
-		config[key] = value;
-
-		setTestCardConfig(config);
-	};
-
-	const browserInLowerCase = testCardConfig.browser.toLowerCase();
 
 	return (
 		<div className={"flex justify-between items-center mt-6 "}>
@@ -620,17 +575,6 @@ function TestConfigSection({ videoUrl, allCofiguration, setTestCardConfig, testC
 					""
 				)}
 
-				<Dropdown component={<Browsers setConfig={setConfig} browsers={allCofiguration.browser} />} dropdownCSS={dropDownSelectionCSS}>
-					<LinkBlock paddingY={4} paddingX={"12rem"}>
-						<div className={"flex items-center "}>
-							<div className={" flex items-center  mr-8 text-13"}>
-								<img src={`/assets/img/build/browser/${browserInLowerCase}.png`} width={"16rem"} className={"mr-8"} />
-								<span className={"mt-1 capitalize"}>{browserInLowerCase}</span>
-							</div>
-							<ChevronDown width={"12rem"} />
-						</div>
-					</LinkBlock>
-				</Dropdown>
 			</div>
 			<Conditional showIf={videoUrl && openVideoModal}>
 				<TestVideoUrl videoUrl={videoUrl} setOpenVideoModal={setIsOpenVideoModal.bind(this)} />
@@ -862,9 +806,6 @@ function TestOverviewTabTopSection({
 	expand,
 	isShowingVideo,
 	setIsShowingVideo,
-	allConfiguration,
-	setTestCardConfig,
-	testCardConfig,
 	setCurrentTestTab,
 }) {
 	const videoUrl = testInstanceData?.output?.video;
@@ -905,19 +846,11 @@ function TestOverviewTabTopSection({
 				<div css={testNavBarItemStyle}>Actions</div>
 			</div>
 
-			{/*<Conditional showIf={!expand}>*/}
-			{/*	<div className={"text-18 font-600"} id={"click-to-open"} css={css`color: #aacb65;`}>*/}
-			{/*		PASSED*/}
-			{/*	</div>*/}
-			{/*</Conditional>*/}
 
 			<div className={"flex items-center mr-60"}>
-				<TestConfigSection
+				<PlayVideo
 					videoUrl={testInstanceData?.output?.video}
 					expand={expand}
-					allCofiguration={allConfiguration}
-					setTestCardConfig={setTestCardConfig}
-					testCardConfig={testCardConfig}
 				/>
 			</div>
 		</div>
@@ -1056,12 +989,27 @@ function TestLogs({ testInstanceData }) {
 	);
 }
 
-function TestCard({ id, testData }: { id: string; testData: Test }) {
+export const testCardConfigAtom = atom(null)
+
+function TestCard() {
+
+	const { query } = useRouter();
+	const { data } = useBuildReport(query.id);
+
+
+	const [selectedTest,] = useAtom(selectedTestAtom);
+
+	const testData = data.tests[selectedTest]
+	const id = selectedTest;
+
+
 	const { name, testInstances } = testData;
 	const [expand, setExpand] = useState(false);
 	const [showLoading] = useState(false);
 	const allConfiguration = getAllConfigurationForGivenTest(testData);
-	const [testCardConfig, setTestCardConfig] = useState(getBaseConfig(allConfiguration));
+
+
+	const [testCardConfig, setTestCardConfig] = useAtom(testCardConfigAtom);
 	const [isShowingVideo, setIsShowingVideo] = React.useState(false);
 	const [currentTestTab, setCurrentTestTab] = React.useState(TestTabEnum.OVERVIEW);
 
@@ -1075,6 +1023,8 @@ function TestCard({ id, testData }: { id: string; testData: Test }) {
 		if (failedTestsConfiguration.length >= 1) {
 			setExpand(true);
 		}
+
+		setTestCardConfig(getBaseConfig(allConfiguration))
 	}, []);
 
 	return (

@@ -10,7 +10,8 @@ import { useAtom } from "jotai";
 
 import { useRouter } from "next/router";
 
-import { selectedTestAtom, testCardConfigAtom } from "../../container/testList";
+import { selectedTestAtom, testCardConfigAtom } from "../../atoms";
+import { useBasicTestData } from "../../hooks";
 
 function Browsers({ browsers, setConfig }) {
 
@@ -48,28 +49,22 @@ const dropDownSelectionCSS = css`
 	left: unset !important;
 `;
 export const ConfigChange = () => {
-    const { query } = useRouter();
-    const { data } = useBuildReport(query.id);
-
-    const [selectedTest,] = useAtom(selectedTestAtom);
-    const testData = data.tests[selectedTest]
+    const { testData } = useBasicTestData()
     const allConfiguration = getAllConfigurationForGivenTest(testData);
 
     const [testCardConfig, setTestCardConfig] = useAtom(testCardConfigAtom);
 
     const setConfig = (key, value) => {
-        const config = allCofiguration;
-
+        const config = allConfiguration;
         config[key] = value;
-
         setTestCardConfig(config);
     };
 
-    const browserInLowerCase = testCardConfig.browser.toLowerCase();
+    const browserInLowerCase = testCardConfig?.browser.toLowerCase();
     // return <div>dsf</div>
     return (
         <Dropdown component={<Browsers setConfig={setConfig} browsers={allConfiguration.browser} />} dropdownCSS={dropDownSelectionCSS}>
-            <LinkBlock paddingY={4} paddingX={"12rem"}>
+            <LinkBlock css={browserStyle}>
                 <div className={"flex items-center "}>
                     <div className={" flex items-center  mr-8 text-13"}>
                         <img src={`/assets/img/build/browser/${browserInLowerCase}.png`} width={"16rem"} className={"mr-8"} />
@@ -80,3 +75,8 @@ export const ConfigChange = () => {
             </LinkBlock>
         </Dropdown>)
 }
+
+const browserStyle = css`
+    padding: 6px 8px;
+    border-radius: 6px;
+`

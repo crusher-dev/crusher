@@ -18,7 +18,7 @@ import { ActionStatusEnum } from "@crusher-shared/lib/runnerLog/interface";
 
 import { FullImageView, ShowSidebySide } from "@svg/builds";
 import { LoadingSVG, PlaySVG } from "@svg/dashboard";
-import { ChevronDown, ExpandSVG, InfoSVG, TestStatusSVG } from "@svg/testReport";
+import { ExpandSVG, InfoSVG, TestStatusSVG } from "@svg/testReport";
 import {
 	getActionLabel,
 	getAllConfigurationForGivenTest,
@@ -29,6 +29,8 @@ import {
 } from "@utils/core/buildReportUtils";
 import { getAssetPath, getCollapsedTestSteps } from "@utils/helpers";
 import { useBuildReport } from "@store/serverState/buildReports";
+import { selectedTestAtom, testCardConfigAtom } from "../atoms";
+import { useBasicTestData } from "../hooks";
 
 
 
@@ -55,7 +57,7 @@ const getStatusFromTestInstances = (testInstances) => {
 	return "PASSED";
 };
 
-export const selectedTestAtom = atom<number>(0)
+
 function ReportSection() {
 	const [selectedTest, setSelectedTest] = useAtom(selectedTestAtom);
 	const { query } = useRouter();
@@ -229,10 +231,7 @@ function RenderImageInfo({ data, index }) {
 }
 
 const imageTestStep = css`
-	//img {
-	//	max-width: 49%;
-	//	border-radius: 6rem;
-	//}
+
 `;
 
 function ErrorComponent({ testInstanceData, actionType, actionName, message }) {
@@ -989,19 +988,13 @@ function TestLogs({ testInstanceData }) {
 	);
 }
 
-export const testCardConfigAtom = atom(null)
+
 
 function TestCard() {
-
-	const { query } = useRouter();
-	const { data } = useBuildReport(query.id);
-
-
 	const [selectedTest,] = useAtom(selectedTestAtom);
 
-	const testData = data.tests[selectedTest]
+	const { testData } = useBasicTestData()
 	const id = selectedTest;
-
 
 	const { name, testInstances } = testData;
 	const [expand, setExpand] = useState(false);

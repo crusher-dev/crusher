@@ -374,7 +374,7 @@ function TestTopBar(props: { totalTests: any; onClick: () => Promise<void> }) {
 								css={css`
 									:hover {
 										path {
-											fill: #647cff;
+											fill: #a742f7;
 										}
 									}
 								`}

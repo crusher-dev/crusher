@@ -75,7 +75,7 @@ const video = css`
 	opacity: 0.9;
 
 	:hover img {
-		border: 1px solid #647cff;
+		border: 1px solid #a742f7;
 	}
 
 	img {

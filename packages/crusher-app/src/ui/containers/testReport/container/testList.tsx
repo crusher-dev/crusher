@@ -1,11 +1,11 @@
-import {css} from "@emotion/react";
-import {useRouter} from "next/router";
+import { css } from "@emotion/react";
+import { useRouter } from "next/router";
 import React from "react";
-import {useAtom} from "jotai";
-import {useBuildReport} from "@store/serverState/buildReports";
-import {CheckSVG} from "@svg/builds";
-import {selectedTestAtom} from "../atoms";
-import {TestOverview} from "@ui/containers/testReport/container/testOverview";
+import { useAtom } from "jotai";
+import { useBuildReport } from "@store/serverState/buildReports";
+import { CheckSVG } from "@svg/builds";
+import { selectedTestAtom } from "../atoms";
+import { TestOverview } from "@ui/containers/testReport/container/testOverview";
 
 
 const getStatusFromTestInstances = (testInstances) => {
@@ -24,8 +24,8 @@ const stepSectionCSS = css`
 
 const testLeftSideCard = (selected) => css`
 	width: 238rem;
-	height: 36rem;
-	border-radius: 8px;
+	height: 32rem;
+	border-radius: 10px;
 	margin-bottom: 10px;
 	border: 0.5px solid transparent;
 	padding: 0 28rem;
@@ -49,7 +49,7 @@ border: 0.5px solid rgba(255, 255, 255, 0.05);
 		font-size: 14rem;
 
 		${selected &&
-		`
+	`
 		font-weight: 600;
 		`}
 	}
@@ -93,7 +93,7 @@ function ReportSection() {
 		<div className={"mt-20"} css={reportSectionCSS}>
 			<TestList data={data} selectedTest={selectedTest} setSelectedTest={setSelectedTest} />
 
-			<div className={"py-4 flex-1"}>{data?.tests.length && <TestOverview /> }</div>
+			<div className={"py-4 flex-1"}>{data?.tests.length && <TestOverview />}</div>
 		</div>
 	);
 }

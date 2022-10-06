@@ -63,7 +63,7 @@ function RenderImageInfo({ data, index }) {
     if (!imageName) return null;
 
     return (
-        <div className={"  pl-44 mt-4 text-11"} css={imageTestStep}>
+        <div className={"  pl-44 mt-4 text-11"}>
             <div className={"flex justify-between text-12 mb-20 "}>
                 <span>{imageName}</span>
                 <div>
@@ -105,14 +105,12 @@ function RenderImageInfo({ data, index }) {
     );
 }
 
-const imageTestStep = css``;
-
 function ErrorComponent({ testInstanceData, actionType, actionName, message }) {
     const videoUrl = testInstanceData?.output?.video;
     const isVideoAvailable = !!videoUrl;
     const [openVideoModal, setOpenVideoModal] = useState(false);
     return (
-        <div className={"  py-16 px-22 mt-8"} css={errorBox}>
+        <div className={" py-20 px-22 mt-20 mb-20"} css={errorBox}>
             <Conditional showIf={isVideoAvailable && openVideoModal}>
                 <TestVideoUrl videoUrl={videoUrl} setOpenVideoModal={setOpenVideoModal.bind(this)} />
             </Conditional>
@@ -123,7 +121,7 @@ function ErrorComponent({ testInstanceData, actionType, actionName, message }) {
                 <div className={"flex  mt-24"}>
                     <div className={"text-13 flex items-center"} id={"play-button"}
                         onClick={setOpenVideoModal.bind(this, true)}>
-                        <PlaySVG /> <span className={" ml-12 leading-none"}> Play To See Recording</span>
+                        <PlaySVG /> <span className={" ml-6 mt-2 leading-none"}> Play To See Recording</span>
                     </div>
                 </div>
             </Conditional>
@@ -228,8 +226,9 @@ const assertTableContainerStyle = css`
 `;
 const leftSide = (isFirst) => css`
 	width: 13px;
-	height: 44rem;
+	height: 100%;
 	align-items: center;
+    
 
 	margin-right: -6px;
 
@@ -292,14 +291,14 @@ function RenderStep({ data, testInstanceData, setIsShowingVideo, testId, index }
 
     return (
         <div className={"relative"} css={stepCSS}>
-            <div className="flex item-center w-full">
+            <div className="flex item-center w-full relative">
                 <div css={leftSide(isFirst)} className="relative flex flex-col">
                     <div id="first"></div>
                     <div id="mark"></div>
                     <div id="second"></div>
                 </div>
                 <div className="flex items-center pl-24 w-full" css={stepBottom}>
-                    <div className="flex items-center">
+                    <div className="flex items-center  mr-12">
                         <CheckSquare />
                         {/* <TestStatusSVG
 						css={
@@ -319,7 +318,7 @@ function RenderStep({ data, testInstanceData, setIsShowingVideo, testId, index }
 
                     <Conditional showIf={status !== "FAILED"}>
                         <div
-                            className={"ml-12 flex items-center"}
+                            className={"flex items-center"}
                             css={css`
 								align-items: center;
 							`}
@@ -372,7 +371,7 @@ function RenderStep({ data, testInstanceData, setIsShowingVideo, testId, index }
                 {data.meta?.outputs ? data.meta.outputs.map((_, index) => <RenderImageInfo data={data}
                     index={index} />) : null}
             </Conditional>
-            <div className={"px-34 mt-12"}>
+            <div className={"px-34"}>
                 {[ActionsInTestEnum.ASSERT_ELEMENT].includes(actionType) &&
                     data.meta &&
                     data.meta.meta &&
@@ -392,9 +391,7 @@ function RenderStep({ data, testInstanceData, setIsShowingVideo, testId, index }
                         >
                             <a href={`crusher://replay-test?testId=${testId}`}>
                                 <Button
-                                    css={css`
-										width: 144px;
-									`}
+
                                 >
                                     Run locally
                                 </Button>
@@ -402,9 +399,7 @@ function RenderStep({ data, testInstanceData, setIsShowingVideo, testId, index }
                             <Button
                                 className={"ml-16"}
                                 bgColor={"tertiary"}
-                                css={css`
-									width: 148rem;
-								`}
+
                                 onClick={setIsShowingVideo.bind(this, true)}
                             >
                                 <span className={"font-400"}>View Video</span>
@@ -448,11 +443,11 @@ function RenderStep({ data, testInstanceData, setIsShowingVideo, testId, index }
 }
 
 const errorBox = css`
-	background: rgba(46, 25, 45, 0.5);
-	border: 1px solid #6f3e6c;
-	box-sizing: border-box;
-	border-radius: 6rem;
-	width: 100%;
+    background: rgb(249 65 192 / 8%);
+    border: 1px solid #c64c7a;
+    box-sizing: border-box;
+    border-radius: 18rem;
+    width: 100%;
 
 	#play-button {
 		:hover {
@@ -675,7 +670,7 @@ function TestOverviewTabTopSection({
             </Conditional>
             <div
                 css={css`
-					gap: 32rem;
+					gap: 20rem;
 				`}
                 className={"px-56 flex items-center leading-none text-15 font-600"}
             >
@@ -795,10 +790,11 @@ function ExpandableStepGroup({
 }
 
 const stepCSS = css`
-	height: 44rem;
+	min-height: 44rem;
 	display: flex;
 	align-items: center;
 	padding-left: 56rem;
+    flex-direction: column;
 	:hover {
 		background: #101010;
 	}

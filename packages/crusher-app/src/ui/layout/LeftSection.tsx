@@ -12,7 +12,7 @@ import { Conditional } from "dyson/src/components/layouts";
 
 import { useProjectDetails } from "@hooks/common";
 import { Book, Gear, NewPeople } from "@svg/dashboard";
-import {BuildIcon, ClockIcon, ExternalIcon, HomeIcon, MapSVG, TestIcon, UpgradeIcon} from "@svg/dashboard";
+import { BuildIcon, ClockIcon, ExternalIcon, HomeIcon, MapSVG, TestIcon, UpgradeIcon } from "@svg/dashboard";
 import { DiscordSVG } from "@svg/onboarding";
 import { GithubSVG } from "@svg/social";
 import { UserNTeam } from "@ui/containers/dashboard/UserNTeam";
@@ -22,21 +22,18 @@ import { GiveFeedback } from "../containers/dashboard/GiveFeedback";
 export const InviteMembers = dynamic(() => import("@ui/containers/dashboard/InviteMember"));
 
 export function LeftSection() {
-    const [inviteTeammates, setInviteTeamMates] = useState(false);
-    const {
-        route,
-        query
-    } = useRouter();
-    const { currentProject: project } = useProjectDetails();
+	const [inviteTeammates, setInviteTeamMates] = useState(false);
+	const { route, query } = useRouter();
+	const { currentProject: project } = useProjectDetails();
 
-    const menuItems = project ? projectMenu : leftMenu;
+	const menuItems = project ? projectMenu : leftMenu;
 
-    const { project_id } = query;
+	const { project_id } = query;
 
-    const isProject = !!project_id;
-    const settingsLink = isProject ? `/${project_id}/settings/basic` : "/settings/org/team-members";
+	const isProject = !!project_id;
+	const settingsLink = isProject ? `/${project_id}/settings/basic` : "/settings/org/team-members";
 
-    return (
+	return (
 		<div css={sidebar} className={"flex flex-col justify-between pb-18"} id="left-section">
 			<UserNTeam />
 			<div className="flex flex-col justify-between h-full">

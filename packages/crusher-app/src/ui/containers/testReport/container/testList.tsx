@@ -17,6 +17,8 @@ import { useBuildReport } from "@store/serverState/buildReports";
 import { CheckSquare, CheckSVG, FullImageView, ShowSidebySide } from "@svg/builds";
 import { LoadingSVG, PlaySVG } from "@svg/dashboard";
 import { InfoSVG } from "@svg/testReport";
+import { TestLogs } from "@ui/containers/testReport/components/steps/testLogs";
+import { PlayVideo, TestVideoUrl } from "@ui/containers/testReport/container/playVideo";
 import {
 	getActionLabel,
 	getAllConfigurationForGivenTest,
@@ -29,8 +31,6 @@ import { getAssetPath, getCollapsedTestSteps } from "@utils/helpers";
 
 import { selectedTestAtom, testCardConfigAtom } from "../atoms";
 import { useBasicTestData } from "../hooks";
-import { TestLogs } from "@ui/containers/testReport/components/steps/testLogs";
-import { PlayVideo, TestVideoUrl } from "@ui/containers/testReport/container/playVideo";
 
 const CompareImage = dynamic(() => import("../components/compareImages"));
 
@@ -55,86 +55,73 @@ const getStatusFromTestInstances = (testInstances) => {
 };
 
 const stepSectionCSS = css`
-border-right-style: solid;
-border-right-width: 1rem;
-border-right-color: rgba(196, 196, 196, 0.08);
-padding-left: 132rem;
-padding-right: 20rem;
-`
+	border-right-style: solid;
+	border-right-width: 1rem;
+	border-right-color: rgba(196, 196, 196, 0.08);
+	padding-left: 132rem;
+	padding-right: 20rem;
+`;
 
 const testLeftSideCard = (selected) => css`
-width: 238rem;
-height: 36rem;
-border-radius: 8px;
-margin-bottom:10px;
-border: 0.5px solid transparent;
-padding: 0 28rem;
+	width: 238rem;
+	height: 36rem;
+	border-radius: 8px;
+	margin-bottom: 10px;
+	border: 0.5px solid transparent;
+	padding: 0 28rem;
 
-:hover{
-	background: #101010;
-	border: 0.5px solid rgba(255, 255, 255, 0.05);
+	:hover {
+		background: #101010;
+		border: 0.5px solid rgba(255, 255, 255, 0.05);
+	}
 
-}
-
-${selected && `
+	${selected &&
+	`
 background: #101010;
 border: 0.5px solid rgba(255, 255, 255, 0.05);
 
 `}
 
-#name{
-	white-space: nowrap;
-	overflow: hidden;
+	#name {
+		white-space: nowrap;
+		overflow: hidden;
 
-	font-size: 14rem;
+		font-size: 14rem;
 
-	${selected && `
-		font-weight: 600;
+		${selected &&
 		`
+		font-weight: 600;
+		`}
 	}
-}
-`
+`;
 
 const reportSectionCSS = css`
-width: 100%;
-background: #090909;
-min-height: 100vh;
-display: flex;
-border-top-color: rgba(255, 255, 255, 0.04);
-border-top-width: 0.5rem;
-border-top-style: solid;
-`
+	width: 100%;
+	background: #090909;
+	min-height: 100vh;
+	display: flex;
+	border-top-color: rgba(255, 255, 255, 0.04);
+	border-top-width: 0.5rem;
+	border-top-style: solid;
+`;
 
 function TestList(props: any) {
-
-	const { data, selectedTest, setSelectedTest } = props
-	return <div
-		css={stepSectionCSS}
-	>
-		<div className="pl-28 pt-32" css={testListHeadingStyle}>
-			tests | 12
+	const { data, selectedTest, setSelectedTest } = props;
+	return (
+		<div css={stepSectionCSS}>
+			<div className="pl-28 pt-32" css={testListHeadingStyle}>
+				tests | 12
+			</div>
+			<ul css={testListStyle}>
+				{data?.tests.map((testData, i) => (
+					<li className="px24 py-12" css={testLeftSideCard(i === selectedTest)} onClick={setSelectedTest.bind(this, i)}>
+						<CheckSVG type={getStatusFromTestInstances(testData?.testInstances)} height={"14rem"} width={"14rem"} />
+						<span id="name">{testData!.name}</span>
+					</li>
+				))}
+			</ul>
 		</div>
-		<ul css={testListStyle}>
-			{data?.tests.map((testData, i) => (
-				<li
-					className="px24 py-12"
-					css={testLeftSideCard(i === selectedTest)}
-					onClick={setSelectedTest.bind(this, i)}
-				>
-					<CheckSVG
-						type={getStatusFromTestInstances(testData?.testInstances)}
-						height={"14rem"}
-						width={"14rem"}
-					/>
-					<span
-						id="name"
-					>
-						{testData!.name}
-					</span>
-				</li>
-			))}
-		</ul>
-	</div>;
+	);
 }
 
 function ReportSection() {
@@ -143,18 +130,10 @@ function ReportSection() {
 	const { data } = useBuildReport(query.id);
 
 	return (
-		<div
-			className={"mt-20"}
-			css={reportSectionCSS}
-		>
-
+		<div className={"mt-20"} css={reportSectionCSS}>
 			<TestList data={data} selectedTest={selectedTest} setSelectedTest={setSelectedTest} />
 
-			<div
-				className={"py-4 flex-1"}
-			>
-				{data?.tests.length ? <TestCard /> : ""}
-			</div>
+			<div className={"py-4 flex-1"}>{data?.tests.length ? <TestCard /> : ""}</div>
 		</div>
 	);
 }
@@ -369,29 +348,30 @@ const assertTableContainerStyle = css`
 `;
 
 const leftSide = (isFirst) => css`
-width: 13px;
-height: 44rem;
-align-items: center;
+	width: 13px;
+	height: 44rem;
+	align-items: center;
 
 	margin-right: -6px;
 
-#first{
-	${isFirst && `visibility: hidden;`}
-}
+	#first {
+		${isFirst && `visibility: hidden;`}
+	}
 
-#mark{
+	#mark {
+		min-width: 13px;
+		min-height: 13px;
 
-	min-width: 13px;
-min-height: 13px;
+		position: absolute;
 
-position: absolute;
-
-${isFirst && `
+		${isFirst &&
+		`
 	background: #1F1F1F;
 	border-radius: 12px;
 `}
 
-${!isFirst && `
+		${!isFirst &&
+		`
 	background: #0B0B0B;
 	border: 0.5px solid #1F1F1F;
 `}
@@ -399,28 +379,28 @@ ${!isFirst && `
 
 
 left: 50%;
-top: 50%;
-transform: translate(-50%, -50%);
-}
+		top: 50%;
+		transform: translate(-50%, -50%);
+	}
 
-#second{
-	height: 50%;
-}
+	#second {
+		height: 50%;
+	}
 
-#first,#second{
-	background: #1C1C1C;
-	height: 27px;
-	width: 1px;
-}
-`
+	#first,
+	#second {
+		background: #1c1c1c;
+		height: 27px;
+		width: 1px;
+	}
+`;
 
 const stepBottom = css`
-border-bottom: .5px solid rgba(217, 217, 217, 0.08);
-`
+	border-bottom: 0.5px solid rgba(217, 217, 217, 0.08);
+`;
 function RenderStep({ data, testInstanceData, setIsShowingVideo, testId, index }) {
 	const [showStepInfoModal, setShowStepInfoModal] = useState(false);
 	const { status, message, actionType, meta } = data;
-
 
 	const actionName = getActionLabel(actionType);
 	const actionDescription = meta?.actionName ? meta.actionName : message;
@@ -434,7 +414,6 @@ function RenderStep({ data, testInstanceData, setIsShowingVideo, testId, index }
 	return (
 		<div className={"relative"} css={stepCSS}>
 			<div className="flex item-center w-full">
-
 				<div css={leftSide(isFirst)} className="relative flex flex-col">
 					<div id="first"></div>
 					<div id="mark"></div>
@@ -462,16 +441,15 @@ function RenderStep({ data, testInstanceData, setIsShowingVideo, testId, index }
 					<Conditional showIf={status !== "FAILED"}>
 						<div
 							className={"ml-12 flex items-center"}
-
 							css={css`
-							align-items: center;
-						`}
+								align-items: center;
+							`}
 						>
 							<span
 								className={"text-13 font-600"}
 								css={css`
-								color: #d0d0d0;
-							`}
+									color: #d0d0d0;
+								`}
 							>
 								{actionName} {status === ActionStatusEnum.STALLED ? "(Stalled)" : ""}
 							</span>
@@ -479,9 +457,9 @@ function RenderStep({ data, testInstanceData, setIsShowingVideo, testId, index }
 								<span
 									className={"text-12 ml-16"}
 									css={css`
-									color: #656565;
-									letter-spacing: .3px;
-								`}
+										color: #656565;
+										letter-spacing: 0.3px;
+									`}
 								>
 									{meta?.actionName ? meta.actionName : message}
 								</span>
@@ -493,17 +471,17 @@ function RenderStep({ data, testInstanceData, setIsShowingVideo, testId, index }
 						<span
 							className={"ml-12"}
 							css={css`
-							:hover {
-								opacity: 0.9;
-							}
-						`}
+								:hover {
+									opacity: 0.9;
+								}
+							`}
 							onClick={openStepInfoModal}
 						>
 							<InfoSVG
 								css={css`
-								width: 12rem;
-								height: 12rem;
-							`}
+									width: 12rem;
+									height: 12rem;
+								`}
 							/>
 						</span>
 					</Conditional>
@@ -514,11 +492,11 @@ function RenderStep({ data, testInstanceData, setIsShowingVideo, testId, index }
 			</Conditional>
 			<div className={"px-34 mt-12"}>
 				{[ActionsInTestEnum.ASSERT_ELEMENT].includes(actionType) &&
-					data.meta &&
-					data.meta.meta &&
-					data.meta.meta.meta &&
-					data.meta.meta.meta.logs &&
-					status === "FAILED" ? (
+				data.meta &&
+				data.meta.meta &&
+				data.meta.meta.meta &&
+				data.meta.meta.meta.logs &&
+				status === "FAILED" ? (
 					<RenderAssertElement logs={data.meta.meta.meta.logs} />
 				) : (
 					""
@@ -825,7 +803,6 @@ function TestOverviewTabTopSection({ currentTestTab, testInstanceData, expand, i
 				>
 					logs
 				</div>
-
 			</div>
 
 			<div className={"flex items-center mr-60"}>
@@ -837,7 +814,7 @@ function TestOverviewTabTopSection({ currentTestTab, testInstanceData, expand, i
 
 const selectedTabStyle = css`
 	font-weight: 700;
-	color: #C071FF;
+	color: #c071ff;
 	text-decoration: none;
 `;
 const testNavBarItemStyle = css`
@@ -847,20 +824,13 @@ const testNavBarItemStyle = css`
 	color: #696969;
 	text-decoration: underline;
 	:hover {
-	
 		color: #fff;
 	}
 `;
 
 function ExpanDNew(props) {
 	return (
-		<svg
-			width={14}
-			height={14}
-			fill="none"
-			xmlns="http://www.w3.org/2000/svg"
-			{...props}
-		>
+		<svg width={14} height={14} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<path
 				d="M1 4V1m0 0h3M1 1l3.75 3.75M13 4V1m0 0h-3m3 0L9.25 4.75M1 10v3m0 0h3m-3 0l3.75-3.75M13 13L9.25 9.25M13 13v-3m0 3h-3"
 				stroke="#D766FF"
@@ -895,10 +865,8 @@ function ExpandableStepGroup({
 		<>
 			<Conditional showIf={!expandTestStep}>
 				<Conditional showIf={count > 0}>
-
 					<div className={"relative"} css={stepCSS}>
 						<div className="flex item-center w-full" onClick={expandHandler}>
-
 							<div css={leftSide(false)} className="relative flex flex-col">
 								<div id="first"></div>
 								<div id="mark"></div>
@@ -909,11 +877,16 @@ function ExpandableStepGroup({
 									<ExpanDNew />
 								</div>
 								<div className="ml-20">
-									<span className={"text-13 font-600 leading-none expand-highlight pt-4"} css={css`color: #D0D0D0;`}>
-										<span className="underline">expand</span> {count} steps</span>
+									<span
+										className={"text-13 font-600 leading-none expand-highlight pt-4"}
+										css={css`
+											color: #d0d0d0;
+										`}
+									>
+										<span className="underline">expand</span> {count} steps
+									</span>
 								</div>
 							</div>
-
 						</div>
 					</div>
 				</Conditional>
@@ -927,17 +900,15 @@ function ExpandableStepGroup({
 	);
 }
 
-
 const stepCSS = css`
 	height: 44rem;
 	display: flex;
-    align-items: center;
+	align-items: center;
 	padding-left: 56rem;
-	:hover{
+	:hover {
 		background: #101010;
 	}
-`
-
+`;
 
 function RenderSteps({ steps, testInstanceData, testId, setIsShowingVideo }: { steps: any[]; testInstanceData: any; setIsShowingVideo: any; testId: any }) {
 	const groupSteps = React.useMemo(() => getCollapsedTestSteps(steps), [steps]);

@@ -9,7 +9,7 @@ import { MenuItem } from "@components/molecules/MenuItem";
 import { ChevronDown } from "@svg/testReport";
 import { getAllConfigurationForGivenTest } from "@utils/core/buildReportUtils";
 
-import {testCardConfigAtom} from "../../atoms";
+import { testCardConfigAtom } from "../../atoms";
 import { useBasicTestData } from "../../hooks";
 
 function Browsers({ browsers, setConfig }) {

@@ -3,7 +3,7 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import React, { useCallback, useEffect } from "react";
 
-import { atom, useAtom } from "jotai";
+import {useAtom} from "jotai";
 
 import { Button, Text } from "dyson/src/components/atoms";
 import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
@@ -20,10 +20,10 @@ import { usePageTitle } from "../../../hooks/seo";
 import { updateMeta } from "../../../store/mutators/metaData";
 import { useBuildReport } from "../../../store/serverState/buildReports";
 import { RequestMethod } from "../../../types/RequestOptions";
+import { selectedTabAtom } from "./atoms";
 import { ConfigChange } from "./components/common/config";
 import { ReviewSection } from "./components/review/reviewComponent";
 import { HomeSection } from "./container/home";
-import { selectedTabAtom } from "./atoms";
 
 const ReportSection = dynamic(() => import("./container/testList"));
 function BuildInfoTop() {
@@ -277,7 +277,6 @@ const section = [
 	// 	icon: null,
 	// },
 ];
-
 
 export const rerunBuild = async (buildId) => {
 	await backendRequest(`/builds/${buildId}/actions/rerun`, {

@@ -83,7 +83,6 @@ const container = css`
 
 
 
-
 function Terminal() {
 	return <div css={buildContainerWidth} className="mx-auto">
 		<div css={report} className="mt-36 flex flex-col justify-between">

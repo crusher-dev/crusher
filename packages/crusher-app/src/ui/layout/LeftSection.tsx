@@ -299,7 +299,7 @@ export const menuItem = css`
 
 const badgeStyle = css`
 	border: 0.5rem solid #222225;
-	background: black;
+	background: #0000001f;
 	.test-count,
 	.hours-count {
 		width: 50%;

@@ -1,5 +1,5 @@
 import React from "react";
-
+import { css } from "@emotion/react";
 export const FIGMA_REM_COEFFICIENT = 16;
 
 export const COLORS = {
@@ -43,3 +43,27 @@ export const COMPONENTS = {
 export const SUPPORTED_THEME = ["dark", "light"];
 export const DEFAULT_THEME = "light";
 export const ThemeContext = React.createContext(DEFAULT_THEME);
+
+
+export const plainButtonCSS = css`
+	padding: 0 10rem;
+
+	font-family: "Gilroy";
+	font-style: normal;
+	font-weight: 600;
+	font-size: 13px;
+
+	color: #ffffff;
+
+	width: max-content;
+
+	background: #a742f7;
+	border: 1px solid #7d41ad;
+	border-radius: 8px;
+
+	:hover {
+		background: #a742f7;
+		filter: brighntess(0.7);
+		border: 1px solid #7d41ad;
+	}
+`;

@@ -28,6 +28,7 @@ import {
     getTestIndexByConfig,
 } from "@utils/core/buildReportUtils";
 import { getAssetPath, getCollapsedTestSteps } from "@utils/helpers";
+import { plainButtonCSS } from "@constants/style";
 
 const CompareImage = dynamic(() => import("../components/compareImages"));
 
@@ -365,7 +366,7 @@ function RenderStep({ data, testInstanceData, setIsShowingVideo, testId, index }
             <Conditional showIf={[ActionsInTestEnum.ELEMENT_SCREENSHOT, ActionsInTestEnum.PAGE_SCREENSHOT, ActionsInTestEnum.CUSTOM_CODE].includes(actionType)}>
                 {data.meta?.outputs ? data.meta.outputs.map((_, index) => <RenderImageInfo data={data} index={index} />) : null}
             </Conditional>
-            <div className={"px-34"}>
+            <div className={"pl-60"}>
                 {[ActionsInTestEnum.ASSERT_ELEMENT].includes(actionType) &&
                     data.meta &&
                     data.meta.meta &&
@@ -386,7 +387,7 @@ function RenderStep({ data, testInstanceData, setIsShowingVideo, testId, index }
                             <a href={`crusher://replay-test?testId=${testId}`}>
                                 <Button>Run locally</Button>
                             </a>
-                            <Button className={"ml-16"} bgColor={"tertiary"} onClick={setIsShowingVideo.bind(this, true)}>
+                            <Button css={plainButtonCSS} className={"ml-8"} bgColor={"tertiary"} onClick={setIsShowingVideo.bind(this, true)}>
                                 <span className={"font-400"}>View Video</span>
                             </Button>
                         </div>
@@ -407,10 +408,11 @@ function RenderStep({ data, testInstanceData, setIsShowingVideo, testId, index }
                             </div>
                             {data.meta?.screenshotDuringError ? (
                                 <img
-                                    className={"mt-26"}
+                                    className={"mt-26 mb-26"}
                                     src={data.meta.screenshotDuringError.endingScreenshot}
                                     css={css`
 										max-width: 49%;
+                                        border: 1px solid #242424;
 									`}
                                 />
                             ) : (

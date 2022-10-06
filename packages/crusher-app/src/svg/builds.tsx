@@ -118,4 +118,42 @@ export function CheckSVG(props) {
 	);
 }
 
+export function CheckSquare(props) {
+	return (
+		<svg
+			width={14}
+			height={14}
+			fill="none"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
+			<path
+				d="M10.008 0c2.349 0 3.922 1.666 3.922 4.144v5.72c0 2.47-1.573 4.136-3.922 4.136H3.998C1.65 14 .07 12.334.07 9.863v-5.72C.07 1.667 1.65 0 4 0h6.008zm-.111 4.9a.606.606 0 00-.86 0L6.175 7.79 4.963 6.567a.606.606 0 00-.86 0 .621.621 0 000 .868l1.65 1.659a.59.59 0 00.422.175c.16 0 .312-.056.43-.175l3.292-3.325a.621.621 0 000-.868z"
+				fill="#9EF25B"
+				fillOpacity={0.91}
+			/>
+		</svg>
+	);
+}
+
+export function ExpandableSVG(props) {
+	return (
+		<svg
+			width={14}
+			height={14}
+			fill="none"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
+			<path
+				d="M1 4V1m0 0h3M1 1l3.75 3.75M13 4V1m0 0h-3m3 0L9.25 4.75M1 10v3m0 0h3m-3 0l3.75-3.75M13 13L9.25 9.25M13 13v-3m0 3h-3"
+				stroke="#D766FF"
+				strokeWidth={1.3}
+				strokeLinecap="round"
+				strokeLinejoin="round"
+			/>
+		</svg>
+	);
+}
+
 export { CommentIconSVG, DangerIconSVG, ClockIconSVG, DropdownIconSVG };

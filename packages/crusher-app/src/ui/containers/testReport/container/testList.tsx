@@ -15,9 +15,9 @@ import { Modal } from "dyson/src/components/molecules/Modal";
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { ActionStatusEnum } from "@crusher-shared/lib/runnerLog/interface";
 import { useBuildReport } from "@store/serverState/buildReports";
-import { CheckSVG, FullImageView, ShowSidebySide } from "@svg/builds";
+import { CheckSquare, CheckSVG, FullImageView, ShowSidebySide } from "@svg/builds";
 import { LoadingSVG, PlaySVG } from "@svg/dashboard";
-import { ExpandSVG, InfoSVG, TestStatusSVG } from "@svg/testReport";
+import { InfoSVG } from "@svg/testReport";
 import {
 	getActionLabel,
 	getAllConfigurationForGivenTest,
@@ -93,6 +93,17 @@ border: 0.5px solid rgba(255, 255, 255, 0.05);
 	}
 }
 `
+
+const reportSectionCSS = css`
+width: 100%;
+background: #0a0a0a;
+min-height: 100vh;
+display: flex;
+border-top-color: rgba(255, 255, 255, 0.04);
+border-top-width: 0.5rem;
+border-top-style: solid;
+`
+
 function ReportSection() {
 	const [selectedTest, setSelectedTest] = useAtom(selectedTestAtom);
 	const { query } = useRouter();
@@ -101,15 +112,7 @@ function ReportSection() {
 	return (
 		<div
 			className={"mt-20"}
-			css={css`
-				width: 100%;
-				background: #0a0a0a;
-				min-height: 100vh;
-				display: flex;
-				border-top-color: rgba(255, 255, 255, 0.04);
-				border-top-width: 0.5rem;
-				border-top-style: solid;
-			`}
+			css={reportSectionCSS}
 		>
 			<div
 				css={stepSectionCSS}
@@ -358,9 +361,58 @@ const assertTableContainerStyle = css`
 	display: inline-block;
 	border-radius: 9rem;
 `;
-function RenderStep({ data, testInstanceData, setIsShowingVideo, testId }) {
+
+const leftSide = (isFirst) => css`
+width: 13px;
+height: 44rem;
+align-items: center;
+
+#first{
+	${isFirst && `visibility: hidden;`}
+}
+
+#mark{
+
+	min-width: 13px;
+min-height: 13px;
+
+position: absolute;
+
+${isFirst && `
+	background: #1F1F1F;
+	border-radius: 12px;
+`}
+
+${!isFirst && `
+	background: #0B0B0B;
+	border: 0.5px solid #1F1F1F;
+`}
+
+
+
+left: 50%;
+top: 50%;
+transform: translate(-50%, -50%);
+}
+
+#second{
+	height: 50%;
+}
+
+#first,#second{
+	background: #1C1C1C;
+	height: 27px;
+	width: 1px;
+}
+`
+
+const stepBottom = css`
+border-bottom: .5px solid rgba(217, 217, 217, 0.08);
+`
+function RenderStep({ data, testInstanceData, setIsShowingVideo, testId, index }) {
 	const [showStepInfoModal, setShowStepInfoModal] = useState(false);
 	const { status, message, actionType, meta } = data;
+
 
 	const actionName = getActionLabel(actionType);
 	const actionDescription = meta?.actionName ? meta.actionName : message;
@@ -369,11 +421,21 @@ function RenderStep({ data, testInstanceData, setIsShowingVideo, testId }) {
 		setShowStepInfoModal(true);
 	};
 
+	const isFirst = index === 0;
+
 	return (
-		<div className={"relative mb-32"}>
-			<div className={" flex px-34"}>
-				<div css={tick}>
-					<TestStatusSVG
+		<div className={"relative"} css={stepCSS}>
+			<div className="flex item-center w-full">
+
+				<div css={leftSide(isFirst)} className="relative flex flex-col">
+					<div id="first"></div>
+					<div id="mark"></div>
+					<div id="second"></div>
+				</div>
+				<div className="flex items-center pl-20 w-full" css={stepBottom}>
+					<div css={tick} className="flex items-center">
+						<CheckSquare />
+						{/* <TestStatusSVG
 						css={
 							status === ActionStatusEnum.STALLED
 								? css`
@@ -386,71 +448,58 @@ function RenderStep({ data, testInstanceData, setIsShowingVideo, testId }) {
 						type={status}
 						height={"20rem"}
 						width={"20rem"}
-					/>
-				</div>
+					/> */}
+					</div>
 
-				<Conditional showIf={status !== "FAILED"}>
-					<div
-						className={"mt-8 flex"}
-						css={css`
+					<Conditional showIf={status !== "FAILED"}>
+						<div
+							className={"ml-20 flex items-center"}
+
+							css={css`
 							align-items: center;
 						`}
-					>
-						<span
-							className={"text-13 font-600"}
-							css={css`
+						>
+							<span
+								className={"text-13 font-600"}
+								css={css`
 								color: #d0d0d0;
 							`}
-						>
-							{actionName} {status === ActionStatusEnum.STALLED ? "(Stalled)" : ""}
-						</span>
-						<Conditional showIf={actionDescription && actionDescription.trim().length}>
-							<span
-								className={"text-12 ml-20"}
-								css={css`
-									color: #848484;
-								`}
 							>
-								{meta?.actionName ? meta.actionName : message}
+								{actionName} {status === ActionStatusEnum.STALLED ? "(Stalled)" : ""}
 							</span>
-						</Conditional>
-						{/* <span
+							<Conditional showIf={actionDescription && actionDescription.trim().length}>
+								<span
+									className={"text-12 ml-16"}
+									css={css`
+									color: #656565;
+									letter-spacing: .3px;
+								`}
+								>
+									{meta?.actionName ? meta.actionName : message}
+								</span>
+							</Conditional>
+						</div>
+					</Conditional>
+					<Conditional showIf={status === "FAILED"}>
+						<ErrorComponent actionName={meta?.actionName} testInstanceData={testInstanceData} actionType={actionType} message={message} />
+						<span
 							className={"ml-12"}
 							css={css`
-								:hover {
-									opacity: 0.9;
-								}
-							`}
-							onClick={openStepInfoModal}
-						>
-							<InfoSVG
-								css={css`
-									width: 12rem;
-									height: 12rem;
-								`}
-							/>
-						</span> */}
-					</div>
-				</Conditional>
-				<Conditional showIf={status === "FAILED"}>
-					<ErrorComponent actionName={meta?.actionName} testInstanceData={testInstanceData} actionType={actionType} message={message} />
-					<span
-						className={"ml-12"}
-						css={css`
 							:hover {
 								opacity: 0.9;
 							}
 						`}
-						onClick={openStepInfoModal}
-					>
-						<InfoSVG
-							css={css`
+							onClick={openStepInfoModal}
+						>
+							<InfoSVG
+								css={css`
 								width: 12rem;
 								height: 12rem;
 							`}
-						/>
-					</span>
-				</Conditional>
+							/>
+						</span>
+					</Conditional>
+				</div>
 			</div>
 			<Conditional showIf={[ActionsInTestEnum.ELEMENT_SCREENSHOT, ActionsInTestEnum.PAGE_SCREENSHOT, ActionsInTestEnum.CUSTOM_CODE].includes(actionType)}>
 				{data.meta?.outputs ? data.meta.outputs.map((_, index) => <RenderImageInfo data={data} index={index} />) : null}
@@ -837,9 +886,9 @@ function TestOverviewTabTopSection({ currentTestTab, testInstanceData, expand, i
 						setCurrentTestTab("logs");
 					}}
 				>
-					Logs
+					logs
 				</div>
-				<div css={testNavBarItemStyle}>Actions</div>
+
 			</div>
 
 			<div className={"flex items-center mr-60"}>
@@ -862,9 +911,29 @@ const testNavBarItemStyle = css`
 	text-decoration: underline;
 	:hover {
 	
-		opacity: 0.8;
+		color: #fff;
 	}
 `;
+
+function ExpanDNew(props) {
+	return (
+		<svg
+			width={14}
+			height={14}
+			fill="none"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
+			<path
+				d="M1 4V1m0 0h3M1 1l3.75 3.75M13 4V1m0 0h-3m3 0L9.25 4.75M1 10v3m0 0h3m-3 0l3.75-3.75M13 13L9.25 9.25M13 13v-3m0 3h-3"
+				stroke="#D766FF"
+				strokeWidth={1.3}
+				strokeLinecap="round"
+				strokeLinejoin="round"
+			/>
+		</svg>
+	);
+}
 function ExpandableStepGroup({
 	steps,
 	testInstanceData,
@@ -889,57 +958,55 @@ function ExpandableStepGroup({
 		<>
 			<Conditional showIf={!expandTestStep}>
 				<Conditional showIf={count > 0}>
-					<div className={"relative mb-32"}>
-						<div className={" flex px-34"} onClick={expandHandler} css={expandDIVCSS}>
-							<div css={tick} className={"expand-svg"}>
-								<ExpandSVG height={"20rem"} width={"20rem"} />
+
+					<div className={"relative"} css={stepCSS}>
+						<div className="flex item-center w-full" onClick={expandHandler}>
+
+							<div css={leftSide(false)} className="relative flex flex-col">
+								<div id="first"></div>
+								<div id="mark"></div>
+								<div id="second"></div>
 							</div>
-							<div
-								className={"mt-4 flex"}
-								css={css`
-									align-items: center;
-								`}
-							>
-								<span className={"text-13 font-600 leading-none expand-highlight pt-4"}>Expand {count} steps</span>
+							<div className="flex items-center pl-20 w-full" css={stepBottom}>
+								<div css={tick} className="flex items-center">
+									<ExpanDNew />
+								</div>
+								<div className="ml-20">
+									<span className={"text-13 font-600 leading-none expand-highlight pt-4"}>
+										<span className="underline">Expand</span> {count} steps</span>
+								</div>
 							</div>
+
 						</div>
 					</div>
 				</Conditional>
 			</Conditional>
 			<Conditional showIf={expandTestStep}>
 				{steps.map((step, index) => (
-					<RenderStep testId={testId} setIsShowingVideo={setIsShowingVideo} testInstanceData={testInstanceData} data={step} key={index} />
+					<RenderStep testId={testId} setIsShowingVideo={setIsShowingVideo} testInstanceData={testInstanceData} data={step} key={index} index={index} />
 				))}
 			</Conditional>
 		</>
 	);
 }
 
-const expandDIVCSS = css`
-	:hover {
-		.expand-highlight {
-			color: #2ae7db;
-			text-decoration: underline;
-		}
 
-		svg rect {
-			fill: #242b36;
-		}
+const stepCSS = css`
+	height: 44px;
+	display: flex;
+    align-items: center;
+	padding-left: 56rem;
+	:hover{
+		background: #101010;
 	}
+`
 
-	.expand-highlight {
-		color: #58e9e0;
-	}
-
-	.expand-svg {
-	}
-`;
 
 function RenderSteps({ steps, testInstanceData, testId, setIsShowingVideo }: { steps: any[]; testInstanceData: any; setIsShowingVideo: any; testId: any }) {
 	const groupSteps = React.useMemo(() => getCollapsedTestSteps(steps), [steps]);
 	return (
-		<div className={"px-32 mt-20 w-full"}>
-			<div className={"ml-32 py-32"} css={stepsList}>
+		<div className={"mt-20 w-full"}>
+			<div className={"py-22"} css={stepsList}>
 				{groupSteps.map(({ type, from, to, count }: any) => (
 					<ExpandableStepGroup
 						testId={testId}
@@ -1044,9 +1111,6 @@ function TestCard() {
 }
 
 const tick = css`
-	position: absolute;
-	left: 0;
-	transform: translate(-50%, 3px);
 `;
 
 const stepsList = css``;

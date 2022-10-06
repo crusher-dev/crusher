@@ -1,5 +1,6 @@
-import React from "react";
 import { css } from "@emotion/react";
+import React from "react";
+
 export const FIGMA_REM_COEFFICIENT = 16;
 
 export const COLORS = {
@@ -43,7 +44,6 @@ export const COMPONENTS = {
 export const SUPPORTED_THEME = ["dark", "light"];
 export const DEFAULT_THEME = "light";
 export const ThemeContext = React.createContext(DEFAULT_THEME);
-
 
 export const plainButtonCSS = css`
 	padding: 0 10rem;

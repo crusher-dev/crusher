@@ -1,12 +1,14 @@
 import { css } from "@emotion/react";
 import { useRouter } from "next/router";
 import React from "react";
+
 import { useAtom } from "jotai";
+
 import { useBuildReport } from "@store/serverState/buildReports";
 import { CheckSVG } from "@svg/builds";
-import { selectedTestAtom } from "../atoms";
 import { TestOverview } from "@ui/containers/testReport/container/testOverview";
 
+import { selectedTestAtom } from "../atoms";
 
 const getStatusFromTestInstances = (testInstances) => {
 	const failed = testInstances.find((a) => a.status === "FAILED");
@@ -49,7 +51,7 @@ border: 0.5px solid rgba(255, 255, 255, 0.05);
 		font-size: 14rem;
 
 		${selected &&
-	`
+		`
 		font-weight: 600;
 		`}
 	}

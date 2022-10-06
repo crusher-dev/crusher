@@ -3,7 +3,7 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import React, { useCallback, useEffect } from "react";
 
-import {useAtom} from "jotai";
+import { useAtom } from "jotai";
 
 import { Button, Text } from "dyson/src/components/atoms";
 import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";

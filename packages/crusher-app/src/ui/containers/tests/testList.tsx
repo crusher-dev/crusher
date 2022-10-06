@@ -421,6 +421,18 @@ const wrapperCSS = css`
 	}
 `;
 
+const SELECTED_TESTS_MENU = [
+	{ id: "rename", label: "Rename", shortcut: <div>Enter</div> },
+	{ id: "edit", label: "Edit test", shortcut: null },
+	{ id: "edit", label: "Run test", shortcut: null },
+	{ id: "delete", label: "Delete", shortcut: <div>Delete</div> },
+];
+
+const MULTI_SELECTED_MENU = [
+	{ id: "run", label: "Run all", shortcut: null },
+	{ id: "delete-all", label: "Delete all", shortcut: <div>Delete</div> },
+];
+
 function TestSearchableList() {
 	const { currentProject: project } = useProjectDetails();
 	const [{ selectedProjectId }] = useAtom(appStateAtom);
@@ -482,7 +494,13 @@ function TestSearchableList() {
 					}}
 				/> */}
 				{/* <FolderList /> */}
-				<TestsList tests={data.list} />
+				<TestsList contextMenu={{"single": {
+					callback: () => {},
+					menuItems: SELECTED_TESTS_MENU
+				}, "multi": {
+					callback: () => {},
+					menuItems: MULTI_SELECTED_MENU
+				}}} tests={ data.list}/>
 				{/* <div css={css`font-size: 14rem; font-weight: bold; color: #fff;`}>{JSOn</div> */}
 				{/* {rootTest} */}
 			</Conditional>

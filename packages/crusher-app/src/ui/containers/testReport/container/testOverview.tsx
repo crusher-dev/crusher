@@ -705,8 +705,8 @@ function TestOverviewTabTopSection({
 }
 
 const selectedTabStyle = css`
-	font-weight: 700;
-	color: #c071ff;
+	font-weight: 600;
+	color: #a742f7;
 	text-decoration: none;
 `;
 const testNavBarItemStyle = css`

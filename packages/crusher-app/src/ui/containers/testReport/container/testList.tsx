@@ -373,6 +373,8 @@ width: 13px;
 height: 44rem;
 align-items: center;
 
+	margin-right: -6px;
+
 #first{
 	${isFirst && `visibility: hidden;`}
 }
@@ -438,7 +440,7 @@ function RenderStep({ data, testInstanceData, setIsShowingVideo, testId, index }
 					<div id="mark"></div>
 					<div id="second"></div>
 				</div>
-				<div className="flex items-center pl-20 w-full" css={stepBottom}>
+				<div className="flex items-center pl-24 w-full" css={stepBottom}>
 					<div className="flex items-center">
 						<CheckSquare />
 						{/* <TestStatusSVG
@@ -927,7 +929,7 @@ function ExpandableStepGroup({
 
 
 const stepCSS = css`
-	height: 44px;
+	height: 44rem;
 	display: flex;
     align-items: center;
 	padding-left: 56rem;

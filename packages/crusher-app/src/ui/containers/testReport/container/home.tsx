@@ -72,7 +72,7 @@ border-radius: 12px;
 const container = css`
 
 				width: 100%;
-				background: #0a0a0a;
+				background: #090909;
 				min-height: 100vh;
 				display: flex;
 				border-top-color: rgba(255, 255, 255, 0.04);

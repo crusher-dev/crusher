@@ -1,22 +1,22 @@
-import {css} from "@emotion/react";
+import { css } from "@emotion/react";
 import dynamic from "next/dynamic";
-import {useRouter} from "next/router";
-import React, {useEffect, useState} from "react";
-import {useBlockLayout, useTable} from "react-table";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
+import { useBlockLayout, useTable } from "react-table";
 
-import {useAtom} from "jotai";
-import {atomWithImmer} from "jotai/immer";
+import { useAtom } from "jotai";
+import { atomWithImmer } from "jotai/immer";
 
-import {Button} from "dyson/src/components/atoms";
-import {Conditional} from "dyson/src/components/layouts";
-import {Modal} from "dyson/src/components/molecules/Modal";
+import { Button } from "dyson/src/components/atoms";
+import { Conditional } from "dyson/src/components/layouts";
+import { Modal } from "dyson/src/components/molecules/Modal";
 
-import {ActionsInTestEnum} from "@crusher-shared/constants/recordedActions";
-import {ActionStatusEnum} from "@crusher-shared/lib/runnerLog/interface";
-import {useBuildReport} from "@store/serverState/buildReports";
-import {CheckSquare, CheckSVG, FullImageView, ShowSidebySide} from "@svg/builds";
-import {LoadingSVG, PlaySVG} from "@svg/dashboard";
-import {InfoSVG} from "@svg/testReport";
+import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
+import { ActionStatusEnum } from "@crusher-shared/lib/runnerLog/interface";
+import { useBuildReport } from "@store/serverState/buildReports";
+import { CheckSquare, CheckSVG, FullImageView, ShowSidebySide } from "@svg/builds";
+import { LoadingSVG, PlaySVG } from "@svg/dashboard";
+import { InfoSVG } from "@svg/testReport";
 import {
 	getActionLabel,
 	getAllConfigurationForGivenTest,
@@ -25,12 +25,12 @@ import {
 	getStepsFromInstanceData,
 	getTestIndexByConfig,
 } from "@utils/core/buildReportUtils";
-import {getAssetPath, getCollapsedTestSteps} from "@utils/helpers";
+import { getAssetPath, getCollapsedTestSteps } from "@utils/helpers";
 
-import {selectedTestAtom, testCardConfigAtom} from "../atoms";
-import {useBasicTestData} from "../hooks";
-import {TestLogs} from "@ui/containers/testReport/components/steps/testLogs";
-import {PlayVideo, TestVideoUrl} from "@ui/containers/testReport/container/playVideo";
+import { selectedTestAtom, testCardConfigAtom } from "../atoms";
+import { useBasicTestData } from "../hooks";
+import { TestLogs } from "@ui/containers/testReport/components/steps/testLogs";
+import { PlayVideo, TestVideoUrl } from "@ui/containers/testReport/container/playVideo";
 
 const CompareImage = dynamic(() => import("../components/compareImages"));
 
@@ -97,7 +97,7 @@ border: 0.5px solid rgba(255, 255, 255, 0.05);
 
 const reportSectionCSS = css`
 width: 100%;
-background: #0a0a0a;
+background: #090909;
 min-height: 100vh;
 display: flex;
 border-top-color: rgba(255, 255, 255, 0.04);
@@ -105,9 +105,9 @@ border-top-width: 0.5rem;
 border-top-style: solid;
 `
 
-function TestList( props: any) {
+function TestList(props: any) {
 
-	const {data,selectedTest,setSelectedTest} = props
+	const { data, selectedTest, setSelectedTest } = props
 	return <div
 		css={stepSectionCSS}
 	>
@@ -129,8 +129,8 @@ function TestList( props: any) {
 					<span
 						id="name"
 					>
-								{testData!.name}
-							</span>
+						{testData!.name}
+					</span>
 				</li>
 			))}
 		</ul>
@@ -148,12 +148,12 @@ function ReportSection() {
 			css={reportSectionCSS}
 		>
 
-			<TestList data={data} selectedTest={selectedTest} setSelectedTest={setSelectedTest}/>
+			<TestList data={data} selectedTest={selectedTest} setSelectedTest={setSelectedTest} />
 
 			<div
 				className={"py-4 flex-1"}
 			>
-				{data?.tests.length ? <TestCard/> : ""}
+				{data?.tests.length ? <TestCard /> : ""}
 			</div>
 		</div>
 	);

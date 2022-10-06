@@ -15,7 +15,7 @@ import { ActionStatusEnum } from "@crusher-shared/lib/runnerLog/interface";
 import { CheckSquare, FullImageView, ShowSidebySide } from "@svg/builds";
 import { LoadingSVG, PlaySVG } from "@svg/dashboard";
 import { InfoSVG } from "@svg/testReport";
-import { selectedTestAtom, testCardConfigAtom } from "@ui/containers/testReport/atoms";
+import { activeActionIndexAtom, selectedTestAtom, testCardConfigAtom } from "@ui/containers/testReport/atoms";
 import { TestLogs } from "@ui/containers/testReport/components/steps/testLogs";
 import { PlayVideo, TestVideoUrl } from "@ui/containers/testReport/container/playVideo";
 import { useBasicTestData } from "@ui/containers/testReport/hooks";
@@ -276,7 +276,9 @@ const stepBottom = css`
 
 function RenderStep({ data, testInstanceData, setIsShowingVideo, testId, index }) {
     const [showStepInfoModal, setShowStepInfoModal] = useState(false);
-    const { status, message, actionType, meta } = data;
+    const { status, message, actionType, meta, actionIndex } = data;
+
+    const [activeActionIndex, setActiveActionIndex] = useAtom(activeActionIndexAtom);
 
     const actionName = getActionLabel(actionType);
     const actionDescription = meta?.actionName ? meta.actionName : message;
@@ -285,10 +287,10 @@ function RenderStep({ data, testInstanceData, setIsShowingVideo, testId, index }
         setShowStepInfoModal(true);
     };
 
-    const isFirst = index === 0;
-
+    const isFirst = actionIndex === 0;
+    const isHovered = activeActionIndex === actionIndex;
     return (
-        <div className={"relative"} css={stepCSS}>
+        <div className={"relative"} css={stepCSS(isHovered)} onMouseOver={setActiveActionIndex.bind(this, actionIndex)}>
             <div className="flex item-center w-full relative">
                 <div css={leftSide(isFirst)} className="relative flex flex-col">
                     <div id="first"></div>
@@ -730,7 +732,7 @@ function ExpandableStepGroup({
         <>
             <Conditional showIf={!expandTestStep}>
                 <Conditional showIf={count > 0}>
-                    <div className={"relative"} css={stepCSS}>
+                    <div className={"relative"} css={stepCSS(false)}>
                         <div className="flex item-center w-full" onClick={expandHandler}>
                             <div css={leftSide(false)} className="relative flex flex-col">
                                 <div id="first"></div>
@@ -765,15 +767,15 @@ function ExpandableStepGroup({
     );
 }
 
-const stepCSS = css`
+const stepCSS = (isHovered) => css`
 	min-height: 44rem;
 	display: flex;
 	align-items: center;
 	padding-left: 56rem;
 	flex-direction: column;
-	:hover {
-		background: #101010;
-	}
+    ${isHovered && `
+    background: #101010;
+    `}
 `;
 
 function RenderSteps({ steps, testInstanceData, testId, setIsShowingVideo }: { steps: any[]; testInstanceData: any; setIsShowingVideo: any; testId: any }) {

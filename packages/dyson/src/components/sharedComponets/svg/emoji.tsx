@@ -1349,3 +1349,10 @@ export function CryFace(props) {
         </svg>
     );
 }
+
+export const BasketBallIcon = React.forwardRef((props, ref) => (
+	<svg viewBox={"0 0 18 18"} fill="none" xmlns="http://www.w3.org/2000/svg" ref={ref} {...props}>
+		<path d="M15.75 9a6.75 6.75 0 1 1-13.5 0 6.75 6.75 0 0 1 13.5 0Z" stroke="#303030" strokeWidth={1.5} />
+		<path d="M6 10.5c.684.91 1.773 1.5 3 1.5s2.316-.59 3-1.5M6.75 7.508V7.5M11.25 7.508V7.5" stroke="#303030" strokeWidth={1.5} strokeLinecap="round" />
+	</svg>
+));

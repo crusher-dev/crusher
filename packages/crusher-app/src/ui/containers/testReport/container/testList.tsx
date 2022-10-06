@@ -1,23 +1,22 @@
-import { css } from "@emotion/react";
+import {css} from "@emotion/react";
 import dynamic from "next/dynamic";
-import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
-import { useTable, useBlockLayout } from "react-table";
+import {useRouter} from "next/router";
+import React, {useEffect, useState} from "react";
+import {useBlockLayout, useTable} from "react-table";
 
-import { useAtom } from "jotai";
-import { atomWithImmer } from "jotai/immer";
+import {useAtom} from "jotai";
+import {atomWithImmer} from "jotai/immer";
 
-import { Button } from "dyson/src/components/atoms";
-import { VideoComponent } from "dyson/src/components/atoms/video/video";
-import { Conditional } from "dyson/src/components/layouts";
-import { Modal } from "dyson/src/components/molecules/Modal";
+import {Button} from "dyson/src/components/atoms";
+import {Conditional} from "dyson/src/components/layouts";
+import {Modal} from "dyson/src/components/molecules/Modal";
 
-import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
-import { ActionStatusEnum } from "@crusher-shared/lib/runnerLog/interface";
-import { useBuildReport } from "@store/serverState/buildReports";
-import { CheckSquare, CheckSVG, FullImageView, ShowSidebySide } from "@svg/builds";
-import { LoadingSVG, PlaySVG } from "@svg/dashboard";
-import { InfoSVG } from "@svg/testReport";
+import {ActionsInTestEnum} from "@crusher-shared/constants/recordedActions";
+import {ActionStatusEnum} from "@crusher-shared/lib/runnerLog/interface";
+import {useBuildReport} from "@store/serverState/buildReports";
+import {CheckSquare, CheckSVG, FullImageView, ShowSidebySide} from "@svg/builds";
+import {LoadingSVG, PlaySVG} from "@svg/dashboard";
+import {InfoSVG} from "@svg/testReport";
 import {
 	getActionLabel,
 	getAllConfigurationForGivenTest,
@@ -26,10 +25,12 @@ import {
 	getStepsFromInstanceData,
 	getTestIndexByConfig,
 } from "@utils/core/buildReportUtils";
-import { getAssetPath, getCollapsedTestSteps } from "@utils/helpers";
+import {getAssetPath, getCollapsedTestSteps} from "@utils/helpers";
 
-import { selectedTestAtom, testCardConfigAtom } from "../atoms";
-import { useBasicTestData } from "../hooks";
+import {selectedTestAtom, testCardConfigAtom} from "../atoms";
+import {useBasicTestData} from "../hooks";
+import {TestLogs} from "@ui/containers/testReport/components/steps/testLogs";
+import {PlayVideo, TestVideoUrl} from "@ui/containers/testReport/container/playVideo";
 
 const CompareImage = dynamic(() => import("../components/compareImages"));
 
@@ -104,6 +105,38 @@ border-top-width: 0.5rem;
 border-top-style: solid;
 `
 
+function TestList( props: any) {
+
+	const {data,selectedTest,setSelectedTest} = props
+	return <div
+		css={stepSectionCSS}
+	>
+		<div className="pl-28 pt-32" css={testListHeadingStyle}>
+			tests | 12
+		</div>
+		<ul css={testListStyle}>
+			{data?.tests.map((testData, i) => (
+				<li
+					className="px24 py-12"
+					css={testLeftSideCard(i === selectedTest)}
+					onClick={setSelectedTest.bind(this, i)}
+				>
+					<CheckSVG
+						type={getStatusFromTestInstances(testData?.testInstances)}
+						height={"14rem"}
+						width={"14rem"}
+					/>
+					<span
+						id="name"
+					>
+								{testData!.name}
+							</span>
+				</li>
+			))}
+		</ul>
+	</div>;
+}
+
 function ReportSection() {
 	const [selectedTest, setSelectedTest] = useAtom(selectedTestAtom);
 	const { query } = useRouter();
@@ -114,40 +147,13 @@ function ReportSection() {
 			className={"mt-20"}
 			css={reportSectionCSS}
 		>
+
+			<TestList data={data} selectedTest={selectedTest} setSelectedTest={setSelectedTest}/>
+
 			<div
-				css={stepSectionCSS}
+				className={"py-4 flex-1"}
 			>
-				<div className="pl-28 pt-32" css={testListHeadingStyle}>
-					tests | 12
-				</div>
-				<ul css={testListStyle}>
-					{data?.tests.map((testData, i) => (
-						<li
-							className="px24 py-12"
-							css={testLeftSideCard(i === selectedTest)}
-							onClick={setSelectedTest.bind(this, i)}
-						>
-							<CheckSVG
-								type={getStatusFromTestInstances(testData?.testInstances)}
-								height={"14rem"}
-								width={"14rem"}
-							/>
-							<span
-								id="name"
-							>
-								{testData!.name}
-							</span>
-						</li>
-					))}
-				</ul>
-			</div>
-			<div
-				className={"py-4"}
-				css={css`
-					flex: 1;
-				`}
-			>
-				{data?.tests.length ? <TestCard /> : ""}
+				{data?.tests.length ? <TestCard/> : ""}
 			</div>
 		</div>
 	);
@@ -433,7 +439,7 @@ function RenderStep({ data, testInstanceData, setIsShowingVideo, testId, index }
 					<div id="second"></div>
 				</div>
 				<div className="flex items-center pl-20 w-full" css={stepBottom}>
-					<div css={tick} className="flex items-center">
+					<div className="flex items-center">
 						<CheckSquare />
 						{/* <TestStatusSVG
 						css={
@@ -592,50 +598,6 @@ const errorBox = css`
 		}
 	}
 `;
-
-/*
-	Use Jotai for avoiding props drilling.
-	Make config much more streamline.
- */
-function PlayVideo({ videoUrl }) {
-	const [openVideoModal, setIsOpenVideoModal] = useState(false);
-
-	return (
-		<div className={"flex justify-between items-center mt-6 "}>
-			<div className={"flex"}>
-				{videoUrl ? (
-					<div
-						css={css`
-							display: flex;
-							align-items: center;
-							gap: 10rem;
-							margin-right: 24rem;
-							:hover {
-								opacity: 0.8;
-							}
-						`}
-						onClick={setIsOpenVideoModal.bind(this, true)}
-					>
-						<PlaySVG />
-						<span
-							css={css`
-								position: relative;
-								top: 2px;
-							`}
-						>
-							Play video
-						</span>
-					</div>
-				) : (
-					""
-				)}
-			</div>
-			<Conditional showIf={videoUrl && openVideoModal}>
-				<TestVideoUrl videoUrl={videoUrl} setOpenVideoModal={setIsOpenVideoModal.bind(this)} />
-			</Conditional>
-		</div>
-	);
-}
 
 function getAllKeys() {
 	const keys: any = {};
@@ -825,33 +787,6 @@ const tableStyle = css`
 	}
 `;
 
-function TestVideoUrl({ setOpenVideoModal, videoUrl }) {
-	const handleClose = () => {
-		setOpenVideoModal(false);
-	};
-	return (
-		<div
-			onClick={(e) => {
-				e.preventDefault();
-				e.stopPropagation();
-			}}
-		>
-			<Modal
-				lightOverlay={false}
-				onClose={handleClose.bind(this)}
-				onOutsideClick={handleClose.bind(this)}
-				modalStyle={css`
-					padding: 28rem 36rem 36rem;
-				`}
-			>
-				<div className={"font-cera text-16 font-600 leading-none"}>Test video by 🦖</div>
-				<div className={"text-13 mt-8 mb-24"}>For better experience, use full screen mode</div>
-				<VideoComponent src={videoUrl} />
-			</Modal>
-		</div>
-	);
-}
-
 function TestOverviewTabTopSection({ currentTestTab, testInstanceData, expand, isShowingVideo, setIsShowingVideo, setCurrentTestTab }) {
 	const videoUrl = testInstanceData?.output?.video;
 
@@ -968,7 +903,7 @@ function ExpandableStepGroup({
 								<div id="second"></div>
 							</div>
 							<div className="flex items-center pl-20 w-full" css={stepBottom}>
-								<div css={tick} className="flex items-center">
+								<div className="flex items-center">
 									<ExpanDNew />
 								</div>
 								<div className="ml-20">
@@ -1006,7 +941,7 @@ function RenderSteps({ steps, testInstanceData, testId, setIsShowingVideo }: { s
 	const groupSteps = React.useMemo(() => getCollapsedTestSteps(steps), [steps]);
 	return (
 		<div className={"mt-20 w-full"}>
-			<div className={"py-22"} css={stepsList}>
+			<div className={"py-22"}>
 				{groupSteps.map(({ type, from, to, count }: any) => (
 					<ExpandableStepGroup
 						testId={testId}
@@ -1019,34 +954,6 @@ function RenderSteps({ steps, testInstanceData, testId, setIsShowingVideo }: { s
 				))}
 			</div>
 		</div>
-	);
-}
-
-function TestLogs({ testInstanceData }) {
-	const steps = getStepsFromInstanceData(testInstanceData);
-
-	return (
-		<textarea
-			css={css`
-				margin-top: 50rem;
-				margin-left: 54rem;
-				width: 100%;
-				height: 200rem;
-				color: #fff;
-				border: 1rem solid rgba(196, 196, 196, 0.08);
-				border-radius: 10rem;
-				background: transparent;
-				padding: 14rem 12rem;
-				font-size: 14rem;
-				line-height: 19rem;
-			`}
-			value={steps
-				.map((step) => {
-					return (step as any).message || (step as any).meta.customLogMessage;
-				})
-				.join("\n")}
-			readOnly={true}
-		></textarea>
 	);
 }
 
@@ -1109,12 +1016,6 @@ function TestCard() {
 		</div>
 	);
 }
-
-const tick = css`
-`;
-
-const stepsList = css``;
-
 const testCard = css`
 	:hover {
 		.test-card-header {

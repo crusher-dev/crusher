@@ -1,24 +1,24 @@
-import {getStepsFromInstanceData} from "@utils/core/buildReportUtils";
-import {css} from "@emotion/react";
+import { getStepsFromInstanceData } from "@utils/core/buildReportUtils";
+import { css } from "@emotion/react";
 import React from "react";
 
-export function TestLogs({testInstanceData}) {
+export function TestLogs({ testInstanceData }) {
     const steps = getStepsFromInstanceData(testInstanceData);
 
     return (
         <textarea
             css={css`
-				margin-top: 50rem;
-				margin-left: 54rem;
-				width: 100%;
-				height: 200rem;
-				color: #fff;
-				border: 1rem solid rgba(196, 196, 196, 0.08);
-				border-radius: 10rem;
-				background: transparent;
-				padding: 14rem 12rem;
-				font-size: 14rem;
-				line-height: 19rem;
+            margin-top: 42rem;
+            margin-left: 54rem;
+            width: 500px;
+            height: 200rem;
+            color: #9b9b9b;
+            border: 1rem solid rgba(196,196,196,0.08);
+            border-radius: 10rem;
+            background: #0000008a;
+            padding: 20rem 24rem;
+            font-size: 13px;
+            line-height: 200%;
 			`}
             value={steps
                 .map((step) => {

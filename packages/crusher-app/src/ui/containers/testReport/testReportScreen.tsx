@@ -320,8 +320,9 @@ function TabBar() {
 }
 
 export const TestReportScreen = () => {
-	// const [selectedTabIndex] = useAtom(selectedTabAtom);
-	const [selectedTabIndex] = [1];
+	// Change this
+	const [selectedTabIndex] = useAtom(selectedTabAtom);
+	// const [selectedTabIndex] = [1];
 	const { query } = useRouter();
 	const [, updateMetaData] = useAtom(updateMeta);
 

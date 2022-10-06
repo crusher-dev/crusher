@@ -99,4 +99,23 @@ export function CorrentSVG(props) {
 	);
 }
 
+export function CheckSVG(props) {
+	return (
+		<svg
+			width={14}
+			height={14}
+			fill="none"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
+			<path
+				fillRule="evenodd"
+				clipRule="evenodd"
+				d="M13.7 2.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.413 0l-4-4A1 1 0 011.7 6.293l3.293 3.293 7.293-7.293a1 1 0 011.414 0z"
+				fill="#ACF861"
+			/>
+		</svg>
+	);
+}
+
 export { CommentIconSVG, DangerIconSVG, ClockIconSVG, DropdownIconSVG };

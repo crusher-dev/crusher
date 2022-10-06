@@ -15,7 +15,7 @@ import { Modal } from "dyson/src/components/molecules/Modal";
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { ActionStatusEnum } from "@crusher-shared/lib/runnerLog/interface";
 import { useBuildReport } from "@store/serverState/buildReports";
-import { FullImageView, ShowSidebySide } from "@svg/builds";
+import { CheckSVG, FullImageView, ShowSidebySide } from "@svg/builds";
 import { LoadingSVG, PlaySVG } from "@svg/dashboard";
 import { ExpandSVG, InfoSVG, TestStatusSVG } from "@svg/testReport";
 import {
@@ -93,6 +93,17 @@ border: 0.5px solid rgba(255, 255, 255, 0.05);
 	}
 }
 `
+
+const reportSectionCSS = css`
+width: 100%;
+// background: #0a0a0a;
+background: #070707;
+min-height: 100vh;
+display: flex;
+border-top-color: rgba(255, 255, 255, 0.04);
+border-top-width: 0.5rem;
+border-top-style: solid;
+`
 function ReportSection() {
 	const [selectedTest, setSelectedTest] = useAtom(selectedTestAtom);
 	const { query } = useRouter();
@@ -101,15 +112,7 @@ function ReportSection() {
 	return (
 		<div
 			className={"mt-20"}
-			css={css`
-				width: 100%;
-				background: #0a0a0a;
-				min-height: 100vh;
-				display: flex;
-				border-top-color: rgba(255, 255, 255, 0.04);
-				border-top-width: 0.5rem;
-				border-top-style: solid;
-			`}
+			css={reportSectionCSS}
 		>
 			<div
 				css={stepSectionCSS}
@@ -124,7 +127,7 @@ function ReportSection() {
 							css={testLeftSideCard(i === selectedTest)}
 							onClick={setSelectedTest.bind(this, i)}
 						>
-							<TestStatusSVG
+							<CheckSVG
 								type={getStatusFromTestInstances(testData?.testInstances)}
 								height={"14rem"}
 								width={"14rem"}
@@ -1013,7 +1016,7 @@ function TestCard() {
 	}, []);
 
 	return (
-		<div css={testCard} className={" flex-col mt-24 "} id={`test-card-${id}`}>
+		<div css={testCard} className={" flex-col pt-30"} id={`test-card-${id}`}>
 			<TestOverviewTabTopSection
 				isShowingVideo={isShowingVideo}
 				setIsShowingVideo={setIsShowingVideo}

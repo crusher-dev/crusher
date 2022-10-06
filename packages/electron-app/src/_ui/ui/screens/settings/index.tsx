@@ -8,6 +8,8 @@ import { hoverStyle } from "electron-app/src/_ui/constants/style";
 import { TextBlock } from "@dyson/components/atoms";
 import { Conditional } from "@dyson/components/layouts";
 import { useNavigate } from "react-router-dom";
+import { IntegrationSettings } from "./integrationSettings";
+import { atom, useAtom } from "jotai";
 
 const goBackToProjectPage = (navigate) => {
 	navigate("/");
@@ -19,11 +21,21 @@ const SettingLabel = () => {
 		<span css={titleCss} className="ml-4">Settings</span>
 	</div>)
 }
+
+const settingsAtom = atom<string>("integrations");
+
 const SettingsScreen = () => {
+	const [section, _] = useAtom(settingsAtom);
 	return (
 		<CompactAppLayout footer={<StickyFooter />} title={<SettingLabel />} css={containerCss}>
 			<SettingsLayout>
-				<SettingsModalContent />
+				{section === "integrations" ? (
+					<div className={"px-22 py-24"}>
+						<IntegrationSettings />
+					</div>
+				) : ""}
+
+				{section === "basic" ? (<SettingsModalContent />) : ""}
 			</SettingsLayout>
 		</CompactAppLayout>
 	);
@@ -55,9 +67,9 @@ const GoBack = () => {
 	)
 }
 
-const MenuLabel = ({ children, selected }: any) => {
+const MenuLabel = ({ children, selected, className, ...props }: any) => {
 	return (
-		<div className="flex  items-center px-10  pr-8 justify-between w-full" css={[labelCSS, selected && selectedCSS]}>
+		<div className={`flex  items-center px-10  pr-8 justify-between w-full ${className}`} css={[labelCSS, selected && selectedCSS]} {...props}>
 			{children}
 			<div>
 				<Conditional showIf={selected}>
@@ -120,25 +132,24 @@ hr{
 
 export const SettingsLayout = (props: any) => {
 	const { children } = props;
+	const [section, setSection] = useAtom(settingsAtom);
+
 
 	return (
 		<div css={container} className="flex">
 			<div css={leftSection} className="py-22 px-16">
 				<GoBack />
 				<div className="mt-16">
-					<MenuLabel selected={true}>
+					<MenuLabel onClick={setSection.bind(this, "basic")} selected={section === "basic"}>
 						basic
-					</MenuLabel>
-					<MenuLabel>
-						project
-					</MenuLabel>
-					<MenuLabel >
-						settings
 					</MenuLabel>
 
 					<SectionLabel>
 						Project
 					</SectionLabel>
+					<MenuLabel onClick={setSection.bind(this, "integrations")} selected={section === "integrations"}>
+						integration
+					</MenuLabel>
 
 				</div>
 			</div>

@@ -339,20 +339,37 @@ const UpDownSizeIcon = (props) => (
 
 const BackIconV3 = (props) => (
 	<svg
-	  viewBox={"0 0 12 10"}
-	  fill="none"
-	  xmlns="http://www.w3.org/2000/svg"
-	  {...props}
+		viewBox={"0 0 12 10"}
+		fill="none"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
 	>
-	  <path
-		d="M1 5h10M4.75 1.25 1.109 4.891a.154.154 0 0 0 0 .218l3.64 3.641"
-		stroke="#919191"
-		strokeWidth={1.5}
-		strokeLinecap="round"
-		strokeLinejoin="round"
-	  />
+		<path
+			d="M1 5h10M4.75 1.25 1.109 4.891a.154.154 0 0 0 0 .218l3.64 3.641"
+			stroke="#919191"
+			strokeWidth={1.5}
+			strokeLinecap="round"
+			strokeLinejoin="round"
+		/>
 	</svg>
-  )
+)
+
+const GithubIcon = (props) => (
+	<svg
+		viewBox={"0 0 16 16"}
+		fill="none"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	>
+		<path
+			fillRule="evenodd"
+			clipRule="evenodd"
+			d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16ZM4.427 4.067h-.002a.8.8 0 0 0-.49.527 3.853 3.853 0 0 0-.153 1.988A3.957 3.957 0 0 0 3.2 8.706c0 1.52.4 2.605 1.13 3.33.717.71 1.63.95 2.39 1.054l.024.003a7.886 7.886 0 0 0 2.505-.022h.001c.763-.093 1.684-.322 2.407-1.028.739-.722 1.14-1.81 1.142-3.338a3.956 3.956 0 0 0-.582-2.124l.017-.096a3.835 3.835 0 0 0-.195-1.95.8.8 0 0 0-.467-.466h-.001l-.001-.001h-.002l-.004-.002-.008-.003-.017-.006a.896.896 0 0 0-.128-.033c-.384-.074-1.02-.005-1.94.62l-.064.044a5.92 5.92 0 0 0-2.817 0 5.654 5.654 0 0 0-.064-.044c-.922-.627-1.562-.694-1.944-.62a1.077 1.077 0 0 0-.126.033l-.016.005-.008.003-.004.001-.002.001Z"
+			fill="#fff"
+		/>
+	</svg>
+)
+
 
 export {
 	BackIconV3,
@@ -380,4 +397,5 @@ export {
 	GoBackIcon,
 	CloseIcon,
 	UpDownSizeIcon,
+	GithubIcon
 };

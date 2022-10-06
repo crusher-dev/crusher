@@ -23,6 +23,7 @@ import { RequestMethod } from "../../../types/RequestOptions";
 import { ConfigChange } from "./components/common/config";
 import { ReviewSection } from "./components/review/reviewComponent";
 import { HomeSection } from "./container/home";
+import { selectedTabAtom } from "./atoms";
 
 const ReportSection = dynamic(() => import("./container/testList"));
 function BuildInfoTop() {
@@ -277,7 +278,6 @@ const section = [
 	// },
 ];
 
-const selectedTabAtom = atom(0);
 
 export const rerunBuild = async (buildId) => {
 	await backendRequest(`/builds/${buildId}/actions/rerun`, {
@@ -320,7 +320,8 @@ function TabBar() {
 }
 
 export const TestReportScreen = () => {
-	const [selectedTabIndex] = useAtom(selectedTabAtom);
+	// const [selectedTabIndex] = useAtom(selectedTabAtom);
+	const [selectedTabIndex] = [1];
 	const { query } = useRouter();
 	const [, updateMetaData] = useAtom(updateMeta);
 

@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useTable, useBlockLayout } from "react-table";
 
-import {useAtom} from "jotai";
+import { useAtom } from "jotai";
 import { atomWithImmer } from "jotai/immer";
 
 import { Button } from "dyson/src/components/atoms";
@@ -53,6 +53,46 @@ const getStatusFromTestInstances = (testInstances) => {
 	return "PASSED";
 };
 
+const stepSectionCSS = css`
+border-right-style: solid;
+border-right-width: 1rem;
+border-right-color: rgba(196, 196, 196, 0.08);
+padding-left: 132rem;
+padding-right: 20rem;
+`
+
+const testLeftSideCard = (selected) => css`
+width: 238rem;
+height: 36rem;
+border-radius: 8px;
+margin-bottom:10px;
+border: 0.5px solid transparent;
+padding: 0 28rem;
+
+:hover{
+	background: #101010;
+	border: 0.5px solid rgba(255, 255, 255, 0.05);
+
+}
+
+${selected && `
+background: #101010;
+border: 0.5px solid rgba(255, 255, 255, 0.05);
+
+`}
+
+#name{
+	white-space: nowrap;
+	overflow: hidden;
+
+	font-size: 14rem;
+
+	${selected && `
+		font-weight: 600;
+		`
+	}
+}
+`
 function ReportSection() {
 	const [selectedTest, setSelectedTest] = useAtom(selectedTestAtom);
 	const { query } = useRouter();
@@ -72,42 +112,25 @@ function ReportSection() {
 			`}
 		>
 			<div
-				css={css`
-					width: 300rem;
-					border-right-style: solid;
-					border-right-width: 1rem;
-					border-right-color: rgba(196, 196, 196, 0.08);
-				`}
+				css={stepSectionCSS}
 			>
-				<div className="px-32 pt-32" css={testListHeadingStyle}>
-					Test list
+				<div className="pl-28 pt-32" css={testListHeadingStyle}>
+					tests | 12
 				</div>
 				<ul css={testListStyle}>
 					{data?.tests.map((testData, i) => (
 						<li
-							className="px-32 py-12"
-							css={
-								i === selectedTest
-									? css`
-											color: #c071ff;
-									  `
-									: undefined
-							}
+							className="px24 py-12"
+							css={testLeftSideCard(i === selectedTest)}
 							onClick={setSelectedTest.bind(this, i)}
 						>
 							<TestStatusSVG
 								type={getStatusFromTestInstances(testData?.testInstances)}
-								height={"20rem"}
-								width={"20rem"}
-								css={css`
-									min-width: 20rem;
-								`}
+								height={"14rem"}
+								width={"14rem"}
 							/>
 							<span
-								css={css`
-									white-space: nowrap;
-									overflow: hidden;
-								`}
+								id="name"
 							>
 								{testData!.name}
 							</span>
@@ -116,7 +139,7 @@ function ReportSection() {
 				</ul>
 			</div>
 			<div
-				className={"px-24 py-4"}
+				className={"py-4"}
 				css={css`
 					flex: 1;
 				`}
@@ -128,12 +151,12 @@ function ReportSection() {
 }
 
 const testListStyle = css`
-	margin-top: 24rem;
+	margin-top: 40rem;
 
 	li {
 		display: flex;
 		align-items: center;
-		gap: 18rem;
+		gap: 8rem;
 		:hover {
 			opacity: 0.8;
 		}
@@ -142,17 +165,10 @@ const testListStyle = css`
 const testListHeadingStyle = css`
 	font-family: "Cera Pro";
 	font-style: normal;
-	font-weight: 700;
-	font-size: 13px;
-
-	color: rgba(255, 255, 255, 0.79);
-
-	font-family: Gilroy;
 	font-weight: 600;
-	font-size: 14px;
-	letter-spacing: 0.3px;
-
-	color: #d0d0d0;
+	font-size: 15rem;
+	color: rgba(255, 255, 255, 0.79);
+	letter-spacing: 0.1px;
 `;
 const imageViewAtom = atomWithImmer<"side" | "compare">("side");
 
@@ -441,11 +457,11 @@ function RenderStep({ data, testInstanceData, setIsShowingVideo, testId }) {
 			</Conditional>
 			<div className={"px-34 mt-12"}>
 				{[ActionsInTestEnum.ASSERT_ELEMENT].includes(actionType) &&
-				data.meta &&
-				data.meta.meta &&
-				data.meta.meta.meta &&
-				data.meta.meta.meta.logs &&
-				status === "FAILED" ? (
+					data.meta &&
+					data.meta.meta &&
+					data.meta.meta.meta &&
+					data.meta.meta.meta.logs &&
+					status === "FAILED" ? (
 					<RenderAssertElement logs={data.meta.meta.meta.logs} />
 				) : (
 					""
@@ -573,12 +589,12 @@ function PlayVideo({ videoUrl }) {
 }
 
 function getAllKeys() {
-    const keys: any = {};
-    for (const key of Object.keys(item)) {
-        keys[key] = true;
-    }
+	const keys: any = {};
+	for (const key of Object.keys(item)) {
+		keys[key] = true;
+	}
 
-    return Object.keys(sortObjectByPropertyKeyAsc(keys));
+	return Object.keys(sortObjectByPropertyKeyAsc(keys));
 }
 
 function sortObjectByPropertyKeyAsc(obj: any) {
@@ -803,9 +819,9 @@ function TestOverviewTabTopSection({ currentTestTab, testInstanceData, expand, i
 			</Conditional>
 			<div
 				css={css`
-					gap: 34rem;
+					gap: 32rem;
 				`}
-				className={"px-54 flex items-center leading-none text-15 font-600"}
+				className={"px-56 flex items-center leading-none text-15 font-600"}
 			>
 				<div
 					css={[testNavBarItemStyle, currentTestTab === TestTabEnum.OVERVIEW ? selectedTabStyle : undefined]}
@@ -835,15 +851,17 @@ function TestOverviewTabTopSection({ currentTestTab, testInstanceData, expand, i
 
 const selectedTabStyle = css`
 	font-weight: 700;
-	color: #c071ff;
+	color: #C071FF;
+	text-decoration: none;
 `;
 const testNavBarItemStyle = css`
 	font-weight: 500;
-	font-size: 15rem;
+	font-size: 14rem;
 
-	color: #d0d0d0;
+	color: #696969;
+	text-decoration: underline;
 	:hover {
-		text-decoration: underline;
+	
 		opacity: 0.8;
 	}
 `;

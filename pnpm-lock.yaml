@@ -495,6 +495,7 @@ importers:
       airtable: ^0.11.5
       autoprefixer: ^9
       babel-preset-react-app: ^10.0.1
+      loadash: ^1.0.0
       postcss: ^7
       postcss-loader: ^4.2.0
       react: ^17.0.1
@@ -527,6 +528,7 @@ importers:
       airtable: 0.11.5
       autoprefixer: 9.8.6
       babel-preset-react-app: 10.0.1
+      loadash: 1.0.0
       postcss: 7.0.36
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2

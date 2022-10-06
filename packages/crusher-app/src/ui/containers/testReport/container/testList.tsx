@@ -453,7 +453,7 @@ function RenderStep({ data, testInstanceData, setIsShowingVideo, testId, index }
 
 					<Conditional showIf={status !== "FAILED"}>
 						<div
-							className={"ml-20 flex items-center"}
+							className={"ml-12 flex items-center"}
 
 							css={css`
 							align-items: center;
@@ -972,8 +972,8 @@ function ExpandableStepGroup({
 									<ExpanDNew />
 								</div>
 								<div className="ml-20">
-									<span className={"text-13 font-600 leading-none expand-highlight pt-4"}>
-										<span className="underline">Expand</span> {count} steps</span>
+									<span className={"text-13 font-600 leading-none expand-highlight pt-4"} css={css`color: #D0D0D0;`}>
+										<span className="underline">expand</span> {count} steps</span>
 								</div>
 							</div>
 

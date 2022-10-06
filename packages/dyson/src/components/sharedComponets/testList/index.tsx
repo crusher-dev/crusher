@@ -1,5 +1,7 @@
 import React from "react";
-import { atom } from "jotai";
+import { ListBox } from "../../molecules/SelectableList";
+import { SelectedTestActions } from "./header";
+import { TestListItem } from "./item";
 
 interface IContextNenuItem{ 
     id: string;
@@ -18,8 +20,6 @@ interface IProps {
         firstRunCompleted: boolean;   
     }>;
 }
-
-export const editInputAtom = atom<any | null>(null);
 
 const TestsList = ({ contextMenu, deleteTestsCallback, tests }: IProps) => {
     const items = React.useMemo(() => {
@@ -41,14 +41,13 @@ const TestsList = ({ contextMenu, deleteTestsCallback, tests }: IProps) => {
     }, [tests]);
 
     return (
-        <List
-    )
+        <ListBox
+            contextMenu={contextMenu}
+            selectedHeaderActions={SelectedTestActions}
+            items={items}
+        />
+    );
+
 };
 
-const SelectedTestActions = () => {
-    return null;
-};
-
-const TestListItem = ({id, isItemSelected, test, deleteTestCallback}) => {
-    return null;  
-}
+export { TestsList }; 

@@ -33,6 +33,7 @@ import { appStateAtom } from "../../../store/atoms/global/appState";
 import { tempTestAtom } from "../../../store/atoms/global/temp/tempTestId";
 import { tempTestNameAtom } from "../../../store/atoms/global/temp/tempTestName";
 import { RequestMethod } from "../../../types/RequestOptions";
+import { TestsList } from "dyson/src/components/sharedComponets/testList";
 
 interface IBuildItemCardProps {
 	id: number;
@@ -470,18 +471,22 @@ function TestSearchableList() {
 		})();
 	}, []);
 
+
+	console.log("Data is", data.list);
 	return (
 		<div>
 			<Conditional showIf={data && data.list.length > 0}>
-				<TestTopBar
+				{/* <TestTopBar
 					totalTests={data.list.length}
 					onClick={async () => {
 						await createFolder(project.id);
 						await mutate(getTestListAPI(project.id));
 					}}
-				/>
-				<FolderList />
-				{rootTest}
+				/> */}
+				{/* <FolderList /> */}
+				<TestsList tests={ data.list}/>
+				{/* <div css={css`font-size: 14rem; font-weight: bold; color: #fff;`}>{JSOn</div> */}
+				{/* {rootTest} */}
 			</Conditional>
 
 			<Conditional showIf={data && data.list.length < 3}>

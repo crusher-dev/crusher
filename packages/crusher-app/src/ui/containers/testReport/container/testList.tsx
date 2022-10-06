@@ -93,17 +93,6 @@ border: 0.5px solid rgba(255, 255, 255, 0.05);
 	}
 }
 `
-
-const reportSectionCSS = css`
-width: 100%;
-// background: #0a0a0a;
-background: #070707;
-min-height: 100vh;
-display: flex;
-border-top-color: rgba(255, 255, 255, 0.04);
-border-top-width: 0.5rem;
-border-top-style: solid;
-`
 function ReportSection() {
 	const [selectedTest, setSelectedTest] = useAtom(selectedTestAtom);
 	const { query } = useRouter();
@@ -112,7 +101,15 @@ function ReportSection() {
 	return (
 		<div
 			className={"mt-20"}
-			css={reportSectionCSS}
+			css={css`
+				width: 100%;
+				background: #0a0a0a;
+				min-height: 100vh;
+				display: flex;
+				border-top-color: rgba(255, 255, 255, 0.04);
+				border-top-width: 0.5rem;
+				border-top-style: solid;
+			`}
 		>
 			<div
 				css={stepSectionCSS}

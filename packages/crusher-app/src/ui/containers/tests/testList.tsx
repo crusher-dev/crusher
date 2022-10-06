@@ -471,8 +471,6 @@ function TestSearchableList() {
 		})();
 	}, []);
 
-
-	console.log("Data is", data.list);
 	return (
 		<div>
 			<Conditional showIf={data && data.list.length > 0}>

@@ -19,6 +19,7 @@ import { getStringFromDuration, timeSince } from "@utils/common/dateTimeUtils";
 
 import { buildFiltersAtom } from "../../../store/atoms/pages/buildPage";
 import { SearchFilterBar } from "../common/searchFilterBar";
+import { BuildsList } from "dyson/src/components/sharedComponets/buildsList/index";
 
 const EmptyList = dynamic(() => import("@ui/components/common/EmptyList"));
 
@@ -104,6 +105,9 @@ function BuildSearchableList() {
 	const [filters, setFilters] = useAtom(buildFiltersAtom);
 	const { data } = useSWR<IProjectBuildListResponse>(getBuildsList(project.id, query.trigger, filters), { suspense: true, refreshInterval: 10000 });
 	const { totalPages } = data;
+	const { currentProject } = useProjectDetails();
+
+	const router = useRouter();
 
 	const { status, triggeredBy, search, page } = filters;
 	const isFilterEnabled = !!status || !!triggeredBy || !!search || !!page;
@@ -124,15 +128,17 @@ function BuildSearchableList() {
 		[filters],
 	);
 
+	const handleViewTest = (buildId) => {
+		router.push(`/${currentProject.id}/build/${buildId}`);
+	};
 	const hasNoBuildsOverall = isZeroBuild && !isFilterEnabled;
 	return (
 		<React.Fragment>
-			<Conditional showIf={!hasNoBuildsOverall}>
-				<SearchFilterBar data={data} placeholder={"Search builds"} />
-			</Conditional>
 
 			<Conditional showIf={!isZeroBuild}>
-				<div className={"mt-34"}>{buildItems}</div>
+				<div>
+					<BuildsList viewTestCallback={handleViewTest} builds={data.list as any}/>
+				</div>
 			</Conditional>
 
 			<Conditional showIf={hasNoBuildsOverall}>

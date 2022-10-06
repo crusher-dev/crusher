@@ -88,8 +88,9 @@ interface IProps {
 	selectedHeaderActions: any;
 	items?: { content: any; id: any }[];
 	contextMenu?: { [type: string]: { callback?: any; menuItems?: any } };
+	showHeader?: boolean;
 }
-const ListBox = ({ className, contextMenu, selectedHeaderActions: SelectedHeaderActions, items, ...props }: IProps) => {
+const ListBox = ({ showHeader = true, className, contextMenu, selectedHeaderActions: SelectedHeaderActions, items, ...props }: IProps) => {
 	const { selectedList, selectItem, isItemSelected, resetSelected, toggleSelectAll, toggleSelectItem } = useSelectableList();
 	const listItems = React.useMemo(() => {
 		if (!items) return null;
@@ -135,7 +136,7 @@ const ListBox = ({ className, contextMenu, selectedHeaderActions: SelectedHeader
 
 	return (
 		<OnOutsideClick onOutsideClick={handleOutSideClick}>
-			<div css={headerCss}>
+			{showHeader ? (<div css={headerCss}>
 				<Checkbox
 					css={checkboxCss}
 					callback={toggleSelectAll.bind(
@@ -147,7 +148,7 @@ const ListBox = ({ className, contextMenu, selectedHeaderActions: SelectedHeader
 				/>
 				<div css={testsCountCss}>{items.length} tests</div>
 				{SelectedHeaderActions ? <SelectedHeaderActions toggleSelectAll={toggleSelectAll} items={items} selectedList={selectedList} /> : ""}
-			</div>
+			</div>) : ""}
 			<RightClickMenu menuItems={menuItemsComponent}>
 				<ul className={String(className)} css={listCss} {...props}>
 					{listItems}
@@ -182,17 +183,20 @@ const testsCountCss = css`
 const listCss = css`
 	user-select: none;
 	height: 100%;
-
+    height: fit-content;
 	font-size: 14px;
 	letter-spacing: 0.03em;
 
 	color: #ffffff;
-	height: 38rem;
 
 	li {
 		position: relative;
 		display: flex;
 		align-items: center;
+		:first-child {
+			border-top: 0.5px solid #1B1B1B;
+			border-radius: 12px 12px 0px 0px;
+		}
 	}
 `;
 const ListItem = ({ isActive, children, onClick, ...props }) => {

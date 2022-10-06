@@ -16,6 +16,7 @@ import { resolvePathToFrontendURI } from "@utils/uri";
 interface IBuildInfoItem {
 	buildId: number;
 	buildName: string | null;
+	buildHost?: string;
 	buildCreatedAt: string;
 	buildReportCreatedAt: string;
 	buildReportUpdatedAt: string;
@@ -54,7 +55,7 @@ class BuildsService {
 			queryParams.push(filter.search);
 		}
 
-		let query = `SELECT jobs.id build_id, jobs.commit_name build_name, jobs.build_trigger build_trigger, EXTRACT(EPOCH FROM (job_reports.updated_at - job_reports.created_at)) build_duration, jobs.created_at build_created_at, job_reports.created_at build_report_created_at, job_reports.updated_at build_report_updated_at, jobs.latest_report_id latest_report_id, job_reports.status build_status, job_reports.total_test_count total_test_count, job_reports.passed_test_count passed_test_count, job_reports.failed_test_count failed_test_count, job_reports.review_required_test_count review_required_test_count, comments.count comment_count, users.id triggered_by_id, users.name triggered_by_name ${
+		let query = `SELECT jobs.host build_host, jobs.id build_id, jobs.commit_name build_name, jobs.build_trigger build_trigger, EXTRACT(EPOCH FROM (job_reports.updated_at - job_reports.created_at)) build_duration, jobs.created_at build_created_at, job_reports.created_at build_report_created_at, job_reports.updated_at build_report_updated_at, jobs.latest_report_id latest_report_id, job_reports.status build_status, job_reports.total_test_count total_test_count, job_reports.passed_test_count passed_test_count, job_reports.failed_test_count failed_test_count, job_reports.review_required_test_count review_required_test_count, comments.count comment_count, users.id triggered_by_id, users.name triggered_by_name ${
 			additionalSelectColumns.length ? `, ${additionalSelectColumns}` : ""
 		} FROM public.users, public.jobs, public.job_reports LEFT JOIN (SELECT report_id, COUNT(*) count FROM public.comments GROUP BY report_id) as comments ON comments.report_id = job_reports.id ${
 			additionalFromSource.length ? `, ${additionalFromSource}` : ""

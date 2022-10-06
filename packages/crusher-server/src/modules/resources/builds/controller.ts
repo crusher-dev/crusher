@@ -13,6 +13,7 @@ import { RedisManager } from "@modules/redis";
 import { v4 as uuidv4 } from "uuid";
 import { TestRunnerQueue } from "@modules/runner/queue.service";
 import { BrowserEnum } from "@modules/runner/interface";
+import { TestService } from "../tests/service";
 
 @Service()
 @JsonController("")
@@ -27,6 +28,8 @@ export class BuildsController {
 	private testRunnerQueueService: TestRunnerQueue;
 	@Inject()
 	private redisManager: RedisManager;
+	@Inject()
+	private testsService: TestService;
 
 	@Authorized()
 	@Post("/projects/:project_id/builds/actions/create.local")
@@ -74,9 +77,25 @@ export class BuildsController {
 
 		const buildsData = await this.buildsService.getBuildInfoList(projectId, params);
 
-		const buildsList = buildsData.list.map((buildData) => {
+		const buildsListPromise = buildsData.list.map(async (buildData) => {
+			if(!buildData.buildHost || buildData.buildHost === "null") {
+				const tests = await this.testsService.getTestsInBuild(buildData.buildId);
+				const events = tests.map((test) => test.events);
+				let finalHost = null;
+				for(let event of events) {
+					try {
+						const events = JSON.parse(event);
+						finalHost = events.find((event) => event.type === "PAGE_NAVIGATE_URL").payload.meta.value;
+						break;
+					} catch(ex) {}
+				}
+				if(finalHost) {
+					buildData.buildHost = finalHost;
+				}
+			}
 			return {
 				id: buildData.buildId,
+				host: buildData.buildHost && buildData.buildHost !== null ? buildData.buildHost : undefined,
 				// @Note: There is no exact such thing as build name. For now build name
 				// is same as commit name if it present otherwise it will be null
 				name: buildData.buildName,
@@ -91,6 +110,7 @@ export class BuildsController {
 				status: buildData.buildStatus,
 				// In seconds
 				duration: buildData.buildDuration,
+				
 				triggeredBy: {
 					id: buildData.triggeredById,
 					name: buildData.triggeredByName,
@@ -98,6 +118,8 @@ export class BuildsController {
 				commentCount: buildData.commentCount ? buildData.commentCount : 0,
 			};
 		});
+
+		const buildsList = await Promise.all(buildsListPromise);
 
 		const availableAuthors = (await this.userService.getUsersInProject(projectId)).map((user) => {
 			return { name: user.name, email: user.email, id: user.id };

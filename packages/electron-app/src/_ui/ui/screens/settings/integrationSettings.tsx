@@ -2,16 +2,17 @@ import React from "react";
 import { css } from "@emotion/react";
 import { HoverButton } from "../../components/hoverButton";
 import { GithubIcon } from "electron-app/src/_ui/constants/icons";
+import { TextBlock } from "@dyson/components/atoms";
 
 const SlackIntegrationItem = () => {
     return (
         <div css={IntegrationItemCss} className="flex items-center py-24 pb-16">
             <div className={"flex-1"}>
-                <div css={itemHeadingCss}>get alerts on slack</div>
-                <div css={itemSubtitleCss} className={"mt-4"}>get alerts on slack</div>
+                <TextBlock weight={600} fontSize={15} color="#A1A1A1">get alerts on slack</TextBlock>
+                <TextBlock fontSize={12} color="#6B6B6B" className="mt-6">get alerts on slack</TextBlock>
             </div>
             <div className={"ml-auto"}>
-                <HoverButton css={buttonCss} width={106} height={32}>Connect</HoverButton>
+                <HoverButton css={buttonCss} width={106} height={32} >Connect</HoverButton>
             </div>
         </div>
     );
@@ -23,9 +24,11 @@ const GithubIntegrationItem = () => {
             <div css={css`height: 100%;`}>
                 <GithubIcon css={githubIconCss} />
             </div>
-            <div className={"flex-1 ml-10"}>
-                <div css={itemHeadingCss}>link crusher to git repo</div>
-                <div css={itemSubtitleCss} className={"mt-4"}>get status check with each commit</div>
+            <div className={"flex-1 ml-12"}>
+
+                <TextBlock weight={600} fontSize={15} color="#A1A1A1">link crusher to git repo</TextBlock>
+                <TextBlock fontSize={12} color="#6B6B6B" className="mt-6">get status check with each commit</TextBlock>
+
             </div>
             <div className={"ml-auto"}>
                 <HoverButton css={buttonCss} width={106} height={32}>
@@ -51,27 +54,14 @@ const buttonCss = css`
     font-weight: 600;
     font-size: 13px;
     letter-spacing: -0.003em;
-`;
-const itemHeadingCss = css`
-    font-weight: 500;
-    font-size: 15px;
-
-    letter-spacing: -0.003em;
-
-    color: #A1A1A1;
+    padding-top: 1px;
 `;
 
-const itemSubtitleCss = css`
-    font-size: 12px;
-    letter-spacing: 0.04em;
-
-    color: #6B6B6B;
-`;
 const IntegrationSettings = () => {
     return (
         <div css={containerCss}>
             <div css={headingCss}>Integration</div>
-            <div className={"mt-8"} css={descriptionCss}>use crusher to enhance your worflow</div>
+            <div className={"mt-6"} css={descriptionCss}>use crusher to enhance your worflow</div>
 
             <div className="mt-10">
                 <SlackIntegrationItem />
@@ -88,6 +78,8 @@ const containerCss = css`
 const headingCss = css`
     font-weight: 700;
     font-size: 15px;
+    color: #C9C9C9;
+
 
     letter-spacing: -0.003em;
 `;
@@ -95,6 +87,7 @@ const descriptionCss = css`
     font-size: 12.5px;
     line-height: 14px;
 
+    letter-spacing: .3px;
     color: #6B6B6B;
 `;
 export { IntegrationSettings };

@@ -30,7 +30,7 @@ const SettingsScreen = () => {
 		<CompactAppLayout footer={<StickyFooter />} title={<SettingLabel />} css={containerCss}>
 			<SettingsLayout>
 				{section === "integrations" ? (
-					<div className={"px-22 py-24"}>
+					<div className={"px-44 py-24"}>
 						<IntegrationSettings />
 					</div>
 				) : ""}

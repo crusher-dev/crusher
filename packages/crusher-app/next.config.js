@@ -1,6 +1,7 @@
 const path = require("path");
 
 module.exports = {
+	swcMinify:false,
 	typescript: {
 		ignoreBuildErrors: true,
 	},

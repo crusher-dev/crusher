@@ -2,7 +2,7 @@ const path = require("path");
 
 module.exports = {
 	typescript: {
-		ignoreBuildErrors: false,
+		ignoreBuildErrors: true,
 	},
 	env: {
 		// declare here all your variables

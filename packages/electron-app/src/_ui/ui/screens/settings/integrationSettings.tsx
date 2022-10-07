@@ -3,16 +3,31 @@ import { css } from "@emotion/react";
 import { HoverButton } from "../../components/hoverButton";
 import { GithubIcon } from "electron-app/src/_ui/constants/icons";
 import { TextBlock } from "@dyson/components/atoms";
+import { remote } from "electron";
+import { shell } from "electron/common";
+import { linkOpen } from "electron-app/src/utils/url";
+import { useStore } from "react-redux";
+import { getCurrentSelectedProjct, getUserAccountInfo } from "electron-app/src/store/selectors/app";
+import { resolveToFrontend } from "electron-app/src/utils/url";
 
 const SlackIntegrationItem = () => {
+    const store = useStore();
+    const handleConnect = () => {
+        const userInfo = getUserAccountInfo(store.getState());
+        const projectId = getCurrentSelectedProjct(store.getState() as any);
+
+		if(userInfo?.token) {
+            linkOpen(resolveToFrontend(`${projectId}/settings/integrations?laccess_token=` + userInfo.token));
+        }
+    };
     return (
         <div css={IntegrationItemCss} className="flex items-center py-24 pb-16">
             <div className={"flex-1"}>
                 <TextBlock weight={600} fontSize={15} color="#A1A1A1">get alerts on slack</TextBlock>
-                <TextBlock fontSize={12} color="#6B6B6B" className="mt-6">get alerts on slack</TextBlock>
+                <TextBlock fontSize={12} color="#6B6B6B" className="mt-6">We post notifications to Slack on event trigger.</TextBlock>
             </div>
             <div className={"ml-auto"}>
-                <HoverButton css={buttonCss} width={106} height={32} >Connect</HoverButton>
+                <HoverButton onClick={handleConnect} css={buttonCss} width={106} height={32} >Connect</HoverButton>
             </div>
         </div>
     );
@@ -61,7 +76,7 @@ const IntegrationSettings = () => {
     return (
         <div css={containerCss}>
             <div css={headingCss}>Integration</div>
-            <div className={"mt-6"} css={descriptionCss}>use crusher to enhance your worflow</div>
+            <div className={"mt-6"} css={descriptionCss}>intergrate services to enhance your worflow</div>
 
             <div className="mt-10">
                 <SlackIntegrationItem />

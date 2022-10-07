@@ -14,6 +14,7 @@ import { resolvePathToBackendURI } from "@utils/common/url";
 
 import { tempProjectAtom, tempTestAtom } from "../store/atoms/global/temp/tempTestId";
 import { tempTestNameAtom } from "../store/atoms/global/temp/tempTestName";
+import { updateInitialDataMutator } from "@store/mutators/user";
 
 export const useLoadTempData = () => {
 	const [, setTempTest] = useAtom(tempTestAtom);
@@ -24,8 +25,9 @@ export const useLoadTempData = () => {
 	const [, setLoginKey] = useAtom(cliLoginUserKeyAtom);
 	const [, setProjectToRedirect] = useAtom(tempProjectAtom);
 	const [, setInviteCode] = useAtom(inviteCodeUserKeyAtom);
+	const [, updateInitialData] = useAtom(updateInitialDataMutator);
 
-	const { asPath } = useRouter();
+	const { asPath, push } = useRouter();
 
 	const queryString = asPath.split("?")?.[1];
 	const urlQuery = new URLSearchParams(queryString);

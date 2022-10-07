@@ -147,7 +147,7 @@ class UsersService {
 			return acc;
 		}, {} as any);
 
-		teamProjects.forEach((project) => {
+		teamProjects && teamProjects.forEach((project) => {
 			project.gitIntegration = projectsGitInfoMap[project.id];
 		});
 

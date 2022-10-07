@@ -12,7 +12,7 @@ import { v4 as uuidv4 } from "uuid";
 import { UserInviteService } from "./invite/service";
 import { InviteReferralEnum } from "./invite/interface";
 import { OCTOKIT_CONFIG } from "../../../../config/github";
-import { encryptPassword, generateToken } from "@utils/auth";
+import { decodeToken, encryptPassword, generateToken } from "@utils/auth";
 
 @Service()
 @JsonController("")
@@ -153,6 +153,20 @@ export class UserController {
 		);
 
 		return res.redirect(resolvePathToFrontendURI("/"));
+	}
+
+	@Post("/users/actions/login.token")
+	async loginWithToken(@Body() body: { token: string }, @Req() req: any, @Res() res: any) {
+		const { token } = body;
+		const { user_id: userId, team_id: teamId } = decodeToken(token);
+
+		if(!userId || !teamId) throw new Error("Invalid token");
+
+		await this.userAuthService.setUserAuthCookies(userId, teamId, req, res);
+		return {
+			status: "Successful",
+			systemInfo: await this.usersService.getUserAndSystemInfo(userId),
+		};
 	}
 
 	@Post("/users/actions/login")

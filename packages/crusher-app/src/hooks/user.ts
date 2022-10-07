@@ -9,8 +9,9 @@ import { cliLoginUserKeyAtom } from "@store/atoms/global/cliToken";
 import { updateInitialDataMutator } from "@store/mutators/user";
 import { RequestMethod } from "@types/RequestOptions";
 import { backendRequest } from "@utils/common/backendRequest";
-import { resolvePathToBackendURI } from "@utils/common/url";
+import { resolvePathToBackendURI, resolvePathToFrontendURI } from "@utils/common/url";
 import { redirectUserOnMount } from "@utils/routing";
+import { URLSearchParams } from "next/dist/compiled/@edge-runtime/primitives/url";
 
 /*
 	Two scenarios to check for
@@ -21,12 +22,17 @@ import { redirectUserOnMount } from "@utils/routing";
  */
 export function loadUserDataAndRedirect({ fetchData = true, userAndSystemData = null }) {
 	const router = useRouter();
+	const {asPath, push} = router;
+
 	const [, updateInitialData] = useAtom(updateInitialDataMutator);
 
 	const [dataLoaded, setDataLoaded] = useState(false);
 	const [loginKey, setLoginKey] = useAtom(cliLoginUserKeyAtom);
 
+
 	useEffect(() => {
+
+
 		(async () => {
 			let dataToConsider: IUserAndSystemInfoResponse | null = null;
 			if (fetchData) {

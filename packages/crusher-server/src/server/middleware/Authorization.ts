@@ -54,6 +54,8 @@ export function getCurrentUserChecker(expressApp) {
 			const cookies = action.request.headers.cookie ? cookie.parse(action.request.headers.cookie) : {};
 			const userToken = action.request.headers['authorization'] || cookies.token;
 			if(userToken) {
+				const decoded = decodeToken(userToken);
+				if(!decoded["user_id"]) return false;
 				return decodeToken(userToken);
 			}
 		} catch (error) {}

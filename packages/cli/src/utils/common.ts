@@ -1,11 +1,12 @@
 import axios from "axios";
 import * as fs from "fs";
 import * as pathModule from "path";
+const open = require('open');
 
 export const downloadFile = (url, path, bar): Promise<string> => {
   return new Promise((resolve, reject) => {
     const fileDir = pathModule.dirname(path);
-    if(!fs.existsSync(fileDir)) {
+    if (!fs.existsSync(fileDir)) {
       fs.mkdirSync(fileDir, { recursive: true });
     }
     axios
@@ -36,8 +37,6 @@ export const downloadFile = (url, path, bar): Promise<string> => {
       });
   });
 };
-
-const open = require('open');
 
 export const openUrl = async (url: string) => {
   console.log("Opening this url: ", url);

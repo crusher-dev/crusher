@@ -166,10 +166,7 @@ export class AppWindow {
 			process.env.CRUSHER_SCALE_FACTOR = this.window.webContents.zoomFactor + "";
 
 			this._loadTime = now() - startLoad;
-
 			identify(4);
-
-			console.log("Telemetry sent");
 
 			this.maybeEmitDidLoad();
 		});
@@ -464,8 +461,8 @@ export class AppWindow {
 			finalUrl = getAppURl() + (finalUrl[1] ? "#/" + payload.url.substring(1) + `?test=${Date.now()}` : "");
 		}
 		try {
-		 await this.window.webContents.loadURL(finalUrl);
-		} catch(ex) { console.error("Error when going to url: " + payload.url)}
+			await this.window.webContents.loadURL(finalUrl);
+		} catch (ex) { console.error("Error when going to url: " + payload.url) }
 
 		return;
 	}
@@ -878,7 +875,7 @@ export class AppWindow {
 
 		await this.resetRecorder();
 		const testSteps = await CloudCrusher.getTest(String(payload.testId));
-		this.store.dispatch(updateCurrentTestInfo({steps: testSteps}));
+		this.store.dispatch(updateCurrentTestInfo({ steps: testSteps }));
 		return this.handleReplayTestSteps(testSteps);
 	}
 

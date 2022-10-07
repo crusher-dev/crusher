@@ -104,6 +104,7 @@ const headerCss = css`
 	align-items: center;
 	position: relative;
 	height: 38rem;
+	justify-content: space-between;
 	z-index: 1000000;
 `;
 
@@ -117,12 +118,17 @@ const titleCss = css`
 	flex: 1;
 	display: flex;
 	justify-content: center;
-	padding-top: 6rem;
+
 	font-family: Cera Pro;
 
 	font-weight: 500;
 	font-size: 13.4px;
 	color: #ffffff;
+
+	position: absolute;
+    top: calc(50% + 5px);
+    left: 50%;
+    transform: translate(-50%, -50%);
 `;
 const headerRightSectionCss = css`
 	position: relative;
@@ -142,6 +148,7 @@ const contentCss = css`
 	flex: 1;
 	padding-top: 20px;
 	overflow-y: overlay;
+	
 	::-webkit-scrollbar {
 		background: transparent;
 		width: 8rem;

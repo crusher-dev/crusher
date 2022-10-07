@@ -21,7 +21,7 @@ export const loadSegment = () => {
   analytics.page();
   }}();
 	`,
-		() => {},
+		() => { },
 	);
 };
 
@@ -59,5 +59,5 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 };
 
 export const openChatBox = () => {
-	window["$crisp"].push(["do", "chat:open"]);
+	// window["$crisp"].push(["do", "chat:open"]);
 };

@@ -10,6 +10,9 @@ import { Conditional } from "@dyson/components/layouts";
 import { useNavigate } from "react-router-dom";
 import { IntegrationSettings } from "./integrationSettings";
 import { atom, useAtom } from "jotai";
+import { useUser } from "electron-app/src/_ui/api/user/user";
+import { getCurrentSelectedProjct } from "electron-app/src/store/selectors/app";
+import { useStore } from "react-redux";
 
 const goBackToProjectPage = (navigate) => {
 	navigate("/");
@@ -22,7 +25,7 @@ const SettingLabel = () => {
 	</div>)
 }
 
-const settingsAtom = atom<string>("integrations");
+const settingsAtom = atom<string>("basic");
 
 const SettingsScreen = () => {
 	const [section, _] = useAtom(settingsAtom);
@@ -133,7 +136,15 @@ hr{
 export const SettingsLayout = (props: any) => {
 	const { children } = props;
 	const [section, setSection] = useAtom(settingsAtom);
+	const [showProjectSettings, setShowProjectSettings] = React.useState(false);
+	const store = useStore();
 
+	React.useEffect(() => {
+		const selectedProjectId = getCurrentSelectedProjct(store.getState() as any);
+		if (selectedProjectId) {
+			setShowProjectSettings(true);
+		}
+	}, []);
 
 	return (
 		<div css={container} className="flex">
@@ -144,12 +155,16 @@ export const SettingsLayout = (props: any) => {
 						basic
 					</MenuLabel>
 
-					<SectionLabel>
-						Project
-					</SectionLabel>
-					<MenuLabel onClick={setSection.bind(this, "integrations")} selected={section === "integrations"}>
-						integration
-					</MenuLabel>
+					{showProjectSettings ? (
+						<>
+							<SectionLabel>
+								Project
+							</SectionLabel>
+							<MenuLabel onClick={setSection.bind(this, "integrations")} selected={section === "integrations"}>
+								integration
+							</MenuLabel>
+						</>
+					) : ""}
 
 				</div>
 			</div>

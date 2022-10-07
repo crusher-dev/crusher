@@ -95,10 +95,10 @@ interface IProps {
 	contextMenu?: { [type: string]: { callback?: any; menuItems?: any } };
 	showHeader?: boolean;
 	isSelectable?: boolean;
+	headerProps?: any;
 }
-const ListBox = ({ showHeader = true, onItemClick, className, contextMenu, isSelectable = true, selectedHeaderActions: SelectedHeaderActions, items, ...props }: IProps) => {
+const ListBox = ({ showHeader = true, headerProps = {}, onItemClick, className, contextMenu, isSelectable = true, selectedHeaderActions: SelectedHeaderActions, items, ...props }: IProps) => {
 	const { selectedList, selectItem, isItemSelected, resetSelected, toggleSelectAll, toggleSelectItem } = useSelectableList(isSelectable);
-
 
 	const listItems = React.useMemo(() => {
 		if (!items) return null;
@@ -159,7 +159,7 @@ const ListBox = ({ showHeader = true, onItemClick, className, contextMenu, isSel
 					isSelected={allSelected}
 				/>
 				<div css={testsCountCss}>{items.length} tests</div>
-				{SelectedHeaderActions ? <SelectedHeaderActions toggleSelectAll={toggleSelectAll} items={items} selectedList={selectedList} /> : ""}
+				{SelectedHeaderActions ? <SelectedHeaderActions toggleSelectAll={toggleSelectAll} items={items} selectedList={selectedList} {...headerProps} /> : ""}
 			</div>) : ""}
 			{menuItemsComponent?.length ? <RightClickMenu menuItems={menuItemsComponent}>
 				{list}

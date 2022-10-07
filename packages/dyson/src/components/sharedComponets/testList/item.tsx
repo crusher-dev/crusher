@@ -34,14 +34,15 @@ const EditableTestName = ({ testName, testId }) => {
 	);
 };
 
-const TestListItem = ({id, isItemSelected, test, deleteTestCallback}) => {
+const TestListItem = ({id, isItemSelected, onEdit, onUpdateEmoji, onDelete, onRename, test, deleteTestCallback}) => {
     const [emoji, setEmoji] = React.useState(test.emoji);
 
-    const handleEmojiSelected = () => {
-        console.log("emoji selected");
+    const handleEmojiSelected = (emoji) => {
+		setEmoji(emoji.native);
+		onUpdateEmoji && onUpdateEmoji(id, emoji.native);
     };
 
-    const handleEdit = () => {};
+    const handleEdit = () => { onEdit && onEdit([id]); };
     const handleRunTest = () => {};
 
     return (

@@ -1,7 +1,7 @@
 import React from "react";
 import { css } from "@emotion/react";
 import { HoverButton } from "../../components/hoverButton";
-import { GithubIcon, TickIcon } from "electron-app/src/_ui/constants/icons";
+import { GithubIcon, ResetIcon, TickIcon } from "electron-app/src/_ui/constants/icons";
 import { TextBlock } from "@dyson/components/atoms";
 import { remote } from "electron";
 import { shell } from "electron/common";
@@ -13,6 +13,7 @@ import useSWR from "swr";
 import { getIntegrationsAPIRequest, removeGithubIntegration, removeSlackIntegration } from "electron-app/src/_ui/api/projects/integrations";
 import useRequest from "electron-app/src/_ui/utils/useRequest";
 import axios from "axios";
+import { HoverCard } from "@dyson/components/atoms/tooltip/Tooltip1";
 
 const SlackIntegrationItem = () => {
     const store = useStore();
@@ -149,11 +150,25 @@ const buttonCss = css`
 `;
 
 const IntegrationSettings = () => {
+
+    const handleRefresh = () => {
+        window.location.reload();
+    }
+
     return (
         <div css={containerCss}>
-            <div css={headingCss}>Integration</div>
-            <div className={"mt-6"} css={descriptionCss}>intergrate services to enhance your worflow</div>
-
+            <div className={"flex"}>
+                <div className={"flex-1"}>
+                    <div css={headingCss}>Integration</div>
+                    <div className={"mt-6"} css={descriptionCss}>intergrate services to enhance your workflow</div>
+                </div>
+                <div className={"ml-auto"}>
+                        <HoverButton onClick={handleRefresh} css={buttonCss} width={32} height={32} title={"refresh"}>
+                            <ResetIcon className={"mb-4"} css={css`width: 12px; height: 12px; `}/>
+                        </HoverButton>
+                </div>
+            </div>
+  
             <div className="mt-10">
                 <SlackIntegrationItem />
                 <GithubIntegrationItem />

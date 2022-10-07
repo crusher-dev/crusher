@@ -1,24 +1,49 @@
 import React from "react";
 import { css } from "@emotion/react";
 import { HoverButton } from "../../components/hoverButton";
-import { GithubIcon } from "electron-app/src/_ui/constants/icons";
+import { GithubIcon, TickIcon } from "electron-app/src/_ui/constants/icons";
 import { TextBlock } from "@dyson/components/atoms";
 import { remote } from "electron";
 import { shell } from "electron/common";
-import { linkOpen } from "electron-app/src/utils/url";
+import { linkOpen, resolveToBackend } from "electron-app/src/utils/url";
 import { useStore } from "react-redux";
 import { getCurrentSelectedProjct, getUserAccountInfo } from "electron-app/src/store/selectors/app";
 import { resolveToFrontend } from "electron-app/src/utils/url";
+import useSWR from "swr";
+import { getIntegrationsAPIRequest, removeGithubIntegration, removeSlackIntegration } from "electron-app/src/_ui/api/projects/integrations";
+import useRequest from "electron-app/src/_ui/utils/useRequest";
+import axios from "axios";
 
 const SlackIntegrationItem = () => {
     const store = useStore();
+	const { data: integrations } = useRequest(getIntegrationsAPIRequest);
+    const [connected, setConnected] = React.useState(false);
+
+    React.useEffect(() => {
+        if(integrations?.slackIntegration) {
+            const slackIntegrationMeta = integrations.slackIntegration?.meta;
+
+			if (slackIntegrationMeta?.channel) {
+				const normalChannel = slackIntegrationMeta.channel.normal;
+				const alertChannel = slackIntegrationMeta.channel.alert;
+                setConnected([normalChannel?.name ? normalChannel.name : "", alertChannel?.name ? alertChannel.name : ""].join(", "));
+			}
+
+        }
+    }, [integrations]);
+
     const handleConnect = () => {
         const userInfo = getUserAccountInfo(store.getState());
         const projectId = getCurrentSelectedProjct(store.getState() as any);
-
+        
 		if(userInfo?.token) {
-            linkOpen(resolveToFrontend(`${projectId}/settings/integrations?laccess_token=` + userInfo.token));
+            linkOpen(resolveToFrontend(`${projectId}/settings/integrations?laccess_token=` + userInfo.token + '&item=slack'));
         }
+    };
+
+    const handleRemove = () => {
+        axios(removeSlackIntegration());
+        setConnected(false);
     };
     return (
         <div css={IntegrationItemCss} className="flex items-center py-24 pb-16">
@@ -27,13 +52,51 @@ const SlackIntegrationItem = () => {
                 <TextBlock fontSize={12} color="#6B6B6B" className="mt-6">We post notifications to Slack on event trigger.</TextBlock>
             </div>
             <div className={"ml-auto"}>
-                <HoverButton onClick={handleConnect} css={buttonCss} width={106} height={32} >Connect</HoverButton>
+                {connected ? (
+                    <div className={"flex items-center"}>
+                        <div className={'flex items-center'}>
+                            <TickIcon css={tickIconCss}/>
+                            <TextBlock className={"ml-6"} color={"#6B6B6B"} fontSize={12}>{connected}</TextBlock>
+                        </div>
+                        <HoverButton className={"ml-12"} onClick={handleRemove} css={buttonCss} width={70} height={24} >remove</HoverButton>
+                    </div>
+                ): (
+                    <HoverButton onClick={handleConnect} css={buttonCss} width={106} height={32} >Connect</HoverButton>
+                )}
             </div>
         </div>
     );
 }
-
+const tickIconCss = css`
+    width: 9.79px;
+    height: 7.8px;
+`;
 const GithubIntegrationItem = () => {
+    const store = useStore();
+	const { data: integrations } = useRequest(getIntegrationsAPIRequest);
+    const [connected, setConnected] = React.useState(false);
+
+    React.useEffect(() => {
+        if(integrations?.gitIntegration) {
+            console.log("Git integration", integrations.gitIntegration);
+            setConnected(true);
+        }
+    }, [integrations]);
+
+    const handleLink = () => {
+        const userInfo = getUserAccountInfo(store.getState());
+        const projectId = getCurrentSelectedProjct(store.getState() as any);
+
+		if(userInfo?.token) {
+            linkOpen(resolveToFrontend(`${projectId}/settings/integrations?laccess_token=` + userInfo.token + '&item=github'));
+        }
+    };
+
+    const handleUnlink = () => {
+        axios(removeGithubIntegration(integrations.gitIntegration.id)());
+        setConnected(false);
+    }
+
     return (
         <div css={IntegrationItemCss} className="flex items-center py-24 pb-16">
             <div css={css`height: 100%;`}>
@@ -46,10 +109,23 @@ const GithubIntegrationItem = () => {
 
             </div>
             <div className={"ml-auto"}>
-                <HoverButton css={buttonCss} width={106} height={32}>
-                    <GithubIcon css={css`width: 13px; height: 13px;`} />
-                    <span className={"ml-6"}>link</span>
-                </HoverButton>
+
+            {connected ? (
+                    <div className={"flex items-center"}>
+                        <div className={'flex items-center'}>
+                            <TickIcon css={tickIconCss}/>
+                            <TextBlock className={"ml-6"} color={"#6B6B6B"} fontSize={12}>{integrations.gitIntegration.repoName}</TextBlock>
+                        </div>
+                        <HoverButton className={"ml-12"} onClick={handleUnlink} css={buttonCss} width={70} height={24} >remove</HoverButton>
+                    </div>
+                ): (
+                    <HoverButton onClick={handleLink} css={buttonCss} width={106} height={32}>
+                        <GithubIcon css={css`width: 13px; height: 13px;`} />
+                        <span className={"ml-6"}>link</span>
+                    </HoverButton>
+                )}
+
+     
             </div>
         </div>
     );

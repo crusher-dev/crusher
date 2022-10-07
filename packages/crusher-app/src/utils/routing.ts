@@ -72,7 +72,7 @@ export const redirectUserOnMount = async (data: IUserAndSystemInfoResponse, rout
 			const res = await backendRequest(resolvePathToBackendURI("/users/actions/login.token"), {method: RequestMethod.POST, payload: {token: loginAccessToken}});
 			if(res.status === "Successful") {
 				// updateInitialData();
-				window.location.href = mainPath;
+				window.location.href = mainPath + "?" + window.location.href.split("?")[1];
 				return;
 			}
 		}

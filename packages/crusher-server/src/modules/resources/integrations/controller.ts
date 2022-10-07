@@ -80,11 +80,13 @@ class IntegrationsController {
 		const integrationsList = await this.integrationsService.getListOfIntegrations(projectId);
 		const slackIntegration = integrationsList.find((item) => item.integrationName === IntegrationServiceEnum.SLACK);
 		const webhook = await this.projectsService.getProjectWebhook(projectId);
+		const linkedRepo = await this.githubIntegrationService.getLinkedRepo(projectId);
 
 		return {
 			emailIntegration: true,
 			slackIntegration: slackIntegration,
 			webhook: webhook,
+			gitIntegration: linkedRepo
 		};
 	}
 

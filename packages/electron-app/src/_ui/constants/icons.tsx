@@ -370,6 +370,23 @@ const GithubIcon = (props) => (
 	</svg>
 )
 
+const TickIcon = (props) => (
+	<svg
+	  viewBox={'0 0 12 9'}
+	  fill="none"
+	  xmlns="http://www.w3.org/2000/svg"
+	  {...props}
+	>
+	  <path
+		fillRule="evenodd"
+		clipRule="evenodd"
+		d="M10.693.7a.501.501 0 0 1 .136.142.465.465 0 0 1 .054.37.476.476 0 0 1-.09.171l-5.6 6.825a.517.517 0 0 1-.169.134.556.556 0 0 1-.62-.085l-3.15-2.925a.469.469 0 0 1-.14-.341.471.471 0 0 1 .153-.336.546.546 0 0 1 .362-.143.548.548 0 0 1 .367.13l2.726 2.531L9.958.793A.555.555 0 0 1 10.693.7Z"
+		fill="#B0FF72"
+		stroke="#B0FF72"
+		strokeWidth={0.6}
+	  />
+	</svg>
+  )
 
 export {
 	BackIconV3,
@@ -397,5 +414,6 @@ export {
 	GoBackIcon,
 	CloseIcon,
 	UpDownSizeIcon,
-	GithubIcon
+	GithubIcon,
+	TickIcon
 };

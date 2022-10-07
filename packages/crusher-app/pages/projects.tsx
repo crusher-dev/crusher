@@ -61,8 +61,12 @@ export default function Dashboard() {
 	};
 
 	const filteredProject = useMemo(() => {
-		if (searchProject.length === 0) return projects;
-		return projects.filter(({ name }) => name.includes(searchProject));
+		const sortProjects = (projects: any) => {
+			return [...projects].sort((x, y) => (!!x.gitIntegration === !!y.gitIntegration)? 0 : !!x.gitIntegration ? -1 : 1);
+		}
+
+		if (searchProject.length === 0) return sortProjects(projects);
+		return sortProjects(projects.filter(({ name }) => name.includes(searchProject)));
 	}, [searchProject]);
 
 	return (

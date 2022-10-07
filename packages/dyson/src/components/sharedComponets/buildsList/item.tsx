@@ -31,9 +31,9 @@ const BuildListItem = ({isItemSelected, viewTestCallback, build}) => {
         <div className={"flex flex-col flex-1 px-24 py-20 pb-16"} css={testItem(isItemSelected)}>
             <div className={"flex items-center"} css={css`width: 100%`}>
                 <div className={"flex items-center flex-1"}>
-					{/* {build.status === "PASSED" ? ( <GreenCheckboxIcon css={passedIconCss}/> ) : ""} */}
-					{/* {build.status === "FAILED" ? ( <FailedCheckboxIcon css={passedIconCss}/> ) : ""} */}
-					{true || build.status === "RUNNING" ? ( <LoadingIconV2 css={loadingIconCss}/> ) : ""}
+					{build.status === "PASSED" ? ( <GreenCheckboxIcon css={passedIconCss}/> ) : ""}
+					{build.status === "FAILED" ? ( <FailedCheckboxIcon css={passedIconCss}/> ) : ""}
+					{build.status === "RUNNING" ? ( <LoadingIconV2 css={loadingIconCss}/> ) : ""}
                     <div className={"ml-12"} css={buildIdCss}>
                         #{build.id}
                     </div>

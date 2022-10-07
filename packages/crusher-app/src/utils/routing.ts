@@ -8,6 +8,8 @@ import { getEdition } from "@utils/helpers";
 import { isTempTestPending } from "@utils/user";
 
 import { resolvePathToBackendURI } from "./common/url";
+import { backendRequest } from "./common/backendRequest";
+import { RequestMethod } from "@types/RequestOptions";
 
 export const handleOpenSourceMounting = async (data: IUserAndSystemInfoResponse, router: NextRouter, loadCallback: any) => {
 	const { userData: user } = data;
@@ -62,6 +64,20 @@ export const handleEERouting = async (data: IUserAndSystemInfoResponse, router: 
 	loadCallback, router dependecy can be removed.
  */
 export const redirectUserOnMount = async (data: IUserAndSystemInfoResponse, router: NextRouter, loadCallback: any) => {
+	if(!data?.userId) {
+		const urlQuery = new URLSearchParams(window.location.href.split("?")[1]);
+		const loginAccessToken = urlQuery.get("laccess_token");
+		const mainPath = window.location.href.split("?")[0];
+		if(loginAccessToken) {
+			const res = await backendRequest(resolvePathToBackendURI("/users/actions/login.token"), {method: RequestMethod.POST, payload: {token: loginAccessToken}});
+			if(res.status === "Successful") {
+				// updateInitialData();
+				window.location.href = mainPath + "?" + window.location.href.split("?")[1];
+				return;
+			}
+		}
+	}
+
 	if (getEdition() === EditionTypeEnum.OPEN_SOURCE) {
 		await handleOpenSourceMounting(data, router, loadCallback);
 	} else {

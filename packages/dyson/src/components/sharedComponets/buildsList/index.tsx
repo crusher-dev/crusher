@@ -70,6 +70,8 @@ const BuildsList = ({ builds, viewTestCallback }: IProps) => {
             </div>
             <div className="mt-16">
                 <ListBox
+                        isSelectable={false}
+                        onItemClick={viewTestCallback}
                             // contextMenu={contextMenu}
                             selectedHeaderActions={() => null}
                             items={items}

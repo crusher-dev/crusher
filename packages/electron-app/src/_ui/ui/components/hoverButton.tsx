@@ -1,9 +1,9 @@
 import React from "react";
 import { css } from "@emotion/react";
 
-const HoverButton = ({ onClick, wrapperCss, children, title = "", height = 20, width = 20, className = "" }: any) => {
+const HoverButton = ({ onClick, wrapperCss, children, title = "", height = 20, width = 20, className = "", ...props }: any) => {
 	return (
-		<div onClick={onClick} className={`flex items-center justify-center ${className}`} css={[hoverIconCss(height, width), wrapperCss]} title={title}>
+		<div onClick={onClick} className={`flex items-center justify-center ${className}`} css={[hoverIconCss(height, width), wrapperCss]} title={title} {...props}>
 			{children}
 		</div>
 	);

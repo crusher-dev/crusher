@@ -11,6 +11,7 @@ import { getCurrentSelectedProjct } from "electron-app/src/store/selectors/app";
 import { Dropdown } from "@dyson/components/molecules/Dropdown";
 import { MenuItem } from "../../components/dropdown/menuItems";
 import { getCurrentProjectConfigPath } from "electron-app/src/_ui/utils/project";
+import { setSelectedProject } from "electron-app/src/store/actions/app";
 
 const createEvent = (props) => {
 	let _isCanceled = false;
@@ -61,6 +62,7 @@ function DashboardTopDropdownContent({ setShowActionMenu, isRecorder }) {
 	const handleSelectProject = () => {
 		const evt = createEvent({ id: "back-to-projects", action: "Go back", isNavigating: true });
 		setShowActionMenu(false, evt);
+		store.dispatch(setSelectedProject(null));
 
 		if(!evt.isCanceled()) {
 			return navigate("/select-project");

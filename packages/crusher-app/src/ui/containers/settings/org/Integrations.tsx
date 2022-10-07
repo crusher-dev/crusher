@@ -847,6 +847,33 @@ const selectBoxCSS = css`
 
 export const Integrations = () => {
 	const [showModal, setShowModal] = useState(false);
+	const [selectedSection, setShowSelectedSection] = useState(null);
+
+	React.useEffect(() => {
+		const query = new URLSearchParams(window.location.search);
+		const section = query.get("item");
+		if(section) {
+			setShowSelectedSection(section);
+		}
+	});
+
+	if(selectedSection) {
+		return (
+		<SettingsLayout hideSidebar={true}>
+			<div className={"text-24 mb-100"} css={maxWidthContainer}>
+				<Heading type={1} fontSize={"18"} className={"mb-12"}>
+					Integrations
+				</Heading>
+				<TextBlock fontSize={"12.5"} className={"mb-24"} color={"#787878"}>
+					Make sure you have selected all the configuration you want
+				</TextBlock>
+				<hr css={basicHR} />
+				{selectedSection === "slack" ? (<SlackIntegration />) : ""}
+				{selectedSection === "github" ? (<GitIntegration />) : ""}
+			</div>
+		</SettingsLayout>
+		)
+	}
 	return (
 		<SettingsLayout>
 			<Conditional showIf={showModal}>

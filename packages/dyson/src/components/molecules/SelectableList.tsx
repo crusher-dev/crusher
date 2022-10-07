@@ -5,13 +5,14 @@ import { RightClickMenu } from "../../components/molecules/RightClick/RightClick
 import Checkbox from "../../components/atoms/checkbox/checkbox";
 import pull from "lodash/pull";
 
-const useSelectableList = () => {
+const useSelectableList = (isSelectable: boolean = true) => {
 	const [keyPressed, setKeyPressed] = useState<any>(null);
 	const [selectedList, setSelectedList] = useState([]);
 
 	const isItemSelected = React.useCallback((index) => selectedList.includes(index), [selectedList]);
 
 	const toggleSelectAll = (items) => {
+		if(!isSelectable) return;
 		if (selectedList.length === items.length) {
 			setSelectedList([]);
 			return;
@@ -21,6 +22,8 @@ const useSelectableList = () => {
 
 	const toggleSelectItem = React.useCallback(
 		(index) => {
+			if(!isSelectable) return;
+
 			const isControlKey = keyPressed === 17 || keyPressed === 91;
 			const isElementAlreadySelected = selectedList.includes(index);
 			if (isControlKey) {
@@ -35,17 +38,19 @@ const useSelectableList = () => {
 				setSelectedList([index]);
 			}
 		},
-		[keyPressed, selectedList],
+		[keyPressed, selectedList, isSelectable],
 	);
 
 	const selectItem = React.useCallback(
 		(index) => {
+			if(!isSelectable) return;
+
 			const isElementAlreadySelected = selectedList.includes(index);
 			if (!isElementAlreadySelected) {
 				setSelectedList([...selectedList, index]);
 			}
 		},
-		[keyPressed, selectedList],
+		[keyPressed, selectedList, isSelectable],
 	);
 
 	useEffect(() => {
@@ -89,9 +94,12 @@ interface IProps {
 	items?: { content: any; id: any }[];
 	contextMenu?: { [type: string]: { callback?: any; menuItems?: any } };
 	showHeader?: boolean;
+	isSelectable?: boolean;
 }
-const ListBox = ({ showHeader = true, className, contextMenu, selectedHeaderActions: SelectedHeaderActions, items, ...props }: IProps) => {
-	const { selectedList, selectItem, isItemSelected, resetSelected, toggleSelectAll, toggleSelectItem } = useSelectableList();
+const ListBox = ({ showHeader = true, onItemClick, className, contextMenu, isSelectable = true, selectedHeaderActions: SelectedHeaderActions, items, ...props }: IProps) => {
+	const { selectedList, selectItem, isItemSelected, resetSelected, toggleSelectAll, toggleSelectItem } = useSelectableList(isSelectable);
+
+
 	const listItems = React.useMemo(() => {
 		if (!items) return null;
 		return items.map((item) => {
@@ -99,7 +107,7 @@ const ListBox = ({ showHeader = true, className, contextMenu, selectedHeaderActi
 				<ListItem
 					key={item.id}
 					onContextMenu={selectItem.bind(this, item.id)}
-					onClick={toggleSelectItem.bind(this, item.id)}
+					onClick={() => { toggleSelectItem(item.id); onItemClick && onItemClick(item.id); }}
 					isActive={isItemSelected(item.id)}
 				>
 					{item.content(isItemSelected(item.id))}
@@ -133,7 +141,11 @@ const ListBox = ({ showHeader = true, className, contextMenu, selectedHeaderActi
 	}, [selectedList, useSingularContextMenu]);
 
 	const allSelected = selectedList.length === items.length;
-
+	const list = (
+		<ul className={String(className)} css={listCss} {...props}>
+			{listItems}
+		</ul>
+	);
 	return (
 		<OnOutsideClick onOutsideClick={handleOutSideClick}>
 			{showHeader ? (<div css={headerCss}>
@@ -149,11 +161,9 @@ const ListBox = ({ showHeader = true, className, contextMenu, selectedHeaderActi
 				<div css={testsCountCss}>{items.length} tests</div>
 				{SelectedHeaderActions ? <SelectedHeaderActions toggleSelectAll={toggleSelectAll} items={items} selectedList={selectedList} /> : ""}
 			</div>) : ""}
-			<RightClickMenu menuItems={menuItemsComponent}>
-				<ul className={String(className)} css={listCss} {...props}>
-					{listItems}
-				</ul>
-			</RightClickMenu>
+			{menuItemsComponent?.length ? <RightClickMenu menuItems={menuItemsComponent}>
+				{list}
+			</RightClickMenu> : <>{list}</>}
 		</OnOutsideClick>
 	);
 };

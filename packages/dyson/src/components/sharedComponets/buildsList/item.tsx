@@ -28,7 +28,7 @@ function timeSince(date: Date): string {
 
 const BuildListItem = ({isItemSelected, viewTestCallback, build}) => {
     return (
-        <div className={"flex flex-col flex-1 px-24 py-20"} css={testItem(isItemSelected)}>
+        <div className={"flex flex-col flex-1 px-24 py-20 pb-16"} css={testItem(isItemSelected)}>
             <div className={"flex items-center"} css={css`width: 100%`}>
                 <div className={"flex items-center flex-1"}>
                     <GreenCheckboxIcon css={passedIconCss}/>
@@ -46,7 +46,7 @@ const BuildListItem = ({isItemSelected, viewTestCallback, build}) => {
                             </div>
                 </div>
             </div>
-            <div className={"flex items-center mt-24"}>
+            <div className={"flex items-center mt-16"}>
 				<div css={metaInfoCss} className={"flex-1 flex"}>
 					<div>{build.host ? (new URL(build.host)).host : "~"}</div>
 					{/* <div className={"ml-20"}>ft-branch-new  33814</div> */}

@@ -4,6 +4,14 @@ module.exports = {
 	typescript: {
 		ignoreBuildErrors: false,
 	},
+	env: {
+		// declare here all your variables
+		BASE_URL: process.env.BASE_URL,
+		GA_ID: "UA-51192281-1",
+		NEXT_PUBLIC_SEGMENT_KEY: "",
+		NEXT_PUBLIC_SLACK_CLIENT_ID: "",
+		NEXT_PUBLIC_CRUSHER_MODE: "normal",
+	},
 	compiler: {
 		emotion: {
 			// default is true. It will be disabled when build type is production.

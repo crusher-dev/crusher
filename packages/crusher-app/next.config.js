@@ -2,7 +2,7 @@ const path = require("path");
 
 module.exports = {
 	typescript: {
-		ignoreBuildErrors: true,
+		ignoreBuildErrors: false,
 	},
 	compiler: {
 		emotion: {

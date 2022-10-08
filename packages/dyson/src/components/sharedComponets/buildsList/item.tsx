@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { css } from "@emotion/react";
-import { GreenCheckboxIcon, PlayIcon } from "../svg/list";
+import { FailedCheckboxIcon, GreenCheckboxIcon, LoadingIconV2, PlayIcon } from "../svg/list";
 import { UserIcon } from "../../atoms/userimage/UserImage";
 const intervals = [
 	{ label: "year", seconds: 31536000 },
@@ -46,8 +46,8 @@ const BuildListItem = ({ isItemSelected, viewTestCallback, build }) => {
 					</div>
 				</div>
 			</div>
-			<div className={"flex items-center mt-16"}>
-				<div css={metaInfoCss} className={"flex-1 flex"}>
+			<div className={"flex items-center mt-12"}>
+				<div css={metaInfoCss} className={"flex-1 flex pl-20"}>
 					<div>{build.host ? (new URL(build.host)).host : "~"}</div>
 					{/* <div className={"ml-20"}>ft-branch-new  33814</div> */}
 				</div>
@@ -70,6 +70,7 @@ color: rgba(255, 255, 255, 0.35);
 const metaInfoCss = css`
 	font-weight: 400;
 	font-size: 13rem;
+    padding-left: 28rem;
 
 	letter-spacing: 0.03em;
 	color: rgba(255, 255, 255, 0.35);
@@ -88,6 +89,11 @@ const commitMessageCss = css`
 const passedIconCss = css`
     width: 16rem;
     height: 16rem;
+`;
+
+const loadingIconCss = css`
+	width: 18rem;
+	height: 18rem;
 `;
 const listItemActionsCss = css`
 		display: none;

@@ -21,7 +21,7 @@ function Builds() {
 
 	return (
 		<SidebarTopBarLayout>
-			<div className="pt-42 pb-24">
+			<div className="pt-20 pb-24">
 				<Suspense fallback={<div>loading...</div>}>
 					<BuildSearchableList />
 				</Suspense>

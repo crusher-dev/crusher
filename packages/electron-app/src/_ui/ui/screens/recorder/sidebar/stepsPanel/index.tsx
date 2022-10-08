@@ -156,6 +156,7 @@ const StepsPanel = ({ className }: IProps) => {
 
 	const showNextSteps = remainingSteps && remainingSteps.length && [TRecorderState.RECORDING_ACTIONS, TRecorderState.ACTION_REQUIRED].includes(recorderState.type);
 	const showPausedCard = remainingSteps && remainingSteps.length && [TRecorderState.RECORDING_ACTIONS].includes(recorderState.type);
+	const hasFailed = recordedSteps.some((step) => step.status === "FAILED");
 
 	return (
 		<div css={containerCss} className={String(className)}>
@@ -188,10 +189,10 @@ const StepsPanel = ({ className }: IProps) => {
 							<div className={"px-16 pt-32 pb-4"} css={css`font-style: normal;
 font-weight: 400;
 font-size: 12rem;color: #DCDCDC;`}>next steps</div>
-			<ToastDemo/>
-
 							{remainingStepsList}
 						</div>) : ""}
+
+						{hasFailed ? (	<ToastDemo/>) : ""}
 					</div>
 				</RightClickMenu>
 			</OnOutsideClick>

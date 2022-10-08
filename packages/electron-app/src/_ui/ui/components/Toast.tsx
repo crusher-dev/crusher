@@ -154,6 +154,9 @@ const Button = styled('button', {
 const ToastDemo = () => {
   const [open, setOpen] = React.useState(true);
 
+  React.useEffect(() => {
+    setOpen(true);
+  }, []);
   return (
     <ToastProvider swipeDirection="right">
       <Toast duration={1000 * 60 * 60 * 60} open={open} onOpenChange={setOpen}>
@@ -173,7 +176,7 @@ const ToastDemo = () => {
             </div>
 
             <div className={"px-12 pl-10"}>
-              <HoverButton>
+              <HoverButton onClick={setOpen.bind(this, false)}>
                 <CloseIcon css={css`width: 8rem; height: 8rem;`} />
               </HoverButton>
             </div>

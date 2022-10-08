@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { css } from "@emotion/react";
-import { GreenCheckboxIcon, PlayIcon } from "../svg/list";
+import { FailedCheckboxIcon, GreenCheckboxIcon, LoadingIconV2, PlayIcon } from "../svg/list";
 import { UserIcon } from "../../atoms/userimage/UserImage";
 const intervals = [
 	{ label: "year", seconds: 31536000 },
@@ -31,7 +31,9 @@ const BuildListItem = ({ isItemSelected, viewTestCallback, build }) => {
 		<div className={"flex flex-col flex-1 px-24 py-20 pb-16"} css={testItem(isItemSelected)} id="build-item">
 			<div className={"flex items-center"} css={css`width: 100%`}>
 				<div className={"flex items-center flex-1"}>
-					<GreenCheckboxIcon css={passedIconCss} />
+					{build.status === "PASSED" ? ( <GreenCheckboxIcon css={passedIconCss}/> ) : ""}
+					{build.status === "FAILED" ? ( <FailedCheckboxIcon css={passedIconCss}/> ) : ""}
+					{build.status === "RUNNING" ? ( <LoadingIconV2 css={loadingIconCss}/> ) : ""}
 					<div className={"ml-12"} css={buildIdCss}>
 						#{build.id}
 					</div>
@@ -88,6 +90,11 @@ const commitMessageCss = css`
 const passedIconCss = css`
     width: 16rem;
     height: 16rem;
+`;
+
+const loadingIconCss = css`
+	width: 18rem;
+	height: 18rem;
 `;
 const listItemActionsCss = css`
 		display: none;

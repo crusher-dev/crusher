@@ -209,6 +209,6 @@ export const getRecorderDistCommand = () => {
 }
 
 
-export const getRelativePath = (path) => {
-  return path.relative(process.cwd(), path)
+export const getRelativePath = (pathStr) => {
+  return path.relative(process.cwd(), pathStr)
 }

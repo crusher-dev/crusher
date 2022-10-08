@@ -32,7 +32,7 @@ const changeTestData = (testId: number, name: string, selectedFolder: string | n
 	});
 };
 
-const deleteTestInServer = (testId: number) => {
+export const deleteTestInServer = (testId: number) => {
 	return backendRequest(deleteTestApi(testId), {
 		method: RequestMethod.POST,
 		payload: {},

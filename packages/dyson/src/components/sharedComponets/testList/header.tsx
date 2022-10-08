@@ -2,13 +2,13 @@ import { css } from "@emotion/react";
 import React from "react";
 import { GarbageIcon, PlayIcon } from "../svg/list";
 
-const SelectedTestActions = ({ items, toggleSelectAll, selectedList }) => {
+const SelectedTestActions = ({ items, onEdit, onDelete, onRename, toggleSelectAll, selectedList }) => {
     const handleRun = React.useCallback(() => {
         // triggerLocalBuild(selectedList);
     }, [items, selectedList]);
 
     const handleDelete = React.useCallback(() => {
-        // deleteTest(selectedList);
+        onDelete(selectedList);
     }, [items, selectedList]);
 
     React.useEffect(() => {

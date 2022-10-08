@@ -117,7 +117,6 @@ const createProjectDescriptionCss = css`
 const ProjectsListScreen = () => {
 	const { projects } = useUser();
 	const navigate = useNavigate();
-
 	React.useEffect(() => {
 		if (projects && !projects.length) {
 			navigate("/onboarding");

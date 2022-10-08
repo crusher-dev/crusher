@@ -29,20 +29,7 @@ async function executeCustomCode(
 
 	const res = await util.transformRepl("main.js", customScriptFunction, {
 		plugins: [
-			require("@babel/plugin-transform-typescript"), require("babel-plugin-auto-await/index"),
-			function(babel) {			  
-				return {
-				  visitor: {
-			  ExpressionStatement: function (path) {
-				if(!["LogicalExpression", "BinaryExpression"].includes(path.node.expression.type)) return;
-				path.replaceWith(babel.types.ifStatement(
-				  babel.types.UnaryExpression("!", path.node.expression),
-				  babel.types.ThrowStatement(babel.types.callExpression(babel.types.identifier("Error"), [babel.types.StringLiteral("Error")]))
-				));
-					}
-				  }
-				}
-			}
+			require("@babel/plugin-transform-typescript")
 		]
 	  });
 

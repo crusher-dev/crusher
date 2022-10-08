@@ -34,21 +34,21 @@ const EditableTestName = ({ testName, testId }) => {
 	);
 };
 
-const TestListItem = ({id, isItemSelected, test, deleteTestCallback}) => {
-    const [emoji, setEmoji] = React.useState(test.emoji);
+const TestListItem = ({ id, isItemSelected, test, deleteTestCallback }) => {
+	const [emoji, setEmoji] = React.useState(test.emoji);
 
-    const handleEmojiSelected = () => {
-        console.log("emoji selected");
-    };
+	const handleEmojiSelected = () => {
+		console.log("emoji selected");
+	};
 
-    const handleEdit = () => {};
-    const handleRunTest = () => {};
+	const handleEdit = () => { };
+	const handleRunTest = () => { };
 
-    return (
-        <div css={testItem(isItemSelected)} title={`Run test - ${test.testName}`}>
+	return (
+		<div css={testItem(isItemSelected)} title={`Run test - ${test.testName}`} id="test-item">
 			<Checkbox id="checkbox" css={checkboxCss} isSelectAllType={false} isSelected={isItemSelected} />
-            
-            <EmojiPicker onEmojiSelected={handleEmojiSelected}>
+
+			<EmojiPicker onEmojiSelected={handleEmojiSelected}>
 				<div className={"emoji-block"} css={emojiBlock}>
 					{emoji ? (
 						<span css={emojiCSS}>{emoji}</span>
@@ -66,13 +66,13 @@ const TestListItem = ({id, isItemSelected, test, deleteTestCallback}) => {
 				</div>
 			</EmojiPicker>
 
-            <EditableTestName
+			<EditableTestName
 				css={testNameInputCss}
 				testId={test.id}
 				testName={test.testName}
 			/>
 
-            <Conditional showIf={!test.firstRunCompleted}>
+			<Conditional showIf={!test.firstRunCompleted}>
 				<div css={loadingContainerCss} title={"verifying..."}>
 					<span className="pt-1 ml-10">verifying</span>
 					<LoadingIconV2 css={loadingIconCss} />
@@ -91,8 +91,8 @@ const TestListItem = ({id, isItemSelected, test, deleteTestCallback}) => {
 					<span css={runTextCss}>run</span>
 				</div>
 			</div>
-        </div>
-    );  
+		</div>
+	);
 }
 
 

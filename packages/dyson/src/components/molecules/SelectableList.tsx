@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { css } from "@emotion/react";
 import { OnOutsideClick } from "../../components/layouts/onOutsideClick/onOutsideClick";
 import { RightClickMenu } from "../../components/molecules/RightClick/RightClick";
@@ -12,7 +12,7 @@ const useSelectableList = (isSelectable: boolean = true) => {
 	const isItemSelected = React.useCallback((index) => selectedList.includes(index), [selectedList]);
 
 	const toggleSelectAll = (items) => {
-		if(!isSelectable) return;
+		if (!isSelectable) return;
 		if (selectedList.length === items.length) {
 			setSelectedList([]);
 			return;
@@ -22,7 +22,7 @@ const useSelectableList = (isSelectable: boolean = true) => {
 
 	const toggleSelectItem = React.useCallback(
 		(index) => {
-			if(!isSelectable) return;
+			if (!isSelectable) return;
 
 			const isControlKey = keyPressed === 17 || keyPressed === 91;
 			const isElementAlreadySelected = selectedList.includes(index);
@@ -43,7 +43,7 @@ const useSelectableList = (isSelectable: boolean = true) => {
 
 	const selectItem = React.useCallback(
 		(index) => {
-			if(!isSelectable) return;
+			if (!isSelectable) return;
 
 			const isElementAlreadySelected = selectedList.includes(index);
 			if (!isElementAlreadySelected) {
@@ -148,7 +148,7 @@ const ListBox = ({ showHeader = true, onItemClick, className, contextMenu, isSel
 	);
 	return (
 		<OnOutsideClick onOutsideClick={handleOutSideClick}>
-			{showHeader ? (<div css={headerCss}>
+			{showHeader ? (<div css={headerCss} id="test-header">
 				<Checkbox
 					css={checkboxCss}
 					callback={toggleSelectAll.bind(
@@ -205,7 +205,7 @@ const listCss = css`
 		align-items: center;
 		:first-child {
 			border-top: 0.5px solid #1B1B1B;
-			border-radius: 12px 12px 0px 0px;
+			// border-radius: 12px 12px 0px 0px;
 		}
 	}
 `;

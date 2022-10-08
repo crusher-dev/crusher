@@ -26,27 +26,27 @@ function timeSince(date: Date): string {
 	return `${durationString} ago`;
 }
 
-const BuildListItem = ({isItemSelected, viewTestCallback, build}) => {
-    return (
-        <div className={"flex flex-col flex-1 px-24 py-20 pb-16"} css={testItem(isItemSelected)}>
-            <div className={"flex items-center"} css={css`width: 100%`}>
-                <div className={"flex items-center flex-1"}>
-                    <GreenCheckboxIcon css={passedIconCss}/>
-                    <div className={"ml-12"} css={buildIdCss}>
-                        #{build.id}
-                    </div>
-                    {build.name ? (<div className={"ml-6"} css={commitMessageCss}>
-                        | {build.name}
-                    </div>) : ""}
-                </div>
-                <div className={"action-buttons ml-auto"} css={listItemActionsCss}>
-                            <div onClick={viewTestCallback.bind(this, build.id)} css={runTestsCSS} title="run this test">
-                                <PlayIcon css={playIconCss} />
-                                <span css={runTextCss}>view</span>
-                            </div>
-                </div>
-            </div>
-            <div className={"flex items-center mt-16"}>
+const BuildListItem = ({ isItemSelected, viewTestCallback, build }) => {
+	return (
+		<div className={"flex flex-col flex-1 px-24 py-20 pb-16"} css={testItem(isItemSelected)} id="build-item">
+			<div className={"flex items-center"} css={css`width: 100%`}>
+				<div className={"flex items-center flex-1"}>
+					<GreenCheckboxIcon css={passedIconCss} />
+					<div className={"ml-12"} css={buildIdCss}>
+						#{build.id}
+					</div>
+					{build.name ? (<div className={"ml-6"} css={commitMessageCss}>
+						| {build.name}
+					</div>) : ""}
+				</div>
+				<div className={"action-buttons ml-auto"} css={listItemActionsCss}>
+					<div onClick={viewTestCallback.bind(this, build.id)} css={runTestsCSS} title="run this test">
+						<PlayIcon css={playIconCss} />
+						<span css={runTextCss}>view</span>
+					</div>
+				</div>
+			</div>
+			<div className={"flex items-center mt-16"}>
 				<div css={metaInfoCss} className={"flex-1 flex"}>
 					<div>{build.host ? (new URL(build.host)).host : "~"}</div>
 					{/* <div className={"ml-20"}>ft-branch-new  33814</div> */}
@@ -55,9 +55,9 @@ const BuildListItem = ({isItemSelected, viewTestCallback, build}) => {
 					<UserIcon initial={build.triggeredBy.name[0]} />
 					<span css={authorCss} className={"text-13 ml-12"}>{timeSince(new Date(build.createdAt))} by {build.triggeredBy.name.toLowerCase()}</span>
 				</div>
-            </div>
-        </div>
-    );  
+			</div>
+		</div>
+	);
 }
 
 const authorCss = css`
@@ -67,7 +67,7 @@ letter-spacing: 0.03em;
 color: rgba(255, 255, 255, 0.35);
 `;
 
-const metaInfoCss =css`
+const metaInfoCss = css`
 	font-weight: 400;
 	font-size: 13rem;
 

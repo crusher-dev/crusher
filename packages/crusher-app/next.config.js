@@ -1,5 +1,21 @@
 const path = require("path");
 
+async function headers() {
+	return [
+		{
+			source: '/assets/fonts/:path*',
+			headers: [
+				{
+					key: 'Cache-Control',
+					value: '2592000',
+				},
+			],
+		},
+	]
+}
+
+
+
 module.exports = {
 	typescript: {
 		ignoreBuildErrors: true,
@@ -48,4 +64,8 @@ module.exports = {
 		ignoreDuringBuilds: true,
 	},
 	productionBrowserSourceMaps: true,
+	headers
+
 };
+
+

@@ -223,6 +223,13 @@ const fontCSS = `
 	font-style: normal;
 }
 
+
+@font-face {
+	font-family: 'EmojiMart';
+	src: url("/assets/fonts/emojiMart/emoji-mart.ttf") format('truetype');
+}
+
+
 `;
 
 export default App;

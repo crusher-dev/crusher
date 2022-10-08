@@ -508,16 +508,8 @@ function TestSearchableList() {
 	const currentEditTestInfo = data.list.find(({ id }) => id === showEditBox);
 
 	return (
-		<div>
+		<div css={testListCSS}>
 			<Conditional showIf={data && data.list.length > 0}>
-				{/* <TestTopBar
-					totalTests={data.list.length}
-					onClick={async () => {
-						await createFolder(project.id);
-						await mutate(getTestListAPI(project.id));
-					}}
-				/> */}
-				{/* <FolderList /> */}
 				<TestsList contextMenu={{"single": {
 					callback: handleMenuCallback,
 					menuItems: SELECTED_TESTS_MENU
@@ -537,8 +529,6 @@ function TestSearchableList() {
 						}}
 					/>
 				): ""}
-				{/* <div css={css`font-size: 14rem; font-weight: bold; color: #fff;`}>{JSOn</div> */}
-				{/* {rootTest} */}
 			</Conditional>
 
 			<Conditional showIf={data && data.list.length < 3}>
@@ -547,6 +537,29 @@ function TestSearchableList() {
 		</div>
 	);
 }
+
+const testListCSS = css`
+#test-header{
+	max-width: 1298rem;
+    width: calc(100vw - 342rem);
+    margin: 0 auto;
+    padding-left: 12rem !important;
+    padding-right: 0 !important;
+}
+
+#test-item{
+	max-width: 1208rem;
+    width: calc(100vw - 340rem);
+    margin: 0 auto;
+    padding-left: 16rem!important;
+    padding-right: 0!important;
+
+	@media screen and (min-width: 1600px){
+		max-width: 1304rem !important;
+		width: calc(100vw - 342rem) !important;
+	}
+}
+`
 
 const folderStyle = css`
 	min-width: 100%;

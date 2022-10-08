@@ -20,7 +20,7 @@ const isDevelopment = true;
 const commonConfig = {
 	mode: process.env.NODE_ENV || "development",
 	plugins: [
-		isDevelopment && new ReactRefreshWebpackPlugin(),
+		isDevelopment && new ReactRefreshWebpackPlugin({overlay: false}),
 		new IgnorePlugin({ resourceRegExp: /^fsevents$/ }),
 		new MonacoWebpackPlugin(),
 		new MiniCssExtractPlugin(),

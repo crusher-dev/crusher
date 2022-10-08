@@ -13,7 +13,7 @@ import { Conditional } from "dyson/src/components/layouts";
 import { TestsList } from "dyson/src/components/sharedComponets/testList";
 
 import { PROJECT_META_KEYS, USER_META_KEYS } from "@constants/USER";
-import { createFolderAPI, getTestListAPI } from "@constants/api";
+import { createFolderAPI, deleteTestApi, getTestListAPI } from "@constants/api";
 import { BuildTriggerEnum } from "@crusher-shared/types/response/iProjectBuildListResponse";
 import { IProjectTestsListResponse, IProjectTestItem } from "@crusher-shared/types/response/iProjectTestsListResponse";
 import { useProjectDetails } from "@hooks/common";
@@ -422,9 +422,8 @@ const wrapperCSS = css`
 `;
 
 const SELECTED_TESTS_MENU = [
-	{ id: "rename", label: "Rename", shortcut: <div>Enter</div> },
 	{ id: "edit", label: "Edit test", shortcut: null },
-	{ id: "edit", label: "Run test", shortcut: null },
+	{ id: "run", label: "Run test", shortcut: null },
 	{ id: "delete", label: "Delete", shortcut: <div>Delete</div> },
 ];
 
@@ -440,6 +439,7 @@ function TestSearchableList() {
 	const [tempTestName, setTempTestName] = useAtom(tempTestNameAtom);
 	const [tempTestType, setTempTestType] = useAtom(tempTestTypeAtom);
 	const [tempTestUpdateId, setTempTestUpdateId] = useAtom(tempTestUpdateIdAtom);
+	const [showEditBox, setShowEditBox] = useState(false);
 
 	const [filters] = useAtom(testFiltersAtom);
 
@@ -483,19 +483,55 @@ function TestSearchableList() {
 		})();
 	}, []);
 
+	const handleMenuCallback = async (id, selectedList) => {
+		switch (id) {
+			case "delete":
+			case "delete-all":
+				const filteredProjects = data.list.filter(({ id }) => !selectedList.includes(id));
+				for (let i = 0; i < selectedList.length; i++) {
+					backendRequest(deleteTestApi(selectedList[i]), {
+						method: RequestMethod.POST,
+						payload: {},
+					});
+				}
+				await mutate(getTestListAPI(project.id), { ...data, list: filteredProjects }, false);
+				break;
+			case "run":
+				alert("Running");
+				break;
+			case "edit":
+				setShowEditBox(selectedList[0]);
+				break;
+		}
+	};
+
+	const currentEditTestInfo = data.list.find(({ id }) => id === showEditBox);
+
 	return (
 		<div css={testListCSS}>
 			<Conditional showIf={data && data.list.length > 0}>
-
 				<TestsList contextMenu={{
 					"single": {
-						callback: () => { },
+						callback: handleMenuCallback,
 						menuItems: SELECTED_TESTS_MENU
 					}, "multi": {
-						callback: () => { },
+						callback: handleMenuCallback,
 						menuItems: MULTI_SELECTED_MENU
 					}
-				}} tests={data.list} />
+				}} onDelete={handleMenuCallback.bind(this, "delete")} onEdit={handleMenuCallback.bind(this, "edit")} tests={data.list} />
+
+				{showEditBox ? (
+					<EditTest
+						id={showEditBox}
+						name={currentEditTestInfo.testName}
+						folderId={currentEditTestInfo.folderId}
+						tags={currentEditTestInfo.tags}
+						onClose={() => {
+							setShowEditBox(false);
+						}}
+					/>
+				) : ""}
+
 			</Conditional>
 
 			<Conditional showIf={data && data.list.length < 3}>

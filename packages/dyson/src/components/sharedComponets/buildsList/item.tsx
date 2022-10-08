@@ -31,7 +31,11 @@ const BuildListItem = ({ isItemSelected, viewTestCallback, build }) => {
 		<div className={"flex flex-col flex-1 px-24 py-20 pb-16"} css={testItem(isItemSelected)} id="build-item">
 			<div className={"flex items-center"} css={css`width: 100%`}>
 				<div className={"flex items-center flex-1"}>
-					<GreenCheckboxIcon css={passedIconCss} />
+
+					{build.status === "PASSED" ? (<GreenCheckboxIcon css={passedIconCss} />) : ""}
+					{build.status === "FAILED" ? (<FailedCheckboxIcon css={passedIconCss} />) : ""}
+					{build.status === "RUNNING" ? (<LoadingIconV2 css={loadingIconCss} />) : ""}
+
 					<div className={"ml-12"} css={buildIdCss}>
 						#{build.id}
 					</div>
@@ -46,8 +50,11 @@ const BuildListItem = ({ isItemSelected, viewTestCallback, build }) => {
 					</div>
 				</div>
 			</div>
+
 			<div className={"flex items-center mt-12"}>
 				<div css={metaInfoCss} className={"flex-1 flex pl-20"}>
+
+
 					<div>{build.host ? (new URL(build.host)).host : "~"}</div>
 					{/* <div className={"ml-20"}>ft-branch-new  33814</div> */}
 				</div>

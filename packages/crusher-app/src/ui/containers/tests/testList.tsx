@@ -422,7 +422,7 @@ const wrapperCSS = css`
 `;
 
 const SELECTED_TESTS_MENU = [
-	{ id: "rename", label: "Rename", shortcut: <div>Enter</div> },
+	// { id: "rename", label: "Rename", shortcut: <div>Enter</div> },
 	{ id: "edit", label: "Edit test", shortcut: null },
 	{ id: "run", label: "Run test", shortcut: null },
 	{ id: "delete", label: "Delete", shortcut: <div>Delete</div> },
@@ -499,9 +499,6 @@ function TestSearchableList() {
 				break;
 			case "run":
 					alert("Running");
-					break;
-			case "rename":
-					alert("Renaming");
 					break;
 			case "edit": 
 					setShowEditBox(selectedList[0]);

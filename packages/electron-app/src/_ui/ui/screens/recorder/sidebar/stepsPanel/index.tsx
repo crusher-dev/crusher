@@ -91,7 +91,7 @@ const StepsPanel = ({ className }: IProps) => {
 				/>
 			);
 		});
-	}, [steps]);
+	}, [remainingSteps, steps]);
 	React.useEffect(() => {
 		const testListContainer: any = document.querySelector("#steps-list-container");
 		const elementHeight = testListContainer.scrollHeight;

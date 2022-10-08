@@ -9,6 +9,7 @@ import { ActionStatusEnum } from "@shared/types/action";
 import { useStore } from "react-redux";
 import { useAtom } from "jotai";
 import { stepHoverAtom } from "electron-app/src/_ui/store/jotai/steps";
+import ToastDemo from "electron-app/src/_ui/ui/components/Toast";
 
 const FailedStepCard = ({ stepId }) => {
 	const store = useStore();

@@ -19,6 +19,7 @@ import { HoverButton } from "electron-app/src/_ui/ui/components/hoverButton";
 import { getRemainingSteps } from "electron-app/src/store/selectors/app";
 import { PausedStepCard } from "./pausedCard";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
+import ToastDemo from "electron-app/src/_ui/ui/components/Toast";
 
 interface IProps {
 	className?: string;
@@ -180,12 +181,15 @@ const StepsPanel = ({ className }: IProps) => {
 			>
 				<RightClickMenu onOpenChange={handleMenuOpenChange} menuItems={menuItemsComponent}>
 					<div className={`custom-scroll`} css={contentCss}>
+
 						{steps}
-						{showPausedCard ? <PausedStepCard /> : ""}
+						{showPausedCard ? (<PausedStepCard />) : ""}
 						{showNextSteps ? (<div>
 							<div className={"px-16 pt-32 pb-4"} css={css`font-style: normal;
 font-weight: 400;
 font-size: 12rem;color: #DCDCDC;`}>next steps</div>
+			<ToastDemo/>
+
 							{remainingStepsList}
 						</div>) : ""}
 					</div>

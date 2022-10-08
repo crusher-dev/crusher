@@ -388,6 +388,48 @@ const TickIcon = (props) => (
 	</svg>
   )
 
+
+const CorrectCircleIcon = (props) => (
+	<svg
+	  viewBox={"0 0 14 14"}
+	  fill="none"
+	  xmlns="http://www.w3.org/2000/svg"
+	  {...props}
+	>
+	  <path
+		fillRule="evenodd"
+		clipRule="evenodd"
+		d="M0 7a7 7 0 1 1 14 0A7 7 0 0 1 0 7Zm9.595-1.895a.7.7 0 0 1 0 .99L7.017 8.673a1.014 1.014 0 0 1-1.434 0L4.405 7.495a.7.7 0 0 1 .99-.99l.905.905 2.305-2.305a.7.7 0 0 1 .99 0Z"
+		fill="#9EF25B"
+	  />
+	  <path
+		fillRule="evenodd"
+		clipRule="evenodd"
+		d="M0 7a7 7 0 1 1 14 0A7 7 0 0 1 0 7Zm9.595-1.895a.7.7 0 0 1 0 .99L7.017 8.673a1.014 1.014 0 0 1-1.434 0L4.405 7.495a.7.7 0 0 1 .99-.99l.905.905 2.305-2.305a.7.7 0 0 1 .99 0Z"
+		fill="#9EF25B"
+	  />
+	</svg>
+  )
+  
+
+
+const EditIconV4 = (props) => (
+	<svg
+	  viewBox={"0 0 14 14"}
+	  fill="none"
+	  xmlns="http://www.w3.org/2000/svg"
+	  {...props}
+	>
+	  <path
+		d="m3.803 9.742.884-2.209a2.8 2.8 0 0 1 .619-.939l4.844-4.843a1.485 1.485 0 0 1 2.1 2.1L7.406 8.694a2.8 2.8 0 0 1-.94.62l-2.208.884a.35.35 0 0 1-.455-.455v-.001Z"
+		fill="#CC5FFF"
+	  />
+	  <path
+		d="M2.45 4.025c0-.483.392-.875.875-.875H7A.525.525 0 0 0 7 2.1H3.325A1.925 1.925 0 0 0 1.4 4.025v6.65A1.925 1.925 0 0 0 3.325 12.6h6.65a1.925 1.925 0 0 0 1.925-1.925V7a.525.525 0 1 0-1.05 0v3.675a.875.875 0 0 1-.875.875h-6.65a.875.875 0 0 1-.875-.875v-6.65Z"
+		fill="#CC5FFF"
+	  />
+	</svg>
+  )
 export {
 	BackIconV3,
 	DisabledCloudIcon,
@@ -415,5 +457,7 @@ export {
 	CloseIcon,
 	UpDownSizeIcon,
 	GithubIcon,
-	TickIcon
+	TickIcon,
+	CorrectCircleIcon,
+	EditIconV4
 };

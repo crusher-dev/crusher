@@ -12,6 +12,7 @@ import { stepHoverAtom } from "electron-app/src/_ui/store/jotai/steps";
 import { useAtom } from "jotai";
 import { editInputAtom } from "electron-app/src/_ui/store/jotai/testsPage";
 import { Conditional } from "@dyson/components/layouts";
+import ToastDemo from "electron-app/src/_ui/ui/components/Toast";
 
 interface IProps {
 	className?: string;
@@ -90,7 +91,7 @@ const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, 
 					{stepInfo.isRunning && !disabled ? <LoadingIcon style={{}} css={runningIconCss} /> : ""}
 					{stepInfo.isCompleted && !disabled ? <GreenCheckboxIcon css={[completedIconCss, !isLast ? inActiveIconCss : null]} /> : ""}
 				</div>
-				{hasFailed ? <FailedStepCard stepId={stepId} /> : ""}
+				{hasFailed ? <FailedStepCard stepId={stepId} />  : ""}
 			</div>
 		</HoverCard>
 	);

@@ -153,7 +153,8 @@ const StepsPanel = ({ className }: IProps) => {
 	}, [recordedSteps, selectedList]);
 	const handleResetTest = () => performVerifyTest(false);
 
-	const showPausedCard = remainingSteps && remainingSteps.length && [TRecorderState.RECORDING_ACTIONS, TRecorderState.ACTION_REQUIRED].includes(recorderState.type);
+	const showNextSteps = remainingSteps && remainingSteps.length && [TRecorderState.RECORDING_ACTIONS, TRecorderState.ACTION_REQUIRED].includes(recorderState.type);
+	const showPausedCard = remainingSteps && remainingSteps.length && [TRecorderState.RECORDING_ACTIONS].includes(recorderState.type);
 
 	return (
 		<div css={containerCss} className={String(className)}>
@@ -181,8 +182,8 @@ const StepsPanel = ({ className }: IProps) => {
 					<div className={`custom-scroll`} css={contentCss}>
 						{steps}
 						{showPausedCard ? <PausedStepCard /> : ""}
-						{showPausedCard ? (<div>
-							<div className={"px-16 pt-32 pb-20"} css={css`font-style: normal;
+						{showNextSteps ? (<div>
+							<div className={"px-16 pt-32 pb-4"} css={css`font-style: normal;
 font-weight: 400;
 font-size: 12rem;color: #DCDCDC;`}>next steps</div>
 							{remainingStepsList}

@@ -153,7 +153,7 @@ const StepsPanel = ({ className }: IProps) => {
 	}, [recordedSteps, selectedList]);
 	const handleResetTest = () => performVerifyTest(false);
 
-	const showPausedCard = remainingSteps && remainingSteps.length && [TRecorderState.RECORDING_ACTIONS].includes(recorderState.type);
+	const showPausedCard = remainingSteps && remainingSteps.length && [TRecorderState.RECORDING_ACTIONS, TRecorderState.ACTION_REQUIRED].includes(recorderState.type);
 
 	return (
 		<div css={containerCss} className={String(className)}>

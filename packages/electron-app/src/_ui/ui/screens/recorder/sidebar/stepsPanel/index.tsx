@@ -19,7 +19,7 @@ import { HoverButton } from "electron-app/src/_ui/ui/components/hoverButton";
 import { getRemainingSteps } from "electron-app/src/store/selectors/app";
 import { PausedStepCard } from "./pausedCard";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
-import ToastDemo from "electron-app/src/_ui/ui/components/Toast";
+import {clearToast, showToast, ToastBox} from "electron-app/src/_ui/ui/components/toasts/index";
 
 interface IProps {
 	className?: string;
@@ -156,7 +156,20 @@ const StepsPanel = ({ className }: IProps) => {
 
 	const showNextSteps = remainingSteps && remainingSteps.length && [TRecorderState.RECORDING_ACTIONS, TRecorderState.ACTION_REQUIRED].includes(recorderState.type);
 	const showPausedCard = remainingSteps && remainingSteps.length && [TRecorderState.RECORDING_ACTIONS].includes(recorderState.type);
-	const hasFailed = recordedSteps.some((step) => step.status === "FAILED");
+	const failedSteps = recordedSteps.filter((step) => step.status === "FAILED");
+
+	React.useEffect(() => {
+		if(failedSteps.length) {
+			showToast({
+				message: "element info couldn't be found",
+				type: "step-failed",
+				isUnique: true,
+				meta: {  },
+			});
+		} else {
+			clearToast("step-failed");
+		}
+	}, [failedSteps.length]);
 
 	return (
 		<div css={containerCss} className={String(className)}>
@@ -191,8 +204,6 @@ font-weight: 400;
 font-size: 12rem;color: #DCDCDC;`}>next steps</div>
 							{remainingStepsList}
 						</div>) : ""}
-
-						{hasFailed ? (	<ToastDemo/>) : ""}
 					</div>
 				</RightClickMenu>
 			</OnOutsideClick>

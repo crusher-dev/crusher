@@ -25,6 +25,7 @@ import { UnAuthorizedErrorContainer } from "./ui/containers/errors/unauthorizedE
 import { InvalidCredsErrorContainer } from "./ui/containers/errors/invalidCreds";
 import { performGoToUrl } from "./commands/perform";
 import { Provider as JotaiProvider } from "jotai";
+import { ToastBox } from "./ui/components/toasts";
 webFrame.setVisualZoomLevelLimits(1, 3);
 
 function getPersistStore() {
@@ -62,6 +63,7 @@ function InsideRouter() {
 		<JotaiProvider>
 			<SWRConfig value={{ onError: handleErrorCallback.bind(this) }}>
 				<ToastSnackbar />
+				<ToastBox/>
 				<Global styles={globalStyle} />
 				<Routes>
 					<Route path="/login" element={<LoginScreen />} />

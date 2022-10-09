@@ -147,18 +147,15 @@ export const ProjectSettings = () => {
 				<hr css={basicHR} className={"mt-54"} />
 				<div className="flex align-items center mt-56 justify-between">
 					<div>
-						<Heading type={2} fontSize={"14"} className={"mb-8"}>
+						<Heading weight={600} type={2} fontSize={"14"} className={"mb-10"}>
 							Delete this project
 						</Heading>
-						<TextBlock fontSize={12} className={"mb-24"} color={"#787878"}>
+						<TextBlock fontSize={12} color={"#787878"}>
 							This action can't be undone.
 						</TextBlock>
 					</div>
 					<Button
 						bgColor={"danger"}
-						css={css`
-							width: 124rem;
-						`}
 						onClick={deleteProjectCallback}
 					>
 						Delete project

@@ -333,7 +333,7 @@ export const ResourceBar = () => {
 						<div className="hours-count">5 hrs</div>
 					</div>
 					<div className="flex justify-center mt-8 item-center px-6">
-						<TextBlock color="#597eff" fontSize={12.6} weight={500} className="mt-3 lowercase mr-8">
+						<TextBlock color="#5fbdfc" fontSize={12.6} weight={500} className="mt-3 lowercase mr-8">
 							Free plan
 						</TextBlock>
 

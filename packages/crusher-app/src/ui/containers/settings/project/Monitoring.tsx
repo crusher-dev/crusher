@@ -249,9 +249,6 @@ export const Monitoring = () => {
 					<div>
 						<Button
 							onClick={addEmptyEnvToStore.bind(this)}
-							css={css`
-								width: 164rem;
-							`}
 						>
 							Add Monitoring
 						</Button>

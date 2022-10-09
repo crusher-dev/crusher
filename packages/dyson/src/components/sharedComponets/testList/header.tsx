@@ -3,48 +3,48 @@ import React from "react";
 import { GarbageIcon, PlayIcon } from "../svg/list";
 
 const SelectedTestActions = ({ items, onEdit, onDelete, onRename, toggleSelectAll, selectedList }) => {
-    const handleRun = React.useCallback(() => {
-        // triggerLocalBuild(selectedList);
-    }, [items, selectedList]);
+	const handleRun = React.useCallback(() => {
+		// triggerLocalBuild(selectedList);
+	}, [items, selectedList]);
 
-    const handleDelete = React.useCallback(() => {
-        onDelete(selectedList);
-    }, [items, selectedList]);
+	const handleDelete = React.useCallback(() => {
+		onDelete(selectedList);
+	}, [items, selectedList]);
 
-    React.useEffect(() => {
-        const keyPressListener = function (e: Event) {
-            if (e.key === "Delete") {
-                // deleteTest(selectedList);
-            } else if (e.key === "a" && e.ctrlKey) {
-                // toggleSelectAll(items.map((item) => item.id));
-            }
-        };
-        window.addEventListener("keyup", keyPressListener, false);
-        return () => {
-            window.removeEventListener("keyup", keyPressListener, false);
-        };
-    }, [items, selectedList]);
+	React.useEffect(() => {
+		const keyPressListener = function (e: Event) {
+			if (e.key === "Delete") {
+				// deleteTest(selectedList);
+			} else if (e.key === "a" && e.ctrlKey) {
+				// toggleSelectAll(items.map((item) => item.id));
+			}
+		};
+		window.addEventListener("keyup", keyPressListener, false);
+		return () => {
+			window.removeEventListener("keyup", keyPressListener, false);
+		};
+	}, [items, selectedList]);
 
-    if (selectedList.length < 1) return null;
-    return (
-        <div
-            className={"action-buttons pt-2"}
-            css={[
-                listItemActionsCss,
-            ]}
-        >
-            <div onClick={handleDelete} css={deleteContainerCss}>
-                <GarbageIcon css={deleteIconCss} />
-                <span css={deleteTextCss} className="mt-2">
-                    delete
-                </span>
-            </div>
-            <div onClick={handleRun} css={runTestsCSS}>
-                <PlayIcon css={playIconCss} />
-                <span css={runTextCss}>run</span>
-            </div>
-        </div>
-    );
+	if (selectedList.length < 1) return null;
+	return (
+		<div
+			className={"action-buttons pt-2"}
+			css={[
+				listItemActionsCss,
+			]}
+		>
+			<div onClick={handleDelete} css={deleteContainerCss}>
+				<GarbageIcon css={deleteIconCss} />
+				<span css={deleteTextCss} className="mt-2">
+					delete
+				</span>
+			</div>
+			<div onClick={handleRun} css={runTestsCSS}>
+				<PlayIcon css={playIconCss} />
+				<span css={runTextCss}>run</span>
+			</div>
+		</div>
+	);
 };
 
 const listItemActionsCss = css`
@@ -66,7 +66,7 @@ const runTextCss = css`
 	position: relative;
 	top: 1rem;
 
-	color: #b061ff;
+	color: #cd60ff;
 `;
 const runTestsCSS = css`
 	display: flex;
@@ -108,4 +108,4 @@ const deleteContainerCss = css`
 		border-radius: 6px;
 	}
 `;
-export  { SelectedTestActions };
+export { SelectedTestActions };

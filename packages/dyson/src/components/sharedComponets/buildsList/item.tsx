@@ -134,7 +134,7 @@ const runTextCss = css`
 	position: relative;
 	top: 1rem;
 
-	color: #b061ff;
+	color: #cd60ff;
 `;
 
 const runTestsCSS = css`

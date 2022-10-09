@@ -24,14 +24,14 @@ export function MenuItem({ label, rightLabel, css, showHighlighted = false, sele
 
 const highlightHoverStyle = css`
 	:hover {
-		background: #a438f8 !important;
+		background: #bb26ff !important;
 	}
 `;
 
 const isSelectedStyle = css`
 	background: rgba(32, 35, 36, 0.62);
 	:hover {
-		background: #a438f8;
+		background: #bb26ff;
 	}
 `;
 
@@ -51,7 +51,7 @@ const dropDownItem = css`
 	}
 
 	:hover {
-		background: #a438f8;
+		background: #a82be2;
 		path {
 			stroke: white;
 			transition: all 0ms;

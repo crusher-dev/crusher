@@ -37,11 +37,11 @@ export const selectedCSS = css`
 
 	.label,
 	span {
-		color: #b960ff;
+		color: #cd60ff;
 	}
 
 	path {
-		fill: #b960ff;
+		fill: #cd60ff;
 	}
 `;
 
@@ -107,7 +107,7 @@ function RunTest() {
 	}, []);
 
 	return (
-		<Button title="Run test in this project" bgColor={"tertiary"} onClick={runProjectTest} css={runTestCSS}>
+		<Button title="Run test in this project" bgColor={"primary"} onClick={runProjectTest} css={runTestCSS}>
 			<div className={"flex items-center"}>
 				<PlayIcon className={"mr-6"} />
 				<span className="mt-2">Run tests</span>
@@ -118,7 +118,7 @@ function RunTest() {
 
 const runTestCSS = css`
 	padding: 0 10rem;
-	height: 30rpx;
+
 
 	font-family: "Gilroy";
 	font-style: normal;
@@ -129,15 +129,7 @@ const runTestCSS = css`
 
 	width: max-content;
 
-	background: #a742f7;
-	border: 1px solid #7d41ad;
-	border-radius: 8px;
 
-	:hover {
-		background: #a742f7;
-		filter: brighntess(0.7);
-		border: 1px solid #7d41ad;
-	}
 `;
 
 const creatTestCSS = css`

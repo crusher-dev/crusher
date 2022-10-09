@@ -181,7 +181,7 @@ const runTextCss = css`
 	position: relative;
 	top: 1rem;
 
-	color: #b061ff;
+	color: #cd60ff;
 `;
 const editTextCss = css`
 	font-weight: 500;

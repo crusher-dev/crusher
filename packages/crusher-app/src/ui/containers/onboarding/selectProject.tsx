@@ -154,7 +154,7 @@ const addIconCss = css`
 `;
 
 const downloadButtonCss = css`
-	background: linear-gradient(0deg, #9651ef, #9651ef), linear-gradient(0deg, #8c45e8, #8c45e8), #bc66ff;
+	background: linear-gradient(0deg, #9651ef, #9651ef), linear-gradient(0deg, #8c45e8, #8c45e8), #cd60ff;
 	border: 0.5px solid rgba(169, 84, 255, 0.4);
 	border-radius: 8px;
 	font-family: "Gilroy";

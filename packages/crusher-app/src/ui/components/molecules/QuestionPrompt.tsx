@@ -103,7 +103,7 @@ const SelectedIcon = (props) => (
 );
 
 const selectedButtonCss = css`
-	background: linear-gradient(0deg, #9651ef, #9651ef), linear-gradient(0deg, #8c45e8, #8c45e8), #bc66ff;
+	background: linear-gradient(0deg, #9651ef, #9651ef), linear-gradient(0deg, #8c45e8, #8c45e8), #cd60ff;
 	border: 1px solid rgba(169, 84, 255, 0.4);
 	gap: 8px;
 	:hover {

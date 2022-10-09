@@ -72,7 +72,7 @@ export function LeftSection() {
 							<InviteMembers onClose={setInviteTeamMates.bind(this, false)} />
 						</Conditional>
 						<div className="ml-6">
-							<TextBlock color="#BC66FF" fontSize={13.5} weight={600} id="invite" onClick={setInviteTeamMates.bind(this, true)}>
+							<TextBlock color="#cd60ff" fontSize={13.5} weight={600} id="invite" onClick={setInviteTeamMates.bind(this, true)}>
 								Invite
 							</TextBlock>
 							<TextBlock color="#acacac" fontSize={12} className="mt-5">
@@ -206,9 +206,9 @@ const linkCSS = css`
 	color: #d1d5db;
 	:hover {
 		background: rgba(43, 43, 43, 0.4);
-		color: #bc66ff;
+		color: #cd60ff;
 		path {
-			fill: #bc66ff;
+			fill: #cd60ff;
 		}
 	}
 	height: 28rem;
@@ -229,7 +229,7 @@ export const menuItemCSS = css`
 	:hover {
 		background-color: rgba(255, 255, 255, 0.05);
 		path {
-			fill: #bc66ff;
+			fill: #cd60ff;
 		}
 	}
 `;
@@ -270,11 +270,11 @@ export const selectedCSS = css`
 
 	.label,
 	span {
-		color: #b960ff;
+		color: #cd60ff;
 	}
 
 	path {
-		fill: #b960ff;
+		fill: #cd60ff;
 	}
 `;
 

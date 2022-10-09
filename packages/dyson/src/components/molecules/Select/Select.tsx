@@ -166,7 +166,7 @@ export const SelectBox: React.FC<TSelectBoxProps> = ({
 						{options.map(({ value, component, label }) => (
 							<div
 								css={dropdDownItem(isMultiSelect)}
-								className={"flex  items-center px-10 py-0 dropdown-label"}
+								className={"flex  items-center px-8 py-0 dropdown-label"}
 								key={value}
 								onClick={selectValue.bind(this, value)}
 							>
@@ -307,10 +307,14 @@ export const dropdDown = css`
 
 const dropdDownItem = (isMultiSelect) => css`
 	font-size: 13rem;
-	height: 30rem;
+	min-height: 28rem;
 	color: #fff;
+	width: calc( 100% - 12px);
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 6px;
 	:hover {
-		background: ${isMultiSelect ? "#16191D" : "#b341f9"} !important;
+		background: ${isMultiSelect ? "#ffffff1a" : "#b341f9"} !important;
 	}
 `;
 

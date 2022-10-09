@@ -36,6 +36,10 @@ const COLOR = {
 	}
 };
 
+const NEW_COLORS = {
+
+}
+
 const background = {};
 
 const border = {};

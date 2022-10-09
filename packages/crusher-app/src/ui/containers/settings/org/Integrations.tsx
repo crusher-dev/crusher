@@ -33,10 +33,10 @@ import { convertToOrganisationInfo, getRepoData } from "@utils/core/settings/pro
 const connectedToGitAtom = atomWithImmer<
 	| any
 	| {
-			token: string;
-			type: "github";
-			updateCount: number;
-	  }
+		token: string;
+		type: "github";
+		updateCount: number;
+	}
 >(null);
 
 const useGithubData = (gitInfo) => {
@@ -324,48 +324,34 @@ function LinkedRepo() {
 			className={"w-full"}
 		>
 			<Card
-				className={"mt-28"}
+				className={"mt-28 mb-32"}
 				css={css`
-					padding: 18rem 20rem 18rem;
+					padding: 22rem 28rem 26rem;
 					background: #101215;
 				`}
 			>
-				<div
-					className={"font-cera font-700 mb-8 leading-none"}
-					css={css`
-						font-size: 13.5rem;
-						color: white;
-					`}
-				>
-					Connected to
-				</div>
-				<div></div>
 
-				<div className={"flex text-13 justify-between mt-16"}>
-					<div className={"flex items-center"}>
+				<TextBlock weight={500} className="mb-8" fontSize={14}>Connected to</TextBlock>
+
+				<div className={"flex text-13 justify-between mt-20"}>
+					<div className={"flex items-start"}>
 						<div
 							className="flex items-center justify-center mr-16"
 							css={css`
 								min-width: 28px;
 								min-height: 28px;
-								border-radius: 4rem;
-								background: #323942;
+								border-radius: 10rem;
+								background: #ffffff29;
 							`}
 						>
 							<GithubSVG />
 						</div>
 
 						<div>
-							<div
-								className={"font-600"}
-								css={css`
-									color: #fff;
-								`}
-							>
-								{repoName}
-							</div>
+							<TextBlock weight={600} className="mb-8" fontSize={14}>{repoName}</TextBlock>
 							<a href={repoLink} target={"_blank"}>
-								{repoLink}
+								<TextBlock color="#787878" className="mb-8" fontSize={12}>{repoLink}</TextBlock>
+
 							</a>
 						</div>
 					</div>
@@ -373,9 +359,6 @@ function LinkedRepo() {
 					<Button
 						size={"small"}
 						bgColor={"danger"}
-						css={css`
-							min-width: 100rem;
-						`}
 						onClick={unlinkRepoCallback.bind(this)}
 					>
 						<span className={"mt-1"}>Disconnect</span>
@@ -551,8 +534,7 @@ function SlackIntegration() {
 	const handleSwitch = useCallback((toggleState: boolean) => {
 		if (toggleState) {
 			const windowRef = openPopup(
-				`https://slack.com/oauth/v2/authorize?scope=chat:write,chat:write.public,channels:read,groups:read&client_id=${
-					process.env.NEXT_PUBLIC_SLACK_CLIENT_ID
+				`https://slack.com/oauth/v2/authorize?scope=chat:write,chat:write.public,channels:read,groups:read&client_id=${process.env.NEXT_PUBLIC_SLACK_CLIENT_ID
 				}&redirect_uri=${escape(resolvePathToBackendURI("/integrations/slack/actions/add"))}&state=${encodeURIComponent(
 					JSON.stringify({ projectId: project.id, redirectUrl: resolvePathToFrontendURI("/settings/project/integrations") }),
 				)}`,
@@ -613,15 +595,15 @@ function SlackIntegration() {
 			payload: {
 				alertChannel: alertChannelInfo[0]
 					? {
-							name: alertChannelInfo[0].label,
-							value: alertChannelInfo[0].value,
-					  }
+						name: alertChannelInfo[0].label,
+						value: alertChannelInfo[0].value,
+					}
 					: null,
 				normalChannel: normalChannelInfo[0]
 					? {
-							name: normalChannelInfo[0].label,
-							value: normalChannelInfo[0].value,
-					  }
+						name: normalChannelInfo[0].label,
+						value: normalChannelInfo[0].value,
+					}
 					: null,
 			},
 		})
@@ -852,26 +834,26 @@ export const Integrations = () => {
 	React.useEffect(() => {
 		const query = new URLSearchParams(window.location.search);
 		const section = query.get("item");
-		if(section) {
+		if (section) {
 			setShowSelectedSection(section);
 		}
 	});
 
-	if(selectedSection) {
+	if (selectedSection) {
 		return (
-		<SettingsLayout hideSidebar={true}>
-			<div className={"text-24 mb-100"} css={maxWidthContainer}>
-				<Heading type={1} fontSize={"18"} className={"mb-12"}>
-					Integrations
-				</Heading>
-				<TextBlock fontSize={"12.5"} className={"mb-24"} color={"#787878"}>
-					Make sure you have selected all the configuration you want
-				</TextBlock>
-				<hr css={basicHR} />
-				{selectedSection === "slack" ? (<SlackIntegration />) : ""}
-				{selectedSection === "github" ? (<GitIntegration />) : ""}
-			</div>
-		</SettingsLayout>
+			<SettingsLayout hideSidebar={true}>
+				<div className={"text-24 mb-100"} css={maxWidthContainer}>
+					<Heading type={1} fontSize={"18"} className={"mb-12"}>
+						Integrations
+					</Heading>
+					<TextBlock fontSize={"12.5"} className={"mb-24"} color={"#787878"}>
+						Make sure you have selected all the configuration you want
+					</TextBlock>
+					<hr css={basicHR} />
+					{selectedSection === "slack" ? (<SlackIntegration />) : ""}
+					{selectedSection === "github" ? (<GitIntegration />) : ""}
+				</div>
+			</SettingsLayout>
 		)
 	}
 	return (

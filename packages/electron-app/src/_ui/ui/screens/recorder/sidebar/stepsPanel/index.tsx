@@ -160,6 +160,7 @@ const StepsPanel = ({ className }: IProps) => {
 
 	React.useEffect(() => {
 		if(failedSteps.length) {
+			const lastFailedStep = failedSteps[failedSteps.length - 1];	
 			showToast({
 				message: "element info couldn't be found",
 				type: "step-failed",

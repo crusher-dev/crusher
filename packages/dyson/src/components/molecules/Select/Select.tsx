@@ -307,6 +307,7 @@ export const dropdDown = css`
 
 const dropdDownItem = (isMultiSelect) => css`
 	font-size: 13rem;
+	height: 30rem;
 	color: #fff;
 	:hover {
 		background: ${isMultiSelect ? "#16191D" : "#b341f9"} !important;

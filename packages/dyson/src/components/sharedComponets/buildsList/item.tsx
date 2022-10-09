@@ -99,8 +99,9 @@ const passedIconCss = css`
 `;
 
 const loadingIconCss = css`
-	width: 18rem;
-	height: 18rem;
+width: 20rem;
+height: 20rem;
+margin-left: -2rem;
 `;
 const listItemActionsCss = css`
 		display: none;

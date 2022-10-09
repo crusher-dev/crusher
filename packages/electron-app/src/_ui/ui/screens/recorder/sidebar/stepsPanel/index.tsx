@@ -20,6 +20,12 @@ import { getRemainingSteps } from "electron-app/src/store/selectors/app";
 import { PausedStepCard } from "./pausedCard";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 import {clearToast, showToast, ToastBox} from "electron-app/src/_ui/ui/components/toasts/index";
+import { ActionDescriptor } from "runner-utils/src/functions/actionDescriptor";
+import { StepErrorTypeEnum } from "runner-utils/src/error.types";
+import { ActionsInTestEnum } from "@shared/constants/recordedActions";
+import { iAction } from "@shared/types/action";
+import { emitShowModal } from "electron-app/src/_ui/ui/containers/components/modals";
+import { EDIT_MODE_MAP } from "./stepEditor";
 
 interface IProps {
 	className?: string;
@@ -29,6 +35,23 @@ const menuItems = [
 	{ id: "jump-to", label: "Jump to", shortcut: <div>Jump to</div> },
 	{ id: "delete", label: "Delete", shortcut: <div>⌘+D</div> },
 ];
+
+const getErrorMessage = (lastFailedStep: iAction) => {
+	if(lastFailedStep.errorType === StepErrorTypeEnum.ASSERTIONS_FAILED) {
+		if(lastFailedStep.type === ActionsInTestEnum.VALIDATE_SEO) {
+			return "SEO assertions failed";
+		} else if (lastFailedStep.type === ActionsInTestEnum.ASSERT_ELEMENT) {
+			return "Element assertions failed";
+		}
+		return "assertions failed";
+	} else {
+		if(lastFailedStep.errorType === StepErrorTypeEnum.TIMEOUT && lastFailedStep.type.startsWith("ELEMENT_")) {
+			return "element info couldn't be found";
+		}
+		return "unexpected error occurred";
+	}
+};
+
 
 const multiMenuItems = [{ id: "delete", label: "Delete", shortcut: <div>⌘+D</div> }];
 const StepsPanel = ({ className }: IProps) => {
@@ -156,16 +179,27 @@ const StepsPanel = ({ className }: IProps) => {
 
 	const showNextSteps = remainingSteps && remainingSteps.length && [TRecorderState.RECORDING_ACTIONS, TRecorderState.ACTION_REQUIRED].includes(recorderState.type);
 	const showPausedCard = remainingSteps && remainingSteps.length && [TRecorderState.RECORDING_ACTIONS].includes(recorderState.type);
-	const failedSteps = recordedSteps.filter((step) => step.status === "FAILED");
+	const failedSteps = recordedSteps.map((a, index) => ({...a, index})).filter((step) => step.status === "FAILED");
 
+	const actionDescriber = React.useMemo(() => {
+		const actionDescriber = new ActionDescriptor();
+		return actionDescriber;
+	}, []);
 	React.useEffect(() => {
 		if(failedSteps.length) {
-			const lastFailedStep = failedSteps[failedSteps.length - 1];	
+			const lastFailedStep = failedSteps[failedSteps.length - 1];
+			actionDescriber.initActionHandlers();
+			
 			showToast({
-				message: "element info couldn't be found",
+				message: getErrorMessage(lastFailedStep),
 				type: "step-failed",
 				isUnique: true,
-				meta: {  },
+				meta: { callback: () => {
+					emitShowModal({
+						type: EDIT_MODE_MAP[lastFailedStep.type],
+						stepIndex: lastFailedStep.index,
+					});
+				} },
 			});
 		} else {
 			clearToast("step-failed");

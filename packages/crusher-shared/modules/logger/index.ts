@@ -52,12 +52,12 @@ export function setupLogger(crusherModuleName: string) {
 	const _log = console.log;
 
 	function modifyNativeConsoleFunctions() {
-		console.log = consoleMiddleware.bind(this, "info");
-		console.error = consoleMiddleware.bind(this, "error");
-		console.warn = consoleMiddleware.bind(this, "warn");
-		console.info = consoleMiddleware.bind(this, "info");
-		console.trace = consoleMiddleware.bind(this, "debug");
-		console.debug = consoleMiddleware.bind(this, "debug");
+		// console.log = consoleMiddleware.bind(this, "info");
+		// console.error = consoleMiddleware.bind(this, "error");
+		// console.warn = consoleMiddleware.bind(this, "warn");
+		// console.info = consoleMiddleware.bind(this, "info");
+		// console.trace = consoleMiddleware.bind(this, "debug");
+		// console.debug = consoleMiddleware.bind(this, "debug");
 	}
 
 	modifyNativeConsoleFunctions();

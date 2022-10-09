@@ -249,7 +249,6 @@ class CrusherRunnerActions {
 					try {
 						// endingScreenshot = await this._getCurrentScreenshot(page);
 					} catch (ex) {}
-					console.error(err);
 					await this.handleActionExecutionStatus(
 						action.name,
 						err.isStalled ? ActionStatusEnum.STALLED : ActionStatusEnum.FAILED,
@@ -260,6 +259,7 @@ class CrusherRunnerActions {
 							actionName: step.name ? step.name : null,
 							beforeUrl: beforeUrl,
 							afterUrl: page ? await page.url() : null,
+							error: err,
 							meta: {
 								...(err.meta ? err.meta : {}),
 								remainingActionsArr: [...remainingActionsArr],

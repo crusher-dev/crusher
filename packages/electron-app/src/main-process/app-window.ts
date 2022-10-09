@@ -27,7 +27,7 @@ import {
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
 import { getRecorderState, getSavedSteps, getTestName } from "../store/selectors/recorder";
 import { CloudCrusher } from "../lib/cloud";
-import { getBrowserActions, getMainActions } from "runner-utils/src";
+import { getMainActions, getBrowserActions } from "runner-utils/src/utils/helper";
 import { iElementInfo, TRecorderState } from "../store/reducers/recorder";
 import { iSeoMetaInformationMeta } from "../types";
 import { getUserAgentFromName } from "@shared/constants/userAgents";

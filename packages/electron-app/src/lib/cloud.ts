@@ -2,7 +2,7 @@ import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { iAction } from "@shared/types/action";
 import axios from "axios";
 import { shell } from "electron";
-import { getBrowserActions, getMainActions } from "runner-utils/src";
+import { getBrowserActions, getMainActions } from "runner-utils/src/utils/helper";
 import { getStore } from "../store/configureStore";
 import { getCurrentSelectedProjct } from "../store/selectors/app";
 import { createAuthorizedRequestFunc, resolveToBackend, resolveToFrontend } from "../utils/url";

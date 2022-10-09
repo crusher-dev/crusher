@@ -24,6 +24,7 @@ import { iAction } from "@shared/types/action";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { RESET_APP_SESSION } from "../actions/app";
+import { StepErrorTypeEnum } from "runner-utils/src/error.types";
 
 export enum TRecorderState {
 	BOOTING = "BOOTING", // <- Internal state (Initialize recorder script)
@@ -93,7 +94,7 @@ interface IRecorderReducer {
 	elementInspectModeMeta: { isOn: boolean; stepId?: any };
 
 	selectedElement: iElementInfo | null;
-	savedSteps: Omit<iAction, "status"> & { status: ActionStatusEnum; time: number }[];
+	savedSteps: Omit<iAction, "status"> & { status: ActionStatusEnum; time: number; errorType?: StepErrorTypeEnum; }[];
 
 	isVerified: boolean;
 	showStatusBar: boolean;
@@ -172,6 +173,9 @@ const recorderReducer = (state: IRecorderReducer = initialState, action: AnyActi
 		case UPDATE_CURRENT_RUNNING_STEP_STATUS: {
 			let savedSteps = state.savedSteps.slice();
 			savedSteps[savedSteps.length - 1].status = action.payload.status;
+			if(action.payload.status === ActionStatusEnum.FAILED) {
+				savedSteps[savedSteps.length - 1].errorType = action.payload.meta.errorType;
+			}
 
 			return {
 				...state,

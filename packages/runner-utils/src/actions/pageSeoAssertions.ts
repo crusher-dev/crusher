@@ -4,6 +4,7 @@ import { iAction } from "@crusher-shared/types/action";
 import { iAssertionRow } from "@crusher-shared/types/assertionRow";
 import template from "@crusher-shared/utils/templateString";
 import { ElementHandle, Locator, Page } from "playwright";
+import { StepErrorTypeEnum } from "../error.types";
 import { CommunicationChannel } from "../functions/communicationChannel";
 import { ExportsManager } from "../functions/exports";
 import { CrusherSdk } from "../sdk/sdk";
@@ -117,7 +118,7 @@ async function runSEOAssertionOnPage(
 	const validationRows = action.payload.meta.validations;
 	const actionResult = await assertSeoRows(page, validationRows, context);
 
-	if (!actionResult.hasPassed) markTestFail("Failed assertions on element", { meta: { logs: actionResult.logs } });
+	if (!actionResult.hasPassed) markTestFail("Failed assertions on element", { type: StepErrorTypeEnum.ASSERTIONS_FAILED, meta: { logs: actionResult.logs } });
 
 	return {
 		customLogMessage: "Ran seo assertions",

@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { ListBox } from "../../molecules/SelectableList";
+import { TestListContext } from "../utils/basic";
 import { SelectedTestActions } from "./header";
 import { TestListItem } from "./item";
 
-interface IContextNenuItem{ 
+interface IContextNenuItem {
     id: string;
     label: string;
     shortcut: any;
@@ -11,13 +12,13 @@ interface IContextNenuItem{
 
 interface IProps {
     deleteTestsCallback: (testIds: string[]) => void;
-    contextMenu?: {[type: any] : {callback: any, menuItems: IContextNenuItem[]}};
+    contextMenu?: { [type: any]: { callback: any, menuItems: IContextNenuItem[] } };
     contextMenuCallback: (testIds: string[], selectedTests: any[]) => void;
     tests: Array<{
         id: string;
         emoji?: string;
         testName: string;
-        firstRunCompleted: boolean;   
+        firstRunCompleted: boolean;
     }>;
 
     onEdit?: (selectedList: Array<string>) => void;
@@ -26,6 +27,10 @@ interface IProps {
 }
 
 const TestsList = ({ contextMenu, deleteTestsCallback, onEdit, onDelete, onRename, tests }: IProps) => {
+    const { runTest } = useContext(TestListContext);
+
+    console.log(runTest)
+
     const items = React.useMemo(() => {
         if (!tests) return null;
         return tests.map((test) => {

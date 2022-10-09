@@ -17,18 +17,18 @@ import { HoverCard } from "@dyson/components/atoms/tooltip/Tooltip1";
 
 const SlackIntegrationItem = () => {
     const store = useStore();
-	const { data: integrations } = useRequest(getIntegrationsAPIRequest);
+    const { data: integrations } = useRequest(getIntegrationsAPIRequest);
     const [connected, setConnected] = React.useState(false);
 
     React.useEffect(() => {
-        if(integrations?.slackIntegration) {
+        if (integrations?.slackIntegration) {
             const slackIntegrationMeta = integrations.slackIntegration?.meta;
 
-			if (slackIntegrationMeta?.channel) {
-				const normalChannel = slackIntegrationMeta.channel.normal;
-				const alertChannel = slackIntegrationMeta.channel.alert;
+            if (slackIntegrationMeta?.channel) {
+                const normalChannel = slackIntegrationMeta.channel.normal;
+                const alertChannel = slackIntegrationMeta.channel.alert;
                 setConnected([normalChannel?.name ? normalChannel.name : "", alertChannel?.name ? alertChannel.name : ""].join(", "));
-			}
+            }
 
         }
     }, [integrations]);
@@ -36,8 +36,8 @@ const SlackIntegrationItem = () => {
     const handleConnect = () => {
         const userInfo = getUserAccountInfo(store.getState());
         const projectId = getCurrentSelectedProjct(store.getState() as any);
-        
-		if(userInfo?.token) {
+
+        if (userInfo?.token) {
             linkOpen(resolveToFrontend(`${projectId}/settings/integrations?laccess_token=` + userInfo.token + '&item=slack'));
         }
     };
@@ -47,22 +47,22 @@ const SlackIntegrationItem = () => {
         setConnected(false);
     };
     return (
-        <div css={IntegrationItemCss} className="flex items-center py-24 pb-16">
+        <div css={IntegrationItemCss} className="flex items-center py-24 pb-20">
             <div className={"flex-1"}>
-                <TextBlock weight={600} fontSize={15} color="#A1A1A1">get alerts on slack</TextBlock>
-                <TextBlock fontSize={12} color="#6B6B6B" className="mt-6">We post notifications to Slack on event trigger.</TextBlock>
+                <TextBlock weight={600} fontSize={15} color="#A1A1A1">slack integration</TextBlock>
+                <TextBlock fontSize={12} color="#6B6B6B" className="mt-8">We post notifications to Slack on event trigger.</TextBlock>
             </div>
             <div className={"ml-auto"}>
                 {connected ? (
                     <div className={"flex items-center"}>
                         <div className={'flex items-center'}>
-                            <TickIcon css={tickIconCss}/>
+                            <TickIcon css={tickIconCss} />
                             <TextBlock className={"ml-6"} color={"#6B6B6B"} fontSize={12}>{connected}</TextBlock>
                         </div>
                         <HoverButton className={"ml-12"} onClick={handleRemove} css={buttonCss} width={70} height={24} >remove</HoverButton>
                     </div>
-                ): (
-                    <HoverButton onClick={handleConnect} css={buttonCss} width={106} height={32} >Connect</HoverButton>
+                ) : (
+                    <HoverButton onClick={handleConnect} css={buttonCss} width={96} height={32} >Connect</HoverButton>
                 )}
             </div>
         </div>
@@ -74,11 +74,11 @@ const tickIconCss = css`
 `;
 const GithubIntegrationItem = () => {
     const store = useStore();
-	const { data: integrations } = useRequest(getIntegrationsAPIRequest);
+    const { data: integrations } = useRequest(getIntegrationsAPIRequest);
     const [connected, setConnected] = React.useState(false);
 
     React.useEffect(() => {
-        if(integrations?.gitIntegration) {
+        if (integrations?.gitIntegration) {
             console.log("Git integration", integrations.gitIntegration);
             setConnected(true);
         }
@@ -88,7 +88,7 @@ const GithubIntegrationItem = () => {
         const userInfo = getUserAccountInfo(store.getState());
         const projectId = getCurrentSelectedProjct(store.getState() as any);
 
-		if(userInfo?.token) {
+        if (userInfo?.token) {
             linkOpen(resolveToFrontend(`${projectId}/settings/integrations?laccess_token=` + userInfo.token + '&item=github'));
         }
     };
@@ -111,22 +111,22 @@ const GithubIntegrationItem = () => {
             </div>
             <div className={"ml-auto"}>
 
-            {connected ? (
+                {connected ? (
                     <div className={"flex items-center"}>
                         <div className={'flex items-center'}>
-                            <TickIcon css={tickIconCss}/>
+                            <TickIcon css={tickIconCss} />
                             <TextBlock className={"ml-6"} color={"#6B6B6B"} fontSize={12}>{integrations.gitIntegration.repoName}</TextBlock>
                         </div>
                         <HoverButton className={"ml-12"} onClick={handleUnlink} css={buttonCss} width={70} height={24} >remove</HoverButton>
                     </div>
-                ): (
+                ) : (
                     <HoverButton onClick={handleLink} css={buttonCss} width={106} height={32}>
                         <GithubIcon css={css`width: 13px; height: 13px;`} />
                         <span className={"ml-6"}>link</span>
                     </HoverButton>
                 )}
 
-     
+
             </div>
         </div>
     );
@@ -163,12 +163,12 @@ const IntegrationSettings = () => {
                     <div className={"mt-6"} css={descriptionCss}>intergrate services to enhance your workflow</div>
                 </div>
                 <div className={"ml-auto"}>
-                        <HoverButton onClick={handleRefresh} css={buttonCss} width={32} height={32} title={"refresh"}>
-                            <ResetIcon className={"mb-4"} css={css`width: 12px; height: 12px; `}/>
-                        </HoverButton>
+                    <HoverButton onClick={handleRefresh} css={buttonCss} width={32} height={32} title={"refresh"}>
+                        <ResetIcon className={"mb-4"} css={css`width: 12px; height: 12px; `} />
+                    </HoverButton>
                 </div>
             </div>
-  
+
             <div className="mt-10">
                 <SlackIntegrationItem />
                 <GithubIntegrationItem />

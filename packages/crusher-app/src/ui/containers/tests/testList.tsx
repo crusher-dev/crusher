@@ -11,6 +11,8 @@ import { LinkBlock } from "dyson/src/components/atoms/Link/Link";
 import { Tooltip } from "dyson/src/components/atoms/tooltip/Tooltip";
 import { Conditional } from "dyson/src/components/layouts";
 import { TestsList } from "dyson/src/components/sharedComponets/testList";
+import { TestListContext } from "dyson/src/components/sharedComponets/utils/basic";
+
 
 import { PROJECT_META_KEYS, USER_META_KEYS } from "@constants/USER";
 import { createFolderAPI, deleteTestApi, getTestListAPI } from "@constants/api";
@@ -510,16 +512,23 @@ function TestSearchableList() {
 	return (
 		<div css={testListCSS}>
 			<Conditional showIf={data && data.list.length > 0}>
-				<TestsList contextMenu={{
-					"single": {
-						callback: handleMenuCallback,
-						menuItems: SELECTED_TESTS_MENU
-					}, "multi": {
-						callback: handleMenuCallback,
-						menuItems: MULTI_SELECTED_MENU
-					}
-				}} onDelete={handleMenuCallback.bind(this, "delete")} onEdit={handleMenuCallback.bind(this, "edit")} tests={data.list} />
 
+				<TestListContext.Provider value={{
+					runTest: () => {
+						console.log("DS")
+					}
+				}}>
+					<TestsList contextMenu={{
+						"single": {
+							callback: handleMenuCallback,
+							menuItems: SELECTED_TESTS_MENU
+						}, "multi": {
+							callback: handleMenuCallback,
+							menuItems: MULTI_SELECTED_MENU
+						}
+					}} onDelete={handleMenuCallback.bind(this, "delete")} onEdit={handleMenuCallback.bind(this, "edit")} tests={data.list} />
+
+				</TestListContext.Provider>
 				{showEditBox ? (
 					<EditTest
 						id={showEditBox}

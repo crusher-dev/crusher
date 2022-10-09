@@ -10,13 +10,11 @@ import { useStore } from "react-redux";
 import { useAtom } from "jotai";
 import { stepHoverAtom } from "electron-app/src/_ui/store/jotai/steps";
 import ToastDemo from "electron-app/src/_ui/ui/components/Toast";
+import { getStore } from "electron-app/src/store/configureStore";
 
-const FailedStepCard = ({ stepId }) => {
-	const store = useStore();
-	const [stepHoverId, setStepHoverId] = useAtom(stepHoverAtom);
-
-	const handleRetry = () => {
-		const savedSteps = getSavedSteps(store.getState());
+export const retryStep = (stepId: number) => {
+	const store = getStore();
+	const savedSteps = getSavedSteps(store.getState() as any);
 		const step = savedSteps[stepId];
 		store.dispatch(deleteRecordedSteps([stepId]));
 
@@ -26,6 +24,14 @@ const FailedStepCard = ({ stepId }) => {
 				status: ActionStatusEnum.STARTED,
 			},
 		]);
+};
+
+const FailedStepCard = ({ stepId }) => {
+	const store = useStore();
+	const [stepHoverId, setStepHoverId] = useAtom(stepHoverAtom);
+
+	const handleRetry = () => {
+		retryStep(stepId);
 	};
 
 	const handleEdit = () => {

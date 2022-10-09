@@ -16,6 +16,7 @@ import { Text } from "@dyson/components/atoms/text/Text";
 import { useTour } from "@reactour/tour";
 import { iAction } from "@shared/types/action";
 import { sendSnackBarEvent } from "../../toast";
+import { retryStep } from "electron-app/src/_ui/ui/screens/recorder/sidebar/stepsPanel/failedCard";
 
 interface iAssertElementModalProps {
 	stepIndex?: number;
@@ -226,9 +227,10 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 			sendSnackBarEvent({ type: "error", message: "No action to update" });
 			return;
 		}
-
 		props.stepAction.payload.meta.validations = validationRows;
 		store.dispatch(updateRecordedStep(props.stepAction, props.stepIndex));
+		retryStep(props.stepIndex);
+
 		sendSnackBarEvent({ type: "success", message: "Updated Element assertions" });
 		handleCloseWrapper(true);
 	};

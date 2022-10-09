@@ -91,19 +91,21 @@ export class WebView {
 		});
 	}
 
-	public async resumeExecution() {
+	public async resumeExecution(throwError = false) {
 		try {
 			await this.webContents.debugger.sendCommand("Debugger.resume");
 		} catch (ex) {
 			console.info("Error resuming execution", ex);
+			if(throwError) throw ex;
 		}
 	}
 
-	public async disableExecution() {
+	public async disableExecution(throwError = false) {
 		try {
 			await this.webContents.debugger.sendCommand("Debugger.pause");
 		} catch (ex) {
 			console.info("Error pausing execution", ex);
+			if(throwError) throw ex;
 		}
 	}
 

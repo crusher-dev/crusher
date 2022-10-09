@@ -65,7 +65,9 @@ const SeoModalContent = (props: iSEOModalProps) => {
 				},
 				{ title: null, metaTags: {} },
 			);
-			setSeoInfo(seoInfoFromActions);
+				ipcRenderer.invoke("get-page-seo-info").then((res) => {
+					setSeoInfo(res);
+				});
 			setValidationRows(props.stepAction.payload.meta.validations);
 		}
 	}, [props.stepAction, isOpen]);

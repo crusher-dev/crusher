@@ -27,7 +27,7 @@ import {
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
 import { getRecorderState, getSavedSteps, getTestName } from "../store/selectors/recorder";
 import { CloudCrusher } from "../lib/cloud";
-import { getMainActions, getBrowserActions } from "runner-utils/src/utils/helper";
+import { getMainActions, getBrowserActions, toCrusherSelectorsFormat } from "runner-utils/src/utils/helper";
 import { iElementInfo, TRecorderState } from "../store/reducers/recorder";
 import { iSeoMetaInformationMeta } from "../types";
 import { getUserAgentFromName } from "@shared/constants/userAgents";
@@ -692,16 +692,23 @@ export class AppWindow {
 		this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
 	}
 
-	async handleGetElementAssertInfo(event: Electron.IpcMainEvent, elementInfo: iElementInfo) {
+	async handleGetElementAssertInfo(event: Electron.IpcMainEvent, { elementInfo, useSelectors = false} : {elementInfo:  iElementInfo, useSelectors: boolean}) {
+		let isPaused = false;
 		try {
-			await this.webView.resumeExecution();
+			await this.webView.resumeExecution(true);
+			isPaused = true;
 		} catch (e) {
 			console.error("Enabling exection failed", e);
 		}
 		await new Promise((resolve) => setTimeout(resolve, 500));
-		const elementHandle = this.webView.playwrightInstance.getElementInfoFromUniqueId(elementInfo.uniqueElementId)?.handle;
+		let elementHandle = this.webView.playwrightInstance.getElementInfoFromUniqueId(elementInfo.uniqueElementId)?.handle;
 		if (!elementHandle) {
-			return null;
+			if(useSelectors) {
+				elementHandle = await this.webView.playwrightInstance.page.$(toCrusherSelectorsFormat(elementInfo.selectors as any).value);
+			}
+			if(!elementHandle) {
+				return null;
+			}
 		}
 		const attributes = await elementHandle.evaluate((element) => {
 			const attributeNamesArr: string[] = (element as HTMLElement).getAttributeNames();
@@ -737,7 +744,9 @@ export class AppWindow {
 			}
 		}
 		try {
-			await this.webView.disableExecution();
+			if(isPaused) {
+				await this.webView.disableExecution();
+			}
 		} catch (ex) {
 			console.error("Disabling execution failed", ex);
 		}

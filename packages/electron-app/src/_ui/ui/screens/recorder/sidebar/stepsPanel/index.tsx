@@ -185,6 +185,7 @@ const StepsPanel = ({ className }: IProps) => {
 		const actionDescriber = new ActionDescriptor();
 		return actionDescriber;
 	}, []);
+
 	React.useEffect(() => {
 		if(failedSteps.length) {
 			const lastFailedStep = failedSteps[failedSteps.length - 1];

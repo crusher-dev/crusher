@@ -636,13 +636,14 @@ function SlackIntegration() {
 		return true;
 	}, [slackChannels, nextCursor]);
 
+
 	return (
 		<div className={"justify-between items-start mt-40 mb-24"}>
 			<div className={"flex justify-between items-start w-full"}>
 				<div className={"flex"}>
 					<img src={"/svg/slack-icon.svg"} width={"20rem"} />
 					<div className={"ml-20"}>
-						<Heading type={2} fontSize={"14"} className={"mb-8"}>
+						<Heading type={2} fontSize={"15"} className={"mb-8"}>
 							Slack Integration
 						</Heading>
 						<TextBlock fontSize={12} color={"#787878"}>
@@ -651,7 +652,7 @@ function SlackIntegration() {
 					</div>
 				</div>
 				<Switch
-					disable={true}
+
 					checked={isConnected}
 					onClick={() => {
 						if (!isConnected) {
@@ -847,7 +848,7 @@ export const Integrations = () => {
 						Integrations
 					</Heading>
 					<TextBlock fontSize={"12.5"} className={"mb-24"} color={"#787878"}>
-						Make sure you have selected all the configuration you want
+
 					</TextBlock>
 					<hr css={basicHR} />
 					{selectedSection === "slack" ? (<SlackIntegration />) : ""}
@@ -865,8 +866,8 @@ export const Integrations = () => {
 				<Heading type={1} fontSize={"18"} className={"mb-12"}>
 					Integrations
 				</Heading>
-				<TextBlock fontSize={"12.5"} className={"mb-24"} color={"#787878"}>
-					Make sure you have selected all the configuration you want
+				<TextBlock fontSize={"13"} className={"mb-24"} color={"#787878"}>
+					Integrate crusher in your current workflow
 				</TextBlock>
 				<hr css={basicHR} />
 				<SlackIntegration />

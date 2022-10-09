@@ -40,9 +40,11 @@ const SwitchComponent = (props: ToggleProps) => {
   const isSmall = size === "small";
 
   return (
-    <Switch disabled={disabled} id="s1" css={[css, switchBackground, disabled && disabledCSS,
-      isSmall && smallSize.switch
-    ]} {...props}>
+    <Switch
+
+      disabled={disabled} id="s1" css={[css, switchBackground, disabled && disabledCSS,
+        isSmall && smallSize.switch
+      ]} {...props}>
       <SwitchThumb css={[isSmall && smallSize.thumb]} />
     </Switch>
   );
@@ -59,7 +61,7 @@ const smallSize = {
   width: 14px;
   height: 14px;
   &[data-state="checked"] {
-    transform: translateX(15px);
+    transform: translateX(15px);  
   }
 
   `
@@ -70,7 +72,7 @@ const switchBackground = css`
     background: #343538 !important;
     border: .5px solid #ffffff15;
       &[data-state="checked"]{
-          background: #A843F6;
+          background: #A843F6 !important;
       }
       
 `

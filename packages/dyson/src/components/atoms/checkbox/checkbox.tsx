@@ -56,6 +56,7 @@ const normalSelect = (isSelected: boolean) => css`
 		}
 	}
 	background: ${isSelected ? "#A742F7" : "none"};
+	border-color: ${isSelected ? "#bd6aff" : "#9F9F9F"};
 
 	:hover {
 		background: ${isSelected ? "#A742F7" : "#A742F7"};

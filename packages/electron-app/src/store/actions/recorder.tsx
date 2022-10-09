@@ -96,10 +96,10 @@ export const updateRecordedStep = (action: iAction, id: number) => {
 	};
 };
 
-export const updateCurrentRunningStepStatus = (status: ActionStatusEnum) => {
+export const updateCurrentRunningStepStatus = (status: ActionStatusEnum, meta: any = {}) => {
 	return {
 		type: UPDATE_CURRENT_RUNNING_STEP_STATUS,
-		payload: { status },
+		payload: { status, meta },
 	};
 };
 

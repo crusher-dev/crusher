@@ -6,7 +6,7 @@ import React from "react";
 import { HoverButton } from "../hoverButton";
 import { ActionToast } from "./variants/actionToast";
 
-const FixToast = ({message}) => {
+const FixToast = ({message, actionCallback}) => {
     const [open, setOpen] = React.useState(true);
 
     return (
@@ -14,7 +14,7 @@ const FixToast = ({message}) => {
             duration={1000 * 60 * 60 * 60}
             open={open}
             setOpen={setOpen}
-            actions={<FixToastActions setOpen={setOpen} />}
+            actions={<FixToastActions actionCallback={actionCallback} setOpen={setOpen} />}
             message={<FixToastMessage message={message} />}
         />
     )
@@ -29,10 +29,15 @@ const FixToastMessage = ({message}) => {
     );
 };
 
-const FixToastActions = ({ setOpen }) => {
+const FixToastActions = ({ setOpen, actionCallback }) => {
+    const handleFixStep = () => {
+        actionCallback && actionCallback();
+        setOpen(false);
+    };
+
     return (
         <div className={"flex items-center"} css={actionsContainerCss}>
-            <div className={"flex items-center"} css={actionCss}>
+            <div className={"flex items-center"} onClick={handleFixStep} css={actionCss}>
                 <div className="px-12 flex items-center">
                     <EditIconV4 css={editIcoNCss} />
                     <TextBlock css={actionTextCss} fontSize={14} color={"#CC5FFF"} className={"ml-6"}>fix step</TextBlock>

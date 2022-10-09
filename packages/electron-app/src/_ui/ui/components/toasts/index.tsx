@@ -27,7 +27,8 @@ const VIEWPORT_PADDING = 25;
 const StyledViewport = styled(ToastPrimitive.Viewport, {
   position: 'fixed',
   bottom: "16rem",
-  left: "50%",
+  left: "calc(50% + 172rem)",
+  transform: "translateX(-50%)",
   display: 'flex',
   flexDirection: 'column',
   padding: VIEWPORT_PADDING,
@@ -38,10 +39,6 @@ const StyledViewport = styled(ToastPrimitive.Viewport, {
   zIndex: 2147483647,
   outline: 'none',
 });
-
-
-
-
 
 // Exports
 const ToastProvider = ToastPrimitive.Provider;
@@ -75,7 +72,7 @@ const ToastBox = () => {
   return (
     <ToastProvider swipeDirection="right">
       {toasts.map((toast) => (
-        <FixToast message={toast.message} />
+        <FixToast actionCallback={toast.meta?.callback} message={toast.message} />
       ))}
       <ToastViewport />
     </ToastProvider>

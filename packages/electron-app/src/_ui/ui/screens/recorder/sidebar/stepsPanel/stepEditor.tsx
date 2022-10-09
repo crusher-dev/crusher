@@ -311,7 +311,7 @@ const stepMetaInfoContainerCss = css`
 `;
 
 // Actions map with modal types
-const EDIT_MODE_MAP = {
+export const EDIT_MODE_MAP = {
 	[ActionsInTestEnum.WAIT]: "WAIT",
 	[ActionsInTestEnum.VALIDATE_SEO]: "SHOW_SEO_MODAL",
 	[ActionsInTestEnum.CUSTOM_CODE]: "CUSTOM_CODE",

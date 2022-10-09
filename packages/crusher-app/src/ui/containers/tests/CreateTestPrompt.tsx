@@ -4,12 +4,13 @@ import React, { useMemo } from "react";
 
 import useSWR from "swr";
 
-import { Text } from "dyson/src/components/atoms";
+import { Text, TextBlock } from "dyson/src/components/atoms";
 import { Input } from "dyson/src/components/atoms/input/Input";
 
 import { RELEASE_API } from "@constants/api";
 import { LINUX_INFO, OS, OS_INFO } from "@constants/app";
 import { getOSType } from "@utils/common";
+import { Heading } from "dyson/src/components/atoms/heading/Heading";
 
 export function RenderDownloadLink(props) {
 	const osType = useMemo(getOSType, []);
@@ -43,69 +44,64 @@ export const CreateTestPrompt = ({ className }: { className?: any }) => (
 		className={className}
 	>
 		<div css={boxCSS}>
-			<div className={"text-18 font-800 mb-12 leading-none"}>
-				Record your tests <span className={"text-13 ml-12 font-400 leading-none"}>(1/3)</span>
-			</div>
-			<Text fontSize={14} color={"#C8C8C8"}>
+			<Heading fontSize={18} className="mb-10">
+				Record a test
+			</Heading>
+			<Text fontSize={13} color={"#888888"}>
 				Create tests for core flow, new features or bug fixes
 			</Text>
 
-			<div className={"flex justify-between mt-40"}>
+			<div className={"flex mt-32"}>
 				<div
-					className={"flex items-center"}
-					css={css`
-						color: #c8c8c8;
-					`}
+					className={"flex items-center mr-20"}
 				>
-					<Terminal /> <span className={"ml-12 text-16 font-500"}>In your project, run</span>
+					<Terminal height={16} width={16} /> <span className={"ml-10 text-16 font-500"}>run</span>
 				</div>
 
-				<div>
+				<div className="flex items-center">
 					<Input
 						css={css`
 							input {
-								width: 305rem;
+								width: 324rem;
+								font-size: 15rem;
 							}
 						`}
 						size={"medium"}
+						className={"mr-10"}
 						initialValue={"npx crusher-cli test:create"}
 					/>
+
+					<RenderDownloadLink>
+						<Text color="#c8c8c8" >
+							Or download
+						</Text>
+					</RenderDownloadLink>
 				</div>
 			</div>
-			<RenderDownloadLink>
-				<div
-					className={"flex text-12 justify-end mt-12 underline"}
-					css={css`
-						color: #c8c8c8;
-					`}
-				>
-					Or download recorder
-				</div>
-			</RenderDownloadLink>
+
 		</div>
 	</div>
 );
 
 const boxCSS = css`
-	background: #101215;
-	border: 1px solid rgba(255, 255, 255, 0.05);
+background: #00000078;
+border: 1px solid rgb(255 255 255 / 8%);
 	box-sizing: border-box;
-	border-radius: 12px;
-	width: 784rem;
-	padding: 28rem 32rem;
+	border-radius: 20px;
+	width: 684rem;
+    padding: 28rem 36rem;
 	margin: 0 auto;
 	transform: translateX(-20px);
 	padding-bottom: 40rem;
+
 `;
 export default CreateTestPrompt;
 
 function Terminal(props) {
 	return (
-		<svg width={14} height={12} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-			<path
-				d="M12.133 0H1.867c-.495 0-.97.181-1.32.503C.197.824.001 1.26 0 1.714v8.572c0 .454.197.89.547 1.211.35.322.825.502 1.32.503h10.266c.495 0 .97-.181 1.32-.503.35-.321.546-.757.547-1.211V1.714c0-.454-.197-.89-.547-1.211A1.956 1.956 0 0012.133 0zm-9.8 6a.496.496 0 01-.27-.079.434.434 0 01-.17-.208.395.395 0 01-.008-.26.428.428 0 01.157-.216l1.878-1.38-1.878-1.38a.44.44 0 01-.118-.128.404.404 0 01-.04-.326.418.418 0 01.085-.148.497.497 0 01.656-.067l2.333 1.714c.055.04.1.091.13.15a.4.4 0 010 .37.437.437 0 01-.13.15L2.625 5.906A.493.493 0 012.333 6zM7 6H5.133a.489.489 0 01-.33-.126.412.412 0 01-.136-.303c0-.113.049-.222.136-.303a.489.489 0 01.33-.125H7c.124 0 .242.045.33.125.088.08.137.19.137.303 0 .114-.05.223-.137.303A.488.488 0 017 6z"
-				fill="#cfc573"
-			/>
-		</svg>
+		<svg height={14} width={14} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#8af742" {...props}>
+			<path fillRule="evenodd" d="M2.25 6a3 3 0 013-3h13.5a3 3 0 013 3v12a3 3 0 01-3 3H5.25a3 3 0 01-3-3V6zm3.97.97a.75.75 0 011.06 0l2.25 2.25a.75.75 0 010 1.06l-2.25 2.25a.75.75 0 01-1.06-1.06l1.72-1.72-1.72-1.72a.75.75 0 010-1.06zm4.28 4.28a.75.75 0 000 1.5h3a.75.75 0 000-1.5h-3z" clip-rule="evenodd" />
+		</svg >
+
 	);
 }

@@ -44,6 +44,7 @@ const getValidationFields = (elementInfo: any): iField[] => {
 };
 
 const getElementFieldValue = (fieldInfo: iField) => {
+	if(!fieldInfo) return null;
 	return fieldInfo.value;
 };
 
@@ -62,7 +63,7 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 		if (isOpen && !props.stepAction) {
 			setValidationRows([]);
 			ipcRenderer
-				.invoke("get-element-assert-info", selectedElement)
+				.invoke("get-element-assert-info", {elementInfo: selectedElement})
 				.then((res) => {
 					console.log("Element info is", res);
 					setElementInfo(res);
@@ -90,9 +91,36 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 				return { name: key, value: elementInfoFromActions.attributes[key].value };
 			});
 			elementInfoFromActions.attributes = attributesArray;
+			// setElementInfo(elementInfoFromActions);
+			// setValidationRows(props.stepAction.payload.meta.validations);
 
-			setElementInfo(elementInfoFromActions);
-			setValidationRows(props.stepAction.payload.meta.validations);
+			ipcRenderer
+			.invoke("get-element-assert-info", {elementInfo: {
+				selectors: props.stepAction.payload.selectors,
+				uniqueId: -1
+			}, useSelectors: true})
+			.then((res) => {
+				let validationRows = JSON.parse(JSON.stringify(props.stepAction.payload.meta.validations));
+
+				if(res) {
+					setElementInfo(res);
+					const fields = getValidationFields(res);
+					for (const validation of validationRows) {
+						validation.field = fields.find((field) => field.name === validation.field.name)!;
+					}
+				} else {
+					setElementInfo(elementInfoFromActions);
+				}
+			
+				setValidationRows(validationRows);
+
+			})
+			.catch((err) => {
+				setElementInfo(elementInfoFromActions);
+				setValidationRows(props.stepAction.payload.meta.validations);
+			});
+
+			// setElementInfo(elementInfoFromActions);
 		}
 	}, [props.stepAction, isOpen]);
 
@@ -227,6 +255,12 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 		}
 	};
 
+	React.useEffect(() => {
+		if(!isOpen) {
+			setValidationRows([]);
+			setElementInfo(null);
+		}
+	}, [isOpen]);
 	if (!isOpen) return null;
 
 	return (

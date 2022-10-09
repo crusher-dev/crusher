@@ -15,6 +15,7 @@ import { getStore } from "electron-app/src/store/configureStore";
 export const retryStep = (stepId: number) => {
 	const store = getStore();
 	const savedSteps = getSavedSteps(store.getState() as any);
+	if(savedSteps.length - 1 === stepId) {
 		const step = savedSteps[stepId];
 		store.dispatch(deleteRecordedSteps([stepId]));
 
@@ -24,6 +25,9 @@ export const retryStep = (stepId: number) => {
 				status: ActionStatusEnum.STARTED,
 			},
 		]);
+	} else {
+		console.log("Can't retry because it's not the last step");
+	}
 };
 
 const FailedStepCard = ({ stepId }) => {

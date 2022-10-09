@@ -72,10 +72,10 @@ export function LeftSection() {
 							<InviteMembers onClose={setInviteTeamMates.bind(this, false)} />
 						</Conditional>
 						<div className="ml-6">
-							<TextBlock color="#BC66FF" fontSize={13} weight={600} id="invite" onClick={setInviteTeamMates.bind(this, true)}>
+							<TextBlock color="#BC66FF" fontSize={13.5} weight={600} id="invite" onClick={setInviteTeamMates.bind(this, true)}>
 								Invite
 							</TextBlock>
-							<TextBlock color="#3E3E3E" fontSize={12} className="mt-5">
+							<TextBlock color="#acacac" fontSize={12} className="mt-5">
 								get +2 testing hrs
 							</TextBlock>
 						</div>

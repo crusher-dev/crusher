@@ -31,7 +31,7 @@ export function GiveFeedback() {
 		>
 			<div className="flex items-center pt-1" css={feedbackCSS}>
 				<Chat className="mr-8" />
-				<TextBlock fontSize={12} color="#838383">
+				<TextBlock fontSize={12} color="#acacac">
 					Give feedback
 				</TextBlock>
 			</div>
@@ -55,6 +55,9 @@ const userDropdownCSS = css`
 	border-radius: 14rem;
 `;
 export const feedbackCSS = css`
+	path{
+		fill: #acacac;
+	}
 	:hover {
 		div,
 		span {

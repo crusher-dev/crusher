@@ -1,4 +1,5 @@
 import { css } from "@emotion/react";
+import { Text } from "dyson/src/components/atoms";
 import { ReactElement } from "react";
 
 type TMenuItem = {
@@ -15,8 +16,8 @@ export function MenuItem({ label, rightLabel, css, showHighlighted = false, sele
 			className={`flex justify-between items-center px-8 py-6 ${className}`}
 			{...otherProps}
 		>
-			<span className={"name font-500 leading-none font-cera capitalize"}>{label}</span>
-			<span className={"text-12 shortcut leading-none"}>{rightLabel}</span>
+			<Text className="name capitalize" weight={600}>{label}</Text>
+			<Text className="shortcut capitalize" fontSize={12}>{rightLabel}</Text>
 		</div>
 	);
 }
@@ -41,8 +42,8 @@ const dropDownItem = css`
 
 	transition: all 0ms;
 	.name {
-		font-size: 12.5rem;
 		color: #e7e7e8;
+		letter-spacing: .4px;
 	}
 
 	.shortcut {

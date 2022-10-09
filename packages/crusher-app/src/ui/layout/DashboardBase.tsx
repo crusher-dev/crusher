@@ -293,10 +293,9 @@ const textLink = css`
 const projectsLabel = css`
 	gap: 2rem;
 	font-weight: 400;
-	font-size: 13px;
-	color: #6b6565;
-	letter-spacing: 0.02em;
-
+	font-size: 13.5ßpx;
+    color: #acacac;
+    letter-spacing: .53px;
 	height: 56rem;
 
 	.badge {
@@ -364,7 +363,7 @@ function NavbarRight(): JSX.Element {
 
 			<Conditional showIf={!isBuildReport}>
 				<a href="https://docs.crusher.dev" target="_blank">
-					<TextBlock color={"#6b6565"} className={"flex ml-4"} css={textLink}>
+					<TextBlock color={"#acacac"} className={"flex ml-4"} css={textLink}>
 						<External className="mr-8" />
 						<span className="mt-1">Docs</span>
 					</TextBlock>

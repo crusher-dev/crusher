@@ -91,7 +91,7 @@ function DropdownContent() {
 			<div className={"mt-66	"}>
 				<hr
 					css={css`
-						color: #1a1d26;
+						color: #2c2c2c;
 					`}
 				/>
 				<MenuItem
@@ -123,7 +123,7 @@ export function UserNTeam() {
 					<Dolphin height={20} width={20} css={icon} />
 				</div>
 				<div className="flex items-center pb-2">
-					<div className={"font-cera mb-1 font-600 flex items-center"} css={name}>
+					<div className={"mb-1 font-600 flex items-center"} css={name}>
 						<span className="mr-6">{team.name.substr(0, 20)}</span>
 						{/* <TopDown className="mb-1" /> */}
 					</div>
@@ -201,7 +201,7 @@ const nameInitial = css`
 `;
 
 const name = css`
-	letter-spacing: 0.02em;
+	letter-spacing: .4px;
 
 	color: #cecece;
 `;

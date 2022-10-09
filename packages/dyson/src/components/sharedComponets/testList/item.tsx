@@ -229,8 +229,8 @@ const playIconCss = css`
 	height: 12rem;
 `;
 const loadingIconCss = css`
-	width: 18px;
-	height: 18px;
+	width: 20px;
+	height: 20px;
 	margin-left: -5x;
 `;
 

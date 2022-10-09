@@ -62,7 +62,7 @@ export default function Dashboard() {
 
 	const filteredProject = useMemo(() => {
 		const sortProjects = (projects: any) => {
-			return [...projects].sort((x, y) => (!!x.gitIntegration === !!y.gitIntegration)? 0 : !!x.gitIntegration ? -1 : 1);
+			return [...projects].sort((x, y) => (!!x.gitIntegration === !!y.gitIntegration) ? 0 : !!x.gitIntegration ? -1 : 1);
 		}
 
 		if (searchProject.length === 0) return sortProjects(projects);
@@ -119,7 +119,7 @@ const projectItem = css`
 
 	border: 0.5px solid #1b1b1b;
 	border: 0.5px solid #252525;
-	border-radius: 14px;
+	border-radius: 16px;
 
 	transition: all 0ms ease;
 
@@ -136,9 +136,12 @@ const projectItem = css`
 		.open {
 			visibility: visible;
 		}
-		border-color: #aa46ff;
-		//background: #c076ff0a;
-		background: #832ccc0a;
+
+		// border-color: #cd60ff;
+		// background: #cd60ff0d;	
+
+		border-color: #272729 !important;
+		background: #151516 !important;
 	}
 `;
 

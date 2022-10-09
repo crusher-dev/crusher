@@ -26,7 +26,7 @@ export const LoadingIconV2 = (props: any) => {
 			preserveAspectRatio="xMidYMid"
 			{...props}
 		>
-			<circle cx={50} cy={50} r={30} stroke="#8746f0" strokeWidth={10} fill="none" />
+			<circle cx={50} cy={50} r={30} stroke="#cd60ff" strokeWidth={10} fill="none" />
 			<circle cx={50} cy={50} r={30} stroke="#fff" strokeWidth={8} strokeLinecap="round" fill="none">
 				<animateTransform
 					attributeName="transform"

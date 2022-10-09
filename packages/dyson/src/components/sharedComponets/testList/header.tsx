@@ -66,7 +66,7 @@ const runTextCss = css`
 	position: relative;
 	top: 1rem;
 
-	color: #cd60ff;
+	color: #ba27ff;
 `;
 const runTestsCSS = css`
 	display: flex;

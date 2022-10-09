@@ -242,7 +242,7 @@ const buttonDropdownCss = css`
 	top: calc(100% + 4rem) !important;
 `;
 const buttonDropdownMainButtonCss = css`
-	background: #a742f7;
+	background: #cd60ff;
 	border: 1px solid #7d41ad;
 	width: fit-content;
 	border-radius: 8px !important;

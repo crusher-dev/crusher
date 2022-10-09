@@ -225,12 +225,12 @@ const runTestCSS = css`
 
 	width: max-content;
 
-	background: #a742f7;
+	background: #cd60ff;
 	border: 1px solid #7d41ad;
 	border-radius: 8px;
 
 	:hover {
-		background: #a742f7;
+		background: #cd60ff;
 		filter: brighntess(0.7);
 		border: 1px solid #7d41ad;
 	}

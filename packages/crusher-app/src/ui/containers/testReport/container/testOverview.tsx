@@ -241,13 +241,13 @@ const leftSide = (isFirst: boolean) => css`
 		position: absolute;
 
 		${isFirst &&
-		`
+	`
 	background: #1F1F1F;
 	border-radius: 12px;
 `}
 
 		${!isFirst &&
-		`
+	`
 	background: #0B0B0B;
 	border: 0.5px solid #1F1F1F;
 `}
@@ -370,11 +370,11 @@ function RenderStep({ data, testInstanceData, setIsShowingVideo, testId, index }
 			</Conditional>
 			<div className={"pl-60"}>
 				{[ActionsInTestEnum.ASSERT_ELEMENT].includes(actionType) &&
-				data.meta &&
-				data.meta.meta &&
-				data.meta.meta.meta &&
-				data.meta.meta.meta.logs &&
-				status === "FAILED" ? (
+					data.meta &&
+					data.meta.meta &&
+					data.meta.meta.meta &&
+					data.meta.meta.meta.logs &&
+					status === "FAILED" ? (
 					<RenderAssertElement logs={data.meta.meta.meta.logs} />
 				) : (
 					""
@@ -680,7 +680,7 @@ function TestOverviewTabTopSection({ currentTestTab, testInstanceData, expand, i
 
 const selectedTabStyle = css`
 	font-weight: 600;
-	color: #a742f7;
+	color: #cd60ff;
 	text-decoration: none;
 `;
 const testNavBarItemStyle = css`

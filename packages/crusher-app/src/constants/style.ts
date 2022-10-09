@@ -57,12 +57,12 @@ export const plainButtonCSS = css`
 
 	width: max-content;
 
-	background: #a742f7 !important;
+	background: #cd60ff !important;
 	border: 1px solid #7d41ad !important;;
 	border-radius: 8px !important;;
 
 	:hover {
-		background: #a742f7;
+		background: #cd60ff;
 		filter: brighntess(0.7);
 		border: 1px solid #7d41ad;
 	}

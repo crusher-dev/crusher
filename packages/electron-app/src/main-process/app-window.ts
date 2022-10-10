@@ -25,7 +25,7 @@ import {
 	updateRecorderState,
 } from "../store/actions/recorder";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
-import { getRecorderState, getSavedSteps, getTestName } from "../store/selectors/recorder";
+import { getAllSteps, getRecorderState, getSavedSteps, getTestName } from "../store/selectors/recorder";
 import { CloudCrusher } from "../lib/cloud";
 import { getMainActions, getBrowserActions, toCrusherSelectorsFormat } from "runner-utils/src/utils/helper";
 import { iElementInfo, TRecorderState } from "../store/reducers/recorder";
@@ -328,7 +328,7 @@ export class AppWindow {
 		this.webView?.webContents.openDevTools();
 	}
 
-	private async handleUndockCode() {
+	private async handleUndockCode(event: Electron.IpcMainEvent, payload: { stepIndex }) {
 		this.codeWindow = new BrowserWindow({
 			title: APP_NAME,
 			titleBarStyle: "hidden",
@@ -359,8 +359,12 @@ export class AppWindow {
 			},
 			acceptFirstMouse: true,
 		});
-		this.codeWindow.loadURL(getAppURl() + "#/code-editor");
 
+		if(payload.stepIndex) {
+			this.codeWindow.loadURL(getAppURl() + `#/code-editor?stepIndex=${payload.stepIndex}`);
+		} else {
+			this.codeWindow.loadURL(getAppURl() + `#/code-editor`);
+		}
 		this.codeWindow.webContents.on("destroyed", () => {
 			this.codeWindow = null;
 			const recorderState = getRecorderState(this.store.getState() as any);
@@ -523,8 +527,9 @@ export class AppWindow {
 	}
 
 	private async handleJumpToStep(event: Electron.IpcMainEvent, payload: { stepIndex: number }) {
-		const recorderSteps = getSavedSteps(this.store.getState() as any);
+		let recorderSteps = getAllSteps(this.store.getState() as any);
 		await this.resetRecorder();
+		
 		this.setRemainingSteps(recorderSteps.slice(payload.stepIndex + 1) as any);
 		await this.handleReplayTestSteps(recorderSteps.slice(0, payload.stepIndex + 1) as any);
 		return true;

@@ -309,7 +309,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 	};
 
 	const handleUnDock = () => {
-		performUndockCode();
+		performUndockCode(props.stepIndex);
 		props.handleClose();
 	};
 
@@ -564,7 +564,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 							left: 0rem !important;
 							width: 162rem;
 							z-index: 123123123123123;
-							left: 47rem !important;
+							left: -2rem !important;
 							top: auto;
 							bottom: calc(100% + 4rem);
 						`}

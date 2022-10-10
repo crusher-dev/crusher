@@ -38,7 +38,17 @@ const menuItems = [
 ];
 
 
-
+function usePrevious(value) {
+	// The ref object is a generic container whose current property is mutable ...
+	// ... and can hold any value, similar to an instance property on a class
+	const ref = React.useRef();
+	// Store current value in ref
+	React.useEffect(() => {
+	  ref.current = value;
+	}, [value]); // Only re-run if value changes
+	// Return previous value (happens before update in useEffect above)
+	return ref.current;
+  }
 
 const multiMenuItems = [{ id: "delete", label: "Delete", shortcut: <div>⌘+D</div> }];
 const StepsPanel = ({ className }: IProps) => {
@@ -55,13 +65,13 @@ const StepsPanel = ({ className }: IProps) => {
 	const recorderState = useSelector(getRecorderState);
 	React.useEffect(() => {
 		if(failedCard) { 
-			requestAnimationFrame(() => {
-			const testListContainer: any = document.querySelector("#steps-list-container");
-			const elementHeight = testListContainer.scrollHeight;
-			testListContainer.scrollBy(0, elementHeight);
-		});
+		// 	requestAnimationFrame(() => {
+		// 	const testListContainer: any = document.querySelector("#steps-list-container");
+		// 	const elementHeight = testListContainer.scrollHeight;
+		// 	testListContainer.scrollBy(0, elementHeight);
+		// });
 	}
-	}, [failedCard]);
+	}, [!!failedCard]);
 	const toggleStatusBar = React.useCallback(() => {
 		setIsStatusBarMaximised(!isStatusBarMaximised);
 	}, [isStatusBarMaximised]);
@@ -103,11 +113,7 @@ const StepsPanel = ({ className }: IProps) => {
 			);
 		});
 	}, [remainingSteps, steps]);
-	React.useEffect(() => {
-		const testListContainer: any = document.querySelector("#steps-list-container");
-		const elementHeight = testListContainer.scrollHeight;
-		testListContainer.scrollBy(0, elementHeight);
-	}, [recordedSteps.length]);
+
 
 	const handleOutSideClick = React.useCallback(() => {
 		// @Note: setTimeOut is here as an hack, to
@@ -173,6 +179,20 @@ const StepsPanel = ({ className }: IProps) => {
 		return actionDescriber;
 	}, []);
 
+	const previousLength = usePrevious(recordedSteps.length);
+
+	React.useEffect(() => {
+		if(recordedSteps.length >= previousLength) {
+			const testListContainer: Element = document.querySelector("#steps-list-container");
+			const nextStepsList: Element = document.querySelector("#next-steps-list");
+			const stepsList: Element = document.querySelector("#steps-list");
+
+			const stepsListHeight = stepsList.getBoundingClientRect().height;
+			const lastLiHeight = stepsList.lastChild ? stepsList.lastChild.getBoundingClientRect().height : 0;
+			testListContainer.scroll(0, stepsListHeight - lastLiHeight - 1);
+		}
+	}, [recordedSteps.length, showPausedCard]);
+
 	React.useEffect(() => {
 		if(failedSteps.length) {
 			const lastFailedStep = failedSteps[failedSteps.length - 1];
@@ -226,10 +246,11 @@ const StepsPanel = ({ className }: IProps) => {
 			>
 				<RightClickMenu onOpenChange={handleMenuOpenChange} menuItems={menuItemsComponent}>
 					<div className={`custom-scroll`} css={contentCss}>
-
-						{steps}
+						<div id="steps-list">
+							{steps}
+						</div>
 						{showPausedCard ? (<PausedStepCard />) : ""}
-						{showNextSteps ? (<div>
+						{ showNextSteps ? (<div id="next-steps-list">
 							<div className={"px-16 pt-32 pb-4"} css={css`font-style: normal;
 font-weight: 400;
 font-size: 12rem;color: #DCDCDC;`}>next steps</div>

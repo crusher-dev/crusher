@@ -11,6 +11,8 @@ import { useAtom } from "jotai";
 import { stepHoverAtom } from "electron-app/src/_ui/store/jotai/steps";
 import ToastDemo from "electron-app/src/_ui/ui/components/Toast";
 import { getStore } from "electron-app/src/store/configureStore";
+import { useStep } from "electron-app/src/_ui/hooks/recorder";
+import { getErrorMessage } from "./helper";
 
 export const retryStep = (stepId: number) => {
 	const store = getStore();
@@ -31,6 +33,7 @@ export const retryStep = (stepId: number) => {
 };
 
 const FailedStepCard = ({ stepId }) => {
+	const { step, deleteStep } = useStep(stepId);
 	const store = useStore();
 	const [stepHoverId, setStepHoverId] = useAtom(stepHoverAtom);
 
@@ -42,17 +45,20 @@ const FailedStepCard = ({ stepId }) => {
 		setStepHoverId(stepId);
 	};
 	const handleDeleteAndContinue = () => {
-		store.dispatch(deleteRecordedSteps([stepId]));
+		deleteStep();
 		continueRemainingSteps();
 	};
+
+	if(!step) return null;
+	const erorrMessage = getErrorMessage(step);
 
 	return (
 		<div css={containerCss} className={"px-12 py-16"}>
 			<div css={notifyCardCss} className="flex px-16 py-11">
 				<div css={cardTextCss}>
-					<div css={titleCss}>last step failed</div>
+					<div css={titleCss}>{erorrMessage}</div>
 					<div css={descriptionCss} className={"mt-5"}>
-						element info couldn't be found
+						Modify the step or force retry
 					</div>
 				</div>
 				<div className={"ml-auto"}>

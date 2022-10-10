@@ -969,7 +969,7 @@ export class AppWindow {
 				if (browserAction.type === ActionsInTestEnum.SET_DEVICE) {
 					await this.store.dispatch(setDevice(browserAction.payload.meta.device.id));
 					await this.handlePerformAction(null, { action: browserAction, shouldNotSave: !!(browserAction as any).shouldNotRecord });
-					if (reaminingSteps.length) {
+			
 						await new Promise((resolve) => {
 							const intervalFun = () => {
 								if (this.webView?.playwrightInstance?.page) {
@@ -987,7 +987,18 @@ export class AppWindow {
 								}, 250);
 							}
 						});
-					}
+						await this.handlePerformAction(null, { action: {
+							type: ActionsInTestEnum.NAVIGATE_URL,
+							payload: {
+								selectors: [],
+								meta: {
+									value: "about:blank",
+								},
+							},
+							status: "COMPLETED",
+							time: Date.now(),
+						}, shouldNotSave: true});
+				
 				} else {
 					if (browserAction.type !== ActionsInTestEnum.RUN_AFTER_TEST) {
 						// @Todo: Add support for future browser actions

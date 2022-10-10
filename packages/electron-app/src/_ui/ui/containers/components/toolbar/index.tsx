@@ -404,7 +404,13 @@ const Toolbar = (props: any) => {
 						},
 					]);
 				} else {
-					performNavigation(validUrl, store);
+					const recorderState = getRecorderState(store.getState());
+					if (recorderState.type === TRecorderState.RECORDING_ACTIONS) {
+						performNavigation(validUrl, store);
+					} else {
+						sendSnackBarEvent({ type: "error", message: "A action is in progress. Wait and retry again" });
+
+					}
 				}
 				// Just in case onboarding overlay info is still visible
 

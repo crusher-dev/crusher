@@ -188,9 +188,9 @@ const overLayCSS = css`
 	top: 0;
 	width: 100%;
 	min-height: 100vh;
-	background: rgba(0, 0, 0, 0.55);
+	background: rgba(0, 0, 0, 0.75);
 	z-index: 22;
-    backdrop-filter: blur(1px);
+    backdrop-filter: blur(3px);
 `
 
 const dragableCss = () => {

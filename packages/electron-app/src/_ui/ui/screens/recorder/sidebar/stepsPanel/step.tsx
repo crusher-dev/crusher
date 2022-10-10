@@ -44,32 +44,36 @@ const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, 
 	}, [editInputId === `${stepId}-stepName`]);
 
 	const handleHoverCallback = React.useCallback((shouldShow: boolean) => {
-		if(shouldShow) {
+		if (shouldShow) {
 			setStepHoverId(stepId);
-		} else if(!shouldShow && stepHoverId === stepId) {
+		} else if (!shouldShow && stepHoverId === stepId) {
 			setStepHoverId(null);
 		}
 	}, [stepHoverId]);
 	return (
 		<HoverCard
-			disabled={disabled || (hasFailed && !stepHoverId)  || (stepHoverId && stepHoverId !== stepId)}
 			disableStateManagement={true}
+			disabled={disabled || (hasFailed && !stepHoverId) || (stepHoverId && stepHoverId !== stepId)}
 			autoHide={true}
 			state={stepHoverId === stepId}
+			// autoHide={false}
+			// state={stepId == 1}
 
 			callback={handleHoverCallback}
 			wrapperCss={css`
 				z-index: 123123123 !important;
 				box-shadow: none;
+				background: #0F0F0F;
 			`}
 			css={css`
 				padding: 0rem !important;
 			
 			`}
 			tooltipCSS={css`
-				border-radius: 16px;
+				border-radius: 12px;
 				overflow: hidden !important;
-				border: .5px solid #1C1C1C;
+				background: #0F0F0F;
+				border: 1px solid #1C1C1C;
 			`}
 			content={<StepEditor stepId={stepId} />}
 			placement="right"
@@ -91,7 +95,7 @@ const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, 
 					{stepInfo.isRunning && !disabled ? <LoadingIcon style={{}} css={runningIconCss} /> : ""}
 					{stepInfo.isCompleted && !disabled ? <GreenCheckboxIcon css={[completedIconCss, !isLast ? inActiveIconCss : null]} /> : ""}
 				</div>
-				{hasFailed ? <FailedStepCard stepId={stepId} />  : ""}
+				{hasFailed ? <FailedStepCard stepId={stepId} /> : ""}
 			</div>
 		</HoverCard>
 	);

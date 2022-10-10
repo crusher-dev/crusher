@@ -47,8 +47,8 @@ const primaryModalStyle = css`
 	box-sizing: border-box;
 	margin-top: -200rem;
 
-	background: rgb(13, 14, 14);
-    border: .5px solid rgba(142, 142, 142, 0.1);
+	background: ##0F0F0F;
+    border: 1px solid rgba(142, 142, 142, 0.15);
 	
 	box-shadow: rgb(14 18 22 / 35%) 0px 10px 38px -10px, rgb(14 18 22 / 20%) 0px 10px 20px -15px;
     border-radius: 20px;

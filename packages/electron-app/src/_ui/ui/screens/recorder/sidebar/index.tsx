@@ -72,8 +72,8 @@ const ResizeWrapper = ({ children, track }) => {
 
 		// laster subtract initial mouse position
 		let newWidth = e.clientX;
-		if (newWidth < 250) {
-			newWidth = 250
+		if (newWidth < 280) {
+			newWidth = 280
 		}
 		if (newWidth > 400) {
 			newWidth = 400
@@ -83,7 +83,6 @@ const ResizeWrapper = ({ children, track }) => {
 
 
 	const dragStart = (e) => {
-
 		setInitialMousePosition(e.clientX)
 		document.addEventListener("mousemove", move)
 		setIsDragging(true)

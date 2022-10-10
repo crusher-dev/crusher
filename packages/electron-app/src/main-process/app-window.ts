@@ -687,7 +687,8 @@ export class AppWindow {
 			remainingSteps = remainingSteps ? [...extraSteps, ...remainingSteps] : extraSteps.slice();
 		}
 		if (remainingSteps) {
-			await this.handleReplayTestSteps(remainingSteps);
+			const success = await this.handleReplayTestSteps(remainingSteps);
+			if(!success) return;
 		}
 		this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
 	}

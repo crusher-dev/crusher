@@ -16,6 +16,7 @@ import { ipcRenderer } from "electron";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
 import { iAction } from "@shared/types/action";
 import { sendSnackBarEvent } from "../../toast";
+import { retryStep } from "electron-app/src/_ui/ui/screens/recorder/sidebar/stepsPanel/failedCard";
 
 interface iSEOModalProps {
 	stepIndex?: number;
@@ -159,6 +160,7 @@ const SeoModalContent = (props: iSEOModalProps) => {
 
 		props.stepAction.payload.meta.validations = validationRows;
 		store.dispatch(updateRecordedStep(props.stepAction, props.stepIndex));
+		retryStep(props.stepIndex);
 		sendSnackBarEvent({ type: "success", message: "Updated seo validations" });
 		handleClose();
 	};

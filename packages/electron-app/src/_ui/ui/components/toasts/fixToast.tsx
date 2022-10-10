@@ -10,6 +10,7 @@ import { useStore } from "react-redux";
 import { getSavedSteps } from "electron-app/src/store/selectors/recorder";
 import { getStore } from "electron-app/src/store/configureStore";
 import { FieldSelectorPicker } from "../../containers/components/sidebar/stepEditor/fields";
+import { retryStep } from "../../screens/recorder/sidebar/stepsPanel/failedCard";
 
 const checkIfElementFailure = (stepId, errorType) => {
     const store = getStore();
@@ -69,13 +70,15 @@ const FixToastActions = ({ setOpen, meta }: IProps) => {
     }, [isElementFailure]);
 
     const handleOnSelectorsPicked = () => {
+        actionCallback && actionCallback();
+        retryStep(stepId);
         setOpen(false);
     };
 
     return (
         <div className={"flex items-center"} css={actionsContainerCss}>
             {isElementFailure ? (
-                <FieldSelectorPicker stepID={stepId} onSelectorsPicked={handleOnSelectorsPicked}>
+                <FieldSelectorPicker stepId={stepId} onSelectorsPicked={handleOnSelectorsPicked}>
                     <div className={"flex items-center"} css={actionCss}>
                         <div className="px-12 flex items-center">
                             <EditIconV4 css={editIcoNCss} />

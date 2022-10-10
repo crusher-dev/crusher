@@ -14,7 +14,7 @@ type IFieldSelectorPickerProps = React.TextareaHTMLAttributes<HTMLTextAreaElemen
 	onSelectorsPicked: (selectors: iSelectorInfo[]) => any;
 };
 const FieldSelectorPicker = React.forwardRef((props: IFieldSelectorPickerProps) => {
-	const { className, stepId, children } = props;
+	const { className, onSelectorsPicked, stepId, children } = props;
 
 	const handleElementSelectorClick = () => {
 		turnOnElementSelectorInspectMode({ stepId });
@@ -24,7 +24,7 @@ const FieldSelectorPicker = React.forwardRef((props: IFieldSelectorPickerProps) 
 		const handleMessage = (event) => {
 			const { type, selectedElementInfo } = JSON.parse(event.data);
 			if (type === "selected-element-for-selectors") {
-				props.onSelectorsPicked(selectedElementInfo.selectors);
+				onSelectorsPicked(selectedElementInfo.selectors);
 			}
 		};
 		window.addEventListener("message", handleMessage);
@@ -32,7 +32,7 @@ const FieldSelectorPicker = React.forwardRef((props: IFieldSelectorPickerProps) 
 		return () => {
 			window.removeEventListener("message", handleMessage);
 		};
-	}, []);
+	}, [onSelectorsPicked]);
 
 	if (children) {
 		return <div onClick={handleElementSelectorClick}>{children}</div>;

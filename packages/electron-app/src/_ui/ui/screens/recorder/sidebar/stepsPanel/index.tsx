@@ -202,7 +202,7 @@ const StepsPanel = ({ className }: IProps) => {
 					errorType: lastFailedStep.errorType,
 					stepId: lastFailedStep.index,
 					callback: isElementFailure ? () => {
-						turnOnElementSelectorInspectMode({ stepId: lastFailedStep.index });
+						console.log("CLICKED, YES");
 					}: () => {
 						emitShowModal({
 							type: EDIT_MODE_MAP[lastFailedStep.type],

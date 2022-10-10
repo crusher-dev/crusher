@@ -8,8 +8,20 @@ import { HoverButton } from "../hoverButton";
 import { ActionToast } from "./variants/actionToast";
 import { useStore } from "react-redux";
 import { getSavedSteps } from "electron-app/src/store/selectors/recorder";
+import { getStore } from "electron-app/src/store/configureStore";
+import { FieldSelectorPicker } from "../../containers/components/sidebar/stepEditor/fields";
 
-const FixToast = ({message, meta}) => {
+const checkIfElementFailure = (stepId, errorType) => {
+    const store = getStore();
+    const savedSteps = getSavedSteps(store.getState() as any);
+    const step = savedSteps[stepId];
+
+    const isElementFailure = step.type.startsWith("ELEMENT_") && [StepErrorTypeEnum.ELEMENT_NOT_FOUND, StepErrorTypeEnum.ELEMENT_NOT_STABLE, StepErrorTypeEnum.ELEMENT_NOT_VISIBLE, StepErrorTypeEnum.TIMEOUT].includes(errorType);
+
+    return isElementFailure;
+}
+
+const FixToast = ({ message, meta }) => {
     const [open, setOpen] = React.useState(true);
 
     return (
@@ -23,7 +35,7 @@ const FixToast = ({message, meta}) => {
     )
 };
 
-const FixToastMessage = ({message}) => {
+const FixToastMessage = ({ message }) => {
     return (
         <div className={"flex items-center"}>
             <FailedCheckboxIcon css={correctIconCss} />
@@ -44,6 +56,8 @@ interface IProps {
 const FixToastActions = ({ setOpen, meta }: IProps) => {
     const { callback: actionCallback } = meta;
     const store = useStore();
+    const { errorType, stepId } = meta;
+    const isElementFailure = checkIfElementFailure(stepId, errorType);
 
     const handleFixStep = () => {
         actionCallback && actionCallback();
@@ -51,22 +65,34 @@ const FixToastActions = ({ setOpen, meta }: IProps) => {
     };
 
     const actionText = React.useMemo(() => {
-        const { errorType, stepId } = meta;
-        const savedSteps = getSavedSteps(store.getState());
-        const step = savedSteps[stepId];
+        return isElementFailure ? "re-select" : "fix step";
+    }, [isElementFailure]);
 
-        const isElementFailure  = step.type.startsWith("ELEMENT_") && [StepErrorTypeEnum.ELEMENT_NOT_FOUND, StepErrorTypeEnum.ELEMENT_NOT_STABLE, StepErrorTypeEnum.ELEMENT_NOT_VISIBLE, StepErrorTypeEnum.TIMEOUT].includes(errorType);
-        return  isElementFailure ? "re-select" : "fix step"; 
-    }, [meta]);
+    const handleOnSelectorsPicked = () => {
+        setOpen(false);
+    };
 
     return (
         <div className={"flex items-center"} css={actionsContainerCss}>
-            <div className={"flex items-center"} onClick={handleFixStep} css={actionCss}>
-                <div className="px-12 flex items-center">
-                    <EditIconV4 css={editIcoNCss} />
-                    <TextBlock css={actionTextCss} fontSize={14} color={"#CC5FFF"} className={"ml-6"}>{actionText}</TextBlock>
+            {isElementFailure ? (
+                <FieldSelectorPicker stepID={stepId} onSelectorsPicked={handleOnSelectorsPicked}>
+                    <div className={"flex items-center"} css={actionCss}>
+                        <div className="px-12 flex items-center">
+                            <EditIconV4 css={editIcoNCss} />
+                            <TextBlock css={actionTextCss} fontSize={14} color={"#CC5FFF"} className={"ml-6"}>{actionText}</TextBlock>
+                        </div>
+                    </div>
+                </FieldSelectorPicker>
+
+            ) : (
+                <div className={"flex items-center"} onClick={handleFixStep} css={actionCss}>
+                    <div className="px-12 flex items-center">
+                        <EditIconV4 css={editIcoNCss} />
+                        <TextBlock css={actionTextCss} fontSize={14} color={"#CC5FFF"} className={"ml-6"}>{actionText}</TextBlock>
+                    </div>
                 </div>
-            </div>
+            )}
+
 
             <div className={"px-12 pl-10"}>
                 <HoverButton onClick={setOpen.bind(this, false)}>

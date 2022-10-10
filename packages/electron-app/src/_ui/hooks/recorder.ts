@@ -9,10 +9,10 @@ export const useSteps = () => {
     const savedSteps = useSelector(getSavedSteps);
 
     const getStep = useCallback((stepId) => {
-        return savedSteps.find((step) => step.id === stepId);
+        return savedSteps[stepId];
     },[savedSteps]);
 
-    const deleteStep = useCallback((index: number) {
+    const deleteStep = useCallback((index: number) => {
         store.dispatch(deleteRecordedSteps([index]));
     }, []);
     
@@ -21,7 +21,7 @@ export const useSteps = () => {
         store.dispatch(updateRecordedStep(merge(step, payload), stepIndex));
     }, [savedSteps]);
 
-    return { getStep, savedSteps, deleteStep, savedSteps, updateStep };
+    return { getStep, savedSteps, deleteStep, updateStep };
 }
 
 export const useStep = (stepId: number) => {

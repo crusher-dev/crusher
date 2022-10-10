@@ -25,7 +25,7 @@ import {
 	updateRecorderState,
 } from "../store/actions/recorder";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
-import { getRecorderState, getSavedSteps, getTestName } from "../store/selectors/recorder";
+import { getAllSteps, getRecorderState, getSavedSteps, getTestName } from "../store/selectors/recorder";
 import { CloudCrusher } from "../lib/cloud";
 import { getMainActions, getBrowserActions, toCrusherSelectorsFormat } from "runner-utils/src/utils/helper";
 import { iElementInfo, TRecorderState } from "../store/reducers/recorder";
@@ -527,8 +527,9 @@ export class AppWindow {
 	}
 
 	private async handleJumpToStep(event: Electron.IpcMainEvent, payload: { stepIndex: number }) {
-		const recorderSteps = getSavedSteps(this.store.getState() as any);
+		let recorderSteps = getAllSteps(this.store.getState() as any);
 		await this.resetRecorder();
+		
 		this.setRemainingSteps(recorderSteps.slice(payload.stepIndex + 1) as any);
 		await this.handleReplayTestSteps(recorderSteps.slice(0, payload.stepIndex + 1) as any);
 		return true;

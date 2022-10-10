@@ -26,6 +26,7 @@ import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { iAction } from "@shared/types/action";
 import { emitShowModal } from "electron-app/src/_ui/ui/containers/components/modals";
 import { EDIT_MODE_MAP } from "./stepEditor";
+import { getErrorMessage } from "./helper";
 
 interface IProps {
 	className?: string;
@@ -36,22 +37,7 @@ const menuItems = [
 	{ id: "delete", label: "Delete", shortcut: <div>⌘+D</div> },
 ];
 
-const getErrorMessage = (lastFailedStep: iAction) => {
-	if(lastFailedStep.errorType === StepErrorTypeEnum.ASSERTIONS_FAILED) {
-		if(lastFailedStep.type === ActionsInTestEnum.VALIDATE_SEO) {
-			return "SEO assertions failed";
-		} else if (lastFailedStep.type === ActionsInTestEnum.ASSERT_ELEMENT) {
-			return "Element assertions failed";
-		}
-		return "assertions failed";
-	} else {
-		console.log("last failed step", lastFailedStep);
-		if([StepErrorTypeEnum.TIMEOUT, StepErrorTypeEnum.ELEMENT_NOT_FOUND, StepErrorTypeEnum.ELEMENT_NOT_STABLE, StepErrorTypeEnum.ELEMENT_NOT_VISIBLE].includes(lastFailedStep.errorType) && lastFailedStep.type.startsWith("ELEMENT_")) {
-			return "element info couldn't be found";
-		}
-		return "unexpected error occurred";
-	}
-};
+
 
 
 const multiMenuItems = [{ id: "delete", label: "Delete", shortcut: <div>⌘+D</div> }];
@@ -202,7 +188,7 @@ const StepsPanel = ({ className }: IProps) => {
 					errorType: lastFailedStep.errorType,
 					stepId: lastFailedStep.index,
 					callback: isElementFailure ? () => {
-						turnOnElementSelectorInspectMode({ stepId: lastFailedStep.index });
+						console.log("CLICKED, YES");
 					}: () => {
 						emitShowModal({
 							type: EDIT_MODE_MAP[lastFailedStep.type],

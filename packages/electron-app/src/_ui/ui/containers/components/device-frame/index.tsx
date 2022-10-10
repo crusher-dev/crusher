@@ -36,6 +36,7 @@ import { useAtom } from "jotai";
 import { crashAtom } from "electron-app/src/_ui/store/jotai/crashAtom";
 import { stepHoverAtom } from "electron-app/src/_ui/store/jotai/steps";
 import { remote } from "electron";
+import { clearToast } from "../../../components/toasts";
 
 const CrashScreen = () => {
 	const store = useStore();
@@ -240,13 +241,13 @@ const DeviceFrame = () => {
 						}
 						const { selectedElementInfo } = args[0].payload;
 						const elementSelectInspectMetaInfo = getInspectElementSelectorMeta(store.getState() as any);
-						console.log(elementSelectInspectMetaInfo, selectedElementInfo, "ASAS");
 						if (elementSelectInspectMetaInfo.isOn && elementSelectInspectMetaInfo.stepId) {
 							const recordedSteps = getSavedSteps(store.getState() as any);
 							const step = recordedSteps[elementSelectInspectMetaInfo.stepId];
 							//@ts-ignore
 							step.payload.selectors = selectedElementInfo.selectors;
 							store.dispatch(updateRecordedStep(step as any, elementSelectInspectMetaInfo.stepId));
+							window.postMessage(JSON.stringify({ type: "selected-element-for-selectors", selectedElementInfo }));
 							sendSnackBarEvent({ type: "success", message: "Selectors updated" });
 						}
 					}

@@ -1,3 +1,6 @@
+import { ActionsInTestEnum } from "@shared/constants/recordedActions";
+import { iAction } from "@shared/types/action";
+import { StepErrorTypeEnum } from "runner-utils/src/error.types";
 import { SELECTOR_TYPE } from "unique-selector/src/constants";
 
 /*
@@ -67,4 +70,21 @@ const transformStringSelectorsToArray = (selectors: string) => {
 	});
 };
 
-export { parseStepNameText, TextHighlighter, transformStringSelectorsToArray, TextHighlighterText };
+const getErrorMessage = (lastFailedStep: iAction) => {
+	if(lastFailedStep.errorType === StepErrorTypeEnum.ASSERTIONS_FAILED) {
+		if(lastFailedStep.type === ActionsInTestEnum.VALIDATE_SEO) {
+			return "SEO assertions failed";
+		} else if (lastFailedStep.type === ActionsInTestEnum.ASSERT_ELEMENT) {
+			return "Element assertions failed";
+		}
+		return "assertions failed";
+	} else {
+		console.log("last failed step", lastFailedStep);
+		if([StepErrorTypeEnum.TIMEOUT, StepErrorTypeEnum.ELEMENT_NOT_FOUND, StepErrorTypeEnum.ELEMENT_NOT_STABLE, StepErrorTypeEnum.ELEMENT_NOT_VISIBLE].includes(lastFailedStep.errorType) && lastFailedStep.type.startsWith("ELEMENT_")) {
+			return "element info couldn't be found";
+		}
+		return "unexpected error occurred";
+	}
+};
+
+export { parseStepNameText, TextHighlighter, transformStringSelectorsToArray, TextHighlighterText, getErrorMessage };

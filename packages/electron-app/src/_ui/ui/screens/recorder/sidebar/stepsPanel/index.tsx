@@ -9,7 +9,7 @@ import { useSelectableList } from "electron-app/src/_ui/hooks/list";
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
 import { RightClickMenu } from "@dyson/components/molecules/RightClick/RightClick";
 import { deleteRecordedSteps } from "electron-app/src/store/actions/recorder";
-import { performJumpTo, performVerifyTest } from "electron-app/src/_ui/commands/perform";
+import { performJumpTo, performVerifyTest, turnOnElementSelectorInspectMode } from "electron-app/src/_ui/commands/perform";
 import { useAtom } from "jotai";
 import { stepHoverAtom } from "electron-app/src/_ui/store/jotai/steps";
 import { editInputAtom } from "electron-app/src/_ui/store/jotai/testsPage";
@@ -45,7 +45,8 @@ const getErrorMessage = (lastFailedStep: iAction) => {
 		}
 		return "assertions failed";
 	} else {
-		if(lastFailedStep.errorType === StepErrorTypeEnum.TIMEOUT && lastFailedStep.type.startsWith("ELEMENT_")) {
+		console.log("last failed step", lastFailedStep);
+		if([StepErrorTypeEnum.TIMEOUT, StepErrorTypeEnum.ELEMENT_NOT_FOUND, StepErrorTypeEnum.ELEMENT_NOT_STABLE, StepErrorTypeEnum.ELEMENT_NOT_VISIBLE].includes(lastFailedStep.errorType) && lastFailedStep.type.startsWith("ELEMENT_")) {
 			return "element info couldn't be found";
 		}
 		return "unexpected error occurred";
@@ -190,17 +191,25 @@ const StepsPanel = ({ className }: IProps) => {
 		if(failedSteps.length) {
 			const lastFailedStep = failedSteps[failedSteps.length - 1];
 			actionDescriber.initActionHandlers();
-			
+			const isElementFailure  = lastFailedStep.type.startsWith("ELEMENT_") && [StepErrorTypeEnum.ELEMENT_NOT_FOUND, StepErrorTypeEnum.ELEMENT_NOT_STABLE, StepErrorTypeEnum.ELEMENT_NOT_VISIBLE, StepErrorTypeEnum.TIMEOUT].includes(lastFailedStep.errorType);
+
+			console.log("Last Failed Step", lastFailedStep);
 			showToast({
 				message: getErrorMessage(lastFailedStep),
 				type: "step-failed",
 				isUnique: true,
-				meta: { callback: () => {
-					emitShowModal({
-						type: EDIT_MODE_MAP[lastFailedStep.type],
-						stepIndex: lastFailedStep.index,
-					});
-				} },
+				meta: {
+					errorType: lastFailedStep.errorType,
+					stepId: lastFailedStep.index,
+					callback: isElementFailure ? () => {
+						turnOnElementSelectorInspectMode({ stepId: lastFailedStep.index });
+					}: () => {
+						emitShowModal({
+							type: EDIT_MODE_MAP[lastFailedStep.type],
+							stepIndex: lastFailedStep.index,
+						});
+					}
+				},
 			});
 		} else {
 			clearToast("step-failed");

@@ -72,7 +72,7 @@ const ToastBox = () => {
   return (
     <ToastProvider swipeDirection="right">
       {toasts.map((toast) => (
-        <FixToast actionCallback={toast.meta?.callback} message={toast.message} />
+        <FixToast meta={toast.meta} message={toast.message} />
       ))}
       <ToastViewport />
     </ToastProvider>

@@ -328,7 +328,7 @@ export class AppWindow {
 		this.webView?.webContents.openDevTools();
 	}
 
-	private async handleUndockCode() {
+	private async handleUndockCode(event: Electron.IpcMainEvent, payload: { stepIndex }) {
 		this.codeWindow = new BrowserWindow({
 			title: APP_NAME,
 			titleBarStyle: "hidden",
@@ -359,8 +359,12 @@ export class AppWindow {
 			},
 			acceptFirstMouse: true,
 		});
-		this.codeWindow.loadURL(getAppURl() + "#/code-editor");
 
+		if(payload.stepIndex) {
+			this.codeWindow.loadURL(getAppURl() + `#/code-editor?stepIndex=${payload.stepIndex}`);
+		} else {
+			this.codeWindow.loadURL(getAppURl() + `#/code-editor`);
+		}
 		this.codeWindow.webContents.on("destroyed", () => {
 			this.codeWindow = null;
 			const recorderState = getRecorderState(this.store.getState() as any);

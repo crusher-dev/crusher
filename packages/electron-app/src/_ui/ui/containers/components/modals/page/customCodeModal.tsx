@@ -309,7 +309,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 	};
 
 	const handleUnDock = () => {
-		performUndockCode();
+		performUndockCode(props.stepIndex);
 		props.handleClose();
 	};
 

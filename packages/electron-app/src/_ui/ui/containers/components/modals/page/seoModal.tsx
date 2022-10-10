@@ -66,9 +66,9 @@ const SeoModalContent = (props: iSEOModalProps) => {
 				},
 				{ title: null, metaTags: {} },
 			);
-				ipcRenderer.invoke("get-page-seo-info").then((res) => {
-					setSeoInfo(res);
-				});
+			ipcRenderer.invoke("get-page-seo-info").then((res) => {
+				setSeoInfo(res);
+			});
 			setValidationRows(props.stepAction.payload.meta.validations);
 		}
 	}, [props.stepAction, isOpen]);
@@ -260,8 +260,8 @@ const modalStyle = css`
 	display: flex;
 	flex-direction: column;
 	padding: 0rem;
-	background: #0D0E0E;
-    border: 1px solid rgba(142, 142, 142, 0.1);
+	background: #0F0F0F;
+    border: 1px solid rgba(142, 142, 142, 0.15);
 `;
 
 const bottomBarStyle = {

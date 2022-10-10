@@ -307,7 +307,8 @@ const stepNameCss = css`
 	font-size: 15rem;
 `;
 const stepMetaInfoContainerCss = css`
-	background: #000000;
+	background: #0F0F0F;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 `;
 
 // Actions map with modal types
@@ -433,7 +434,7 @@ const StepOverlayEditor = ({ stepId }) => {
 			) : (
 				<>
 					<StepMetaInfo setShowAdvanced={handleShowAdvanced} stepId={stepId} />
-					<div className={"px-20 py-24"} css={stepMainContentCss}>
+					<div className={"px-20 py-24"}>
 						{false && showPreview ? (
 							<div className="flex">
 								<div css={elementImageCss}></div>
@@ -504,9 +505,6 @@ const elementImageCss = css`
 	height: 172rem;
 	background: rgba(128, 128, 128, 0.8);
 	border-radius: 17rem;
-`;
-const stepMainContentCss = css`
-	background: #0C0C0D;
 `;
 
 const containerCss = css`

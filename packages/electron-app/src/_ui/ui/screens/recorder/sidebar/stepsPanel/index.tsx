@@ -38,7 +38,17 @@ const menuItems = [
 ];
 
 
-
+function usePrevious(value) {
+	// The ref object is a generic container whose current property is mutable ...
+	// ... and can hold any value, similar to an instance property on a class
+	const ref = React.useRef();
+	// Store current value in ref
+	React.useEffect(() => {
+	  ref.current = value;
+	}, [value]); // Only re-run if value changes
+	// Return previous value (happens before update in useEffect above)
+	return ref.current;
+  }
 
 const multiMenuItems = [{ id: "delete", label: "Delete", shortcut: <div>⌘+D</div> }];
 const StepsPanel = ({ className }: IProps) => {
@@ -169,16 +179,20 @@ const StepsPanel = ({ className }: IProps) => {
 		return actionDescriber;
 	}, []);
 
-	React.useEffect(() => {
-		const testListContainer: Element = document.querySelector("#steps-list-container");
-		const nextStepsList: Element = document.querySelector("#next-steps-list");
-		const stepsList: Element = document.querySelector("#steps-list");
+	const previousLength = usePrevious(recordedSteps.length);
 
-		const stepsListHeight = stepsList.getBoundingClientRect().height;
-		const lastLiHeight = stepsList.lastChild ? stepsList.lastChild.getBoundingClientRect().height : 0;
-		testListContainer.scroll(0, stepsListHeight - lastLiHeight - 1);
+	React.useEffect(() => {
+		if(recordedSteps.length >= previousLength) {
+			const testListContainer: Element = document.querySelector("#steps-list-container");
+			const nextStepsList: Element = document.querySelector("#next-steps-list");
+			const stepsList: Element = document.querySelector("#steps-list");
+
+			const stepsListHeight = stepsList.getBoundingClientRect().height;
+			const lastLiHeight = stepsList.lastChild ? stepsList.lastChild.getBoundingClientRect().height : 0;
+			testListContainer.scroll(0, stepsListHeight - lastLiHeight - 1);
+		}
 	}, [recordedSteps.length, showPausedCard]);
-	
+
 	React.useEffect(() => {
 		if(failedSteps.length) {
 			const lastFailedStep = failedSteps[failedSteps.length - 1];

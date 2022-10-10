@@ -1,6 +1,7 @@
 import { getCurrentSelectedProjct } from "electron-app/src/store/selectors/app";
 import { getStore } from "../../store/configureStore";
 import fs from "fs";
+import { remote } from "electron";
 
 const getCurrentProjectConfigPath = () => {
     try {
@@ -22,7 +23,7 @@ const getCurrentProjectConfig = () => {
         let config = null;
         // if projectConfigPath is .js
         if (projectConfigPath.endsWith(".js")) {
-             config = eval("require")(projectConfigPath);
+             config = remote.require(projectConfigPath);
         } else {
             config = JSON.parse(fs.readFileSync(projectConfigPath, "utf8"));
         }

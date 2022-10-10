@@ -419,6 +419,19 @@ const StepOverlayEditor = ({ stepId }) => {
 		}
 	}, [])
 
+	const editMessage = React.useMemo(() => {
+		if([ActionsInTestEnum.VALIDATE_SEO, ActionsInTestEnum.ASSERT_ELEMENT].includes(step.type) ) {
+			return "see checks";
+		}
+		if(step.type === ActionsInTestEnum.CUSTOM_CODE) {
+			return "code editor";
+		}
+		if(step.type === ActionsInTestEnum.WAIT) {
+			return "set wait time";
+		}
+
+		return "edit";
+	});
 
 	return (
 		<div
@@ -450,7 +463,7 @@ const StepOverlayEditor = ({ stepId }) => {
 
 						{shouldShowEditButton ? (
 							<Button onClick={handleEditModeClick.bind(this)} bgColor="tertiary-outline" css={buttonCss}>
-								see checks
+								{editMessage}
 							</Button>
 						) : (
 							""

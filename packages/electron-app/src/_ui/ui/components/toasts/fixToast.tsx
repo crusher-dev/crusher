@@ -3,10 +3,13 @@ import { css } from "@emotion/react";
 import { CloseIcon, EditIconV4 } from "electron-app/src/_ui/constants/icons";
 import { FailedCheckboxIcon } from "electron-app/src/_ui/constants/old_icons";
 import React from "react";
+import { StepErrorTypeEnum } from "runner-utils/src/error.types";
 import { HoverButton } from "../hoverButton";
 import { ActionToast } from "./variants/actionToast";
+import { useStore } from "react-redux";
+import { getSavedSteps } from "electron-app/src/store/selectors/recorder";
 
-const FixToast = ({message, actionCallback}) => {
+const FixToast = ({message, meta}) => {
     const [open, setOpen] = React.useState(true);
 
     return (
@@ -14,7 +17,7 @@ const FixToast = ({message, actionCallback}) => {
             duration={1000 * 60 * 60 * 60}
             open={open}
             setOpen={setOpen}
-            actions={<FixToastActions actionCallback={actionCallback} setOpen={setOpen} />}
+            actions={<FixToastActions meta={meta} setOpen={setOpen} />}
             message={<FixToastMessage message={message} />}
         />
     )
@@ -29,18 +32,39 @@ const FixToastMessage = ({message}) => {
     );
 };
 
-const FixToastActions = ({ setOpen, actionCallback }) => {
+interface IProps {
+    setOpen: any;
+    meta?: {
+        stepId: any;
+        errorType: StepErrorTypeEnum;
+        callback: () => void;
+    }
+};
+
+const FixToastActions = ({ setOpen, meta }: IProps) => {
+    const { callback: actionCallback } = meta;
+    const store = useStore();
+
     const handleFixStep = () => {
         actionCallback && actionCallback();
         setOpen(false);
     };
+
+    const actionText = React.useMemo(() => {
+        const { errorType, stepId } = meta;
+        const savedSteps = getSavedSteps(store.getState());
+        const step = savedSteps[stepId];
+
+        const isElementFailure  = step.type.startsWith("ELEMENT_") && [StepErrorTypeEnum.ELEMENT_NOT_FOUND, StepErrorTypeEnum.ELEMENT_NOT_STABLE, StepErrorTypeEnum.ELEMENT_NOT_VISIBLE, StepErrorTypeEnum.TIMEOUT].includes(errorType);
+        return  isElementFailure ? "re-select" : "fix step"; 
+    }, [meta]);
 
     return (
         <div className={"flex items-center"} css={actionsContainerCss}>
             <div className={"flex items-center"} onClick={handleFixStep} css={actionCss}>
                 <div className="px-12 flex items-center">
                     <EditIconV4 css={editIcoNCss} />
-                    <TextBlock css={actionTextCss} fontSize={14} color={"#CC5FFF"} className={"ml-6"}>fix step</TextBlock>
+                    <TextBlock css={actionTextCss} fontSize={14} color={"#CC5FFF"} className={"ml-6"}>{actionText}</TextBlock>
                 </div>
             </div>
 

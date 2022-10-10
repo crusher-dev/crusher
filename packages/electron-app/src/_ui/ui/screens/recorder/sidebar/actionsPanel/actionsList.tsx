@@ -77,11 +77,11 @@ const headingCss = css`
 	padding-right: 12rem;
 	display: flex;
 	:hover {
-		background: rgba(85, 85, 85, 0.1);
+		background: rgba(85, 85, 85, 0.15);
 	}
 `;
 const activeSectionCss = css`
-	background: rgba(85, 85, 85, 0.1);
+	background: rgba(85, 85, 85, 0.15);
 `;
 const headingIconCss = css`
 	margin-top: 1rem;

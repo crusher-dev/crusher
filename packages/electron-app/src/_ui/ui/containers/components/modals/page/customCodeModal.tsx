@@ -121,6 +121,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 		const handleListener = () => {
 			if (editorMainRef.current) {
 				const topbar = document.querySelector("#top-bar");
+				if(!topbar) return;
 				const rect = topbar.parentElement.getBoundingClientRect();
 				const containerNode = (editorMainRef.current as monaco.editor.IStandaloneCodeEditor).getContainerDomNode();
 				const mainContainerNode = containerNode.parentNode.parentNode;
@@ -139,11 +140,11 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 
 		window["resizeCustomCode"] = handleListener;
 
-		window.addEventListener("resize", handleListener.bind(this));
+		window.addEventListener("resize", handleListener);
 
 		return () => {
 			window["resizeCustomCode"] = undefined;
-			window.removeEventListener("resize", handleListener.bind(this));
+			window.removeEventListener("resize", handleListener);
 		};
 	}, []);
 	React.useEffect(() => {

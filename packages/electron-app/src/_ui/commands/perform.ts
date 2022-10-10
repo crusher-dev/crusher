@@ -296,8 +296,8 @@ const performExit = () => {
 	return ipcRenderer.invoke("exit-app");
 };
 
-const performUndockCode = () => {
-	return ipcRenderer.invoke("undock-code");
+const performUndockCode = (stepIndex) => {
+	return ipcRenderer.invoke("undock-code", {stepIndex});
 };
 
 const turnOnProxy = (configFilePath) => {

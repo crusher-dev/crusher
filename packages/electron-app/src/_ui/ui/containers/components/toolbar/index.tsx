@@ -99,13 +99,13 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 			let shouldNotSetupProxy: any = false;
 			// Modify project config here <----
 			const projectConfig = getCurrentProjectConfig();
-			if(projectConfig && proxyWarning?.startUrl) {
+			if (projectConfig && proxyWarning?.startUrl) {
 				const hasProxySetup = projectConfig.proxy && projectConfig.proxy.find((item: any) => item.url === proxyWarning.startUrl.origin);
-				if(hasProxySetup) {
+				if (hasProxySetup) {
 					shouldNotSetupProxy = true;
 				}
 			}
-			if(proxyWarning.shouldShow && proxyWarning?.startUrl && !shouldNotSetupProxy) {
+			if (proxyWarning.shouldShow && proxyWarning?.startUrl && !shouldNotSetupProxy) {
 				projectConfig["proxy"] = projectConfig["proxy"] ? [
 					...projectConfig["proxy"],
 					{
@@ -123,7 +123,7 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 				writeProjectConfig(projectConfig);
 			}
 
-			
+
 			performVerifyTest(shouldAutoSave, autoSaveType, false).then((res) => {
 				if (res) {
 					if (res.draftJobId) {
@@ -744,9 +744,10 @@ const containerStyle = css`
 	background-color: #09090a;
 	padding: 5rem;
 	padding-left: 11rem;
-	min-height: 70rem;
+	min-height: 72rem;
 	position: relative;
 	z-index: 999;
+	border-bottom:  3rem solid #141414;
 	padding-right: 16rem;
 `;
 const buttonStyle = css`

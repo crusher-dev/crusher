@@ -211,7 +211,7 @@ const DeviceFrame = () => {
 	const isStatusBarVisible = useSelector(getIsStatusBarVisible);
 	const ref = React.useRef<HTMLWebViewElement>(null);
 	const store = useStore();
-    const [, setCrash] = useAtom(crashAtom);
+	const [, setCrash] = useAtom(crashAtom);
 	const [stepHoverId, setStepHoverId] = useAtom(stepHoverAtom);
 
 	const getPreloadScriptPath = () => {
@@ -291,9 +291,9 @@ const DeviceFrame = () => {
 	}, []);
 
 	const isPageFailedCrash = recorderCrashState && recorderCrashState.type === TRecorderCrashState.PAGE_LOAD_FAILED;
-	
+
 	React.useEffect(() => {
-		if(isPageFailedCrash) {
+		if (isPageFailedCrash) {
 			setCrash("PAGE_LOAD_FAILED");
 		}
 	}, [isPageFailedCrash]);
@@ -337,8 +337,8 @@ const DeviceFrame = () => {
 							<Conditional showIf={recorderCrashState && recorderCrashState.type === TRecorderCrashState.CRASHED}>
 								<CrashScreen />
 							</Conditional>
-							<CrashErrorDialog/>
-				
+							<CrashErrorDialog />
+
 							<Conditional showIf={[TRecorderState.PERFORMING_ACTIONS, TRecorderState.PERFORMING_RECORDER_ACTIONS].includes(recorderState.type)}>
 								<div css={deviceOverlayStyle}></div>
 							</Conditional>
@@ -389,8 +389,14 @@ const containerStyle = (isStatusBarVisible) => css`
 	justify-content: center;
 	position: relative;
 	flex: 1;
-	background: #1e1e1e;
-	border: 1rem solid #141414;
+	// background: #000;
+	// border: 2.5rem solid #141414;
+
+	// background: #000;
+	// border: 1rem solid #141414;
+
+	// background: #1e1e1e;
+
 	border-right: none;
 	border-bottom: none;
 `;

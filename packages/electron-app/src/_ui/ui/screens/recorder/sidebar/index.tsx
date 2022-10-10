@@ -37,7 +37,7 @@ const Sidebar = ({ className }: ISidebarProps) => {
 				</>
 			</Conditional>
 			<ModalManager />
-			<TemplatesModal isOpen={false} handleClose={() => {}} />
+			<TemplatesModal isOpen={false} handleClose={() => { }} />
 		</div>
 	);
 };
@@ -51,6 +51,8 @@ const containerCss = css`
 	position: relative;
 	z-index: 1000;
 	background-color: #09090a;
+
+	border-right:  3rem solid #141414;
 `;
 
 export { Sidebar };

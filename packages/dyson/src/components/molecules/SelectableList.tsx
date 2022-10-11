@@ -231,8 +231,9 @@ const itemCss = (isActive) => css`
 	border-bottom: 0.5rem solid rgba(153, 153, 153, 0.09);
 
 	transition: background 150ms ease-out, border 150ms ease-out, transform 150ms ease-out;
+
 	:hover {
-		background: ${isActive ? `rgba(199, 81, 255, 0.14)` : `rgba(255, 255, 255, 0.02)`} !important;
+		background: ${isActive ? `rgba(199, 81, 255, 0.14)` : `rgba(255, 255, 255, 0.03)`} !important;
 	}
 `;
 export { ListBox };

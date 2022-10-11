@@ -8,6 +8,7 @@ import { SidebarTopBarLayout } from "@ui/layout/DashboardBase";
 
 import { usePageTitle } from "../../src/hooks/seo";
 import { buildFiltersAtom } from "../../src/store/atoms/pages/buildPage";
+import { LoadingComponent } from "@components/common/loadingComponent";
 
 function Builds() {
 	usePageTitle("Builds");
@@ -22,7 +23,7 @@ function Builds() {
 	return (
 		<SidebarTopBarLayout>
 			<div className="pt-20 pb-24">
-				<Suspense fallback={<div>loading...</div>}>
+				<Suspense fallback={<LoadingComponent />}>
 					<BuildSearchableList />
 				</Suspense>
 			</div>

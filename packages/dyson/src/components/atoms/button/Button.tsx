@@ -110,8 +110,8 @@ const getColor = (color: string, impact: string): { main: Color; hover: Color } 
 			break;
 		default:
 			return {
-				main: { background: "#8860DE", border: "#8860DE", color: "#fff" },
-				hover: { background: "#8860DE", border: "#8860DE", color: "#fff" },
+				main: { background: "#bb27ff", border: "#bb27ff", color: "#fff" },
+				hover: { background: "#bb27ff", border: "#bb27ff", color: "#fff" },
 			};
 			break;
 	}

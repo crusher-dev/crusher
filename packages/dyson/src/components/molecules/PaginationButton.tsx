@@ -36,37 +36,38 @@ export const PaginationButton = ({ isPreviousActive = true, isNextActive = true,
 
 export const pagination = css`
 	#left-button {
-		border-top-left-radius: 4rem;
-		border-bottom-left-radius: 4rem;
+		border-top-left-radius: 10rem;
+		border-bottom-left-radius: 10rem;
 	}
 	#right-button {
-		border-top-right-radius: 4rem;
-		border-bottom-right-radius: 4rem;
+		border-top-right-radius: 10rem;
+		border-bottom-right-radius: 10rem;
 		border-left-width: 0;
 	}
 `;
 
 const button = css`
-	background-color: #1e242c;
-	border: 1rem solid #2e3744;
-	height: 32rem;
-	width: 112rem;
+	background-color: rgba(255,255,255,0.04);
+	
+	border: .5rem solid rgba(255,255,255,0.10);
+	height: 36rem;
+	width: 100rem;
 	font-size: 13rem;
 	display: flex;
-	color: #7086ff;
+	color: #c2c2c2;
 	font-weight: 600;
 	align-items: center;
 	padding-top: 2rem;
 	justify-content: center;
 	:hover {
-		background-color: #1b1d1f;
-		border: 1rem solid #2a2e38;
+		background-color: rgba(255,255,255,0.07);
+		border: .5rem solid rgba(255,255,255,0.10);
 	}
+	transition: background 150ms ease-out, border 150ms ease-out, transform 150ms ease-out;
 `;
 const disabled = css`
-	color: #424c86;
-	background-color: #0a0b0e !important;
-	border: 1rem solid #2e3744;
+	color: #c2c2c2;
+	border: .5rem solid rgba(255,255,255,0.10);
 	cursor: not-allowed;
 `;
 

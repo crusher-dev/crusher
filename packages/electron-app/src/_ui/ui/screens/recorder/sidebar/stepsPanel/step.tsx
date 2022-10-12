@@ -27,11 +27,17 @@ interface IProps {
 	step?: any;
 }
 
+const ReRender = () => {
+	console.log("render")
+	return null
+}
+
 const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, step, onClick, setIsActive, isLast, ...props }: IProps) => {
 	const { stepId } = props;
 	const [stepHoverId, setStepHoverId] = useAtom(stepHoverAtom);
+	const isHovered = stepId === stepHoverId
+
 	const [editInputId] = useAtom(editInputAtom);
-	const [isEditCardOpen, setIsEditorCardOpen] = React.useState(false);
 	const stepInfo = useSelector(getStepInfo(stepId));
 
 	const title = TextHighlighter({ text: stepInfo.name });
@@ -50,7 +56,9 @@ const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, 
 			setStepHoverId(null);
 		}
 	}, [stepHoverId]);
-	return (
+
+
+	return React.useMemo(() => (
 		<HoverCard
 			disableStateManagement={true}
 			disabled={disabled || (hasFailed && !stepHoverId) || (stepHoverId && stepHoverId !== stepId)}
@@ -88,6 +96,7 @@ const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, 
 						<TextBlock css={[stepNameCss, stepInfo.isFailed ? failedTextNameCss : null, stepInfo.isRunning ? runningTextNameCss : null, disabled ? css`color: rgba(255, 255, 255, 0.85);` : null]}>
 							{title}
 						</TextBlock>
+						<ReRender />
 						<Conditional showIf={!!stepInfo?.description}>
 							<TextBlock css={stepDescriptionCss}>{stepInfo?.description?.substring(0, 40)}</TextBlock>
 						</Conditional>
@@ -98,7 +107,7 @@ const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, 
 				{hasFailed ? <FailedStepCard stepId={stepId} /> : ""}
 			</div>
 		</HoverCard>
-	);
+	), [isHovered]);
 };
 
 const inActiveIconCss = css`

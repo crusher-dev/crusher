@@ -1,6 +1,6 @@
 import React from "react";
 import { css, SerializedStyles } from "@emotion/react";
-import { colors } from "../../../constant/color";
+import { COLORS } from "../../../constant/color";
 
 const getStyleBySize = (
 	size: string,
@@ -102,10 +102,10 @@ const getColor = (color: string, impact: string): { main: Color; hover: Color } 
 		case "danger":
 			return {
 				main: {
-					background: colors.RED[600],
-					border: colors.RED[600], color: "#fff"
+					background: COLORS.red[500],
+					border: COLORS.red[500], color: "#fff"
 				},
-				hover: { background: colors.RED[700], border: colors.RED[700], color: "#fff" },
+				hover: { background: COLORS.red[700], border: COLORS.red[700], color: "#fff" },
 			};
 			break;
 		default:

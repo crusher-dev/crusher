@@ -44,7 +44,8 @@ const StyledViewport = styled(ToastPrimitive.Viewport, {
 const StyledToast = styled(ToastPrimitive.Root, {
   backgroundColor: '#0D0D0D',
   borderRadius: 12,
-  boxShadow: 'hsl(206 22% 7% / 35%) 0px 10px 38px -10px, hsl(206 22% 7% / 20%) 0px 10px 20px -15px',
+  border: '0.6px solid #222225',
+  boxShadow: '0px 0px 0px 5px rgb(0 0 0 / 14%)',
 
   display: 'grid',
   gridTemplateAreas: '"title action"',
@@ -107,50 +108,6 @@ export const ToastAction = StyledAction;
 export const ToastClose = ToastPrimitive.Close;
 
 // Your app...
-const Box = styled('div', {});
-const Button = styled('button', {
-  all: 'unset',
-  display: 'inline-flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  borderRadius: 4,
-  padding: '0 15px',
-  fontSize: 15,
-  lineHeight: 1,
-  fontWeight: 500,
-  height: 35,
-
-  variants: {
-    size: {
-      small: {
-        fontSize: 12,
-        padding: '0 10px',
-        lineHeight: '25px',
-        height: 25,
-      },
-    },
-    variant: {
-      violet: {
-        backgroundColor: 'white',
-        color: violet.violet11,
-        boxShadow: `0 2px 10px ${blackA.blackA7}`,
-        '&:hover': { backgroundColor: mauve.mauve3 },
-        '&:focus': { boxShadow: `0 0 0 2px black` },
-      },
-      green: {
-        backgroundColor: green.green2,
-        color: green.green11,
-        boxShadow: `inset 0 0 0 1px ${green.green7}`,
-        '&:hover': { boxShadow: `inset 0 0 0 1px ${green.green8}` },
-        '&:focus': { boxShadow: `0 0 0 2px ${green.green8}` },
-      },
-    },
-  },
-
-  defaultVariants: {
-    variant: 'violet',
-  },
-});
 
 const ActionToast = ({ open, setOpen, duration, message, actions}) => {
     return (
@@ -166,24 +123,5 @@ const ActionToast = ({ open, setOpen, duration, message, actions}) => {
 }
 
 
-const actionCss = css`height: 100%;border-width: 0px 0.5px;
-border-style: solid;
-border-color: rgba(255, 255, 255, 0.05);
-border-radius: 0px;
-:hover {
-  background: rgba(255, 255, 255, 0.01);
-}
-`;
-const actionTextCss = css`
-  margin-top: 2rem;
-`;
-const editIcoNCss = css`
-  width: 14rem;
-  height: 14rem;
-`;
-const correctIconCss = css`
-  width: 14rem;
-  height: 14rem;
-`;
 
 export { ActionToast };

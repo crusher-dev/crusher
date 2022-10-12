@@ -15,6 +15,7 @@ import { useProjectDetails } from "@hooks/common";
 
 import { buildFiltersAtom } from "../../../store/atoms/pages/buildPage";
 import { BuildsList } from "dyson/src/components/sharedComponets/buildsList/index";
+import { BuildListContext } from "dyson/src/components/sharedComponets/utils/basic";
 
 const EmptyList = dynamic(() => import("@ui/components/common/EmptyList"));
 
@@ -35,8 +36,6 @@ function BuildSearchableList() {
 
 	const isZeroBuild = data && data.list.length === 0;
 
-
-
 	const setPage = useCallback(
 		(page) => {
 			setFilters({ ...filters, page });
@@ -47,14 +46,28 @@ function BuildSearchableList() {
 	const handleViewTest = (buildId) => {
 		router.push(`/${currentProject.id}/build/${buildId}`);
 	};
+
+	const handleShowLocalBuild = () => {
+
+	};
+
+	const handleShowMine = () => {
+
+	};
+
 	const hasNoBuildsOverall = isZeroBuild && !isFilterEnabled;
 	return (
 		<React.Fragment>
 
 			<Conditional showIf={!isZeroBuild}>
-				<div>
-					<BuildsList viewTestCallback={handleViewTest} builds={data.list as any} />
-				</div>
+				<BuildListContext.Provider value={{
+					showLocalBuildCallback: handleShowLocalBuild,
+					showMineCallback: handleShowMine,
+				}}>
+					<div>
+						<BuildsList viewTestCallback={handleViewTest} builds={data.list as any} />
+					</div>
+				</BuildListContext.Provider>
 			</Conditional>
 
 			<Conditional showIf={hasNoBuildsOverall}>

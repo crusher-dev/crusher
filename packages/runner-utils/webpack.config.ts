@@ -23,7 +23,9 @@ module.exports = {
 		extensions: [".ts", ".tsx", ".js"],
 		plugins: [new TsconfigPathsPlugin({ configFile: path.resolve("./tsconfig.json") })],
 	},
-	externals: ["playwright"],
+	externals: ["playwright", {
+		fsevents: "require('fsevents')"
+	}],
 	module: {
 		rules: [
 			{

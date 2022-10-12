@@ -60,6 +60,6 @@ export default function BaseContainer({ children }) {
 
 const containerCSS = css(`
 height: 100vh;
-background: linear-gradient(180deg,#0c0c0c 0%,#0A0A0A 100%);
+background: linear-gradient(180deg,#080808 0%,#0A0A0A 100%);
 width: 100vw;
 `);

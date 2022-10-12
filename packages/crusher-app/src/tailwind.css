@@ -11,6 +11,8 @@ body {
 	color: #eee;
 	-webkit-font-smoothing: antialiased;
 	text-rendering: optimizelegibility;
+	position: fixed;
+	width: 100%;
 }
 
 #__next {

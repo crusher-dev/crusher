@@ -24,6 +24,7 @@ import { selectedTabAtom } from "./atoms";
 import { ConfigChange } from "./components/common/config";
 import { ReviewSection } from "./components/review/reviewComponent";
 import { HomeSection } from "./container/home";
+import { COLORS } from "dyson/src/constant/color";
 
 const ReportSection = dynamic(() => import("./container/testList"));
 function BuildInfoTop() {
@@ -225,14 +226,14 @@ const runTestCSS = css`
 
 	width: max-content;
 
-	background: #cd60ff;
-	border: 1px solid #7d41ad;
+	background: ${COLORS.purple[700]};
+	border: 1px solid ${COLORS.purple[700]};
 	border-radius: 8px;
 
 	:hover {
-		background: #cd60ff;
-		filter: brighntess(0.7);
-		border: 1px solid #7d41ad;
+		background: ${COLORS.purple[700]};
+		filter: brighntess(.8);
+		border: 1px solid ${COLORS.purple[700]};
 	}
 `;
 

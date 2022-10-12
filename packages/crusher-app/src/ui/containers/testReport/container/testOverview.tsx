@@ -13,7 +13,7 @@ import { Modal } from "dyson/src/components/molecules/Modal";
 import { plainButtonCSS } from "@constants/style";
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { ActionStatusEnum } from "@crusher-shared/lib/runnerLog/interface";
-import { CheckSquare, FullImageView, ShowSidebySide } from "@svg/builds";
+import { CheckSquare, FullImageView, ShowSidebySide, StatusIconSquare } from "@svg/builds";
 import { LoadingSVG, PlaySVG } from "@svg/dashboard";
 import { InfoSVG } from "@svg/testReport";
 import { activeActionIndexAtom, selectedTestAtom, testCardConfigAtom } from "@ui/containers/testReport/atoms";
@@ -299,21 +299,7 @@ function RenderStep({ data, testInstanceData, setIsShowingVideo, testId, index }
 				</div>
 				<div className="flex items-center pl-24 w-full" css={stepBottom}>
 					<div className="flex items-center  mr-12">
-						<CheckSquare />
-						{/* <TestStatusSVG
-						css={
-							status === ActionStatusEnum.STALLED
-								? css`
-										path {
-											fill: #e1c973;
-										}
-								  `
-								: css``
-						}
-						type={status}
-						height={"20rem"}
-						width={"20rem"}
-					/> */}
+						<StatusIconSquare type={status} />
 					</div>
 
 					<Conditional showIf={status !== "FAILED"}>

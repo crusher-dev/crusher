@@ -7,15 +7,14 @@ import React, { useState, useMemo, useEffect, useCallback } from "react";
 import { useAtom } from "jotai";
 import useSWR, { mutate } from "swr";
 
-import { LinkBlock } from "dyson/src/components/atoms/Link/Link";
-import { Tooltip } from "dyson/src/components/atoms/tooltip/Tooltip";
+
 import { Conditional } from "dyson/src/components/layouts";
 import { TestsList } from "dyson/src/components/sharedComponets/testList";
 import { TestListContext } from "dyson/src/components/sharedComponets/utils/basic";
 
 
 import { PROJECT_META_KEYS, USER_META_KEYS } from "@constants/USER";
-import { createFolderAPI, deleteTestApi, getTestListAPI } from "@constants/api";
+import { deleteTestApi, getTestListAPI } from "@constants/api";
 import { BuildTriggerEnum } from "@crusher-shared/types/response/iProjectBuildListResponse";
 import { IProjectTestsListResponse, IProjectTestItem } from "@crusher-shared/types/response/iProjectTestsListResponse";
 import { useProjectDetails } from "@hooks/common";
@@ -24,7 +23,6 @@ import { tempTestUpdateIdAtom } from "@store/atoms/global/temp/tempTestUpdateId"
 import { testFiltersAtom } from "@store/atoms/pages/testPage";
 import { updateMeta } from "@store/mutators/metaData";
 import { PlaySVG } from "@svg/dashboard";
-import { TestStatusSVG } from "@svg/testReport";
 import { EditIcon, Folder, TestIcon } from "@svg/tests";
 import CreateTestPrompt from "@ui/containers/tests/CreateTestPrompt";
 import { getBoolean } from "@utils/common";
@@ -36,6 +34,7 @@ import { appStateAtom } from "../../../store/atoms/global/appState";
 import { tempTestAtom } from "../../../store/atoms/global/temp/tempTestId";
 import { tempTestNameAtom } from "../../../store/atoms/global/temp/tempTestName";
 import { RequestMethod } from "../../../types/RequestOptions";
+import { StatusIconSquare } from "@svg/builds";
 
 interface IBuildItemCardProps {
 	id: number;
@@ -71,9 +70,9 @@ function TestCard(props: IBuildItemCardProps) {
 	const { testData, isRoot } = props;
 	const { testName, isPassing, id, firstRunCompleted, draftBuildId, tags } = testData;
 	const statusIcon = getBoolean(isPassing) ? (
-		<TestStatusSVG type={"PASSED"} height={"16rem"} />
+		<StatusIconSquare type={"PASSED"} height={"16rem"} />
 	) : (
-		<TestStatusSVG
+		<StatusIconSquare
 			css={css`
 				margin-right: -3rem;
 			`}
@@ -322,106 +321,7 @@ function FolderList() {
 	);
 }
 
-const createFolder = (projectId: number) => {
-	return backendRequest(createFolderAPI(projectId), {
-		method: RequestMethod.POST,
-		payload: {},
-	});
-};
 
-function TestTopBar(props: { totalTests: any; onClick: () => Promise<void> }) {
-	const router = useRouter();
-	const [{ selectedProjectId }] = useAtom(appStateAtom);
-	const [, updateMetaData] = useAtom(updateMeta);
-
-	const runProjectTest = useCallback(() => {
-		(async () => {
-			await handleTestRun(selectedProjectId, BuildTriggerEnum.MANUAL, {}, router, updateMetaData);
-
-			updateMetaData({
-				type: "user",
-				key: USER_META_KEYS.RAN_TEST,
-				value: true,
-			});
-
-			updateMetaData({
-				type: "project",
-				key: PROJECT_META_KEYS.RAN_TEST,
-				value: true,
-			});
-		})();
-	}, []);
-
-	return (
-		<div css={containerWidth} className={"flex justify-between items-start"}>
-			<div>
-				<div className={"text-15 font-600 font-cera mb-8"}>Your tests</div>
-				<div className={"text-12"}>{props.totalTests} tests total</div>
-			</div>
-
-			<div className={"text-12 flex items-center"}>
-				<div onClick={props.onClick}>
-					<Tooltip
-						autoHide
-						content="Create folder"
-						placement="bottom"
-						type="hover"
-						wrapperCSS={wrapperCSS}
-						timer={2000}
-						css={css`
-							padding-top: 8rem;
-						`}
-					>
-						<span>
-							<Folder
-								css={css`
-									:hover {
-										path {
-											fill: #cd60ff;
-										}
-									}
-								`}
-							/>
-						</span>
-					</Tooltip>
-				</div>
-				<LinkBlock className={"ml-8"} paddingY={6} paddingX={8} onClick={runProjectTest.bind(this)}>
-					<div className={"text-12 flex items-center "}>
-						<PlaySVG height={14} width={14} />
-						<span className={"ml-8 text-13 mt-4 font-500"}>Run tests</span>
-					</div>
-				</LinkBlock>
-			</div>
-		</div>
-	);
-}
-
-const wrapperCSS = css`
-	animation: fadeIn 1300ms;
-
-	@-webkit-keyframes fadeIn {
-		0% {
-			opacity: 0;
-		}
-		55% {
-			opacity: 0;
-		}
-		100% {
-			opacity: 1;
-		}
-	}
-	@keyframes fadeIn {
-		0% {
-			opacity: 0;
-		}
-		55% {
-			opacity: 0;
-		}
-		100% {
-			opacity: 1;
-		}
-	}
-`;
 
 const SELECTED_TESTS_MENU = [
 	{ id: "edit", label: "Edit test", shortcut: null },
@@ -452,15 +352,6 @@ function TestSearchableList() {
 		refreshInterval: newTestCreated ? 4000 : 200000,
 	});
 
-	const rootTest = useMemo(() => {
-		return data.list
-			.filter(({ folderId }) => !folderId)
-			.map((test: IProjectTestItem) => {
-				const { id } = test;
-
-				return <TestCard testData={test} key={id} id={id} isRoot={true} />;
-			});
-	}, [data.list]);
 
 	useEffect(() => {
 		if (!tempTestId || tempTestId === "null") return;

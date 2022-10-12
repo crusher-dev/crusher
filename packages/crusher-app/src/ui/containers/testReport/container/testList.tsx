@@ -78,7 +78,7 @@ function TestList(props: any) {
 				{data?.tests.map((testData, i) => {
 
 					const status = getStatusFromTestInstances(testData?.testInstances);
-					console.log(status, testData)
+
 					return (
 						<li className="px24 py-12" css={testLeftSideCard(i === selectedTest)} onClick={setSelectedTest.bind(this, i)}>
 							<TestNewStatusSVG type={status} height={"14rem"} width={"14rem"} />

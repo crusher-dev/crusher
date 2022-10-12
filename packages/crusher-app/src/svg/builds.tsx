@@ -1,37 +1,3 @@
-function CommentIconSVG(props) {
-	return (
-		<svg width={"12rem"} height={"12rem"} viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-			<path
-				d="M11.607.001H1.393C.623.001 0 .625 0 1.394v7.428c0 .77.624 1.393 1.393 1.393H3.04l-.252 2.27a.464.464 0 00.772.397l2.963-2.667h5.083c.77 0 1.393-.623 1.393-1.393V1.394C13 .624 12.376 0 11.607 0zm.464 8.821a.464.464 0 01-.464.465H6.345a.464.464 0 00-.31.119l-2.189 1.97.175-1.573a.464.464 0 00-.461-.516H1.393a.464.464 0 01-.464-.465V1.394c0-.257.207-.464.464-.464h10.214c.257 0 .464.207.464.464v7.428z"
-				fill="#D0D0D0"
-			/>
-		</svg>
-	);
-}
-
-function DangerIconSVG(props) {
-	return (
-		<svg width={"17rem"} height={"15rem"} viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-			<path
-				d="M16.85 13.146L9.392.777a1.042 1.042 0 00-1.784 0L.15 13.147a1.042 1.042 0 00.892 1.579h14.916a1.042 1.042 0 00.892-1.58zM8.506 4.552c.428 0 .79.242.79.67 0 1.307-.153 3.185-.153 4.492 0 .34-.374.483-.637.483-.352 0-.648-.142-.648-.483 0-1.307-.154-3.185-.154-4.492 0-.428.351-.67.802-.67zm.01 8.095a.846.846 0 01-.845-.846.84.84 0 01.846-.846c.45 0 .834.385.834.846 0 .45-.384.846-.834.846z"
-				fill="#F344AD"
-			/>
-		</svg>
-	);
-}
-
-function ClockIconSVG(props) {
-	return (
-		<svg width={"12rem"} height={"12rem"} viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-			<path
-				d="M6.5 0A6.507 6.507 0 000 6.5C0 10.084 2.916 13 6.5 13S13 10.084 13 6.5 10.084 0 6.5 0zm0 11.631A5.137 5.137 0 011.369 6.5 5.137 5.137 0 016.5 1.369 5.137 5.137 0 0111.631 6.5 5.137 5.137 0 016.5 11.631z"
-				fill="#fff"
-				fillOpacity={0.6}
-			/>
-			<path d="M9.21 6.572H6.546V4.264a.684.684 0 10-1.37 0v2.992c0 .378.307.685.685.685h3.35a.684.684 0 100-1.37z" fill="#fff" fillOpacity={0.6} />
-		</svg>
-	);
-}
 
 function DropdownIconSVG(props) {
 	return (
@@ -127,7 +93,7 @@ export function ExpandableSVG(props) {
 	);
 }
 
-export { CommentIconSVG, DangerIconSVG, ClockIconSVG, DropdownIconSVG };
+export { DropdownIconSVG };
 
 
 function ErrorFlat(props) {
@@ -184,12 +150,21 @@ export const TestNewStatusSVG = ({ type, ...props }) => {
 	return <CheckSVG {...props} />;
 };
 
+
+
+
 export const StatusIconSquare = ({ type, ...props }) => {
 	if (type === "FAILED") {
 		return <ErrorSquare {...props} />;
 	}
 	if (type === "MANUAL_REVIEW_REQUIRED") {
 		return <REVIEW_REQUIRED_FLAT {...props} />;
+	}
+	if (type === "RUNNING") {
+		return <RunningSVG {...props} />;
+	}
+	if (type === "INITIATED") {
+		return <InitiatedSVG {...props} />;
 	}
 	return <CheckSquare {...props} />;
 };
@@ -228,6 +203,131 @@ function ErrorSquare(props) {
 					<path fill="#fff" d="M0 0h14v14H0z" />
 				</clipPath>
 			</defs>
+		</svg>
+	);
+}
+export function InitiatedSVG(props) {
+	const { isMonochrome } = props;
+	return (
+		<svg width={21} height={21} viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+			<rect width={21} height={21} rx={10.5} fill={isMonochrome ? "#fff" : "#47484A"} />
+			<path d="M10.5 8A2.503 2.503 0 008 10.5c0 1.378 1.122 2.5 2.5 2.5s2.5-1.122 2.5-2.5S11.878 8 10.5 8z" fill="#0a0b0e" />
+		</svg>
+	);
+}
+
+export function RunningSVG(props) {
+	return (
+		<svg xmlns="http://www.w3.org/2000/svg" width={"20rem"} height={"20rem"} viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" display="block" {...props}>
+			<circle cx={84} cy={50} r={"10rem"} fill="#d9d9d9">
+				<animate
+					attributeName="r"
+					repeatCount="indefinite"
+					dur="0.6578947368421053s"
+					calcMode="spline"
+					keyTimes="0;1"
+					values="14;0"
+					keySplines="0 0.5 0.5 1"
+					begin="0s"
+				/>
+				<animate
+					attributeName="fill"
+					repeatCount="indefinite"
+					dur="2.6315789473684212s"
+					calcMode="discrete"
+					keyTimes="0;0.25;0.5;0.75;1"
+					values="#d9d9d9;#6a6a6a;#828282;#a8a8a8;#d9d9d9"
+					begin="0s"
+				/>
+			</circle>
+			<circle cx={"16rem"} cy={50} r={"10rem"} fill="#d9d9d9">
+				<animate
+					attributeName="r"
+					repeatCount="indefinite"
+					dur="2.6315789473684212s"
+					calcMode="spline"
+					keyTimes="0;0.25;0.5;0.75;1"
+					values="0;0;14;14;14"
+					keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
+					begin="0s"
+				/>
+				<animate
+					attributeName="cx"
+					repeatCount="indefinite"
+					dur="2.6315789473684212s"
+					calcMode="spline"
+					keyTimes="0;0.25;0.5;0.75;1"
+					values="16;16;16;50;84"
+					keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
+					begin="0s"
+				/>
+			</circle>
+			<circle cx={50} cy={50} r={"10rem"} fill="#a8a8a8">
+				<animate
+					attributeName="r"
+					repeatCount="indefinite"
+					dur="2.6315789473684212s"
+					calcMode="spline"
+					keyTimes="0;0.25;0.5;0.75;1"
+					values="0;0;14;14;14"
+					keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
+					begin="-0.6578947368421053s"
+				/>
+				<animate
+					attributeName="cx"
+					repeatCount="indefinite"
+					dur="2.6315789473684212s"
+					calcMode="spline"
+					keyTimes="0;0.25;0.5;0.75;1"
+					values="16;16;16;50;84"
+					keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
+					begin="-0.6578947368421053s"
+				/>
+			</circle>
+			<circle cx={84} cy={50} r={"10rem"} fill="#828282">
+				<animate
+					attributeName="r"
+					repeatCount="indefinite"
+					dur="2.6315789473684212s"
+					calcMode="spline"
+					keyTimes="0;0.25;0.5;0.75;1"
+					values="0;0;14;14;14"
+					keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
+					begin="-1.3157894736842106s"
+				/>
+				<animate
+					attributeName="cx"
+					repeatCount="indefinite"
+					dur="2.6315789473684212s"
+					calcMode="spline"
+					keyTimes="0;0.25;0.5;0.75;1"
+					values="16;16;16;50;84"
+					keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
+					begin="-1.3157894736842106s"
+				/>
+			</circle>
+			<circle cx={"16rem"} cy={50} r={"10rem"} fill="#6a6a6a">
+				<animate
+					attributeName="r"
+					repeatCount="indefinite"
+					dur="2.6315789473684212s"
+					calcMode="spline"
+					keyTimes="0;0.25;0.5;0.75;1"
+					values="0;0;14;14;14"
+					keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
+					begin="-1.9736842105263157s"
+				/>
+				<animate
+					attributeName="cx"
+					repeatCount="indefinite"
+					dur="2.6315789473684212s"
+					calcMode="spline"
+					keyTimes="0;0.25;0.5;0.75;1"
+					values="16;16;16;50;84"
+					keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
+					begin="-1.9736842105263157s"
+				/>
+			</circle>
 		</svg>
 	);
 }

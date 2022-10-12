@@ -4,7 +4,7 @@ import React, { useMemo } from "react";
 
 import useSWR from "swr";
 
-import { Text, TextBlock } from "dyson/src/components/atoms";
+import { Text } from "dyson/src/components/atoms";
 import { Input } from "dyson/src/components/atoms/input/Input";
 
 import { RELEASE_API } from "@constants/api";

@@ -83,21 +83,7 @@ const StepsPanel = ({ className }: IProps) => {
 		[toggleSelectItem],
 	);
  
-	const steps = React.useMemo(() => {
-		return recordedSteps.map((step, index) => {
-			return (
-				<Step
-					step={step}
-					onContextMenu={selectItem.bind(this, index)}
-					onClick={handleStepClick.bind(this, index)}
-					isActive={isItemSelected(index)}
-					setIsActive={selectItem.bind(this, index)}
-					stepId={index}
-					isLast={index === recordedSteps.length - 1}
-				/>
-			);
-		});
-	}, [selectedList, selectItem, handleStepClick, recordedSteps]);
+
 
 	const remainingStepsList = React.useMemo(() => {
 		if (!remainingSteps) return [];
@@ -154,6 +140,25 @@ const StepsPanel = ({ className }: IProps) => {
 			};
 		});
 	}, [selectedList, handleCallback]);
+
+	const steps = React.useMemo(() => {
+		return recordedSteps.map((step, index) => {
+			return (
+				<RightClickMenu onOpenChange={handleMenuOpenChange} menuItems={menuItemsComponent}>
+
+				<Step
+					step={step}
+					onContextMenu={selectItem.bind(this, index)}
+					onClick={handleStepClick.bind(this, index)}
+					isActive={isItemSelected(index)}
+					setIsActive={selectItem.bind(this, index)}
+					stepId={index}
+					isLast={index === recordedSteps.length - 1}
+				/>
+				</RightClickMenu>
+			);
+		});
+	}, [selectedList, selectItem, handleStepClick, menuItemsComponent, recordedSteps]);
 
 	React.useEffect(() => {
 		const keyPressListener = function (e: Event) {
@@ -244,7 +249,6 @@ const StepsPanel = ({ className }: IProps) => {
 				`}
 				onOutsideClick={handleOutSideClick}
 			>
-				<RightClickMenu onOpenChange={handleMenuOpenChange} menuItems={menuItemsComponent}>
 					<div className={`custom-scroll`} css={contentCss}>
 						<div id="steps-list">
 							{steps}
@@ -257,7 +261,6 @@ font-size: 12rem;color: #DCDCDC;`}>next steps</div>
 							{remainingStepsList}
 						</div>) : ""}
 					</div>
-				</RightClickMenu>
 			</OnOutsideClick>
 		</div>
 	);

@@ -1,7 +1,7 @@
 import React from "react";
 import { css } from "@emotion/react";
 import { getStepInfo } from "electron-app/src/store/selectors/recorder";
-import { useSelector } from "react-redux";
+import { useSelector, shallowEqual } from "react-redux";
 import { GreenCheckboxIcon, LoadingIcon, PointerArrowIcon } from "electron-app/src/_ui/constants/old_icons";
 import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
 import { TextHighlighter } from "./helper";
@@ -38,7 +38,7 @@ const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, 
 	const isHovered = stepId === stepHoverId
 
 	const [editInputId] = useAtom(editInputAtom);
-	const stepInfo = useSelector(getStepInfo(stepId));
+	const stepInfo = useSelector(getStepInfo(stepId), shallowEqual);
 	const { isFailed, isRunning, isCompleted } = stepInfo
 
 	React.useEffect(() => {
@@ -69,8 +69,8 @@ const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, 
 		return null
 	}, [isRunning, isFailed, isCompleted]);
 
-
-	return React.useMemo(() => (
+	const title = React.useMemo(() => TextHighlighter({ text: stepInfo.name }), [stepInfo.name]);
+	return (
 		<HoverCard
 			disableStateManagement={true}
 			disabled={disabled || (statusType === "failed" && !stepHoverId) || (stepHoverId && stepHoverId !== stepId)}
@@ -106,7 +106,7 @@ const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, 
 					{statusType === "running" ? <PointerArrowIcon css={runningPointerIconCss} /> : ""}
 					<div css={stepTextCss} className="flex flex-col justify-center">
 						<TextBlock css={[stepNameCss, statusType === "failed" ? failedTextNameCss : null, statusType === "running" ? runningTextNameCss : null, disabled ? css`color: rgba(255, 255, 255, 0.85);` : null]}>
-							{TextHighlighter({ text: stepInfo.name })}
+							{title}
 						</TextBlock>
 						<ReRender />
 						<Conditional showIf={!!stepInfo?.description}>
@@ -119,7 +119,7 @@ const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, 
 				{statusType === "failed" ? <FailedStepCard stepId={stepId} /> : ""}
 			</div>
 		</HoverCard>
-	), [isHovered, statusType, disabled]);
+	);
 };
 
 const inActiveIconCss = css`

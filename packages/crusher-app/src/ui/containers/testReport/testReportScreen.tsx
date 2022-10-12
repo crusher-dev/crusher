@@ -41,10 +41,10 @@ function BuildInfoTop() {
 			<div className="flex items-center mt-16" css={flexGap}>
 				<div className="flex items-center">
 					<Text color="#696969" fontSize={13}>
-						Status :{" "}
+						Status:
 					</Text>
 					<Text color="#E7E7E7" fontSize={13}>
-						All passed
+						&nbsp;All passed
 					</Text>
 				</div>
 				<div className="flex items-center">

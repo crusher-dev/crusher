@@ -39,9 +39,7 @@ const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, 
 
 	const [editInputId] = useAtom(editInputAtom);
 	const stepInfo = useSelector(getStepInfo(stepId));
-
-	const title = TextHighlighter({ text: stepInfo.name });
-	const hasFailed = stepInfo.isFailed;
+	const { isFailed, isRunning, isCompleted } = stepInfo
 
 	React.useEffect(() => {
 		if (!editInputId && stepHoverId) {
@@ -57,13 +55,25 @@ const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, 
 		}
 	}, [stepHoverId]);
 
-	const statusType = stepInfo.isRunning && !disabled ? "running" : stepInfo.isCompleted && !disabled ? "completed" : null;
+	const statusType = React.useMemo(() => {
+		if (stepInfo.isRunning && !disabled) {
+			return "running"
+		}
+		if (stepInfo.isCompleted && !disabled) {
+			return "completed"
+		}
+
+		if (stepInfo.isFailed && !disabled) {
+			return "failed"
+		}
+		return null
+	}, [isRunning, isFailed, isCompleted]);
 
 
 	return React.useMemo(() => (
 		<HoverCard
 			disableStateManagement={true}
-			disabled={disabled || (hasFailed && !stepHoverId) || (stepHoverId && stepHoverId !== stepId)}
+			disabled={disabled || (statusType === "failed" && !stepHoverId) || (stepHoverId && stepHoverId !== stepId)}
 			autoHide={true}
 			state={stepHoverId === stepId}
 			// autoHide={false}
@@ -91,12 +101,12 @@ const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, 
 			padding={8}
 			offset={0}
 		>
-			<div className={"step-list-item"} onContextMenu={onContextMenu} onClick={onClick} css={[containerCss(hasFailed || disabled), isActive ? activeItemCss : undefined]}>
+			<div className={"step-list-item"} onContextMenu={onContextMenu} onClick={onClick} css={[containerCss(statusType === "failed" || disabled), isActive ? activeItemCss : undefined]}>
 				<div className={"card"} css={contentCss}>
 					{statusType === "running" ? <PointerArrowIcon css={runningPointerIconCss} /> : ""}
 					<div css={stepTextCss} className="flex flex-col justify-center">
-						<TextBlock css={[stepNameCss, stepInfo.isFailed ? failedTextNameCss : null, stepInfo.isRunning ? runningTextNameCss : null, disabled ? css`color: rgba(255, 255, 255, 0.85);` : null]}>
-							{title}
+						<TextBlock css={[stepNameCss, statusType === "failed" ? failedTextNameCss : null, statusType === "running" ? runningTextNameCss : null, disabled ? css`color: rgba(255, 255, 255, 0.85);` : null]}>
+							{TextHighlighter({ text: stepInfo.name })}
 						</TextBlock>
 						<ReRender />
 						<Conditional showIf={!!stepInfo?.description}>
@@ -106,10 +116,10 @@ const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, 
 					{statusType === "running" ? <LoadingIcon style={{}} css={runningIconCss} /> : ""}
 					{statusType === "completed" && !disabled ? <GreenCheckboxIcon css={[completedIconCss, !isLast ? inActiveIconCss : null]} /> : ""}
 				</div>
-				{hasFailed ? <FailedStepCard stepId={stepId} /> : ""}
+				{statusType === "failed" ? <FailedStepCard stepId={stepId} /> : ""}
 			</div>
 		</HoverCard>
-	), [isHovered, statusType]);
+	), [isHovered, statusType, disabled]);
 };
 
 const inActiveIconCss = css`

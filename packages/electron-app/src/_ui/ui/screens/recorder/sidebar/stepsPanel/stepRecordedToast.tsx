@@ -42,8 +42,8 @@ const containerCss = css`
 	box-shadow: 0px 0px 7px -3px rgba(0, 0, 0, 0.88);
 	border-radius: 12px;
 	z-index: 9999;
-	left: 50%;
-	transform: translateX(-50%);
+    left: calc(50% + 172rem);
+    transform: translateX(-50%);
 	z-index: 999999;
 `;
 const actionTextCss = css`

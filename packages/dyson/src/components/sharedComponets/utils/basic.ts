@@ -9,5 +9,6 @@ export const TestListContext = React.createContext({
 
 export const BuildListContext = React.createContext({
     showMineCallback: null,
-    showLocalBuildCallback: null
+    showLocalBuildCallback: null,
+    filters: {}
 });

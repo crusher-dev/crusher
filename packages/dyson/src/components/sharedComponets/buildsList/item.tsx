@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { css } from "@emotion/react";
 import { FailedCheckboxIcon, GreenCheckboxIcon, LoadingIconV2, PlayIcon } from "../svg/list";
 import { UserIcon } from "../../atoms/userimage/UserImage";
+import { LinkBlock } from "../../atoms/Link/Link";
 const intervals = [
 	{ label: "year", seconds: 31536000 },
 	{ label: "month", seconds: 2592000 },
@@ -55,7 +56,7 @@ const BuildListItem = ({ isItemSelected, viewTestCallback, build }) => {
 				<div css={metaInfoCss} className={"flex-1 flex pl-20"}>
 
 
-					<div>{build.host ? (new URL(build.host)).host : "~"}</div>
+				<div onClick={(e) => { e.stopPropagation(); }}><a css={linkCss} target={"_blank"} href={new URL(build.host)}>{build.host ? (new URL(build.host)).host : "~"}</a></div>
 					{/* <div className={"ml-20"}>ft-branch-new  33814</div> */}
 				</div>
 				<div className={"flex items-center ml-auto"}>
@@ -66,6 +67,13 @@ const BuildListItem = ({ isItemSelected, viewTestCallback, build }) => {
 		</div>
 	);
 }
+
+const linkCss = css`
+:hover {
+	text-decoration: underline !important;
+	color: rgba(255, 255, 255, 0.8);
+}
+`;
 
 const authorCss = css`
 font-size: 12rem;

@@ -14,7 +14,7 @@ const loadingSVGCSS = css`
 border-radius: 8rem;
 background: #0D0E0E;
 border: 0.6px solid #222225;
-box-shadow: 0px 0px 0px 5px rgb(0 0 0 / 34%);
+box-shadow: 0px 0px 0px 5px rgb(0 0 0 / 14%);
 color: #D1D5DB;
 padding: 8rem 10rem;
 font-size: 13.4rem;

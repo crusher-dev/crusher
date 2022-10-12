@@ -112,17 +112,6 @@ export function CheckSVG(props) {
 	);
 }
 
-export function CheckSquare(props) {
-	return (
-		<svg width={14} height={14} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-			<path
-				d="M10.008 0c2.349 0 3.922 1.666 3.922 4.144v5.72c0 2.47-1.573 4.136-3.922 4.136H3.998C1.65 14 .07 12.334.07 9.863v-5.72C.07 1.667 1.65 0 4 0h6.008zm-.111 4.9a.606.606 0 00-.86 0L6.175 7.79 4.963 6.567a.606.606 0 00-.86 0 .621.621 0 000 .868l1.65 1.659a.59.59 0 00.422.175c.16 0 .312-.056.43-.175l3.292-3.325a.621.621 0 000-.868z"
-				fill="#9EF25B"
-				fillOpacity={0.91}
-			/>
-		</svg>
-	);
-}
 
 export function ExpandableSVG(props) {
 	return (
@@ -139,3 +128,107 @@ export function ExpandableSVG(props) {
 }
 
 export { CommentIconSVG, DangerIconSVG, ClockIconSVG, DropdownIconSVG };
+
+
+function ErrorFlat(props) {
+	return (
+		<svg
+			width={14}
+			height={14}
+			fill="none"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
+			<path
+				fillRule="evenodd"
+				clipRule="evenodd"
+				d="M2.239 2.254a.833.833 0 011.178 0l3.578 3.578 3.577-3.578a.833.833 0 111.179 1.179L8.173 7.01l3.578 3.578a.834.834 0 01-1.179 1.178L6.995 8.188l-3.578 3.578a.833.833 0 01-1.178-1.178L5.816 7.01 2.24 3.433a.833.833 0 010-1.179z"
+				fill="#FF4163"
+			/>
+		</svg>
+	);
+}
+
+
+
+function REVIEW_REQUIRED_FLAT(props) {
+	return (
+		<svg
+			width={14}
+			height={14}
+			fill="none"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
+			<path
+				fillRule="evenodd"
+				clipRule="evenodd"
+				d="M1.667 6.666C1.667 4.021 4.127 2 7 2s5.333 2.021 5.333 4.666c0 2.644-2.46 4.667-5.333 4.667-.336 0-.67-.028-1.002-.083-.76.547-1.69.809-2.624.739a.5.5 0 01-.389-.763c.218-.352.338-.756.348-1.17-1.014-.84-1.666-2.04-1.666-3.39z"
+				fill="#FF8159"
+			/>
+		</svg>
+	);
+}
+
+
+
+
+
+export const TestNewStatusSVG = ({ type, ...props }) => {
+	if (type === "FAILED") {
+		return <ErrorFlat {...props} />;
+	}
+	if (type === "MANUAL_REVIEW_REQUIRED") {
+		return <REVIEW_REQUIRED_FLAT {...props} />;
+	}
+	return <CheckSVG {...props} />;
+};
+
+export const StatusIconSquare = ({ type, ...props }) => {
+	if (type === "FAILED") {
+		return <ErrorSquare {...props} />;
+	}
+	if (type === "MANUAL_REVIEW_REQUIRED") {
+		return <REVIEW_REQUIRED_FLAT {...props} />;
+	}
+	return <CheckSquare {...props} />;
+};
+
+export function CheckSquare(props) {
+	return (
+		<svg width={14} height={14} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+			<path
+				d="M10.008 0c2.349 0 3.922 1.666 3.922 4.144v5.72c0 2.47-1.573 4.136-3.922 4.136H3.998C1.65 14 .07 12.334.07 9.863v-5.72C.07 1.667 1.65 0 4 0h6.008zm-.111 4.9a.606.606 0 00-.86 0L6.175 7.79 4.963 6.567a.606.606 0 00-.86 0 .621.621 0 000 .868l1.65 1.659a.59.59 0 00.422.175c.16 0 .312-.056.43-.175l3.292-3.325a.621.621 0 000-.868z"
+				fill="#9EF25B"
+				fillOpacity={0.91}
+			/>
+		</svg>
+	);
+}
+
+function ErrorSquare(props) {
+	return (
+		<svg
+			width={14}
+			height={14}
+			fill="none"
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
+			<g clipPath="url(#prefix__clip0_3445_4199)">
+				<path
+					fillRule="evenodd"
+					clipRule="evenodd"
+					d="M5.395 4.405a.7.7 0 10-.99.99L6.01 7 4.405 8.605a.7.7 0 00.99.99L7 7.99l1.605 1.605a.7.7 0 10.99-.99L7.99 7l1.605-1.605a.7.7 0 10-.99-.99L7 6.01 5.395 4.405zM3.675.271C4.585.07 5.687 0 7 0c1.313 0 2.416.07 3.325.271.917.204 1.68.552 2.266 1.139.586.586.934 1.348 1.138 2.265C13.93 4.585 14 5.687 14 7c0 1.313-.07 2.416-.271 3.325-.204.917-.552 1.68-1.138 2.266-.587.586-1.349.934-2.266 1.138C9.415 13.93 8.313 14 7 14c-1.313 0-2.416-.07-3.325-.271-.917-.204-1.68-.552-2.265-1.138-.587-.587-.935-1.349-1.139-2.266C.07 9.415 0 8.313 0 7c0-1.313.07-2.416.271-3.325.204-.917.552-1.68 1.139-2.265C1.996.823 2.758.475 3.675.27v.001z"
+					fill="#E0307A"
+				/>
+			</g>
+			<defs>
+				<clipPath id="prefix__clip0_3445_4199">
+					<path fill="#fff" d="M0 0h14v14H0z" />
+				</clipPath>
+			</defs>
+		</svg>
+	);
+}
+

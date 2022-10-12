@@ -1,7 +1,6 @@
-import { css } from "@emotion/react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import React, { useMemo, useCallback } from "react";
+import React, { useCallback } from "react";
 
 import { useAtom } from "jotai";
 import useSWR from "swr";
@@ -10,7 +9,7 @@ import { PaginationButton } from "../../../../../dyson/src/components/molecules/
 import { Conditional } from "dyson/src/components/layouts";
 
 import { getBuildsList } from "@constants/api";
-import { IProjectBuildListItem, IProjectBuildListResponse } from "@crusher-shared/types/response/iProjectBuildListResponse";
+import { IProjectBuildListResponse } from "@crusher-shared/types/response/iProjectBuildListResponse";
 import { useProjectDetails } from "@hooks/common";
 
 import { buildFiltersAtom } from "../../../store/atoms/pages/buildPage";

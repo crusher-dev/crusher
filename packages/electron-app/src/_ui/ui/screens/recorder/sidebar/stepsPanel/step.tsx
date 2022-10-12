@@ -81,7 +81,7 @@ const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, 
 			padding={8}
 			offset={0}
 		>
-			<div onContextMenu={onContextMenu} onClick={onClick} css={[containerCss(hasFailed || disabled), isActive ? activeItemCss : undefined]}>
+			<div className={"step-list-item"} onContextMenu={onContextMenu} onClick={onClick} css={[containerCss(hasFailed || disabled), isActive ? activeItemCss : undefined]}>
 				<div className={"card"} css={contentCss}>
 					{stepInfo.isRunning ? <PointerArrowIcon css={runningPointerIconCss} /> : ""}
 					<div css={stepTextCss} className="flex flex-col justify-center">

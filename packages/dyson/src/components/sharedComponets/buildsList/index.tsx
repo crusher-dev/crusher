@@ -39,7 +39,10 @@ const pillButtonCss = css`
     color: rgba(255, 255, 255, 0.35);
     background: rgba(217, 217, 217, 0.03);
     border: 0.5px solid rgba(255, 255, 255, 0.12);
-    border-radius: 12rem;
+   
+    border-radius: 16rem;
+    height: 26rem;
+    
 
     :hover {
         background: rgba(255,255,255,0.07);
@@ -63,7 +66,7 @@ const BuildsList = ({ builds, viewTestCallback }: IProps) => {
     return (
         <div>
             <div className="flex items-center px-24" css={headerCSS}>
-                <div>recent builds</div>
+                <div>filter</div>
                 <div className={"flex ml-16"}>
                     <PillButton onClick={showMineCallback}>show mine</PillButton>
                     <PillButton onClick={showLocalBuildCallback} className={"ml-16"}>local build</PillButton>
@@ -92,6 +95,7 @@ const headerCSS = css`
 max-width: 1298rem;
 width: calc(100vw - 342rem);
 margin: 0 auto;
+color: #9e9e9e;
 padding-left: 12rem !important;
 padding-right: 0 !important;
 `

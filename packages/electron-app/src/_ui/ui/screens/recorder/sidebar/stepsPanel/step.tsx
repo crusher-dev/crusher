@@ -95,7 +95,7 @@ const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, 
 				background: #0F0F0F;
 				border: 1px solid #1C1C1C;
 			`}
-			content={<StepEditor stepId={stepId} />}
+			content={isHovered ? <StepEditor stepId={stepId} /> : null}
 			placement="right"
 			type="hover"
 			padding={8}

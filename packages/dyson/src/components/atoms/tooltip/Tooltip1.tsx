@@ -131,7 +131,7 @@ export const HoverCard: React.FC<TooltipWrapperProps> = ({
     return (
         <React.Fragment>
             <ClonedElement />
-            {show && !disabled && (
+            {content !== null && show && !disabled && (
                 <TooltipBox>
                     <div
                         css={[tooltipWrapper(padding), wrapperCSS]}

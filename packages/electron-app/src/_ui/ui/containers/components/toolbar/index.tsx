@@ -2,7 +2,7 @@ import React, { memo, useContext, useEffect } from "react";
 import { css } from "@emotion/react";
 import { Conditional } from "@dyson/components/layouts";
 import { LoadingIconV2, RedDotIcon, SettingsIcon } from "../../../../constants/old_icons";
-import { useDispatch, batch, useSelector, useStore } from "react-redux";
+import { useDispatch, batch, useSelector, useStore, shallowEqual } from "react-redux";
 import { devices } from "../../../../../devices";
 import { getRecorderInfo, getRecorderInfoUrl, getRecorderState, getSavedSteps, getTestName, isTestVerified } from "electron-app/src/store/selectors/recorder";
 import { goFullScreen, performExit, performNavigation, performSteps, performVerifyTest, saveTest, updateTest, updateTestName } from "../../../../commands/perform";

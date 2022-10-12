@@ -5,7 +5,7 @@ import React from "react";
 import { useAtom } from "jotai";
 
 import { useBuildReport } from "@store/serverState/buildReports";
-import { CheckSVG, TestNewStatusSVG } from "@svg/builds";
+import { TestNewStatusSVG } from "@svg/builds";
 import { TestOverview } from "@ui/containers/testReport/container/testOverview";
 
 import { selectedTestAtom } from "../atoms";

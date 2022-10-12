@@ -48,11 +48,11 @@ function BuildSearchableList() {
 	};
 
 	const handleShowLocalBuild = () => {
-
+		setFilters({...filters, showLocal: true});
 	};
 
 	const handleShowMine = () => {
-
+		setFilters({...filters, showMine: true});
 	};
 
 	const hasNoBuildsOverall = isZeroBuild && !isFilterEnabled;

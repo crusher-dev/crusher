@@ -58,6 +58,6 @@ export type ICreateBuildRequestPayload = KeysToCamelCase<
 		isDraftJob?: boolean;
 		meta?: any;
 		context?: any;
-		isLocalBuild?: boolean;
+		isLocalJob?: boolean;
 	}
 >;

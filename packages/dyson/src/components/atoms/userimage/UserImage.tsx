@@ -29,9 +29,9 @@ export const UserImage: React.FC<UserImageProps> = ({ url }) => {
 	);
 };
 
-export const UserIcon: React.FC<UserImageProps> = ({ initial }: any) => {
+export const UserIcon: React.FC<UserImageProps> = ({ className, initial }: any) => {
 	return (
-		<div css={userInitialCSS} className="flex items-center justify-center">
+		<div css={userInitialCSS} className={`flex items-center justify-center ${className}`}>
 			<div className="mt-2">{initial}</div>
 		</div>
 	);

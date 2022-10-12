@@ -60,8 +60,9 @@ const BuildListItem = ({ isItemSelected, viewTestCallback, build }) => {
 					{/* <div className={"ml-20"}>ft-branch-new  33814</div> */}
 				</div>
 				<div className={"flex items-center ml-auto"}>
-					<UserIcon initial={build.triggeredBy.name[0]} />
-					<span css={authorCss} className={"text-13 ml-12"}>{timeSince(new Date(build.createdAt))} by {build.triggeredBy.name.toLowerCase()}</span>
+					<span css={authorCss} className={"text-13"}>{timeSince(new Date(build.createdAt))} by {build.triggeredBy.name.toLowerCase()}</span>
+					<UserIcon className={"ml-12"} initial={build.triggeredBy.name[0]} />
+
 				</div>
 			</div>
 		</div>

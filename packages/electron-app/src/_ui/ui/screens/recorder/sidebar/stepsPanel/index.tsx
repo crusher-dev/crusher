@@ -19,7 +19,7 @@ import { HoverButton } from "electron-app/src/_ui/ui/components/hoverButton";
 import { getRemainingSteps } from "electron-app/src/store/selectors/app";
 import { PausedStepCard } from "./pausedCard";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
-import {clearToast, showToast, ToastBox} from "electron-app/src/_ui/ui/components/toasts/index";
+import { clearToast, showToast, ToastBox } from "electron-app/src/_ui/ui/components/toasts/index";
 import { ActionDescriptor } from "runner-utils/src/functions/actionDescriptor";
 import { StepErrorTypeEnum } from "runner-utils/src/error.types";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
@@ -44,11 +44,11 @@ function usePrevious(value) {
 	const ref = React.useRef();
 	// Store current value in ref
 	React.useEffect(() => {
-	  ref.current = value;
+		ref.current = value;
 	}, [value]); // Only re-run if value changes
 	// Return previous value (happens before update in useEffect above)
 	return ref.current;
-  }
+}
 
 const multiMenuItems = [{ id: "delete", label: "Delete", shortcut: <div>⌘+D</div> }];
 const StepsPanel = ({ className }: IProps) => {
@@ -64,13 +64,13 @@ const StepsPanel = ({ className }: IProps) => {
 
 	const recorderState = useSelector(getRecorderState);
 	React.useEffect(() => {
-		if(failedCard) { 
-		// 	requestAnimationFrame(() => {
-		// 	const testListContainer: any = document.querySelector("#steps-list-container");
-		// 	const elementHeight = testListContainer.scrollHeight;
-		// 	testListContainer.scrollBy(0, elementHeight);
-		// });
-	}
+		if (failedCard) {
+			// 	requestAnimationFrame(() => {
+			// 	const testListContainer: any = document.querySelector("#steps-list-container");
+			// 	const elementHeight = testListContainer.scrollHeight;
+			// 	testListContainer.scrollBy(0, elementHeight);
+			// });
+		}
 	}, [!!failedCard]);
 	const toggleStatusBar = React.useCallback(() => {
 		setIsStatusBarMaximised(!isStatusBarMaximised);
@@ -82,7 +82,7 @@ const StepsPanel = ({ className }: IProps) => {
 		},
 		[toggleSelectItem],
 	);
- 
+
 
 
 	const remainingStepsList = React.useMemo(() => {
@@ -92,7 +92,7 @@ const StepsPanel = ({ className }: IProps) => {
 				<Step
 					disabled={true}
 					step={step}
-
+					key={index + steps.length}
 					stepId={index + steps.length}
 					isLast={index === remainingSteps.length - 1}
 				/>
@@ -146,15 +146,15 @@ const StepsPanel = ({ className }: IProps) => {
 			return (
 				<RightClickMenu onOpenChange={handleMenuOpenChange} menuItems={menuItemsComponent}>
 
-				<Step
-					step={step}
-					onContextMenu={selectItem.bind(this, index)}
-					onClick={handleStepClick.bind(this, index)}
-					isActive={isItemSelected(index)}
-					setIsActive={selectItem.bind(this, index)}
-					stepId={index}
-					isLast={index === recordedSteps.length - 1}
-				/>
+					<Step
+						step={step}
+						onContextMenu={selectItem.bind(this, index)}
+						onClick={handleStepClick.bind(this, index)}
+						isActive={isItemSelected(index)}
+						setIsActive={selectItem.bind(this, index)}
+						stepId={index}
+						isLast={index === recordedSteps.length - 1}
+					/>
 				</RightClickMenu>
 			);
 		});
@@ -177,7 +177,7 @@ const StepsPanel = ({ className }: IProps) => {
 
 	const showNextSteps = remainingSteps && remainingSteps.length && [TRecorderState.RECORDING_ACTIONS, TRecorderState.ACTION_REQUIRED].includes(recorderState.type);
 	const showPausedCard = remainingSteps && remainingSteps.length && [TRecorderState.RECORDING_ACTIONS].includes(recorderState.type);
-	const failedSteps = recordedSteps.map((a, index) => ({...a, index})).filter((step) => step.status === "FAILED");
+	const failedSteps = recordedSteps.map((a, index) => ({ ...a, index })).filter((step) => step.status === "FAILED");
 
 	const actionDescriber = React.useMemo(() => {
 		const actionDescriber = new ActionDescriptor();
@@ -187,7 +187,7 @@ const StepsPanel = ({ className }: IProps) => {
 	const previousLength = usePrevious(recordedSteps.length);
 
 	React.useEffect(() => {
-		if(recordedSteps.length >= previousLength) {
+		if (recordedSteps.length >= previousLength) {
 			const testListContainer: Element = document.querySelector("#steps-list-container");
 			const nextStepsList: Element = document.querySelector("#next-steps-list");
 			const stepsList: Element = document.querySelector("#steps-list");
@@ -199,10 +199,10 @@ const StepsPanel = ({ className }: IProps) => {
 	}, [recordedSteps.length, showPausedCard]);
 
 	React.useEffect(() => {
-		if(failedSteps.length) {
+		if (failedSteps.length) {
 			const lastFailedStep = failedSteps[failedSteps.length - 1];
 			actionDescriber.initActionHandlers();
-			const isElementFailure  = lastFailedStep.type.startsWith("ELEMENT_") && [StepErrorTypeEnum.ELEMENT_NOT_FOUND, StepErrorTypeEnum.ELEMENT_NOT_STABLE, StepErrorTypeEnum.ELEMENT_NOT_VISIBLE, StepErrorTypeEnum.TIMEOUT].includes(lastFailedStep.errorType);
+			const isElementFailure = lastFailedStep.type.startsWith("ELEMENT_") && [StepErrorTypeEnum.ELEMENT_NOT_FOUND, StepErrorTypeEnum.ELEMENT_NOT_STABLE, StepErrorTypeEnum.ELEMENT_NOT_VISIBLE, StepErrorTypeEnum.TIMEOUT].includes(lastFailedStep.errorType);
 
 			console.log("Last Failed Step", lastFailedStep);
 			showToast({
@@ -214,7 +214,7 @@ const StepsPanel = ({ className }: IProps) => {
 					stepId: lastFailedStep.index,
 					callback: isElementFailure ? () => {
 						console.log("CLICKED, YES");
-					}: () => {
+					} : () => {
 						emitShowModal({
 							type: EDIT_MODE_MAP[lastFailedStep.type],
 							stepIndex: lastFailedStep.index,
@@ -249,18 +249,18 @@ const StepsPanel = ({ className }: IProps) => {
 				`}
 				onOutsideClick={handleOutSideClick}
 			>
-					<div className={`custom-scroll`} css={contentCss}>
-						<div id="steps-list">
-							{steps}
-						</div>
-						{showPausedCard ? (<PausedStepCard />) : ""}
-						{ showNextSteps ? (<div id="next-steps-list">
-							<div className={"px-16 pt-32 pb-4"} css={css`font-style: normal;
+				<div className={`custom-scroll`} css={contentCss}>
+					<div id="steps-list">
+						{steps}
+					</div>
+					{showPausedCard ? (<PausedStepCard />) : ""}
+					{showNextSteps ? (<div id="next-steps-list">
+						<div className={"px-16 pt-32 pb-4"} css={css`font-style: normal;
 font-weight: 400;
 font-size: 12rem;color: #DCDCDC;`}>next steps</div>
-							{remainingStepsList}
-						</div>) : ""}
-					</div>
+						{remainingStepsList}
+					</div>) : ""}
+				</div>
 			</OnOutsideClick>
 		</div>
 	);

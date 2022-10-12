@@ -63,7 +63,6 @@ export class WebView {
 		this.registerIPCListeners();
 		await this.playwrightInstance.connect();
 
-		await this.playwrightInstance.addInitScript(path.join(__dirname, "recorder.js"));
 		this._initializeTime = now() - this._startTime;
 
 		console.log("Initialized recorder in", this._initializeTime.toFixed(2) + "ms");
@@ -192,8 +191,6 @@ class WebViewListener {
 				this.appWindow.getRecorderState().type,
 			)
 		) {
-			console.log("Recorder state is", this.appWindow.getRecorderState().type);
-
 			this.appWindow.handleSaveStep(null, {
 				action: {
 					type: ActionsInTestEnum.WAIT_FOR_NAVIGATION as ActionsInTestEnum,

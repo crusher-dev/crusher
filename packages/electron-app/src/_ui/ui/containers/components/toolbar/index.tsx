@@ -381,18 +381,6 @@ const Toolbar = (props: any) => {
 						},
 						{
 							type: "PAGE_NAVIGATE_URL",
-							shouldNotRecord: true,
-							payload: {
-								selectors: [],
-								meta: {
-									value: "about:blank",
-								},
-							},
-							status: "COMPLETED",
-							time: Date.now(),
-						},
-						{
-							type: "PAGE_NAVIGATE_URL",
 							payload: {
 								selectors: [],
 								meta: {

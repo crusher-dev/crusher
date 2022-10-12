@@ -47,12 +47,12 @@ function BuildSearchableList() {
 		router.push(`/${currentProject.id}/build/${buildId}`);
 	};
 
-	const handleShowLocalBuild = () => {
-		setFilters({...filters, showLocal: true});
+	const handleShowLocalBuildToggle = () => {
+		setFilters({...filters, page: 0, showLocal: !filters.showLocal});
 	};
 
-	const handleShowMine = () => {
-		setFilters({...filters, showMine: true});
+	const handleShowMineToggle = () => {
+		setFilters({...filters, showMine: !filters.showMine});
 	};
 
 	const hasNoBuildsOverall = isZeroBuild && !isFilterEnabled;
@@ -61,8 +61,9 @@ function BuildSearchableList() {
 
 			<Conditional showIf={!isZeroBuild}>
 				<BuildListContext.Provider value={{
-					showLocalBuildCallback: handleShowLocalBuild,
-					showMineCallback: handleShowMine,
+					showLocalBuildCallback: handleShowLocalBuildToggle,
+					showMineCallback: handleShowMineToggle,
+					filters: filters,
 				}}>
 					<div>
 						<BuildsList viewTestCallback={handleViewTest} builds={data.list as any} />

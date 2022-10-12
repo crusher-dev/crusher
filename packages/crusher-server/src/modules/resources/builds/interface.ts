@@ -46,10 +46,11 @@ export interface IBuildTable extends BaseRowInterface {
 	check_run_id?: string;
 	config: IBuildConfig;
 	is_draft_job: boolean;
+	is_local_job: boolean;
 }
 
 export type ICreateBuildRequestPayload = KeysToCamelCase<
-	Omit<IBuildTable, "id" | "meta" | "latest_report_id" | "config" | "status" | "is_draft_job" | "browser"> & {
+	Omit<IBuildTable, "id" | "meta" | "latest_report_id" | "config" | "status" | "is_draft_job" | "browser" | "is_local_build"> & {
 		browser: Array<BrowserEnum>;
 		config?: IBuildConfig;
 		status?: BuildStatusEnum;
@@ -57,5 +58,6 @@ export type ICreateBuildRequestPayload = KeysToCamelCase<
 		isDraftJob?: boolean;
 		meta?: any;
 		context?: any;
+		isLocalBuild?: boolean;
 	}
 >;

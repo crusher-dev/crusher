@@ -44,11 +44,12 @@ export class BuildsController {
 				browser: BrowserEnum.CHROME,
 			},
 			meta: {
-				disableBaseLineComparisions: true
+				disableBaseLineComparisions: true,
 			},
 			status: BuildStatusEnum.CREATED,
 			buildTrigger: BuildTriggerEnum.MANUAL,
 			browser: [BrowserEnum.CHROME],
+			isLocalBuild: true
 		});
 
 		return { build, buildReportStatus };
@@ -67,14 +68,18 @@ export class BuildsController {
 		return build;
 	}
 
+	@Authorized()
 	@Get("/projects/:project_id/builds")
 	public async getBuildsList(
+		@CurrentUser({required: true}) user: any,
 		@Param("project_id") projectId: number,
 		@QueryParams()
-		params: { triggerType?: BuildTriggerEnum; triggeredBy?: number; search?: string; page?: number; status?: BuildReportStatusEnum; buildId?: number },
+		params: { triggerType?: BuildTriggerEnum; triggeredBy?: number; search?: string; page?: number; status?: BuildReportStatusEnum; buildId?: number; showMine?: boolean; showLocal?: boolean },
 	): Promise<IProjectBuildListResponse & { availableAuthors: Array<Pick<KeysToCamelCase<IUserTable>, "name" | "email" | "id">> }> {
 		if (!params.page) params.page = 0;
-
+		if(params.showMine) {
+			params.triggeredBy = user.user_id;
+		}
 		const buildsData = await this.buildsService.getBuildInfoList(projectId, params);
 
 		const buildsListPromise = buildsData.list.map(async (buildData) => {
@@ -93,6 +98,7 @@ export class BuildsController {
 					buildData.buildHost = finalHost;
 				}
 			}
+
 			return {
 				id: buildData.buildId,
 				host: buildData.buildHost && buildData.buildHost !== null ? buildData.buildHost : undefined,
@@ -101,6 +107,7 @@ export class BuildsController {
 				name: buildData.buildName,
 				trigger: buildData.buildTrigger,
 				createdAt: new Date(buildData.buildCreatedAt).getTime(),
+				isLocalBuild: buildData.isLocalBuild,
 				tests: {
 					totalCount: buildData.totalTestCount,
 					passedCount: buildData.passedTestCount,

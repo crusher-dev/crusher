@@ -1,6 +1,7 @@
 import { css } from "@emotion/react";
-import React from "react";
+import React, { useContext } from "react";
 import { ListBox } from "../../molecules/SelectableList";
+import { BuildListContext } from "../utils/basic";
 import { BuildListItem } from "./item";
 
 interface IContextNenuItem {
@@ -46,6 +47,7 @@ const pillButtonCss = css`
 `;
 
 const BuildsList = ({ builds, viewTestCallback }: IProps) => {
+    const { showLocalBuildCallback, showMineCallback } = useContext(BuildListContext);
     const items = React.useMemo(() => {
         if (!builds) return null;
         return builds.map((build) => {
@@ -63,8 +65,8 @@ const BuildsList = ({ builds, viewTestCallback }: IProps) => {
             <div className="flex items-center px-24" css={headerCSS}>
                 <div>recent builds</div>
                 <div className={"flex ml-16"}>
-                    <PillButton>show mine</PillButton>
-                    <PillButton className={"ml-16"}>local build</PillButton>
+                    <PillButton onClick={showMineCallback}>show mine</PillButton>
+                    <PillButton onClick={showLocalBuildCallback} className={"ml-16"}>local build</PillButton>
                 </div>
 
             </div>

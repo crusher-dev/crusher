@@ -57,6 +57,8 @@ const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, 
 		}
 	}, [stepHoverId]);
 
+	const statusType = stepInfo.isRunning && !disabled ? "running" : stepInfo.isCompleted && !disabled ? "completed" : null;
+
 
 	return React.useMemo(() => (
 		<HoverCard
@@ -91,7 +93,7 @@ const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, 
 		>
 			<div className={"step-list-item"} onContextMenu={onContextMenu} onClick={onClick} css={[containerCss(hasFailed || disabled), isActive ? activeItemCss : undefined]}>
 				<div className={"card"} css={contentCss}>
-					{stepInfo.isRunning ? <PointerArrowIcon css={runningPointerIconCss} /> : ""}
+					{statusType === "running" ? <PointerArrowIcon css={runningPointerIconCss} /> : ""}
 					<div css={stepTextCss} className="flex flex-col justify-center">
 						<TextBlock css={[stepNameCss, stepInfo.isFailed ? failedTextNameCss : null, stepInfo.isRunning ? runningTextNameCss : null, disabled ? css`color: rgba(255, 255, 255, 0.85);` : null]}>
 							{title}
@@ -101,13 +103,13 @@ const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, 
 							<TextBlock css={stepDescriptionCss}>{stepInfo?.description?.substring(0, 40)}</TextBlock>
 						</Conditional>
 					</div>
-					{stepInfo.isRunning && !disabled ? <LoadingIcon style={{}} css={runningIconCss} /> : ""}
-					{stepInfo.isCompleted && !disabled ? <GreenCheckboxIcon css={[completedIconCss, !isLast ? inActiveIconCss : null]} /> : ""}
+					{statusType === "running" ? <LoadingIcon style={{}} css={runningIconCss} /> : ""}
+					{statusType === "completed" && !disabled ? <GreenCheckboxIcon css={[completedIconCss, !isLast ? inActiveIconCss : null]} /> : ""}
 				</div>
 				{hasFailed ? <FailedStepCard stepId={stepId} /> : ""}
 			</div>
 		</HoverCard>
-	), [isHovered]);
+	), [isHovered, statusType]);
 };
 
 const inActiveIconCss = css`

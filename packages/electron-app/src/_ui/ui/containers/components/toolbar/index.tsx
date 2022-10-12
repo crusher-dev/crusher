@@ -105,7 +105,7 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 					shouldNotSetupProxy = true;
 				}
 			}
-			if (proxyWarning.shouldShow && proxyWarning?.startUrl && !shouldNotSetupProxy) {
+			if (projectConfig && proxyWarning.shouldShow && proxyWarning?.startUrl && !shouldNotSetupProxy) {
 				projectConfig["proxy"] = projectConfig["proxy"] ? [
 					...projectConfig["proxy"],
 					{

@@ -176,8 +176,19 @@ const App = () => {
 };
 
 const StepHoverOverlay = () => {
-	const [isStepHovered] = useAtom(isStepHoverAtom)
-	if (!isStepHovered) {
+	const [isStepHovered] = useAtom(isStepHoverAtom);
+	const [show, setShow] = React.useState(false);
+	React.useEffect(() => {
+		let interval;
+		interval = setTimeout(() => {
+				setShow(isStepHovered);
+		}, 25);
+
+		return () => {
+			interval && clearInterval(interval);
+		}
+	}, [isStepHovered]);
+	if (!show) {
 		return null
 	}
 	return (<div css={overLayCSS}></div>)

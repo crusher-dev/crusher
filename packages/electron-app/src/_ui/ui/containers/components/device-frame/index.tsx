@@ -34,7 +34,6 @@ import { sendSnackBarEvent } from "../toast";
 import { CrashErrorDialog } from "../../../screens/recorder/crashErrorDialog";
 import { useAtom } from "jotai";
 import { crashAtom } from "electron-app/src/_ui/store/jotai/crashAtom";
-import { stepHoverAtom } from "electron-app/src/_ui/store/jotai/steps";
 import { remote } from "electron";
 import { clearToast } from "../../../components/toasts";
 
@@ -213,7 +212,6 @@ const DeviceFrame = () => {
 	const ref = React.useRef<HTMLWebViewElement>(null);
 	const store = useStore();
 	const [, setCrash] = useAtom(crashAtom);
-	const [stepHoverId, setStepHoverId] = useAtom(stepHoverAtom);
 
 	const getPreloadScriptPath = () => {
 		return `file://` + remote.app.getAppPath() + "/webview-preload.js";

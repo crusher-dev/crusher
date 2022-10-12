@@ -16,7 +16,7 @@ export interface IRunnerLogStepMeta {
 	beforeUrl?: string;
 	afterUrl?: string;
 	outputs?: [{ name: string; value: string }];
-	error?: Error;
+	error?: any;
 	meta?: any;
 }
 

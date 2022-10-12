@@ -70,7 +70,7 @@ const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, 
 	}, [isRunning, isFailed, isCompleted]);
 
 	const title = React.useMemo(() => TextHighlighter({ text: stepInfo.name }), [stepInfo.name]);
-	return (
+	return React.useMemo(() => (
 		<HoverCard
 			disableStateManagement={true}
 			disabled={disabled || (statusType === "failed" && !stepHoverId) || (stepHoverId && stepHoverId !== stepId)}
@@ -119,7 +119,7 @@ const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, 
 				{statusType === "failed" ? <FailedStepCard stepId={stepId} /> : ""}
 			</div>
 		</HoverCard>
-	);
+	), [isHovered, stepInfo, isActive, isLast, disabled, statusType, title]);
 };
 
 const inActiveIconCss = css`

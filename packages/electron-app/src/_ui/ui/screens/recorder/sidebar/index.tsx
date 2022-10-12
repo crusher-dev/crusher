@@ -55,7 +55,7 @@ const containerCss = css`
 	z-index: 1000;
 	background-color: #09090a;
 
-	border-right:  3rem solid #141414;
+	border-right:  0rem solid #141414;
 `;
 
 export { Sidebar };
@@ -127,18 +127,15 @@ align-items: center;
 user-select: none;	
 
 #Resizable{
-    border: 1px solid black; 
     height: 100%;
     width: 320px;
 }
 #Draggable{
     background: #141414;
-    border-bottom: 1px solid black;
-    border-right: 1px solid black;
-    border-top: 1px solid black;
+
 
     height: 100%;
-    width: 3px;
+    width: 2px;
 
 	transition: all .1s ease-in;
 }

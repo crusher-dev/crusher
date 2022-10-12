@@ -49,7 +49,7 @@ export class BuildsController {
 			status: BuildStatusEnum.CREATED,
 			buildTrigger: BuildTriggerEnum.MANUAL,
 			browser: [BrowserEnum.CHROME],
-			isLocalBuild: true
+			isLocalJob: true
 		});
 
 		return { build, buildReportStatus };

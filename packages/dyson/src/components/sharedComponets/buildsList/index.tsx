@@ -50,7 +50,7 @@ const pillButtonCss = css`
 `;
 
 const BuildsList = ({ builds, viewTestCallback }: IProps) => {
-    const { showLocalBuildCallback, showMineCallback } = useContext(BuildListContext);
+    const { showLocalBuildCallback, showMineCallback, filters } = useContext(BuildListContext);
     const items = React.useMemo(() => {
         if (!builds) return null;
         return builds.map((build) => {
@@ -66,10 +66,10 @@ const BuildsList = ({ builds, viewTestCallback }: IProps) => {
     return (
         <div>
             <div className="flex items-center px-24" css={headerCSS}>
-                <div>filter</div>
+                <div>filters</div>
                 <div className={"flex ml-16"}>
-                    <PillButton onClick={showMineCallback}>show mine</PillButton>
-                    <PillButton onClick={showLocalBuildCallback} className={"ml-16"}>local build</PillButton>
+                    <PillButton css={pillCss(filters.showMine)} onClick={showMineCallback}>show mine</PillButton>
+                    <PillButton css={pillCss(filters.showLocal)} onClick={showLocalBuildCallback} className={"ml-16"}>local build</PillButton>
                 </div>
 
             </div>
@@ -90,7 +90,14 @@ const BuildsList = ({ builds, viewTestCallback }: IProps) => {
 
 };
 
-
+const pillCss = (isActive) =>{
+    if(isActive) {
+        return css`
+            background: rgba(217,217,217,0.1);
+        `;
+    }
+    return css`background: rgba(217,217,217,0.03);`;
+}
 const headerCSS = css`
 max-width: 1298rem;
 width: calc(100vw - 342rem);

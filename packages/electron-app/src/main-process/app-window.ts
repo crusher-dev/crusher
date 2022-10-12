@@ -52,6 +52,7 @@ import { screen } from "electron";
 import { ProxyManager } from "./proxy-manager";
 import { resolveToBackend } from "../utils/url";
 import { getLogs } from "../store/selectors/logger";
+import path from "path";
 
 export class AppWindow {
 	private window: Electron.BrowserWindow;
@@ -985,6 +986,7 @@ export class AppWindow {
 								return false;
 							};
 							const result = intervalFun();
+							// @Todo: throw an error here.
 							if (!result) {
 								const _interval = setInterval(() => {
 									if (intervalFun()) {
@@ -993,17 +995,16 @@ export class AppWindow {
 								}, 250);
 							}
 						});
-						await this.handlePerformAction(null, { action: {
-							type: ActionsInTestEnum.NAVIGATE_URL,
-							payload: {
-								selectors: [],
-								meta: {
-									value: "about:blank",
-								},
-							},
-							status: "COMPLETED",
-							time: Date.now(),
-						}, shouldNotSave: true});
+
+						const isCrusherScriptLoaded = await this.webView?.playwrightInstance?.page?.evaluate(() => {
+							 // @ts-ignore
+							 return !!window.eventRecorderExecuted;
+						}, []);
+						console.log("Script loaded", isCrusherScriptLoaded);
+						if(!isCrusherScriptLoaded) {
+							console.log("Adding init script");
+							await this.webView.playwrightInstance.addInitScript(path.join(__dirname, "recorder.js"));
+						}
 				
 				} else {
 					if (browserAction.type !== ActionsInTestEnum.RUN_AFTER_TEST) {

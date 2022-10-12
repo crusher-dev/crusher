@@ -105,7 +105,7 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 					shouldNotSetupProxy = true;
 				}
 			}
-			if (proxyWarning.shouldShow && proxyWarning?.startUrl && !shouldNotSetupProxy) {
+			if (projectConfig && proxyWarning.shouldShow && proxyWarning?.startUrl && !shouldNotSetupProxy) {
 				projectConfig["proxy"] = projectConfig["proxy"] ? [
 					...projectConfig["proxy"],
 					{
@@ -377,18 +377,6 @@ const Toolbar = (props: any) => {
 									device: selectedDevice[0].device,
 								},
 							},
-							time: Date.now(),
-						},
-						{
-							type: "PAGE_NAVIGATE_URL",
-							shouldNotRecord: true,
-							payload: {
-								selectors: [],
-								meta: {
-									value: "about:blank",
-								},
-							},
-							status: "COMPLETED",
 							time: Date.now(),
 						},
 						{

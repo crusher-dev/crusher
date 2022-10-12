@@ -1,5 +1,5 @@
 "use strict";
-const COLOR = {
+const COLORS = {
 	purple: {
 		"0": "#691C8C",
 		"100": "#7920A3",
@@ -111,7 +111,7 @@ const background = {};
 const border = {};
 
 module.exports = {
-	colors: COLOR,
+	COLORS,
 	background,
 	border,
 };

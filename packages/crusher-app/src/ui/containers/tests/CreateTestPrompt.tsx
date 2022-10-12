@@ -84,7 +84,6 @@ export const CreateTestPrompt = ({ className }: { className?: any }) => (
 );
 
 const boxCSS = css`
-background: #00000078;
 border: 1px solid rgb(255 255 255 / 8%);
 	box-sizing: border-box;
 	border-radius: 20px;

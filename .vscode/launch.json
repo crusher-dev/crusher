@@ -9,6 +9,14 @@
             "request": "attach",
             "name": "Attach to backend",
             "port": 9230
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "recorder",
+            "skipFiles": [ "<node_internals>/**"],
+            "preLaunchTask": "run-electron-app",
+            "program": "${workspaceFolder}/test.js"
         }
     ]
 }

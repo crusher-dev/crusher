@@ -15,10 +15,11 @@ const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
 // Remove output directory
 const OUTPUT_DIR = path.resolve(__dirname, "../../../output/crusher-electron-app/");
 
-const isDevelopment = true;
+const ENV  = process.env.NODE_ENV || "development";
+const isDevelopment = ENV === "development";
 
 const commonConfig = {
-	mode: process.env.NODE_ENV || "development",
+	mode: ENV,
 	plugins: [
 		isDevelopment && new ReactRefreshWebpackPlugin({overlay: false}),
 		new IgnorePlugin({ resourceRegExp: /^fsevents$/ }),

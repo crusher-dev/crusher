@@ -18,5 +18,5 @@
             "preLaunchTask": "run-electron-app",
             "program": "${workspaceFolder}/test.js"
         }
-    ]
+    ] 
 }

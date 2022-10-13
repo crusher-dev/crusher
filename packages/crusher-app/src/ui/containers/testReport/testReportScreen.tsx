@@ -186,6 +186,7 @@ function RunLocally() {
 	// const { query } = router;
 	// const [filters] = useAtom(buildFiltersAtom);
 	// const [, updateMetaData] = useAtom(updateMeta);
+	const { query } = useRouter();
 
 	const runProjectTest = useCallback(() => {
 		(async () => {
@@ -207,7 +208,7 @@ function RunLocally() {
 		<Button size="medium" bgColor={"tertiary"} title="run test locally" onClick={runProjectTest} css={runTestCSS}>
 			<div className={"flex items-center"}>
 				<PlayIcon className={"mr-6"} />
-				<span className="mt-2">run locally</span>
+				<a className="mt-2" href={`crusher://run-local-build?buildId=${query.id}`}><span>run locally</span></a>
 			</div>
 		</Button>
 	);

@@ -181,36 +181,23 @@ function Reload() {
 }
 
 function RunLocally() {
-	// const router = useRouter();
-	// const { currentProject } = useProjectDetails()
-	// const { query } = router;
-	// const [filters] = useAtom(buildFiltersAtom);
-	// const [, updateMetaData] = useAtom(updateMeta);
 	const { query } = useRouter();
 
 	const runProjectTest = useCallback(() => {
 		(async () => {
-			// await handleTestRun(currentProject?.id, query, filters, router, updateMetaData);
-			// updateMetaData({
-			// 	type: "user",
-			// 	key: USER_META_KEYS.RAN_TEST,
-			// 	value: true,
-			// });
-			// updateMetaData({
-			// 	type: "project",
-			// 	key: PROJECT_META_KEYS.RAN_TEST,
-			// 	value: true,
-			// });
+
 		})();
 	}, []);
 
 	return (
-		<Button size="medium" bgColor={"tertiary"} title="run test locally" onClick={runProjectTest} css={runTestCSS}>
-			<div className={"flex items-center"}>
-				<PlayIcon className={"mr-6"} />
-				<a className="mt-2" href={`crusher://run-local-build?buildId=${query.id}`}><span>run locally</span></a>
-			</div>
-		</Button>
+		<a  href={`crusher://run-local-build?buildId=${query.id}`}>
+			<Button size="medium" bgColor={"tertiary"} title="run test locally" css={runTestCSS}>
+					<div className={"flex items-center"}>
+						<PlayIcon className={"mr-6"} />
+						<span className="mt-2">run locally</span>
+					</div>
+			</Button>
+		</a>
 	);
 }
 

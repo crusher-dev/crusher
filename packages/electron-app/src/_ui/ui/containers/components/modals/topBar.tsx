@@ -72,7 +72,6 @@ const headingStyle = css`
 const subHeadingStyle = css`
 	font-size: 14rem;
 	color: #ffffff;
-	font-family: Cera Pro;
 	color: rgba(255, 255, 255, 0.4);
 	margin-top: 12rem;
 `;

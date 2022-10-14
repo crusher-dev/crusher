@@ -41,7 +41,7 @@ export const checkForDiscord = async (shouldCheckForDiscord = true) => {
 	if (discordArgv?.shouldIgnore) return;
 	
 	await console.log(chalk.green(`New to crusher?`))
-	await console.log(`Join discord community ${chalk.green("https://discord.gg/dHZkSNXQrg")}`)
+	await console.log(`Join discord community ${chalk.green("https://discord.gg/dHZkSNXQrg")} \n`)
 
 	return { code: "CRU-TEST" };
 	// if (!discordArgv?.code && shouldCheckForDiscord) {

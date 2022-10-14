@@ -872,7 +872,6 @@ export class AppWindow {
 		this.store.dispatch(updateRecorderCrashState(null));
 		const recordedSteps = getSavedSteps(this.store.getState() as any);
 		await this.resetRecorder(TRecorderState.PERFORMING_ACTIONS);
-		console.log("Verifiyng");
 		const isSuccessful = await this.handleReplayTestSteps(recordedSteps as any);
 		this.store.dispatch(setIsTestVerified(true));
 		if (isSuccessful) {
@@ -962,7 +961,6 @@ export class AppWindow {
 	}
 
 	async handleReplayTestSteps(steps: iAction[] | null = null) {
-		console.log("Calling again");
 		this.store.dispatch(updateRecorderState(TRecorderState.PERFORMING_ACTIONS, {}));
 
 		const browserActions = getBrowserActions(steps);
@@ -976,8 +974,7 @@ export class AppWindow {
 
 				if (browserAction.type === ActionsInTestEnum.SET_DEVICE) {
 					await this.store.dispatch(setDevice(browserAction.payload.meta.device.id));
-					await this.handlePerformAction(null, { action: browserAction, shouldNotSave: !!(browserAction as any).shouldNotRecord });
-			
+					await this.handlePerformAction(null, { action: browserAction, shouldNotSave: !!(browserAction as any).shouldNotRecord });					
 						await new Promise((resolve) => {
 							const intervalFun = () => {
 								if (this.webView?.playwrightInstance?.page) {
@@ -996,9 +993,7 @@ export class AppWindow {
 								}, 250);
 							}
 						});
-
 						const isCrusherScriptLoaded = await this.webView?.webContents.executeJavaScript("window.crusherScriptLoaded");
-						console.log("Script loaded", isCrusherScriptLoaded);
 						if(!isCrusherScriptLoaded) {
 							console.log("Adding init script");
 							await this.webView.playwrightInstance.addInitScript(path.join(__dirname, "recorder.js"));
@@ -1125,7 +1120,7 @@ export class AppWindow {
 					if (!shouldNotSave) {
 						this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
 					}
-					await this.waitForWebView();
+					// await this.waitForWebView();
 					break;
 				}
 				case ActionsInTestEnum.NAVIGATE_URL:
@@ -1188,7 +1183,14 @@ export class AppWindow {
 		this.store.dispatch(resetRecorderState(state));
 		this.store.dispatch(clearLogs());
 		if (this.webView) {
-			await this.webView.webContents.loadURL("about:blank");
+			console.log("loading blank page...");
+			try {
+				try { await this.webView.webContents.loadURL("about:blank"); } catch(e) {}
+				await this.webView.playwrightInstance.page.waitForLoadState("networkidle");
+
+			} catch (e) {
+				console.log("error loading blank page", e);
+			}
 		}
 		await this.clearWebViewStorage();
 	}
@@ -1241,8 +1243,9 @@ export class AppWindow {
 			if (this.webView) {
 				this.webView = undefined;
 			}
-			this.store.dispatch(resetRecorder());
 			await this.resetRecorder();
+
+			this.store.dispatch(resetRecorder());
 			this.store.dispatch(setSessionInfoMeta({}));
 			this.handleResetStorage();
 		});

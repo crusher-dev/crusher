@@ -84,8 +84,8 @@ const handleCompletion = async (store: Store, action: IDeepLinkAction, addNotifi
 const handleUrlAction = (store: Store, addNotification, event: Electron.IpcRendererEvent, { action }: { action: IDeepLinkAction }) => {
 	switch (action.commandName) {
 		case "run-local-build":
-			const { buildId } = action.args;
-			const buildReport = CloudCrusher.getBuildReport(buildId)
+			// const { buildId } = action.args;
+			// const buildReport = CloudCrusher.getBuildReport(buildId)
 			break;
 		case "replay-test":
 			const sessionInfoMeta = getAppSessionMeta(store.getState() as any);

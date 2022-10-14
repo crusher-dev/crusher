@@ -92,8 +92,8 @@ const StepsPanel = ({ className }: IProps) => {
 				<Step
 					disabled={true}
 					step={step}
-					key={index + steps.length}
-					stepId={index + steps.length}
+					key={index + (steps?.length || 0)}
+					stepId={index + (steps?.length || 0)}
 					isLast={index === remainingSteps.length - 1}
 				/>
 			);

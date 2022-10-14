@@ -86,7 +86,7 @@ function ReportInfoTOp() {
 	usePageTitle(title);
 	return (
 		<div className={"flex"}>
-			<ImageSection />
+			<ImageSection src={data.hostScreenshot}/>
 
 			<div className="w-full">
 				<div id="build-info-top" className="flex justify-between w-full">
@@ -275,10 +275,10 @@ export const rerunBuild = async (buildId) => {
 	sendSnackBarEvent({ type: "normal", message: "We've started new build" });
 };
 
-function ImageSection() {
+function ImageSection({src}) {
 	return (
 		<div className="mr-46">
-			<img src="https://i.imgur.com/GT2hLO9.png" css={previewImgCss} />
+			<img src={src} css={previewImgCss} />
 		</div>
 	);
 }
@@ -288,6 +288,7 @@ const previewImgCss = css`
 	height: 220rem;
 	border: 0.5px solid rgb(255 255 255 / 6%);
 	border-radius: 15px;
+	object-fit: cover;
 `;
 function TabBar() {
 	const [selectedTabIndex, setSelectedTabIndex] = useAtom(selectedTabAtom);

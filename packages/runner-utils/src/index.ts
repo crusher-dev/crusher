@@ -321,7 +321,6 @@ class CrusherRunnerActions {
 			if (shouldTakeScreenshots && action.type === ActionsInTestEnum.NAVIGATE_URL && isFirstNavigationStep) {
 				isFirstNavigationStep = false;
 				shouldCaptureHostScreenshot = true;
-				continue;
 			}
 			await this.actionHandlers[action.type](
 				action,

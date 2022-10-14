@@ -2,6 +2,8 @@ import { applyMiddleware, createStore, compose, Store, StoreEnhancer } from "red
 
 import { rootReducer } from "./reducers";
 import { forwardToMain, forwardToRenderer, replayActionMain, replayActionRenderer } from "electron-redux";
+import { isProduction } from "../utils";
+import loggerMiddleware from "redux-logger";
 
 const composeEnhancers =
 	typeof window === "object" && (window as any)["__REDUX_DEVTOOLS_EXTENSION_COMPOSE__"]

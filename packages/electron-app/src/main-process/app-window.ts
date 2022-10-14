@@ -962,6 +962,7 @@ export class AppWindow {
 	}
 
 	async handleReplayTestSteps(steps: iAction[] | null = null) {
+		console.log("Calling again");
 		this.store.dispatch(updateRecorderState(TRecorderState.PERFORMING_ACTIONS, {}));
 
 		const browserActions = getBrowserActions(steps);
@@ -996,10 +997,7 @@ export class AppWindow {
 							}
 						});
 
-						const isCrusherScriptLoaded = await this.webView?.playwrightInstance?.page?.evaluate(() => {
-							 // @ts-ignore
-							 return !!window.eventRecorderExecuted;
-						}, []);
+						const isCrusherScriptLoaded = await this.webView?.webContents.executeJavaScript("window.crusherScriptLoaded");
 						console.log("Script loaded", isCrusherScriptLoaded);
 						if(!isCrusherScriptLoaded) {
 							console.log("Adding init script");

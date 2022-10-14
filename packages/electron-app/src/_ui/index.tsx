@@ -1,4 +1,4 @@
-import { webFrame } from "electron";
+import { ipcRenderer, webFrame } from "electron";
 import { getInitialStateRenderer } from "electron-redux";
 import React from "react";
 import { setShowShouldOnboardingOverlay } from "../store/actions/app";
@@ -26,6 +26,9 @@ import { InvalidCredsErrorContainer } from "./ui/containers/errors/invalidCreds"
 import { performGoToUrl } from "./commands/perform";
 import { Provider as JotaiProvider } from "jotai";
 import { ToastBox } from "./ui/components/toasts";
+import { CloudCrusher } from "../lib/cloud";
+import { Store } from "redux";
+import { IDeepLinkAction } from "../types";
 webFrame.setVisualZoomLevelLimits(1, 3);
 
 function getPersistStore() {
@@ -36,6 +39,19 @@ function getPersistStore() {
 	const store = configureStore(initialReduxState, "renderer");
 	store.dispatch(setShowShouldOnboardingOverlay(shouldShowOnboardingOverlay));
 	return store;
+}
+
+
+const handleUrlAction = async (store: Store, event: Electron.IpcRendererEvent, { action }: { action: IDeepLinkAction }) => {
+	switch (action.commandName) {
+		case "run-local-build":
+			const { buildId } = action.args;
+			console.log("Local build", action);
+			// const buildReport = await CloudCrusher.getBuildReport(buildId);
+			alert("Build id is: " + buildId);
+			break;
+		
+	}
 }
 
 const store = getPersistStore();
@@ -56,6 +72,11 @@ function InsideRouter() {
 			performGoToUrl("/unauthorized_error");
 		} else {
 			performGoToUrl("/network_error");
+		}
+		ipcRenderer.on("url-action", handleUrlAction.bind(this, store));
+
+		return () => {
+			ipcRenderer.removeListener("url-action", handleUrlAction);
 		}
 	}, []);
 

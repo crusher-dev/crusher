@@ -111,6 +111,7 @@ function handleAppURL(url: string) {
 		// This manual focus call _shouldn't_ be necessary, but is for Chrome on
 		// macOS. See https://github.com/desktop/desktop/issues/973.
 		window.focus();
+		console.log("Window loaded", action);
 		if (action) window.sendMessage("url-action", { action });
 	});
 }
@@ -187,7 +188,7 @@ function createWindow() {
 	mainWindow = window;
 }
 
-function onDidLoad(fn: OnDidLoadFn) {
+function onDidLoad(fn: OnDidLoadFn) {	
 	if (onDidLoadFns) {
 		onDidLoadFns.push(fn);
 	} else {

@@ -1286,7 +1286,7 @@ export class AppWindow {
 	}
 
 	private get rendererLoaded(): boolean {
-		return this.loadTime && !!this.rendererReadyTime;
+		return !!this.loadTime;
 	}
 
 	/**

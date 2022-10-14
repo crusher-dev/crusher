@@ -124,6 +124,7 @@ const InputValueEditor = ({ step, stepId }) => {
 	};
 	if (!fieldInfo) return null;
 
+
 	return (
 		<div className={"flex items-center mt-20"}>
 			<div
@@ -144,7 +145,7 @@ const InputValueEditor = ({ step, stepId }) => {
 						font-weight: 400 !important;
 						font-size: 13rem !important;
 						height: 24rem !important;
-						/* or 93% */
+
 						background: rgba(177, 79, 254, 0.04) !important;
 						border: 0.5px solid #b14ffe !important;
 						border-radius: 8rem !important;
@@ -212,9 +213,6 @@ const StepName = ({ stepId }) => {
 						input {
 							width: 180rem;
 							min-width: 180rem !important;
-							font-family: "Gilroy" !important;
-							font-style: normal !important;
-							font-weight: 400 !important;
 							font-size: 14rem !important;
 							/* or 93% */
 							border: 0.5px solid #b14ffe !important;
@@ -226,9 +224,6 @@ const StepName = ({ stepId }) => {
 						}
 					`}
 						labelCss={css`
-						font-family: "Gilroy" !important;
-						font-style: normal !important;
-						font-weight: 400 !important;
 						font-size: 14rem !important;
 						border: 0.5px solid transparent !important;
 						padding: 4rem 0rem !important;
@@ -240,18 +235,19 @@ const StepName = ({ stepId }) => {
 					/>
 				</div>
 				<EditPencilIcon onClick={setIsStepNameEditing.bind(this, stepId + "-stepName")} className={"ml-10"} css={pencilIconCss} />
-				{showStepDescriptionHelper ? (
-					<div
-						className={"ml-10"}
-						css={css`
-						font-size: 13rem;
-						margin-top: 4rem;
-					`}
-					>
-						{TextHighlighter({ text: stepInfo.actionDescription }, true)}
-					</div>
-				) : ""}
+
 			</div>
+			{showStepDescriptionHelper ? (
+				<div
+					css={css`
+						font-size: 12rem;
+						margin-top: 8rem;
+					`}
+					className="ml-2"
+				>
+					{TextHighlighter({ text: stepInfo.actionDescription }, true)}
+				</div>
+			) : ""}
 
 		</>
 	);
@@ -264,8 +260,9 @@ const StepMetaInfo = ({ stepId, setShowAdvanced }) => {
 	const showFieldInput = [ActionsInTestEnum.NAVIGATE_URL, ActionsInTestEnum.WAIT_FOR_NAVIGATION, ActionsInTestEnum.ADD_INPUT].includes(steps[stepId].type);
 
 	return (
-		<div css={stepMetaInfoContainerCss} className={"px-20 py-24 pt-20"}>
+		<div css={stepMetaInfoContainerCss} className={"px-20 py-12"}>
 			<StepName stepId={stepId} />
+
 
 			{showFieldInput ? <InputValueEditor stepId={stepId} step={steps[stepId]} /> : ""}
 
@@ -420,13 +417,13 @@ const StepOverlayEditor = ({ stepId }) => {
 	}, [])
 
 	const editMessage = React.useMemo(() => {
-		if([ActionsInTestEnum.VALIDATE_SEO, ActionsInTestEnum.ASSERT_ELEMENT].includes(step.type) ) {
+		if ([ActionsInTestEnum.VALIDATE_SEO, ActionsInTestEnum.ASSERT_ELEMENT].includes(step.type)) {
 			return "see checks";
 		}
-		if(step.type === ActionsInTestEnum.CUSTOM_CODE) {
+		if (step.type === ActionsInTestEnum.CUSTOM_CODE) {
 			return "code editor";
 		}
-		if(step.type === ActionsInTestEnum.WAIT) {
+		if (step.type === ActionsInTestEnum.WAIT) {
 			return "set wait time";
 		}
 

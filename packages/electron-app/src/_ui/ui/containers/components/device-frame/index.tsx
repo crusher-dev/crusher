@@ -98,8 +98,7 @@ const CrashScreen = () => {
 						css={[
 							buttonStyle,
 							css`
-								width: 190rem;
-								height: 32rem;
+								width: fit-content;
 							`,
 						]}
 					>

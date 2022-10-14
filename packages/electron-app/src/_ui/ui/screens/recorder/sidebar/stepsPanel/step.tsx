@@ -77,7 +77,7 @@ const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, 
 			autoHide={true}
 			state={stepHoverId === stepId}
 			// autoHide={false}
-			// state={stepId == 1}
+			// state={true}
 
 			callback={handleHoverCallback}
 			wrapperCss={css`

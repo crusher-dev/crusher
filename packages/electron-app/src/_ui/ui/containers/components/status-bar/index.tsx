@@ -422,6 +422,7 @@ const StatusBar = () => {
 								padding-bottom: 8rem;
 								height: calc(100% - 38rem);
 								overflow-y: auto;
+								padding-bottom: 20rem;
 							`}
 							className={"custom-scroll"}
 						>

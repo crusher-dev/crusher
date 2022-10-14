@@ -86,7 +86,7 @@ function ReportInfoTOp() {
 	usePageTitle(title);
 	return (
 		<div className={"flex"}>
-			<ImageSection src={data.hostScreenshot}/>
+			<ImageSection src={data.hostScreenshot} />
 
 			<div className="w-full">
 				<div id="build-info-top" className="flex justify-between w-full">
@@ -190,12 +190,12 @@ function RunLocally() {
 	}, []);
 
 	return (
-		<a  href={`crusher://run-local-build?buildId=${query.id}`}>
+		<a href={`crusher://run-local-build?buildId=${query.id}`}>
 			<Button size="medium" bgColor={"tertiary"} title="run test locally" css={runTestCSS}>
-					<div className={"flex items-center"}>
-						<PlayIcon className={"mr-6"} />
-						<span className="mt-2">run locally</span>
-					</div>
+				<div className={"flex items-center"}>
+					<PlayIcon className={"mr-6"} />
+					<span className="mt-2">run locally</span>
+				</div>
 			</Button>
 		</a>
 	);
@@ -275,19 +275,41 @@ export const rerunBuild = async (buildId) => {
 	sendSnackBarEvent({ type: "normal", message: "We've started new build" });
 };
 
-function ImageSection({src}) {
+function ImageSection({ src }) {
+	if (!src) {
+
+		return (<div css={[previewImgCss, errorImageCSS]} className="mr-46">
+			<div className="flex items-center mb-12">
+				<TextBlock color="#BDBDBD" fontSize={16} weight={700} className="mr-6">screeshot failed</TextBlock>
+				<div css={dot}></div>
+			</div>
+			<TextBlock fontSize={13} color="#696969">couldn't get screenshot</TextBlock>
+		</div>)
+	}
 	return (
-		<div className="mr-46">
-			<img src={src} css={previewImgCss} />
-		</div>
+		<img src={src} css={previewImgCss} className="mr-46" />
 	);
 }
+
+const dot = css`
+min-width: 6px;
+min-height: 6px;
+
+background: #FF4874;
+border-radius: 21px;
+`
+
+const errorImageCSS = css`
+	border: 1.5px solid rgb(255 255 255 / 6%);
+	padding: 20rem 24rem;
+
+`
 
 const previewImgCss = css`
 	min-width: 304rem;
 	height: 220rem;
 	border: 0.5px solid rgb(255 255 255 / 6%);
-	border-radius: 15px;
+	border-radius: 16rem;
 	object-fit: cover;
 `;
 function TabBar() {

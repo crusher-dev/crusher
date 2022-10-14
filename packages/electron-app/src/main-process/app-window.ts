@@ -361,7 +361,7 @@ export class AppWindow {
 			acceptFirstMouse: true,
 		});
 
-		if(payload.stepIndex) {
+		if (payload.stepIndex) {
 			this.codeWindow.loadURL(getAppURl() + `#/code-editor?stepIndex=${payload.stepIndex}`);
 		} else {
 			this.codeWindow.loadURL(getAppURl() + `#/code-editor`);
@@ -530,7 +530,7 @@ export class AppWindow {
 	private async handleJumpToStep(event: Electron.IpcMainEvent, payload: { stepIndex: number }) {
 		let recorderSteps = getAllSteps(this.store.getState() as any);
 		await this.resetRecorder();
-		
+
 		this.setRemainingSteps(recorderSteps.slice(payload.stepIndex + 1) as any);
 		await this.handleReplayTestSteps(recorderSteps.slice(0, payload.stepIndex + 1) as any);
 		return true;
@@ -694,12 +694,12 @@ export class AppWindow {
 		}
 		if (remainingSteps) {
 			const success = await this.handleReplayTestSteps(remainingSteps);
-			if(!success) return;
+			if (!success) return;
 		}
 		this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
 	}
 
-	async handleGetElementAssertInfo(event: Electron.IpcMainEvent, { elementInfo, useSelectors = false} : {elementInfo:  iElementInfo, useSelectors: boolean}) {
+	async handleGetElementAssertInfo(event: Electron.IpcMainEvent, { elementInfo, useSelectors = false }: { elementInfo: iElementInfo, useSelectors: boolean }) {
 		let isPaused = false;
 		try {
 			await this.webView.resumeExecution(true);
@@ -710,10 +710,10 @@ export class AppWindow {
 		await new Promise((resolve) => setTimeout(resolve, 500));
 		let elementHandle = this.webView.playwrightInstance.getElementInfoFromUniqueId(elementInfo.uniqueElementId)?.handle;
 		if (!elementHandle) {
-			if(useSelectors) {
+			if (useSelectors) {
 				elementHandle = await this.webView.playwrightInstance.page.$(toCrusherSelectorsFormat(elementInfo.selectors as any).value);
 			}
-			if(!elementHandle) {
+			if (!elementHandle) {
 				return null;
 			}
 		}
@@ -751,7 +751,7 @@ export class AppWindow {
 			}
 		}
 		try {
-			if(isPaused) {
+			if (isPaused) {
 				await this.webView.disableExecution();
 			}
 		} catch (ex) {
@@ -872,7 +872,6 @@ export class AppWindow {
 		this.store.dispatch(updateRecorderCrashState(null));
 		const recordedSteps = getSavedSteps(this.store.getState() as any);
 		await this.resetRecorder(TRecorderState.PERFORMING_ACTIONS);
-		console.log("Verifiyng");
 		const isSuccessful = await this.handleReplayTestSteps(recordedSteps as any);
 		this.store.dispatch(setIsTestVerified(true));
 		if (isSuccessful) {
@@ -976,36 +975,30 @@ export class AppWindow {
 				if (browserAction.type === ActionsInTestEnum.SET_DEVICE) {
 					await this.store.dispatch(setDevice(browserAction.payload.meta.device.id));
 					await this.handlePerformAction(null, { action: browserAction, shouldNotSave: !!(browserAction as any).shouldNotRecord });
-			
-						await new Promise((resolve) => {
-							const intervalFun = () => {
-								if (this.webView?.playwrightInstance?.page) {
-									resolve(true);
-									return true;
-								}
-								return false;
-							};
-							const result = intervalFun();
-							// @Todo: throw an error here.
-							if (!result) {
-								const _interval = setInterval(() => {
-									if (intervalFun()) {
-										clearInterval(_interval);
-									}
-								}, 250);
+					await new Promise((resolve) => {
+						const intervalFun = () => {
+							if (this.webView?.playwrightInstance?.page) {
+								resolve(true);
+								return true;
 							}
-						});
-
-						const isCrusherScriptLoaded = await this.webView?.playwrightInstance?.page?.evaluate(() => {
-							 // @ts-ignore
-							 return !!window.eventRecorderExecuted;
-						}, []);
-						console.log("Script loaded", isCrusherScriptLoaded);
-						if(!isCrusherScriptLoaded) {
-							console.log("Adding init script");
-							await this.webView.playwrightInstance.addInitScript(path.join(__dirname, "recorder.js"));
+							return false;
+						};
+						const result = intervalFun();
+						// @Todo: throw an error here.
+						if (!result) {
+							const _interval = setInterval(() => {
+								if (intervalFun()) {
+									clearInterval(_interval);
+								}
+							}, 250);
 						}
-				
+					});
+					const isCrusherScriptLoaded = await this.webView?.webContents.executeJavaScript("window.crusherScriptLoaded");
+					if (!isCrusherScriptLoaded) {
+						console.log("Adding init script");
+						await this.webView.playwrightInstance.addInitScript(path.join(__dirname, "recorder.js"));
+					}
+
 				} else {
 					if (browserAction.type !== ActionsInTestEnum.RUN_AFTER_TEST) {
 						// @Todo: Add support for future browser actions
@@ -1127,7 +1120,7 @@ export class AppWindow {
 					if (!shouldNotSave) {
 						this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
 					}
-					await this.waitForWebView();
+					// await this.waitForWebView();
 					break;
 				}
 				case ActionsInTestEnum.NAVIGATE_URL:
@@ -1190,7 +1183,14 @@ export class AppWindow {
 		this.store.dispatch(resetRecorderState(state));
 		this.store.dispatch(clearLogs());
 		if (this.webView) {
-			await this.webView.webContents.loadURL("about:blank");
+			console.log("loading blank page...");
+			try {
+				try { await this.webView.webContents.loadURL("about:blank"); } catch (e) { }
+				await this.webView.playwrightInstance.page.waitForLoadState("networkidle");
+
+			} catch (e) {
+				console.log("error loading blank page", e);
+			}
 		}
 		await this.clearWebViewStorage();
 	}
@@ -1243,8 +1243,9 @@ export class AppWindow {
 			if (this.webView) {
 				this.webView = undefined;
 			}
-			this.store.dispatch(resetRecorder());
 			await this.resetRecorder();
+
+			this.store.dispatch(resetRecorder());
 			this.store.dispatch(setSessionInfoMeta({}));
 			this.handleResetStorage();
 		});
@@ -1286,7 +1287,7 @@ export class AppWindow {
 	}
 
 	private get rendererLoaded(): boolean {
-		return this.loadTime && !!this.rendererReadyTime;
+		return !!this.loadTime;
 	}
 
 	/**

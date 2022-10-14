@@ -175,7 +175,7 @@ class WebViewListener {
 	}
 
 	private handleDidFailLoad(event, errorCode, errorDescription, validatedURL, isMainFrame) {
-		if (isMainFrame) {
+		if (isMainFrame && errorCode === -105) {
 			this.appWindow.updateRecorderCrashState({ type: TRecorderCrashState.PAGE_LOAD_FAILED });
 		}
 	}

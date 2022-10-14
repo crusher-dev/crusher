@@ -24,7 +24,7 @@ function isDevelopment() {
 }
 
 export function getAppURl() {
-	if (isDevelopment) {
+	if (isDevelopment()) {
 		return "http://localhost:8080";
 	}
 	return encodePathAsUrl(__dirname, "index.html");

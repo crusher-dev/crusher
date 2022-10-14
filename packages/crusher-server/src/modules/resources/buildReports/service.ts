@@ -161,7 +161,12 @@ export class BuildReportService {
 					recordedVideoUrl: await this.getPublicUrl(instance.recordedVideoUrl),
 				})),
 		);
+		let hostScreenshot = null;
 		const testsMap = testMapArr.reduce((prev: any, current) => {
+			const firstPageNavigateStep = current.actionsResult.find((action) => action.actionType === ActionsInTestEnum.NAVIGATE_URL);
+			if(firstPageNavigateStep && !hostScreenshot) {
+				hostScreenshot = firstPageNavigateStep.meta?.meta?.hostScreenshot;
+			}
 			const testInstance = {
 				id: current.testInstanceId,
 				verboseStatus: current.testResultStatus,
@@ -199,6 +204,7 @@ export class BuildReportService {
 		return {
 			buildId: testsWithReportData[0].buildId,
 			buildReportId: testsWithReportData[0].buildReportId,
+			hostScreenshot: hostScreenshot ? await this.getPublicUrl(hostScreenshot) : null,
 			id: testsWithReportData[0].buildId,
 			name: testsWithReportData[0].buildName,
 			startedAt: new Date(testsWithReportData[0].buildReportCreatedAt).getTime(),

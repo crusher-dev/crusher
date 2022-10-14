@@ -73,7 +73,7 @@ class CrusherRunnerActions {
 		if (!this.globals.has(TEST_ACTIONS_LOG)) {
 			this.globals.set(TEST_ACTIONS_LOG, []);
 		}
-	
+
 		this.initActionHandlers();
 	}
 
@@ -104,7 +104,7 @@ class CrusherRunnerActions {
 	) {
 
 		if (actionCallback) await actionCallback({ actionType, status, message, meta });
-	
+
 		if (status === ActionStatusEnum.COMPLETED || status === ActionStatusEnum.FAILED || status === ActionStatusEnum.STALLED) {
 			this.globals.get(TEST_RESULT_KEY).push({ actionType, status, message, meta });
 		}
@@ -113,7 +113,7 @@ class CrusherRunnerActions {
 			// @TODO: Add a local logging service for fast logs-saving
 			return this.logManager.logStep.bind(null, actionType, status, message, meta);
 		}));
-	
+
 	}
 
 	async _getCurrentScreenshot(page: Page): Promise<string | null> {
@@ -138,9 +138,16 @@ class CrusherRunnerActions {
 			shouldSleepAfterComplete = true,
 			remainingActionsArr: Array<iAction> = [],
 			shouldLog: boolean = true,
+			shouldTakeScreenshots: boolean = true,
+			shouldCaptureHostScreenshot: boolean = true,
 		): Promise<void> => {
-			let startingScreenshot = null;
 			let stepResult = null;
+			let startingScreenshot = null;
+			if (shouldTakeScreenshots) {
+				try {
+					startingScreenshot = await this._getCurrentScreenshot(page);
+				} catch (ex) { }
+			}
 
 			if (shouldLog) {
 				await this.handleActionExecutionStatus(
@@ -152,10 +159,6 @@ class CrusherRunnerActions {
 					},
 					actionCallback,
 				);
-
-				try {
-					// startingScreenshot = await this._getCurrentScreenshot(page);
-				} catch (ex) {}
 			}
 
 			const beforeUrl = page ? await page.url() : null;
@@ -221,34 +224,46 @@ class CrusherRunnerActions {
 				}
 				// Woohoo! Action executed without any errors.
 				if (shouldLog) {
+					let endingScreenshot = null;
+					if (shouldCaptureHostScreenshot) {
+						try {
+							endingScreenshot = await this._getCurrentScreenshot(page);
+						} catch (ex) { }
+					}
 					await this.handleActionExecutionStatus(
 						action.name,
 						ActionStatusEnum.COMPLETED,
 						stepResult && stepResult.customLogMessage ? stepResult.customLogMessage : `Finished performing ${action.description}`,
 						stepResult
 							? {
+								...stepResult,
+								actionName: step.name ? step.name : null,
+								beforeUrl: beforeUrl,
+								afterUrl: page ? await page.url() : null,
+								meta: {
 									...stepResult,
-									actionName: step.name ? step.name : null,
-									beforeUrl: beforeUrl,
-									afterUrl: page ? await page.url() : null,
-									meta: {
-										...stepResult,
-									},
-							  }
+									hostScreenshot: endingScreenshot,
+								},
+							}
 							: {
-									actionName: step.name ? step.name : null,
-									beforeUrl: beforeUrl,
-									afterUrl: page ? await page.url() : null,
-							  },
+								actionName: step.name ? step.name : null,
+								beforeUrl: beforeUrl,
+								afterUrl: page ? await page.url() : null,
+								meta: {
+									hostScreenshot: endingScreenshot,
+								}
+							},
 						actionCallback,
 					);
 				}
 			} catch (err) {
-				if (shouldLog) {
-					let endingScreenshot = null;
+				let endingScreenshot = null;
+				if (shouldTakeScreenshots) {
 					try {
-						// endingScreenshot = await this._getCurrentScreenshot(page);
-					} catch (ex) {}
+						endingScreenshot = await this._getCurrentScreenshot(page);
+					} catch (ex) { }
+				}
+				if (shouldLog) {
 					await this.handleActionExecutionStatus(
 						action.name,
 						err.isStalled ? ActionStatusEnum.STALLED : ActionStatusEnum.FAILED,
@@ -289,15 +304,24 @@ class CrusherRunnerActions {
 		page: Page | null = null,
 		actionCallback: ActionStatusCallbackFn | null = null,
 		shouldLog: boolean = true,
+		shouldTakeScreenshots: boolean = true,
 	) {
 		let index = 0;
 
 		const remainingActionsArr = [...actions];
+		let isFirstNavigationStep = true;
 
 		for (let action of actions) {
 			remainingActionsArr.shift();
 
 			if (!this.actionHandlers[action.type]) throw new Error("No handler for this action type");
+			let shouldCaptureHostScreenshot = false;
+
+			// Capture screenshot of the host page before performing the action
+			if (shouldTakeScreenshots && action.type === ActionsInTestEnum.NAVIGATE_URL && isFirstNavigationStep) {
+				isFirstNavigationStep = false;
+				shouldCaptureHostScreenshot = true;
+			}
 			await this.actionHandlers[action.type](
 				action,
 				browser,
@@ -306,6 +330,8 @@ class CrusherRunnerActions {
 				actions[index + 1] ? (actions[index + 1].type !== ActionsInTestEnum.WAIT_FOR_NAVIGATION ? true : false) : false,
 				remainingActionsArr,
 				shouldLog,
+				shouldTakeScreenshots,
+				shouldCaptureHostScreenshot
 			);
 			index++;
 		}

@@ -104,6 +104,11 @@ class CloudCrusher {
 		return axios.get(resolveToBackend(`/builds/${buildId}/report`), authorizationOptions).then((res) => res.data);
 	});
 
+	public static getBuildReportBuildMeta: (buildId: string) => Promise<any> = createAuthorizedRequestFunc((authorizationOptions, buildId) => {
+		return axios.get(resolveToBackend(`/builds/${buildId}/report.buildMeta`), authorizationOptions).then((res) => res.data);
+	});
+
+
 	public static deleteTest: (testId: string) => Promise<any> = createAuthorizedRequestFunc((authorizationOptions, testId) => {
 		return axios.post(resolveToBackend(`/tests/${testId}/actions/delete`), {}, authorizationOptions).then((res) => res.data);
 	});

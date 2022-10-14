@@ -29,6 +29,7 @@ import { useBuildNotifications } from "./hooks/tests";
 import { addBuildNotification, clearCurrentLocalBuild, updateCurrentLocalBuild } from "../store/actions/builds";
 import { useAtom } from "jotai";
 import { isStepHoverAtom } from "./store/jotai/testsPage";
+import { CloudCrusher } from "../lib/cloud";
 
 const handleCompletion = async (store: Store, action: IDeepLinkAction, addNotification) => {
 	// @TODO: Change `redirectAfterSuccess` to `isLocalBuild`
@@ -82,6 +83,10 @@ const handleCompletion = async (store: Store, action: IDeepLinkAction, addNotifi
 
 const handleUrlAction = (store: Store, addNotification, event: Electron.IpcRendererEvent, { action }: { action: IDeepLinkAction }) => {
 	switch (action.commandName) {
+		case "run-local-build":
+			// const { buildId } = action.args;
+			// const buildReport = CloudCrusher.getBuildReport(buildId)
+			break;
 		case "replay-test":
 			const sessionInfoMeta = getAppSessionMeta(store.getState() as any);
 			const { selectedTests } = action.args;
@@ -130,10 +135,11 @@ const App = () => {
 			historyInstance.push("/", {});
 			goFullScreen(false);
 		});
-		ipcRenderer.on("url-action", handleUrlAction.bind(this, store, addNotification));
+		const listener = handleUrlAction.bind(this, store, addNotification);
+		ipcRenderer.on("url-action",listener);
 
 		return () => {
-			ipcRenderer.removeAllListeners("url-action");
+			ipcRenderer.removeListener("url-action", listener);
 			ipcRenderer.removeAllListeners("renderer-ready");
 			ipcRenderer.removeAllListeners("webview-initialized");
 			store.dispatch(resetRecorder());

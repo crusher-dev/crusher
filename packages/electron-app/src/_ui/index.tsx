@@ -44,9 +44,11 @@ function getPersistStore() {
 
 
 const handleUrlAction = async (store: Store, event: Electron.IpcRendererEvent, { action }: { action: IDeepLinkAction }) => {
+	console.log("Action recieved", action);
 	switch (action.commandName) {
 		case "run-local-build":
 			const { buildId } = action.args;
+			console.log("Local build", action);
 			const buildReport = await CloudCrusher.getBuildReportBuildMeta(buildId);
 			const testIds = buildReport.tests.map((test) => test.id);
 			triggerLocalBuild(testIds, buildReport.tests.map((test) => ({...test, testName: test.name})));
@@ -80,6 +82,7 @@ function InsideRouter() {
 	React.useEffect(() => {
 		const listener = handleUrlAction.bind(null, store);
 		ipcRenderer.on("url-action", listener);
+		window.triggerLocalBuild = listener.bind(null, null, { action: { commandName: "run-local-build", args: { buildId: "29372" } } });
 		return () => {
 			ipcRenderer.removeListener("url-action", listener);
 		}

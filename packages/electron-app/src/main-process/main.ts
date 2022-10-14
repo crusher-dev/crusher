@@ -189,6 +189,7 @@ function createWindow() {
 }
 
 function onDidLoad(fn: OnDidLoadFn) {	
+	console.log(`onDidLoad`, !!onDidLoadFns, !!mainWindow);
 	if (onDidLoadFns) {
 		onDidLoadFns.push(fn);
 	} else {

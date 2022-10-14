@@ -29,6 +29,7 @@ import { ToastBox } from "./ui/components/toasts";
 import { CloudCrusher } from "../lib/cloud";
 import { Store } from "redux";
 import { IDeepLinkAction } from "../types";
+import { triggerLocalBuild } from "./utils/recorder";
 webFrame.setVisualZoomLevelLimits(1, 3);
 
 function getPersistStore() {
@@ -43,12 +44,14 @@ function getPersistStore() {
 
 
 const handleUrlAction = async (store: Store, event: Electron.IpcRendererEvent, { action }: { action: IDeepLinkAction }) => {
+	console.log("Action recieved", action);
 	switch (action.commandName) {
 		case "run-local-build":
 			const { buildId } = action.args;
 			console.log("Local build", action);
-			// const buildReport = await CloudCrusher.getBuildReport(buildId);
-			alert("Build id is: " + buildId);
+			const buildReport = await CloudCrusher.getBuildReport(buildId);
+			const testIds = buildReport.tests.map((test) => test.id);
+			triggerLocalBuild(testIds, buildReport.tests);
 			break;
 		
 	}
@@ -73,10 +76,15 @@ function InsideRouter() {
 		} else {
 			performGoToUrl("/network_error");
 		}
-		ipcRenderer.on("url-action", handleUrlAction.bind(this, store));
 
+	}, []);
+
+	React.useEffect(() => {
+		const listener = handleUrlAction.bind(null, store);
+		ipcRenderer.on("url-action", listener);
+		window.triggerLocalBuild = listener.bind(null, null, { action: { commandName: "run-local-build", args: { buildId: "29372" } } });
 		return () => {
-			ipcRenderer.removeListener("url-action", handleUrlAction);
+			ipcRenderer.removeListener("url-action", listener);
 		}
 	}, []);
 

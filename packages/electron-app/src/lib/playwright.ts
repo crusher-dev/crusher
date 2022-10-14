@@ -315,7 +315,7 @@ class PlaywrightInstance {
 					if (!shouldNotSave) this.appWindow.getRecorder().markRunningStepCompleted();
 					break;
 			}
-		});
+		}, true, false);
 	}
 
 	public addInitScript(scriptPath: string) {

@@ -30,21 +30,21 @@ const ReportSection = dynamic(() => import("./container/testList"));
 function BuildInfoTop() {
 	const { query } = useRouter();
 	const { data } = useBuildReport(query.id);
+	const title = data.name || `#${data?.id}`;
 
-	const name = "feats: integrated test GTM #517";
-
+	const { status } = data;
 	return (
 		<div>
 			<div className={"font-cera text-18 font-700 leading-none flex pt-8"} id={"title"}>
-				{name || `${data?.name} #${data?.id}`} <CorrentSVG height={18} width={18} className="ml-16" />
+				{title || `${data?.name} #${data?.id}`} <CorrentSVG height={18} width={18} className="ml-16" />
 			</div>
 			<div className="flex items-center mt-16" css={flexGap}>
 				<div className="flex items-center">
 					<Text color="#696969" fontSize={13}>
 						Status:
 					</Text>
-					<Text color="#E7E7E7" fontSize={13}>
-						&nbsp;All passed
+					<Text color="#E7E7E7" fontSize={13} className="ml-4">
+						{status === "PASSED" ? `All passed` : status.toLowerCase()}
 					</Text>
 				</div>
 				<div className="flex items-center">
@@ -81,6 +81,8 @@ const flexGap = css`
 function ReportInfoTOp() {
 	const { query } = useRouter();
 	const { data } = useBuildReport(query.id);
+
+	console.log(data)
 
 	const title = data.name || `#${data?.id}`;
 	usePageTitle(title);

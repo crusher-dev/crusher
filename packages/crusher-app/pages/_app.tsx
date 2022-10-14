@@ -13,13 +13,12 @@ import { loadGTM, loadGA, loadSegment } from "@utils/common/scriptUtils";
 
 import { usePageSegmentAnalytics } from "/src/hooks/analytics";
 import { useBasicSEO } from "/src/hooks/seo";
-import { useLoadTempData } from "/src/hooks/tempTest";
+
 import { loadUserDataAndRedirect } from "/src/hooks/user";
 import { rootGlobalAtom } from "/src/store/atoms/global/rootAtom";
 import "/src/tailwind.css";
 
 function App({ Component, pageProps }: AppProps<any>) {
-	useLoadTempData();
 
 	const [userDataLoaded] = loadUserDataAndRedirect({ fetchData: true, userAndSystemData: null });
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment

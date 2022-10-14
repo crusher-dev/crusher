@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useMemo, useState } from "react";
 import { css } from "@emotion/react";
 import Checkbox from "../../atoms/checkbox/checkbox";
 import { EmojiPicker } from "../../molecules/EmojiPicker";
@@ -6,11 +6,14 @@ import { BasketBallIcon } from "../svg/emoji";
 import { Conditional } from "../../layouts";
 import { EditIcon, LoadingIconV2, PlayIcon } from "../svg/list";
 import { EditableInput } from "../EditableInput";
+import { TestListContext } from "../utils/basic";
 
 const EditableTestName = ({ testName, testId }) => {
 	const [testEditName, setTestEditName] = useState(null);
 	const [name, setName] = React.useState(testName);
 	const inputRef = React.useRef<HTMLInputElement>(null);
+	const { type } = useContext(TestListContext)
+
 
 	const handleOnChange = (value) => {
 		// CloudCrusher.updateTestName(testId, value);
@@ -20,12 +23,13 @@ const EditableTestName = ({ testName, testId }) => {
 
 	const editThisTestName = testEditName === testId;
 
+
 	return (
 		<EditableInput
 			id={testId}
-			labelCss={css`
-				padding-left: 12px;
-			`}
+			labelCss={[InputCSS,
+				type === "web" && webInput
+			]}
 			ref={inputRef}
 			onChange={handleOnChange}
 			value={name}
@@ -33,6 +37,15 @@ const EditableTestName = ({ testName, testId }) => {
 		/>
 	);
 };
+
+const InputCSS = css`
+				padding-left: 12px;
+				font-size:
+			`
+
+const webInput = css`
+	font-size: 14rem;
+`
 
 
 const TestListItem = ({ id, isItemSelected, onEdit, onUpdateEmoji, onDelete, onRename, test, deleteTestCallback }) => {
@@ -206,22 +219,22 @@ const runTestsCSS = css`
 
 	font-size: 13rem;
 
-	padding: 6px 6px;
+	padding: 6rem;
+	border-radius: 6rem;
 	:hover {
 		color: #fff;
-		background: linear-gradient(0deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.06)), #131314;
-		border-radius: 6px;
+		background: rgba(255, 255, 255, 0.10);
 	}
 `;
 const editContainerCss = css`
 	display: flex;
 	align-items: center;
 
-	padding: 6px 6px;
+	padding: 6rem;
+	border-radius: 6rem;
 	:hover {
 		color: #fff;
-		background: linear-gradient(0deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.06)), #131314;
-		border-radius: 6px;
+		background: rgba(255, 255, 255, 0.10);
 	}
 `;
 const playIconCss = css`

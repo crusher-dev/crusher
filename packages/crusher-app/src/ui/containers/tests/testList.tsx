@@ -39,9 +39,10 @@ const updateTest = (tempTestId: string, mainTestId: string) => {
 	});
 };
 
-const SELECTED_TESTS_MENU = [
+const SELECTED_TEST_MENU = [
 	{ id: "edit", label: "Edit test", shortcut: null },
 	{ id: "run", label: "Run test", shortcut: null },
+	{ id: "rename", label: "Rename", shortcut: null },
 	{ id: "delete", label: "Delete", shortcut: <div>Delete</div> },
 ];
 
@@ -121,6 +122,7 @@ function TestSearchableList() {
 			<Conditional showIf={data && data.list.length > 0}>
 
 				<TestListContext.Provider value={{
+					type: "web",
 					runTest: () => {
 						console.log("DS")
 					}
@@ -128,7 +130,7 @@ function TestSearchableList() {
 					<TestsList contextMenu={{
 						"single": {
 							callback: handleMenuCallback,
-							menuItems: SELECTED_TESTS_MENU
+							menuItems: SELECTED_TEST_MENU
 						}, "multi": {
 							callback: handleMenuCallback,
 							menuItems: MULTI_SELECTED_MENU

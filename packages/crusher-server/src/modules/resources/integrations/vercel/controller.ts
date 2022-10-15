@@ -67,6 +67,7 @@ class VercelIntegrationsController {
                 github: {
                     repoName: repoName,
                     commitId: githubCommitSha,
+                    githubCommitMessage: githubCommitMessage
                 }
             };
 

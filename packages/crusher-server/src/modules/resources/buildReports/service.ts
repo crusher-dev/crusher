@@ -200,7 +200,13 @@ export class BuildReportService {
 		}, {});
 
 		const testsArray: Array<any> = Object.values(testsMap);
+		const buildMeta = testsWithReportData[0].buildMeta ? JSON.parse(testsWithReportData[0].buildMeta) : {};
 
+		if(buildMeta.github) {
+			const { repoName, commitId } = buildMeta.github;
+			buildMeta.github.repoLink = `https://github.com/${repoName}/commits/${commitId}`;
+		}
+	
 		return {
 			buildId: testsWithReportData[0].buildId,
 			buildReportId: testsWithReportData[0].buildReportId,
@@ -220,7 +226,7 @@ export class BuildReportService {
 			configuration: {
 				environment: [],
 			},
-			meta: testsWithReportData[0].buildMeta ? JSON.parse(testsWithReportData[0].buildMeta) : {},
+			meta: buildMeta,
 			tests: testsArray,
 			// @TODO: Add implementation for this
 			comments: [],

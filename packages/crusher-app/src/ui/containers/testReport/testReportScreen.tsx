@@ -107,7 +107,8 @@ function ReportInfoTOp() {
 }
 
 function BuildMainInfo() {
-	const { data: { meta } } = useReportData();
+	const { data } = useReportData();
+	const { meta } = data;
 	const { github } = meta;
 
 
@@ -130,8 +131,8 @@ function BuildMainInfo() {
 							host
 						</TextBlock>
 						<TextBlock color="#D0D0D0" fontSize={13} className="mt-8">
-							<a href={"https://crusher.dev"} css={link} className="flex items-center" target="_blank">
-								crusher.dev  <ExternalIcon className="ml-6" />
+							<a href={data.host} css={link} className="flex items-center" target="_blank">
+								{data.host.split("://")[1]} <ExternalIcon className="ml-6" />
 							</a>
 						</TextBlock>
 					</div>

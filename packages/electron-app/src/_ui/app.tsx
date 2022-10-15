@@ -31,18 +31,18 @@ import { useAtom } from "jotai";
 import { isStepHoverAtom } from "./store/jotai/testsPage";
 import { CloudCrusher } from "../lib/cloud";
 import { clearAllToasts, clearToast, showToast } from "./ui/components/toasts";
+import { getStore } from "../store/configureStore";
 
-const handleCompletion = async (store: Store, action: IDeepLinkAction, addNotification) => {
+const handleCompletion = async (store: Store, action: IDeepLinkAction, addNotification, hasCompletedSuccesfully: boolean) => {
 	// @TODO: Change `redirectAfterSuccess` to `isLocalBuild`
-	console.log("Action args", action, window["testsToRun"]);
+
 	if (action.args.redirectAfterSuccess && window["testsToRun"]) {
 		window["testsToRun"].list = window["testsToRun"].list.filter((testId) => testId !== action.args.testId);
 		const logs = await performGetRecorderTestLogs();
-		const recorderState = getRecorderState(store.getState());
 		window["localRunCache"][action.args.testId] = {
 			steps: logs,
 			id: action.args.testId,
-			status: recorderState.type !== TRecorderState.ACTION_REQUIRED ? "FINISHED" : "FAILED",
+			status: hasCompletedSuccesfully ? "FINISHED" : "FAILED",
 		};
 
 		if (window["testsToRun"].list.length) {
@@ -81,11 +81,13 @@ const handleCompletion = async (store: Store, action: IDeepLinkAction, addNotifi
 			sendSnackBarEvent({ type: "test_report", message: null, meta: { totalCount: totalTestsInBuild, buildReportStatus: localBuild.buildReportStatus } });
 		}
 	} else {
-		showToast({
-			type: "ready-for-edit",
-			isUnique: true,
-			message: "All steps completed, you can edit now",
-		})
+		if(hasCompletedSuccesfully) {
+			showToast({
+				type: "ready-for-edit",
+				isUnique: true,
+				message: "All steps completed, you can edit now",
+			});
+		}
 	}
 };
 
@@ -110,7 +112,12 @@ const handleUrlAction = (store: Store, addNotification, event: Electron.IpcRende
 					selectedTest: currentTest,
 				}),
 			);
-			performReplayTest(action.args.testId).finally(handleCompletion.bind(this, store, action, addNotification));
+			performReplayTest(action.args.testId).then((hasCompletedSuccesfully: boolean) => {
+				handleCompletion(store, action, addNotification, hasCompletedSuccesfully);
+			}).catch((err) => {
+				console.error(err);
+				handleCompletion(store, action, addNotification, false);
+			})
 			break;
 		case "restore":
 			if (window.localStorage.getItem("saved-steps")) {

@@ -110,8 +110,15 @@ export const ToastClose = ToastPrimitive.Close;
 // Your app...
 
 const ActionToast = ({ open, setOpen, duration, message, actions}) => {
+    React.useEffect(() => {
+      const interval = setTimeout(() => {
+        setOpen(false);
+      }, duration);
+
+      return () => clearInterval(interval);
+    }, []);
     return (
-        <Toast duration={duration} open={open} onOpenChange={setOpen}>
+        <Toast open={open} onOpenChange={setOpen}>
             <ToastTitle>
                 {message}
             </ToastTitle>

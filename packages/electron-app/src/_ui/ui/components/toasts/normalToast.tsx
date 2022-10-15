@@ -5,16 +5,19 @@ import React from "react";
 import { HoverButton } from "../hoverButton";
 import { ActionToast } from "./variants/actionToast";
 
-const NormalToast = ({ meta, message }) => {
-    const [open, setOpen] = React.useState(true);
-
+const NormalToast = ({ meta, setOpen, message }) => {
+    const handleOpen = (open) => {
+        if(!open) {
+            setOpen(open);
+        }
+    }
     return (
         <ActionToast
-            duration={2}
-            open={open}
+            duration={2000}
+            open={true}
             setOpen={setOpen}
             message={<FixToastMessage message={message} />}
-            actions={<NormalToastActions setOpen={setOpen} meta={meta} />}
+            actions={<NormalToastActions setOpen={handleOpen} meta={meta} />}
         />
     )
 };

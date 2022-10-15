@@ -6,6 +6,11 @@ module.exports = {
             "name": "frontend",
             "url": "http://localhost:3000",
             "intercept": "localhost:3000"
+        },
+        {
+            "name": "frontend-1-12",
+            "url": "http://localhost:3913",
+            "intercept": "localhost:3913"
         }
     ]
 }

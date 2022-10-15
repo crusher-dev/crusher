@@ -19,8 +19,8 @@ export const shouldOverrideHost = async (appWindow: AppWindow) => {
             return null;
         }
 
-        if(projectConfig.selectedHost) {
-            return { host: projectConfig.selectedHost };
+        if(projectConfig.env?.BASE_URL) {
+            return { host: projectConfig.env.BASE_URL };
         }
     }
     return null;

@@ -66,7 +66,7 @@ export default function Dashboard() {
 		}
 
 		if (searchProject.length === 0) return sortProjects(projects);
-		return sortProjects(projects.filter(({ name }) => name.includes(searchProject)));
+		return sortProjects(projects.filter(({ name }) => name.toLowerCase().includes(searchProject.toLowerCase())));
 	}, [searchProject]);
 
 	return (
@@ -229,15 +229,15 @@ function ProjectCard({ project }) {
 					</div>
 					<div className="open flex items-center justify-center">Open</div>
 				</div>
-
+				{/* 
 				<TextBlock fontSize={12.6} color="#4a4a4a" className="mt-11">
 					Add github action
-				</TextBlock>
+				</TextBlock> */}
 			</div>
 			<Conditional showIf={!!gitIntegration}>
 				<div className="flex items-center">
 					<GitIcon className="mr-8" css={normalGitIcon} />{" "}
-					<a href={`https://github.com/${gitIntegration?.repoName}`} css={hoverRepoLink}>
+					<a href={`https://github.com/${gitIntegration?.repoName}`} css={hoverRepoLink} target="_blank">
 						{gitIntegration?.repoName}
 					</a>
 				</div>

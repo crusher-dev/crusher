@@ -92,14 +92,14 @@ function DashboardTopDropdownContent({ setShowActionMenu, isRecorder }) {
 		>
 			<div>
 				{isRecorder ? (
-					<MenuItem onClick={handleGoBackToDashboard} label={<span>Go Back</span>} className={"close-on-click"} />
+					<MenuItem onMouseDown={handleGoBackToDashboard} label={<span>Go Back</span>} className={"close-on-click"} />
 				) : (
-					<MenuItem onClick={handleSelectProject} label={<span>Back to projects</span>} className={"close-on-click"} />
+					<MenuItem onMouseDown={handleSelectProject} label={<span>Back to projects</span>} className={"close-on-click"} />
 				)}
-				{projectConfigFile ? <MenuItem onClick={handleOpenConfigFile} label={<span>Edit Project config</span>} className={"close-on-click"} /> : ""}
-				<MenuItem onClick={handleSettings} label={<span>Settings</span>} className={"close-on-click"} />
-				<MenuItem onClick={handleHelpAccount} label={<span>Help & account</span>} className={"close-on-click"} />
-				<MenuItem onClick={handleExit} label={<span>Exit</span>} className={"close-on-click"} />
+				{projectConfigFile ? <MenuItem onMouseDown={handleOpenConfigFile} label={<span>Edit Project config</span>} className={"close-on-click"} /> : ""}
+				<MenuItem onMouseDown={handleSettings} label={<span>Settings</span>} className={"close-on-click"} />
+				<MenuItem onMouseDown={handleHelpAccount} label={<span>Help & account</span>} className={"close-on-click"} />
+				<MenuItem onMouseDown={handleExit} label={<span>Exit</span>} className={"close-on-click"} />
 			</div>
 		</div>
 	);

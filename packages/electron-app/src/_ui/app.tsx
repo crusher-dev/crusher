@@ -46,6 +46,7 @@ const handleCompletion = async (store: Store, action: IDeepLinkAction, addNotifi
 		};
 
 		if (window["testsToRun"].list.length) {
+			clearAllToasts();
 			historyInstance.push("/recorder", {});
 			goFullScreen();
 			store.dispatch(setSessionInfoMeta({}));

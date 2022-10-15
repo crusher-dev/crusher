@@ -1,6 +1,7 @@
 import { createHashHistory } from "history";
 import React from "react";
 import { HashRouterProps, Router } from "react-router-dom";
+import { clearAllToasts } from "../ui/components/toasts";
 const historyInstance = createHashHistory();
 
 export function CustomRouter({ basename, children }: HashRouterProps) {
@@ -16,6 +17,10 @@ export function CustomRouter({ basename, children }: HashRouterProps) {
 	});
 
 	React.useLayoutEffect(() => history.listen(setState), [history]);
+
+	React.useEffect(() => {
+		clearAllToasts();
+	}, [state.location]);
 
 	return <Router basename={basename} children={children} location={state.location} navigationType={state.action} navigator={history} />;
 }

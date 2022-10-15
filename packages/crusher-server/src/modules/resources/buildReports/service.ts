@@ -207,7 +207,7 @@ export class BuildReportService {
 
 		if(buildMeta.github) {
 			const { repoName, commitId } = buildMeta.github;
-			buildMeta.github.repoLink = `https://github.com/${repoName}/commits/${commitId}`;
+			buildMeta.github.repoLink = `https://github.com/${repoName}/commit/${commitId}`;
 		}
 	
 		return {

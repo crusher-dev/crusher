@@ -37,9 +37,9 @@ const userDropdownItems = [
 		target: "_blank",
 	},
 	{
-		leftLabel: "Help & Support",
+		leftLabel: "Discord",
 		rightLabel: "",
-		link: "https://docs.crusher.dev/docs/references/contact-us",
+		link: "https://discord.com/invite/dHZkSNXQrg",
 		target: "_blank",
 	},
 	{

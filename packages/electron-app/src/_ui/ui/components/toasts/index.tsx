@@ -3,9 +3,10 @@ import { styled } from '@stitches/react';
 import * as ToastPrimitive from '@radix-ui/react-toast';
 import { FixToast } from './fixToast';
 import mitt from 'mitt';
+import { NormalToast } from './normalToast';
 
 export const toastEmitter = mitt();
-export type ToastType = "step-failed";
+export type ToastType = "step-failed" | "ready-for-edit";
 
 export type ToastEvent = {
 	message: string;
@@ -22,6 +23,9 @@ export const clearToast = (eventType: ToastType) => {
   toastEmitter.emit("clear", eventType);
 };
 
+export const clearAllToasts = () => {
+  toastEmitter.emit("clear-all-toasts");
+}
 const VIEWPORT_PADDING = 25;
 
 const StyledViewport = styled(ToastPrimitive.Viewport, {
@@ -61,19 +65,30 @@ const ToastBox = () => {
       setToasts((toasts) => toasts.filter(t => t.type !== eventType));
     };
 
+    const handleClearAllToasts = () => {
+      setToasts([]);
+    }
+
     toastEmitter.on("show", handler);
     toastEmitter.on("clear", handleClear);
+    toastEmitter.on("clear-all-toasts", handleClearAllToasts);
+
     return () => {
       toastEmitter.off("show", handler);
       toastEmitter.off("clear", handleClear);
+      toastEmitter.off("clear-all-toasts", handleClearAllToasts);
     };
   }, []);
 
   return (
     <ToastProvider swipeDirection="right">
-      {toasts.map((toast) => (
-        <FixToast meta={toast.meta} message={toast.message} />
-      ))}
+      {toasts.map((toast) => {
+        if(toast.type === "step-failed") return (<FixToast meta={toast.meta} message={toast.message} />);
+
+        return (
+          <NormalToast message={toast.message} meta={toast.meta} />
+        );
+      })};
       <ToastViewport />
     </ToastProvider>
   );

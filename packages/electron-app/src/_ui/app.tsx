@@ -30,6 +30,7 @@ import { addBuildNotification, clearCurrentLocalBuild, updateCurrentLocalBuild }
 import { useAtom } from "jotai";
 import { isStepHoverAtom } from "./store/jotai/testsPage";
 import { CloudCrusher } from "../lib/cloud";
+import { clearAllToasts, clearToast, showToast } from "./ui/components/toasts";
 
 const handleCompletion = async (store: Store, action: IDeepLinkAction, addNotification) => {
 	// @TODO: Change `redirectAfterSuccess` to `isLocalBuild`
@@ -71,13 +72,20 @@ const handleCompletion = async (store: Store, action: IDeepLinkAction, addNotifi
 					time: Date.now(),
 				}),
 			);
-
+			
+			clearAllToasts();
 			historyInstance.push("/", {});
 
 			goFullScreen(false);
 			store.dispatch(clearCurrentLocalBuild());
 			sendSnackBarEvent({ type: "test_report", message: null, meta: { totalCount: totalTestsInBuild, buildReportStatus: localBuild.buildReportStatus } });
 		}
+	} else {
+		showToast({
+			type: "ready-for-edit",
+			isUnique: true,
+			message: "All steps completed, you can edit now",
+		})
 	}
 };
 
@@ -132,6 +140,7 @@ const App = () => {
 		});
 
 		ipcRenderer.on("go-to-dashboard", () => {
+			clearAllToasts();
 			historyInstance.push("/", {});
 			goFullScreen(false);
 		});

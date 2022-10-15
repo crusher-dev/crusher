@@ -1,25 +1,25 @@
 import React from "react";
 
-const CloudIcon = React.forwardRef(({ shouldAnimateGreen, ...props }, ref) => {
+const CloudIcon = React.forwardRef(({ shouldAnimateGreen, color = "#9EF25B", ...props }, ref) => {
 	return (
 		<svg viewBox={"0 0 16 11"} fill="none" xmlns="http://www.w3.org/2000/svg" ref={ref} {...props}>
 			{shouldAnimateGreen ? (
 				<linearGradient id="lg" x1="0.5" y1="1" x2="0.5" y2="0">
-					<stop offset="0%" stopOpacity="1" stopColor="#E42475" />
-					<stop offset="40%" stopOpacity="1" stopColor="#E42475">
+					<stop offset="0%" stopOpacity="1" stopColor={color} />
+					<stop offset="40%" stopOpacity="1" stopColor={color}>
 						<animate attributeName="offset" values="0;1" repeatCount="indefinite" dur="0.8s" begin="0s" />
 					</stop>
-					<stop offset="40%" stopOpacity="0" stopColor="#E42475">
+					<stop offset="40%" stopOpacity="0" stopColor={color}>
 						<animate attributeName="offset" values="0;1" repeatCount="indefinite" dur="0.8s" begin="0s" />
 					</stop>
-					<stop offset="100%" stopOpacity="0" stopColor="#E42475" />
+					<stop offset="100%" stopOpacity="0" stopColor={color} />
 				</linearGradient>
 			) : (
 				""
 			)}
 			<path
 				d="M12.854 4.47C12.566 1.953 10.504 0 8 0 5.497 0 3.433 1.953 3.147 4.47 1.409 4.47 0 5.932 0 7.735 0 9.538 1.409 11 3.146 11h9.708C14.59 11 16 9.538 16 7.735c0-1.803-1.409-3.265-3.146-3.265Z"
-				fill={shouldAnimateGreen ? "url(#lg)" : "#E42475"}
+				fill={shouldAnimateGreen ? "url(#lg)" : color}
 				stroke={"#fff"}
 				strokeWidth="0.5"
 			/>

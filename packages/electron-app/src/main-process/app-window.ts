@@ -965,7 +965,7 @@ export class AppWindow {
 		return shouldOverrideHost(this);	
 	}
 	
-	async handleReplayTestSteps(steps: iAction[] | null = null) {
+	async modifyStepsForEnvironment(steps: any) {
 		const overrideHost = await this.shouldOverrideHost();
 		if(overrideHost) {
 			steps = steps.map((event) => {
@@ -980,6 +980,11 @@ export class AppWindow {
 				return event;
 			});
 		}
+
+		return steps;
+	}
+	async handleReplayTestSteps(steps: iAction[] | null = null) {
+		steps = await this.modifyStepsForEnvironment(steps);
 		this.store.dispatch(updateRecorderState(TRecorderState.PERFORMING_ACTIONS, {}));
 
 		const browserActions = getBrowserActions(steps);
@@ -1023,7 +1028,7 @@ export class AppWindow {
 						// @Todo: Add support for future browser actions
 						this.store.dispatch(recordStep(browserAction, ActionStatusEnum.COMPLETED));
 					} else {
-						await this.handleRunAfterTest(browserAction);
+						await this.handleRunAfterTest(browserAction, false);
 					}
 				}
 			}
@@ -1214,9 +1219,10 @@ export class AppWindow {
 		await this.clearWebViewStorage();
 	}
 
-	private async handleRunAfterTest(action: iAction, shouldRecordSetDevice = false) {
+	private async handleRunAfterTest(action: iAction, shouldRecordSetDevice = false, overrideHost = null) {
 		try {
-			const testSteps = await CloudCrusher.getTest(action.payload.meta.value);
+			let testSteps = await CloudCrusher.getTest(action.payload.meta.value);
+			testSteps = await this.modifyStepsForEnvironment(testSteps);
 
 			const replayableTestSteps = await CloudCrusher.getReplayableTestActions(testSteps, true);
 			const browserActions = getBrowserActions(replayableTestSteps);

@@ -88,11 +88,11 @@ export default function ForgotPassword() {
 			<div css={overlayContainer} className={"mt-32"}>
 				<div className={" mb-42"}>
 					<Conditional showIf={data && !loading}>
-						<div className="text-32 font-extrabold my-50">Please Check your email</div>;
+						<TextBlock fontSize={15} className="text-17 text-center mt-48">Please check your email</TextBlock>
 					</Conditional>
 					<Conditional showIf={!data}>
 						<div css={overlayContainer} className={"mt-32"}>
-							<TextBlock fontSize={14} color={"#E7E7E7"} className={"mb-24"}>
+							<TextBlock fontSize={14} color={"#E7E7E7"} className={"mb-12"}>
 								Reset your password
 							</TextBlock>
 
@@ -114,7 +114,7 @@ export default function ForgotPassword() {
 										</div>
 									</Conditional>
 								</div>
-								<NewButton className={"flex items-center justify-center mt-30"} onClick={onSubmit}>
+								<NewButton className={"flex items-center justify-center mt-16"} onClick={onSubmit}>
 									<div className={"flex justify-center items-center"}>
 										<Conditional showIf={!loading}>
 											<Text fontSize={14} weight={600}>

@@ -114,7 +114,7 @@ export const StickyFooter = ({ className }: IProps) => {
 								shouldAnimateGreen={false}
 							/>
 						) : (
-							<CloudIcon css={[cloudIconCss, clickableCss]} shouldAnimateGreen={proxyIsInitializing} />
+							<CloudIcon css={[cloudIconCss, activeCloudIconCss, clickableCss]} shouldAnimateGreen={proxyIsInitializing} />
 						)}
 					</Tooltip>
 					{/* <NotepadIcon css={[notepadIconCss, clickableCss]} /> */}
@@ -192,6 +192,9 @@ const contentCss = css`
 const cloudIconCss = css`
 	width: 16px;
 	height: 11px;
+`;
+const activeCloudIconCss = css`
+
 `;
 const clickableCss = css`
 	:hover {

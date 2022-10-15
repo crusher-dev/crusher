@@ -22,13 +22,15 @@ const checkIfElementFailure = (stepId, errorType) => {
     return isElementFailure;
 }
 
-const FixToast = ({ message, meta }) => {
-    const [open, setOpen] = React.useState(true);
+const FixToast = ({ message, setOpen, meta }) => {
+    const handleOpen = (open) => {
+        setOpen(open);
+    }
 
     return (
         <ActionToast
             duration={1000 * 60 * 60 * 60}
-            open={open}
+            open={true}
             setOpen={setOpen}
             actions={<FixToastActions meta={meta} setOpen={setOpen} />}
             message={<FixToastMessage message={message} />}

@@ -53,6 +53,7 @@ import { ProxyManager } from "./proxy-manager";
 import { resolveToBackend } from "../utils/url";
 import { getLogs } from "../store/selectors/logger";
 import path from "path";
+import { shouldOverrideHost } from "../lib/project-config";
 
 export class AppWindow {
 	private window: Electron.BrowserWindow;
@@ -960,7 +961,25 @@ export class AppWindow {
 		);
 	}
 
+	async shouldOverrideHost() {
+		return shouldOverrideHost(this);	
+	}
+	
 	async handleReplayTestSteps(steps: iAction[] | null = null) {
+		const overrideHost = await this.shouldOverrideHost();
+		if(overrideHost) {
+			steps = steps.map((event) => {
+				if (event.type === ActionsInTestEnum.NAVIGATE_URL) {
+					const urlToGo = new URL(event.payload.meta.value);
+					const newHostURL = new URL(overrideHost.host);
+					urlToGo.host = newHostURL.host;
+					urlToGo.port = newHostURL.port;
+					urlToGo.protocol = newHostURL.protocol;
+					event.payload.meta.value = urlToGo.toString();
+				}
+				return event;
+			});
+		}
 		this.store.dispatch(updateRecorderState(TRecorderState.PERFORMING_ACTIONS, {}));
 
 		const browserActions = getBrowserActions(steps);

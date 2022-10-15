@@ -126,22 +126,24 @@ function BuildMainInfo() {
 			</div>
 			<div className="flex justify-between items-start mt-80">
 				<div className="flex" css={flexGapInfo}>
+					<Conditional showIf={!!data?.host}>
+						<div>
+							<TextBlock color="#696969" fontSize={13}>
+								host
+							</TextBlock>
+							<TextBlock color="#D0D0D0" fontSize={13} className="mt-8">
+								<a href={data.host} css={link} className="flex items-center" target="_blank">
+									{data.host.split("://")[1]} <ExternalIcon className="ml-6" />
+								</a>
+							</TextBlock>
+						</div>
+					</Conditional>
 					<div>
 						<TextBlock color="#696969" fontSize={13}>
-							host
+							env
 						</TextBlock>
 						<TextBlock color="#D0D0D0" fontSize={13} className="mt-8">
-							<a href={data.host} css={link} className="flex items-center" target="_blank">
-								{data.host.split("://")[1]} <ExternalIcon className="ml-6" />
-							</a>
-						</TextBlock>
-					</div>
-					<div>
-						<TextBlock color="#696969" fontSize={13}>
-							host
-						</TextBlock>
-						<TextBlock color="#D0D0D0" fontSize={13} className="mt-8">
-							crusher.dev
+							Prod
 						</TextBlock>
 					</div>
 				</div>

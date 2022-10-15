@@ -178,7 +178,7 @@ function NavbarLeft() {
 			<div css={reportLabel} className={"flex items-center w-full"}>
 				<Link href={`/projects`}>
 					<div className="flex items-center">
-						<BackSVG height={12} width={12} className="mr-8" />
+						{/* <BackSVG height={12} width={12} className="mr-8" /> */}
 						<span css={projectIcon}>projects</span>
 					</div>
 				</Link>
@@ -251,11 +251,11 @@ export const SidebarTopBarLayout = ({ children, noContainerWidth = false, hideSi
 
 			<div className={"w-full relative"} id="right-section">
 				<TopNavbar>
-					<Conditional showIf={showSidebar}>
+					{/* <Conditional showIf={showSidebar}>
 						<div css={sidebarIconCSS} onClick={setShowSidebar.bind(this, !showSidebar)}>
 							<ShowSidebar />
 						</div>
-					</Conditional>
+					</Conditional> */}
 
 					<div className="flex items-center h-full">
 						<NavbarLeft />

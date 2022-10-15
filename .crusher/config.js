@@ -1,6 +1,7 @@
 module.exports = {
     "backend": "https://backend.crusher.dev/",
     "project": 258,
+    "selectedHost": "http://localhost:3000",
     "proxy": [
         {
             "name": "frontend",

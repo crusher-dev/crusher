@@ -1,8 +1,6 @@
 import { css } from "@emotion/react";
-import React from "react";
 
-export const DEFAULT_THEME = "light";
-export const ThemeContext = React.createContext(DEFAULT_THEME);
+
 
 export const plainButtonCSS = css`
 	padding: 0 10rem;
@@ -24,5 +22,12 @@ export const plainButtonCSS = css`
 		background: #cd60ff;
 		filter: brighntess(0.7);
 		border: 1px solid #7d41ad;
+	}
+`;
+
+
+export const underlineLink = css`
+	:hover {
+		text-decoration: underline !important;
 	}
 `;

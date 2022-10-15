@@ -72,7 +72,7 @@ function TestList(props: any) {
 	return (
 		<div css={stepSectionCSS}>
 			<div className="pl-28 pt-32" css={testListHeadingStyle}>
-				tests | 12
+				tests | {data.tests.length}
 			</div>
 			<ul css={testListStyle}>
 				{data?.tests.map((testData, i) => {

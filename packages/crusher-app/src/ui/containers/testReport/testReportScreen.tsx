@@ -11,7 +11,7 @@ import { Conditional } from "dyson/src/components/layouts";
 
 import { PROJECT_META_KEYS, USER_META_KEYS } from "@constants/USER";
 import { CorrentSVG } from "@svg/builds";
-import { PlayIcon, ReloadIcon } from "@svg/dashboard";
+import { ExternalIcon, PlayIcon, ReloadIcon } from "@svg/dashboard";
 import { GithubSquare } from "@svg/social";
 import { backendRequest } from "@utils/common/backendRequest";
 import { sendSnackBarEvent } from "@utils/common/notify";
@@ -28,11 +28,12 @@ import { COLORS } from "dyson/src/constant/color";
 
 const ReportSection = dynamic(() => import("./container/testList"));
 function BuildInfoTop() {
-	const { query } = useRouter();
-	const { data } = useBuildReport(query.id);
+	const { data } = useReportData();
 	const title = data.name || `#${data?.id}`;
 
 	const { status } = data;
+
+
 	return (
 		<div>
 			<div className={"font-cera text-18 font-700 leading-none flex pt-8"} id={"title"}>
@@ -66,7 +67,7 @@ function BuildInfoTop() {
 						test count :{" "}
 					</Text>
 					<Text color="#E7E7E7" fontSize={13}>
-						12
+						{data.tests.length}
 					</Text>
 				</div>
 			</div>
@@ -78,11 +79,15 @@ const flexGap = css`
 	gap: 28rem;
 `;
 
-function ReportInfoTOp() {
+const useReportData = () => {
 	const { query } = useRouter();
 	const { data } = useBuildReport(query.id);
 
-	console.log(data)
+	return { data }
+}
+
+function ReportInfoTOp() {
+	const { data } = useReportData()
 
 	const title = data.name || `#${data?.id}`;
 	usePageTitle(title);
@@ -102,12 +107,21 @@ function ReportInfoTOp() {
 }
 
 function BuildMainInfo() {
+	const { data: { meta } } = useReportData();
+	const { github } = meta;
+
+
 	return (
 		<React.Fragment>
-			<div className="mt-32">
-				<TextBlock color="#696969" fontSize={13}>
-					Failed for few configuration
-				</TextBlock>
+			<div className="mt-32" css={css`min-height: 13px;`}>
+				<Conditional showIf={!!github}>
+					<a href={github.repoLink} css={link} target="_blank">
+						<TextBlock color="#696969" fontSize={13} className="flex items-center" css={link}>
+							{github.githubCommitMessage} <ExternalIcon className="ml-6" />
+
+						</TextBlock>
+					</a>
+				</Conditional>
 			</div>
 			<div className="flex justify-between items-start mt-80">
 				<div className="flex" css={flexGapInfo}>
@@ -116,8 +130,8 @@ function BuildMainInfo() {
 							host
 						</TextBlock>
 						<TextBlock color="#D0D0D0" fontSize={13} className="mt-8">
-							<a href={"https://crusher.dev"} css={link}>
-								crusher.dev
+							<a href={"https://crusher.dev"} css={link} className="flex items-center" target="_blank">
+								crusher.dev  <ExternalIcon className="ml-6" />
 							</a>
 						</TextBlock>
 					</div>

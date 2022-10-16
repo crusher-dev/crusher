@@ -189,6 +189,11 @@ const StatusBar = () => {
 				</div>
 				{showChildrens && log.children && log.children.length
 					? log.children.map((child: ILog & { children: ILog[]; diff: string }) => {
+						if(child.message.includes("\n")){
+							return (
+								<pre className={"mt-12 ml-60 px-16 py-12"} css={rawMessageCss}>{child.message}</pre>
+							);
+						}
 						return (
 							<LogItem
 								css={css`
@@ -500,6 +505,17 @@ const StatusBar = () => {
 		</div>
 	);
 };
+
+
+const rawMessageCss = css`
+	font-size: 14rem;
+	border: 1px solid #fff;
+	border-radius: 4rem;
+	color: #717171;
+	width: fit-content;
+	user-select: text;
+	cursor: auto;
+`;
 const docsButtonCss = css`
 	font-family: "Cera Pro";
 

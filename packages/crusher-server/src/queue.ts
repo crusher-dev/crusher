@@ -106,7 +106,7 @@ async function setupInstanceHeartbeat(worker, redisClient) {
 
 	const shutDownInterval = setInterval(async () => {
 		if (Date.now() - _lastJobPickedUpTime > 120000 && _bootAfterNJobsOffset != 0) {
-			console.log("Shutting down...");
+			console.log("Shutting down...", Date.now(), _lastJobPickedUpTime, _bootAfterNJobsOffset);
 			await worker.close();
 
 			if (process.env.ECS_ENABLE_CONTAINER_METADATA) {

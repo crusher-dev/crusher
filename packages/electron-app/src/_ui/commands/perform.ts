@@ -7,6 +7,7 @@ import { recordStep } from "electron-app/src/store/actions/recorder";
 import { iElementInfo } from "electron-app/src/store/reducers/recorder";
 import { getSavedSteps } from "electron-app/src/store/selectors/recorder";
 import { AnyAction, Store } from "redux";
+import { showToast } from "../ui/components/toasts";
 
 const performAction = (action: iAction, shouldNotSave = false, isRecording = true) => {
 	return ipcRenderer.invoke("perform-action", { action, shouldNotSave, isRecording });
@@ -152,7 +153,14 @@ export const performAssertElementVisibility = async (selectedElement: iElementIn
 };
 
 const performVerifyTest = (shouldAlsoSave = true, autoSaveType: "UPDATE" | "SAVE" = "SAVE", shouldNotRunTest = true) => {
-	return ipcRenderer.invoke("verify-test", { shouldAlsoSave, autoSaveType, shouldNotRunTest });
+	return ipcRenderer.invoke("verify-test", { shouldAlsoSave, autoSaveType, shouldNotRunTest }).then((res) => {
+		if(shouldNotRunTest)
+		showToast({
+			type: "ready-for-edit",
+			isUnique: true,
+			message: "All steps completed, you can edit now",
+		});
+	});
 };
 
 const performRunTests = (testIds) => {

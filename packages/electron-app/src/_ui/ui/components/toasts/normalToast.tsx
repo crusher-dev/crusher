@@ -13,7 +13,7 @@ const NormalToast = ({ meta, setOpen, message }) => {
     }
     return (
         <ActionToast
-            duration={2000}
+            duration={7000}
             open={true}
             setOpen={setOpen}
             message={<FixToastMessage message={message} />}

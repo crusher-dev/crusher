@@ -81,11 +81,21 @@ const ResizeWrapper = ({ children, track }) => {
 		resizable.style.width = `${newWidth}px`;
 	}, [])
 
+	const remove = React.useCallback((e) => {
+
+		setIsDragging(false)
+		document.removeEventListener("mouseup", remove)
+		document.removeEventListener("mousemove", move)
+		document.body.style.cursor = 'default';
+	}, [])
+
 
 	const dragStart = (e) => {
 		setInitialMousePosition(e.clientX)
 		document.addEventListener("mousemove", move)
+		document.addEventListener("mouseup", remove)
 		setIsDragging(true)
+		document.body.style.cursor = 'ew-resize';
 	}
 
 	const dragStop = () => {
@@ -106,9 +116,10 @@ const ResizeWrapper = ({ children, track }) => {
 				}}
 				onMouseLeave={() => {
 					setMouseOver(false)
+
 				}}
 				onMouseDown={dragStart.bind(this)}
-				onMouseUp={dragStop.bind(this)}
+			// onMouseUp={dragStop.bind(this)}
 			/>
 		</div>
 	);
@@ -131,11 +142,17 @@ user-select: none;
     width: 320px;
 }
 #Draggable{
-    background: #141414;
+    background: #09090a;
 
 
     height: 100%;
-    width: 2px;
+    width: 3px;
+	border-right: 1px solid #141414;
+
+	:hover{
+		border-right: 1px solid #212121;
+	}
+
 
 	transition: all .1s ease-in;
 }
@@ -144,7 +161,7 @@ user-select: none;
 const hoverCSS = (mouseOver) => css`
 	cursor:  ew-resize;
 	transition: all .5s ease-in;
-	:hover{
-		background:  ${mouseOver ? "#B341F9" : "#141414"} !important;
-	}	
+	// :hover{
+	// 	background:  ${mouseOver ? "#B341F9" : "#141414"} !important;
+	// }	
 `

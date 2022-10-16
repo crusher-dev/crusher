@@ -160,7 +160,7 @@ const runningPointerIconCss = css`
 	height: 9rem;
 	position: absolute;
 	left: 8rem;
-	top: 10rem;
+	top: 12.5rem;
 `;
 const stepTextCss = css`
 	flex: 1 0 50%;

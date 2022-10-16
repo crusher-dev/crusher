@@ -5,6 +5,7 @@ on:
     branches:
       - master
       - baseBranch
+      - improve-editing
   release:
     types: [published]
 

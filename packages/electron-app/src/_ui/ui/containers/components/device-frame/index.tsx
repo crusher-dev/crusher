@@ -229,6 +229,8 @@ const DeviceFrame = () => {
 								width: "95%",
 								maxHeight: "100%",
 								position: "relative",
+								borderRadius: "12rem",
+								overflow: "hidden"
 							}}
 						>
 							<webview

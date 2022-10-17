@@ -17,6 +17,7 @@ import { contentContainer, contentContainerScroll, SidebarTopBarLayout } from "@
 import { getIdentifier } from "@utils/routing";
 
 import { usePageTitle } from "../src/hooks/seo";
+import { ExternalWindow } from "@svg/dashboard";
 
 function GitIcon(props) {
 	return (
@@ -125,23 +126,26 @@ const projectItem = css`
 
 	.open {
 		visibility: hidden;
-		width: 46px;
-		height: 25px;
+		width: 54px;
+		height: 24px;
+		margin-top: -4px;
+		margin-right: -2px;
 
 		background: #212121;
 		border-radius: 7px;
 		font-size: 12px;
+		path{
+			fill: #5f5f5f;
+		}
 	}
 	:hover {
 		.open {
 			visibility: visible;
 		}
 
-		// border-color: #cd60ff;
-		// background: #cd60ff0d;	
 
-		border-color: #272729 !important;
-		background: #151516 !important;
+		border-color: rgba(255,255,255,0.14) !important;
+		background: rgba(255,255,255,0.03) !important;
 	}
 `;
 
@@ -227,7 +231,7 @@ function ProjectCard({ project }) {
 							{name}
 						</TextBlock>
 					</div>
-					<div className="open flex items-center justify-center">Open</div>
+					<div className="open flex items-center justify-center">Open <ExternalWindow height={12} width={12} className="ml-2" /></div>
 				</div>
 				{/* 
 				<TextBlock fontSize={12.6} color="#4a4a4a" className="mt-11">

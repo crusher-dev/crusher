@@ -116,9 +116,9 @@ function BuildMainInfo() {
 		<React.Fragment>
 			<div className="mt-32" css={css`min-height: 13px;`}>
 				<Conditional showIf={!!github}>
-					<a href={github.repoLink} css={link} target="_blank">
+					<a href={github?.repoLink} css={link} target="_blank">
 						<TextBlock color="#696969" fontSize={13} className="flex items-center" css={link}>
-							{github.githubCommitMessage} <ExternalIcon className="ml-6" />
+							{github?.githubCommitMessage} <ExternalIcon className="ml-6" />
 
 						</TextBlock>
 					</a>
@@ -132,8 +132,8 @@ function BuildMainInfo() {
 								host
 							</TextBlock>
 							<TextBlock color="#D0D0D0" fontSize={13} className="mt-8">
-								<a href={data.host} css={link} className="flex items-center" target="_blank">
-									{data.host.split("://")[1]} <ExternalIcon className="ml-6" />
+								<a href={data?.host} css={link} className="flex items-center" target="_blank">
+									{data?.host?.split("://")[1]} <ExternalIcon className="ml-6" />
 								</a>
 							</TextBlock>
 						</div>

@@ -54,6 +54,7 @@ import { resolveToBackend } from "../utils/url";
 import { getLogs } from "../store/selectors/logger";
 import path from "path";
 import { shouldOverrideHost } from "../lib/project-config";
+import { chalkShared, _log } from "@shared/modules/logger";
 
 export class AppWindow {
 	private window: Electron.BrowserWindow;
@@ -962,12 +963,12 @@ export class AppWindow {
 	}
 
 	async shouldOverrideHost() {
-		return shouldOverrideHost(this);	
+		return shouldOverrideHost(this);
 	}
-	
+
 	async modifyStepsForEnvironment(steps: any) {
 		const overrideHost = await this.shouldOverrideHost();
-		if(overrideHost) {
+		if (overrideHost) {
 			steps = steps.map((event) => {
 				if (event.type === ActionsInTestEnum.NAVIGATE_URL) {
 					const urlToGo = new URL(event.payload.meta.value);
@@ -1121,9 +1122,17 @@ export class AppWindow {
 		payload: { action: iAction; shouldNotSave?: boolean; isRecording?: boolean; shouldNotSleep?: boolean },
 	) {
 		if (this.webView?.playwrightInstance) {
-			console.log("Starting action", this.webView.playwrightInstance.actionDescriptor.describeAction(payload.action));
+			const stepName = this.webView.playwrightInstance.actionDescriptor.describeAction(payload.action);
+			let squareBracketRegex = /(.*)\[(.*)\]/i;
+			let result = stepName.match(squareBracketRegex);
+			if (!result) {
+				console.logPlain(`  .   `, stepName);
+			} else {
+				console.logPlain(`  .   `, result[1], chalkShared.magenta(result[2]));
+			}
+
 		} else {
-			console.log("Starting action", payload.action.type);
+			console.logPlain(`  .   ` + payload.action.type);
 		}
 
 		const { action, shouldNotSave } = payload;

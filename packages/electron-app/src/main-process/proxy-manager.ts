@@ -37,7 +37,7 @@ class ProxyManager {
 
 		const projectConfig = readProjectConfig(configFilePath);
 		if (!(projectConfig && projectConfig.proxy)) return;
-		console.info("[Proxy]: using proxy " + getRelativePath(configFilePath));
+		console.info("Create tunnel proxy defined in " + getRelativePath(configFilePath));
 		this._logs = [];
 		try {
 			const cliPath = app.commandLine.getSwitchValue("crusher-cli-path");

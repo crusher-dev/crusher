@@ -84,6 +84,17 @@ const ArrowRightIcon = (props) => (
 	</svg>
 );
 
+const cssHighlight = css`
+		// color: #498ed6e3;
+		// color: #99e66ae3;
+		color: #349dd8;
+`
+
+const normalMessage = css`
+		color: #b1b1b1;
+`
+
+
 const StatusBar = () => {
 	const [currentModal, setCurrentModal] = React.useState({ type: null, stepIndex: null });
 	const store = useStore();
@@ -135,6 +146,22 @@ const StatusBar = () => {
 
 		const hasChildrens = React.useMemo(() => log.children?.length, [log]);
 
+		const formattedMessage = React.useMemo(() => {
+			const stepName = log.message;
+			let squareBracketRegex = /(.*)\[(.*)\]/i;
+			let result = stepName.match(squareBracketRegex);
+			if (!result) {
+				return <span css={normalMessage}>{log.message}</span>;
+			}
+
+			return (
+				<>
+					<span css={normalMessage}>{result[1].trim()}</span>
+					<span className="ml-4" css={cssHighlight}>{result[2]}</span>
+				</>
+			)
+		}, [log])
+
 		return (
 			<div className={String(props.className)}>
 				<div
@@ -169,7 +196,8 @@ const StatusBar = () => {
 						<span
 							css={css`
 								font-size: 14rem;
-								color: ${log.type === "error" ? "#C2607D" : "#9FC370"};
+								margin-left:3rem;
+								color: ${log.type === "error" ? "#ff4c81" : "#8c8c8c"};
 							`}
 						>
 							{log.type}
@@ -178,18 +206,19 @@ const StatusBar = () => {
 							css={css`
 								font-size: 14rem;
 								color: #717171;
+								letter-spacing: .15px;
 
 								word-break: break-all;
 							`}
 							className={"ml-20"}
 						>
-							{log.message}
+							{formattedMessage}
 						</span>
 					</div>
 				</div>
 				{showChildrens && log.children && log.children.length
 					? log.children.map((child: ILog & { children: ILog[]; diff: string }) => {
-						if(child.message.includes("\n")){
+						if (child.message.includes("\n")) {
 							return (
 								<pre className={"mt-12 ml-60 px-16 py-12"} css={rawMessageCss}>{child.message}</pre>
 							);

@@ -35,9 +35,9 @@ module.exports = {
 	description: "Click on element",
 	actionDescriber: (action: iAction) => {
 		if (!action.payload.meta || !action.payload.meta.elementDescription) {
-			return `Click on element`;
+			return `Click element`;
 		}
-		return `Click on [${action.payload.meta.elementDescription}]`;
+		return `Click [${action.payload.meta.elementDescription}]`;
 	},
 	handler: clickOnElement,
 };

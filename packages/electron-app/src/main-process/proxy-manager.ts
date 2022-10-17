@@ -3,6 +3,7 @@ import { app } from "electron";
 import { AnyAction, Store } from "redux";
 import { readProjectConfig } from "../lib/project-config";
 import { setProxyInitializing, setProxyState } from "../store/actions/app";
+import { getRelativePath } from "../utils";
 
 const resultsTunnelRegexp = new RegExp(/results\stunnel\s(.*)/gms);
 
@@ -13,7 +14,7 @@ class ProxyManager {
 
 	isDisabled: boolean = false;
 
-	constructor(private store: Store<unknown, AnyAction>) {}
+	constructor(private store: Store<unknown, AnyAction>) { }
 
 	private handleProxyResults(result: string) {
 		const jsonContentRaw = result.replace(/(\r\n|\n|\r)/gm, "").replace(/ /g, "");
@@ -33,10 +34,10 @@ class ProxyManager {
 
 	initializeProxy(configFilePath: string) {
 		if (this.isDisabled || !configFilePath) return;
-		
+
 		const projectConfig = readProjectConfig(configFilePath);
-		if(!(projectConfig && projectConfig.proxy)) return;
-		console.info("[ProxyManager]: using proxy declared in " + configFilePath);
+		if (!(projectConfig && projectConfig.proxy)) return;
+		console.info("[Proxy]: using proxy " + getRelativePath(configFilePath));
 		this._logs = [];
 		try {
 			const cliPath = app.commandLine.getSwitchValue("crusher-cli-path");

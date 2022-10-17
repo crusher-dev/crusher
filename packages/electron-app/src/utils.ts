@@ -122,9 +122,13 @@ const getUserAccountProjects: () => Promise<any> = createAuthorizedRequestFunc((
 	return axios.get(resolveToBackend("/users/actions/getUserAndSystemInfo"), authorizationOptions).then((res) => res.data);
 });
 
+const getRelativePath = (pathStr) => {
+	return path.relative(process.cwd(), pathStr)
+}
 
 
 export {
+	getRelativePath,
 	isProduction,
 	getAppIconPath,
 	encodePathAsUrl,

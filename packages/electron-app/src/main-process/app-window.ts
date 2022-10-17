@@ -1128,7 +1128,7 @@ export class AppWindow {
 			if (!result) {
 				console.logPlain(`  .   `, stepName);
 			} else {
-				console.logPlain(`  .   `, result[1], chalkShared.magenta(result[2]));
+				console.logPlain(`  .   `, result[1].trim(), chalkShared.magenta(result[2]));
 			}
 
 		} else {

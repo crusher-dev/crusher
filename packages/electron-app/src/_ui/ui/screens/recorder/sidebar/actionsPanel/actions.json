@@ -2,45 +2,100 @@
 	"PAGE": {
 		"TAKE_VIEWPORT_SCREENSHOT": {
 			"label": "Screenshot",
-			"keywords": ["take", "screenshot", "page", "viewport"]
+			"keywords": [
+				"take",
+				"screenshot",
+				"page",
+				"viewport"
+			]
 		},
 		"WAIT": {
-			"label": "Wait for seconds",
-			"keywords": ["wait", "seconds", "timeout", "page", "sleep"]
+			"label": "Sleep (in secs)",
+			"keywords": [
+				"wait",
+				"seconds",
+				"timeout",
+				"page",
+				"sleep"
+			]
 		},
 		"SHOW_SEO_MODAL": {
-			"label": "Add SEO checks",
-			"keywords": ["add", "seo", "checks", "page", "assert"]
+			"label": "Assert SEO ",
+			"keywords": [
+				"add",
+				"seo",
+				"checks",
+				"page",
+				"assert"
+			]
 		},
 		"RUN_AFTER_TEST": {
 			"label": "Run after test",
-			"keywords": ["run", "after", "page", "test"]
+			"keywords": [
+				"run",
+				"after",
+				"page",
+				"test"
+			]
 		}
 	},
 	"ELEMENT": {
 		"CLICK": {
 			"label": "Click",
-			"keywords": ["click", "tap", "element", "press"]
+			"keywords": [
+				"click",
+				"tap",
+				"element",
+				"press"
+			]
 		},
 		"HOVER": {
 			"label": "Hover",
-			"keywords": ["hover", "move", "element", "mouse"]
+			"keywords": [
+				"hover",
+				"move",
+				"element",
+				"mouse"
+			]
 		},
 		"SCREENSHOT": {
 			"label": "Screenshot",
-			"keywords": ["screenshot", "take", "element", "capture"]
+			"keywords": [
+				"screenshot",
+				"take",
+				"element",
+				"capture"
+			]
 		},
 		"SHOW_ASSERT_MODAL": {
-			"label": "Add checks",
-			"keywords": ["assert", "text", "check", "element", "verify"]
+			"label": "Assert info",
+			"keywords": [
+				"assert",
+				"text",
+				"check",
+				"element",
+				"verify"
+			]
 		},
 		"ASSERT_VISIBILITY": {
 			"label": "Assert visibility",
-			"keywords": ["assert", "visibility", "visible", "check", "element", "verify"]
+			"keywords": [
+				"assert",
+				"visibility",
+				"visible",
+				"check",
+				"element",
+				"verify"
+			]
 		}
 	},
 	"CODE": {
 		"label": "code",
-		"keywords": ["code", "javascript", "js", "script"]
+		"keywords": [
+			"code",
+			"javascript",
+			"js",
+			"script"
+		]
 	}
 }

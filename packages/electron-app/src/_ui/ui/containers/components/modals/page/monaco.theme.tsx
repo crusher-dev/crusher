@@ -597,7 +597,7 @@ const newTheme = {
 		"activityBar.background": "#080808",
 		"editorLineNumber.foreground": "#3f3f3f",
 		"editorLineNumber.activeForeground": "#ffffff",
-		"editor.selectionBackground": "#fffffffff32",
+		"editor.selectionBackground": "#ffffff42",
 		"editor.selectionForeground": "#ffffff",
 		"editorCursor.foreground": "#B731B0",
 		"editorWhitespace.foreground": "#2b2b2b",

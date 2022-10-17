@@ -20,6 +20,7 @@ import {
 } from "electron-app/src/_ui/commands/perform";
 import { DownIcon } from "electron-app/src/_ui/constants/old_icons";
 import { MenuItem } from "electron-app/src/_ui/ui/components/dropdown/menuItems";
+import { LinkPointer } from "electron-app/src/_ui/ui/components/LinkPointer";
 import * as fs from "fs";
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 import * as path from "path";
@@ -347,23 +348,14 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 				title={
 					<>
 						<span>Code block</span>
-						<div
-							css={css`
-								font-size: 13rem;
-								font-family: "Cera Pro";
-								display: flex;
-								color: rgba(255, 255, 255, 0.4);
-								align-items: center;
-								padding-top: 1rem;
-								margin-left: 14rem;
-								:hover {
-									opacity: 0.8;
-								}
-							`}
-							onClick={handleReadDocs}
-						>
-							Read docs
-						</div>
+						<LinkPointer 
+						onClick={handleReadDocs}
+						css={css`
+						letter-spacing: .4px;
+						
+						margin-left: 2px;
+						margin-top: -1px; font-size: 13px; font-weight: 400; 	color: rgba(255, 255, 255, 0.5);`}>Read docs</LinkPointer>
+
 					</>
 				}
 				closeModal={() => {

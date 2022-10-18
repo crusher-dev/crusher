@@ -92,13 +92,13 @@ const StepsPanel = ({ className }: IProps) => {
 				<Step
 					disabled={true}
 					step={step}
-					key={index + (steps?.length || 0)}
-					stepId={index + (steps?.length || 0)}
+					key={index + (recordedSteps?.length || 0)}
+					stepId={index + (recordedSteps?.length || 0)}
 					isLast={index === remainingSteps.length - 1}
 				/>
 			);
 		});
-	}, [remainingSteps, steps]);
+	}, [remainingSteps, recordedSteps]);
 
 
 	const handleOutSideClick = React.useCallback(() => {

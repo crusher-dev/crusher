@@ -1,7 +1,7 @@
 import React from "react";
 import { css } from "@emotion/react";
 import { performGoToUrl } from "../../../commands/perform";
-import { getUserAccountInfo } from "electron-app/src/store/selectors/app";
+import { getCurrentSelectedProjct, getUserAccountInfo } from "electron-app/src/store/selectors/app";
 import { useStore } from "react-redux";
 import { CompactAppLayout } from "../../layout/CompactAppLayout";
 import { Footer } from "../../layout/Footer";
@@ -13,18 +13,27 @@ import { shell } from "electron";
 import path from "path";
 import os from 'os';
 import { underlineOnHover } from "electron-app/src/_ui/constants/style";
+import { useSelector } from "react-redux";
+import { getCurrentProjectConfigPath } from "electron-app/src/_ui/utils/project";
 
-const Info = ({ className }) => <div css={css`display: flex; justify-content: center;`}><div className={`flex items-center ${className}`}>
-	<TextBlock fontSize={13} css={css`display: flex; justify-content: flex-end;`} color="#909090">
-		<span>project:</span>
-		<span css={[linkCSS]}>Netlify</span>
-	</TextBlock>
 
-	<TextBlock fontSize={13} color="#909090" className="ml-4 flex-1">
-		<span>config path:</span>
-		<span onClick={() => { shell.openPath(path.resolve(os.homedir(), "crusher/cs/.crusher/config.js")); }} className="ml-2" css={[linkCSS, underlineOnHover]}>~/crusher/cs/.crusher/config.js</span>
-	</TextBlock>
-</div></div>;
+const Info = ({ className }) => {
+	const selectedProject = useSelector(getCurrentSelectedProjct)
+	const configPath = getCurrentProjectConfigPath();
+	return (
+		<div css={css`display: flex; justify-content: center;`}><div className={`flex items-center ${className}`}>
+			<TextBlock fontSize={13} css={css`display: flex; justify-content: flex-end;`} color="#909090">
+				<span>project:</span>
+				<span css={[linkCSS]}>{selectedProject}</span>
+			</TextBlock>
+
+			<TextBlock fontSize={13} color="#909090" className="ml-4 flex-1">
+				<span>config path:</span>
+				<span onClick={() => { shell.openPath(configPath); }} className="ml-2" css={[linkCSS, underlineOnHover]}>~/{path.relative(os.homedir(), configPath)}</span>
+			</TextBlock>
+		</div></div>
+	)
+};
 
 const UnAuthorizedErrorContainer = () => {
 	const store = useStore();

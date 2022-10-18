@@ -24,10 +24,10 @@ const Info = ({ className }) => {
 		<div css={css`display: flex; justify-content: center;`}><div className={`flex items-center ${className}`}>
 			<TextBlock fontSize={13} css={css`display: flex; justify-content: flex-end;`} color="#909090">
 				<span>project:</span>
-				<span css={[linkCSS]}>{selectedProject}</span>
+				<span className="ml-2" css={[linkCSS]}>{selectedProject}</span>
 			</TextBlock>
 
-			<TextBlock fontSize={13} color="#909090" className="ml-4 flex-1">
+			<TextBlock fontSize={13} color="#909090" className="flex-1">
 				<span>config path:</span>
 				<span onClick={() => { shell.openPath(configPath); }} className="ml-2" css={[linkCSS, underlineOnHover]}>~/{path.relative(os.homedir(), configPath)}</span>
 			</TextBlock>

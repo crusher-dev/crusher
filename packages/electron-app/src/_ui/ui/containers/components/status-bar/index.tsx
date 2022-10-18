@@ -445,7 +445,7 @@ const StatusBar = () => {
 								`}
 							>
 								<HoverButton onClick={handleExportLogs} title={"export logs"}>
-									<ExportIcon css={css`width: 12rem; height: 12rem; transform: rotate(90deg)`} />
+									<ExportIcon css={css`width: 14rem; height: 14rem;`} />
 								</HoverButton>
 								<HoverButton
 									onClick={handleToggle}

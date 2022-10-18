@@ -8,6 +8,23 @@ import { Footer } from "../../layout/Footer";
 import { NormalButton } from "../../components/buttons/NormalButton";
 import { getGlobalAppConfig, writeGlobalAppConfig } from "electron-app/src/lib/global-config";
 import { setUserAccountInfo } from "electron-app/src/store/actions/app";
+import { TextBlock } from "@dyson/components/atoms";
+import { shell } from "electron";
+import path from "path";
+import os from 'os';
+import { underlineOnHover } from "electron-app/src/_ui/constants/style";
+
+const Info = ({className}) => <div css={css`display: flex; justify-content: center;`}><div className={`flex items-center ${className}`}>
+<TextBlock fontSize={13}  css={css`display: flex; justify-content: flex-end;`} color="#909090">
+	<span>project:</span>
+	<span className="ml-2" css={[linkCSS]}>Netlify</span>
+</TextBlock>
+
+<TextBlock  fontSize={13} color="#909090" className="ml-4 flex-1">
+	<span>config path:</span>
+	<span onClick={() => { shell.openPath(path.resolve(os.homedir(), "crusher/cs/.crusher/config.js")); }} className="ml-2" css={[linkCSS, underlineOnHover]}>~/crusher/cs/.crusher/config.js</span>
+</TextBlock>
+</div></div>;
 
 const UnAuthorizedErrorContainer = () => {
 	const store = useStore();
@@ -39,8 +56,11 @@ const UnAuthorizedErrorContainer = () => {
 					<div css={headingStyle}>
 						You don't have access to this project
 					</div>
+					<Info css={css`width: 100%; gap: 20rem;`} className={"mt-18"}/>
+
 					<div css={descriptionStyle}>
-						Please contact your org admin to gain access or go back.
+						<div>Please contact your org admin to gain access or go back.</div>
+					
 
 						<div
 							className="mt-20"
@@ -52,9 +72,6 @@ const UnAuthorizedErrorContainer = () => {
 							<NormalButton onClick={handleAccountInfo} css={accountInfoButtonCss}>
 								Account Info
 							</NormalButton>
-							<NormalButton onClick={handeLogout} css={logoutButtonCss}>
-								Logout
-							</NormalButton>
 						</div>
 					</div>
 				</div>
@@ -62,6 +79,10 @@ const UnAuthorizedErrorContainer = () => {
 		</CompactAppLayout>
 	);
 };
+
+const linkCSS = css`
+	color: #6CB7FC !important;
+`
 
 const containerCss = css`
 	height: 100%;

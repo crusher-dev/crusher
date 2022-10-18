@@ -226,7 +226,7 @@ const DeviceFrame = () => {
 							style={{
 								aspectRatio: `${recorderInfo.device?.width} / ${recorderInfo.device?.height}`,
 								maxWidth: `${recorderInfo.device?.width}rem`,
-								width: "95%",
+								width: "99%",
 								maxHeight: "100%",
 								position: "relative",
 								borderRadius: "12rem",
@@ -301,16 +301,6 @@ const containerStyle = (isStatusBarVisible) => css`
 	justify-content: center;
 	position: relative;
 	flex: 1;
-	// background: #000;
-	// border: 2.5rem solid #141414;
-
-	// background: #000;
-	// border: 1rem solid #141414;
-
-	// background: #1e1e1e;
-
-	border-right: none;
-	border-bottom: none;
 `;
 
 export { DeviceFrame };

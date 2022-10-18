@@ -81,7 +81,7 @@ const ElementActions = ({ className, filteredList, defaultExpanded }: IProps) =>
 		<ActionsList
 			className={String(className)}
 			title={"element"}
-			description={"actions for element"}
+			description={"checks over element"}
 			icon={<ElementIcon css={elementIconCss} />}
 			items={getItemsFromActionsData(items)}
 			defaultExpanded={defaultExpanded}

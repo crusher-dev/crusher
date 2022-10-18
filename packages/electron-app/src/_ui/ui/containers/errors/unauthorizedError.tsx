@@ -14,30 +14,21 @@ import path from "path";
 import os from 'os';
 import { underlineOnHover } from "electron-app/src/_ui/constants/style";
 
-const Info = ({className}) => <div css={css`display: flex; justify-content: center;`}><div className={`flex items-center ${className}`}>
-<TextBlock fontSize={13}  css={css`display: flex; justify-content: flex-end;`} color="#909090">
-	<span>project:</span>
-	<span className="ml-2" css={[linkCSS]}>Netlify</span>
-</TextBlock>
+const Info = ({ className }) => <div css={css`display: flex; justify-content: center;`}><div className={`flex items-center ${className}`}>
+	<TextBlock fontSize={13} css={css`display: flex; justify-content: flex-end;`} color="#909090">
+		<span>project:</span>
+		<span css={[linkCSS]}>Netlify</span>
+	</TextBlock>
 
-<TextBlock  fontSize={13} color="#909090" className="ml-4 flex-1">
-	<span>config path:</span>
-	<span onClick={() => { shell.openPath(path.resolve(os.homedir(), "crusher/cs/.crusher/config.js")); }} className="ml-2" css={[linkCSS, underlineOnHover]}>~/crusher/cs/.crusher/config.js</span>
-</TextBlock>
+	<TextBlock fontSize={13} color="#909090" className="ml-4 flex-1">
+		<span>config path:</span>
+		<span onClick={() => { shell.openPath(path.resolve(os.homedir(), "crusher/cs/.crusher/config.js")); }} className="ml-2" css={[linkCSS, underlineOnHover]}>~/crusher/cs/.crusher/config.js</span>
+	</TextBlock>
 </div></div>;
 
 const UnAuthorizedErrorContainer = () => {
 	const store = useStore();
 
-	const handeLogout = React.useCallback(() => {
-		const appConfig = getGlobalAppConfig();
-		if (appConfig?.["userInfo"]) {
-			delete appConfig["userInfo"];
-			writeGlobalAppConfig(appConfig);
-		}
-		store.dispatch(setUserAccountInfo(null));
-		performGoToUrl("/");
-	}, []);
 
 	const handleAccountInfo = React.useCallback(() => {
 		const acc = getUserAccountInfo(store.getState() as any);
@@ -56,14 +47,14 @@ const UnAuthorizedErrorContainer = () => {
 					<div css={headingStyle}>
 						You don't have access to this project
 					</div>
-					<Info css={css`width: 100%; gap: 20rem;`} className={"mt-18"}/>
+					<Info css={css`width: 100%; gap: 16rem;`} className={"mt-12"} />
 
-					<div css={descriptionStyle}>
-						<div>Please contact your org admin to gain access or go back.</div>
-					
+					<div css={descriptionStyle} >
+						<TextBlock fontSize={13} color="#909090" className="mt-20">Please contact your org admin to gain access or go back.</TextBlock>
+
 
 						<div
-							className="mt-20"
+							className="mt-12"
 							css={css`
 								display: flex;
 								gap: 20rem;
@@ -102,9 +93,12 @@ const logoutButtonCss = css`
 	width: 52rem;
 `;
 const accountInfoButtonCss = css`
-	margin-top: 16rem;
-	width: 84rem;
+	margin-top: 12rem;
+
 	background: transparent !important;
+	:hover{
+		background: transparent !important;
+	}
 `;
 
 const contentContainerStyle = css`

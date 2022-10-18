@@ -146,7 +146,7 @@ user-select: none;
 
 
     height: 100%;
-    width: 3px;
+    width: 2px;
 	border-right: 1px solid #141414;
 
 	:hover{

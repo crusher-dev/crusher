@@ -245,7 +245,7 @@ const StepsPanel = ({ className }: IProps) => {
 				id={"steps-list-container"}
 				css={css`
 					height: 100%;
-					overflow-y: auto;
+					overflow-y: overlay;
 				`}
 				onOutsideClick={handleOutSideClick}
 			>

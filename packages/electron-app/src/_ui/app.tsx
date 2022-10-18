@@ -256,7 +256,7 @@ const globalCss = css`
 		max-width: "100vw";
 	}
 	.custom-scroll::-webkit-scrollbar {
-		width: 12rem;
+		width: 8rem;
 	}
 
 	.custom-scroll::-webkit-scrollbar-track {
@@ -266,7 +266,7 @@ const globalCss = css`
 
 	.custom-scroll::-webkit-scrollbar-thumb {
 		background-color: #1b1f23;
-		border-radius: 100rem;
+		border-radius: 12rem;
 	}
 
 	.custom-scroll::-webkit-scrollbar-thumb:hover {

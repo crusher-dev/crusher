@@ -72,6 +72,7 @@ const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, 
 	const title = React.useMemo(() => TextHighlighter({ text: stepInfo.name }), [stepInfo.name]);
 	return React.useMemo(() => (
 		<HoverCard
+			supportPadding={<div css={css`position: absolute; background: transparent; width: 20rem; height: 100%; z-index: 999; margin-left: -24rem;`}></div>}
 			disableStateManagement={true}
 			disabled={disabled || (statusType === "failed" && !stepHoverId) || (stepHoverId && stepHoverId !== stepId)}
 			autoHide={true}
@@ -87,7 +88,7 @@ const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, 
 			`}
 			css={css`
 				padding: 0rem !important;
-			
+				margin-left: -4rem;
 			`}
 			tooltipCSS={css`
 				border-radius: 12px;

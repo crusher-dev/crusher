@@ -179,7 +179,7 @@ class TestRunnerQueue {
     }
 
 
-    async handleProcessJob(bullJob: ITestResultWorkerJob, buildRecord: KeysToCamelCase<IBuildTable>, buildReportRecord: KeysToCamelCase<IBuildReportTable>) {
+    async handleProcessJob(bullJob: ITestResultWorkerJob, buildRecord: KeysToCamelCase<IBuildTable>, buildReportRecord: KeysToCamelCase<IBuildReportTable>, shouldCompareScreenshot = true) {
         if (bullJob.data.parameterizedTests && bullJob.data.parameterizedTests.length) {
 			const siblingTestInstances = await this.testRunner.spawnTestInstances(
 				bullJob.data.parameterizedTests,
@@ -189,11 +189,16 @@ class TestRunnerQueue {
 			await this.handleParameterisedTestInstancesForExecution(bullJob, siblingTestInstances.testInstances, siblingTestInstances.buildInfo);
 		}
 		await this.handleNextTestsForExecution(bullJob, buildRecord);
-		const actionsResultWithIndex = bullJob.data.actionResults.map((actionResult, index) => ({ ...actionResult, actionIndex: index }));
 
-		const screenshotActionsResultWithIndex = getScreenshotActionsResult(actionsResultWithIndex);
-
-		const savedScreenshotRecords = await this.buildTestInstanceScreenshotService.saveScreenshots(screenshotActionsResultWithIndex, bullJob.data.testInstanceId);
+		let actionsResultWithIndex = [];
+        let screenshotActionsResultWithIndex = [];
+        let  savedScreenshotRecords = [];
+        
+        if(shouldCompareScreenshot) {
+            actionsResultWithIndex = bullJob.data.actionResults.map((actionResult, index) => ({ ...actionResult, actionIndex: index }));
+            screenshotActionsResultWithIndex = getScreenshotActionsResult(actionsResultWithIndex);
+            savedScreenshotRecords = await this.buildTestInstanceScreenshotService.saveScreenshots(screenshotActionsResultWithIndex, bullJob.data.testInstanceId);
+        }
 
 		// Compare visual diffs and save the final result
 		await this.buildTestInstanceService.saveResult(
@@ -278,7 +283,7 @@ class TestRunnerQueue {
                     isStalled: undefined,
                     persistenContextZipURL: null
                 }
-            } as any, build, buildReport);
+            } as any, build, buildReport, false);
         });
         await Promise.all(processPromiseArr);
 

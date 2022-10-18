@@ -155,16 +155,18 @@ const StatusBar = () => {
 			const stepName = log.message;
 			let squareBracketRegex = /(.*)\[(.*)\]/i;
 			let result = stepName.match(squareBracketRegex);
-			if (!result) {
-				return <span css={normalMessage}>{log.message}</span>;
+
+			if (result && !log.parent) {
+				return (
+					<>
+						<span css={normalMessage}>{result[1].trim()}</span>
+						<span className="ml-4" css={cssHighlight}>{result[2]}</span>
+					</>
+				)
 			}
 
-			return (
-				<>
-					<span css={normalMessage}>{result[1].trim()}</span>
-					<span className="ml-4" css={cssHighlight}>{result[2]}</span>
-				</>
-			)
+			return <span css={normalMessage}>{log.message}</span>;
+
 		}, [log])
 
 		return (
@@ -296,11 +298,11 @@ const StatusBar = () => {
 	const handleExportLogs = React.useCallback((e) => {
 		e.preventDefault();
 		e.stopPropagation();
-		
+
 		// Transform logs to string
 		const logsString = logs.get("_").map((log) => {
 			let str = `${log.type}: ${log.message}`;
-			if(logs.get(log.id)) {
+			if (logs.get(log.id)) {
 				logs.get(log.id).forEach((child) => {
 					str += `\n\t${child.type}: ${child.message}`;
 				});
@@ -311,11 +313,11 @@ const StatusBar = () => {
 		var options = {
 			title: "Save file",
 			defaultPath: path.resolve(require("os").homedir(), "crusher_logs.txt"),
-			buttonLabel : "Save",
+			buttonLabel: "Save",
 
-			filters :[
-				{name: 'txt', extensions: ['txt']},
-				{name: 'All Files', extensions: ['*']}
+			filters: [
+				{ name: 'txt', extensions: ['txt'] },
+				{ name: 'All Files', extensions: ['*'] }
 			]
 		};
 
@@ -498,7 +500,6 @@ const StatusBar = () => {
 								padding-bottom: 8rem;
 								height: calc(100% - 38rem);
 								overflow-y: auto;
-								padding-bottom: 20rem;
 							`}
 							className={"custom-scroll"}
 						>

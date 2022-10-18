@@ -12,10 +12,15 @@ import { getRecorderState, getSavedSteps } from "electron-app/src/store/selector
 import { updateRecorderState } from "electron-app/src/store/actions/recorder";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 import { HoverCard } from "@dyson/components/atoms/tooltip/Tooltip1";
-import { DocsIcon, UpDownSizeIcon } from "electron-app/src/_ui/constants/icons";
-import { HelpContent } from "electron-app/src/_ui/ui/containers/common/stickyFooter";
+import { DocsIcon, ExportIcon, UpDownSizeIcon } from "electron-app/src/_ui/constants/icons";
+import { ExternalIcon, HelpContent } from "electron-app/src/_ui/ui/containers/common/stickyFooter";
 import { useAtom } from "jotai";
 import { statusBarMaximiseAtom } from "electron-app/src/_ui/store/jotai/statusBar";
+import { HoverButton } from "../../../components/hoverButton";
+import { remote } from "electron";
+import fs from "fs";
+import { showToast } from "../../../components/toasts";
+import path from "path";
 
 interface ITabButtonProps {
 	title: string;
@@ -288,6 +293,42 @@ const StatusBar = () => {
 		[clicked],
 	);
 
+	const handleExportLogs = React.useCallback((e) => {
+		e.preventDefault();
+		e.stopPropagation();
+		
+		// Transform logs to string
+		const logsString = logs.get("_").map((log) => {
+			let str = `${log.type}: ${log.message}`;
+			if(logs.get(log.id)) {
+				logs.get(log.id).forEach((child) => {
+					str += `\n\t${child.type}: ${child.message}`;
+				});
+			}
+			return str;
+		}).join("\n");
+
+		var options = {
+			title: "Save file",
+			defaultPath: path.resolve(require("os").homedir(), "crusher_logs.txt"),
+			buttonLabel : "Save",
+
+			filters :[
+				{name: 'txt', extensions: ['txt']},
+				{name: 'All Files', extensions: ['*']}
+			]
+		};
+
+		remote.dialog.showSaveDialog(null, options).then(({ filePath }) => {
+			// alert("Saving to " + filePath);
+			fs.writeFileSync(filePath, logsString, 'utf-8');
+			showToast({
+				type: "normal",
+				message: "Logs exported successfully",
+			})
+		});
+	}, [logs]);
+
 	return (
 		<div
 			css={[
@@ -403,13 +444,14 @@ const StatusBar = () => {
 									margin-right: 8rem;
 								`}
 							>
-								<div
+								<HoverButton onClick={handleExportLogs} title={"export logs"}>
+									<ExportIcon css={css`width: 12rem; height: 12rem; transform: rotate(90deg)`} />
+								</HoverButton>
+								<HoverButton
 									onClick={handleToggle}
-									className="flex items-center justify-center"
+									className="flex items-center justify-center ml-2"
 									css={css`
-										height: 16rem;
-										width: 16rem;
-
+				
 										border-radius: 4rem;
 
 										:hover {
@@ -426,7 +468,7 @@ const StatusBar = () => {
 											height: 10rem;
 										`}
 									/>
-								</div>
+								</HoverButton>
 							</div>
 						</Conditional>
 					</div>

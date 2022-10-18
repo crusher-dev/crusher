@@ -7,7 +7,7 @@ import { NormalToast } from './normalToast';
 import { uuidv4 } from 'runner-utils/src/utils/helper';
 
 export const toastEmitter = mitt();
-export type ToastType = "step-failed" | "ready-for-edit";
+export type ToastType = "step-failed" | "ready-for-edit" | "normal";
 
 export type ToastEvent = {
   id?: string;

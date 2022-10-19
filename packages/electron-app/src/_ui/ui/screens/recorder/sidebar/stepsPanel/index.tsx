@@ -236,7 +236,7 @@ const StepsPanel = ({ className }: IProps) => {
 			<div css={headerCss} title={""} className="flex items-center">
 				<Text css={sectionHeadingCss} className="mt-3">{recordedSteps.length} steps</Text>
 				<div css={sectionActionsCss}>
-					<HoverButton title={"pause"} onClick={handlePause}>
+					<HoverButton title={"skip this step"} onClick={handlePause}>
 						<ForwardIcon  css={forwrdIconCss} />
 					</HoverButton>
 					<HoverButton title={"reload test"} onClick={handleResetTest}>

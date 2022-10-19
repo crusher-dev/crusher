@@ -336,6 +336,10 @@ const turnOnWebviewDevTools = () => {
 	return ipcRenderer.invoke("turn-on-webview-dev-tools", {});
 };
 
+const performPauseStepsExecution = () => {
+	return ipcRenderer.invoke("pause-steps", {});
+};
+
 export {
 	recordHoverDependencies,
 	performAction,
@@ -392,4 +396,5 @@ export {
 	performCreateCloudProject,
 	performGoToUrl,
 	turnOnWebviewDevTools,
+	performPauseStepsExecution
 };

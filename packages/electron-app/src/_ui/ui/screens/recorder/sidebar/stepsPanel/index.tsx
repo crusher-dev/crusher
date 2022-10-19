@@ -1,7 +1,7 @@
 import React from "react";
 import { css } from "@emotion/react";
 import { Text } from "@dyson/components/atoms/text/Text";
-import { ConsoleIcon } from "electron-app/src/_ui/constants/old_icons";
+import { ConsoleIcon, ForwardIcon, StopIcon } from "electron-app/src/_ui/constants/old_icons";
 import { useSelector, useStore } from "react-redux";
 import { getIsStatusBarVisible, getRecorderState, getSavedSteps } from "electron-app/src/store/selectors/recorder";
 import { Step } from "./step";
@@ -9,7 +9,7 @@ import { useSelectableList } from "electron-app/src/_ui/hooks/list";
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
 import { RightClickMenu } from "@dyson/components/molecules/RightClick/RightClick";
 import { deleteRecordedSteps } from "electron-app/src/store/actions/recorder";
-import { performJumpTo, performVerifyTest, turnOnElementSelectorInspectMode } from "electron-app/src/_ui/commands/perform";
+import { performJumpTo, performPauseStepsExecution, performVerifyTest, turnOnElementSelectorInspectMode } from "electron-app/src/_ui/commands/perform";
 import { useAtom } from "jotai";
 import { stepHoverAtom } from "electron-app/src/_ui/store/jotai/steps";
 import { editInputAtom } from "electron-app/src/_ui/store/jotai/testsPage";
@@ -227,11 +227,18 @@ const StepsPanel = ({ className }: IProps) => {
 		}
 	}, [failedSteps.length]);
 
+	const handlePause = () => {
+		performPauseStepsExecution();	
+	}
+
 	return (
 		<div css={containerCss} className={String(className)}>
 			<div css={headerCss} title={""} className="flex items-center">
 				<Text css={sectionHeadingCss} className="mt-3">{recordedSteps.length} steps</Text>
 				<div css={sectionActionsCss}>
+					<HoverButton title={"pause"} onClick={handlePause}>
+						<ForwardIcon  css={forwrdIconCss} />
+					</HoverButton>
 					<HoverButton title={"reload test"} onClick={handleResetTest}>
 						<ResetIcon css={resetIconCss} />
 					</HoverButton>
@@ -266,6 +273,18 @@ font-size: 12rem;color: #DCDCDC;`}>next steps</div>
 	);
 };
 
+const forwrdIconCss = css`
+width: 14rem;
+height: 14rem;
+path{
+	fill: #5f5f60;
+}
+:hover{
+	path{
+		fill: #fff;
+	}	
+}
+`;
 const resetIconCss = css`
 	width: 12rem;
 	height: 12rem;

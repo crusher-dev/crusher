@@ -278,6 +278,7 @@ export class AppWindow {
 		ipcMain.on("get-var-context", this.handleGetVarContext.bind(this));
 		ipcMain.on("get-is-advanced-selector", this.handleGetVarContext.bind(this));
 		ipcMain.handle("turn-on-webview-dev-tools", this.handleTurnOnWebviewDevtools.bind(this));
+		ipcMain.handle("pause-steps", this.handlePauseSteps.bind(this));
 
 		this.window.on("focus", () => this.window.webContents.send("focus"));
 		this.window.on("blur", () => this.window.webContents.send("blur"));
@@ -301,6 +302,13 @@ export class AppWindow {
 			process.argv = process.argv.filter((a) => a.includes("--project-config-file"));
 		}
 		this.handle(projectId).catch((err) => console.error("Can't initialize project config in renderer process", err));
+	}
+
+	async handlePauseSteps(event: Electron.IpcMainEvent, data: {}) {
+		if(!global["promises"]) return;
+		await Promise.all(Object.values(global["promises"]).map((promise: any) => {
+			return promise();
+		 }));
 	}
 
 	async handle(projectId) {

@@ -241,9 +241,12 @@ const dragableCss = () => {
 const contentCss = () => {
 	return css`
 		display: flex;
-		background: #020202;
 		width: 100%;
 		overflow-x: hidden;
+		background: linear-gradient(
+			90deg
+			,#050505 15px,transparent 1%) 50%,linear-gradient(#050505 15px,transparent 1%) 50%,hsla(0,0%,100%,.16);
+				background-size: 16px 16px;
 		color: white;
 		height: ${process.platform === "darwin" ? `calc(100vh - 32px)` : "100vh"};
 	`;

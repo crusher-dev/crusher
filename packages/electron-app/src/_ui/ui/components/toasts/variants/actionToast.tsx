@@ -17,8 +17,8 @@ const hide = keyframes({
 });
 
 const slideIn = keyframes({
-  from: { transform: `translateX(calc(100% + ${VIEWPORT_PADDING}px))` },
-  to: { transform: 'translateX(0)' },
+  from: { transform: `translateY(calc(100% + ${VIEWPORT_PADDING}px))` },
+  to: { transform: 'translateY(0)' },
 });
 
 const swipeOut = keyframes({

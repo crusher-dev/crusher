@@ -322,6 +322,7 @@ class CrusherRunnerActions {
 				isFirstNavigationStep = false;
 				shouldCaptureHostScreenshot = true;
 			}
+
 			await this.actionHandlers[action.type](
 				action,
 				browser,

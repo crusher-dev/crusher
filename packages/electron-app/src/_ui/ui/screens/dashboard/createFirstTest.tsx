@@ -95,6 +95,7 @@ const watchCss = css`
 	justify-self: end;
 
 	margin-top: 100rem;
+	color: #969696;
 
 	:hover {
 		color: #a966ff;

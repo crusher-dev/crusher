@@ -8,7 +8,6 @@
   </a>
 </p>
 </p>
-
 <p align="center">
     <a href="https://crusher.dev/#gh-light-mode-only">
   <img src="https://i.imgur.com/oHZjIaK.png" width="890px" =/>

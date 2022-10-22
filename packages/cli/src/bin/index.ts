@@ -15,7 +15,6 @@ if (parseFloat(nodeVersion) >= 10.0) {
 	const helpArgs = ['-h', '--h', 'help', '--help', '-help'];
 	const cliVersion = require('../../package.json').version;
 
-	console.log("hello", RECORDER_MAC_BUILD)
 	console.log('\n');
 	Message(chalk.bgBlueBright.bold, ' crusher ', `${chalk.magenta.bold('v1.0.3')} launch sequence initiated 🦖\n`);
 

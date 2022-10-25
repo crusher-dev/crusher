@@ -10,6 +10,7 @@ import expect from "expect";
 import * as modules from "../utils/modules";
 import { CommunicationChannel } from "../functions/communicationChannel";
 import * as util from "@babel/cli/lib/babel/util";
+import { NodeExtraModules } from "../sdk/modules.extra";
 
 async function executeCustomCode(
 	page: Page,
@@ -33,6 +34,17 @@ async function executeCustomCode(
 		]
 	  });
 
+
+	const customRequire = (moduleName: string) => {
+		try {
+			// @ts-ignore
+			return NodeExtraModules.require(moduleName);
+		} catch(err) {
+			//@ts-ignore
+			return __non_webpack_require__(moduleName);
+		}
+	};
+	
 	result = await new Function(
 		"exports",
 		"require",
@@ -46,8 +58,7 @@ async function executeCustomCode(
 		`${res.code} if(typeof validate === "function") { return validate(crusherSdk, ctx); } return true;`,
 	)(
 		exports,
-		//@ts-ignore
-		typeof __webpack_require__ === "function" ? __non_webpack_require__ : require,
+		customRequire,
 		module,
 		__filename,
 		__dirname,

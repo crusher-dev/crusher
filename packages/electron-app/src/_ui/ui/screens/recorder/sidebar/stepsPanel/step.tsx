@@ -45,7 +45,7 @@ const renderTime = ({ remainingTime }) => {
   };
 
   const remainingTimeCss = css`
- 	font-size: 9rem; 
+ 	font-size: 10rem; 
   `;
 
 const StepTimeout = React.memo(({timeout, ...props}: any) => {
@@ -58,7 +58,7 @@ const StepTimeout = React.memo(({timeout, ...props}: any) => {
 					size={24}
 					trailColor={"transparent"}
 					strokeWidth={1.5}
-					colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
+					colors={["#a056ff", "#F7B801", "#A30000", "#A30000"]}
 					colorsTime={[10, 6, 3, 0]}
 					onComplete={() => ({ shouldRepeat: true, delay: 1 })}
 				>
@@ -115,38 +115,8 @@ const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, 
 	}, [isRunning, isFailed, isCompleted]);
 
 	const title = React.useMemo(() => TextHighlighter({ text: stepInfo.name }), [stepInfo.name]);
-	return React.useMemo(() => (
-		<HoverCard
-			supportPadding={<div css={css`position: absolute; background: transparent; width: 20rem; height: 100%; z-index: 999; margin-left: -24rem;`}></div>}
-			disableStateManagement={true}
-			disabled={disabled || (statusType === "failed" && !stepHoverId) || (stepHoverId && stepHoverId !== stepId)}
-			autoHide={true}
-			state={stepHoverId === stepId}
-			// autoHide={false}
-			// state={true}
-
-			callback={handleHoverCallback}
-			wrapperCss={css`
-				z-index: 123123123 !important;
-				box-shadow: none;
-				background: #0F0F0F;
-			`}
-			css={css`
-				padding: 0rem !important;
-				margin-left: -4rem;
-			`}
-			tooltipCSS={css`
-				border-radius: 12px;
-				overflow: hidden !important;
-				background: #0F0F0F;
-				border: 1px solid #1C1C1C;
-			`}
-			content={isHovered ? <StepEditor stepId={stepId} /> : null}
-			placement="right"
-			type="hover"
-			padding={8}
-			offset={0}
-		>
+	const timeout = React.useMemo(() => (statusType === "running" ? <StepTimeout timeout={30}/> : ""), [statusType === "running"]);
+	const content = React.useMemo(() => (
 			<div className={"step-list-item"} onContextMenu={onContextMenu} onClick={onClick} css={[containerCss(statusType === "failed" || disabled), isActive ? activeItemCss : undefined]}>
 				<div className={"card"} css={contentCss}>
 					{statusType === "running" ? <PointerArrowIcon css={runningPointerIconCss} /> : ""}
@@ -159,13 +129,48 @@ const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, 
 							<TextBlock css={stepDescriptionCss}>{stepInfo?.description?.substring(0, 40)}</TextBlock>
 						</Conditional>
 					</div>
-					{statusType === "running" ? <StepTimeout timeout={30}/> : ""}
+					{timeout}
 					{statusType === "completed" && !disabled ? <GreenCheckboxIcon css={[completedIconCss, !isLast ? inActiveIconCss : null]} /> : ""}
 				</div>
 				{statusType === "failed" ? <FailedStepCard stepId={stepId} /> : ""}
 			</div>
+	), [stepInfo, isActive, isLast, disabled, statusType, title, timeout]);
+
+	return (
+		<HoverCard
+		supportPadding={<div css={css`position: absolute; background: transparent; width: 20rem; height: 100%; z-index: 999; margin-left: -24rem;`}></div>}
+		disableStateManagement={true}
+		disabled={disabled || (statusType === "failed" && !stepHoverId) || (stepHoverId && stepHoverId !== stepId)}
+		autoHide={true}
+		state={stepHoverId === stepId}
+		// autoHide={false}
+		// state={true}
+
+		callback={handleHoverCallback}
+		wrapperCss={css`
+			z-index: 123123123 !important;
+			box-shadow: none;
+			background: #0F0F0F;
+		`}
+		css={css`
+			padding: 0rem !important;
+			margin-left: -4rem;
+		`}
+		tooltipCSS={css`
+			border-radius: 12px;
+			overflow: hidden !important;
+			background: #0F0F0F;
+			border: 1px solid #1C1C1C;
+		`}
+		content={isHovered ? <StepEditor stepId={stepId} /> : null}
+		placement="right"
+		type="hover"
+		padding={8}
+		offset={0}
+	>
+		{content}
 		</HoverCard>
-	), [isHovered, stepInfo, isActive, isLast, disabled, statusType, title]);
+	)
 };
 
 const inActiveIconCss = css`

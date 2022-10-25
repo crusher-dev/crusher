@@ -12,7 +12,7 @@ import { stepHoverAtom } from "electron-app/src/_ui/store/jotai/steps";
 import { useAtom } from "jotai";
 import { editInputAtom } from "electron-app/src/_ui/store/jotai/testsPage";
 import { Conditional } from "@dyson/components/layouts";
-import ToastDemo from "electron-app/src/_ui/ui/components/Toast";
+import { CountdownCircleTimer } from "react-countdown-circle-timer";
 
 interface IProps {
 	className?: string;
@@ -31,6 +31,51 @@ const ReRender = () => {
 	console.log("render")
 	return null
 }
+  
+const renderTime = ({ remainingTime }) => {
+	if (remainingTime === 0) {
+	  return <div className="timer">Too lale...</div>;
+	}
+  
+	return (
+	  <div className="timer">
+		<div className="value" css={remainingTimeCss}>{remainingTime}</div>
+	  </div>
+	);
+  };
+
+  const remainingTimeCss = css`
+ 	font-size: 9rem; 
+  `;
+
+const StepTimeout = React.memo(({timeout, ...props}: any) => {
+	return (
+		<div css={countdownCss}>
+			<div css={css`position: absolute; top: -4rem; left: -12rem;`}>
+				<CountdownCircleTimer
+					isPlaying
+					duration={timeout}
+					size={24}
+					trailColor={"transparent"}
+					strokeWidth={1.5}
+					colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
+					colorsTime={[10, 6, 3, 0]}
+					onComplete={() => ({ shouldRepeat: true, delay: 1 })}
+				>
+					{renderTime}
+				</CountdownCircleTimer>
+		  </div>
+		</div>
+	);
+});
+
+const countdownCss = css`
+	position: relative;
+	margin-left: auto;
+	text-align: center;
+	padding: 4rem;
+`;
+
 
 const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, step, onClick, setIsActive, isLast, ...props }: IProps) => {
 	const { stepId } = props;
@@ -114,7 +159,7 @@ const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, 
 							<TextBlock css={stepDescriptionCss}>{stepInfo?.description?.substring(0, 40)}</TextBlock>
 						</Conditional>
 					</div>
-					{statusType === "running" ? <LoadingIcon style={{}} css={runningIconCss} /> : ""}
+					{statusType === "running" ? <StepTimeout timeout={30}/> : ""}
 					{statusType === "completed" && !disabled ? <GreenCheckboxIcon css={[completedIconCss, !isLast ? inActiveIconCss : null]} /> : ""}
 				</div>
 				{statusType === "failed" ? <FailedStepCard stepId={stepId} /> : ""}

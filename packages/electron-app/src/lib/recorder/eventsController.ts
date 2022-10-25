@@ -122,16 +122,17 @@ export default class EventsController {
 		const uniqueElementId = capturedTarget && ![document.body, document].includes(capturedTarget) ? ElementsIdMap.getUniqueId(capturedTarget) : null;
 
 		const selectors =
-			capturedTarget && uniqueElementId.isNew
+			capturedTarget && uniqueElementId?.isNew
 				? getSelectors(capturedTarget instanceof SVGAElement ? capturedTarget.ownerSVGElement : capturedTarget, true)
 				: window["crusherCacheSelectors"]
-				? window["crusherCacheSelectors"][uniqueElementId.value]
+				? uniqueElementId ? window["crusherCacheSelectors"][uniqueElementId.value] : null
 				: null;
 
-		if (uniqueElementId.isNew && selectors) {
+		if (uniqueElementId?.isNew && selectors) {
 			if (!window["crusherCacheSelectors"]) window["crusherCacheSelectors"] = {};
 			window["crusherCacheSelectors"][uniqueElementId.value] = selectors;
 		}
+	
 		let capturedElementScreenshot = null;
 
 		if (
@@ -165,7 +166,7 @@ export default class EventsController {
 				meta: {
 					value,
 					elementDescription: getElementDescription(capturedTarget),
-					uniqueNodeId: uniqueElementId.value,
+					uniqueNodeId: uniqueElementId?.value,
 				},
 			},
 			screenshot: capturedElementScreenshot,

@@ -685,13 +685,22 @@ export class AppWindow {
 	}
 
 	reinstateElementSteps(uniqueElementId, elementInfo) {
-		a.step.payload.meta = {
-			...(a.step.payload.meta || {}),
-			parentFrameSelectors: elementInfo.parentFrameSelectors,
-		};
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore
-		this.store.dispatch(updateRecordedStep(a.step, a.index));
+		const recordedSteps = getSavedSteps(this.store.getState() as any);
+		const stepsToReinstate = recordedSteps
+			.map((step, index) => ({ step, index }))
+			.filter((step) => {
+				return step.step.payload.meta?.uniqueNodeId === uniqueElementId;
+			});
+
+		stepsToReinstate.map((a) => {
+			a.step.payload.meta = {
+				...(a.step.payload.meta || {}),
+				parentFrameSelectors: elementInfo.parentFrameSelectors,
+			};
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
+			this.store.dispatch(updateRecordedStep(a.step, a.index));
+		});
 	}
 
 	async continueRemainingSteps(event: Electron.IpcMainEvent, payload: { extraSteps?: iAction[] | null }) {

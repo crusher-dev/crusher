@@ -193,7 +193,7 @@ const App = () => {
 				</div>
 			</div>
 			<Global styles={globalCss} />
-			<InfoOverLay />
+			{/* <InfoOverLay /> */}
 		</div>
 	);
 };

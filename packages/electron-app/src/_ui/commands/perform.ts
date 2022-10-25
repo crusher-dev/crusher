@@ -160,6 +160,8 @@ const performVerifyTest = (shouldAlsoSave = true, autoSaveType: "UPDATE" | "SAVE
 			isUnique: true,
 			message: "All steps completed, you can edit now",
 		});
+
+		return res;
 	});
 };
 

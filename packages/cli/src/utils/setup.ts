@@ -14,7 +14,7 @@ import { getProjectsOfCurrentUser, createProject, getUserInfoFromToken } from ".
 import localTunnel from "localtunnel";
 import { getProjectNameFromGitInfo, isUserLoggedIn } from "./index";
 import { getAppConfig, initializeAppConfig, setAppConfig } from "../utils/appConfig";
-import { downloadFile, openUrl } from "./common";
+import { downloadFile, getGitUserInfo, openUrl } from "./common";
 import chalk from "chalk";
 import ora from "ora";
 import { checkForDiscord, waitForLogin } from "./hooks";
@@ -65,9 +65,7 @@ export async function askUserLogin(shouldCheckForDiscord: boolean = true) {
         });
       });
     } else {
-
-      const email = execSync(`git config --global user.email`);
-      const emailText = email.toString();
+      const emailText = getGitUserInfo().email;
       const emailRes = await inquirer.prompt([
         {
           name: "email",

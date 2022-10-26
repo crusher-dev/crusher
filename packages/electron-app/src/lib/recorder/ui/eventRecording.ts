@@ -544,10 +544,10 @@ export default class EventRecording {
 					lastPush = Date.now();
 					this.eventsController.saveCapturedEventInBackground(
 						ActionsInTestEnum.WAIT_FOR_NAVIGATION,
-						null,
+						document.body,
 						argArray[2]
 							? !this.isAbsoluteURL(argArray[2])
-								? new URL(argArray[2], document.baseURI).toString()
+								? `**/*${argArray[2]}`
 								: argArray[2]
 							: window.location.href,
 					);
@@ -564,10 +564,10 @@ export default class EventRecording {
 					lastPush = Date.now();
 					this.eventsController.saveCapturedEventInBackground(
 						ActionsInTestEnum.WAIT_FOR_NAVIGATION,
-						null,
+						document.body,
 						argArray[2]
 							? !this.isAbsoluteURL(argArray[2])
-								? new URL(argArray[2], document.baseURI).toString()
+								? `**/*${argArray[2]}`
 								: argArray[2]
 							: window.location.href,
 					);

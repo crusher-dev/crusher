@@ -190,12 +190,11 @@ class TestRunnerQueue {
 		}
 		await this.handleNextTestsForExecution(bullJob, buildRecord);
 
-		let actionsResultWithIndex = [];
+		let actionsResultWithIndex = bullJob.data.actionResults.map((actionResult, index) => ({ ...actionResult, actionIndex: index }));
         let screenshotActionsResultWithIndex = [];
         let  savedScreenshotRecords = [];
         
         if(shouldCompareScreenshot) {
-            actionsResultWithIndex = bullJob.data.actionResults.map((actionResult, index) => ({ ...actionResult, actionIndex: index }));
             screenshotActionsResultWithIndex = getScreenshotActionsResult(actionsResultWithIndex);
             savedScreenshotRecords = await this.buildTestInstanceScreenshotService.saveScreenshots(screenshotActionsResultWithIndex, bullJob.data.testInstanceId);
         }

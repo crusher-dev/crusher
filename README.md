@@ -79,20 +79,21 @@ You can run test locally on your machine to debug. Run it on cloud for faster ex
 Reference/ [Getting Started](https://docs.crusher.dev/getting-started/create-your-first-test#using-cli) | [What is Crusher](https://docs.crusher.dev/getting-started/what-is-crusher) 
 
 
-## 🦖 Features
+## 👨🏽‍💻 Features
 
-- 🏆 **Test using low-code:** Create tests using our customized recorder based on chromium.
-- **Write tests using code:** Better APIs and more control with native playwright APIs.
-- 🔥 **Fast test execution:** No more execution on selenium grid.
-- 🔋 **All major browsers supported:** Run tests on chromium, safari, and firefox in seconds.
-- ⚡ **Blazing Fast:** Built on top of Playwright, Crusher delivers an amazing performance during execution.
-- **Easy integration with your projects:** Use npx base CLI to integrate.
-- 🦄 **Central reporting & dashboard:** See how your app is doing overall anytime-anywhere.
-- **Built for developers:** Use modern javascript to write tests with dead-simple workflow.
+Crusher has a lot of features, some of the major ones are
+- 👨🏽‍💻 **Test using low-code:** Create tests using our customized recorder based on chromium
+- 📇 **Use code files:** Better APIs and more control with playwright APIs
+- 🔋 **All major browsers supported:** 
+- 👨🏽‍💻 **Built for developers:** Use modern javascript to write tests with simple workflow
+- 🔥 **Fast test execution** 
+- ⚡ **Blazing Fast:** Built on top of Playwright, Crusher delivers an amazing performance during execution
+- 📼 **Easy integration** with your projects
+- 🦄 Central **reporting & dashboard**: See how your app is doing overall anytime-anywhere
 
-Built using playwright as the base for better developer experience. We're building a customized toolkit to upgrade the testing experience, by focusing heavily on the engineering + product side.
+Crusher works framework on top of playwright. We're focusing on engineering, e2e experience of testing.
 
-## 🏃 Use cases
+## ⏩ Use cases
 - **Test e2e user flows:** Never compromise your user experience by testing important end-to-end user flows.
 - **Test UI of your project:** Never let a UI change catch you off guard.
 - **Run tests locally:** Test specific functionalities of your app easily with a single click.
@@ -102,7 +103,7 @@ Built using playwright as the base for better developer experience. We're buildi
 ## 💡 Philosophy
 If you are involved in software development, you are no stranger to things breaking now and then. Sometimes it's because of a small typo/change, and sometimes because of reasons out of your control.
 
-It seems like every time you are changing something, there is a chance that something else might break. The worst part is you have no idea what went wrong until it goes into production and someone reports it.
+It seems like every time you are changing something, there is a chance of stuff breaking. The worst part is you're lost, and then someone reports the issue in prod.
 
 Testing solves this, but it hasn't evolved. We're changing it by creating an integrated solution that simply works.
 

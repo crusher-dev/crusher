@@ -9,22 +9,17 @@
 </p>
 </p>
 
-<p align="center">
-    <a href="https://crusher.dev/#gh-light-mode-only">
-  <img src="https://i.imgur.com/oHZjIaK.png" width="890px" =/>
-  </a>
-  <a href="https://crusher.dev/#gh-dark-mode-only">
-    <img src="https://i.imgur.com/oHZjIaK.png"  width="890px" />
-  </a>
-  </p>
-
 
 
 
 <h3 align="center">Fast all-in-one testing with low-code</h3>
 <p align="center">
-  Open-source testing framework to test with minimal effort.
+<img src="https://user-images.githubusercontent.com/6849438/197889752-c1f60b2a-873b-4579-b651-e43010452483.gif"/>
+<br/>
+  Open-source testing framework to test with minimal effort
 </p>
+
+
 
 <div align="center">
   <table>
@@ -45,7 +40,8 @@
 
 [Crusher](https://crusher.dev) is an all in one, faster testing framework, an modern replacement to traditional workflows using cypress, selenium, etc.
 
-**Create, run and debug tests** with dead simple workflow, use **low-code or code**. We're reimagining testing to make it blazingly simple, fast and effective.
+**Create, run and debug tests** with dead simple workflow, use **low-code or code**.
+We're reimagining testing to make it simple, fast and robust.
 
 
 
@@ -66,7 +62,7 @@
 **☄️Create your first test**
 
 ```
-npx crusher-cli init
+npx crusher.dev
 ```
 
 or [download binary](https://docs.crusher.dev/getting-started/create-your-first-test#or-install-recorder)
@@ -75,7 +71,7 @@ or [download binary](https://docs.crusher.dev/getting-started/create-your-first-
 **🚖 Run test**
 
 ```
-npx crusher-cli test:run
+npx crusher.dev test:run
 ```
 
 You can run test locally on your machine to debug. Run it on cloud for faster execution.
@@ -144,3 +140,14 @@ For general help using Crusher, please refer to [the official documentation](htt
 ## 📝 License
 
 This repo is entirely MIT licensed, except the **/src_ee directory (if applicable)**.
+
+
+
+<p align="center">
+    <a href="https://crusher.dev/#gh-light-mode-only">
+  <img src="https://i.imgur.com/oHZjIaK.png" width="890px" =/>
+  </a>
+  <a href="https://crusher.dev/#gh-dark-mode-only">
+    <img src="https://i.imgur.com/oHZjIaK.png"  width="890px" />
+  </a>
+  </p>

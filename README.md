@@ -38,7 +38,7 @@
 <hr/>
 
 
-[Crusher](https://crusher.dev) is an all in one, faster testing framework. 
+[Crusher](https://crusher.dev) all in one testing framework. It includes everything w.r.t to e2e testing, like test recorder(local app), test runner and web app for you. 
 
 **Create, run and debug tests** with simple workflow, use **low-code or code**.
 Making testing to make it simple, fast and robust.
@@ -144,13 +144,3 @@ For general help using Crusher, please refer to [the official documentation](htt
 
 This repo is entirely MIT licensed, except the **/src_ee directory (if applicable)**.
 
-
-
-<p align="center">
-    <a href="https://crusher.dev/#gh-light-mode-only">
-  <img src="https://i.imgur.com/oHZjIaK.png" width="890px" =/>
-  </a>
-  <a href="https://crusher.dev/#gh-dark-mode-only">
-    <img src="https://i.imgur.com/oHZjIaK.png"  width="890px" />
-  </a>
-  </p>

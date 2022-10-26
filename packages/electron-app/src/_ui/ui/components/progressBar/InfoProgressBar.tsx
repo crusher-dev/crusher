@@ -1,15 +1,15 @@
 import { css } from "@emotion/react";
 import React from "react";
 
-const InfoProgressBar = ({className, id, disableTime, total, value, label}) => {
+const InfoProgressBar = ({ className, id, disableTime, total, value, label }) => {
 	const [elapsedTime, setElapsedTime] = React.useState("0:00");
-    const [startTime, setStartTime] = React.useState(Date.now());
+	const [startTime, setStartTime] = React.useState(Date.now());
 
-    // Reset timer when id changes
-    React.useEffect(() => {
-        setStartTime(Date.now());
-        setElapsedTime("0:00");
-    }, [id]);
+	// Reset timer when id changes
+	React.useEffect(() => {
+		setStartTime(Date.now());
+		setElapsedTime("0:00");
+	}, [id]);
 
 	React.useEffect(() => {
 		const interval = setInterval(() => {
@@ -21,7 +21,7 @@ const InfoProgressBar = ({className, id, disableTime, total, value, label}) => {
 		return () => clearInterval(interval);
 	}, [startTime]);
 
-    const progress = value === 0 ? 0 : (value / total) * 100;
+	const progress = value === 0 ? 0 : (value / total) * 100;
 
 	return (
 		<div className={className}>

@@ -56,7 +56,7 @@ const BuildListItem = ({ isItemSelected, viewTestCallback, build }) => {
 				<div css={metaInfoCss} className={"flex-1 flex pl-20"}>
 
 
-				<div onClick={(e) => { e.stopPropagation(); }}><a css={linkCss} target={"_blank"} href={new URL(build.host)}>{build.host ? (new URL(build.host)).host : "~"}</a></div>
+				<div onClick={(e) => { e.stopPropagation(); }}><a css={linkCss} target={"_blank"} href={build.host ? new URL(build.host) : "#"}>{build.host ? (new URL(build.host)).host : "~"}</a></div>
 					{/* <div className={"ml-20"}>ft-branch-new  33814</div> */}
 				</div>
 				<div className={"flex items-center ml-auto"}>

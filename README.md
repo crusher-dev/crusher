@@ -38,10 +38,12 @@
 <hr/>
 
 
-[Crusher](https://crusher.dev) is an all in one, faster testing framework, an modern replacement to traditional workflows using cypress, selenium, etc.
+[Crusher](https://crusher.dev) is an all in one, faster testing framework. 
 
-**Create, run and debug tests** with dead simple workflow, use **low-code or code**.
-We're reimagining testing to make it simple, fast and robust.
+**Create, run and debug tests** with simple workflow, use **low-code or code**.
+Making testing to make it simple, fast and robust.
+
+It's an alternative to cypress, playwright, selenium, etc.
 
 
 

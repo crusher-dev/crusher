@@ -119,26 +119,12 @@ export class Cloudflare {
       const proxyKeys = Object.keys(resultTunnelMap);
 
       // Wait until tunnel is reachable using axios
-      await Promise.all(proxyKeys.map((proxyKey)=> {
+      await proxyKeys.map((proxyKey)=> {
         const tunnel = resultTunnelMap[proxyKey].tunnel;
         console.log("Tunnel is", `"${tunnel}"`);
 
-        return new Promise((res, rej) => {
-          const interval = setInterval(async () => {
-            try {
-              const tunnelUrl = new URL(tunnel);
-              tunnelUrl.searchParams.append("random_blabla", Date.now().toString());
-              const response = await axios.post(resolveBackendServerUrl("/proxy/actions/validate.response"), { url: tunnelUrl.toString() });
-              if(response && response.data && response.data.status && response.data.status < 500) {
-                res("Tunnel is reachable");
-                clearInterval(interval);
-              }
-            } catch (e) {
-              console.log(e.message);
-            }
-          }, 5000);
-        });
-      }))
+        return "Tunnel is reachable"
+      });
 
       console.log("Wait for 60 seconds to make sure tunnel is reachable");
       await new Promise((resolve, reject) => setTimeout(resolve, 60000));

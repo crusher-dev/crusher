@@ -116,7 +116,7 @@ const SettingsModalContent = ({ className, ...props }: iStartupModalProps & { cl
 		if (connectToCloudStatus === ConnectToCloudStatusEnum.NOT_CONNECTED) {
 			connectToCloud();
 		} else if (connectToCloudStatus === ConnectToCloudStatusEnum.CONNECTED) {
-			sendSnackBarEvent({ type: "info", message: `Already connected to cloud! Hello, ${userAccountInfo.name}` });
+			sendSnackBarEvent({ type: "info", message: `Already connected to cloud!` });
 		} else {
 			sendSnackBarEvent({ type: "error", message: "Waiting for the login process to complete" });
 		}

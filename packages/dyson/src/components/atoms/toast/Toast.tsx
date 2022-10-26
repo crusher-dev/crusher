@@ -31,7 +31,7 @@ const alertContainer = css`
 
 	padding: 0rem 16rem 0 16rem;
 
-	font-weight: 600;
+	font-weight: 500;
 
 	border-radius: 12rem;
 

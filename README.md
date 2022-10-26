@@ -118,9 +118,9 @@ Testing solves this, but it hasn't evolved. We're changing it by creating an int
 
 ## FAQs
 
-- **I don't have any prior experience, Can I use Crusher?** Yes, we primarily designed crusher to make testing easy. Most developer have never tested.
-- **Low-code ain't powerful? I believe code is more powerful:** Fair enough, you can write code too. We might support other frameworks later on.
-- **Why use this over selenium, cypress, etc?** With any library, you'll have to spend a lot of time setting up testing workflow. For us the whole experience was frustrating, from both time and reliability.
+- **I don't have any prior experience, Can I use Crusher?** Yes, we primarily designed crusher to make testing easy. Most developer have never created test.
+- **Low-code ain't powerful? I believe code is more powerful:** Fair enough, you can write code too. We might support other frameworks later on. 
+- **Why use this over selenium, cypress, etc?** With any library, you'll have to spend a lot of time setting up testing framework. For us the whole experience was frustrating, from both time and reliability.
 - **Why a new framework?** Testing has not evolved. We still have old flaky APIs that don't work.
 - **Is crusher using electron?** We need to use chromium to build the recorder and also to run tests locally. We also modify V8 and Blink to make the recorder more powerful.
 
@@ -134,13 +134,13 @@ For general help using Crusher, please refer to [the official documentation](htt
 - [GitHub](https://github.com/crusherdev/crusher) (Bug reports, Contributions)
 - support@crusher.dev
 
-## Contribute to Crusher
+### Contribute to Crusher
 
 - Setup crusher locally [Docs](https://docs.crusher.dev/development/setting-up-development-env)
 - Found a bug? [File an issue](https://github.com/crusherdev/crusher/issues/new/choose)
 - Wanna help. We love pull requests, too!
 
-## 📝 License
+### License
 
 This repo is entirely MIT licensed, except the **/src_ee directory (if applicable)**.
 

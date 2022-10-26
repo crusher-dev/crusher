@@ -29,10 +29,11 @@ async function executeCustomCode(
 	let result = null;
 
 	const res = await util.transformRepl("main.js", customScriptFunction, {
+		cwd: eval(`__dirname`),
 		plugins: [
 			require("@babel/plugin-transform-typescript")
 		]
-	  });
+	});
 
 
 	const customRequire = (moduleName: string) => {

@@ -6,6 +6,7 @@ import { getCurrentTestInfo, getRemainingSteps } from "electron-app/src/store/se
 import { useSelector } from "react-redux";
 import { getAllSteps, getSavedSteps } from "electron-app/src/store/selectors/recorder";
 import { InfoProgressBar } from "electron-app/src/_ui/ui/components/progressBar/InfoProgressBar";
+import { getBuildProgress } from "electron-app/src/store/selectors/builds";
 
 
 
@@ -15,6 +16,7 @@ interface IProps {
 const ReplaySidebarHeader = ({ className }: IProps) => {
 	const testInfo = useSelector(getCurrentTestInfo);
 	const { currentBuild } = useLocalBuild();
+	const buildProgress = useSelector(getBuildProgress);
 	const savedSteps = useSelector(getSavedSteps);
 
 	const testInfoProgressBar = {
@@ -52,6 +54,7 @@ const ReplaySidebarHeader = ({ className }: IProps) => {
 					label={`${buildProgressBar.current}/${buildProgressBar.total} tests`}
 					total={buildProgressBar.total}
 					value={buildProgressBar.current}
+					segments={Object.values(buildProgress)}
 					className={"flex-1"} />
 			</div>
 		</div>

@@ -32,10 +32,11 @@ import { isStepHoverAtom } from "./store/jotai/testsPage";
 import { CloudCrusher } from "../lib/cloud";
 import { clearAllToasts, clearToast, showToast } from "./ui/components/toasts";
 import { getStore } from "../store/configureStore";
+import { getCurrentLocalBuild } from "../store/selectors/builds";
 
 const handleCompletion = async (store: Store, action: IDeepLinkAction, addNotification, hasCompletedSuccesfully: boolean) => {
 	// @TODO: Change `redirectAfterSuccess` to `isLocalBuild`
-
+	const localBuild = getCurrentLocalBuild(store.getState());
 	if (action.args.redirectAfterSuccess && window["testsToRun"]) {
 		window["testsToRun"].list = window["testsToRun"].list.filter((testId) => testId !== action.args.testId);
 		const logs = await performGetRecorderTestLogs();
@@ -50,9 +51,13 @@ const handleCompletion = async (store: Store, action: IDeepLinkAction, addNotifi
 			historyInstance.push("/recorder", {});
 			goFullScreen();
 			store.dispatch(setSessionInfoMeta({}));
+
+			const progress = new Map(localBuild.progress);
+			progress.set(action.args.testId, hasCompletedSuccesfully)
 			store.dispatch(
 				updateCurrentLocalBuild({
 					queuedTests: window["testsToRun"].list,
+					progress: progress,
 				} as any),
 			);
 			performReplayTestUrlAction(window["testsToRun"].list[0], true, action.args.selectedTests || []);
@@ -266,7 +271,6 @@ const globalCss = css`
 		background-color: #0a0b0e;
 		box-shadow: none;
 	}
-
 	.custom-scroll::-webkit-scrollbar-thumb {
 		background-color: #1b1f23;
 		border-radius: 12rem;

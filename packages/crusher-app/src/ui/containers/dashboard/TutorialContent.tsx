@@ -26,8 +26,8 @@ function Content(props) {
 			<div css={videoBlock} className={"mr-44"}>
 				<iframe
 					width="100%"
-					height="360"
-					src="https://www.loom.com/embed/c6bad79bd3e74d64ad522550c04f97f8?hide_owner=true&hide_share=true&hide_title=true&hideEmbedTopBar=true"
+					height="320"
+					src="https://www.loom.com/embed/4d7671daaea5401c89731d2f7c333388?hide_owner=true&hide_share=true&hide_title=true&hideEmbedTopBar=true"
 					frameborder="0"
 					webkitallowfullscreen
 					mozallowfullscreen
@@ -61,13 +61,13 @@ function Content(props) {
 
 export const videoBlock = css`
 	width: 570px;
-	height: 360px;
+	height: 300px;
 
 	overflow: hidden;
 
 	background: rgba(0, 0, 0, 0.19);
 	border: 1px solid #1f1f1f;
-	border-radius: 20px;
+	// border-radius: 20px;
 `;
 export const tutorialBack = css`
 	color: #5e5e5e;

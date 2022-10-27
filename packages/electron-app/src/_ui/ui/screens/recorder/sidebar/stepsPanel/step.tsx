@@ -12,7 +12,7 @@ import { stepHoverAtom } from "electron-app/src/_ui/store/jotai/steps";
 import { useAtom } from "jotai";
 import { editInputAtom } from "electron-app/src/_ui/store/jotai/testsPage";
 import { Conditional } from "@dyson/components/layouts";
-import { CountdownCircleTimer } from "react-countdown-circle-timer";
+import { StepTimeout } from "./components/steps/timeout";
 
 interface IProps {
 	className?: string;
@@ -27,54 +27,6 @@ interface IProps {
 	step?: any;
 }
 
-const ReRender = () => {
-	console.log("render")
-	return null
-}
-  
-const renderTime = ({ remainingTime }) => {
-	if (remainingTime === 0) {
-	  return <div className="timer">Too lale...</div>;
-	}
-  
-	return (
-	  <div className="timer">
-		<div className="value" css={remainingTimeCss}>{remainingTime}</div>
-	  </div>
-	);
-  };
-
-  const remainingTimeCss = css`
- 	font-size: 10rem; 
-  `;
-
-const StepTimeout = React.memo(({timeout, ...props}: any) => {
-	return (
-		<div css={countdownCss}>
-			<div css={css`position: absolute; top: -4rem; left: -12rem;`}>
-				<CountdownCircleTimer
-					isPlaying
-					duration={timeout}
-					size={24}
-					trailColor={"transparent"}
-					strokeWidth={1.5}
-					colors={["#a056ff", "#F7B801", "#A30000", "#A30000"]}
-					colorsTime={[10, 6, 3, 0]}
-					onComplete={() => ({ shouldRepeat: true, delay: 1 })}
-				>
-					{renderTime}
-				</CountdownCircleTimer>
-		  </div>
-		</div>
-	);
-});
-
-const countdownCss = css`
-	position: relative;
-	margin-left: auto;
-	text-align: center;
-	padding: 4rem;
-`;
 
 
 const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, step, onClick, setIsActive, isLast, ...props }: IProps) => {
@@ -115,60 +67,56 @@ const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, 
 	}, [isRunning, isFailed, isCompleted]);
 
 	const title = React.useMemo(() => TextHighlighter({ text: stepInfo.name }), [stepInfo.name]);
-	const timeout = React.useMemo(() => (statusType === "running" ? <StepTimeout timeout={30}/> : ""), [statusType === "running"]);
+	const timeout = React.useMemo(() => (statusType === "running" ? <StepTimeout timeout={30} /> : null), [statusType === "running"]);
 	const content = React.useMemo(() => (
-			<div className={"step-list-item"} onContextMenu={onContextMenu} onClick={onClick} css={[containerCss(statusType === "failed" || disabled), isActive ? activeItemCss : undefined]}>
-				<div className={"card"} css={contentCss}>
-					{statusType === "running" ? <PointerArrowIcon css={runningPointerIconCss} /> : ""}
-					<div css={stepTextCss} className="flex flex-col justify-center">
-						<TextBlock css={[stepNameCss, statusType === "failed" ? failedTextNameCss : null, statusType === "running" ? runningTextNameCss : null, disabled ? css`color: rgba(255, 255, 255, 0.85);` : null]}>
-							{title}
-						</TextBlock>
-						<ReRender />
-						<Conditional showIf={!!stepInfo?.description}>
-							<TextBlock css={stepDescriptionCss}>{stepInfo?.description?.substring(0, 40)}</TextBlock>
-						</Conditional>
-					</div>
-					{timeout}
-					{statusType === "completed" && !disabled ? <GreenCheckboxIcon css={[completedIconCss, !isLast ? inActiveIconCss : null]} /> : ""}
+		<div className={"step-list-item"} onContextMenu={onContextMenu} onClick={onClick} css={[containerCss(statusType === "failed" || disabled), isActive ? activeItemCss : undefined]}>
+			<div className={"card"} css={contentCss}>
+				{statusType === "running" ? <PointerArrowIcon css={runningPointerIconCss} /> : ""}
+				<div css={stepTextCss} className="flex flex-col justify-center">
+					<TextBlock css={[stepNameCss, statusType === "failed" ? failedTextNameCss : null, statusType === "running" ? runningTextNameCss : null, disabled ? css`color: rgba(255, 255, 255, 0.85);` : null]}>
+						{title}
+					</TextBlock>
+
+					<Conditional showIf={!!stepInfo?.description}>
+						<TextBlock css={stepDescriptionCss}>{stepInfo?.description?.substring(0, 40)}</TextBlock>
+					</Conditional>
 				</div>
-				{statusType === "failed" ? <FailedStepCard stepId={stepId} /> : ""}
+				{timeout}
+				{statusType === "completed" && !disabled ? <GreenCheckboxIcon css={[completedIconCss, !isLast ? inActiveIconCss : null]} /> : ""}
 			</div>
+			{statusType === "failed" ? <FailedStepCard stepId={stepId} /> : ""}
+		</div>
 	), [stepInfo, isActive, isLast, disabled, statusType, title, timeout]);
 
 	return (
 		<HoverCard
-		supportPadding={<div css={css`position: absolute; background: transparent; width: 20rem; height: 100%; z-index: 999; margin-left: -24rem;`}></div>}
-		disableStateManagement={true}
-		disabled={disabled || (statusType === "failed" && !stepHoverId) || (stepHoverId && stepHoverId !== stepId)}
-		autoHide={true}
-		state={stepHoverId === stepId}
-		// autoHide={false}
-		// state={true}
-
-		callback={handleHoverCallback}
-		wrapperCss={css`
+			supportPadding={<div css={css`position: absolute; background: transparent; width: 20rem; height: 100%; z-index: 999; margin-left: -24rem;`}></div>}
+			disabled={disabled || (statusType === "failed" && !stepHoverId) || (stepHoverId && stepHoverId !== stepId)}
+			autoHide={true}
+			state={stepHoverId === stepId}
+			callback={handleHoverCallback}
+			wrapperCss={css`
 			z-index: 123123123 !important;
 			box-shadow: none;
 			background: #0F0F0F;
 		`}
-		css={css`
+			css={css`
 			padding: 0rem !important;
 			margin-left: -4rem;
 		`}
-		tooltipCSS={css`
+			tooltipCSS={css`
 			border-radius: 12px;
 			overflow: hidden !important;
 			background: #0F0F0F;
 			border: 1px solid #1C1C1C;
 		`}
-		content={isHovered ? <StepEditor stepId={stepId} /> : null}
-		placement="right"
-		type="hover"
-		padding={8}
-		offset={0}
-	>
-		{content}
+			content={isHovered ? <StepEditor stepId={stepId} /> : null}
+			placement="right"
+			type="hover"
+			padding={8}
+			offset={0}
+		>
+			{content}
 		</HoverCard>
 	)
 };

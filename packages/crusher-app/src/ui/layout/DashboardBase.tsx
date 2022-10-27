@@ -222,24 +222,7 @@ const projectIcon = css`
 	}
 `;
 
-const sidebarIconCSS = css`
-	position: absolute;
-	top: 18px;
-	left: 20px;
-	cursor: pointer;
-	z-index: 20;
-	/* padding: 8px 12px; */
-	height: 20px;
-	width: 20px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
 
-	border-radius: 6px;
-	:hover {
-		background: #323232;
-	}
-`;
 
 export const SidebarTopBarLayout = ({ children, noContainerWidth = false, hideSidebar = false, setContainerWidth = true }): JSX.Element => {
 	const [showSidebar, setShowSidebar] = useState(hideSidebar);
@@ -275,9 +258,9 @@ const noContainerWidthCSS = css`
 `;
 const textLink = css`
 	:hover {
-		color: #d378fe;
+		color: #2688ff;
 		path {
-			fill: #d378fe;
+			fill: #2688ff;
 		}
 	}
 `;

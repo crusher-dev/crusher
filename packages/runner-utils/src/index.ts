@@ -219,9 +219,9 @@ class CrusherRunnerActions {
 						throw new Error("Invalid action category handler");
 				}
 
-				if (shouldSleepAfterComplete) {
-					await sleep(500);
-				}
+				// if (shouldSleepAfterComplete) {
+				// 	await sleep(500);
+				// }
 				// Woohoo! Action executed without any errors.
 				if (shouldLog) {
 					let endingScreenshot = null;

@@ -7,6 +7,7 @@
 		"setup": "node setup/tsconfig.js",
 		"dev": "next dev",
 		"build": "next build",
+		"start": "next start",
 		"lint": "eslint --ext=jsx,ts,tsx src",
 		"export": "next export",
 		"prettify:test": "prettier .",

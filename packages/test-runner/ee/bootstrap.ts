@@ -54,11 +54,6 @@ class EnterpriseTestRunnerBootstrap extends TestRunnerBootstrap {
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			//@ts-ignore
 			getOffset: this.getBootAfterNJobsOffset.bind(this),
-			limiter: {
-				max: 2,
-				duration: 1800000,
-				groupKey: "buildId",
-			},
 		});
 
 		// Trigger everytime worker picks up job

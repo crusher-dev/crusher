@@ -143,11 +143,11 @@ class CrusherRunnerActions {
 		): Promise<void> => {
 			let stepResult = null;
 			let startingScreenshot = null;
-			if (shouldTakeScreenshots) {
-				try {
-					startingScreenshot = await this._getCurrentScreenshot(page);
-				} catch (ex) { }
-			}
+			// if (shouldTakeScreenshots) {
+			// 	try {
+			// 		startingScreenshot = await this._getCurrentScreenshot(page);
+			// 	} catch (ex) { }
+			// }
 
 			if (shouldLog) {
 				await this.handleActionExecutionStatus(

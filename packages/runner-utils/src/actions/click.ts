@@ -15,7 +15,7 @@ async function clickOnElement(
 ) {
 	try {
 		let pos = undefined;
-		await (await element.elementHandle()).waitForElementState("visible");
+		await element.waitFor({state: "visible"});
 
 		if (action.payload.meta.value?.mousePos) {
 			const posObj = action.payload.meta.value.mousePos;

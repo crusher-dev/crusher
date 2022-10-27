@@ -70,6 +70,7 @@ class CloudCrusher {
 			const store = getStore();
 			const selectedProject = getCurrentSelectedProjct(store.getState() as any);
 			if (!selectedProject) throw new Error("No project selected!");
+
 			return axios
 				.post(
 					resolveToBackend(`/projects/${selectedProject}/builds/actions/create.local`),

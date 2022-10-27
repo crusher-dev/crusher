@@ -1,8 +1,8 @@
 import React from "react";
 
-const CloudIcon = React.forwardRef(({ shouldAnimateGreen, color = "#9EF25B", ...props }, ref) => {
+const CloudIcon = ({ shouldAnimateGreen, color = "#9EF25B", ...props }) => {
 	return (
-		<svg viewBox={"0 0 16 11"} fill="none" xmlns="http://www.w3.org/2000/svg" ref={ref} {...props}>
+		<svg viewBox={"0 0 16 11"} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			{shouldAnimateGreen ? (
 				<linearGradient id="lg" x1="0.5" y1="1" x2="0.5" y2="0">
 					<stop offset="0%" stopOpacity="1" stopColor={color} />
@@ -25,7 +25,7 @@ const CloudIcon = React.forwardRef(({ shouldAnimateGreen, color = "#9EF25B", ...
 			/>
 		</svg>
 	);
-});
+};
 
 const DisabledCloudIcon = React.forwardRef(({ shouldAnimateGreen, ...props }, ref) => (
 	<svg viewBox="0 0 25 19" fill="none" xmlns="http://www.w3.org/2000/svg" ref={ref} {...props}>
@@ -372,84 +372,84 @@ const GithubIcon = (props) => (
 
 const TickIcon = (props) => (
 	<svg
-	  viewBox={'0 0 12 9'}
-	  fill="none"
-	  xmlns="http://www.w3.org/2000/svg"
-	  {...props}
+		viewBox={'0 0 12 9'}
+		fill="none"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
 	>
-	  <path
-		fillRule="evenodd"
-		clipRule="evenodd"
-		d="M10.693.7a.501.501 0 0 1 .136.142.465.465 0 0 1 .054.37.476.476 0 0 1-.09.171l-5.6 6.825a.517.517 0 0 1-.169.134.556.556 0 0 1-.62-.085l-3.15-2.925a.469.469 0 0 1-.14-.341.471.471 0 0 1 .153-.336.546.546 0 0 1 .362-.143.548.548 0 0 1 .367.13l2.726 2.531L9.958.793A.555.555 0 0 1 10.693.7Z"
-		fill="#B0FF72"
-		stroke="#B0FF72"
-		strokeWidth={0.6}
-	  />
+		<path
+			fillRule="evenodd"
+			clipRule="evenodd"
+			d="M10.693.7a.501.501 0 0 1 .136.142.465.465 0 0 1 .054.37.476.476 0 0 1-.09.171l-5.6 6.825a.517.517 0 0 1-.169.134.556.556 0 0 1-.62-.085l-3.15-2.925a.469.469 0 0 1-.14-.341.471.471 0 0 1 .153-.336.546.546 0 0 1 .362-.143.548.548 0 0 1 .367.13l2.726 2.531L9.958.793A.555.555 0 0 1 10.693.7Z"
+			fill="#B0FF72"
+			stroke="#B0FF72"
+			strokeWidth={0.6}
+		/>
 	</svg>
-  )
+)
 
 
 const CorrectCircleIcon = (props) => (
 	<svg
-	  viewBox={"0 0 14 14"}
-	  fill="none"
-	  xmlns="http://www.w3.org/2000/svg"
-	  {...props}
+		viewBox={"0 0 14 14"}
+		fill="none"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
 	>
-	  <path
-		fillRule="evenodd"
-		clipRule="evenodd"
-		d="M0 7a7 7 0 1 1 14 0A7 7 0 0 1 0 7Zm9.595-1.895a.7.7 0 0 1 0 .99L7.017 8.673a1.014 1.014 0 0 1-1.434 0L4.405 7.495a.7.7 0 0 1 .99-.99l.905.905 2.305-2.305a.7.7 0 0 1 .99 0Z"
-		fill="#9EF25B"
-	  />
-	  <path
-		fillRule="evenodd"
-		clipRule="evenodd"
-		d="M0 7a7 7 0 1 1 14 0A7 7 0 0 1 0 7Zm9.595-1.895a.7.7 0 0 1 0 .99L7.017 8.673a1.014 1.014 0 0 1-1.434 0L4.405 7.495a.7.7 0 0 1 .99-.99l.905.905 2.305-2.305a.7.7 0 0 1 .99 0Z"
-		fill="#9EF25B"
-	  />
+		<path
+			fillRule="evenodd"
+			clipRule="evenodd"
+			d="M0 7a7 7 0 1 1 14 0A7 7 0 0 1 0 7Zm9.595-1.895a.7.7 0 0 1 0 .99L7.017 8.673a1.014 1.014 0 0 1-1.434 0L4.405 7.495a.7.7 0 0 1 .99-.99l.905.905 2.305-2.305a.7.7 0 0 1 .99 0Z"
+			fill="#9EF25B"
+		/>
+		<path
+			fillRule="evenodd"
+			clipRule="evenodd"
+			d="M0 7a7 7 0 1 1 14 0A7 7 0 0 1 0 7Zm9.595-1.895a.7.7 0 0 1 0 .99L7.017 8.673a1.014 1.014 0 0 1-1.434 0L4.405 7.495a.7.7 0 0 1 .99-.99l.905.905 2.305-2.305a.7.7 0 0 1 .99 0Z"
+			fill="#9EF25B"
+		/>
 	</svg>
-  )
-  
+)
+
 
 
 const EditIconV4 = (props) => (
 	<svg
-	  viewBox={"0 0 14 14"}
-	  fill="none"
-	  xmlns="http://www.w3.org/2000/svg"
-	  {...props}
+		viewBox={"0 0 14 14"}
+		fill="none"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
 	>
-	  <path
-		d="m3.803 9.742.884-2.209a2.8 2.8 0 0 1 .619-.939l4.844-4.843a1.485 1.485 0 0 1 2.1 2.1L7.406 8.694a2.8 2.8 0 0 1-.94.62l-2.208.884a.35.35 0 0 1-.455-.455v-.001Z"
-		fill="#CC5FFF"
-	  />
-	  <path
-		d="M2.45 4.025c0-.483.392-.875.875-.875H7A.525.525 0 0 0 7 2.1H3.325A1.925 1.925 0 0 0 1.4 4.025v6.65A1.925 1.925 0 0 0 3.325 12.6h6.65a1.925 1.925 0 0 0 1.925-1.925V7a.525.525 0 1 0-1.05 0v3.675a.875.875 0 0 1-.875.875h-6.65a.875.875 0 0 1-.875-.875v-6.65Z"
-		fill="#CC5FFF"
-	  />
+		<path
+			d="m3.803 9.742.884-2.209a2.8 2.8 0 0 1 .619-.939l4.844-4.843a1.485 1.485 0 0 1 2.1 2.1L7.406 8.694a2.8 2.8 0 0 1-.94.62l-2.208.884a.35.35 0 0 1-.455-.455v-.001Z"
+			fill="#CC5FFF"
+		/>
+		<path
+			d="M2.45 4.025c0-.483.392-.875.875-.875H7A.525.525 0 0 0 7 2.1H3.325A1.925 1.925 0 0 0 1.4 4.025v6.65A1.925 1.925 0 0 0 3.325 12.6h6.65a1.925 1.925 0 0 0 1.925-1.925V7a.525.525 0 1 0-1.05 0v3.675a.875.875 0 0 1-.875.875h-6.65a.875.875 0 0 1-.875-.875v-6.65Z"
+			fill="#CC5FFF"
+		/>
 	</svg>
-  );
+);
 
 
 
 const ExportIcon = (props) => (
-		<svg
-		  viewBox={"0 0 14 14"}
-		  fill="none"
-		  xmlns="http://www.w3.org/2000/svg"
-		  {...props}
-		>
-		  <path
+	<svg
+		viewBox={"0 0 14 14"}
+		fill="none"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	>
+		<path
 			fillRule="evenodd"
 			clipRule="evenodd"
 			d="M7.583 8.217v-1.8a.583.583 0 10-1.166 0v1.8l-.463-.463a.583.583 0 00-.825.825l1.167 1.167a.996.996 0 001.408 0l1.167-1.167a.583.583 0 00-.825-.825l-.463.463zm-.302-7.05c.396-.001.748-.002 1.072.133.325.134.573.383.852.664l1.665 1.664c.28.28.529.528.663.852.135.325.134.676.134 1.072-.002 1.468 0 2.935 0 4.403 0 .517 0 .963-.048 1.32-.052.382-.168.748-.465 1.046-.297.297-.664.413-1.046.465-.357.047-.802.047-1.32.047H5.212c-.518 0-.963 0-1.32-.047-.382-.052-.749-.168-1.046-.465-.297-.297-.413-.664-.465-1.046-.048-.357-.048-.803-.048-1.32V4.083v-.038c0-.517 0-.963.048-1.32.052-.382.168-.748.465-1.046.297-.297.664-.413 1.046-.464.357-.048.802-.048 1.32-.048h2.07z"
 			fill="rgba(255, 255, 255, 0.7)"
-		  />
-		</svg>
+		/>
+	</svg>
 );
 
-  
+
 export {
 	BackIconV3,
 	DisabledCloudIcon,

@@ -25,7 +25,7 @@ const SettingLabel = () => {
 	</div>)
 }
 
-const settingsAtom = atom<string>("basic");
+export const settingsAtom = atom<"basic" | "integrations">("basic");
 
 const SettingsScreen = () => {
 	const [section, _] = useAtom(settingsAtom);

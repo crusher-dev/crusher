@@ -1,12 +1,23 @@
 import { TextBlock } from "@dyson/components/atoms";
 import { css } from "@emotion/react";
+import { useAtom } from "jotai";
+import { useNavigate } from "react-router-dom";
+import { settingsAtom } from "../../settings";
 
 export const OnboardingSection = () => {
+
+    const navigate = useNavigate();
+    const [_, setScreen] = useAtom(settingsAtom);
+    const openSettings = () => {
+        setScreen("integrations")
+        navigate("/settings");
+
+    };
 
     return (
         <div className="mt-60 m-auto">
             <div>
-                <div css={onboardingSectionCSS}>
+                <div css={onboardingSectionCSS} onClick={openSettings}>
                     <div className="onboarding-item">
                         <span>get alerts</span><span className="icon">📩</span>
                     </div>

@@ -25,6 +25,8 @@ import { LinkPointer } from "../../components/LinkPointer";
 import { linkOpen } from "electron-app/src/utils/url";
 import { resolveToFrontEndPath } from "@shared/utils/url";
 import { ProxyConfigModifedToast } from "../projectList/proxyConfigModifiedToast";
+import { TextBlock } from "@dyson/components/atoms";
+import { OnboardingSection } from "./testList/onboarding";
 
 const TitleComponent = ({ project }) => {
 	const { name, id } = project;
@@ -202,6 +204,8 @@ const DashboardScreen = () => {
 			) : ""
 		}
 		{testContent}
+		<OnboardingSection />
+
 	</>;
 	const hasNotLoaded = isLoading || !animationComplete;
 	return (
@@ -278,3 +282,4 @@ const createTestCss = css`
 `;
 
 export { DashboardScreen };
+

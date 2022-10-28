@@ -25,10 +25,10 @@ const SettingLabel = () => {
 	</div>)
 }
 
-export const settingsAtom = atom<"basic" | "integrations">("basic");
+export const settingsScreenAtom = atom<"basic" | "integrations">("basic");
 
 const SettingsScreen = () => {
-	const [section, _] = useAtom(settingsAtom);
+	const [section, _] = useAtom(settingsScreenAtom);
 	return (
 		<CompactAppLayout footer={<StickyFooter />} title={<SettingLabel />} css={containerCss}>
 			<SettingsLayout>
@@ -135,7 +135,7 @@ hr{
 
 export const SettingsLayout = (props: any) => {
 	const { children } = props;
-	const [section, setSection] = useAtom(settingsAtom);
+	const [section, setSection] = useAtom(settingsScreenAtom);
 	const [showProjectSettings, setShowProjectSettings] = React.useState(false);
 	const store = useStore();
 

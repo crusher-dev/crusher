@@ -2,12 +2,12 @@ import { TextBlock } from "@dyson/components/atoms";
 import { css } from "@emotion/react";
 import { useAtom } from "jotai";
 import { useNavigate } from "react-router-dom";
-import { settingsAtom } from "../../settings";
+import { settingsScreenAtom } from "../../settings";
 
 export const OnboardingSection = () => {
 
     const navigate = useNavigate();
-    const [_, setScreen] = useAtom(settingsAtom);
+    const [_, setScreen] = useAtom(settingsScreenAtom);
     const openSettings = () => {
         setScreen("integrations")
         navigate("/settings");

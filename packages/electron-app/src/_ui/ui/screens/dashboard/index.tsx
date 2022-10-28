@@ -204,7 +204,8 @@ const DashboardScreen = () => {
 			) : ""
 		}
 		{testContent}
-		<OnboardingSection />
+		{filteredTests.length < 3 && (<OnboardingSection />)}
+
 
 	</>;
 	const hasNotLoaded = isLoading || !animationComplete;

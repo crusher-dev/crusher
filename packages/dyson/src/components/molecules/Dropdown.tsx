@@ -55,11 +55,15 @@ export const dropdDown = css`
 	width: 206.03rem;
 	overflow: hidden;
 
-	background: #0f1112;
-	border: 1px solid rgba(42, 47, 50, 0.8);
+	border-radius: 8rem;
+
+	background: #0D0E0E;
+border: 0.6px solid #222225;
+box-shadow: 0px 0px 0px 5px rgba(0, 0, 0, 0.14);
+	color: #D1D5DB;
+
 	box-sizing: border-box;
-	box-shadow: 0 4px 15px rgba(16, 15, 15, 0.4);
-	border-radius: 6px;
+
 	padding: 8rem 0;
 	z-index: 1;
 `;

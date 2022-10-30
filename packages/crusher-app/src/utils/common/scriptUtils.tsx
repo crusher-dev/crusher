@@ -21,15 +21,16 @@ export const loadSegment = () => {
   analytics.page();
   }}();
 	`,
-		() => {},
+		() => { },
 	);
 };
 
-export const GA_ID = process.env.GA_ID || "UA-51192281-1";
+export const GA_ID = process.env.GA_ID;
 
 // Hate to use GA, but other user activity tool aren't reliable.
 // Might switch to plausible soon. Anyways, if you're not comfortable you can switch off tracking completely.
 export const loadGA = () => {
+	return;
 	addScript(
 		"ga",
 		{},
@@ -46,6 +47,7 @@ export const loadGA = () => {
 };
 
 export const loadGTM = () => {
+	return;
 	addScript(
 		"gtm",
 		{},
@@ -59,5 +61,5 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 };
 
 export const openChatBox = () => {
-	window["$crisp"].push(["do", "chat:open"]);
+	// window["$crisp"].push(["do", "chat:open"]);
 };

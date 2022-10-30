@@ -1,6 +1,8 @@
 import { css } from "@emotion/react";
 import { useState } from "react";
 
+import useSWR from "swr";
+
 import { Card } from "../../../../../../dyson/src/components/layouts/Card/Card";
 import { Button } from "dyson/src/components/atoms";
 import { Heading } from "dyson/src/components/atoms/heading/Heading";
@@ -9,7 +11,6 @@ import { Conditional } from "dyson/src/components/layouts";
 
 import InviteMember from "@ui/containers/dashboard/InviteMember";
 import { SettingsLayout } from "@ui/layout/SettingsBase";
-import useSWR from "swr";
 import { resolvePathToBackendURI } from "@utils/common/url";
 
 export const TeamMembers = () => {
@@ -24,10 +25,10 @@ export const TeamMembers = () => {
 			<div className={"text-24 mb-100"} css={maxWidthContainer}>
 				<div className={"flex justify-between items-start mt-16"}>
 					<div>
-						<Heading type={2} fontSize={"16"} className={"mb-8"}>
+						<Heading type={2} fontSize={"18"} className={"mb-8"}>
 							Team members
 						</Heading>
-						<TextBlock fontSize={13} className={"mb-24"} color={"#c1c1c1"}>
+						<TextBlock fontSize={13} className={"mb-24"} color={"#787878"}>
 							Make sure you have selected all the configuration you want
 						</TextBlock>
 					</div>

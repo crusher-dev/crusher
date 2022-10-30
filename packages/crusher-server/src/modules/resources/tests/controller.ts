@@ -122,6 +122,7 @@ export class TestController {
 
 				return {
 					id: testData.id,
+					emoji: testData.emoji,
 					testName: testData.name,
 					tags: testData.tags,
 					folderId: testData.testFolder,
@@ -149,16 +150,6 @@ export class TestController {
 		});
 
 		return { totalPages: testsListData.totalPages, folders: folderData, list: testsList, availableAuthors: availableAuthors, currentPage: params.page };
-	}
-
-	@Authorized()
-	@Post("/projects/:project_id/tests/save.report")
-	async saveReport(
-		@CurrentUser({ required: true }) user,
-		@Param("project_id") projectId: number,
-		@Body() body: { testId: Array<number>; report: { [key: string]: {} } },
-	): Promise<void> {
-		// await this.testService.saveReport(projectId, body.testId, body.report);
 	}
 
 	@Authorized()
@@ -246,6 +237,13 @@ export class TestController {
 	async deleteTest(@CurrentUser({ required: true }) user, @Param("test_id") testId: number) {
 		await this.testService.deleteTest(testId);
 
+		return "Success";
+	}
+
+	@Authorized()
+	@Post("/tests/:test_id/actions/update.emoji")
+	async updateTestEmoji(@CurrentUser({ required: true }) user, @Param("test_id") testId: number, @Body() body: { emoji: string }) {
+		await this.testService.updateEmoji(testId, body.emoji);
 		return "Success";
 	}
 

@@ -17,3 +17,5 @@ export const getProxyState = (state: iReduxState) => state.app.proxy;
 export const getIsProxyInitializing = (state: iReduxState) => state.app.proxyIsInitializing;
 
 export const getCurrentSelectedProjct = (state: iReduxState) => state.app.selectedProject;
+
+export const getCurrentTestInfo = (state: iReduxState) => state.app.sessionMeta.selectedTest;

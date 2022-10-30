@@ -24,6 +24,7 @@ interface TestBuildReport {
 	buildBaselineId: number;
 	buildProjectId: number;
 	buildReportId: number;
+	buildHost?: string | null;
 	buildName: string;
 	buildCreatedAt: string;
 	buildReportCreatedAt: string;
@@ -127,7 +128,7 @@ export class BuildReportService {
 
 	async getBuildReport(buildId: number): Promise<IBuildReportResponse> {
 		const testsWithReportData: Array<TestBuildReport> = await this.dbManager.fetchAllRows(
-			"SELECT jobs.id build_id, jobs.meta build_meta, jobs.project_id build_project_id, jobs.commit_name build_name, job_reports.id build_report_id, job_reports.reference_job_id build_baseline_id, job_reports.created_at build_report_created_at, jobs.created_at build_created_at, jobs.updated_at build_updated_at, job_reports.updated_at build_report_updated_at, job_reports.status build_report_status, build_tests.* FROM public.jobs, public.job_reports LEFT JOIN (SELECT test_instances.id test_instance_id, test_instances.meta test_instance_meta, test_instances.group_id test_instance_group_id, test_instances.context test_instance_context, test_instance_result_sets.report_id test_build_report_id, test_instance_result_sets.status test_result_status, test_instance_result_sets.conclusion test_Result_conclusion, test_instance_result_sets.id test_result_set_id, test_instance_result_sets.target_instance_id test_baseline_instance_id, tests.name test_name, test_instances.browser test_instance_browser, tests.id test_id, tests.events test_steps_json, test_instances.host test_instance_host, test_instances.recorded_video_url recorded_video_url FROM public.test_instances, public.tests, public.test_instance_result_sets WHERE  tests.id = test_instances.test_id AND test_instance_result_sets.instance_id = test_instances.id) build_tests ON build_tests.test_build_report_id = job_reports.id WHERE  jobs.id = ? AND job_reports.id = jobs.latest_report_id",
+			"SELECT jobs.id build_id, jobs.host build_host, jobs.meta build_meta, jobs.project_id build_project_id, jobs.commit_name build_name, job_reports.id build_report_id, job_reports.reference_job_id build_baseline_id, job_reports.created_at build_report_created_at, jobs.created_at build_created_at, jobs.updated_at build_updated_at, job_reports.updated_at build_report_updated_at, job_reports.status build_report_status, build_tests.* FROM public.jobs, public.job_reports LEFT JOIN (SELECT test_instances.id test_instance_id, test_instances.meta test_instance_meta, test_instances.group_id test_instance_group_id, test_instances.context test_instance_context, test_instance_result_sets.report_id test_build_report_id, test_instance_result_sets.status test_result_status, test_instance_result_sets.conclusion test_Result_conclusion, test_instance_result_sets.id test_result_set_id, test_instance_result_sets.target_instance_id test_baseline_instance_id, tests.name test_name, test_instances.browser test_instance_browser, tests.id test_id, tests.events test_steps_json, test_instances.host test_instance_host, test_instances.recorded_video_url recorded_video_url FROM public.test_instances, public.tests, public.test_instance_result_sets WHERE  tests.id = test_instances.test_id AND test_instance_result_sets.instance_id = test_instances.id) build_tests ON build_tests.test_build_report_id = job_reports.id WHERE  jobs.id = ? AND job_reports.id = jobs.latest_report_id",
 			[buildId],
 			true,
 		);
@@ -161,7 +162,12 @@ export class BuildReportService {
 					recordedVideoUrl: await this.getPublicUrl(instance.recordedVideoUrl),
 				})),
 		);
+		let hostScreenshot = null;
 		const testsMap = testMapArr.reduce((prev: any, current) => {
+			const firstPageNavigateStep = current.actionsResult.find((action) => action.actionType === ActionsInTestEnum.NAVIGATE_URL);
+			if(firstPageNavigateStep && !hostScreenshot) {
+				hostScreenshot = firstPageNavigateStep.meta?.meta?.hostScreenshot;
+			}
 			const testInstance = {
 				id: current.testInstanceId,
 				verboseStatus: current.testResultStatus,
@@ -196,9 +202,19 @@ export class BuildReportService {
 
 		const testsArray: Array<any> = Object.values(testsMap);
 
+		const buildHost = testsWithReportData[0].buildHost;
+		const buildMeta = testsWithReportData[0].buildMeta ? JSON.parse(testsWithReportData[0].buildMeta) : {};
+
+		if(buildMeta.github) {
+			const { repoName, commitId } = buildMeta.github;
+			buildMeta.github.repoLink = `https://github.com/${repoName}/commit/${commitId}`;
+		}
+	
 		return {
 			buildId: testsWithReportData[0].buildId,
 			buildReportId: testsWithReportData[0].buildReportId,
+			host: buildHost && buildHost !== "null" ? buildHost : null,
+			hostScreenshot: hostScreenshot ? await this.getPublicUrl(hostScreenshot) : null,
 			id: testsWithReportData[0].buildId,
 			name: testsWithReportData[0].buildName,
 			startedAt: new Date(testsWithReportData[0].buildReportCreatedAt).getTime(),
@@ -214,7 +230,7 @@ export class BuildReportService {
 			configuration: {
 				environment: [],
 			},
-			meta: testsWithReportData[0].buildMeta ? JSON.parse(testsWithReportData[0].buildMeta) : {},
+			meta: buildMeta,
 			tests: testsArray,
 			// @TODO: Add implementation for this
 			comments: [],

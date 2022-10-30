@@ -24,7 +24,7 @@ import { iAction } from "@shared/types/action";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { RESET_APP_SESSION } from "../actions/app";
-import { TElementActionsEnum } from "electron-app/src/ui/components/sidebar/actionsPanel/elementActions";
+import { StepErrorTypeEnum } from "runner-utils/src/error.types";
 
 export enum TRecorderState {
 	BOOTING = "BOOTING", // <- Internal state (Initialize recorder script)
@@ -59,7 +59,7 @@ interface IReplayingStatePayload {
 	externalTestId?: string;
 	externalTestName?: string;
 
-	actions: Array<iAction>;
+	actions: iAction[];
 }
 
 interface iActionRequiredStatePayload {
@@ -70,11 +70,11 @@ export interface iElementInfo {
 	// Unique id assigned by devtools
 	uniqueElementId: string;
 	// In case the element is no longer in DOM, we can still use the selector
-	selectors: Array<iSelectorInfo>;
+	selectors: iSelectorInfo[];
 	// Element Description to set default name for the actin
 	elementDescription: string;
 	/* In order (first one should be the origin node) */
-	dependentHovers: Array<Omit<iElementInfo, "dependentHovers">>;
+	dependentHovers: Omit<iElementInfo, "dependentHovers">[];
 }
 
 export interface iSettings {}
@@ -90,11 +90,11 @@ interface IRecorderReducer {
 		payload: INavigatingStatePayload | IRecordingActionStatePayload | IReplayingStatePayload | iActionRequiredStatePayload | null;
 	};
 	crashState: { type: TRecorderCrashState; payload: any } | null;
-	isInspectModeOn: boolean;
-	isInspectElementSelectorModeOn: boolean;
+	isInspectModeOn: any;
+	elementInspectModeMeta: { isOn: boolean; stepId?: any };
 
 	selectedElement: iElementInfo | null;
-	savedSteps: Array<Omit<iAction, "status"> & { status: ActionStatusEnum; time: number }>;
+	savedSteps: Omit<iAction, "status"> & { status: ActionStatusEnum; time: number; errorType?: StepErrorTypeEnum; }[];
 
 	isVerified: boolean;
 	showStatusBar: boolean;
@@ -107,8 +107,7 @@ const initialState: IRecorderReducer = {
 
 	state: { type: TRecorderState.BOOTING, payload: null },
 	isInspectModeOn: false,
-	isInspectElementSelectorModeOn: false,
-
+	elementInspectModeMeta: { isOn: false, stepId: null },
 	selectedElement: null,
 	savedSteps: [],
 	isVerified: false,
@@ -120,7 +119,7 @@ const initialState: IRecorderReducer = {
 const recorderReducer = (state: IRecorderReducer = initialState, action: AnyAction) => {
 	switch (action.type) {
 		case UPDATE_RECORDED_STEP: {
-			const newSavedSteps = [...state.savedSteps];
+			const newSavedSteps = state.savedSteps.slice();
 			newSavedSteps[action.payload.id] = action.payload.action;
 			return {
 				...state,
@@ -142,12 +141,12 @@ const recorderReducer = (state: IRecorderReducer = initialState, action: AnyActi
 		case SET_INSPECT_MODE:
 			return {
 				...state,
-				isInspectModeOn: action.payload.isOn,
+				isInspectModeOn: action.payload,
 			};
 		case SET_INSPECT_ELEMENT_SELECTOR_MODE:
 			return {
 				...state,
-				isInspectElementSelectorModeOn: action.payload.isOn,
+				elementInspectModeMeta: { isOn: action.payload.isOn, stepId: action.payload.stepId },
 			};
 		case SET_SELECTED_ELEMENT:
 			return {
@@ -155,7 +154,6 @@ const recorderReducer = (state: IRecorderReducer = initialState, action: AnyActi
 				selectedElement: action.payload.element,
 			};
 		case RECORD_STEP:
-			const lastStep = state.savedSteps.length > 1 ? state.savedSteps[state.savedSteps.length - 1] : null;
 			if (action.type === ActionsInTestEnum.WAIT_FOR_NAVIGATION) {
 				return state;
 			}
@@ -173,8 +171,11 @@ const recorderReducer = (state: IRecorderReducer = initialState, action: AnyActi
 				],
 			};
 		case UPDATE_CURRENT_RUNNING_STEP_STATUS: {
-			let savedSteps = [...state.savedSteps];
+			let savedSteps = state.savedSteps.slice();
 			savedSteps[savedSteps.length - 1].status = action.payload.status;
+			if(action.payload.status === ActionStatusEnum.FAILED) {
+				savedSteps[savedSteps.length - 1].errorType = action.payload.meta.errorType;
+			}
 
 			return {
 				...state,
@@ -228,19 +229,15 @@ const recorderReducer = (state: IRecorderReducer = initialState, action: AnyActi
 				isVerified: false,
 			};
 		}
-		case SET_IS_WEBVIEW_INITIALIZED: {
+		case SET_IS_WEBVIEW_INITIALIZED:
 			return {
 				...state,
 				isWebViewInitialized: action.payload.isInitialized,
 			};
-		}
-		case RESET_RECORDER: {
+		case RESET_RECORDER:
 			return initialState;
-		}
 		case RESET_APP_SESSION:
-			return {
-				...initialState,
-			};
+			return initialState;
 		case SET_STATUS_BAR_VISIBILITY:
 			return {
 				...state,

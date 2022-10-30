@@ -30,9 +30,9 @@ module.exports = {
 	description: "Take element screenshot",
 	actionDescriber: (action: iAction) => {
 		if (!action.payload.meta || !action.payload.meta.elementDescription) {
-			return `Take element screenshot`;
+			return `Screenshot element`;
 		}
-		return `Take screenshot of [${action.payload.meta.elementDescription}]`;
+		return `Screenshot element [${action.payload.meta.elementDescription}]`;
 	},
 	handler: takeElementScreenshot,
 };

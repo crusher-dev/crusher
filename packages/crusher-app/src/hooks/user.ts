@@ -5,13 +5,12 @@ import { useAtom } from "jotai";
 
 import { USER_SYSTEM_API } from "@constants/api";
 import { IUserAndSystemInfoResponse } from "@crusher-shared/types/response/IUserAndSystemInfoResponse";
-import { backendRequest } from "@utils/common/backendRequest";
-import { redirectUserOnMount } from "@utils/routing";
-
-import { selectInitialProjectMutator, updateInitialDataMutator } from "@store/mutators/user";
 import { cliLoginUserKeyAtom } from "@store/atoms/global/cliToken";
-import { resolvePathToBackendURI } from "@utils/common/url";
+import { updateInitialDataMutator } from "@store/mutators/user";
 import { RequestMethod } from "@types/RequestOptions";
+import { backendRequest } from "@utils/common/backendRequest";
+import { resolvePathToBackendURI, resolvePathToFrontendURI } from "@utils/common/url";
+import { redirectUserOnMount } from "@utils/routing";
 
 /*
 	Two scenarios to check for
@@ -22,13 +21,15 @@ import { RequestMethod } from "@types/RequestOptions";
  */
 export function loadUserDataAndRedirect({ fetchData = true, userAndSystemData = null }) {
 	const router = useRouter();
+
 	const [, updateInitialData] = useAtom(updateInitialDataMutator);
-	const [, selectInitialProject] = useAtom(selectInitialProjectMutator);
 
 	const [dataLoaded, setDataLoaded] = useState(false);
 	const [loginKey, setLoginKey] = useAtom(cliLoginUserKeyAtom);
 
+
 	useEffect(() => {
+
 		(async () => {
 			let dataToConsider: IUserAndSystemInfoResponse | null = null;
 			if (fetchData) {
@@ -39,24 +40,21 @@ export function loadUserDataAndRedirect({ fetchData = true, userAndSystemData = 
 			}
 			updateInitialData(dataToConsider);
 
-			if (!!dataToConsider?.userData) {
-				selectInitialProject(dataToConsider);
-			}
-
 			if (loginKey && loginKey !== "null" && dataToConsider.isUserLoggedIn) {
-				backendRequest(resolvePathToBackendURI("/cli/actions/login.user"), { method: RequestMethod.POST, payload: { loginKey } }).then((res) => {
-					setLoginKey(null);
-					window.location.href = "/login_sucessful";
-				}).catch((err) => {
-					if(err.message.includes("Invalid login key")) {
+				backendRequest(resolvePathToBackendURI("/cli/actions/login.user"), { method: RequestMethod.POST, payload: { loginKey } })
+					.then(() => {
 						setLoginKey(null);
-						redirectUserOnMount(dataToConsider, router, setDataLoaded.bind(this, true));
-					}
-				});
+						window.location.href = "/login_sucessful";
+					})
+					.catch((err) => {
+						if (err.message.includes("Invalid login key")) {
+							setLoginKey(null);
+							redirectUserOnMount(dataToConsider, router, setDataLoaded.bind(this, true));
+						}
+					});
 			} else {
 				await redirectUserOnMount(dataToConsider, router, setDataLoaded.bind(this, true));
 			}
-			
 		})();
 	}, [userAndSystemData]);
 

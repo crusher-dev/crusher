@@ -1,11 +1,11 @@
 import React from "react";
 
 import { LoginSuccessfulContainer } from "@ui/containers/login_successful";
+
 import { usePageTitle } from "../src/hooks/seo";
 
-function LoginPage() {
+function LoginSuccessful() {
 	usePageTitle("Login");
-	const [isLoginWithEmail, setLoginWithEmail] = React.useState(false);
 
 	React.useEffect(() => {
 		if ((window as any).localStorage.getItem("githubToken") !== null) {
@@ -13,8 +13,7 @@ function LoginPage() {
 		}
 	}, []);
 
-
-	return <LoginSuccessfulContainer/>;
+	return <LoginSuccessfulContainer />;
 }
 
-export default LoginPage;
+export default LoginSuccessful;

@@ -6,7 +6,10 @@ import { IUserAndSystemInfoResponse } from "@crusher-shared/types/response/IUser
 import { getBoolean } from "@utils/common";
 import { getEdition } from "@utils/helpers";
 import { isTempTestPending } from "@utils/user";
+
 import { resolvePathToBackendURI } from "./common/url";
+import { backendRequest } from "./common/backendRequest";
+import { RequestMethod } from "@types/RequestOptions";
 
 export const handleOpenSourceMounting = async (data: IUserAndSystemInfoResponse, router: NextRouter, loadCallback: any) => {
 	const { userData: user } = data;
@@ -19,7 +22,7 @@ export const handleOpenSourceMounting = async (data: IUserAndSystemInfoResponse,
 			if (isTempTestPending()) {
 				await router.push("/app/tests");
 			} else {
-				await router.push("/app/dashboard");
+				await router.push("/projects");
 			}
 		}
 
@@ -35,14 +38,13 @@ export const handleEERouting = async (data: IUserAndSystemInfoResponse, router: 
 	const { pathname } = router;
 
 	if (isUserLoggedIn) {
-		console.log("Starting", ROUTES_ACCESSIBLE_WITHOUT_SESSION, pathname);
 		if (!getBoolean(user.meta.INITIAL_ONBOARDING) && !["/login_sucessful"].includes(pathname)) {
 			await router.push("/setup/onboarding");
 		} else if (ROUTES_TO_REDIRECT_WHEN_SESSION.includes(pathname)) {
 			if (isTempTestPending()) {
 				await router.push("/app/tests");
 			} else {
-				await router.push("/app/dashboard");
+				await router.push("/projects");
 			}
 		}
 	} else {
@@ -62,6 +64,20 @@ export const handleEERouting = async (data: IUserAndSystemInfoResponse, router: 
 	loadCallback, router dependecy can be removed.
  */
 export const redirectUserOnMount = async (data: IUserAndSystemInfoResponse, router: NextRouter, loadCallback: any) => {
+	if(!data?.userId) {
+		const urlQuery = new URLSearchParams(window.location.href.split("?")[1]);
+		const loginAccessToken = urlQuery.get("laccess_token");
+		const mainPath = window.location.href.split("?")[0];
+		if(loginAccessToken) {
+			const res = await backendRequest(resolvePathToBackendURI("/users/actions/login.token"), {method: RequestMethod.POST, payload: {token: loginAccessToken}});
+			if(res.status === "Successful") {
+				// updateInitialData();
+				window.location.href = mainPath + "?" + window.location.href.split("?")[1];
+				return;
+			}
+		}
+	}
+
 	if (getEdition() === EditionTypeEnum.OPEN_SOURCE) {
 		await handleOpenSourceMounting(data, router, loadCallback);
 	} else {
@@ -80,4 +96,8 @@ export const getGoogleAuthUrl = (query: any): string => {
 	}
 
 	return finalURL.toString();
+};
+
+export const getIdentifier = (name, id) => {
+	return String(id);
 };

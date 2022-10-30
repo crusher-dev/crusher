@@ -83,10 +83,10 @@ export const InvitePeople = ({ onClose }) => {
 			<div className={"flex justify-end mt-12"}>
 				<Button
 					css={css`
-						min-width: 132rem;
+						min-width: 102rem;
 					`}
 					disabled={isNoName || processing}
-					bgColor={isNoName ? "disabled" : ""}
+					bgColor={isNoName ? "disabled" : "primary"}
 					title={isNoName && "Please enter project name"}
 					onClick={inviteMembersCallback}
 				>
@@ -108,7 +108,7 @@ export const InvitePeople = ({ onClose }) => {
 
 			<div className={"flex mt-32 items-center justify-between"}>
 				<div
-					className={"mt-12 text-13 font-600 mb-16 mr-24"}
+					className={"text-13 font-600 pt-8 mr-24"}
 					css={css`
 						color: #d8d8d8;
 					`}

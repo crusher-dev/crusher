@@ -12,8 +12,7 @@ export function getXpathTo(element: HTMLElement): string | null {
 	let ix = 0;
 	const siblings = element.parentNode.childNodes;
 
-	for (let i = 0; i < siblings.length; i++) {
-		const sibling: ChildNode = siblings[i];
+	for (const sibling: ChildNode of siblings) {
 		if (sibling === element) {
 			return `${getXpathTo(element.parentNode as HTMLElement)}/${element.tagName}[${ix + 1}]`;
 		}
@@ -23,12 +22,12 @@ export function getXpathTo(element: HTMLElement): string | null {
 	return null;
 }
 
-export function getSelectors(elementNode: HTMLElement, useAdvancedSelector: boolean = false): Array<iSelectorInfo> {
+export function getSelectors(elementNode: HTMLElement, useAdvancedSelector: boolean = false): iSelectorInfo[] {
 	const selectors = _uniqueSelector2.getUniqueSelector(elementNode, useAdvancedSelector);
 	const xPathSelector = getXpathTo(elementNode);
 
-	const out: Array<any> = [];
-	out.push(...(selectors.list as Array<iSelectorInfo>));
+	const out: any[] = [];
+	out.push(...(selectors.list as iSelectorInfo[]));
 	if (xPathSelector) {
 		out.push({
 			type: "xpath",

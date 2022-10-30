@@ -143,7 +143,7 @@ export const createDirIfNotExist = (dirPath: string) => {
 
 export const resolveBackendServerUrl = (endpoint): string => {
   const appConfig = getAppConfig();
-  return appConfig && appConfig.endpoint ? url.resolve(appConfig.endpoint, endpoint) :  url.resolve(BACKEND_SERVER_URL, endpoint);
+  return appConfig && appConfig.endpoint ? url.resolve(appConfig.endpoint, endpoint) : url.resolve(BACKEND_SERVER_URL, endpoint);
 };
 
 export const resolveFrontendServerUrl = (endpoint): string => {
@@ -183,18 +183,18 @@ export const getIsArm = () => {
 export const getRecorderDistCommand = () => {
   const useDevelopmentBinary = getRuntimeEnv().__DEV__ && getRuntimeEnv().__DEV_CRUSHER_PROJECT_DIR__;
 
-  switch(process.platform) {
+  switch (process.platform) {
     case "darwin":
       const arch = getIsArm() ? "arm64" : "x64";
-      if(useDevelopmentBinary) {
+      if (useDevelopmentBinary) {
         const electronDist = path.resolve(getRuntimeEnv().__DEV_CRUSHER_PROJECT_DIR__, `./packages/electron-app/bin/darwin-${arch}/Electron.app/Contents/MacOS/Electron`);
-        if(!fs.existsSync(electronDist)) throw new Error("Electron dist is not available");
+        if (!fs.existsSync(electronDist)) throw new Error("Electron dist is not available");
         return `${electronDist} ${path.resolve(getRuntimeEnv().__DEV_CRUSHER_PROJECT_DIR__, './output/crusher-electron-app')}`;
       }
 
       return resolvePathToAppDirectory('bin/"Crusher Recorder.app"/Contents/MacOS/"Crusher Recorder"');
     case "linux":
-      if(useDevelopmentBinary) {
+      if (useDevelopmentBinary) {
         const arch = "x64";
         const electronDist = path.resolve(getRuntimeEnv().__DEV_CRUSHER_PROJECT_DIR__, `./packages/electron-app/bin/linux-${arch}/electron`);
 
@@ -206,4 +206,9 @@ export const getRecorderDistCommand = () => {
     default:
       throw new Error("Platform not supported!");
   }
+}
+
+
+export const getRelativePath = (pathStr) => {
+  return path.relative(process.cwd(), pathStr)
 }

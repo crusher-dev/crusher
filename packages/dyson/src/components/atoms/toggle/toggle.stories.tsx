@@ -1,13 +1,15 @@
 import React from "react";
 import { Story, Meta } from "@storybook/react/types-6-0";
 
-import { ToggleProps, Toggle } from "./toggle";
+import { Toggle,ToggleProps } from "./toggle";
 export default {
 	title: "Atoms/Forms/Toogle",
 	component: Toggle,
 } as Meta;
 
-const Template: Story<ToggleProps> = (args) => <Toggle {...args}></Toggle>;
+const Template: Story<ToggleProps> = (args) => (
+	<Toggle {...args}></Toggle>
+);
 
 Template.parameters = {
 	status: "beta",

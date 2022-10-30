@@ -1,5 +1,4 @@
-import { ReactPropTypes } from "react";
-import React from "react";
+import React, { ReactPropTypes } from "react";
 
 export function RerunSVG(props: ReactPropTypes) {
 	return (
@@ -7,7 +6,7 @@ export function RerunSVG(props: ReactPropTypes) {
 			<g>
 				<path
 					d="M15.66 7.665a.746.746 0 00-1.06.22l-.022.036C14.3 3.996 11.142.89 7.298.89 3.275.89 0 4.295 0 8.48c0 4.186 3.274 7.591 7.299 7.591.562 0 1.018-.474 1.018-1.06 0-.584-.456-1.058-1.018-1.058-2.901 0-5.262-2.455-5.262-5.473 0-3.017 2.36-5.472 5.262-5.472 2.689 0 4.913 2.11 5.224 4.82a.744.744 0 00-1.019-.163.814.814 0 00-.212 1.102l1.513 2.36a.93.93 0 00.777.444.93.93 0 00.777-.445l1.513-2.359a.814.814 0 00-.212-1.102z"
-					fill="#647CFF"
+					fill="#cd60ff"
 				/>
 			</g>
 		</svg>
@@ -26,7 +25,7 @@ export function ThreeEllipsisSVG(props: ReactPropTypes) {
 	);
 }
 
-export function CalendarSVG(props: ReactPropTypes) {
+export function CalendarSVG(props: any) {
 	return (
 		<svg width={"13rem"} height={"13rem"} viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<path
@@ -84,29 +83,21 @@ export function InitiatedSVG(props) {
 	);
 }
 
-
 export function FailedSVG(props) {
 	const { isMonochrome } = props;
 	return (
-		<svg
-		  width={16}
-		  height={16}
-		  viewBox="0 0 16 16"
-		  fill="none"
-		  xmlns="http://www.w3.org/2000/svg"
-		  {...props}
-		>
-		  <path
-			fillRule="evenodd"
-			clipRule="evenodd"
-			d="M0 8a8 8 0 1116 0A8 8 0 010 8zm6.166-2.966a.8.8 0 00-1.132 1.132L6.87 8 5.034 9.834a.8.8 0 001.132 1.132L8 9.13l1.834 1.835a.8.8 0 001.132-1.132L9.13 8l1.835-1.834a.8.8 0 00-1.132-1.132L8 6.87 6.166 5.034z"
-			fill={isMonochrome ? "#fff" : "#EF4074"}
-		  />
+		<svg width={16} height={16} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+			<path
+				fillRule="evenodd"
+				clipRule="evenodd"
+				d="M0 8a8 8 0 1116 0A8 8 0 010 8zm6.166-2.966a.8.8 0 00-1.132 1.132L6.87 8 5.034 9.834a.8.8 0 001.132 1.132L8 9.13l1.834 1.835a.8.8 0 001.132-1.132L9.13 8l1.835-1.834a.8.8 0 00-1.132-1.132L8 6.87 6.166 5.034z"
+				fill={isMonochrome ? "#fff" : "#EF4074"}
+			/>
 		</svg>
-	  );
+	);
 }
 
-export function ExpandSVG(props) {
+export function ExpandSVG() {
 	return (
 		<svg width="22rem" height="22rem" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
 			<rect width="20" height="20" rx="3" fill="#171C24" />

@@ -29,9 +29,32 @@ export const UserImage: React.FC<UserImageProps> = ({ url }) => {
 	);
 };
 
+export const UserIcon: React.FC<UserImageProps> = ({ className, initial }: any) => {
+	return (
+		<div css={userInitialCSS} className={`flex items-center justify-center ${className}`}>
+			<div className="mt-2">{initial}</div>
+		</div>
+	);
+};
+
 UserImage.defaultProps = UserDefaultProps;
+
+const userInitialCSS = css`
+
+	border-radius: 8rem;
+	height: 32rem;
+	width: 32rem;
+
+    border: 0.6px solid rgba(255,255,255,0.10	);
+	font-weight: 700;
+	color: #efefef;
+	:hover {
+		background: rgba(255, 255, 255, 0.07);
+	}
+`;
+
 const userImage = css`
-	padding: 6rem 16rem 5rem;
+
 	:hover {
 		background: #202429;
 		border-radius: 4px;

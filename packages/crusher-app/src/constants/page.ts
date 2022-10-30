@@ -10,7 +10,6 @@ export const ROUTES_TO_REDIRECT_WHEN_SESSION = ["/login", "/signup", "/"];
 
 /*
  	NOT_AUTH_ROUTES = ["login", "signup", "error"],
-
- */
+*/
 
 export const ROOT_PATH = "/";

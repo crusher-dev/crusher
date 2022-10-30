@@ -35,7 +35,6 @@
 		"./src/preload/renderer.ts",
 		"./src/preload/webview.ts",
 		"./src/extension/background.ts",
-		"./src/ui/index.tsx",
 		"../../node_modules/react/index.js"
 	],
 	"include": ["./src/**/*"],

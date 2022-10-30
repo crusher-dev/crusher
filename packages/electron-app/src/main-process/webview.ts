@@ -1,9 +1,9 @@
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
-import { WebContents, ipcMain, webContents, session } from "electron";
+import { WebContents, ipcMain, webContents } from "electron";
 import * as path from "path";
-import { Disposer } from "../lib/disposable";
 import { PlaywrightInstance } from "../lib/playwright";
 import { TRecorderCrashState, TRecorderState } from "../store/reducers/recorder";
+import { isInspectModeOn } from "../store/selectors/recorder";
 import { AppWindow } from "./app-window";
 import { now } from "./now";
 
@@ -63,13 +63,12 @@ export class WebView {
 		this.registerIPCListeners();
 		await this.playwrightInstance.connect();
 
-		await this.playwrightInstance.addInitScript(path.join(__dirname, "recorder.js"));
 		this._initializeTime = now() - this._startTime;
 
 		console.log("Initialized recorder in", this._initializeTime.toFixed(2) + "ms");
 		// This signals the renderer process that the webview is ready, and its okay
 		// to continue.
-		this.appWindow.sendMessage("webview-initialized", { initializeTime: this._initializeTime.toFixed(2)});
+		this.appWindow.sendMessage("webview-initialized", { initializeTime: this._initializeTime.toFixed(2) });
 	}
 
 	private registerIPCListeners() {
@@ -91,29 +90,39 @@ export class WebView {
 		});
 	}
 
-	public async resumeExecution() {
+	public async resumeExecution(throwError = false) {
 		try {
 			await this.webContents.debugger.sendCommand("Debugger.resume");
 		} catch (ex) {
 			console.info("Error resuming execution", ex);
+			if(throwError) throw ex;
 		}
 	}
 
-	public async disableExecution() {
+	public async disableExecution(throwError = false) {
 		try {
 			await this.webContents.debugger.sendCommand("Debugger.pause");
 		} catch (ex) {
 			console.info("Error pausing execution", ex);
+			if(throwError) throw ex;
 		}
 	}
 
 	async handleDebuggerEvents(event, method, params) {
 		if (method === "Overlay.inspectNodeRequested") {
 			const nodeObject = await this.webContents.debugger.sendCommand("DOM.resolveNode", { backendNodeId: params.backendNodeId });
+			const payload = isInspectModeOn(this.appWindow.store.getState() as any);
 			await this.webContents.debugger.sendCommand("Runtime.callFunctionOn", {
 				functionDeclaration: "function(){const event = new CustomEvent('elementSelected', {detail:{element: this}}); window.dispatchEvent(event);}",
 				objectId: nodeObject.object.objectId,
 			});
+			if (payload?.meta?.action) {
+				// @TODO: Remove this timeout hack
+				setTimeout(() => {
+					this.appWindow.getWebContents().executeJavaScript(`window["elementActionsCallback"](); window["elementActionsCallback"]=null;`);
+				}, 100);
+			}
+
 			await this.webContents.debugger.sendCommand("Overlay.setInspectMode", {
 				mode: "none",
 				highlightConfig: highlighterStyle,
@@ -166,7 +175,7 @@ class WebViewListener {
 	}
 
 	private handleDidFailLoad(event, errorCode, errorDescription, validatedURL, isMainFrame) {
-		if (isMainFrame) {
+		if (isMainFrame && errorCode === -105) {
 			this.appWindow.updateRecorderCrashState({ type: TRecorderCrashState.PAGE_LOAD_FAILED });
 		}
 	}
@@ -182,8 +191,6 @@ class WebViewListener {
 				this.appWindow.getRecorderState().type,
 			)
 		) {
-			console.log("Recorder state is", this.appWindow.getRecorderState().type);
-
 			this.appWindow.handleSaveStep(null, {
 				action: {
 					type: ActionsInTestEnum.WAIT_FOR_NAVIGATION as ActionsInTestEnum,

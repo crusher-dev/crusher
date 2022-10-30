@@ -23,39 +23,44 @@ const postionCSS = css`
 	top: 50rem;
 	left: 50%;
 	transform: translateX(-50%);
-
-	box-shadow: 0px 4px 5px rgba(31, 28, 28, 0.4);
 `;
 
 const alertContainer = css`
-	min-width: 343px;
-	height: 36px;
+	min-width: 343rem;
+	height: 36rem;
 
-	padding: 2rem 12rem 0 16rem;
+	padding: 0rem 16rem 0 16rem;
 
-	font-size: 14rem;
-	line-height: 14rem;
 	font-weight: 500;
 
-	background: #1e2126;
-	border: 1px solid #2d3339;
-	border-radius: 5px;
+	border-radius: 12rem;
+
+	border: 0.5px solid rgba(50, 50, 50, 0.78);
+    box-shadow: 0px 0px 0px 5px rgb(0 0 0 / 34%);
+	background: #171718;
+	
+	div{
+		font-size: 14.5rem;
+		letter-spacing: .2px;
+	}
+
+	color: #D1D5DB;
 `;
 
 const success = css`
-	background: #89dd7b;
-	border: 1px solid #7bdb6c;
-	color: #23401e;
+	background: #31CA74;
+	border: 1px solid #0c0c0c6b;
+	color: #0C0C0C;
 	path {
-		fill: #23401e;
+		fill: #0C0C0C;
 	}
 `;
 const error = css`
-	background: #ec7eb3;
-	border: 1px solid #fc5da9;
-	color: #592c42;
+	background: #EA3E5D;
+	border: 1px solid #fc5d84	;
+	color: #0C0C0C;
 
 	path {
-		fill: #592c42;
+		fill: #0C0C0C;
 	}
 `;

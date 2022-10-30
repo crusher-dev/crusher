@@ -8,14 +8,6 @@ import { ElementsIdMap } from "../elementsMap";
 
 const KEYS_TO_TRACK_FOR_INPUT = new Set(["Enter", "Escape", "Tab"]);
 
-const KEYS_TO_TRACK_FOR_TEXTAREA = new Set([
-	// Enter types a line break, shouldn't be a press.
-	"Escape",
-	"Tab",
-]);
-
-type iPerformActionMeta = any;
-
 export default class EventRecording {
 	defaultState: any = {
 		targetElement: null,
@@ -32,8 +24,8 @@ export default class EventRecording {
 
 	private isInspectorMoving = false;
 
-	private pointerEventsMap: Array<{ data: PointerEvent }> = [];
-	private recordedHoverArr: Array<any> = [];
+	private pointerEventsMap: { data: PointerEvent }[] = [];
+	private recordedHoverArr: any[] = [];
 
 	private hoveringState: any = {
 		element: null,
@@ -48,10 +40,8 @@ export default class EventRecording {
 	private _pageRecordedEventsArr = [];
 	private _clickEvents = [];
 
-	constructor(options = {} as any) {
-		this.state = {
-			...this.defaultState,
-		};
+	constructor() {
+		this.state = this.defaultState;
 
 		this.onRightClick = this.onRightClick.bind(this);
 		this.handleScroll = this.handleScroll.bind(this);
@@ -84,7 +74,7 @@ export default class EventRecording {
 		this._overlayCover = document.querySelector("#overlay_cover");
 	}
 
-	updateEventTarget(target: HTMLElement, event: any) {
+	updateEventTarget(target: HTMLElement) {
 		this.state = {
 			...this.state,
 			targetElement: target,
@@ -107,7 +97,7 @@ export default class EventRecording {
 		} while (el?.tagName !== "HTML");
 
 		// clean up
-		for (let i = 0; i < stack.length; i += 1) stack[i]?.classList.remove("pointerEventsNone");
+		for (let i = 0; i < stack.length; ++i) stack[i]?.classList.remove("pointerEventsNone");
 
 		return stack;
 	}
@@ -143,7 +133,7 @@ export default class EventRecording {
 		if (event) {
 			const elements = this.elementsAtLocation(event.clientX, event.clientY);
 			if (elements && elements.length > 1 && elements[0].id === "overlay_cover") {
-				target = elements[1];
+				[, target] = elements;
 			}
 		}
 		this._overlayCover.style.top = window.scrollY + target.getBoundingClientRect().y + "px";
@@ -217,12 +207,13 @@ export default class EventRecording {
 		// eslint-disable-next-line @typescript-eslint/no-this-alias
 		const _this = this;
 		const processScroll = () => {
-			const target = event.composedPath()[0];
+			const [target] = event.composedPath();
 
 			const isDocumentScrolled = target === document;
 			if (isDocumentScrolled) {
-				return _this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.PAGE_SCROLL, null, window.scrollY);
+				return _this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.PAGE_SCROLL, document.body, window.scrollY);
 			}
+			if(!target) return;
 
 			const isRecorderCover = target.getAttribute("data-recorder-cover");
 			if (!isRecorderCover && !event.simulatedEvent) {
@@ -267,7 +258,7 @@ export default class EventRecording {
 		}
 	}
 
-	async getHoverDependentNodes(_element: HTMLElement, baseLineTimeStamp: number | null = null): Promise<Array<any>> {
+	async getHoverDependentNodes(_element: HTMLElement, baseLineTimeStamp: number | null = null): Promise<any[]> {
 		// Use parent svg element if element is an svg element
 		const element = _element instanceof SVGElement && _element.tagName.toLocaleLowerCase() !== "svg" ? _element.ownerSVGElement : _element;
 
@@ -374,9 +365,9 @@ export default class EventRecording {
 		if (originalTimestamp - this.lastClick < 500) return;
 		this.lastClick = originalTimestamp;
 
-		let target = event.composedPath()[0];
-		target = target instanceof HTMLSlotElement ? target.assignedNodes()[0] : target;
-		target = target.nodeType === target.TEXT_NODE ? target.parentElement : target;
+		let [target] = event.composedPath();
+		if (target instanceof HTMLSlotElement) [target] = target.assignedNodes();
+		if (target.nodeType === target.TEXT_NODE) target = target.parentElement;
 
 		const mainAnchorNode = this.checkIfElementIsAnchored(target);
 		if (mainAnchorNode) target = mainAnchorNode;
@@ -385,8 +376,6 @@ export default class EventRecording {
 
 		const tagName = target.tagName.toLowerCase();
 		if (["option", "select"].includes(tagName)) return;
-
-		const closestLink: HTMLAnchorElement = target.tagName === "a" ? target : target.closest("a");
 
 		// If clientX and clientY is 0 it may mean that the event is not triggered
 		// by user. Found during creating tests for ielts search
@@ -412,7 +401,7 @@ export default class EventRecording {
 	}
 
 	handleKeyDown(event: KeyboardEvent) {
-		const key = event.key;
+		const { key } = event;
 		if (KEYS_TO_TRACK_FOR_INPUT.has(key)) {
 			this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.PRESS, event.composedPath()[0], key);
 		}
@@ -442,9 +431,7 @@ export default class EventRecording {
 			detail: { type: string; key: string; eventNode: Node; targetNode: Node };
 		},
 	) {
-		this.releventHoverDetectionManager.registerDOMMutation({
-			...event.detail,
-		});
+		this.releventHoverDetectionManager.registerDOMMutation(event.detail);
 	}
 
 	handleElementSelected(event: CustomEvent & { detail: { element: HTMLElement } }) {
@@ -461,13 +448,12 @@ export default class EventRecording {
 			case "select": {
 				const selectElement = eventNode as HTMLSelectElement;
 				const selectedOptions = selectElement.selectedOptions ? Array.from(selectElement.selectedOptions) : [];
-				return { type: InputNodeTypeEnum.SELECT, value: selectedOptions.map((option, index) => option.index), name: selectElement.name };
+				return { type: InputNodeTypeEnum.SELECT, value: selectedOptions.map((option) => option.index), name: selectElement.name };
 			}
 			case "input": {
 				const inputElement = eventNode as HTMLInputElement;
 				const inputType = inputElement.type;
 				const inputName = inputElement.name;
-				const parentForm = inputElement.form ? inputElement.form : document.body;
 
 				switch (inputType) {
 					case "file":
@@ -503,7 +489,7 @@ export default class EventRecording {
 
 	async handleElementInput(event: InputEvent) {
 		if (!event.isTrusted) return;
-		const target = event.composedPath()[0];
+		const [target] = event.composedPath();
 
 		const inputNodeInfo = this._getInputNodeInfo(target as HTMLElement);
 		if (!inputNodeInfo || ![InputNodeTypeEnum.INPUT, InputNodeTypeEnum.TEXTAREA, InputNodeTypeEnum.CONTENT_EDITABLE].includes(inputNodeInfo.type)) return;
@@ -520,7 +506,7 @@ export default class EventRecording {
 
 	async handleElementChange(event: InputEvent) {
 		if (!event.isTrusted) return;
-		const target = event.composedPath()[0];
+		const [target] = event.composedPath();
 		const inputNodeInfo = await this._getInputNodeInfo(target as HTMLElement);
 		if (!inputNodeInfo) return;
 		if ([InputNodeTypeEnum.INPUT, InputNodeTypeEnum.CONTENT_EDITABLE].includes(inputNodeInfo.type)) return;
@@ -551,17 +537,17 @@ export default class EventRecording {
 
 		let lastPush = Date.now();
 		window.history.pushState = new Proxy(window.history.pushState, {
-			apply: async (target, thisArg, argArray) => {
+			apply: (target, thisArg, argArray) => {
 				this.releventHoverDetectionManager.reset();
 				const out = target.apply(thisArg, argArray);
 				if (argArray[0]) {
 					lastPush = Date.now();
 					this.eventsController.saveCapturedEventInBackground(
 						ActionsInTestEnum.WAIT_FOR_NAVIGATION,
-						null,
+						document.body,
 						argArray[2]
 							? !this.isAbsoluteURL(argArray[2])
-								? new URL(argArray[2], document.baseURI).toString()
+								? `**/*${argArray[2]}`
 								: argArray[2]
 							: window.location.href,
 					);
@@ -571,17 +557,17 @@ export default class EventRecording {
 		});
 
 		window.history.replaceState = new Proxy(window.history.pushState, {
-			apply: async (target, thisArg, argArray) => {
+			apply: (target, thisArg, argArray) => {
 				this.releventHoverDetectionManager.reset();
 				const out = target.apply(thisArg, argArray);
 				if (argArray[0]) {
 					lastPush = Date.now();
 					this.eventsController.saveCapturedEventInBackground(
 						ActionsInTestEnum.WAIT_FOR_NAVIGATION,
-						null,
+						document.body,
 						argArray[2]
 							? !this.isAbsoluteURL(argArray[2])
-								? new URL(argArray[2], document.baseURI).toString()
+								? `**/*${argArray[2]}`
 								: argArray[2]
 							: window.location.href,
 					);
@@ -608,7 +594,7 @@ export default class EventRecording {
 	}
 
 	private isAbsoluteURL(url: string) {
-		const rgx = new RegExp("^(?:[a-z]+:)?//", "i");
+		const rgx = /^(?:[a-z]+:)?\/\//i;
 		return rgx.test(url);
 	}
 

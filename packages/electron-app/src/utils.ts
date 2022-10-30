@@ -1,7 +1,6 @@
 import * as path from "path";
 import fileUrl from "file-url";
 import { IDeepLinkAction } from "./types";
-import { resolveToBackendPath, resolveToFrontEndPath } from "@shared/utils/url";
 import { createAuthorizedRequestFunc, resolveToBackend } from "./utils/url";
 import axios, { AxiosRequestConfig } from "axios";
 import { getStore } from "./store/configureStore";
@@ -18,6 +17,17 @@ function getAppIconPath() {
 		default:
 			return path.join(__dirname, "static/assets/icons/app.png");
 	}
+}
+
+function isDevelopment() {
+	return process.env.NODE_ENV === "development";
+}
+
+export function getAppURl() {
+	if (isDevelopment()) {
+		return "http://localhost:8080";
+	}
+	return encodePathAsUrl(__dirname, "index.html");
 }
 
 function encodePathAsUrl(...pathSegments: string[]): string {
@@ -58,16 +68,15 @@ function isValidHttpUrl(str: string) {
 
 	const pattern = new RegExp(
 		"^(https?:\\/\\/)?" + // protocol
-			"((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
-			"((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
-			"(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
-			"(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
-			"(\\#[-a-z\\d_]*)?$",
+		"((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
+		"((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
+		"(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
+		"(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
+		"(\\#[-a-z\\d_]*)?$",
 		"i",
 	); // fragment locator
 	return !!pattern.test(str);
 }
-
 
 const getUserInfoFromToken = async (token: string) => {
 	// call axios request with token as cookie header
@@ -93,7 +102,7 @@ const getUserInfoFromToken = async (token: string) => {
 const getSelectedProjectTestsRequest: () => AxiosRequestConfig = createAuthorizedRequestFunc((authorizationOptions: any) => {
 	const store = getStore();
 	const selectedProject = getCurrentSelectedProjct(store.getState() as any);
-	if(!selectedProject) return null;
+	if (!selectedProject) return null;
 
 	return {
 		url: resolveToBackend(`/projects/${selectedProject}/tests`),
@@ -102,20 +111,24 @@ const getSelectedProjectTestsRequest: () => AxiosRequestConfig = createAuthorize
 	};
 }, true);
 
-const getSelectedProjectTests: () => Promise<any> = createAuthorizedRequestFunc(async (authorizationOptions: any) => {
+const getSelectedProjectTests: () => Promise<any> = createAuthorizedRequestFunc(async () => {
 	let axiosRequest = getSelectedProjectTestsRequest();
-	if(!axiosRequest) throw new Error("No project selected");
+	if (!axiosRequest) throw new Error("No project selected");
 
 	return axios(axiosRequest).then((res) => res.data);
 });
 
-const getUserAccountProjects : () => Promise<any> = createAuthorizedRequestFunc(async (authorizationOptions: any) => {
-	return axios.get(resolveToBackend("/users/actions/getUserAndSystemInfo"), {
-		...authorizationOptions
-	}).then((res) => res.data);
+const getUserAccountProjects: () => Promise<any> = createAuthorizedRequestFunc((authorizationOptions: any) => {
+	return axios.get(resolveToBackend("/users/actions/getUserAndSystemInfo"), authorizationOptions).then((res) => res.data);
 });
 
+const getRelativePath = (pathStr) => {
+	return path.relative(process.cwd(), pathStr)
+}
+
+
 export {
+	getRelativePath,
 	isProduction,
 	getAppIconPath,
 	encodePathAsUrl,
@@ -126,5 +139,5 @@ export {
 	getUserInfoFromToken,
 	getUserAccountProjects,
 	getSelectedProjectTests,
-	getSelectedProjectTestsRequest
+	getSelectedProjectTestsRequest,
 };

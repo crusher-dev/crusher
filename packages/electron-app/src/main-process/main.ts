@@ -2,7 +2,6 @@ import { setupLogger } from "@crusher-shared/modules/logger";
 setupLogger("recorder");
 
 require("v8-compile-cache");
-import * as Sentry from "@sentry/electron";
 import { isProduction, parseDeepLinkUrlAction } from "./../utils";
 import { app, session } from "electron";
 import { APP_NAME } from "../../config/about";
@@ -10,13 +9,9 @@ import { AppWindow } from "./app-window";
 import { now } from "./now";
 import { installSameOriginFilter } from "./same-origin-filter";
 import configureStore from "../store/configureStore";
-import * as path from "path";
-import net from "net";
 import { getGlobalAppConfig } from "../lib/global-config";
-import { rootReducer } from "../store/reducers";
 import { SettingsManager } from "../lib/settingsManager";
-
-const os = require("os");
+import path from "path";
 
 //     Sentry.init({ dsn: "https://392b9a7bcc324b2dbdff0146ccfee044@o1075083.ingest.sentry.io/6075223" });
 //     require('update-electron-app')({
@@ -33,7 +28,7 @@ const launchTime = now();
 let readyTime: number | null = null;
 
 type OnDidLoadFn = (window: AppWindow) => void;
-let onDidLoadFns: Array<OnDidLoadFn> | null = [];
+let onDidLoadFns: OnDidLoadFn[] | null = [];
 
 function setupElectronApp() {
 	app.setName(APP_NAME);
@@ -51,9 +46,14 @@ function setupElectronApp() {
 		applicationName: APP_NAME,
 		applicationVersion: app.getVersion(),
 		copyright: "Copyright © 2021",
-		credits: "Made with ❤️ by Crusher team",
+		credits: "Made with ❤️ by crusher team",
 	});
-	app.setAsDefaultProtocolClient("crusher");
+	if(isProduction()) {
+		app.setAsDefaultProtocolClient("crusher");
+	} else {
+		console.log("Registering protocol client", process.execPath, process.argv);
+		app.setAsDefaultProtocolClient("crusher", process.execPath, [path.resolve(process.argv[1])]);
+	}
 }
 setupElectronApp();
 
@@ -76,7 +76,7 @@ if (process.platform === "linux" && !isDuplicateInstance) {
 	});
 }
 
-app.on("second-instance", (event, args, workingDirectory) => {
+app.on("second-instance", (event, args) => {
 	if (mainWindow) {
 		if (mainWindow.isMinimized()) {
 			mainWindow.restore();
@@ -111,6 +111,7 @@ function handleAppURL(url: string) {
 		// This manual focus call _shouldn't_ be necessary, but is for Chrome on
 		// macOS. See https://github.com/desktop/desktop/issues/973.
 		window.focus();
+		console.log("Window loaded", action);
 		if (action) window.sendMessage("url-action", { action });
 	});
 }
@@ -120,17 +121,19 @@ app.on("open-url", (event, url) => {
 	handleAppURL(url);
 });
 
-let store;
 function createWindow() {
-	console.log("Creating window now...");
 	const globalAppConfig = getGlobalAppConfig();
 	const _store = configureStore(undefined, "main", true);
-    const settings = SettingsManager.getSavedSettings();
+	const settings = SettingsManager.getSavedSettings();
 
-    // initialReduxState.app.shouldShowOnboardingOverlay = localStorage.getItem("app.showShouldOnboardingOverlay") === "false" ? false : true;
-   
-	if(!settings.backendEndPoint) { settings.backendEndPoint = process.env.BACKEND_URL; }
-	if(!settings.frontendEndPoint) { settings.frontendEndPoint = process.env.FRONTEND_URL; }
+	// initialReduxState.app.shouldShowOnboardingOverlay = localStorage.getItem("app.showShouldOnboardingOverlay") === "false" ? false : true;
+
+	if (!settings.backendEndPoint) {
+		settings.backendEndPoint = process.env.BACKEND_URL;
+	}
+	if (!settings.frontendEndPoint) {
+		settings.frontendEndPoint = process.env.FRONTEND_URL;
+	}
 
 	const initialState = {
 		...(_store.getState() as any),
@@ -138,13 +141,13 @@ function createWindow() {
 			...(_store.getState() as any).app,
 			settings: {
 				...(_store.getState() as any).app.settings,
-				...settings
+				...settings,
 			},
-			accountInfo: globalAppConfig && globalAppConfig.userInfo ? globalAppConfig.userInfo : null
-		}
+			accountInfo: globalAppConfig?.userInfo ? globalAppConfig.userInfo : null,
+		},
 	};
 	const store = configureStore(initialState, "main");
-	
+
 	const window = new AppWindow(store);
 
 	if (!isProduction()) {
@@ -157,7 +160,7 @@ function createWindow() {
 		for (const extension of extensions) {
 			try {
 				installExtension(extension, { loadExtensionOptions: { allowFileAccess: true } });
-			} catch (e) {}
+			} catch { }
 		}
 	}
 
@@ -185,7 +188,8 @@ function createWindow() {
 	mainWindow = window;
 }
 
-function onDidLoad(fn: OnDidLoadFn) {
+function onDidLoad(fn: OnDidLoadFn) {	
+	console.log(`onDidLoad`, !!onDidLoadFns, !!mainWindow);
 	if (onDidLoadFns) {
 		onDidLoadFns.push(fn);
 	} else {

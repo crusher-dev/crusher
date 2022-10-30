@@ -18,15 +18,25 @@ export function MenuItemHorizontal({ children, selected, ...props }) {
 }
 
 const menuLink = css`
+	display: flex;
+	align-items: center;
+
+	font-size: 13.5rem;
+	font-weight: 500;
+	border-radius: 8rem;
+	box-sizing: border-box;
+	border: 0.5px solid transparent;
+
+	:hover {
+		background: rgba(255, 255, 255, 0.04);
+		border: 0.5px solid rgba(255, 255, 255, 0.08);
+	}
+
 	box-sizing: border-box;
 	border-radius: 6rem;
-	line-height: 13rem;
 	height: 28rem;
 	padding: 0 10rem;
 	color: rgba(255, 255, 255, 0.8);
-	font-weight: 600;
-	display: flex;
-	align-items: center;
 
 	:hover {
 		background: rgba(255, 255, 255, 0.05);
@@ -34,7 +44,8 @@ const menuLink = css`
 `;
 
 const menuSelected = css`
-	background: rgba(255, 255, 255, 0.05);
+	background: rgba(255, 255, 255, 0.04);
+	border: 0.5px solid rgba(255, 255, 255, 0.08);
 `;
 
 export const CompressibleMenu = ({ name, children, initialState = true }) => {
@@ -61,19 +72,23 @@ export const CompressibleMenu = ({ name, children, initialState = true }) => {
 const projectLinks = [
 	{
 		label: "General",
-		link: "/settings/project/basic",
+		link: "/settings/basic",
+		isProjectLink: true,
 	},
 	{
 		label: "Environments",
-		link: "/settings/project/environments",
+		link: "/settings/environments",
+		isProjectLink: true,
 	},
 	{
 		label: "Monitoring",
-		link: "/settings/project/monitoring",
+		link: "/settings/monitoring",
+		isProjectLink: true,
 	},
 	{
 		label: "Integrations",
-		link: "/settings/project/integrations",
+		link: "/settings/integrations",
+		isProjectLink: true,
 	},
 ];
 
@@ -85,15 +100,19 @@ const orgLinks = [
 ];
 
 function LinksSection({ links, label }) {
-	const { pathname } = useRouter();
+	const { query, pathname } = useRouter();
+	const { project_id } = query;
+
 	return (
 		<>
 			<CompressibleMenu name={label}>
-				<div className={"mt-6 mb-32"}>
-					{links.map(({ link, label }) => {
+				<div className={"mt-6 mb-32"} css={linkSection}>
+					{links.map(({ link, label, isProjectLink }) => {
+						const finalLink = isProjectLink ? `/${project_id}/${link}` : link;
+
 						return (
-							<Link href={link}>
-								<MenuItemHorizontal className={"mt-2"} selected={pathname === link}>
+							<Link href={finalLink}>
+								<MenuItemHorizontal selected={pathname.includes(link)}>
 									<span
 										css={css`
 											font-size: 12.5rem;
@@ -112,31 +131,47 @@ function LinksSection({ links, label }) {
 	);
 }
 
+const linkSection = css`
+	display: flex;
+	flex-direction: column;
+	gap: 8rem;
+`;
+
 const clickableCSS = css`
 	padding: 4px 8rem;
 `;
 function LeftSection() {
 	const router = useRouter();
+	const { query } = router;
 
 	const [showModal, setShowModal] = useState(false);
+
+	const { project_id } = query;
+
+	const isProject = !!project_id;
+	const backLink = isProject ? `/${project_id}/dashboard` : "/projects";
 	return (
-		<div css={sidebar} className={"flex flex-col justify-between py-18 px-32"}>
+		<div css={sidebar} className={"flex flex-col justify-between py-16 px-23"}>
 			<Conditional showIf={showModal}>
 				<InviteMember onClose={setShowModal.bind(this, false)} />
 			</Conditional>
 			<div>
-				<div className={"flex items-center pl-2 mt-10 text-13 mb-32"}>
+				<div className={"flex items-cente mt-10 text-13 mb-32"}>
 					<span
 						css={clickableCSS}
 						onClick={() => {
-							router.push("/app/dashboard");
+							router.push(backLink);
 						}}
 					>
-						{"<"}
-						<span className={" leading-none mr-8 underline ml-8"}> Go back</span>
+						←{" "}
+						<span className={" leading-none mr-8 "} css={hoverCSS}>
+							go back
+						</span>
 					</span>
 				</div>
-				<LinksSection label={"Project settings"} links={projectLinks} />
+				<Conditional showIf={isProject}>
+					<LinksSection label={"Project settings"} links={projectLinks} />
+				</Conditional>
 
 				<LinksSection label={"Org settings"} links={orgLinks} />
 			</div>
@@ -149,6 +184,13 @@ function LeftSection() {
 		</div>
 	);
 }
+
+const hoverCSS = css`
+	:hover {
+		color: #d378fe;
+		text-decoration: underline;
+	}
+`;
 
 export const SettingsLayout = ({ children, hideSidebar = false }) => {
 	return (
@@ -167,15 +209,17 @@ export const SettingsLayout = ({ children, hideSidebar = false }) => {
 };
 
 const background = css`
-	background: #0a0b0e;
+	background: #080808;
 	min-height: 100vh;
 `;
 
 const sidebar = css`
-	width: 281rem;
+	width: 303rem;
 	height: 100vh;
-	border: 1px solid #171b20;
+	border-right: 0.5px solid #1b1b1b;
 	box-sizing: border-box;
+	background: #0b0b0c;
+	justify-content: flex-start;
 `;
 
 const containerWidth = css`
@@ -189,7 +233,7 @@ const containerWidth = css`
 const scrollContainer = css`
 	overflow-y: scroll;
 	height: calc(100vh);
-	padding-top: 56rem;
+	padding-top: 32rem;
 `;
 
 const project = css`

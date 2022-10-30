@@ -1,5 +1,5 @@
 {
-  "name": "crusher-cli",
+  "name": "crusher.dev",
   "version": "2.0.46",
   "author": "Himanshu @himanshu-dixit",
   "repository": "https://github.com/crusherdev/CLI",
@@ -7,7 +7,7 @@
   "private": true,
   "license": "MIT",
   "bin": {
-    "crusher-cli": "./src/bin/index.js"
+    "crusher.dev": "./src/bin/index.js"
   },
   "engines": {
     "node": ">=10.0.0"
@@ -15,7 +15,7 @@
   "engineStrict": true,
   "scripts": {
     "run": "ts-node src/bin/index.ts",
-    "build": "webpack && PACKAGE_NAME=crusher-cli node scripts/copyPackageJson.js",
+    "build": "webpack && PACKAGE_NAME=crusher.dev node scripts/copyPackageJson.js",
     "build:debug": "webpack && PACKAGE_NAME=crusher-debug node scripts/copyPackageJson.js",
     "analyzer": "webpack-cli --profile --json > compilation-stats.json",
     "test": "jest"

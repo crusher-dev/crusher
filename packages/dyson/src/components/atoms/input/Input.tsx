@@ -7,7 +7,7 @@ export type InputProps = {
 	/**
 	 * Size of the component
 	 */
-	size?: "small" | "tiny" | "x-small" | "small" | "medium" | "big-medium" | "large" | "x-large";
+	size?: "x-tiny" | "tiny" | "x-small" | "small" | "medium" | "big-medium" | "large" | "x-large";
 
 	/**
 	 * Is error
@@ -31,7 +31,12 @@ export type InputProps = {
 	onReturn?: (value: string) => void;
 
 	className?: string;
+	inputCss?: any;
+	inputWrapperCss?: any;
 
+	autoComplete?: string;
+	value?: string;
+	type?: string;
 	forwardRef?: React.Ref<HTMLInputElement>;
 } & React.DetailedHTMLProps<React.HTMLAttributes<HTMLInputElement>, any>;
 
@@ -39,7 +44,7 @@ export type InputProps = {
  * Unified button component for Dyson UI system
  */
 export const Input: React.FC<InputProps> = React.forwardRef((mainProps, ref) => {
-	const { initialValue = "", forwardRef, size = "large", className, rightIcon, leftIcon, isError = false, onReturn, children, ...props } = mainProps;
+	const { initialValue = "", forwardRef, inputCss, size = "large", className, inputWrapperCss, rightIcon, leftIcon, isError = false, onReturn, children, ...props } = mainProps;
 	ref = ref ? ref : useRef<HTMLInputElement>(null);
 
 	const onKeyUp = useCallback(
@@ -63,6 +68,8 @@ export const Input: React.FC<InputProps> = React.forwardRef((mainProps, ref) => 
 				css`
 					position: relative;
 				`,
+				style,
+				inputWrapperCss
 			]}
 			className={`relative ${className}`}
 		>
@@ -71,7 +78,7 @@ export const Input: React.FC<InputProps> = React.forwardRef((mainProps, ref) => 
 					{leftIcon}
 				</div>
 			</Conditional>
-			<input ref={ref} css={[inputBox(sizeStyle), isError && errorState]} {...props} onKeyUp={onKeyUp} />
+			<input ref={ref} css={[inputBox(sizeStyle, !!leftIcon), isError && errorState, inputCss]} {...props} onKeyUp={onKeyUp} />
 			<Conditional showIf={!!rightIcon}>
 				<div css={rightIconStyle} className="input__rightIconContainer">
 					{rightIcon}
@@ -81,6 +88,41 @@ export const Input: React.FC<InputProps> = React.forwardRef((mainProps, ref) => 
 	);
 });
 
+
+const style = css`
+
+input {
+	background: transparent;
+	border: 0.5px solid rgba(56, 56, 56, 0.6);
+	border-radius: 10rem;
+	font-weight: 500;
+	:focus {
+		background: #121316;
+		border: 1px solid #ae47ff;
+		border-color: #ae47ff;
+	}
+	::placeholder {
+		color: #808080;
+	}
+	:hover {
+		box-shadow: 0px 0px 0px 3px rgba(28, 28, 28, 0.72);
+	}
+}
+
+@-webkit-keyframes autofill {
+	0%,
+	100% {
+		color: #666;
+		background: transparent;
+	}
+}
+
+input:-webkit-autofill {
+	-webkit-animation-delay: 1s; /* Safari support - any positive time runs instantly */
+	-webkit-animation-name: autofill;
+	-webkit-animation-fill-mode: both;
+}
+`
 //@ts-ignore
 Input.whyDidYouRender = true;
 
@@ -99,18 +141,15 @@ const leftIconStyle = css`
 	height: 100%;
 	left: 0px;
 	transform: translateY(-50%);
+
+	display: flex;
+	align-items: center;
 `;
-const inputBox = (sizeStyle: { height: number }) => css`
-	background: linear-gradient(0deg, #0e1012, #0e1012);
-	border: 1px solid #2a2e38;
-	box-sizing: border-box;
-	border-radius: 4px;
+const inputBox = (sizeStyle: { height: number }, leftIconStyle) => css`
 	height: ${sizeStyle.height}rem;
 	padding-top: 3rem;
 	font-size: ${sizeStyle.fontSize}rem;
-	padding-left: 16rem;
-	color: #fff;
-
+	padding-left: calc(12rem + ${leftIconStyle === true ? "12rem" : "0rem"});
 	width: 100%;
 
 	:focus {
@@ -120,16 +159,16 @@ const inputBox = (sizeStyle: { height: number }) => css`
 `;
 
 const errorState = css`
-	border-color: #ff4583;
+	border-color: #ff4583 !important;
 	:focus {
-		border-color: #ff4583;
+		border-color: #ff4583 !important;
 	}
 `;
 
 function getSizePropery(size: InputProps["size"]) {
 	switch (size) {
-		case "small":
-			return { height: 26, fontSize: 12 };
+		case "x-tiny":
+			return { height: 22, fontSize: 12 };
 			break;
 		case "tiny":
 			return { height: 26, fontSize: 12 };

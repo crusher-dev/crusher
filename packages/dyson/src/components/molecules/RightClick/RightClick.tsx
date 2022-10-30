@@ -1,5 +1,5 @@
 
-import React, { ReactElement} from "react";
+import React, { ReactElement } from "react";
 import { styled } from "@stitches/react";
 import { violet, mauve } from "@radix-ui/colors";
 import {
@@ -63,7 +63,7 @@ const itemStyles = {
   },
 
   "&[data-highlighted]": {
-    backgroundColor: "#8735D9",
+    backgroundColor: "#a82be2",
     color: violet.violet1
   },
   "&[data-state=open]": {
@@ -119,56 +119,57 @@ const RightSlot = styled("div", {
 });
 
 
-const RenderMenuItems = ({menuItems,isSubItem=false})=>{
-  return (menuItems.map((menuItem,i)=>{
-    const {value,rightItem,disabled,subItems, onClick, type} = menuItem;
+const RenderMenuItems = ({ menuItems, isSubItem = false }) => {
+  return (menuItems.map((menuItem, i) => {
+    const { value, rightItem, disabled, subItems, onClick, type } = menuItem;
 
-    if(type === 'separator') return (<ContextMenuSeparator />)
-    if(type === 'heading') return ( <ContextMenuLabel>{value}</ContextMenuLabel>)
+    if (type === 'separator') return (<ContextMenuSeparator />)
+    if (type === 'heading') return (<ContextMenuLabel>{value}</ContextMenuLabel>)
 
-    if(subItems && subItems.length > 0){
+    if (subItems && subItems.length > 0) {
       return (
         <ContextMenuSub>
           <ContextMenuSubTrigger>
-            {value} 
+            {value}
             <RightSlot>
-                <ChevronRightIcon />
+              <ChevronRightIcon />
             </RightSlot>
           </ContextMenuSubTrigger>
           <ContextMenuSubContent sideOffset={2} alignOffset={-2}>
-            <RenderMenuItems menuItems={subItems}/>
+            <RenderMenuItems menuItems={subItems} />
           </ContextMenuSubContent>
         </ContextMenuSub>
       )
     }
     return (
-    <ContextMenuItem key={i} disabled={disabled} onClick={onClick}>
-      {value} {rightItem ? (<RightSlot>{rightItem}</RightSlot>) : null}
-    </ContextMenuItem>
+      <ContextMenuItem key={i} disabled={disabled} onClick={onClick}>
+        {value} {rightItem ? (<RightSlot>{rightItem}</RightSlot>) : null}
+      </ContextMenuItem>
     )
   }))
 }
 
-export const RightClickMenu = ({children,menuItems})=>{
-	return (
-		<ContextMenu>
-        <ContextMenuTrigger>
+export const RightClickMenu = ({ children, disabled, onOpenChange, menuItems }) => {
+  if (disabled) return children;
+  return (
+    <ContextMenu onOpenChange={onOpenChange}>
+      <ContextMenuTrigger>
         {children}
-        </ContextMenuTrigger>
-        <ContextMenuContent sideOffset={5} align="start">
-        <RenderMenuItems menuItems={menuItems}/>
-        </ContextMenuContent>
-      </ContextMenu>
-	)
+      </ContextMenuTrigger>
+      <ContextMenuContent sideOffset={5} align="start">
+        <RenderMenuItems menuItems={menuItems} />
+      </ContextMenuContent>
+    </ContextMenu>
+  )
 }
 
 type parentItem = {
   type: 'menuItem',
-	value?: string,
-	rightItem?: ReactElement | string,
-	subMenu?: subMenuItem[],
+  value?: string,
+  rightItem?: ReactElement | string,
+  subMenu?: subMenuItem[],
   onClick: Function,
-	disabled?: boolean
+  disabled?: boolean
   //let it handle everything
   element?: any
 }
@@ -176,17 +177,17 @@ type parentItem = {
 type subMenuItem = Omit<parentItem, 'subMenu'>
 
 type headingItem = {
-	type: 'heading'
+  type: 'heading'
   value: string
 };
 type separatorItem = {
-	type: 'separator'
+  type: 'separator'
 };
 
-type Item = separatorItem|MenuItem|headingItem
+type Item = separatorItem | MenuItem | headingItem
 
 export type TRightItemProps = {
-	menuItems: Item[]
+  menuItems: Item[]
 } & React.DetailedHTMLProps<React.HTMLAttributes<HTMLButtonElement>, any>;
 
 

@@ -1,0 +1,11 @@
+{
+    "version": "2.0.0",
+    "tasks": [{
+        "label": "run-electron-app",
+        "command": "../../packages/electron-app/bin/darwin-x64/Electron.app/Contents/MacOS/Electron .",
+        "type": "shell",
+        "options": {
+            "cwd": "${workspaceFolder}/output/crusher-electron-app/"
+        },
+    }]
+  }

@@ -3,6 +3,8 @@ import { TestInstanceResultSetStatus, TestInstanceResultSetConclusion } from "cr
 export interface IBuildReportResponse {
 	buildId: number;
 	buildReportId: number;
+	host?: string | null;
+	hostScreenshot?: string| null;
 	id: number;
 	name: string;
 	startedAt: number;

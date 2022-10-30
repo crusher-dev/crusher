@@ -57,12 +57,12 @@ const SelectDefaultProps = {
 	placeholder: "Select a value",
 	isMultiSelect: false,
 	isCreateable: false,
-	onScrollEnd: () => {},
+	onScrollEnd: () => { },
 	isSearchable: false,
 	size: "medium",
 	dropDownHeight: "auto",
 	values: [],
-	callback: () => {},
+	callback: () => { },
 };
 
 export const SelectBox: React.FC<TSelectBoxProps> = ({
@@ -166,7 +166,7 @@ export const SelectBox: React.FC<TSelectBoxProps> = ({
 						{options.map(({ value, component, label }) => (
 							<div
 								css={dropdDownItem(isMultiSelect)}
-								className={"flex  items-center px-12 py-8 dropdown-label"}
+								className={"flex  items-center px-8 py-0 dropdown-label"}
 								key={value}
 								onClick={selectValue.bind(this, value)}
 							>
@@ -247,38 +247,42 @@ const selectBoxContainer = (isOpen, size) => css`
 	.selectBox {
 		width: 100%;
 
-		background: #121519;
-		border: 1px solid #181c23;
+
+		border: 0.5px solid rgba(56, 56, 56, 0.6);
 		box-sizing: border-box;
-		border-radius: 4px;
+		border-radius: 8px;
 
 		display: flex;
 		align-items: center;
 		color: #797979;
 
 		:hover {
-			background: #16191d;
-			border: 1px solid #262c36;
+			filter: brightness(130%);
 		}
 
 		${size === "small" && `height:28rem;`}
-		${size === "medium" && `height:34rem;`}
-    ${size === "large" && `height:42rem;`}
-		${isOpen ? `	border-color: #6893e7;` : ""}
+		${size === "medium" && `height:36rem;`}
+    	${size === "large" && `height:42rem;`}
+		${isOpen ? `	border-color: #b341f9;` : ""}
 	}
 `;
 
 export const dropdDownContainer = css`
-	top: calc(100% + 8rem);
+	top: calc(100% + rem);
 	left: 0;
 	position: absolute;
 	width: 100%;
 	overflow: hidden;
 	z-index: 5;
-	background: #0f1112;
-	border: 1px solid rgba(42, 47, 50, 0.8);
-	box-shadow: 0 4px 15px rgba(16, 15, 15, 0.4);
-	border-radius: 4px;
+	
+	border-radius: 8rem;
+
+	background: #0D0E0E;
+border: 0.6px solid #222225;
+
+box-shadow: 0px 0px 7px 5px rgb(0 0 0 / 14%);
+
+
 	box-sizing: border-box;
 	padding: 8rem 0;
 `;
@@ -303,9 +307,14 @@ export const dropdDown = css`
 
 const dropdDownItem = (isMultiSelect) => css`
 	font-size: 13rem;
+	min-height: 28rem;
 	color: #fff;
+	width: calc( 100% - 12px);
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 6px;
 	:hover {
-		background: ${isMultiSelect ? "#16191D" : "#687ef2"} !important;
+		background: ${isMultiSelect ? "#ffffff1a" : "#b341f9"} !important;
 	}
 `;
 
@@ -318,4 +327,7 @@ const inputBoxCSS = css`
 	background: transparent;
 	color: white;
 	color: #797979;
+	:placeholer{
+		color: #6e6e6e;
+	}
 `;

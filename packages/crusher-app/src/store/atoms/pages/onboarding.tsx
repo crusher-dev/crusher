@@ -1,5 +1,3 @@
-import { EditionTypeEnum } from "@crusher-shared/types/common/general";
-import { getEdition } from "@utils/helpers";
 import { atom } from "jotai";
 
 export enum OnboardingStepEnum {
@@ -9,4 +7,4 @@ export enum OnboardingStepEnum {
 	CLI_INTEGRATION = "CLI_INTEGRATION",
 }
 
-export const onboardingStepAtom = atom<OnboardingStepEnum>(getEdition() === EditionTypeEnum.EE ? OnboardingStepEnum.SURVEY : OnboardingStepEnum.SURVEY);
+export const onboardingStepAtom = atom<OnboardingStepEnum>(OnboardingStepEnum.SURVEY);

@@ -14,6 +14,7 @@ const pageScreenshotModule = require("../actions/pageScreenshot");
 class CrusherSdk implements ICrusherSdk {
 	_page: Page; // Playwright page reference
 	page: Page;
+	playwright: { page: Page };
 	exportsManager: ExportsManager;
 	storageManager: StorageManager;
 	communicationChannel: CommunicationChannel;
@@ -23,6 +24,7 @@ class CrusherSdk implements ICrusherSdk {
 		this.exportsManager = exportsManager;
 		this.storageManager = storageManager;
 		this.page = page;
+		this.playwright = { page: page };
 		this.communicationChannel = communicationChannel;
 	}
 

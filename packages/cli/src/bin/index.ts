@@ -7,6 +7,7 @@ import { Message } from '../utils/messages';
 import { getProjectConfig, getProjectConfigPath } from '../utils/projectConfig';
 import { askUserLogin, installCrusherRecorder, makeSureSetupIsCorrect } from '../utils/setup';
 import { getRecorderDistCommand } from '../utils/utils';
+import { RECORDER_MAC_BUILD } from '../constants';
 const nodeVersion = process.version.match(/^v(\d+\.\d+)/)[1];
 
 if (parseFloat(nodeVersion) >= 10.0) {
@@ -29,7 +30,7 @@ if (parseFloat(nodeVersion) >= 10.0) {
 	} else {
 		if (isDefaultCommand && !isHelpArg) {
 			new Promise(async () => {
-        const { token } = await askUserLogin();
+				const { token } = await askUserLogin();
 				// @Todo: Add support for flag token here
 				await loadUserInfoOnLoad({ token: undefined });
 				await installCrusherRecorder();

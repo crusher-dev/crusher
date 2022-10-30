@@ -3,7 +3,7 @@ import devices from "@shared/constants/devices";
 import { iDevice } from "@shared/types/extension/device";
 import * as url from "url";
 
-export function executeScript(name: string, tabId: number, cb?: any) {
+export function executeScript(name: string, tabId: number) {
 	return new Promise((resolve, reject) => {
 		if (process.env.NODE_ENV === "production") {
 			chrome.tabs.executeScript(tabId, { file: `/js/${name}.js`, runAt: "document_end" }, () => {
@@ -51,21 +51,19 @@ interface iElementAttributeInfo {
 	value: any;
 }
 
-export function getAllAttributes(element: HTMLElement): Array<iElementAttributeInfo> {
+export function getAllAttributes(element: HTMLElement): iElementAttributeInfo[] {
 	if (!DOM.isElement(element)) {
 		throw new Error("Invalid element provided.");
 	}
 
-	const attributeNamesArr: Array<string> = element.getAttributeNames();
+	const attributeNamesArr: string[] = element.getAttributeNames();
 
-	return [
-		...attributeNamesArr.map((attributeName) => {
-			return {
-				name: attributeName,
-				value: element.getAttribute(attributeName),
-			};
-		}),
-	];
+	return attributeNamesArr.map((attributeName) => {
+		return {
+			name: attributeName,
+			value: element.getAttribute(attributeName),
+		};
+	});
 }
 
 export function getDevice(deviceId: string): iDevice | undefined {
@@ -115,7 +113,7 @@ export function validURL(str) {
 		"i",
 	); // fragment locator
 
-	const localHostRegex = new RegExp("(localhost|127.0.0.1)(:\\d*)?");
+	const localHostRegex = /(localhost|127.0.0.1)(:\d*)?/;
 	return !!pattern.test(str) || !!localHostRegex.test(str);
 }
 
@@ -127,7 +125,7 @@ export function getNodeLevel(node: Node) {
 	if (!document.body.contains(node) && node !== document.body) return null;
 
 	let depth = 0;
-	while (node != document.body) {
+	while (node !== document.body) {
 		node = node.parentNode;
 		depth++;
 	}

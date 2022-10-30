@@ -13,6 +13,7 @@ import { RedisManager } from "@modules/redis";
 import { v4 as uuidv4 } from "uuid";
 import { TestRunnerQueue } from "@modules/runner/queue.service";
 import { BrowserEnum } from "@modules/runner/interface";
+import { TestService } from "../tests/service";
 
 @Service()
 @JsonController("")
@@ -27,6 +28,8 @@ export class BuildsController {
 	private testRunnerQueueService: TestRunnerQueue;
 	@Inject()
 	private redisManager: RedisManager;
+	@Inject()
+	private testsService: TestService;
 
 	@Authorized()
 	@Post("/projects/:project_id/builds/actions/create.local")
@@ -41,14 +44,13 @@ export class BuildsController {
 				browser: BrowserEnum.CHROME,
 			},
 			meta: {
-				disableBaseLineComparisions: true
+				disableBaseLineComparisions: true,
 			},
 			status: BuildStatusEnum.CREATED,
 			buildTrigger: BuildTriggerEnum.MANUAL,
 			browser: [BrowserEnum.CHROME],
+			isLocalJob: true
 		});
-
-		console.log("Build id is", build);
 
 		return { build, buildReportStatus };
 	}
@@ -66,24 +68,46 @@ export class BuildsController {
 		return build;
 	}
 
+	@Authorized()
 	@Get("/projects/:project_id/builds")
 	public async getBuildsList(
+		@CurrentUser({required: true}) user: any,
 		@Param("project_id") projectId: number,
 		@QueryParams()
-		params: { triggerType?: BuildTriggerEnum; triggeredBy?: number; search?: string; page?: number; status?: BuildReportStatusEnum; buildId?: number },
+		params: { triggerType?: BuildTriggerEnum; triggeredBy?: number; search?: string; page?: number; status?: BuildReportStatusEnum; buildId?: number; showMine?: boolean; showLocal?: boolean },
 	): Promise<IProjectBuildListResponse & { availableAuthors: Array<Pick<KeysToCamelCase<IUserTable>, "name" | "email" | "id">> }> {
 		if (!params.page) params.page = 0;
-
+		if(params.showMine) {
+			params.triggeredBy = user.user_id;
+		}
 		const buildsData = await this.buildsService.getBuildInfoList(projectId, params);
 
-		const buildsList = buildsData.list.map((buildData) => {
+		const buildsListPromise = buildsData.list.map(async (buildData) => {
+			if(!buildData.buildHost || buildData.buildHost === "null") {
+				const tests = await this.testsService.getTestsInBuild(buildData.buildId);
+				const events = tests.map((test) => test.events);
+				let finalHost = null;
+				for(let event of events) {
+					try {
+						const events = JSON.parse(event);
+						finalHost = events.find((event) => event.type === "PAGE_NAVIGATE_URL").payload.meta.value;
+						break;
+					} catch(ex) {}
+				}
+				if(finalHost) {
+					buildData.buildHost = finalHost;
+				}
+			}
+
 			return {
 				id: buildData.buildId,
+				host: buildData.buildHost && buildData.buildHost !== null ? buildData.buildHost : undefined,
 				// @Note: There is no exact such thing as build name. For now build name
 				// is same as commit name if it present otherwise it will be null
 				name: buildData.buildName,
 				trigger: buildData.buildTrigger,
 				createdAt: new Date(buildData.buildCreatedAt).getTime(),
+				isLocalBuild: buildData.isLocalBuild,
 				tests: {
 					totalCount: buildData.totalTestCount,
 					passedCount: buildData.passedTestCount,
@@ -93,6 +117,7 @@ export class BuildsController {
 				status: buildData.buildStatus,
 				// In seconds
 				duration: buildData.buildDuration,
+				
 				triggeredBy: {
 					id: buildData.triggeredById,
 					name: buildData.triggeredByName,
@@ -100,6 +125,8 @@ export class BuildsController {
 				commentCount: buildData.commentCount ? buildData.commentCount : 0,
 			};
 		});
+
+		const buildsList = await Promise.all(buildsListPromise);
 
 		const availableAuthors = (await this.userService.getUsersInProject(projectId)).map((user) => {
 			return { name: user.name, email: user.email, id: user.id };

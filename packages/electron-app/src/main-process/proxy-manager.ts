@@ -1,19 +1,20 @@
 import child_process, { ChildProcess } from "child_process";
-import fs from "fs";
-import { app, BrowserWindow } from "electron";
+import { app } from "electron";
 import { AnyAction, Store } from "redux";
+import { readProjectConfig } from "../lib/project-config";
 import { setProxyInitializing, setProxyState } from "../store/actions/app";
+import { getRelativePath } from "../utils";
 
 const resultsTunnelRegexp = new RegExp(/results\stunnel\s(.*)/gms);
 
 class ProxyManager {
 	_currentProxyProcess: ChildProcess | null;
 	_results: any | null;
-	_logs: Array<string> = [];
+	_logs: string[] = [];
 
 	isDisabled: boolean = false;
 
-	constructor(private store: Store<unknown, AnyAction>) {}
+	constructor(private store: Store<unknown, AnyAction>) { }
 
 	private handleProxyResults(result: string) {
 		const jsonContentRaw = result.replace(/(\r\n|\n|\r)/gm, "").replace(/ /g, "");
@@ -21,17 +22,22 @@ class ProxyManager {
 
 		console.info("[ProxyManager]: Tunnel is ready and live");
 		// console.table
-		console.table(Object.entries(this._results).map((a: any) => {
-				return { name: a[0], tunnel: a[1].tunnel, intercept: a[1].intercept}
-		}));
+		console.table(
+			Object.entries(this._results).map((a: any) => {
+				return { name: a[0], tunnel: a[1].tunnel, intercept: a[1].intercept };
+			}),
+		);
 
 		this.store.dispatch(setProxyState(this._results));
 		this.store.dispatch(setProxyInitializing(false));
 	}
 
 	initializeProxy(configFilePath: string) {
-		if (this.isDisabled) return;
-		console.info("[ProxyManager]: Starting proxy declared in " + configFilePath);
+		if (this.isDisabled || !configFilePath) return;
+
+		const projectConfig = readProjectConfig(configFilePath);
+		if (!(projectConfig && projectConfig.proxy)) return;
+		console.info("Create tunnel proxy defined in " + getRelativePath(configFilePath));
 		this._logs = [];
 		try {
 			const cliPath = app.commandLine.getSwitchValue("crusher-cli-path");
@@ -63,7 +69,6 @@ class ProxyManager {
 		this._logs = [];
 		if (this._currentProxyProcess) {
 			console.info("[ProxyManager]: Killing an existing tunnel process");
-
 			this.store.dispatch(setProxyState({}));
 			this._currentProxyProcess.kill();
 			this._currentProxyProcess = null;

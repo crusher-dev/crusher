@@ -42,7 +42,9 @@ module.exports = {
 			patterns: [{ from: path.resolve(__dirname, ".env") }],
 		}),
 	],
-	externals: ["crusher_runner_utils"],
+	externals: [{
+		fsevents: "require('fsevents')"
+	}],
 	resolve: {
 		plugins: [new TsconfigPathsPlugin({ configFile: path.resolve("./tsconfig.json") })],
 		extensions: [".ts", ".tsx", ".js"],

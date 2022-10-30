@@ -34,7 +34,7 @@ const RadioDefaultProps = {
 const checkBox = () => css`
 	height: 16rem;
 	width: 16rem;
-	border: 1rem solid #383a41;
+	border: 1rem solid #9F9F9F;
 	border-radius: 4rem;
 	display: flex;
 	align-items: center;
@@ -55,10 +55,11 @@ const normalSelect = (isSelected: boolean) => css`
 			display: block;
 		}
 	}
-	background: ${isSelected ? "#9462FF" : "none"};
+	background: ${isSelected ? "#ba27ff" : "none"};
+	border-color: ${isSelected ? "#ba27ff" : "#9F9F9F"};
 
 	:hover {
-		background: ${isSelected ? "#8a5ee8" : "#9462FF"};
+		background: ${isSelected ? "#ba27ff" : "#ba27ff"};
 	}
 `;
 
@@ -67,11 +68,11 @@ const selectAll = (isSelected: boolean) => css`
 		height: 8rem;
 		width: 8rem;
 		border-radius: 2rem;
-		background: ${isSelected ? "#0a0b0e" : "#9462FF"};
+		background: ${isSelected ? "#0a0b0e" : "#ba27ff"};
 		display: ${isSelected ? "block" : "none"};
 	}
 
-	background: ${isSelected ? "#9462FF" : "none"};
+	background: ${isSelected ? "#ba27ff" : "none"};
 
 	:hover {
 		#tick {
@@ -87,22 +88,22 @@ const disabledCSS = css`
 `;
 
 export function Checkbox(props: CheckboxProps): ReactElement {
-	const { callback, disabled, label, isSelected, isSelectAllType, className } = props;
+	const { callback, disabled, label, isSelected, isSelectAllType, className, id } = props;
 
 	const handleClick = () => {
 		callback && callback(!isSelected);
 	};
 
 	return (
-		<div className={`flex items-center ${className}`} onClick={handleClick}>
+		<div className={`flex items-center ${className}`} onClick={handleClick} id={id}>
 			<Conditional showIf={isSelectAllType}>
-				<div css={[checkBox(), selectAll(isSelected), disabled && disabledCSS]}>
+				<div className={"checkbox-container"} css={[checkBox(), selectAll(isSelected), disabled && disabledCSS]}>
 					<div id={"tick"}></div>
 				</div>
 			</Conditional>
 
 			<Conditional showIf={!isSelectAllType}>
-				<div css={[checkBox(), normalSelect(isSelected), disabled && disabledCSS]}>
+				<div className={"checkbox-container"} css={[checkBox(), normalSelect(isSelected), disabled && disabledCSS]}>
 					<TickSVG height={8} width={8} />
 				</div>
 			</Conditional>

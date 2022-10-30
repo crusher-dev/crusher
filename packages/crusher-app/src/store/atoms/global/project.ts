@@ -1,9 +1,10 @@
+import produce from "immer";
 import { atom } from "jotai";
 import { atomWithImmer } from "jotai/immer";
+
 import { TProjectsData } from "@crusher-shared/types/response/IUserAndSystemInfoResponse";
 
 import { appStateAtom } from "./appState";
-import produce from "immer";
 
 export const projectsAtom = atomWithImmer<TProjectsData[] | null>(null);
 projectsAtom.debugLabel = "projectsAtom";

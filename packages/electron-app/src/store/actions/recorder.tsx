@@ -1,6 +1,6 @@
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
 import { iAction } from "@shared/types/action";
-import { iElementInfo, TRecorderCrashState, TRecorderState } from "../reducers/recorder";
+import { iElementInfo, TRecorderState } from "../reducers/recorder";
 
 export const UPDATE_RECORDER_STATE = "UPDATE_RECORDER_STATE";
 export const SET_IS_WEBVIEW_INITIALIZED = "SET_IS_WEBVIEW_INITIALIZED";
@@ -47,17 +47,17 @@ export const updateRecorderCrashState = (stateMeta: { state: TRecorderState; pay
 	};
 };
 
-export const setInspectMode = (isOn: boolean) => {
+export const setInspectMode = (payload: any) => {
 	return {
 		type: SET_INSPECT_MODE,
-		payload: { isOn },
+		payload: payload,
 	};
 };
 
-export const setInspectElementSelectorMode = (isOn: boolean) => {
+export const setInspectElementSelectorMode = (isOn: boolean, stepId?: any) => {
 	return {
 		type: SET_INSPECT_ELEMENT_SELECTOR_MODE,
-		payload: { isOn },
+		payload: { isOn, stepId: stepId },
 	};
 };
 
@@ -96,10 +96,10 @@ export const updateRecordedStep = (action: iAction, id: number) => {
 	};
 };
 
-export const updateCurrentRunningStepStatus = (status: ActionStatusEnum) => {
+export const updateCurrentRunningStepStatus = (status: ActionStatusEnum, meta: any = {}) => {
 	return {
 		type: UPDATE_CURRENT_RUNNING_STEP_STATUS,
-		payload: { status },
+		payload: { status, meta },
 	};
 };
 

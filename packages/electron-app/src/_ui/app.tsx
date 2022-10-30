@@ -1,373 +1,317 @@
 import { css, Global } from "@emotion/react";
-import { StepType, TourProvider, useTour } from "@reactour/tour";
 import { ipcRenderer } from "electron";
 import React from "react";
 import { useSelector, useStore } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { Store } from "redux";
 import { setSessionInfoMeta } from "../store/actions/app";
 import { resetRecorder, setIsWebViewInitialized } from "../store/actions/recorder";
 import { TRecorderState } from "../store/reducers/recorder";
 import { getAppSessionMeta } from "../store/selectors/app";
-import { getIsStatusBarVisible, getRecorderInfo, getRecorderState, getSavedSteps } from "../store/selectors/recorder";
+import { getIsStatusBarVisible, getRecorderState } from "../store/selectors/recorder";
 import { IDeepLinkAction } from "../types";
-import { goFullScreen, performGetRecorderTestLogs, performReplayTest, performReplayTestUrlAction, performSaveLocalBuild, performSteps, resetStorage } from "../ui/commands/perform";
-import DeviceFrame from "../ui/components/device-frame";
-import { InfoOverLay } from "../ui/components/overlays/infoOverlay";
-import Sidebar from "../ui/components/sidebar";
-import { StatusBar } from "../ui/components/status-bar";
-import { sendSnackBarEvent } from "../ui/components/toast";
-import Toolbar from "../ui/components/toolbar";
+import {
+	goFullScreen,
+	performGetRecorderTestLogs,
+	performReplayTest,
+	performReplayTestUrlAction,
+	performSaveLocalBuild,
+	performSteps,
+	resetStorage,
+} from "./commands/perform";
+import DeviceFrame from "./ui/containers/components/device-frame";
+import { InfoOverLay } from "./ui/containers/components/overlays/infoOverlay";
+import { Sidebar } from "./ui/screens/recorder/sidebar";
+import { StatusBar } from "./ui/containers/components/status-bar";
+import { sendSnackBarEvent } from "./ui/containers/components/toast";
+import Toolbar from "./ui/containers/components/toolbar";
 import historyInstance from "./utils/history";
+import { useBuildNotifications } from "./hooks/tests";
+import { addBuildNotification, clearCurrentLocalBuild, updateCurrentLocalBuild } from "../store/actions/builds";
+import { useAtom } from "jotai";
+import { isStepHoverAtom } from "./store/jotai/testsPage";
+import { CloudCrusher } from "../lib/cloud";
+import { clearAllToasts, clearToast, showToast } from "./ui/components/toasts";
+import { getStore } from "../store/configureStore";
+import { getCurrentLocalBuild } from "../store/selectors/builds";
 
-const handleCompletion = async (store: Store, action: IDeepLinkAction) => {
+const handleCompletion = async (store: Store, action: IDeepLinkAction, addNotification, hasCompletedSuccesfully: boolean) => {
+	// @TODO: Change `redirectAfterSuccess` to `isLocalBuild`
+	const localBuild = getCurrentLocalBuild(store.getState());
+	if (action.args.redirectAfterSuccess && window["testsToRun"]) {
+		window["testsToRun"].list = window["testsToRun"].list.filter((testId) => testId !== action.args.testId);
+		const logs = await performGetRecorderTestLogs();
+		window["localRunCache"][action.args.testId] = {
+			steps: logs,
+			id: action.args.testId,
+			status: hasCompletedSuccesfully ? "FINISHED" : "FAILED",
+		};
 
-    // @TODO: Change `redirectAfterSuccess` to `isLocalBuild`
-    console.log("Action args", action, window["testsToRun"]);
-    if(action.args.redirectAfterSuccess && window["testsToRun"]) {
-        window["testsToRun"].list = window["testsToRun"].list.filter(testId => testId !== action.args.testId);
-        const logs = await performGetRecorderTestLogs();
-        const recorderState = getRecorderState(store.getState());
-        window["localRunCache"][action.args.testId] = { steps: logs, id: action.args.testId, status: recorderState.type !== TRecorderState.ACTION_REQUIRED? "FINISHED" : "FAILED"};
+		if (window["testsToRun"].list.length) {
+			clearAllToasts();
+			historyInstance.push("/recorder", {});
+			goFullScreen();
+			store.dispatch(setSessionInfoMeta({}));
 
-        if(window["testsToRun"].list.length) {
-            historyInstance.push("/recorder", {});
-            goFullScreen();
-            store.dispatch(setSessionInfoMeta({}));
-            performReplayTestUrlAction(window["testsToRun"].list[0], true);
-          } else {
-            // Time to redirect to dashboard
-            const totalTestsInBuild = window["testsToRun"].count;
-            window["testsToRun"] = undefined;
-            const localBuild = await performSaveLocalBuild(Object.values(window["localRunCache"]));
-            console.log("local build is", localBuild);
-            window["localRunCache"] = undefined;
-            // steps: Array<any>; id: number; name: string; status: "FINISHED" | "FAILED"
-            window["localBuildReportId"] = localBuild.build.id;
+			const progress = new Map(localBuild.progress);
+			progress.set(action.args.testId, hasCompletedSuccesfully)
+			store.dispatch(
+				updateCurrentLocalBuild({
+					queuedTests: window["testsToRun"].list,
+					progress: progress,
+				} as any),
+			);
+			performReplayTestUrlAction(window["testsToRun"].list[0], true, action.args.selectedTests || []);
+		} else {
+			// Time to redirect to dashboard
+			const totalTestsInBuild = window["testsToRun"].count;
+			window["testsToRun"] = undefined;
+			const localBuild = await performSaveLocalBuild(Object.values(window["localRunCache"]));
+			window["localRunCache"] = undefined;
+			// steps: Array<any>; id: number; name: string; status: "FINISHED" | "FAILED"
+			window["localBuildReportId"] = localBuild.build.id;
+			addNotification({ id: localBuild.build.id });
+			store.dispatch(
+				addBuildNotification({
+					id: localBuild.build.id,
+					status: localBuild.buildReportStatus,
+					meta: { build: localBuild },
+					time: Date.now(),
+				}),
+			);
+			
+			clearAllToasts();
+			historyInstance.push("/", {});
 
-            historyInstance.push("/", {});
-
-            goFullScreen(false);
-            sendSnackBarEvent({ type: "test_report", message: null, meta: { totalCount: totalTestsInBuild, buildReportStatus: localBuild.buildReportStatus }});
-        }
-    }
+			goFullScreen(false);
+			store.dispatch(clearCurrentLocalBuild());
+			sendSnackBarEvent({ type: "test_report", message: null, meta: { totalCount: totalTestsInBuild, buildReportStatus: localBuild.buildReportStatus } });
+		}
+	} else {
+		if(hasCompletedSuccesfully) {
+			showToast({
+				type: "ready-for-edit",
+				isUnique: true,
+				message: "All steps completed, you can edit now",
+			});
+		}
+	}
 };
 
-
-const handleUrlAction = (store: Store, event: Electron.IpcRendererEvent, { action }: { action: IDeepLinkAction }) => {
-    switch(action.commandName) {
-        case "replay-test":
+const handleUrlAction = (store: Store, addNotification, event: Electron.IpcRendererEvent, { action }: { action: IDeepLinkAction }) => {
+	switch (action.commandName) {
+		case "run-local-build":
+			// const { buildId } = action.args;
+			// const buildReport = CloudCrusher.getBuildReport(buildId)
+			break;
+		case "replay-test":
 			const sessionInfoMeta = getAppSessionMeta(store.getState() as any);
+			const { selectedTests } = action.args;
+
+			console.log("Selected tests are", selectedTests);
+			const currentTest = selectedTests?.length ? selectedTests.find((test) => test.id === action.args.testId) : null;
 			store.dispatch(
 				setSessionInfoMeta({
 					...sessionInfoMeta,
 					editing: {
 						testId: action.args.testId,
-				    },
+					},
+					selectedTest: currentTest,
 				}),
 			);
-            
-            performReplayTest(action.args.testId).finally(handleCompletion.bind(this, store, action))
-            break;
-        case "restore":
-            if (window.localStorage.getItem("saved-steps")) {
-                const savedSteps = JSON.parse(window.localStorage.getItem("saved-steps"));
-                window.localStorage.removeItem("saved-steps");
-                performSteps(savedSteps);
-            }
-            break;
-        default:
-            console.error("Invalid URL action: ", action);
-    }
-};
-
-
-const MoreStepsOnboarding = () => {
-	const store = useStore();
-	const [startingOffset, setStartingOffset] = React.useState(getSavedSteps(store.getState() as any).length);
-	const savedSteps = useSelector(getSavedSteps);
-	const { setCurrentStep } = useTour();
-
-	React.useEffect(() => {
-		if (savedSteps.length - startingOffset === 6) {
-			setCurrentStep(6);
-		}
-	}, [savedSteps]);
-
-	return (
-		<div>
-			<div
-				css={css`
-					font-family: Cera Pro;
-					font-size: 15rem;
-					font-weight: 600;
-				`}
-			>
-				We automatically detect your actions
-			</div>
-			<p
-				className={"mt-8"}
-				css={css`
-					font-family: Gilroy;
-					font-size: 14rem;
-				`}
-			>
-				Let's record few more steps in our test and finally save it
-			</p>
-			<div
-				className={"mt-4"}
-				css={css`
-					position: absolute;
-					font-size: 12rem;
-				`}
-			>
-				{savedSteps.length - startingOffset}/5
-			</div>
-		</div>
-	);
-};
-
-const OnboardingItem = ({ title, description }) => {
-	return (
-		<div>
-			<div
-				css={css`
-					font-family: Cera Pro;
-					font-size: 15rem;
-					font-weight: 600;
-				`}
-			>
-				{title}
-			</div>
-			<p
-				className={"mt-8"}
-				css={css`
-					font-family: Gilroy;
-					font-size: 14rem;
-				`}
-			>
-				{description}
-			</p>
-		</div>
-	);
-};
-const steps: Array<StepType> = [
-	{
-		selector: "#target-site-input",
-		content: <OnboardingItem title={"Enter URL of website you want to test"} description={""} />,
-	},
-	{
-		selector: "#select-element-action",
-		content: <OnboardingItem title={"Turn on element mode"} description={"Select an element to record actions on it"} />,
-	},
-	{
-		selector: "#device_browser",
-		content: <OnboardingItem title={"Select an element"} description={"Move your mouse over the element and click on it"} />,
-	},
-	{
-		selector: "#element-actions-list",
-		content: <OnboardingItem title={"Select a element action"} description={"You can click, hover, take screenshot or add assertions"} />,
-	},
-    {
-		selector: "#current-modal",
-		content: <OnboardingItem title={"Select a element action"} description={"You can click, hover, take screenshot or add assertions"} />,
-        resizeObservables: ["#current-modal"],
-	},
-	{
-		selector: "#device_browser",
-		content: <MoreStepsOnboarding />,
-	},
-	{
-		selector: "#verify-save-test",
-		content: <OnboardingItem title={"Verify and Save"} description={"Time to save your first test"} />,
-	},
-];
-
-function doArrow(position, verticalAlign, horizontalAlign) {
-    const opositeSide = {
-        top: "bottom",
-        bottom: "top",
-        right: "left",
-        left: "right",
-    };
-    const popoverPadding = 10;
-
-	if (!position || position === "custom") {
-		return {};
+			performReplayTest(action.args.testId).then((hasCompletedSuccesfully: boolean) => {
+				handleCompletion(store, action, addNotification, hasCompletedSuccesfully);
+			}).catch((err) => {
+				console.error(err);
+				handleCompletion(store, action, addNotification, false);
+			})
+			break;
+		case "restore":
+			if (window.localStorage.getItem("saved-steps")) {
+				const savedSteps = JSON.parse(window.localStorage.getItem("saved-steps"));
+				window.localStorage.removeItem("saved-steps");
+				performSteps(savedSteps);
+			}
+			break;
+		default:
+			console.error("Invalid URL action: ", action);
 	}
-
-	const width = 16;
-	const height = 12;
-	const color = "#111213";
-	const isVertical = position === "top" || position === "bottom";
-	const spaceFromSide = popoverPadding;
-	const obj = {
-		[isVertical ? "borderLeft" : "borderTop"]: `${width / 2}px solid transparent`, // CSS Triangle width
-		[isVertical ? "borderRight" : "borderBottom"]: `${width / 2}px solid transparent`, // CSS Triangle width
-		[`border${position[0].toUpperCase()}${position.substring(1)}`]: `${height}px solid ${color}`, // CSS Triangle height
-		[isVertical ? opositeSide[horizontalAlign] : verticalAlign]: height + spaceFromSide, // space from side
-		[opositeSide[position]]: -height + 2,
-	};
-
-	return {
-		"&::after": {
-			content: "''",
-			width: 0,
-			height: 0,
-			position: "absolute",
-			...obj,
-		},
-	};
-}
+};
 
 const App = () => {
-    let navigate = useNavigate();
-    
-    const store = useStore();
-    const recorderInfo = useSelector(getRecorderInfo);
-    const isStatusBarVisible = useSelector(getIsStatusBarVisible);
-    const recorderState = useSelector(getRecorderState);
+	const { addNotification } = useBuildNotifications();
+	const store = useStore();
+	const isStatusBarVisible = useSelector(getIsStatusBarVisible);
+	const recorderState = useSelector(getRecorderState);
 
-    React.useEffect(() => {
+	React.useEffect(() => {
 		document.querySelector("html").style = "";
-    }, []);
+	}, []);
 
-    React.useEffect(() => {
-        ipcRenderer.on("webview-initialized", async (event: Electron.IpcRendererEvent, { initializeTime }) => {
+	React.useEffect(() => {
+		ipcRenderer.on("webview-initialized", () => {
 			store.dispatch(setIsWebViewInitialized(true));
 		});
 
-        ipcRenderer.on("url-action", handleUrlAction.bind(this, store));
+		ipcRenderer.on("go-to-dashboard", () => {
+			clearAllToasts();
+			historyInstance.push("/", {});
+			goFullScreen(false);
+		});
+		const listener = handleUrlAction.bind(this, store, addNotification);
+		ipcRenderer.on("url-action",listener);
 
-        return () => {
-            ipcRenderer.removeAllListeners("url-action");
+		return () => {
+			ipcRenderer.removeListener("url-action", listener);
 			ipcRenderer.removeAllListeners("renderer-ready");
 			ipcRenderer.removeAllListeners("webview-initialized");
 			store.dispatch(resetRecorder());
 			store.dispatch(setSessionInfoMeta({}));
 			const sessionInfoMeta = getAppSessionMeta(store.getState() as any);
+
 			setSessionInfoMeta({
 				...sessionInfoMeta,
 				remainingSteps: [],
-			}),
+			});
+
 			resetStorage();
-        }
-    }, []);
+		};
+	}, []);
 
-    const dragableStyle = React.useMemo(() => dragableCss(), []);
-    const contentStyle = React.useMemo(() => contentCss(), []);
-    const toolbarStyle = React.useMemo(() => { toolbarCss(recorderState.type === TRecorderState.CUSTOM_CODE_ON) }, [recorderState]);
+	const dragableStyle = React.useMemo(() => dragableCss(), []);
+	const contentStyle = React.useMemo(() => contentCss(), []);
+	const toolbarStyle = React.useMemo(() => {
+		toolbarCss(recorderState.type === TRecorderState.CUSTOM_CODE_ON);
+	}, [recorderState]);
 
-    return (
-        <TourProvider
-        onClickMask={() => {}}
-        disableDotsNavigation={true}
-        disableKeyboardNavigation={true}
-        showPrevNextButtons={false}
-        disableFocusLock={true}
-        showBadge={false}
-        styles={{
-            popover: (base, state) => ({
-                ...base,
-                background: "linear-gradient(0deg, #111213, #111213), rgba(10, 11, 14, 0.4)",
-                border: "0.5px solid rgba(255, 255, 255, 0.1)",
-                borderRadius: "8rem",
-                color: "#fff",
-                fontSize: "14rem",
-                minWidth: "400rem",
-                ...doArrow(state.position, state.verticalAlign, state.horizontalAlign),
-            }),
-        }}
-        steps={steps}
-    >
-        <div>
-            <div css={dragableStyle} className={"drag"}></div>
-            <div css={contentStyle}>
-                {!!recorderInfo.device ? <Sidebar css={sidebarCss} /> : ""}
-                <div css={bodyCss}>
-                        <Toolbar css={toolbarStyle} />
-                        <DeviceFrame css={deviceFrameContainerCss} />
-                        {isStatusBarVisible ? <StatusBar /> : ""}
-                </div>
-            </div>
-
-            <Global styles={globalCss}/>
-            <InfoOverLay />
-        </div>
-        </TourProvider>
-    )
+	return (
+		// <Wrapper figmaUrl={"https://www.figma.com/proto/MsJZCnY5NvrDF4kL1oczZq/Crusher-%7C-Aug?node-id=2305%3A6559&scaling=min-zoom&page-id=2305%3A5930"}>
+		// </Wrapper>
+		<div>
+			<div css={dragableStyle} className={"drag"}></div>
+			<div css={contentStyle}>
+				<Sidebar css={sidebarCss} />
+				<div css={bodyCss} className="relative">
+					<StepHoverOverlay />
+					<Toolbar css={toolbarStyle} />
+					<DeviceFrame css={deviceFrameContainerCss} />
+					{isStatusBarVisible ? <StatusBar /> : ""}
+				</div>
+			</div>
+			<Global styles={globalCss} />
+			{/* <InfoOverLay /> */}
+		</div>
+	);
 };
+
+const StepHoverOverlay = () => {
+	const [isStepHovered] = useAtom(isStepHoverAtom);
+	const [show, setShow] = React.useState(false);
+	React.useEffect(() => {
+		let interval;
+		interval = setTimeout(() => {
+				setShow(isStepHovered);
+		}, 25);
+
+		return () => {
+			interval && clearInterval(interval);
+		}
+	}, [isStepHovered]);
+	if (!show) {
+		return null
+	}
+	return (<div css={overLayCSS}></div>)
+}
+
+const overLayCSS = css`
+	position: absolute;
+	top: 0;
+	width: 100%;
+	min-height: 100vh;
+	background: rgba(0, 0, 0, 0.75);
+	z-index: 22;
+    backdrop-filter: blur(3px);
+`
 
 const dragableCss = () => {
-    return css`
-        min-height: 32px;
-        width: 100%;
-        background: #111213;
-        border-bottom: 1px solid #2c2c2c;
-        justify-content: center;
-        align-items: center;
-        display: ${process.platform === "darwin" ? "flex" : "none"};
-    `;
+	return css`
+		min-height: 32px;
+		width: 100%;
+		background: #111213;
+		border-bottom: 1px solid #2c2c2c;
+		justify-content: center;
+		align-items: center;
+		display: ${process.platform === "darwin" ? "flex" : "none"};
+	`;
 };
 const contentCss = () => {
-    return css`
-        display: flex;
-        background: #020202;
-        width: 100%;
-        overflow-x: hidden;
-        color: white;
-        height: ${process.platform ==="darwin" ? `calc(100vh - 32px)` : "100vh"};
-    `;
-}
+	return css`
+		display: flex;
+		width: 100%;
+		overflow-x: hidden;
+		background: linear-gradient(
+			90deg
+			,#050505 15px,transparent 1%) 50%,linear-gradient(#050505 15px,transparent 1%) 50%,hsla(0,0%,100%,.16);
+				background-size: 16px 16px;
+		color: white;
+		height: ${process.platform === "darwin" ? `calc(100vh - 32px)` : "100vh"};
+	`;
+};
 const globalCss = css`
-        body {
-            margin: 0;
-            padding: 0;
-            min-height: "100vh";
-            max-width: "100vw";
-        }
-        .custom-scroll::-webkit-scrollbar {
-            width: 12rem;
-        }
+	body {
+		margin: 0;
+		padding: 0;
+		min-height: "100vh";
+		max-width: "100vw";
+	}
+	.custom-scroll::-webkit-scrollbar {
+		width: 8rem;
+	}
 
-        .custom-scroll::-webkit-scrollbar-track {
-            background-color: #0a0b0e;
-            box-shadow: none;
-        }
+	.custom-scroll::-webkit-scrollbar-track {
+		background-color: #0a0b0e;
+		box-shadow: none;
+	}
+	.custom-scroll::-webkit-scrollbar-thumb {
+		background-color: #1b1f23;
+		border-radius: 12rem;
+	}
 
-        .custom-scroll::-webkit-scrollbar-thumb {
-            background-color: #1b1f23;
-            border-radius: 100rem;
-        }
+	.custom-scroll::-webkit-scrollbar-thumb:hover {
+		background-color: #272b31;
+		border-radius: 100rem;
+	}
+	[data-radix-popper-content-wrapper] {
+		z-index: 1001 !important;
 
-        .custom-scroll::-webkit-scrollbar-thumb:hover {
-            background-color: #272b31;
-            border-radius: 100rem;
-        }
+		[role="menu"] {
+			min-width: 180rem !important;
+			[role="menuitem"] {
+				font-size: 12rem !important;
+			}
+		}
+	}
 `;
 const sidebarCss = css`
-	padding: 1rem;
-	width: 336rem;
+	width: 332rem;
 `;
 const bodyCss = css`
 	flex: 1;
 	display: flex;
 	flex-direction: column;
 	position: relative;
-	position: relative;
 	z-index: 201;
+	overflow: hidden;
 `;
 const toolbarCss = (isCUstomCodeOn: boolean) => {
-    return css`
-        background-color: #111213;
-        padding: 5rem;
-        min-height: 60rem;
-        z-index: ${isCUstomCodeOn ? "-1" : "1"};
-    `;
-}
+	return css`
+		background-color: #09090a;
+		padding: 5rem;
+		min-height: 61rem;
+		z-index: ${isCUstomCodeOn ? "-1" : "1"};
+	`;
+};
 const deviceFrameContainerCss = css`
 	flex: 1;
 	overflow: auto;
 `;
 export { App };
-

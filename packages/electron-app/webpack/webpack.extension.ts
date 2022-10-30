@@ -20,7 +20,7 @@ const virtualModules = new VirtualModulesPlugin({
   let pwQuerySelector, pwQuerySelectorAll;
   (() => {
     ${injectedScriptSource.source}
-    const injected = new pwExport(1, false, []);
+    const injected = new InjectedScript(false,1, "chromium", []);
     window.injected = injected;
     pwQuerySelector = (selector, root) => {
       const parsed = injected.parseSelector(selector);
@@ -90,7 +90,7 @@ let finalConfig: any = {
 	devtool: "cheap-module-source-map",
 };
 
-if(process.env.NODE_ENV === "development") {
+if (process.env.NODE_ENV === "development") {
 	finalConfig.watch = true;
 }
 

@@ -7,16 +7,16 @@ export interface ILog {
 	type: "log" | "info" | "error";
 	parent?: string;
 	message: string;
-	args: Array<any>;
+	args: any[];
 	time: number;
-};
+}
 
 interface ILoggerReducer {
-	logs: Map<string, Array<ILog>>;
+	logs: Map<string, ILog[]>;
 }
 
 const initialState: ILoggerReducer = {
-	logs: new Map([["_", []]])
+	logs: new Map([["_", []]]),
 };
 
 const loggerReducer = (state: ILoggerReducer = initialState, action: AnyAction) => {

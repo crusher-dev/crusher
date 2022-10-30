@@ -7,4 +7,5 @@ module.exports = {
 	jsxSingleQuote: false,
 	importOrder: ["(.*)(react|next)(.*)$", "(.*)(jotai|swr|immer|emotion|lodash|axios)(.*)$", "(.*)(dyson|next)(.*)$", "(@|crusher-app)(.*)", ".(.*)"],
 	importOrderSeparation: true,
+	plugins: ["prettier-plugin-tailwindcss", "@trivago/prettier-plugin-sort-imports/"],
 };

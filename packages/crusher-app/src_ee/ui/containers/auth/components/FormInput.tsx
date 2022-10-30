@@ -1,5 +1,8 @@
-import { Input } from "dyson/src/components/atoms";
 import { css } from "@emotion/react";
+
+import { Input } from "dyson/src/components/atoms";
+
+import { newInputBoxCSS } from "../login";
 
 /*
 	@Note - Wrong implementation of the loading state.
@@ -19,6 +22,7 @@ export function FormInput({ type, data, onChange, placeholder, autoComplete, onB
 				onReturn={onReturn}
 				onBlur={onBlur}
 				type={type || "text"}
+				css={newInputBoxCSS}
 			/>
 			<div className={"mt-4 mb-5 text-11"} css={errorState}>
 				{data.error}

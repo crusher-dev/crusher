@@ -6,6 +6,7 @@ import { loadUserInfoOnLoad } from "../../utils/hooks";
 import { getUserInfo } from "../../state/userInfo";
 import { Cloudflare } from "../../module/cloudflare";
 import { BROWSERS_MAP } from "../../constants";
+import { execSync } from "child_process";
 
 export default class CommandBase {
   program: Command;
@@ -23,6 +24,7 @@ export default class CommandBase {
       .option("-b, --browsers <string>", "Browsers to run test on")
       .option("-host, --host <string>", "Browsers to run test on")
       .option("-C, --disable-project-config", "Disable project config", false)
+      .option("-p, --pre-script <string>", "Script to run before running tests")
       .parse(process.argv);
   }
 
@@ -64,16 +66,20 @@ export default class CommandBase {
     const disableProjectConfig = flags["disable-project-config"];
 
     const projectConfig = !disableProjectConfig ? getProjectConfig() : null;
-    const { testId, testGroup, browser, token,host } = flags;
+    const { testId, testGroup, browser, token, host, preScript } = flags;
+
+    if (preScript) {
+      execSync(preScript, { stdio: 'inherit' });
+    }
     let proxyUrls = null;
 
-    if (projectConfig  && !!projectConfig.proxy && projectConfig.proxy.length > 0) {
-      if(!!host){
+    if (projectConfig && !!projectConfig.proxy && projectConfig.proxy.length > 0) {
+      if (!!host) {
         console.log("Host passed, not creating a tunnel", host);
-      }else{
+      } else {
         proxyUrls = await Cloudflare.runTunnel();
       }
-  
+
     }
 
     if (token) {
@@ -83,15 +89,15 @@ export default class CommandBase {
         throw new Error("Invalid token");
       }
     }
-  
+
     let _browsers = undefined;
-    if(browser){
+    if (browser) {
       _browsers = browser.split(",").map(b => b.trim().toUpperCase()).filter(b => !!BROWSERS_MAP[b]);
     }
 
 
     try {
-      await runTests(host, proxyUrls, _browsers, testId, testGroup, flags.projectid || null );
+      await runTests(host, proxyUrls, _browsers, testId, testGroup, flags.projectid || null);
     } catch (err) {
       console.error("Error is", err);
     } finally {

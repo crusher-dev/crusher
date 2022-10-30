@@ -1,29 +1,31 @@
 import { css } from "@emotion/react";
 import React, { useCallback, useEffect, useState } from "react";
 
+import { useAtom } from "jotai";
+import { atomWithImmer } from "jotai/immer";
+import useSWR, { mutate } from "swr";
+
 import { Card } from "../../../../../../dyson/src/components/layouts/Card/Card";
 import { Button } from "dyson/src/components/atoms";
 import { Heading } from "dyson/src/components/atoms/heading/Heading";
-import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
-import { Conditional } from "dyson/src/components/layouts";
-
-import { SettingsLayout } from "@ui/layout/SettingsBase";
-import useSWR, { mutate } from "swr";
-import { useAtom } from "jotai";
-import { currentProject } from "../../../../store/atoms/global/project";
-import { createProjectEnvironment, deleteProjectEnv, getProjectEnvironments, updateProjectEnv } from "@constants/api";
-import { ChevronRight } from "@svg/settings";
-import { atomWithImmer } from "jotai/immer";
-import { ChevronDown } from "@svg/testReport";
 import { Input } from "dyson/src/components/atoms/input/Input";
-import { AddSVG, LoadingSVG } from "@svg/dashboard";
+import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import { CloseSVG } from "dyson/src/components/icons/CloseSVG";
-import { backendRequest } from "@utils/common/backendRequest";
-import { RequestMethod } from "../../../../types/RequestOptions";
-import { converServerToClientSideState, convertEnvToServerSide } from "@utils/core/settings/environmentSettingUtils";
-import { sendSnackBarEvent } from "@utils/common/notify";
+import { Conditional } from "dyson/src/components/layouts";
 import { SelectBox } from "dyson/src/components/molecules/Select/Select";
+
+import { createProjectEnvironment, deleteProjectEnv, getProjectEnvironments, updateProjectEnv } from "@constants/api";
+import { useProjectDetails } from "@hooks/common";
+import { AddSVG, LoadingSVG } from "@svg/dashboard";
+import { ChevronRight } from "@svg/settings";
+import { ChevronDown } from "@svg/testReport";
+import { SettingsLayout } from "@ui/layout/SettingsBase";
+import { backendRequest } from "@utils/common/backendRequest";
+import { sendSnackBarEvent } from "@utils/common/notify";
 import { sentenceCase } from "@utils/common/textUtils";
+import { converServerToClientSideState, convertEnvToServerSide } from "@utils/core/settings/environmentSettingUtils";
+
+import { RequestMethod } from "../../../../types/RequestOptions";
 
 function VariableSection({ envId }) {
 	const [environmentsInStore, setEnvironment] = useAtom(environmentsAtom);
@@ -123,7 +125,7 @@ const getBrowserValues = () => {
 };
 
 function EnvironmentForm({ id }) {
-	const [project] = useAtom(currentProject);
+	const { currentProject: project } = useProjectDetails();
 	const [environmentsInStore, setEnvironment] = useAtom(environmentsAtom);
 	const [savingEnv, setSavingEnv] = useState(false);
 	const [deleting, setDeleting] = useState(false);
@@ -317,9 +319,9 @@ type TEnvironment = {
 const environmentsAtom = atomWithImmer<TEnvironment[]>([]);
 
 export const Environment = () => {
-	const [project] = useAtom(currentProject);
+	const { currentProject } = useProjectDetails();
 
-	const { data: environments } = useSWR(getProjectEnvironments(project.id));
+	const { data: environments } = useSWR(getProjectEnvironments(currentProject.id));
 	const [environmentsInStore, setEnvironment] = useAtom(environmentsAtom);
 
 	useEffect(() => {
@@ -347,22 +349,15 @@ export const Environment = () => {
 			<div className={"text-24 mb-100"} css={maxWidthContainer}>
 				<div className={"flex justify-between items-start mt-16"}>
 					<div>
-						<Heading type={2} fontSize={"16"} className={"mb-12"}>
+						<Heading type={2} fontSize={"18"} className={"mb-8"}>
 							Environments
 						</Heading>
-						<TextBlock fontSize={13} className={"mb-24"} color={"#c1c1c1"}>
-							Make sure you have selected all the configuration you want
+						<TextBlock fontSize={13} className={"mb-24"} color={"#787878"}>
+							manage environment for crusher
 						</TextBlock>
 					</div>
 					<div>
-						<Button
-							onClick={addEmptyEnvToStore.bind(this)}
-							css={css`
-								width: 164rem;
-							`}
-						>
-							Add environment
-						</Button>
+						<Button onClick={addEmptyEnvToStore.bind(this)}>Add environment</Button>
 					</div>
 				</div>
 

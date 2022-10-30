@@ -1,5 +1,5 @@
 import React from "react";
-import { css, SerializedStyles } from "@emotion/react";
+import { css } from "@emotion/react";
 
 export type TextBlockProps = {
 	fontSize: string;
@@ -17,15 +17,15 @@ const TextDefaultProps = {
 };
 
 const getLetterSpacing = (fontSize) => {
-	if (fontSize < 12) {
-		return { letterSpacing: `.4px` };
+	if (fontSize <= 12) {
+		return { letterSpacing: `.5px` };
 	}
 
-	if (fontSize < 13) {
-		return { letterSpacing: `.4px` };
+	if (fontSize <= 13) {
+		return { letterSpacing: `.35px` };
 	}
 
-	if (fontSize < 14) {
+	if (fontSize <= 14) {
 		return { letterSpacing: `.25px` };
 	}
 	if (fontSize <= 15) {

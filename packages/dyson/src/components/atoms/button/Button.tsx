@@ -1,5 +1,6 @@
 import React from "react";
 import { css, SerializedStyles } from "@emotion/react";
+import { COLORS } from "../../../constant/color";
 
 const getStyleBySize = (
 	size: string,
@@ -41,13 +42,13 @@ type Color = {
 	color: string;
 };
 const getColor = (color: string, impact: string): { main: Color; hover: Color } => {
-	const finalColor = color === "primary" || color === "danger" ? color + "-" + impact : color;
+	const finalColor = color === "primary" ? color + "-" + impact : color;
 
 	switch (finalColor) {
 		case "primary-high":
 			return {
-				main: { background: "#7353F5", border: "#7353F5", color: "#fff" },
-				hover: { background: "#6749de", border: "#6749de", color: "#fff" },
+				main: { background: "#bb27ff", border: "#bb27ff", color: "#fff" },
+				hover: { background: "#bb27ff", border: "#bb27ff", color: "#fff" },
 			};
 			break;
 		case "primary-medium":
@@ -98,16 +99,87 @@ const getColor = (color: string, impact: string): { main: Color; hover: Color } 
 				hover: { background: "#1E242C", border: "#353e4b", color: "#fff" },
 			};
 			break;
-		case "danger-high":
+		case "danger":
 			return {
-				main: { background: "#E1566E", border: "#E1566E", color: "#fff" },
-				hover: { background: "#d5546a", border: "#d5546a", color: "#fff" },
+				main: {
+					background: COLORS.red[500],
+					border: COLORS.red[500], color: "#fff"
+				},
+				hover: { background: COLORS.red[700], border: COLORS.red[700], color: "#fff" },
 			};
 			break;
-		case "danger-low":
+		default:
 			return {
-				main: { background: "rgba(0,0,0,0)", border: "#E1566E", color: "#E1566E" },
-				hover: { background: "rgba(0,0,0,0)", border: "#E1566E", color: "#E1566E" },
+				main: { background: "#bb27ff", border: "#bb27ff", color: "#fff" },
+				hover: { background: "#bb27ff", border: "#bb27ff", color: "#fff" },
+			};
+			break;
+	}
+
+	// const finalColor = color === "primary" ? color + "-" + impact : color;
+
+	switch (finalColor) {
+		case "primary-high":
+			return {
+				main: { background: "#b341f9", border: "#b341f9", color: "#fff" },
+				hover: { background: "#b341f9", border: "#b341f9", color: "#fff" },
+			};
+			break;
+		case "primary-medium":
+			return {
+				main: { background: "#917DFA", border: "#917DFA", color: "#171522" },
+				hover: { background: "#917DFA", border: "#917DFA", color: "#171522" },
+			};
+			break;
+		case "primary-low":
+			return {
+				main: { background: "rgba(0,0,0,0)", border: "#917DFA", color: "#917DFA" },
+				hover: { background: "rgba(0,0,0,0)", border: "#917DFA", color: "#917DFA" },
+			};
+			break;
+		case "secondary-pink":
+			return {
+				main: { background: "#F471CF", border: "#F471CF", color: "#fff" },
+				hover: { background: "#F471CF", border: "#F471CF", color: "#fff" },
+			};
+			break;
+		case "secondary-green":
+			return {
+				main: { background: "#A5EA6F", border: "#A5EA6F", color: "#333F24" },
+				hover: { background: "#A5EA6F", border: "#A5EA6F", color: "#333F24" },
+			};
+			break;
+		case "tertiary-white-outline":
+			return {
+				main: { background: "rgba(0,0,0,0)", border: "rgba(255, 255, 255, 0.66)", color: "#fff" },
+				hover: { background: "rgba(0,0,0,0)", border: "rgba(255, 255, 255, 0.66)", color: "#fff" },
+			};
+			break;
+		case "tertiary-white":
+			return {
+				main: { background: "#fff", border: "#fff", color: "#0B0B0D" },
+				hover: { background: "#fff", border: "#fff", color: "#0B0B0D" },
+			};
+			break;
+		case "tertiary-dark":
+			return {
+				main: { background: "#0B0B0D", border: "#292d33", color: "#fff" },
+				hover: { background: "#0B0B0D", border: "#292d33", color: "#fff" },
+			};
+			break;
+		case "tertiary":
+			return {
+				main: { background: "#1E242C", border: "#353e4b", color: "#fff" },
+				hover: { background: "#1E242C", border: "#353e4b", color: "#fff" },
+			};
+			break;
+		case "danger":
+			return {
+				main: {
+					background: colors.RED[600],
+					border: colors.RED[600], color: "#fff"
+				},
+				hover: { background: colors.RED[700], border: colors.RED[700], color: "#fff" },
 			};
 			break;
 		default:
@@ -119,15 +191,20 @@ const getColor = (color: string, impact: string): { main: Color; hover: Color } 
 	}
 };
 
+type primaryButton = "primary";
+type whiteColors = "white" | "white-grey" | "white-outline" | "white-blank" | "white-dashed";
+type otherColors = "blue" | "green" | "cyan" | "danger";
+type otherButtonTypes = "link" | "disabled";
+
 export type ButtonProps = {
 	/**
 	 * Is this the principal call to action on the page?
 	 */
-	impactLevel?: "high" | "medium" | "low";
+	impactLevel?: "high" | "medium" | "low" | null;
 	/**
 	 * What background color to use
 	 */
-	bgColor?: "blue" | "pink" | "green" | "tertiary-dark" | "tertiary" | "tertiary-white" | "disabled" | "tertiary-outline" | "danger";
+	bgColor?: primaryButton | whiteColors | otherColors | otherButtonTypes;
 	/**
 	 * Size of the component
 	 */
@@ -184,7 +261,7 @@ export const Button: React.FC<ButtonProps> = React.forwardRef(
 
 const buttonCSS = css`
 	cursor: default;
-	border-radius: 4rem;
+	border-radius: 8rem;
 	color: white;
 	font-weight: 600;
 	height: 32rem;
@@ -194,7 +271,7 @@ const buttonCSS = css`
 const getColorCSS = (color: string, impact: string, disabled: boolean) => css`
 	background: ${getColor(color, impact).main.background};
 	color: ${getColor(color, impact).main.color};
-	border: 1px solid ${getColor(color, impact).main.border};
+	border: .5px solid ${getColor(color, impact).main.border};
 	${disabled !== true &&
 	`
 			:hover {
@@ -216,7 +293,6 @@ const getSize = (size: string) => css`
 `;
 
 const disabledButton = css`
-	//opacity: 0.1;
 	background: ${getColor("tertiary", "").main.background};
 	color: ${getColor("tertiary", "").main.color};
 	border: 1px solid ${getColor("tertiary", "impact").main.border};

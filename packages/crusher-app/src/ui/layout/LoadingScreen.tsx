@@ -10,7 +10,7 @@ export const LoadingScreen = () => {
 		<CrusherBase>
 			<CenterLayout className={"pb-100"}>
 				<div className="flex flex-col justify-center items-center">
-					<LogoAnimated/>
+					<LogoAnimated />
 				</div>
 			</CenterLayout>
 		</CrusherBase>

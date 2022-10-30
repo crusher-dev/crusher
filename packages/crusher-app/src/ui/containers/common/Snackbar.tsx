@@ -23,6 +23,7 @@ export const Snackbar = () => {
 		});
 	}, []);
 
+
 	if (event === null) return null;
 
 	return (

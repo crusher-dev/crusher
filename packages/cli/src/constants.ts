@@ -20,6 +20,7 @@ export const CLOUDFLARED_URL = {
   MAC: "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-darwin-amd64.tgz",
   LINUX: "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64"
 }
+
 export const getRecorderBuildForPlatfrom = () => {
   if (process.platform === "linux")
     return {
@@ -42,4 +43,4 @@ export const getRecorderBuildForPlatfrom = () => {
   throw new Error("Recorder not available for your platfrom yet");
 };
 
-export const BROWSERS_MAP = {"CHROME": 1, "FIREFOX": 1, "SAFARI": 1};
+export const BROWSERS_MAP = { "CHROME": 1, "FIREFOX": 1, "SAFARI": 1 };

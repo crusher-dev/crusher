@@ -1,41 +1,35 @@
 import { css } from "@emotion/react";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+
+import { useAtom } from "jotai";
+import { atomWithImmer } from "jotai/immer";
+import useSWR, { mutate } from "swr";
 
 import { Card } from "../../../../../../dyson/src/components/layouts/Card/Card";
+import { SelectBox } from "../../../../../../dyson/src/components/molecules/Select/Select";
 import { Button } from "dyson/src/components/atoms";
 import { Heading } from "dyson/src/components/atoms/heading/Heading";
+import { Input } from "dyson/src/components/atoms/input/Input";
 import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 import { Conditional } from "dyson/src/components/layouts";
 
-import { SettingsLayout } from "@ui/layout/SettingsBase";
-import useSWR, { mutate } from "swr";
-import { useAtom } from "jotai";
-import { currentProject } from "../../../../store/atoms/global/project";
 import { createProjectMonitoring, deleteProjectMonitoring, getProjectEnvironments, getProjectMonitoring, updateProjectMonitoing } from "@constants/api";
-import { ChevronRight } from "@svg/settings";
-import { atomWithImmer } from "jotai/immer";
-import { ChevronDown } from "@svg/testReport";
-import { Input } from "dyson/src/components/atoms/input/Input";
+import { useProjectDetails } from "@hooks/common";
 import { LoadingSVG } from "@svg/dashboard";
+import { ChevronRight } from "@svg/settings";
+import { ChevronDown } from "@svg/testReport";
+import { SettingsLayout } from "@ui/layout/SettingsBase";
 import { backendRequest } from "@utils/common/backendRequest";
-import { RequestMethod } from "../../../../types/RequestOptions";
-import { converServerToClientSideStateMonitoring, convertToServerSideMonitoring } from "@utils/core/settings/environmentSettingUtils";
 import { sendSnackBarEvent } from "@utils/common/notify";
-import { SelectBox } from "../../../../../../dyson/src/components/molecules/Select/Select";
-import { sentenceCase } from "@utils/common/textUtils";
+import { converServerToClientSideStateMonitoring, convertToServerSideMonitoring } from "@utils/core/settings/environmentSettingUtils";
+
+import { RequestMethod } from "../../../../types/RequestOptions";
 
 const selectBoxCSS = css`
 	.selectBox {
 		width: 200rem;
 	}
 `;
-const getBrowserValues = () => {
-	return (
-		["CHROME", "FIREFOX", "SAFARI"].map((browserName) => {
-			return { label: sentenceCase(browserName), value: browserName };
-		}) ?? []
-	);
-};
 const getValues = (environments) => {
 	return (
 		environments?.map(({ name, id }) => {
@@ -45,7 +39,7 @@ const getValues = (environments) => {
 };
 
 function MonitoringForm({ id }) {
-	const [project] = useAtom(currentProject);
+	const { currentProject: project } = useProjectDetails();
 	const [monitoringInStore, setMonitoring] = useAtom(monitoringAtom);
 	const [savingEnv, setSavingEnv] = useState(false);
 	const { notSavedInDB, environmentId, testInterval } = monitoringInStore[id];
@@ -61,7 +55,7 @@ function MonitoringForm({ id }) {
 
 	const setEnv = (values) => {
 		setMonitoring((monitoring) => {
-			monitoring[id].environmentId = values[0];
+			[monitoring[id].environmentId] = values;
 		});
 	};
 
@@ -164,7 +158,7 @@ function MonitoringCard({ monitoringData, id }) {
 	const { isOpen, testInterval, environmentId } = monitoringData;
 	const [environmentsInStore, setEnvironment] = useAtom(monitoringAtom);
 	const { notSavedInDB } = environmentsInStore[id];
-	const [project] = useAtom(currentProject);
+	const { currentProject: project } = useProjectDetails();
 	const { data: environments } = useSWR(getProjectEnvironments(project.id));
 
 	const onClick = () => {
@@ -215,7 +209,7 @@ type TMonitoringCard = {
 const monitoringAtom = atomWithImmer<TMonitoringCard[]>([]);
 
 export const Monitoring = () => {
-	const [project] = useAtom(currentProject);
+	const { currentProject: project } = useProjectDetails();
 
 	const { data: monitoring } = useSWR(getProjectMonitoring(project.id));
 
@@ -245,19 +239,16 @@ export const Monitoring = () => {
 			<div className={"text-24 mb-100"} css={maxWidthContainer}>
 				<div className={"flex justify-between items-start mt-16"}>
 					<div>
-						<Heading type={2} fontSize={"16"} className={"mb-12"}>
+						<Heading type={2} fontSize={"18"} className={"mb-8"}>
 							Monitoring
 						</Heading>
-						<TextBlock fontSize={13} className={"mb-24"} color={"#c1c1c1"}>
+						<TextBlock fontSize={13} className={"mb-24"} color={"#787878"}>
 							Make sure you have selected all the configuration you want
 						</TextBlock>
 					</div>
 					<div>
 						<Button
 							onClick={addEmptyEnvToStore.bind(this)}
-							css={css`
-								width: 164rem;
-							`}
 						>
 							Add Monitoring
 						</Button>

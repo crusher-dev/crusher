@@ -7,12 +7,13 @@ import { Button, Input } from "dyson/src/components/atoms";
 import { Heading } from "dyson/src/components/atoms/heading/Heading";
 import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
 
+import { useProjectDetails } from "@hooks/common";
 import { SettingsLayout } from "@ui/layout/SettingsBase";
 import { backendRequest } from "@utils/common/backendRequest";
 import { sendSnackBarEvent } from "@utils/common/notify";
 
 import { appStateAtom } from "../../../store/atoms/global/appState";
-import { currentProject, projectsAtom, updateCurrentProjectInfoAtom } from "../../../store/atoms/global/project";
+import { projectsAtom, updateCurrentProjectInfoAtom } from "../../../store/atoms/global/project";
 import { RequestMethod } from "../../../types/RequestOptions";
 
 const deleteProject = (projectId) => {
@@ -30,7 +31,7 @@ const updateProjectSettings = (projectId, name, visualBaseline) => {
 
 export const ProjectSettings = () => {
 	const [{ selectedProjectId }] = useAtom(appStateAtom);
-	const [project] = useAtom(currentProject);
+	const { currentProject: project } = useProjectDetails();
 	const [, updateCurrentProject] = useAtom(updateCurrentProjectInfoAtom);
 	const [projectsList] = useAtom(projectsAtom);
 	const [projectName, setProjectName] = useState(project?.name);
@@ -78,12 +79,12 @@ export const ProjectSettings = () => {
 				<Heading type={1} fontSize={"20"} className={"mb-8"}>
 					Overview
 				</Heading>
-				<TextBlock fontSize={13} color={"#c1c1c1"}>
+				<TextBlock fontSize={13} color={"#787878"}>
 					Basic configuration for your test
 				</TextBlock>
 				<hr css={basicHR} className={"mt-36"} />
 
-				<Heading type={2} fontSize={"16"} className={"mb-24 mt-38"}>
+				<Heading type={2} fontSize={"15"} className={"mb-16 mt-38"}>
 					Project name
 				</Heading>
 				<div>
@@ -100,7 +101,7 @@ export const ProjectSettings = () => {
 					/>
 				</div>
 
-				<Heading type={2} fontSize={"16"} className={"mb-24 mt-38"}>
+				<Heading type={2} fontSize={"15"} className={"mb-16 mt-38"}>
 					Visual Baseline
 				</Heading>
 				<div>
@@ -144,21 +145,22 @@ export const ProjectSettings = () => {
 					</Button>
 				</div>
 				<hr css={basicHR} className={"mt-54"} />
-				<Heading type={2} fontSize={"16"} className={"mb-12 mt-56"}>
-					Delete this project
-				</Heading>
-				<TextBlock fontSize={13} className={"mb-24"} color={"#c1c1c1"}>
-					This action can't be undone.
-				</TextBlock>
-				<Button
-					bgColor={"danger"}
-					css={css`
-						width: 124rem;
-					`}
-					onClick={deleteProjectCallback}
-				>
-					Delete project
-				</Button>
+				<div className="flex align-items center mt-56 justify-between">
+					<div>
+						<Heading weight={600} type={2} fontSize={"14"} className={"mb-10"}>
+							Delete this project
+						</Heading>
+						<TextBlock fontSize={12} color={"#787878"}>
+							This action can't be undone.
+						</TextBlock>
+					</div>
+					<Button
+						bgColor={"danger"}
+						onClick={deleteProjectCallback}
+					>
+						Delete project
+					</Button>
+				</div>
 			</div>
 		</SettingsLayout>
 	);

@@ -1,19 +1,19 @@
 import { css } from "@emotion/react";
 import { useRouter } from "next/router";
 import React, { useCallback, useState } from "react";
+
 import { Input } from "dyson/src/components/atoms";
 import { Button, Logo } from "dyson/src/components/atoms";
 import { CenterLayout, Conditional } from "dyson/src/components/layouts";
 
+import { loadUserDataAndRedirect } from "@hooks/user";
 import { LoadingSVG } from "@svg/dashboard";
+import { RequestMethod } from "@types/RequestOptions";
+import { getBoolean } from "@utils/common";
 import { backendRequest } from "@utils/common/backendRequest";
 import { resolvePathToBackendURI } from "@utils/common/url";
 import { validatePassword } from "@utils/common/validationUtils";
 import CrusherBase from "crusher-app/src/ui/layout/CrusherBase";
-
-import { loadUserDataAndRedirect } from "@hooks/user";
-import { RequestMethod } from "@types/RequestOptions";
-import { getBoolean } from "@utils/common";
 
 const resetPasswordRequest = (token: string, password: string) => {
 	return backendRequest("/users/actions/reset_password", {
@@ -67,7 +67,7 @@ function EmailPasswordBox() {
 		try {
 			const { systemInfo } = await resetPasswordRequest(query?.token?.toString(), confirmPassword.value);
 			setData(systemInfo);
-			push("/app/dashboard");
+			push("/projects");
 		} catch (e: any) {
 			console.log(e);
 			alert(e.message === "USER_EMAIL_NOT_AVAILABLE" ? "User not found" : "Some error occurred while registering");

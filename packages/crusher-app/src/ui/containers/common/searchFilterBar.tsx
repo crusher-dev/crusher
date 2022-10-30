@@ -3,7 +3,7 @@ import React, { useState } from "react";
 
 import { useAtom } from "jotai";
 
-import { ClickableText } from "../../../../../dyson/src/components/atoms/clickacbleLink/Text";
+import { LinkBlock } from "../../../../../dyson/src/components/atoms/Link/Link";
 import { Dropdown } from "../../../../../dyson/src/components/molecules/Dropdown";
 import { Input } from "dyson/src/components/atoms/input/Input";
 import { Conditional } from "dyson/src/components/layouts";
@@ -74,17 +74,17 @@ function Statustag() {
 		<React.Fragment>
 			<Conditional showIf={!status}>
 				<Dropdown component={<StatusList />} dropdownCSS={dropDownSelectionCSS}>
-					<ClickableText>
+					<LinkBlock>
 						<div className="flex flex-row items-center">
 							<span className="text-13">Status</span>
 							<DropdownIconSVG className={"ml-8"} />
 						</div>
-					</ClickableText>
+					</LinkBlock>
 				</Dropdown>
 			</Conditional>
 
 			<Conditional showIf={!!status}>
-				<ClickableText
+				<LinkBlock
 					onClick={() => {
 						setFilters({ ...filters, status: null });
 					}}
@@ -93,7 +93,7 @@ function Statustag() {
 						<span className="text-13 mt-2">{TestTypeLabel[status]}</span>
 						<CloseSVG className={"ml-8"} height={"10rem"} />
 					</div>
-				</ClickableText>
+				</LinkBlock>
 			</Conditional>
 		</React.Fragment>
 	);
@@ -108,17 +108,17 @@ function Authorstag({ data }: { data: any }) {
 		<React.Fragment>
 			<Conditional showIf={!triggeredBy}>
 				<Dropdown component={<Author authors={data.availableAuthors} />} dropdownCSS={dropDownSelectionCSS}>
-					<ClickableText>
+					<LinkBlock>
 						<div className="flex flex-row items-center">
 							<span className="text-13">Author</span>
 							<DropdownIconSVG className={"ml-8"} />
 						</div>
-					</ClickableText>
+					</LinkBlock>
 				</Dropdown>
 			</Conditional>
 
 			<Conditional showIf={!!triggeredBy}>
-				<ClickableText
+				<LinkBlock
 					onClick={() => {
 						setFilters({ ...filters, triggeredBy: null });
 					}}
@@ -127,7 +127,7 @@ function Authorstag({ data }: { data: any }) {
 						<span className="text-13 mt-2">{selectedAuthor[0]?.name}</span>
 						<CloseSVG className={"ml-8"} height={"10rem"} />
 					</div>
-				</ClickableText>
+				</LinkBlock>
 			</Conditional>
 		</React.Fragment>
 	);
@@ -142,7 +142,7 @@ function SearchFilterBar(props: ISearchFilterBarProps) {
 	const isFilterEnabled = !!status || !!triggeredBy || !!search;
 
 	const closeSVG = (
-		<ClickableText
+		<LinkBlock
 			paddingY={4}
 			paddingX={4}
 			onClick={() => {
@@ -150,7 +150,7 @@ function SearchFilterBar(props: ISearchFilterBarProps) {
 			}}
 		>
 			<CloseSVG height={"12rem"} width={"12rem"} />
-		</ClickableText>
+		</LinkBlock>
 	);
 
 	const enterToSearch = (

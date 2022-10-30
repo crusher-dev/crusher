@@ -1,4 +1,3 @@
-import identity from "lodash/identity";
 import pickBy from "lodash/pickBy";
 
 import { BuildTriggerEnum } from "@crusher-shared/types/response/iProjectBuildListResponse";
@@ -69,7 +68,8 @@ export const unlinkGithubRepo = (projectId: number) => resolvePathToBackendURI(`
 export const getGitIntegrations = (projectId: number) => resolvePathToBackendURI(`/integrations/${projectId}/github/list/repo/`);
 
 export const getCIIntegrationCommnad = (projectId: number) => resolvePathToBackendURI(`/integrations/${projectId}/ci/command/`);
-export const getSlackIntegrations = (projectId: number) => resolvePathToBackendURI(`/integrations/${projectId}`);
+export const getIntegrations = (projectId: number) => resolvePathToBackendURI(`/integrations/${projectId}`);
+export const saveWebhookUrlAPI = (projectId: number) => resolvePathToBackendURI(`/integrations/${projectId}/actions/save.webhook`);
 
 export const createFolderAPI = (projectId: number) => resolvePathToBackendURI(`/projects/${projectId}/folder/create`);
 export const deleteFolderAPI = (projectId: number) => resolvePathToBackendURI(`/projects/${projectId}/folder/delete`);

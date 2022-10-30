@@ -5,22 +5,22 @@ import React from "react";
 import { useAtom } from "jotai";
 import useSWR, { mutate } from "swr";
 
+import { TextBlock } from "../../../../../dyson/src/components/atoms/textBlock/TextBlock";
+import { SelectBox } from "../../../../../dyson/src/components/molecules/Select/Select";
 import { Button, Input } from "dyson/src/components/atoms";
 import { Conditional } from "dyson/src/components/layouts";
 import { Modal } from "dyson/src/components/molecules/Modal";
 
 import { changeTestInfoAPI, deleteTestApi, getTestListAPI } from "@constants/api";
+import { IProjectTestsListResponse } from "@crusher-shared/types/response/iProjectTestsListResponse";
+import { useProjectDetails } from "@hooks/common";
+import { testFiltersAtom } from "@store/atoms/pages/testPage";
 import { LoadingSVG } from "@svg/dashboard";
 import { backendRequest } from "@utils/common/backendRequest";
 import { sendSnackBarEvent } from "@utils/common/notify";
-
-import { currentProject } from "../../../store/atoms/global/project";
-import { RequestMethod } from "../../../types/RequestOptions";
-import { SelectBox } from "../../../../../dyson/src/components/molecules/Select/Select";
-import { TextBlock } from "../../../../../dyson/src/components/atoms/textBlock/TextBlock";
-import { IProjectTestsListResponse } from "@crusher-shared/types/response/iProjectTestsListResponse";
 import { sentenceCase } from "@utils/common/textUtils";
-import { testFiltersAtom } from "@store/atoms/pages/testPage";
+
+import { RequestMethod } from "../../../types/RequestOptions";
 
 const changeTestData = (testId: number, name: string, selectedFolder: string | null) => {
 	return backendRequest(changeTestInfoAPI(testId), {
@@ -32,7 +32,7 @@ const changeTestData = (testId: number, name: string, selectedFolder: string | n
 	});
 };
 
-const deleteTestInServer = (testId: number) => {
+export const deleteTestInServer = (testId: number) => {
 	return backendRequest(deleteTestApi(testId), {
 		method: RequestMethod.POST,
 		payload: {},
@@ -43,12 +43,12 @@ export const getOptions = ({ list }, id) => {
 	return list.filter((listItem) => listItem.id !== id).map((listItem) => ({ label: sentenceCase(listItem.testName), value: listItem.id }));
 };
 
-export const EditTestModal = ({ name, folderId, id, onClose, tags }) => {
+export const EditTestModal = ({ name, folderId, id, onClose }) => {
 	const [testName, changeTestName] = useState(name);
 	const [processing, setProcessing] = useState(false);
 	const [processingDelete, setProcessingDelete] = useState(false);
-	const [project] = useAtom(currentProject);
-	const [selectedFolder, setSelectedFolder] = useState(!!folderId ? [folderId] : []);
+	const { currentProject: project } = useProjectDetails();
+	const [selectedFolder, setSelectedFolder] = useState(folderId ? [folderId] : []);
 
 	const selectedFolderId = selectedFolder.length > 0 && selectedFolder[0];
 	const isFormChanged = testName !== name || folderId !== selectedFolderId;
@@ -103,6 +103,8 @@ export const EditTestModal = ({ name, folderId, id, onClose, tags }) => {
 			}}
 			modalStyle={css`
 				padding-left: 28rem;
+				// background: #010101;
+				background: #060606;
 				padding-right: 28rem;
 			`}
 		>
@@ -159,9 +161,6 @@ export const EditTestModal = ({ name, folderId, id, onClose, tags }) => {
 			</div>
 			<div className={"flex justify-end mt-20"}>
 				<Button
-					css={css`
-						min-width: 104rem;
-					`}
 					disabled={!isFormChanged || processing}
 					bgColor={!isFormChanged ? "disabled" : ""}
 					title={!isFormChanged && "Please change form to save"}

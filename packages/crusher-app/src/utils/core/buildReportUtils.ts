@@ -1,6 +1,7 @@
 import filter from "lodash/filter";
-import union from "lodash/union";
 import flatten from "lodash/flatten";
+import union from "lodash/union";
+
 import { ACTIONS_TO_LABEL_MAP } from "@crusher-shared/constants/recordedActions";
 import { IBuildReportResponse, Instance, Test } from "@crusher-shared/types/response/iBuildReportResponse";
 
@@ -63,9 +64,9 @@ export const getCountByTestStatus = (tests: Pick<IBuildReportResponse, "tests">)
 	const testsGroupByStatus = groupTestByStatus(tests);
 
 	const statusObj = {};
-	Object.keys(testsGroupByStatus).map((status) => {
+	for (const status of Object.keys(testsGroupByStatus)) {
 		statusObj[status] = flatten(Object.values(testsGroupByStatus[status])).length;
-	});
+	}
 
 	return statusObj;
 };

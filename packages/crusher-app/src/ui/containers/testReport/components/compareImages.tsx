@@ -1,8 +1,8 @@
 import { css } from "@emotion/react";
-import { useCallback, useMemo, useState } from "react";
-import { hashCode } from "@utils/helpers";
-import { Conditional } from "dyson/src/components/layouts";
 import dynamic from "next/dynamic";
+import { useCallback, useMemo, useState } from "react";
+
+import { hashCode } from "@utils/helpers";
 
 const ImageSlider = dynamic(() => import("react-image-comparison-slider"), { ssr: false });
 

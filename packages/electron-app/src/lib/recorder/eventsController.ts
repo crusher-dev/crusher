@@ -10,21 +10,21 @@ import { getElementDescription } from "./utils/dom";
 
 export default class EventsController {
 	recordingOverlay: EventRecording;
-	_recordedEvents: Array<{ eventType: string; element: Node }> = [];
+	_recordedEvents: { eventType: string; element: Node }[] = [];
 
 	constructor(recordingOverlay: EventRecording) {
 		this.recordingOverlay = recordingOverlay;
 		(window as any).getSelectors = getSelectors;
 	}
 
-	getRelevantHoverRecordsFromSavedEvents(nodes: Array<Node>, rootElement: HTMLElement): Array<Node> {
+	getRelevantHoverRecordsFromSavedEvents(nodes: Node[], rootElement: HTMLElement): Node[] {
 		if (!this._recordedEvents.length) return nodes;
 
 		const reverseRecordedEvents = this._recordedEvents.reverse().filter((a) => {
 			return [ActionsInTestEnum.CLICK, ActionsInTestEnum.HOVER].includes(a.eventType as ActionsInTestEnum);
 		});
 
-		function getListTillNoMatching(list: Array<{ eventType: string; element: Node }>) {
+		function getListTillNoMatching(list: { eventType: string; element: Node }[]) {
 			const out = [];
 			for (const item of list) {
 				const result = nodes.some((node) => {
@@ -91,7 +91,7 @@ export default class EventsController {
 		}
 	}
 
-	getSelectorsOfNodes(nodes: Array<HTMLElement>): Array<{ selectors: Array<iSelectorInfo | null> }> {
+	getSelectorsOfNodes(nodes: HTMLElement[]): { selectors: Array<iSelectorInfo | null> }[] {
 		return nodes.map((node) => {
 			const selectors = node ? getSelectors(node) : null;
 			return { selectors };
@@ -121,12 +121,18 @@ export default class EventsController {
 			_capturedTarget instanceof SVGElement && _capturedTarget.tagName.toLocaleLowerCase() !== "svg" ? _capturedTarget.ownerSVGElement : _capturedTarget;
 		const uniqueElementId = capturedTarget && ![document.body, document].includes(capturedTarget) ? ElementsIdMap.getUniqueId(capturedTarget) : null;
 
-		const selectors = capturedTarget && uniqueElementId.isNew ? getSelectors(capturedTarget instanceof SVGAElement ? capturedTarget.ownerSVGElement : capturedTarget, true) : (window["crusherCacheSelectors"] ? window["crusherCacheSelectors"][uniqueElementId.value] : null);
+		const selectors =
+			capturedTarget && uniqueElementId?.isNew
+				? getSelectors(capturedTarget instanceof SVGAElement ? capturedTarget.ownerSVGElement : capturedTarget, true)
+				: window["crusherCacheSelectors"]
+				? uniqueElementId ? window["crusherCacheSelectors"][uniqueElementId.value] : null
+				: null;
 
-		if(uniqueElementId.isNew && selectors) {
-			if(!window["crusherCacheSelectors"]) window["crusherCacheSelectors"] = {};
+		if (uniqueElementId?.isNew && selectors) {
+			if (!window["crusherCacheSelectors"]) window["crusherCacheSelectors"] = {};
 			window["crusherCacheSelectors"][uniqueElementId.value] = selectors;
 		}
+	
 		let capturedElementScreenshot = null;
 
 		if (
@@ -160,7 +166,7 @@ export default class EventsController {
 				meta: {
 					value,
 					elementDescription: getElementDescription(capturedTarget),
-					uniqueNodeId: uniqueElementId.value,
+					uniqueNodeId: uniqueElementId?.value,
 				},
 			},
 			screenshot: capturedElementScreenshot,

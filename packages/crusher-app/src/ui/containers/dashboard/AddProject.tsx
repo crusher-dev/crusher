@@ -8,6 +8,7 @@ import { Button, Input } from "dyson/src/components/atoms";
 import { Conditional } from "dyson/src/components/layouts";
 import { Modal } from "dyson/src/components/molecules/Modal";
 
+import { userAtom } from "@store/atoms/global/user";
 import { LoadingSVG } from "@svg/dashboard";
 import { backendRequest } from "@utils/common/backendRequest";
 import { sendSnackBarEvent } from "@utils/common/notify";
@@ -15,7 +16,6 @@ import { sendSnackBarEvent } from "@utils/common/notify";
 import { appStateItemMutator } from "../../../store/atoms/global/appState";
 import { projectsAtom } from "../../../store/atoms/global/project";
 import { RequestMethod } from "../../../types/RequestOptions";
-import { userAtom } from "@store/atoms/global/user";
 
 const addProject = (name) => {
 	return backendRequest("/projects/actions/create", {

@@ -1,42 +1,42 @@
 import { css } from "@emotion/react";
-import { ReactEventHandler, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import React from "react";
+
+import { useAtom } from "jotai";
+import { atomWithImmer } from "jotai/immer";
+import useSWR, { mutate } from "swr";
 
 import { Button, Input } from "dyson/src/components/atoms";
 import { Heading } from "dyson/src/components/atoms/heading/Heading";
 import { TextBlock } from "dyson/src/components/atoms/textBlock/TextBlock";
+import Switch from "dyson/src/components/atoms/toggle/switch";
 import { Conditional } from "dyson/src/components/layouts";
+import { Card } from "dyson/src/components/layouts/Card/Card";
+import { SelectBox } from "dyson/src/components/molecules/Select/Select";
 
+import { addGithubRepo, getCIIntegrationCommnad, getGitIntegrations, getIntegrations, saveWebhookUrlAPI, unlinkGithubRepo } from "@constants/api";
+import { useProjectDetails } from "@hooks/common";
+import { AddSVG } from "@svg/dashboard";
+import { CopyIconSVG } from "@svg/onboarding";
+import { GithubSVG } from "@svg/social";
+import { RequestMethod } from "@types/RequestOptions";
 import AddProjectModal from "@ui/containers/dashboard/AddProject";
 import { SettingsLayout } from "@ui/layout/SettingsBase";
-
-import Toggle from "dyson/src/components/atoms/toggle/toggle";
-import { GithubSVG } from "@svg/social";
-import { Card } from "dyson/src/components/layouts/Card/Card";
+import { backendRequest } from "@utils/common/backendRequest";
 import { openPopup } from "@utils/common/domUtils";
-import { getGithubOAuthURL, getGithubOAuthURLLegacy } from "@utils/core/external";
-import { SelectBox } from "dyson/src/components/molecules/Select/Select";
-import { useAtom } from "jotai";
-import { atomWithImmer } from "jotai/immer";
+import { sendSnackBarEvent } from "@utils/common/notify";
+import { resolvePathToBackendURI, resolvePathToFrontendURI } from "@utils/common/url";
+import { getGithubOAuthURLLegacy } from "@utils/core/external";
 import { OctokitManager } from "@utils/core/external/ocktokit";
 import { convertToOrganisationInfo, getRepoData } from "@utils/core/settings/project/integrationUtils";
-import { AddSVG } from "@svg/dashboard";
-import { backendRequest } from "@utils/common/backendRequest";
-import { addGithubRepo, getCIIntegrationCommnad, getGitIntegrations, getSlackIntegrations, unlinkGithubRepo } from "@constants/api";
-import { RequestMethod } from "@types/RequestOptions";
-import { currentProject } from "@store/atoms/global/project";
-import useSWR, { mutate } from "swr";
-import { resolvePathToBackendURI, resolvePathToFrontendURI } from "@utils/common/url";
-import { sendSnackBarEvent } from "@utils/common/notify";
-import { CopyIconSVG } from "@svg/onboarding";
-import React from "react";
 
 const connectedToGitAtom = atomWithImmer<
 	| any
 	| {
-			token: string;
-			type: "github";
-			updateCount: number;
-	  }
+		token: string;
+		type: "github";
+		updateCount: number;
+	}
 >(null);
 
 const useGithubData = (gitInfo) => {
@@ -84,7 +84,7 @@ const addGithubProject = (projectId: number, repoData) => {
 };
 
 function RepoBar({ repo }) {
-	const [project] = useAtom(currentProject);
+	const { currentProject: project } = useProjectDetails();
 
 	const onSelect = useCallback(async () => {
 		await addGithubProject(project.id, repo);
@@ -201,7 +201,7 @@ function ProjectBox() {
 				))}
 			</Card>
 
-			<TextBlock className={"mt-16"} fontSize={"12"} color={"#A7A7A8"}>
+			<TextBlock className={"mt-08"} fontSize={"12"} color={"#787878"}>
 				Learn more about login for connection
 			</TextBlock>
 		</div>
@@ -241,33 +241,31 @@ function ConnectionGithub() {
 			className={"w-full"}
 		>
 			<Card
-				className={"mt-28"}
+				className={"mt-40"}
 				css={css`
-					padding: 16rem 20rem 18rem;
-					background: #101215;
+					padding: 20rem 28rem 24rem !important;
 				`}
 			>
 				<div
-					className={"font-cera font-700 mb-10 leading-none"}
+					className={"font-cera font-700 mb-8 leading-none"}
 					css={css`
-						font-size: 13.5rem;
+						font-size: 15rem;
 						color: white;
 					`}
 				>
 					Connect a git repository
 				</div>
-				<TextBlock fontSize={12.4} color={"#E4E4E4"}>
+				<TextBlock fontSize={12} color={"#787878"}>
 					Seamless test builds for commits pushed to your repository.
 				</TextBlock>
 
-				<div className={"mt-16"}>
+				<div className={"mt-24"}>
 					<Button
 						bgColor={"tertiary-white"}
 						onClick={onGithubClick.bind(this, false)}
 						css={css`
 							border-width: 0;
 							background: #fff !important;
-							//
 							:hover {
 								border-width: 0;
 								background: #fff !important;
@@ -275,15 +273,24 @@ function ConnectionGithub() {
 						`}
 					>
 						<div className={"flex items-center"}>
-							<GithubSVG css={css`path { fill: #000 !important; }`} height={"12rem"} width={"12rem"} className={"mt-1"} />
+							<GithubSVG
+								css={css`
+									path {
+										fill: #000 !important;
+									}
+								`}
+								height={"12rem"}
+								width={"12rem"}
+								className={"mt-1"}
+							/>
 							<span className={"mt-2 ml-8"}>Github</span>
 						</div>
 					</Button>
 				</div>
 			</Card>
 
-			<TextBlock className={"mt-16"} fontSize={"12"} color={"#A7A7A8"}>
-				Learn more about login for connection
+			<TextBlock className={"mt-12 ml-28"} fontSize={"12"} color={"#787878"}>
+				Docs for gihub integration
 			</TextBlock>
 		</div>
 	);
@@ -299,15 +306,14 @@ const unlinkRepo = (projectId: number, id) => {
 };
 
 function LinkedRepo() {
-	const [project] = useAtom(currentProject);
+	const { currentProject: project } = useProjectDetails();
 	const { data: linkedRepos } = useSWR(getGitIntegrations(project.id));
 
 	const { repoName, projectId, repoLink, id: id } = linkedRepos.linkedRepo;
 
 	const unlinkRepoCallback = useCallback(async () => {
-		console.log("LInked repos are", linkedRepos);
 		await unlinkRepo(projectId, id);
-		mutate(getGitIntegrations(project.id));
+		mutate(getGitIntegrations(project?.id));
 	}, [linkedRepos]);
 
 	return (
@@ -318,48 +324,34 @@ function LinkedRepo() {
 			className={"w-full"}
 		>
 			<Card
-				className={"mt-28"}
+				className={"mt-28 mb-32"}
 				css={css`
-					padding: 18rem 20rem 18rem;
+					padding: 22rem 28rem 26rem;
 					background: #101215;
 				`}
 			>
-				<div
-					className={"font-cera font-700 mb-8 leading-none"}
-					css={css`
-						font-size: 13.5rem;
-						color: white;
-					`}
-				>
-					Connected to
-				</div>
-				<div></div>
 
-				<div className={"flex text-13 justify-between mt-16"}>
-					<div className={"flex items-center"}>
+				<TextBlock weight={500} className="mb-8" fontSize={14}>Connected to</TextBlock>
+
+				<div className={"flex text-13 justify-between mt-20"}>
+					<div className={"flex items-start"}>
 						<div
 							className="flex items-center justify-center mr-16"
 							css={css`
 								min-width: 28px;
 								min-height: 28px;
-								border-radius: 4rem;
-								background: #323942;
+								border-radius: 10rem;
+								background: #ffffff29;
 							`}
 						>
 							<GithubSVG />
 						</div>
 
 						<div>
-							<div
-								className={"font-600"}
-								css={css`
-									color: #fff;
-								`}
-							>
-								{repoName}
-							</div>
+							<TextBlock weight={600} className="mb-8" fontSize={14}>{repoName}</TextBlock>
 							<a href={repoLink} target={"_blank"}>
-								{repoLink}
+								<TextBlock color="#787878" className="mb-8" fontSize={12}>{repoLink}</TextBlock>
+
 							</a>
 						</div>
 					</div>
@@ -367,9 +359,6 @@ function LinkedRepo() {
 					<Button
 						size={"small"}
 						bgColor={"danger"}
-						css={css`
-							min-width: 100rem;
-						`}
 						onClick={unlinkRepoCallback.bind(this)}
 					>
 						<span className={"mt-1"}>Disconnect</span>
@@ -394,8 +383,8 @@ const GitSVG = (props) => (
 );
 
 function CISection() {
-	const [project] = useAtom(currentProject);
-	const { data } = useSWR(getCIIntegrationCommnad(project.id));
+	const { currentProject: project } = useProjectDetails();
+	const { data } = useSWR(getCIIntegrationCommnad(project?.id));
 	const inputRef = React.useRef(null);
 
 	const copyCommand = React.useCallback(() => {
@@ -407,10 +396,10 @@ function CISection() {
 
 	return (
 		<div>
-			<Heading type={1} fontSize={"16"} className={"mb-12 mt-16"}>
+			<Heading type={1} fontSize={"16"} className={"mb-8 mt-16"}>
 				CI/CD
 			</Heading>
-			<TextBlock fontSize={12.4} className={""} color={"#c1c1c1"}>
+			<TextBlock fontSize={12} color={"#787878"}>
 				Easily integrate and trigger tests from your CI/CD workflow
 			</TextBlock>
 
@@ -444,20 +433,28 @@ function CISection() {
 
 function GitIntegration() {
 	const [connectedToGit] = useAtom(connectedToGitAtom);
-	const [project] = useAtom(currentProject);
-	const { data: linkedRepo } = useSWR(getGitIntegrations(project.id));
+	const { currentProject: project } = useProjectDetails();
+	const { data: linkedRepo } = useSWR(getGitIntegrations(project?.id));
 
 	const hadLinkedRepo = !!linkedRepo?.linkedRepo;
 	return (
 		<div className={"flex flex-col justify-between items-start mt-44 mb-24"}>
 			<div className={"flex justify-between items-center w-full"}>
 				<div className={"flex"}>
-					<GitSVG css={css`path { fill: #fff !important; }`} height={28} width={28} />
+					<GitSVG
+						css={css`
+							path {
+								fill: #fff !important;
+							}
+						`}
+						height={28}
+						width={28}
+					/>
 					<div className={"ml-16"}>
 						<Heading type={2} fontSize={"14"} className={"mb-8"}>
 							Git Integration
 						</Heading>
-						<TextBlock fontSize={12.4} className={""} color={"#c1c1c1"}>
+						<TextBlock fontSize={12} color={"#787878"}>
 							Integrate with Github, Gitlab to get checks with each commit
 						</TextBlock>
 					</div>
@@ -479,7 +476,7 @@ function GitIntegration() {
 	);
 }
 
-const getSlackChannelValues = (channels: Array<{ name: string; id: string }> | null) => {
+const getSlackChannelValues = (channels: { name: string; id: string }[] | null) => {
 	if (!channels) return [];
 
 	return (
@@ -490,12 +487,12 @@ const getSlackChannelValues = (channels: Array<{ name: string; id: string }> | n
 };
 
 function SlackIntegration() {
-	const [project] = useAtom(currentProject);
+	const { currentProject: project } = useProjectDetails();
 
 	const [isConnected, setIsConnected] = useState(false);
 	const [slackChannels, setSlackChannels] = useState(null);
 	const [nextCursor, setNextCursor] = useState(null);
-	const { data: integrations } = useSWR(getSlackIntegrations(project.id));
+	const { data: integrations } = useSWR(getIntegrations(project?.id));
 
 	const [integration, setSlackIntegration] = useState({
 		normalChannel: [],
@@ -503,13 +500,13 @@ function SlackIntegration() {
 	});
 
 	useEffect(() => {
-		if (integrations && integrations.slackIntegration) {
+		if (integrations?.slackIntegration) {
 			console.log("Integrations is", integrations);
 			setIsConnected(true);
 
-			const slackIntegrationMeta = integrations.slackIntegration && integrations.slackIntegration.meta;
+			const slackIntegrationMeta = integrations.slackIntegration?.meta;
 
-			if (slackIntegrationMeta && slackIntegrationMeta.channel) {
+			if (slackIntegrationMeta?.channel) {
 				const normalChannel = slackIntegrationMeta.channel.normal;
 				const alertChannel = slackIntegrationMeta.channel.alert;
 
@@ -537,8 +534,7 @@ function SlackIntegration() {
 	const handleSwitch = useCallback((toggleState: boolean) => {
 		if (toggleState) {
 			const windowRef = openPopup(
-				`https://slack.com/oauth/v2/authorize?scope=chat:write,chat:write.public,channels:read,groups:read&client_id=${
-					process.env.NEXT_PUBLIC_SLACK_CLIENT_ID
+				`https://slack.com/oauth/v2/authorize?scope=chat:write,chat:write.public,channels:read,groups:read&client_id=${process.env.NEXT_PUBLIC_SLACK_CLIENT_ID
 				}&redirect_uri=${escape(resolvePathToBackendURI("/integrations/slack/actions/add"))}&state=${encodeURIComponent(
 					JSON.stringify({ projectId: project.id, redirectUrl: resolvePathToFrontendURI("/settings/project/integrations") }),
 				)}`,
@@ -549,7 +545,6 @@ function SlackIntegration() {
 
 				const isOnFEPage = windowRef?.location?.href?.includes(window.location.host);
 				if (isOnFEPage) {
-					const url = windowRef?.location?.href;
 					setIsConnected(true);
 					windowRef.close();
 					clearInterval(interval);
@@ -557,7 +552,7 @@ function SlackIntegration() {
 			}, 200);
 		} else {
 			backendRequest(`/integrations/${project.id}/slack/actions/remove`)
-				.then((res) => {
+				.then(() => {
 					setIsConnected(false);
 					setSlackIntegration({
 						normalChannel: [],
@@ -568,7 +563,7 @@ function SlackIntegration() {
 						type: "normal",
 					});
 				})
-				.catch((err) => {
+				.catch(() => {
 					sendSnackBarEvent({
 						message: "Error disabling slack integration",
 						type: "error",
@@ -589,11 +584,9 @@ function SlackIntegration() {
 		const normalChannel = channelTypeName === "normalChannel" ? selectedValues : integration.normalChannel;
 
 		const alertChannelInfo =
-			alertChannel && alertChannel[0] && alertChannel[0].label
-				? alertChannel
-				: getSlackChannelValues(slackChannels).filter((channel) => alertChannel[0] === channel.value);
+			alertChannel?.[0] && alertChannel[0].label ? alertChannel : getSlackChannelValues(slackChannels).filter((channel) => alertChannel[0] === channel.value);
 		const normalChannelInfo =
-			normalChannel && normalChannel[0] && normalChannel[0].label
+			normalChannel?.[0] && normalChannel[0].label
 				? normalChannel
 				: getSlackChannelValues(slackChannels).filter((channel) => normalChannel[0] === channel.value);
 
@@ -602,15 +595,15 @@ function SlackIntegration() {
 			payload: {
 				alertChannel: alertChannelInfo[0]
 					? {
-							name: alertChannelInfo[0].label,
-							value: alertChannelInfo[0].value,
-					  }
+						name: alertChannelInfo[0].label,
+						value: alertChannelInfo[0].value,
+					}
 					: null,
 				normalChannel: normalChannelInfo[0]
 					? {
-							name: normalChannelInfo[0].label,
-							value: normalChannelInfo[0].value,
-					  }
+						name: normalChannelInfo[0].label,
+						value: normalChannelInfo[0].value,
+					}
 					: null,
 			},
 		})
@@ -621,7 +614,7 @@ function SlackIntegration() {
 					message: "Slack integration saved successfully",
 				});
 			})
-			.catch((err) => {
+			.catch(() => {
 				sendSnackBarEvent({
 					type: "error",
 					message: "Slack integration failed to save",
@@ -638,26 +631,35 @@ function SlackIntegration() {
 			},
 		});
 
-		setNextCursor((previous) => _nextCursor);
+		setNextCursor(() => _nextCursor);
 		setSlackChannels((previous) => [...previous, ...channels]);
 		return true;
 	}, [slackChannels, nextCursor]);
 
+
 	return (
 		<div className={"justify-between items-start mt-40 mb-24"}>
-			<div className={"flex justify-between items-center w-full"}>
+			<div className={"flex justify-between items-start w-full"}>
 				<div className={"flex"}>
-					<img src={"/svg/slack-icon.svg"} width={"24rem"} />
+					<img src={"/svg/slack-icon.svg"} width={"20rem"} />
 					<div className={"ml-20"}>
-						<Heading type={2} fontSize={"14"} className={"mb-8"}>
+						<Heading type={2} fontSize={"15"} className={"mb-8"}>
 							Slack Integration
 						</Heading>
-						<TextBlock fontSize={12.4} className={""} color={"#c1c1c1"}>
-							We post notifications to Slack on event trigger.
+						<TextBlock fontSize={12} color={"#787878"}>
+							Get notifications on build event
 						</TextBlock>
 					</div>
 				</div>
-				<Toggle disableInternalState={true} callback={handleSwitch} isOn={isConnected}></Toggle>
+				<Switch
+
+					checked={isConnected}
+					onClick={() => {
+						if (!isConnected) {
+							handleSwitch(true);
+						}
+					}}
+				/>
 			</div>
 			<Conditional showIf={isConnected}>
 				<div
@@ -682,7 +684,7 @@ function SlackIntegration() {
 										dropDownHeight={"214rem"}
 										isSearchable={true}
 										values={getSlackChannelValues(slackChannels)}
-										selected={integration.normalChannel ? integration.normalChannel : null}
+										selected={integration.normalChannel || null}
 										placeholder="Select a channel"
 										callback={handleChannelSelect.bind(this, "normal")}
 									/>
@@ -697,7 +699,7 @@ function SlackIntegration() {
 										dropDownHeight={"214rem"}
 										isSearchable={true}
 										values={getSlackChannelValues(slackChannels)}
-										selected={integration.alertChannel ? integration.alertChannel : null}
+										selected={integration.alertChannel || null}
 										placeholder="Select a channel"
 										callback={handleChannelSelect.bind(this, "alert")}
 										css={selectBoxCSS}
@@ -712,91 +714,149 @@ function SlackIntegration() {
 	);
 }
 
-const selectBoxCSS = css`
-	width: 200rem;
-`;
+const updateWebhookUrl = (webhook: string, projectId: number) => {
+	return backendRequest(saveWebhookUrlAPI(projectId), {
+		method: RequestMethod.POST,
+		payload: {
+			webhook: webhook,
+		},
+	});
+};
 
-const ciIntegrations = ["Gitlab", "Github"];
+function WebHookIntegration() {
+	const { currentProject: project } = useProjectDetails();
+	const { data: integrations } = useSWR(getIntegrations(project?.id));
+	const [webhookUrl, setWebhookUrl] = useState(null);
 
-const ciButtonCSS = css`
-	width: 100rem;
-	height: 26rem;
-`;
-const selectedCSS = css`
-	background: #6b77df;
-	:hover {
-		background: #6b77df;
-	}
-`;
-function CIButtons({ setSelectedCI, selectedCI }) {
+	const [added, setAdded] = useState(false);
+	const [isEditable, setIsEditable] = useState(false);
+
+	useEffect(() => {
+		if (integrations?.webhook) {
+			setWebhookUrl(integrations.webhook);
+			setAdded(true);
+		}
+	}, [integrations]);
+
+	const handleSaveWebhook = () => {
+		setIsEditable(false);
+		updateWebhookUrl(webhookUrl, project.id)
+			.then(() => {
+				sendSnackBarEvent({
+					type: "success",
+					message: "Webhook saved successfully",
+				});
+			})
+			.catch(() => {
+				sendSnackBarEvent({
+					type: "error",
+					message: "Failed to save webhook",
+				});
+			});
+	};
+
 	return (
-		<div className={"flex"}>
-			{ciIntegrations.map((item, index) => (
-				<Button
-					css={[selectedCI === item && selectedCSS, ciButtonCSS]}
-					size={"x-small"}
-					bgColor={"tertiary-outline"}
-					className={"mr-20"}
-					onClick={setSelectedCI.bind(this, item)}
-				>
-					<span
-						className={"mt-7"}
-						css={css`
-							font-size: 13rem !important;
-						`}
-					>
-						Github
-					</span>
-				</Button>
-			))}
+		<div className={"justify-between items-start mt-24 mb-24"}>
+			<div className={"flex justify-between items-center w-full"}>
+				<div className={"flex"}>
+					<div className={"ml-44"}>
+						<Heading type={2} fontSize={"14"} className={"mb-8"}>
+							Webhook
+						</Heading>
+						<TextBlock fontSize={12} color={"#787878"}>
+							Get alerts on test fail and important evens
+						</TextBlock>
+					</div>
+				</div>
+				<Conditional showIf={added}>
+					<div className="flex items-center">
+						<Input
+							disabled={!isEditable}
+							size={"medium"}
+							initialValue={webhookUrl}
+							css={webhookInputCss(!isEditable)}
+							onChange={(evt) => setWebhookUrl(evt.target.value)}
+							onReturn={handleSaveWebhook.bind(this)}
+							size="small"
+							placeholder="enter webhook"
+						/>
+						<Conditional showIf={isEditable}>
+							<Button disabled={webhookUrl && webhookUrl.length < 1} onClick={handleSaveWebhook} size="small" className="ml-4">
+								save
+							</Button>
+						</Conditional>
+						<Conditional showIf={!isEditable}>
+							<Button
+								disabled={false}
+								onClick={() => {
+									setIsEditable(true);
+								}}
+								size="small"
+								className="ml-4"
+							>
+								edit
+							</Button>
+						</Conditional>
+					</div>
+				</Conditional>
+				<Conditional showIf={!added}>
+					<div className="flex items-center">
+						<Button
+							placeholder="enter the URl"
+							onClick={() => {
+								setAdded(true);
+								setIsEditable(true);
+							}}
+							size="small"
+							className="ml-4"
+						>
+							+ Add
+						</Button>
+					</div>
+				</Conditional>
+			</div>
 		</div>
 	);
 }
 
-const CiIntegration = () => {
-	const [selectedCI, setSelectedCI] = useState<string | null>(null);
-	return (
-		<div>
-			<Heading type={2} fontSize={"16"} className={"mt-48 mb-8"}>
-				CI Integration
-			</Heading>
-			<TextBlock fontSize={12} className={"mb-28"} color={"#c1c1c1"}>
-				Integrate with CI of your choice
-			</TextBlock>
-
-			<TextBlock fontSize={"12.6"} className={"mb-12"}>
-				Select CI
-			</TextBlock>
-			<CIButtons selectedCI={selectedCI} setSelectedCI={setSelectedCI} />
-			<Conditional showIf={!!selectedCI}>
-				<div className={"text-13 mt-36"}>
-					<div className={"mb-24"}>
-						1. <span className={"ml-16"}>Create and start your server.</span>
-					</div>
-					<div className={"mb-24"}>
-						2. <span className={"ml-16"}>Expose Localtunnel.</span>
-					</div>
-					<div className={"mb-24"}>
-						3. <span className={"ml-16"}>Copy this snipped below.</span>
-					</div>
-					<div className={"py-20 px-32"} css={codeBackground}>
-						//code
-						<br />
-						ci: run dark
-					</div>
-				</div>
-			</Conditional>
-		</div>
-	);
-};
-
-const codeBackground = css`
-	background: #101215;
-	border: 1px solid #171c24;
-	border-radius: 4px;
+const webhookInputCss = (isDisabled: boolean) => css`
+	input {
+		cursor: ${isDisabled ? "not-allowed" : "auto"};
+	}
 `;
+const selectBoxCSS = css`
+	width: 200rem;
+`;
+
 export const Integrations = () => {
 	const [showModal, setShowModal] = useState(false);
+	const [selectedSection, setShowSelectedSection] = useState(null);
+
+	React.useEffect(() => {
+		const query = new URLSearchParams(window.location.search);
+		const section = query.get("item");
+		if (section) {
+			setShowSelectedSection(section);
+		}
+	});
+
+	if (selectedSection) {
+		return (
+			<SettingsLayout hideSidebar={true}>
+				<div className={"text-24 mb-100"} css={maxWidthContainer}>
+					<Heading type={1} fontSize={"18"} className={"mb-12"}>
+						Integrations
+					</Heading>
+					<TextBlock fontSize={"12.5"} className={"mb-24"} color={"#787878"}>
+
+					</TextBlock>
+					<hr css={basicHR} />
+					{selectedSection === "slack" ? (<SlackIntegration />) : ""}
+					{selectedSection === "github" ? (<GitIntegration />) : ""}
+				</div>
+			</SettingsLayout>
+		)
+	}
 	return (
 		<SettingsLayout>
 			<Conditional showIf={showModal}>
@@ -806,14 +866,18 @@ export const Integrations = () => {
 				<Heading type={1} fontSize={"18"} className={"mb-12"}>
 					Integrations
 				</Heading>
-				<TextBlock fontSize={"12.5"} className={"mb-24"} color={"#c1c1c1"}>
-					Make sure you have selected all the configuration you want
+				<TextBlock fontSize={"13"} className={"mb-24"} color={"#787878"}>
+					Integrate crusher in your current workflow
 				</TextBlock>
 				<hr css={basicHR} />
 				<SlackIntegration />
+
 				{/* <hr css={basicHR} /> */}
 				<GitIntegration />
 				<hr css={basicHR} className={"mt-40"} />
+
+				<WebHookIntegration />
+				<hr css={basicHR} className={"mt-24 mb-24"} />
 				<CISection />
 				{/* <CiIntegration /> */}
 			</div>

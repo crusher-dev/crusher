@@ -34,6 +34,17 @@ class TestService {
 		this.redisManager = Container.get(RedisManager);
 	}
 
+	@CamelizeResponse()
+	async getTestsInBuild(buildId: number): Promise<Array<KeysToCamelCase<ITestTable>>> {
+		const build = await this.dbManager.fetchSingleRow("SELECT * FROM public.jobs WHERE id = ?", [buildId]);
+		if(build?.config?.testIds) {
+			const testIds = build.config.testIds;
+			const query = `SELECT * FROM public.tests WHERE id IN (${testIds.map(() => "?").join(",")})`;
+			return this._runCamelizeFetchAllQuery(query, testIds);
+		}
+		return [];
+	}
+	
 	async saveTempTest(events: Array<iAction>): Promise<{ insertId: string }> {
 		const keyId = `temp_test_${uuidv4()}`;
 		await this.redisManager.set(keyId, JSON.stringify(events), { expiry: { type: "s", value: 10 * 60 } });
@@ -43,6 +54,10 @@ class TestService {
 	async getTempTest(tempTestId): Promise<{ events: Array<iAction> }> {
 		const result = await this.redisManager.get(tempTestId);
 		return { events: JSON.parse(result) };
+	}
+
+	async updateEmoji(testId: number, emoji: string) {
+		return this.dbManager.update("UPDATE public.tests SET emoji = ? WHERE id = ?", [emoji, testId]);
 	}
 
 	// Modifies the events actions object directly

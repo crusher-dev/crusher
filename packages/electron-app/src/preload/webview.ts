@@ -4,7 +4,7 @@ import { contextBridge, ipcRenderer } from "electron";
 contextBridge.exposeInMainWorld("isCrusherRecorder", true);
 
 contextBridge.exposeInMainWorld("recorder", {
-	sendMessage: async (...args) => {
+	sendMessage: (...args) => {
 		ipcRenderer.sendToHost("recorder-message", ...args);
 	},
 	canRecordEvents: () => {

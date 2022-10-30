@@ -1,9 +1,12 @@
-import { getBuildsList, getRunTestApi } from "@constants/api";
-import { PROJECT_META_KEYS, USER_META_KEYS } from "@constants/USER";
-import { mutate } from "swr";
 import { BaseRouter } from "next/dist/shared/lib/router/router";
-import { sendSnackBarEvent } from "@utils/common/notify";
+
+import { mutate } from "swr";
+
+import { PROJECT_META_KEYS, USER_META_KEYS } from "@constants/USER";
+import { getBuildsList, getRunTestApi } from "@constants/api";
 import { backendRequest } from "@utils/common/backendRequest";
+import { sendSnackBarEvent } from "@utils/common/notify";
+
 import { RequestMethod } from "../../types/RequestOptions";
 
 const runTests = (projectId: number, folder: string | null = null) => {
@@ -18,7 +21,7 @@ const runTests = (projectId: number, folder: string | null = null) => {
 export function handleTestRun(selectedProjectId: number | null, query: any, filters: Record<string, any>, router: BaseRouter, updateMetaData: Function) {
 	(async () => {
 		try {
-			await runTests(selectedProjectId, filters.folder ? filters.folder : null);
+			await runTests(selectedProjectId, filters.folder || null);
 			sendSnackBarEvent({ type: "normal", message: "We're running test." });
 			const buildAPI = getBuildsList(selectedProjectId, query.trigger, filters);
 
@@ -36,7 +39,7 @@ export function handleTestRun(selectedProjectId: number | null, query: any, filt
 
 			await mutate(buildAPI);
 			// @ts-ignore
-			await router.push("/app/builds");
+			await router.push(`/${selectedProjectId}/builds`);
 		} catch (e) {
 			if (e.toString() === "Error: No tests available to run") {
 				sendSnackBarEvent({ type: "error", message: "You don't have any test to run" });

@@ -51,7 +51,7 @@ class RelevantHoverDetection {
 		this.isRunning = true;
 	}
 
-	isCoDependentNode(node: Node, baseLineTimeStamp: number | null = null, clickRecords: Array<MouseEvent>) {
+	isCoDependentNode(node: Node, baseLineTimeStamp: number | null = null, clickRecords: MouseEvent[]) {
 		return this.getParentDOMMutations(node, baseLineTimeStamp, clickRecords).length > 0;
 	}
 
@@ -60,11 +60,10 @@ class RelevantHoverDetection {
 		this.resetTime = Date.now();
 	}
 
-	getParentDOMMutations(node: Node, baseLineTimeStamp: number | null = null, clickRecords: Array<any>): Array<IRegisteredMutationRecord> {
-		let currentNode = node;
+	getParentDOMMutations(currentNode: Node, baseLineTimeStamp: number | null = null, clickRecords: any[]): IRegisteredMutationRecord[] {
 		const list = [];
 
-		while (document.body.contains(currentNode) && currentNode != document.body) {
+		while (document.body.contains(currentNode) && currentNode !== document.body) {
 			if (this._mapRecords.has(currentNode) && !(currentNode instanceof SVGElement)) {
 				const tmp = this._mapRecords.get(currentNode)!;
 				list.push(
@@ -79,12 +78,6 @@ class RelevantHoverDetection {
 			.reverse()
 			.filter((item, index, array) => {
 				const timeOfEventStart = parseInt(item.key.split("__")[2]);
-				const ls = clickRecords.map((record) => ({
-					out: Math.abs(record.timestamp - timeOfEventStart),
-					recordTimeStamp: record.timestamp,
-					currentTimeStamp: timeOfEventStart,
-					item: item.key,
-				}));
 
 				return (
 					array.findIndex((currentItem) => currentItem.eventNode === item.eventNode) === index &&

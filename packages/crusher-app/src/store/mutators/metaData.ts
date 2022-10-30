@@ -48,10 +48,17 @@ const updateTeamMeta = (meta: Record<string, any>) => {
  */
 export const updateMeta = atom(
 	null,
-	(_get, _set, passedPayload: { callback?: any; } & (IUpdateUserOnboarding | { type: IUpdateUserOnboarding["type"]; values: Array<Omit<IUpdateUserOnboarding, "type">>; })) => {
-		let callback: any = undefined;
-		if(passedPayload.callback) { callback = passedPayload.callback; delete passedPayload.callback; }
-		
+	(
+		_get,
+		_set,
+		passedPayload: { callback?: any } & (IUpdateUserOnboarding | { type: IUpdateUserOnboarding["type"]; values: Omit<IUpdateUserOnboarding, "type">[] }),
+	) => {
+		let callback = undefined;
+		if (passedPayload.callback) {
+			callback = passedPayload.callback;
+			delete passedPayload.callback;
+		}
+
 		const { selectedProjectId } = _get(appStateAtom);
 		let payload = {};
 		const { type } = passedPayload;
@@ -66,7 +73,7 @@ export const updateMeta = atom(
 			}, {});
 		} else if (passedPayload instanceof Object) {
 			//@ts-ignore
-			const { key, value, type } = passedPayload;
+			const { key, value } = passedPayload;
 			payload = { [String(key)]: value };
 		}
 		switch (type) {
@@ -83,7 +90,9 @@ export const updateMeta = atom(
 					_set(projectsAtom, newState);
 
 					updateProjectMeta(selectedProjectId, payload).finally(() => {
-						if(callback) { callback(); }
+						if (callback) {
+							callback();
+						}
 					});
 				}
 				break;
@@ -100,7 +109,9 @@ export const updateMeta = atom(
 					});
 					_set(teamAtom, newState);
 					updateTeamMeta(payload).finally(() => {
-						if(callback) { callback(); }
+						if (callback) {
+							callback();
+						}
 					});
 				}
 				break;
@@ -117,11 +128,12 @@ export const updateMeta = atom(
 					});
 					_set(userAtom, newState);
 					updateUserMeta(payload).finally(() => {
-						if(callback) { callback(); }
+						if (callback) {
+							callback();
+						}
 					});
 				}
 				break;
 		}
-
 	},
 );

@@ -1,8 +1,7 @@
 export const validateEmail = (email: string) => {
-	if (email.length < 3) {
-		return false;
-	}
-	return true;
+	return String(email)
+		.toLowerCase()
+		.match(/^(([^\s"(),.:;<>@[\\\]]+(\.[^\s"(),.:;<>@[\\\]]+)*)|(".+"))@((\[(?:\d{1,3}\.){3}\d{1,3}\])|(([\dA-Za-z\-]+\.)+[A-Za-z]{2,}))$/);
 };
 
 export const validatePassword = (password: string) => {
@@ -20,5 +19,5 @@ export const validateName = (name: string) => {
 };
 
 export const validateSessionInviteCode = (inviteCode: string) => {
-	return inviteCode && inviteCode.startsWith("CRU-");
+	return inviteCode?.startsWith("CRU-");
 };

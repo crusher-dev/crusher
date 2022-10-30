@@ -16,7 +16,7 @@ interface iDevice {
 	userAgentRaw: string;
 }
 
-const devices: Array<iDevice> = [
+const devices: iDevice[] = [
 	{
 		id: TDeviceEnum.DESKTOP_M,
 		name: "Desktop",

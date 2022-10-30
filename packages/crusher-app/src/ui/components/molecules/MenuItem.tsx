@@ -1,4 +1,5 @@
 import { css } from "@emotion/react";
+import { Text } from "dyson/src/components/atoms";
 import { ReactElement } from "react";
 
 type TMenuItem = {
@@ -12,32 +13,37 @@ export function MenuItem({ label, rightLabel, css, showHighlighted = false, sele
 	return (
 		<div
 			css={[dropDownItem, showHighlighted && highlightHoverStyle, selected && isSelectedStyle, css]}
-			className={`flex justify-between items-center px-16 py-12 ${className}`}
+			className={`flex justify-between items-center px-8 py-6 ${className}`}
 			{...otherProps}
 		>
-			<span className={"name font-500 leading-none font-cera capitalize"}>{label}</span>
-			<span className={"text-12 shortcut leading-none"}>{rightLabel}</span>
+			<Text className="name capitalize" weight={600}>{label}</Text>
+			<Text className="shortcut capitalize" fontSize={12}>{rightLabel}</Text>
 		</div>
 	);
 }
 
 const highlightHoverStyle = css`
 	:hover {
-		background: #687ef2 !important;
+		background: #bb26ff !important;
 	}
 `;
 
 const isSelectedStyle = css`
 	background: rgba(32, 35, 36, 0.62);
 	:hover {
-		background: #687ef2;
+		background: #bb26ff;
 	}
 `;
 
 const dropDownItem = css`
+	height: 28rem;
+	width: 176rem;
+	border-radius: 6rem;
+
+	transition: all 0ms;
 	.name {
-		font-size: 12.5rem;
 		color: #e7e7e8;
+		letter-spacing: .4px;
 	}
 
 	.shortcut {
@@ -45,6 +51,10 @@ const dropDownItem = css`
 	}
 
 	:hover {
-		background: rgba(32, 35, 36, 0.62);
+		background: #a82be2;
+		path {
+			stroke: white;
+			transition: all 0ms;
+		}
 	}
 `;

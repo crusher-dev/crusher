@@ -6,14 +6,13 @@ import { CloseSVG } from "../../icons/CloseSVG";
 type TransparentOverlayProps = {
 	children: ReactElement;
 	onClose?: Function;
-	lightOverlay?: boolean;
 } & Record<any, any>;
 
-export function OverlayTransparent({ children, onClose, lightOverlay }: TransparentOverlayProps) {
+export function OverlayTransparent({ children, onClose, css, className = "", ...props }: TransparentOverlayProps) {
 	return (
 		<div
-			className={"flex justify-between leading-none relative"}
-			css={[overlay, lightOverlay ? lightOverlayStyle : null]}
+			className={`flex justify-between leading-none relative ${className}`}
+			css={[overlay, css]}
 			onClick={(e) => {
 				e.stopPropagation();
 				e.preventDefault();
@@ -30,7 +29,8 @@ export function OverlayTransparent({ children, onClose, lightOverlay }: Transpar
 }
 
 const overlay = css`
-	background: rgba(15, 14, 14, 0.95);
+	background: rgb(0 0 0 / 75%) !important;
+	backdrop-filter: blur(3px);
 	width: 100vw;
 	height: 100vh;
 	position: fixed;
@@ -39,12 +39,11 @@ const overlay = css`
 	left: 0;
 `;
 
-const lightOverlayStyle = css`
-	background: rgba(0, 0, 0, 0.88);
-`;
+
 
 const closeIcon = css`
 	position: absolute;
-	top: 44rem;
-	right: 64rem;
+	top: 24rem;
+	right: 40rem;
+	cursor: pointer;
 `;

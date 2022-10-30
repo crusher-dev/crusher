@@ -114,7 +114,6 @@ class UsersService {
 
 	async deleteUserWorkspace(userId: number) {
 		const userRecord = await this.getUserInfo(userId);
-		await this.dbManager.delete("DELETE FROM public.user_meta WHERE user_id = ?", [userRecord.id]);
 		await this.dbManager.delete("DELETE FROM public.user_project_roles WHERE user_id = ?", [userRecord.id]);
 		await this.dbManager.delete("DELETE FROM public.projects WHERE team_id = ?", [userRecord.teamId]);
 		await this.dbManager.delete("DELETE FROM public.user_team_roles WHERE user_id = ?", [userRecord.id]);
@@ -132,7 +131,11 @@ class UsersService {
 
 	@CamelizeResponse()
 	async getUserInfo(userId: number): Promise<KeysToCamelCase<IUserTable>> {
-		return this.dbManager.fetchSingleRow(`SELECT * FROM public.users WHERE id = ?`, [userId]);
+		let record: any = await this.dbManager.fetchSingleRow(`SELECT * FROM public.users WHERE id = ?`, [userId]);
+		if(record.meta){
+			record.meta = JSON.stringify(record.meta || {});
+		};
+		return record;
 	}
 
 	async getUserAndSystemInfo(userId: number): Promise<IUserAndSystemInfoResponse> {

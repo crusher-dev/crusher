@@ -316,16 +316,6 @@ export class TestController {
 		return folderUpdateRecord;
 	}
 
-	@Get("/tests/actions/get.template")
-	async getTemplate(@QueryParams() params: { id: string }) {
-		return this.testService.getTemplate(parseInt(params.id));
-	}
-
-	@Get("/tests/actions/get.templates")
-	async getTemplates(@QueryParams() params: { name: string }) {
-		return this.testService.getTemplates(params.name);
-	}
-
 	@Authorized()
 	@Post("/tests/:test_id/actions/edit")
 	async editTest(@CurrentUser({ required: true }) user, @Param("test_id") testId: number, @Body() body: { name: string; testFolder: number | null }) {

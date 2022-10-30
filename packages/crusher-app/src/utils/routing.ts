@@ -39,6 +39,7 @@ export const handleEERouting = async (data: IUserAndSystemInfoResponse, router: 
 
 	if (isUserLoggedIn) {
 		if (!getBoolean(user.meta.INITIAL_ONBOARDING) && !["/login_sucessful"].includes(pathname)) {
+
 			await router.push("/setup/onboarding");
 		} else if (ROUTES_TO_REDIRECT_WHEN_SESSION.includes(pathname)) {
 			if (isTempTestPending()) {

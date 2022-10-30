@@ -60,31 +60,7 @@ class TestService {
 		return this.dbManager.update("UPDATE public.tests SET emoji = ? WHERE id = ?", [emoji, testId]);
 	}
 
-	// Modifies the events actions object directly
-	private async handleTemplateActions(templateActions: Array<iAction>, projectId: number, userId: number) {
-		const promiseArr = [];
-		for (const templateAction of templateActions) {
-			if (templateAction.payload.meta && templateAction.payload.meta.id) {
-				// Do nothing
-				continue;
-			}
-
-			promiseArr.push(
-				this.createTemplate({ name: templateAction.name, events: templateAction.payload.meta.actions, projectId, userId }).then((insertRecord) => {
-					templateAction.payload.meta.id = insertRecord.insertId;
-					delete templateAction.payload.meta.actions;
-					return true;
-				}),
-			);
-		}
-
-		return Promise.all(promiseArr);
-	}
-
 	async createTest(testInfo: Omit<ICreateTestPayload, "events"> & { events: Array<iAction> }): Promise<{ insertId: number }> {
-		const templateActions = testInfo.events.filter((event) => event.type === ActionsInTestEnum.RUN_TEMPLATE);
-		await this.handleTemplateActions(templateActions, testInfo.projectId, testInfo.userId);
-
 		return this.dbManager.insert(
 			`INSERT INTO public.tests (project_id, name, events, user_id, featured_video_url, featured_screenshot_url) VALUES (?, ?, ?, ?, ?, ?)`,
 			[
@@ -387,16 +363,7 @@ class TestService {
 	@CamelizeResponse()
 	async getFullTest(testRecord: KeysToCamelCase<ITestTable>): Promise<KeysToCamelCase<ITestTable>> {
 		const actions = JSON.parse(testRecord.events);
-		const templateActions = actions.filter((action) => action.type === ActionsInTestEnum.RUN_TEMPLATE);
 		const customCodeActions = actions.filter((action) => action.type === ActionsInTestEnum.CUSTOM_CODE);
-		await Promise.all(
-			templateActions.map(async (action) => {
-				if (action.payload.meta.id) {
-					const template = await this.getTemplate(action.payload.meta.id);
-					action.payload.meta.actions = JSON.parse(template.events);
-				}
-			}),
-		);
 
 		await Promise.all(
 			customCodeActions.map(async (customCode) => {
@@ -457,25 +424,6 @@ class TestService {
 		}
 
 		return Object.values(testsMap);
-	}
-
-	async createTemplate(payload: Omit<ICreateTemplatePayload, "events"> & { events: Array<iAction> }) {
-		return this.dbManager.insert("INSERT INTO public.templates (name, events, project_id, user_id) VALUES (?, ?, ?, ?)", [
-			payload.name,
-			JSON.stringify(payload.events),
-			payload.projectId ? payload.projectId : null,
-			payload.userId ? payload.userId : null,
-		]);
-	}
-
-	@CamelizeResponse()
-	async getTemplates(name: string): Promise<Array<KeysToCamelCase<ITemplatesTable>>> {
-		return this.dbManager.fetchAllRows(`SELECT * FROM public.templates WHERE name LIKE ?`, [name ? `%${name}%` : "%"]);
-	}
-
-	@CamelizeResponse()
-	async getTemplate(id: number): Promise<KeysToCamelCase<ITemplatesTable>> {
-		return this.dbManager.fetchSingleRow(`SELECT * FROM public.templates WHERE id = ?`, [id]);
 	}
 }
 

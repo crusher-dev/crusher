@@ -9,11 +9,6 @@ class ProjectsService {
 	@Inject()
 	private dbManager: DBManager;
 
-	@CamelizeResponse()
-	async getProjectEnvironments(projectId: number): Promise<Array<KeysToCamelCase<IProjectEnvironmentTable>>> {
-		return this.dbManager.fetchAllRows("SELECT * FROM public.project_hosts WHERE project_id = ?", [projectId]);
-	}
-
 	async updateWebhook(webhook: string, projectId: number) {
 		const project = await this.getProject(projectId);
 		let meta: any = {};
@@ -31,15 +26,6 @@ class ProjectsService {
 			meta = JSON.parse(project.meta);
 		} catch(ex) {}
 		return meta["webhook"];
-	}
-
-	async createProjectEnvironment(environmentInfo: ICreateProjectEnvironmentPayload): Promise<{ insertId: number }> {
-		return this.dbManager.insert("INSERT INTO public.project_hosts (url, host_name, project_id, user_id) VALUES (?, ?, ?, ?)", [
-			environmentInfo.url,
-			environmentInfo.hostName,
-			environmentInfo.projectId,
-			environmentInfo.userId,
-		]);
 	}
 
 	async updateEmoji(projectId: number, emoji: string) {

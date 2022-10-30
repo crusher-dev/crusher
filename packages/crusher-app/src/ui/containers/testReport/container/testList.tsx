@@ -5,7 +5,7 @@ import React from "react";
 import { useAtom } from "jotai";
 
 import { useBuildReport } from "@store/serverState/buildReports";
-import { CheckSVG } from "@svg/builds";
+import { TestNewStatusSVG } from "@svg/builds";
 import { TestOverview } from "@ui/containers/testReport/container/testOverview";
 
 import { selectedTestAtom } from "../atoms";
@@ -39,10 +39,10 @@ const testLeftSideCard = (selected) => css`
 
 	${selected &&
 	`
-background: #101010;
-border: 0.5px solid rgba(255, 255, 255, 0.05);
+		background: #101010;
+		border: 0.5px solid rgba(255, 255, 255, 0.05);
 
-`}
+	`}
 
 	#name {
 		white-space: nowrap;
@@ -51,7 +51,7 @@ border: 0.5px solid rgba(255, 255, 255, 0.05);
 		font-size: 14rem;
 
 		${selected &&
-		`
+	`
 		font-weight: 600;
 		`}
 	}
@@ -72,15 +72,21 @@ function TestList(props: any) {
 	return (
 		<div css={stepSectionCSS}>
 			<div className="pl-28 pt-32" css={testListHeadingStyle}>
-				tests | 12
+				tests | {data.tests.length}
 			</div>
 			<ul css={testListStyle}>
-				{data?.tests.map((testData, i) => (
-					<li className="px24 py-12" css={testLeftSideCard(i === selectedTest)} onClick={setSelectedTest.bind(this, i)}>
-						<CheckSVG type={getStatusFromTestInstances(testData?.testInstances)} height={"14rem"} width={"14rem"} />
-						<span id="name">{testData!.name}</span>
-					</li>
-				))}
+				{data?.tests.map((testData, i) => {
+
+					const status = getStatusFromTestInstances(testData?.testInstances);
+
+					return (
+						<li className="px24 py-12" css={testLeftSideCard(i === selectedTest)} onClick={setSelectedTest.bind(this, i)}>
+							<TestNewStatusSVG type={status} height={"14rem"} width={"14rem"} />
+
+							<span id="name">{testData!.name}</span>
+						</li>
+					)
+				})}
 			</ul>
 		</div>
 	);

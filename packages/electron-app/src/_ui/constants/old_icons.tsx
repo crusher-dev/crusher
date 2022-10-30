@@ -208,6 +208,14 @@ const StopIcon = (props: any) => {
 	);
 };
 
+const ForwardIcon = (props: any) => {
+	return (
+		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff" {...props}>
+			<path d="M5.055 7.06c-1.25-.714-2.805.189-2.805 1.628v8.123c0 1.44 1.555 2.342 2.805 1.628L12 14.471v2.34c0 1.44 1.555 2.342 2.805 1.628l7.108-4.061c1.26-.72 1.26-2.536 0-3.256L14.805 7.06C13.555 6.346 12 7.25 12 8.688v2.34L5.055 7.06z" />
+		</svg>
+	);
+};
+
 const MiniCrossIcon = (props: any) => {
 	return (
 		<svg viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
@@ -280,11 +288,11 @@ const ConnectivityWarningIcon = (props) => (
 function PlayV2Icon(props) {
 	return (
 		<svg width={18} height={18} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-			<rect width={18} height={18} rx={9} fill="#A966FF" />
+			<rect width={18} height={18} rx={9} fill="#969696" />
 			<rect x={0.125} y={0.125} width={17.75} height={17.75} rx={8.875} stroke="#000" strokeOpacity={0.53} strokeWidth={0.25} />
 			<path
 				d="M7.963 12.123a.58.58 0 01-.291-.08.67.67 0 01-.324-.582V6.539a.67.67 0 01.324-.582.576.576 0 01.595.007l4.126 2.518a.607.607 0 01.281.518.62.62 0 01-.28.517l-4.128 2.519a.584.584 0 01-.303.087z"
-				fill="#fff"
+				fill="black"
 			/>
 		</svg>
 	);
@@ -426,4 +434,5 @@ export {
 	FailedCheckboxIcon,
 	PointerArrowIcon,
 	AddIconV3,
+	ForwardIcon
 };

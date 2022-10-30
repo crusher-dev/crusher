@@ -1,5 +1,5 @@
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
-import { ActionDescriptor } from "runner-utils/src";
+import { ActionDescriptor } from "runner-utils/src/functions/actionDescriptor";
 import { getDeviceFromId } from "../../devices";
 import { iReduxState } from "../reducers";
 import { TRecorderState } from "../reducers/recorder";

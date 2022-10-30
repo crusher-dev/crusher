@@ -31,6 +31,7 @@ interface IBuildInfoItem {
 	triggeredById: number;
 	triggeredByName: string;
 	buildTrigger: BuildTriggerEnum;
+	isLocalBuild: boolean;
 }
 
 @Service()
@@ -43,7 +44,7 @@ class BuildsService {
 	@CamelizeResponse()
 	async getBuildInfoList(
 		projectId: number,
-		filter: { triggerType?: BuildTriggerEnum; triggeredBy?: number; search?: string; page?: number; status?: BuildReportStatusEnum; buildId?: number },
+		filter: { triggerType?: BuildTriggerEnum; triggeredBy?: number; search?: string; page?: number; status?: BuildReportStatusEnum; buildId?: number; showLocal?: boolean },
 	): Promise<{ list: Array<IBuildInfoItem>; totalPages: number }> {
 		let additionalSelectColumns = "";
 		let additionalFromSource = "";
@@ -55,7 +56,7 @@ class BuildsService {
 			queryParams.push(filter.search);
 		}
 
-		let query = `SELECT jobs.host build_host, jobs.id build_id, jobs.commit_name build_name, jobs.build_trigger build_trigger, EXTRACT(EPOCH FROM (job_reports.updated_at - job_reports.created_at)) build_duration, jobs.created_at build_created_at, job_reports.created_at build_report_created_at, job_reports.updated_at build_report_updated_at, jobs.latest_report_id latest_report_id, job_reports.status build_status, job_reports.total_test_count total_test_count, job_reports.passed_test_count passed_test_count, job_reports.failed_test_count failed_test_count, job_reports.review_required_test_count review_required_test_count, comments.count comment_count, users.id triggered_by_id, users.name triggered_by_name ${
+		let query = `SELECT jobs.host build_host, jobs.is_local_job is_local_build, jobs.id build_id, jobs.commit_name build_name, jobs.build_trigger build_trigger, EXTRACT(EPOCH FROM (job_reports.updated_at - job_reports.created_at)) build_duration, jobs.created_at build_created_at, job_reports.created_at build_report_created_at, job_reports.updated_at build_report_updated_at, jobs.latest_report_id latest_report_id, job_reports.status build_status, job_reports.total_test_count total_test_count, job_reports.passed_test_count passed_test_count, job_reports.failed_test_count failed_test_count, job_reports.review_required_test_count review_required_test_count, comments.count comment_count, users.id triggered_by_id, users.name triggered_by_name ${
 			additionalSelectColumns.length ? `, ${additionalSelectColumns}` : ""
 		} FROM public.users, public.jobs, public.job_reports LEFT JOIN (SELECT report_id, COUNT(*) count FROM public.comments GROUP BY report_id) as comments ON comments.report_id = job_reports.id ${
 			additionalFromSource.length ? `, ${additionalFromSource}` : ""
@@ -72,6 +73,11 @@ class BuildsService {
 			queryParams.push(filter.triggeredBy!);
 		}
 
+		if(filter.showLocal) {
+			query += " AND jobs.is_local_job = ?";
+			queryParams.push(filter.showLocal);
+		}
+		
 		if (filter.status) {
 			query += " AND job_reports.status = ?";
 			queryParams.push(filter.status);
@@ -126,7 +132,7 @@ class BuildsService {
 
 	async createBuild(buildInfo: ICreateBuildRequestPayload): Promise<{ insertId: number }> {
 		return this.dbManager.insert(
-			`INSERT INTO public.jobs (user_id, project_id, host, status, build_trigger, browser, config, meta, is_draft_job) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+			`INSERT INTO public.jobs (user_id, project_id, host, status, build_trigger, browser, config, meta, is_draft_job, is_local_job) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 			[
 				buildInfo.userId,
 				buildInfo.projectId,
@@ -137,6 +143,7 @@ class BuildsService {
 				JSON.stringify(buildInfo.config),
 				buildInfo.meta ? JSON.stringify(buildInfo.meta) : null,
 				buildInfo.isDraftJob ? buildInfo.isDraftJob : false,
+				buildInfo.isLocalJob ? buildInfo.isLocalJob : false,
 			],
 		);
 	}

@@ -25,9 +25,9 @@ import {
 	updateRecorderState,
 } from "../store/actions/recorder";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
-import { getRecorderState, getSavedSteps, getTestName } from "../store/selectors/recorder";
+import { getAllSteps, getRecorderState, getSavedSteps, getTestName } from "../store/selectors/recorder";
 import { CloudCrusher } from "../lib/cloud";
-import { getBrowserActions, getMainActions } from "runner-utils/src";
+import { getMainActions, getBrowserActions, toCrusherSelectorsFormat } from "runner-utils/src/utils/helper";
 import { iElementInfo, TRecorderState } from "../store/reducers/recorder";
 import { iSeoMetaInformationMeta } from "../types";
 import { getUserAgentFromName } from "@shared/constants/userAgents";
@@ -52,6 +52,9 @@ import { screen } from "electron";
 import { ProxyManager } from "./proxy-manager";
 import { resolveToBackend } from "../utils/url";
 import { getLogs } from "../store/selectors/logger";
+import path from "path";
+import { shouldOverrideHost } from "../lib/project-config";
+import { chalkShared, _log } from "@shared/modules/logger";
 
 export class AppWindow {
 	private window: Electron.BrowserWindow;
@@ -275,6 +278,7 @@ export class AppWindow {
 		ipcMain.on("get-var-context", this.handleGetVarContext.bind(this));
 		ipcMain.on("get-is-advanced-selector", this.handleGetVarContext.bind(this));
 		ipcMain.handle("turn-on-webview-dev-tools", this.handleTurnOnWebviewDevtools.bind(this));
+		ipcMain.handle("pause-steps", this.handlePauseSteps.bind(this));
 
 		this.window.on("focus", () => this.window.webContents.send("focus"));
 		this.window.on("blur", () => this.window.webContents.send("blur"));
@@ -298,6 +302,13 @@ export class AppWindow {
 			process.argv = process.argv.filter((a) => a.includes("--project-config-file"));
 		}
 		this.handle(projectId).catch((err) => console.error("Can't initialize project config in renderer process", err));
+	}
+
+	async handlePauseSteps(event: Electron.IpcMainEvent, data: {}) {
+		if(!global["promises"]) return;
+		await Promise.all(Object.values(global["promises"]).map((promise: any) => {
+			return promise();
+		 }));
 	}
 
 	async handle(projectId) {
@@ -328,7 +339,7 @@ export class AppWindow {
 		this.webView?.webContents.openDevTools();
 	}
 
-	private async handleUndockCode() {
+	private async handleUndockCode(event: Electron.IpcMainEvent, payload: { stepIndex }) {
 		this.codeWindow = new BrowserWindow({
 			title: APP_NAME,
 			titleBarStyle: "hidden",
@@ -359,8 +370,12 @@ export class AppWindow {
 			},
 			acceptFirstMouse: true,
 		});
-		this.codeWindow.loadURL(getAppURl() + "#/code-editor");
 
+		if (payload.stepIndex) {
+			this.codeWindow.loadURL(getAppURl() + `#/code-editor?stepIndex=${payload.stepIndex}`);
+		} else {
+			this.codeWindow.loadURL(getAppURl() + `#/code-editor`);
+		}
 		this.codeWindow.webContents.on("destroyed", () => {
 			this.codeWindow = null;
 			const recorderState = getRecorderState(this.store.getState() as any);
@@ -523,8 +538,9 @@ export class AppWindow {
 	}
 
 	private async handleJumpToStep(event: Electron.IpcMainEvent, payload: { stepIndex: number }) {
-		const recorderSteps = getSavedSteps(this.store.getState() as any);
+		let recorderSteps = getAllSteps(this.store.getState() as any);
 		await this.resetRecorder();
+
 		this.setRemainingSteps(recorderSteps.slice(payload.stepIndex + 1) as any);
 		await this.handleReplayTestSteps(recorderSteps.slice(0, payload.stepIndex + 1) as any);
 		return true;
@@ -669,13 +685,22 @@ export class AppWindow {
 	}
 
 	reinstateElementSteps(uniqueElementId, elementInfo) {
-		a.step.payload.meta = {
-			...(a.step.payload.meta || {}),
-			parentFrameSelectors: elementInfo.parentFrameSelectors,
-		};
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore
-		this.store.dispatch(updateRecordedStep(a.step, a.index));
+		const recordedSteps = getSavedSteps(this.store.getState() as any);
+		const stepsToReinstate = recordedSteps
+			.map((step, index) => ({ step, index }))
+			.filter((step) => {
+				return step.step.payload.meta?.uniqueNodeId === uniqueElementId;
+			});
+
+		stepsToReinstate.map((a) => {
+			a.step.payload.meta = {
+				...(a.step.payload.meta || {}),
+				parentFrameSelectors: elementInfo.parentFrameSelectors,
+			};
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
+			this.store.dispatch(updateRecordedStep(a.step, a.index));
+		});
 	}
 
 	async continueRemainingSteps(event: Electron.IpcMainEvent, payload: { extraSteps?: iAction[] | null }) {
@@ -687,21 +712,29 @@ export class AppWindow {
 			remainingSteps = remainingSteps ? [...extraSteps, ...remainingSteps] : extraSteps.slice();
 		}
 		if (remainingSteps) {
-			await this.handleReplayTestSteps(remainingSteps);
+			const success = await this.handleReplayTestSteps(remainingSteps);
+			if (!success) return;
 		}
 		this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
 	}
 
-	async handleGetElementAssertInfo(event: Electron.IpcMainEvent, elementInfo: iElementInfo) {
+	async handleGetElementAssertInfo(event: Electron.IpcMainEvent, { elementInfo, useSelectors = false }: { elementInfo: iElementInfo, useSelectors: boolean }) {
+		let isPaused = false;
 		try {
-			await this.webView.resumeExecution();
+			await this.webView.resumeExecution(true);
+			isPaused = true;
 		} catch (e) {
 			console.error("Enabling exection failed", e);
 		}
 		await new Promise((resolve) => setTimeout(resolve, 500));
-		const elementHandle = this.webView.playwrightInstance.getElementInfoFromUniqueId(elementInfo.uniqueElementId)?.handle;
+		let elementHandle = this.webView.playwrightInstance.getElementInfoFromUniqueId(elementInfo.uniqueElementId)?.handle;
 		if (!elementHandle) {
-			return null;
+			if (useSelectors) {
+				elementHandle = await this.webView.playwrightInstance.page.$(toCrusherSelectorsFormat(elementInfo.selectors as any).value);
+			}
+			if (!elementHandle) {
+				return null;
+			}
 		}
 		const attributes = await elementHandle.evaluate((element) => {
 			const attributeNamesArr: string[] = (element as HTMLElement).getAttributeNames();
@@ -737,7 +770,9 @@ export class AppWindow {
 			}
 		}
 		try {
-			await this.webView.disableExecution();
+			if (isPaused) {
+				await this.webView.disableExecution();
+			}
 		} catch (ex) {
 			console.error("Disabling execution failed", ex);
 		}
@@ -856,7 +891,6 @@ export class AppWindow {
 		this.store.dispatch(updateRecorderCrashState(null));
 		const recordedSteps = getSavedSteps(this.store.getState() as any);
 		await this.resetRecorder(TRecorderState.PERFORMING_ACTIONS);
-		console.log("Verifiyng");
 		const isSuccessful = await this.handleReplayTestSteps(recordedSteps as any);
 		this.store.dispatch(setIsTestVerified(true));
 		if (isSuccessful) {
@@ -945,7 +979,30 @@ export class AppWindow {
 		);
 	}
 
+	async shouldOverrideHost() {
+		return shouldOverrideHost(this);
+	}
+
+	async modifyStepsForEnvironment(steps: any) {
+		const overrideHost = await this.shouldOverrideHost();
+		if (overrideHost) {
+			steps = steps.map((event) => {
+				if (event.type === ActionsInTestEnum.NAVIGATE_URL) {
+					const urlToGo = new URL(event.payload.meta.value);
+					const newHostURL = new URL(overrideHost.host);
+					urlToGo.host = newHostURL.host;
+					urlToGo.port = newHostURL.port;
+					urlToGo.protocol = newHostURL.protocol;
+					event.payload.meta.value = urlToGo.toString();
+				}
+				return event;
+			});
+		}
+
+		return steps;
+	}
 	async handleReplayTestSteps(steps: iAction[] | null = null) {
+		steps = await this.modifyStepsForEnvironment(steps);
 		this.store.dispatch(updateRecorderState(TRecorderState.PERFORMING_ACTIONS, {}));
 
 		const browserActions = getBrowserActions(steps);
@@ -960,31 +1017,36 @@ export class AppWindow {
 				if (browserAction.type === ActionsInTestEnum.SET_DEVICE) {
 					await this.store.dispatch(setDevice(browserAction.payload.meta.device.id));
 					await this.handlePerformAction(null, { action: browserAction, shouldNotSave: !!(browserAction as any).shouldNotRecord });
-					if (reaminingSteps.length) {
-						await new Promise((resolve) => {
-							const intervalFun = () => {
-								if (this.webView?.playwrightInstance?.page) {
-									resolve(true);
-									return true;
-								}
-								return false;
-							};
-							const result = intervalFun();
-							if (!result) {
-								const _interval = setInterval(() => {
-									if (intervalFun()) {
-										clearInterval(_interval);
-									}
-								}, 250);
+					await new Promise((resolve) => {
+						const intervalFun = () => {
+							if (this.webView?.playwrightInstance?.page) {
+								resolve(true);
+								return true;
 							}
-						});
+							return false;
+						};
+						const result = intervalFun();
+						// @Todo: throw an error here.
+						if (!result) {
+							const _interval = setInterval(() => {
+								if (intervalFun()) {
+									clearInterval(_interval);
+								}
+							}, 250);
+						}
+					});
+					const isCrusherScriptLoaded = await this.webView?.webContents.executeJavaScript("window.crusherScriptLoaded");
+					if (!isCrusherScriptLoaded) {
+						console.log("Adding init script");
+						await this.webView.playwrightInstance.addInitScript(path.join(__dirname, "recorder.js"));
 					}
+
 				} else {
 					if (browserAction.type !== ActionsInTestEnum.RUN_AFTER_TEST) {
 						// @Todo: Add support for future browser actions
 						this.store.dispatch(recordStep(browserAction, ActionStatusEnum.COMPLETED));
 					} else {
-						await this.handleRunAfterTest(browserAction);
+						await this.handleRunAfterTest(browserAction, false);
 					}
 				}
 			}
@@ -1077,9 +1139,17 @@ export class AppWindow {
 		payload: { action: iAction; shouldNotSave?: boolean; isRecording?: boolean; shouldNotSleep?: boolean },
 	) {
 		if (this.webView?.playwrightInstance) {
-			console.log("Starting action", this.webView.playwrightInstance.actionDescriptor.describeAction(payload.action));
+			const stepName = this.webView.playwrightInstance.actionDescriptor.describeAction(payload.action);
+			let squareBracketRegex = /(.*)\[(.*)\]/i;
+			let result = stepName.match(squareBracketRegex);
+			if (!result) {
+				console.logPlain(`  .   `, stepName);
+			} else {
+				console.logPlain(`  .   `, result[1].trim(), chalkShared.magenta(result[2]));
+			}
+
 		} else {
-			console.log("Starting action", payload.action.type);
+			console.logPlain(`  .   ` + payload.action.type);
 		}
 
 		const { action, shouldNotSave } = payload;
@@ -1100,7 +1170,7 @@ export class AppWindow {
 					if (!shouldNotSave) {
 						this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
 					}
-					await this.waitForWebView();
+					// await this.waitForWebView();
 					break;
 				}
 				case ActionsInTestEnum.NAVIGATE_URL:
@@ -1163,14 +1233,22 @@ export class AppWindow {
 		this.store.dispatch(resetRecorderState(state));
 		this.store.dispatch(clearLogs());
 		if (this.webView) {
-			await this.webView.webContents.loadURL("about:blank");
+			console.log("loading blank page...");
+			try {
+				try { await this.webView.webContents.loadURL("about:blank"); } catch (e) { }
+				await this.webView.playwrightInstance.page.waitForLoadState("networkidle");
+
+			} catch (e) {
+				console.log("error loading blank page", e);
+			}
 		}
 		await this.clearWebViewStorage();
 	}
 
-	private async handleRunAfterTest(action: iAction, shouldRecordSetDevice = false) {
+	private async handleRunAfterTest(action: iAction, shouldRecordSetDevice = false, overrideHost = null) {
 		try {
-			const testSteps = await CloudCrusher.getTest(action.payload.meta.value);
+			let testSteps = await CloudCrusher.getTest(action.payload.meta.value);
+			testSteps = await this.modifyStepsForEnvironment(testSteps);
 
 			const replayableTestSteps = await CloudCrusher.getReplayableTestActions(testSteps, true);
 			const browserActions = getBrowserActions(replayableTestSteps);
@@ -1216,8 +1294,9 @@ export class AppWindow {
 			if (this.webView) {
 				this.webView = undefined;
 			}
-			this.store.dispatch(resetRecorder());
 			await this.resetRecorder();
+
+			this.store.dispatch(resetRecorder());
 			this.store.dispatch(setSessionInfoMeta({}));
 			this.handleResetStorage();
 		});
@@ -1259,7 +1338,7 @@ export class AppWindow {
 	}
 
 	private get rendererLoaded(): boolean {
-		return this.loadTime && !!this.rendererReadyTime;
+		return !!this.loadTime;
 	}
 
 	/**

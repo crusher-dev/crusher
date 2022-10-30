@@ -20,32 +20,8 @@ async function waitForNavigation(
 ) {
 	if (action.payload.meta?.value) {
 		let url = template(action.payload.meta?.value, { ctx: context || {} });
-		await new Promise((resolve, reject) => {
-			let time = 0;
 
-			const interval = setInterval(async () => {
-				if (time >= 5 * 1000) {
-					clearInterval(interval);
-					return resolve(true);
-				}
-				const pageUrl = await page.url();
-
-				const pageURL = new URL(pageUrl);
-				pageURL.search = "";
-
-				const metaValueUrl = new URL(url);
-				metaValueUrl.search = "";
-				// Trim the slash at the end if any
-				const pageUrlTrimmed = pageURL.toString().replace(/\/$/, "");
-				const metaValue = metaValueUrl.toString().replace(/\/$/, "");
-
-				if (pageUrlTrimmed === metaValue) {
-					clearInterval(interval);
-					return resolve(true);
-				}
-				time += 500;
-			}, 500);
-		});
+		await page.waitForURL(url, { timeout: action.payload.meta?.timeout || 30000 });
 	} else {
 		await sleep(2000);
 	}

@@ -84,7 +84,7 @@ export default function Signup() {
 		try {
 			const { systemInfo } = await resetPasswordRequest(query?.token?.toString(), confirmPassword.value);
 			setData(systemInfo);
-			push("/app/dashboard");
+			push("/app/projects");
 		} catch (e: any) {
 			console.log(e);
 			alert(e.message === "USER_EMAIL_NOT_AVAILABLE" ? "User not found" : "Some error occurred while registering");

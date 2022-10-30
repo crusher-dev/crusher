@@ -53,7 +53,7 @@ const inputCss = css`
 		.showOnClick {
 			height: 100%;
 		}
-		/* To stop border collision */
+
 		margin-left: 0.5rem;
 		margin-top: 0.5rem;
 		margin-bottom: 0.5rem;
@@ -76,13 +76,14 @@ const inputCss = css`
 		padding-right: 110rem;
 
 		background: rgba(77, 77, 77, 0.25);
+		
 		border: 0.5px solid rgba(55, 55, 55, 0.23);
 		border-radius: 10px;
 
 		
 		
 		font-weight: 600;
-		font-size: 13.8rem;
+		font-size: 14rem;
 		color: rgba(255, 255, 255, 0.67);
         :focus {
             border-color: #D660FF;

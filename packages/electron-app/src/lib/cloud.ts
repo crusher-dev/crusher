@@ -2,7 +2,7 @@ import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { iAction } from "@shared/types/action";
 import axios from "axios";
 import { shell } from "electron";
-import { getBrowserActions, getMainActions } from "runner-utils/src";
+import { getBrowserActions, getMainActions } from "runner-utils/src/utils/helper";
 import { getStore } from "../store/configureStore";
 import { getCurrentSelectedProjct } from "../store/selectors/app";
 import { createAuthorizedRequestFunc, resolveToBackend, resolveToFrontend } from "../utils/url";
@@ -70,6 +70,7 @@ class CloudCrusher {
 			const store = getStore();
 			const selectedProject = getCurrentSelectedProjct(store.getState() as any);
 			if (!selectedProject) throw new Error("No project selected!");
+
 			return axios
 				.post(
 					resolveToBackend(`/projects/${selectedProject}/builds/actions/create.local`),
@@ -103,6 +104,11 @@ class CloudCrusher {
 	public static getBuildReport: (buildId: string) => Promise<any> = createAuthorizedRequestFunc((authorizationOptions, buildId) => {
 		return axios.get(resolveToBackend(`/builds/${buildId}/report`), authorizationOptions).then((res) => res.data);
 	});
+
+	public static getBuildReportBuildMeta: (buildId: string) => Promise<any> = createAuthorizedRequestFunc((authorizationOptions, buildId) => {
+		return axios.get(resolveToBackend(`/builds/${buildId}/report.buildMeta`), authorizationOptions).then((res) => res.data);
+	});
+
 
 	public static deleteTest: (testId: string) => Promise<any> = createAuthorizedRequestFunc((authorizationOptions, testId) => {
 		return axios.post(resolveToBackend(`/tests/${testId}/actions/delete`), {}, authorizationOptions).then((res) => res.data);

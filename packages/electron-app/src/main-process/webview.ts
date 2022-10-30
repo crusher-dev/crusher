@@ -63,7 +63,6 @@ export class WebView {
 		this.registerIPCListeners();
 		await this.playwrightInstance.connect();
 
-		await this.playwrightInstance.addInitScript(path.join(__dirname, "recorder.js"));
 		this._initializeTime = now() - this._startTime;
 
 		console.log("Initialized recorder in", this._initializeTime.toFixed(2) + "ms");
@@ -91,19 +90,21 @@ export class WebView {
 		});
 	}
 
-	public async resumeExecution() {
+	public async resumeExecution(throwError = false) {
 		try {
 			await this.webContents.debugger.sendCommand("Debugger.resume");
 		} catch (ex) {
 			console.info("Error resuming execution", ex);
+			if(throwError) throw ex;
 		}
 	}
 
-	public async disableExecution() {
+	public async disableExecution(throwError = false) {
 		try {
 			await this.webContents.debugger.sendCommand("Debugger.pause");
 		} catch (ex) {
 			console.info("Error pausing execution", ex);
+			if(throwError) throw ex;
 		}
 	}
 
@@ -174,7 +175,7 @@ class WebViewListener {
 	}
 
 	private handleDidFailLoad(event, errorCode, errorDescription, validatedURL, isMainFrame) {
-		if (isMainFrame) {
+		if (isMainFrame && errorCode === -105) {
 			this.appWindow.updateRecorderCrashState({ type: TRecorderCrashState.PAGE_LOAD_FAILED });
 		}
 	}
@@ -190,8 +191,6 @@ class WebViewListener {
 				this.appWindow.getRecorderState().type,
 			)
 		) {
-			console.log("Recorder state is", this.appWindow.getRecorderState().type);
-
 			this.appWindow.handleSaveStep(null, {
 				action: {
 					type: ActionsInTestEnum.WAIT_FOR_NAVIGATION as ActionsInTestEnum,

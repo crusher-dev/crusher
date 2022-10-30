@@ -1,7 +1,7 @@
 import React from "react";
 import { css } from "@emotion/react";
 import { getStepInfo } from "electron-app/src/store/selectors/recorder";
-import { useSelector } from "react-redux";
+import { useSelector, shallowEqual } from "react-redux";
 import { GreenCheckboxIcon, LoadingIcon, PointerArrowIcon } from "electron-app/src/_ui/constants/old_icons";
 import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
 import { TextHighlighter } from "./helper";
@@ -12,7 +12,7 @@ import { stepHoverAtom } from "electron-app/src/_ui/store/jotai/steps";
 import { useAtom } from "jotai";
 import { editInputAtom } from "electron-app/src/_ui/store/jotai/testsPage";
 import { Conditional } from "@dyson/components/layouts";
-import ToastDemo from "electron-app/src/_ui/ui/components/Toast";
+import { StepTimeout } from "./components/steps/timeout";
 
 interface IProps {
 	className?: string;
@@ -27,15 +27,16 @@ interface IProps {
 	step?: any;
 }
 
+
+
 const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, step, onClick, setIsActive, isLast, ...props }: IProps) => {
 	const { stepId } = props;
 	const [stepHoverId, setStepHoverId] = useAtom(stepHoverAtom);
-	const [editInputId] = useAtom(editInputAtom);
-	const [isEditCardOpen, setIsEditorCardOpen] = React.useState(false);
-	const stepInfo = useSelector(getStepInfo(stepId));
+	const isHovered = stepId === stepHoverId
 
-	const title = TextHighlighter({ text: stepInfo.name });
-	const hasFailed = stepInfo.isFailed;
+	const [editInputId] = useAtom(editInputAtom);
+	const stepInfo = useSelector(getStepInfo(stepId), shallowEqual);
+	const { isFailed, isRunning, isCompleted } = stepInfo
 
 	React.useEffect(() => {
 		if (!editInputId && stepHoverId) {
@@ -44,57 +45,80 @@ const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, 
 	}, [editInputId === `${stepId}-stepName`]);
 
 	const handleHoverCallback = React.useCallback((shouldShow: boolean) => {
-		if(shouldShow) {
+		if (shouldShow) {
 			setStepHoverId(stepId);
-		} else if(!shouldShow && stepHoverId === stepId) {
+		} else if (!shouldShow && stepHoverId === stepId) {
 			setStepHoverId(null);
 		}
 	}, [stepHoverId]);
+
+	const statusType = React.useMemo(() => {
+		if (stepInfo.isRunning && !disabled) {
+			return "running"
+		}
+		if (stepInfo.isCompleted && !disabled) {
+			return "completed"
+		}
+
+		if (stepInfo.isFailed && !disabled) {
+			return "failed"
+		}
+		return null
+	}, [isRunning, isFailed, isCompleted]);
+
+	const title = React.useMemo(() => TextHighlighter({ text: stepInfo.name }), [stepInfo.name]);
+	const timeout = React.useMemo(() => (statusType === "running" ? <StepTimeout timeout={30} /> : null), [statusType === "running"]);
+	const content = React.useMemo(() => (
+		<div className={"step-list-item"} onContextMenu={onContextMenu} onClick={onClick} css={[containerCss(statusType === "failed" || disabled), isActive ? activeItemCss : undefined]}>
+			<div className={"card"} css={contentCss}>
+				{statusType === "running" ? <PointerArrowIcon css={runningPointerIconCss} /> : ""}
+				<div css={stepTextCss} className="flex flex-col justify-center">
+					<TextBlock css={[stepNameCss, statusType === "failed" ? failedTextNameCss : null, statusType === "running" ? runningTextNameCss : null, disabled ? css`color: rgba(255, 255, 255, 0.85);` : null]}>
+						{title}
+					</TextBlock>
+
+					<Conditional showIf={!!stepInfo?.description}>
+						<TextBlock css={stepDescriptionCss}>{stepInfo?.description?.substring(0, 40)}</TextBlock>
+					</Conditional>
+				</div>
+				{timeout}
+				{statusType === "completed" && !disabled ? <GreenCheckboxIcon css={[completedIconCss, !isLast ? inActiveIconCss : null]} /> : ""}
+			</div>
+			{statusType === "failed" ? <FailedStepCard stepId={stepId} /> : ""}
+		</div>
+	), [stepInfo, isActive, isLast, disabled, statusType, title, timeout]);
+
 	return (
 		<HoverCard
-			disabled={disabled || (hasFailed && !stepHoverId)  || (stepHoverId && stepHoverId !== stepId)}
-			disableStateManagement={true}
+			supportPadding={<div css={css`position: absolute; background: transparent; width: 20rem; height: 100%; z-index: 999; margin-left: -24rem;`}></div>}
+			disabled={disabled || (statusType === "failed" && !stepHoverId) || (stepHoverId && stepHoverId !== stepId)}
 			autoHide={true}
 			state={stepHoverId === stepId}
-
 			callback={handleHoverCallback}
 			wrapperCss={css`
-				z-index: 123123123 !important;
-				box-shadow: none;
-			`}
+			z-index: 123123123 !important;
+			box-shadow: none;
+			background: #0F0F0F;
+		`}
 			css={css`
-				padding: 0rem !important;
-			
-			`}
+			padding: 0rem !important;
+			margin-left: -4rem;
+		`}
 			tooltipCSS={css`
-				border-radius: 16px;
-				overflow: hidden !important;
-				border: .5px solid #1C1C1C;
-			`}
-			content={<StepEditor stepId={stepId} />}
+			border-radius: 12px;
+			overflow: hidden !important;
+			background: #0F0F0F;
+			border: 1px solid #1C1C1C;
+		`}
+			content={isHovered ? <StepEditor stepId={stepId} /> : null}
 			placement="right"
 			type="hover"
 			padding={8}
 			offset={0}
 		>
-			<div onContextMenu={onContextMenu} onClick={onClick} css={[containerCss(hasFailed || disabled), isActive ? activeItemCss : undefined]}>
-				<div className={"card"} css={contentCss}>
-					{stepInfo.isRunning ? <PointerArrowIcon css={runningPointerIconCss} /> : ""}
-					<div css={stepTextCss} className="flex flex-col justify-center">
-						<TextBlock css={[stepNameCss, stepInfo.isFailed ? failedTextNameCss : null, stepInfo.isRunning ? runningTextNameCss : null, disabled ? css`color: rgba(255, 255, 255, 0.85);` : null]}>
-							{title}
-						</TextBlock>
-						<Conditional showIf={!!stepInfo?.description}>
-							<TextBlock css={stepDescriptionCss}>{stepInfo?.description?.substring(0, 40)}</TextBlock>
-						</Conditional>
-					</div>
-					{stepInfo.isRunning && !disabled ? <LoadingIcon style={{}} css={runningIconCss} /> : ""}
-					{stepInfo.isCompleted && !disabled ? <GreenCheckboxIcon css={[completedIconCss, !isLast ? inActiveIconCss : null]} /> : ""}
-				</div>
-				{hasFailed ? <FailedStepCard stepId={stepId} />  : ""}
-			</div>
+			{content}
 		</HoverCard>
-	);
+	)
 };
 
 const inActiveIconCss = css`
@@ -135,7 +159,7 @@ const runningPointerIconCss = css`
 	height: 9rem;
 	position: absolute;
 	left: 8rem;
-	top: 10rem;
+	top: 12.5rem;
 `;
 const stepTextCss = css`
 	flex: 1 0 50%;

@@ -36,11 +36,5 @@ export const updateInitialDataMutator = atom(null, (_get, _set, data: UserInitia
 });
 
 export const selectInitialProjectMutator = atom(null, (_get, _set, data: UserInitialData) => {
-	console.log(data, "sdf");
-	// const { userData, projects } = data;
-	// const tempProjectToRedirect = _get(tempProjectAtom);
-	// const selectedProjectId = !!tempProjectToRedirect ? tempProjectToRedirect : userData?.meta?.[USER_META_KEYS.SELECTED_PROJECT_ID] ?? (projects?.[0] ? projects?.[0].id : null);
 
-	// _set(tempProjectAtom, "");
-	// _set(appStateItemMutator, { key: "selectedProjectId", value: selectedProjectId });
 });

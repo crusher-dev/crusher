@@ -11,6 +11,8 @@ body {
 	color: #eee;
 	-webkit-font-smoothing: antialiased;
 	text-rendering: optimizelegibility;
+	position: fixed;
+	width: 100%;
 }
 
 #__next {
@@ -76,7 +78,7 @@ input:-webkit-autofill {
 
 * {
 	transition: all 120ms cubic-bezier(0.76, -0.02, 0.49, 0.8);
-	transition-property: fill, opacity, filter, box-shadow, height, width, background, color, background-color;
+	transition-property: fill, opacity, filter, box-shadow, height, width, background, color, background-color, border-color;
 	text-underline-offset: 4px;
 }
 

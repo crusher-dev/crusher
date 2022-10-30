@@ -11,7 +11,7 @@ import { Conditional } from "dyson/src/components/layouts";
 
 import { PROJECT_META_KEYS, USER_META_KEYS } from "@constants/USER";
 import { CorrentSVG } from "@svg/builds";
-import { PlayIcon, ReloadIcon } from "@svg/dashboard";
+import { ExternalIcon, PlayIcon, ReloadIcon } from "@svg/dashboard";
 import { GithubSquare } from "@svg/social";
 import { backendRequest } from "@utils/common/backendRequest";
 import { sendSnackBarEvent } from "@utils/common/notify";
@@ -24,26 +24,28 @@ import { selectedTabAtom } from "./atoms";
 import { ConfigChange } from "./components/common/config";
 import { ReviewSection } from "./components/review/reviewComponent";
 import { HomeSection } from "./container/home";
+import { COLORS } from "dyson/src/constant/color";
 
 const ReportSection = dynamic(() => import("./container/testList"));
 function BuildInfoTop() {
-	const { query } = useRouter();
-	const { data } = useBuildReport(query.id);
+	const { data } = useReportData();
+	const title = data.name || `#${data?.id}`;
 
-	const name = "feats: integrated test GTM #517";
+	const { status } = data;
+
 
 	return (
 		<div>
 			<div className={"font-cera text-18 font-700 leading-none flex pt-8"} id={"title"}>
-				{name || `${data?.name} #${data?.id}`} <CorrentSVG height={18} width={18} className="ml-16" />
+				{title || `${data?.name} #${data?.id}`} <CorrentSVG height={18} width={18} className="ml-16" />
 			</div>
 			<div className="flex items-center mt-16" css={flexGap}>
 				<div className="flex items-center">
 					<Text color="#696969" fontSize={13}>
-						Status :{" "}
+						Status:
 					</Text>
-					<Text color="#E7E7E7" fontSize={13}>
-						All passed
+					<Text color="#E7E7E7" fontSize={13} className="ml-4">
+						{status === "PASSED" ? `All passed` : status.toLowerCase()}
 					</Text>
 				</div>
 				<div className="flex items-center">
@@ -65,7 +67,7 @@ function BuildInfoTop() {
 						test count :{" "}
 					</Text>
 					<Text color="#E7E7E7" fontSize={13}>
-						12
+						{data.tests.length}
 					</Text>
 				</div>
 			</div>
@@ -77,15 +79,21 @@ const flexGap = css`
 	gap: 28rem;
 `;
 
-function ReportInfoTOp() {
+const useReportData = () => {
 	const { query } = useRouter();
 	const { data } = useBuildReport(query.id);
+
+	return { data }
+}
+
+function ReportInfoTOp() {
+	const { data } = useReportData()
 
 	const title = data.name || `#${data?.id}`;
 	usePageTitle(title);
 	return (
 		<div className={"flex"}>
-			<ImageSection />
+			<ImageSection src={data.hostScreenshot} />
 
 			<div className="w-full">
 				<div id="build-info-top" className="flex justify-between w-full">
@@ -99,31 +107,43 @@ function ReportInfoTOp() {
 }
 
 function BuildMainInfo() {
+	const { data } = useReportData();
+	const { meta } = data;
+	const { github } = meta;
+
+
 	return (
 		<React.Fragment>
-			<div className="mt-32">
-				<TextBlock color="#696969" fontSize={13}>
-					Failed for few configuration
-				</TextBlock>
+			<div className="mt-32" css={css`min-height: 13px;`}>
+				<Conditional showIf={!!github}>
+					<a href={github?.repoLink} css={link} target="_blank">
+						<TextBlock color="#696969" fontSize={13} className="flex items-center" css={link}>
+							{github?.githubCommitMessage} <ExternalIcon className="ml-6" />
+
+						</TextBlock>
+					</a>
+				</Conditional>
 			</div>
 			<div className="flex justify-between items-start mt-80">
 				<div className="flex" css={flexGapInfo}>
+					<Conditional showIf={!!data?.host}>
+						<div>
+							<TextBlock color="#696969" fontSize={13}>
+								host
+							</TextBlock>
+							<TextBlock color="#D0D0D0" fontSize={13} className="mt-8">
+								<a href={data?.host} css={link} className="flex items-center" target="_blank">
+									{data?.host?.split("://")[1]} <ExternalIcon className="ml-6" />
+								</a>
+							</TextBlock>
+						</div>
+					</Conditional>
 					<div>
 						<TextBlock color="#696969" fontSize={13}>
-							host
+							env
 						</TextBlock>
 						<TextBlock color="#D0D0D0" fontSize={13} className="mt-8">
-							<a href={"https://crusher.dev"} css={link}>
-								crusher.dev
-							</a>
-						</TextBlock>
-					</div>
-					<div>
-						<TextBlock color="#696969" fontSize={13}>
-							host
-						</TextBlock>
-						<TextBlock color="#D0D0D0" fontSize={13} className="mt-8">
-							crusher.dev
+							Prod
 						</TextBlock>
 					</div>
 				</div>
@@ -180,35 +200,23 @@ function Reload() {
 }
 
 function RunLocally() {
-	// const router = useRouter();
-	// const { currentProject } = useProjectDetails()
-	// const { query } = router;
-	// const [filters] = useAtom(buildFiltersAtom);
-	// const [, updateMetaData] = useAtom(updateMeta);
+	const { query } = useRouter();
 
 	const runProjectTest = useCallback(() => {
 		(async () => {
-			// await handleTestRun(currentProject?.id, query, filters, router, updateMetaData);
-			// updateMetaData({
-			// 	type: "user",
-			// 	key: USER_META_KEYS.RAN_TEST,
-			// 	value: true,
-			// });
-			// updateMetaData({
-			// 	type: "project",
-			// 	key: PROJECT_META_KEYS.RAN_TEST,
-			// 	value: true,
-			// });
+
 		})();
 	}, []);
 
 	return (
-		<Button size="medium" bgColor={"tertiary"} title="run test locally" onClick={runProjectTest} css={runTestCSS}>
-			<div className={"flex items-center"}>
-				<PlayIcon className={"mr-6"} />
-				<span className="mt-2">run locally</span>
-			</div>
-		</Button>
+		<a href={`crusher://run-local-build?buildId=${query.id}`}>
+			<Button size="medium" bgColor={"tertiary"} title="run test locally" css={runTestCSS}>
+				<div className={"flex items-center"}>
+					<PlayIcon className={"mr-6"} />
+					<span className="mt-2">run locally</span>
+				</div>
+			</Button>
+		</a>
 	);
 }
 
@@ -225,14 +233,14 @@ const runTestCSS = css`
 
 	width: max-content;
 
-	background: #cd60ff;
-	border: 1px solid #7d41ad;
+	background: ${COLORS.purple[700]};
+	border: 1px solid ${COLORS.purple[700]};
 	border-radius: 8px;
 
 	:hover {
-		background: #cd60ff;
-		filter: brighntess(0.7);
-		border: 1px solid #7d41ad;
+		background: ${COLORS.purple[700]};
+		filter: brighntess(.8);
+		border: 1px solid ${COLORS.purple[700]};
 	}
 `;
 
@@ -286,19 +294,42 @@ export const rerunBuild = async (buildId) => {
 	sendSnackBarEvent({ type: "normal", message: "We've started new build" });
 };
 
-function ImageSection() {
+function ImageSection({ src }) {
+	if (!src) {
+
+		return (<div css={[previewImgCss, errorImageCSS]} className="mr-46">
+			<div className="flex items-center mb-12">
+				<TextBlock color="#BDBDBD" fontSize={16} weight={700} className="mr-6">screeshot failed</TextBlock>
+				<div css={dot}></div>
+			</div>
+			<TextBlock fontSize={13} color="#696969">couldn't get screenshot</TextBlock>
+		</div>)
+	}
 	return (
-		<div className="mr-46">
-			<img src="https://i.imgur.com/GT2hLO9.png" css={previewImgCss} />
-		</div>
+		<img src={src} css={previewImgCss} className="mr-46" />
 	);
 }
+
+const dot = css`
+min-width: 6px;
+min-height: 6px;
+
+background: #FF4874;
+border-radius: 21px;
+`
+
+const errorImageCSS = css`
+	border: 1.5px solid rgb(255 255 255 / 6%);
+	padding: 20rem 24rem;
+
+`
 
 const previewImgCss = css`
 	min-width: 304rem;
 	height: 220rem;
 	border: 0.5px solid rgb(255 255 255 / 6%);
-	border-radius: 15px;
+	border-radius: 16rem;
+	object-fit: cover;
 `;
 function TabBar() {
 	const [selectedTabIndex, setSelectedTabIndex] = useAtom(selectedTabAtom);

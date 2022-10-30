@@ -162,7 +162,7 @@ const headerCss = css`
 const contentCss = css`
 	height: 100%;
 	padding-top: 16rem;
-	overflow-y: auto;
+	overflow-y: overlay;
 `;
 
 export { ActionsPanel };

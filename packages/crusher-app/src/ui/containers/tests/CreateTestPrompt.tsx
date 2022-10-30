@@ -4,7 +4,7 @@ import React, { useMemo } from "react";
 
 import useSWR from "swr";
 
-import { Text, TextBlock } from "dyson/src/components/atoms";
+import { Text } from "dyson/src/components/atoms";
 import { Input } from "dyson/src/components/atoms/input/Input";
 
 import { RELEASE_API } from "@constants/api";
@@ -84,7 +84,6 @@ export const CreateTestPrompt = ({ className }: { className?: any }) => (
 );
 
 const boxCSS = css`
-background: #00000078;
 border: 1px solid rgb(255 255 255 / 8%);
 	box-sizing: border-box;
 	border-radius: 20px;

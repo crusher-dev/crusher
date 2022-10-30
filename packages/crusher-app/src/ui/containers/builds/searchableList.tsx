@@ -1,7 +1,6 @@
-import { css } from "@emotion/react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import React, { useMemo, useCallback } from "react";
+import React, { useCallback } from "react";
 
 import { useAtom } from "jotai";
 import useSWR from "swr";
@@ -10,11 +9,12 @@ import { PaginationButton } from "../../../../../dyson/src/components/molecules/
 import { Conditional } from "dyson/src/components/layouts";
 
 import { getBuildsList } from "@constants/api";
-import { IProjectBuildListItem, IProjectBuildListResponse } from "@crusher-shared/types/response/iProjectBuildListResponse";
+import { IProjectBuildListResponse } from "@crusher-shared/types/response/iProjectBuildListResponse";
 import { useProjectDetails } from "@hooks/common";
 
 import { buildFiltersAtom } from "../../../store/atoms/pages/buildPage";
 import { BuildsList } from "dyson/src/components/sharedComponets/buildsList/index";
+import { BuildListContext } from "dyson/src/components/sharedComponets/utils/basic";
 
 const EmptyList = dynamic(() => import("@ui/components/common/EmptyList"));
 
@@ -35,8 +35,6 @@ function BuildSearchableList() {
 
 	const isZeroBuild = data && data.list.length === 0;
 
-
-
 	const setPage = useCallback(
 		(page) => {
 			setFilters({ ...filters, page });
@@ -47,14 +45,29 @@ function BuildSearchableList() {
 	const handleViewTest = (buildId) => {
 		router.push(`/${currentProject.id}/build/${buildId}`);
 	};
+
+	const handleShowLocalBuildToggle = () => {
+		setFilters({...filters, page: 0, showLocal: !filters.showLocal});
+	};
+
+	const handleShowMineToggle = () => {
+		setFilters({...filters, showMine: !filters.showMine});
+	};
+
 	const hasNoBuildsOverall = isZeroBuild && !isFilterEnabled;
 	return (
 		<React.Fragment>
 
 			<Conditional showIf={!isZeroBuild}>
-				<div>
-					<BuildsList viewTestCallback={handleViewTest} builds={data.list as any} />
-				</div>
+				<BuildListContext.Provider value={{
+					showLocalBuildCallback: handleShowLocalBuildToggle,
+					showMineCallback: handleShowMineToggle,
+					filters: filters,
+				}}>
+					<div>
+						<BuildsList viewTestCallback={handleViewTest} builds={data.list as any} />
+					</div>
+				</BuildListContext.Provider>
 			</Conditional>
 
 			<Conditional showIf={hasNoBuildsOverall}>

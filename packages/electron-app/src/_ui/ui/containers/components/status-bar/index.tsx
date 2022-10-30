@@ -12,10 +12,15 @@ import { getRecorderState, getSavedSteps } from "electron-app/src/store/selector
 import { updateRecorderState } from "electron-app/src/store/actions/recorder";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 import { HoverCard } from "@dyson/components/atoms/tooltip/Tooltip1";
-import { DocsIcon, UpDownSizeIcon } from "electron-app/src/_ui/constants/icons";
-import { HelpContent } from "electron-app/src/_ui/ui/containers/common/stickyFooter";
+import { DocsIcon, ExportIcon, UpDownSizeIcon } from "electron-app/src/_ui/constants/icons";
+import { ExternalIcon, HelpContent } from "electron-app/src/_ui/ui/containers/common/stickyFooter";
 import { useAtom } from "jotai";
 import { statusBarMaximiseAtom } from "electron-app/src/_ui/store/jotai/statusBar";
+import { HoverButton } from "../../../components/hoverButton";
+import { remote } from "electron";
+import fs from "fs";
+import { showToast } from "../../../components/toasts";
+import path from "path";
 
 interface ITabButtonProps {
 	title: string;
@@ -84,6 +89,17 @@ const ArrowRightIcon = (props) => (
 	</svg>
 );
 
+const cssHighlight = css`
+		// color: #498ed6e3;
+		// color: #99e66ae3;
+		color: #349dd8;
+`
+
+const normalMessage = css`
+		color: #b1b1b1;
+`
+
+
 const StatusBar = () => {
 	const [currentModal, setCurrentModal] = React.useState({ type: null, stepIndex: null });
 	const store = useStore();
@@ -135,6 +151,24 @@ const StatusBar = () => {
 
 		const hasChildrens = React.useMemo(() => log.children?.length, [log]);
 
+		const formattedMessage = React.useMemo(() => {
+			const stepName = log.message;
+			let squareBracketRegex = /(.*)\[(.*)\]/i;
+			let result = stepName.match(squareBracketRegex);
+
+			if (result && !log.parent) {
+				return (
+					<>
+						<span css={normalMessage}>{result[1].trim()}</span>
+						<span className="ml-4" css={cssHighlight}>{result[2]}</span>
+					</>
+				)
+			}
+
+			return <span css={normalMessage}>{log.message}</span>;
+
+		}, [log])
+
 		return (
 			<div className={String(props.className)}>
 				<div
@@ -169,7 +203,8 @@ const StatusBar = () => {
 						<span
 							css={css`
 								font-size: 14rem;
-								color: ${log.type === "error" ? "#C2607D" : "#9FC370"};
+								margin-left:3rem;
+								color: ${log.type === "error" ? "#ff4c81" : "#8c8c8c"};
 							`}
 						>
 							{log.type}
@@ -178,17 +213,23 @@ const StatusBar = () => {
 							css={css`
 								font-size: 14rem;
 								color: #717171;
+								letter-spacing: .15px;
 
 								word-break: break-all;
 							`}
 							className={"ml-20"}
 						>
-							{log.message}
+							{formattedMessage}
 						</span>
 					</div>
 				</div>
 				{showChildrens && log.children && log.children.length
 					? log.children.map((child: ILog & { children: ILog[]; diff: string }) => {
+						if (child.message.includes("\n")) {
+							return (
+								<pre className={"mt-12 ml-60 px-16 py-12"} css={rawMessageCss}>{child.message}</pre>
+							);
+						}
 						return (
 							<LogItem
 								css={css`
@@ -253,6 +294,42 @@ const StatusBar = () => {
 		},
 		[clicked],
 	);
+
+	const handleExportLogs = React.useCallback((e) => {
+		e.preventDefault();
+		e.stopPropagation();
+
+		// Transform logs to string
+		const logsString = logs.get("_").map((log) => {
+			let str = `${log.type}: ${log.message}`;
+			if (logs.get(log.id)) {
+				logs.get(log.id).forEach((child) => {
+					str += `\n\t${child.type}: ${child.message}`;
+				});
+			}
+			return str;
+		}).join("\n");
+
+		var options = {
+			title: "Save file",
+			defaultPath: path.resolve(require("os").homedir(), "crusher_logs.txt"),
+			buttonLabel: "Save",
+
+			filters: [
+				{ name: 'txt', extensions: ['txt'] },
+				{ name: 'All Files', extensions: ['*'] }
+			]
+		};
+
+		remote.dialog.showSaveDialog(null, options).then(({ filePath }) => {
+			// alert("Saving to " + filePath);
+			fs.writeFileSync(filePath, logsString, 'utf-8');
+			showToast({
+				type: "normal",
+				message: "Logs exported successfully",
+			})
+		});
+	}, [logs]);
 
 	return (
 		<div
@@ -369,13 +446,14 @@ const StatusBar = () => {
 									margin-right: 8rem;
 								`}
 							>
-								<div
+								<HoverButton onClick={handleExportLogs} title={"export logs"}>
+									<ExportIcon css={css`width: 14rem; height: 14rem;`} />
+								</HoverButton>
+								<HoverButton
 									onClick={handleToggle}
-									className="flex items-center justify-center"
+									className="flex items-center justify-center ml-2"
 									css={css`
-										height: 16rem;
-										width: 16rem;
-
+				
 										border-radius: 4rem;
 
 										:hover {
@@ -392,7 +470,7 @@ const StatusBar = () => {
 											height: 10rem;
 										`}
 									/>
-								</div>
+								</HoverButton>
 							</div>
 						</Conditional>
 					</div>
@@ -499,6 +577,17 @@ const StatusBar = () => {
 		</div>
 	);
 };
+
+
+const rawMessageCss = css`
+	font-size: 14rem;
+	border: 1px solid #fff;
+	border-radius: 4rem;
+	color: #717171;
+	width: fit-content;
+	user-select: text;
+	cursor: auto;
+`;
 const docsButtonCss = css`
 	font-family: "Cera Pro";
 
@@ -553,7 +642,6 @@ const statusBarContainerStyle = css`
 	z-index: 999;
 	margin-top: auto;
 	border-top: 0.5px solid #242424;
-	border-left: 0.5px solid #242424;
 	border-right: 0;
 	border-bottom: 0;
 `;

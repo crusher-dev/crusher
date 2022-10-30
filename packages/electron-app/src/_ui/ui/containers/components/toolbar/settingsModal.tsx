@@ -116,7 +116,7 @@ const SettingsModalContent = ({ className, ...props }: iStartupModalProps & { cl
 		if (connectToCloudStatus === ConnectToCloudStatusEnum.NOT_CONNECTED) {
 			connectToCloud();
 		} else if (connectToCloudStatus === ConnectToCloudStatusEnum.CONNECTED) {
-			sendSnackBarEvent({ type: "info", message: `Already connected to cloud! Hello, ${userAccountInfo.name}` });
+			sendSnackBarEvent({ type: "info", message: `Already connected to cloud!` });
 		} else {
 			sendSnackBarEvent({ type: "error", message: "Waiting for the login process to complete" });
 		}
@@ -244,31 +244,6 @@ const SettingsModalContent = ({ className, ...props }: iStartupModalProps & { cl
 				</div>
 			</div>
 			<div css={submitFormContainerStyle} className={"submit-action-button"}>
-				<div
-					onClick={handleConnectToCloud}
-					css={css`
-						display: flex;
-						align-items: center;
-						color: #fff;
-						font-size: 13rem;
-						:hover {
-							opacity: 0.9;
-						}
-					`}
-				>
-					<span>{connectWordMap[connectToCloudStatus]} to cloud</span>
-					<Conditional showIf={connectToCloudStatus === ConnectToCloudStatusEnum.WAITING}>
-						<LoadingIconV2
-							css={css`
-								height: 20rem;
-								margin-left: 6rem;
-							`}
-						/>
-					</Conditional>
-					<Conditional showIf={connectToCloudStatus === ConnectToCloudStatusEnum.CONNECTED}>
-						<img src={"./static/assets/icons/correct.svg"} style={{ marginLeft: "6rem", height: "14rem", marginTop: "-2rem" }} />
-					</Conditional>
-				</div>
 				<Button onClick={saveAction} css={[buttonStyle, newButtonStyle]}>
 					Save
 				</Button>

@@ -1,4 +1,4 @@
-import { webFrame } from "electron";
+import { ipcRenderer, webFrame } from "electron";
 import { getInitialStateRenderer } from "electron-redux";
 import React from "react";
 import { setShowShouldOnboardingOverlay } from "../store/actions/app";
@@ -26,6 +26,10 @@ import { InvalidCredsErrorContainer } from "./ui/containers/errors/invalidCreds"
 import { performGoToUrl } from "./commands/perform";
 import { Provider as JotaiProvider } from "jotai";
 import { ToastBox } from "./ui/components/toasts";
+import { CloudCrusher } from "../lib/cloud";
+import { Store } from "redux";
+import { IDeepLinkAction } from "../types";
+import { triggerLocalBuild } from "./utils/recorder";
 webFrame.setVisualZoomLevelLimits(1, 3);
 
 function getPersistStore() {
@@ -36,6 +40,21 @@ function getPersistStore() {
 	const store = configureStore(initialReduxState, "renderer");
 	store.dispatch(setShowShouldOnboardingOverlay(shouldShowOnboardingOverlay));
 	return store;
+}
+
+
+const handleUrlAction = async (store: Store, event: Electron.IpcRendererEvent, { action }: { action: IDeepLinkAction }) => {
+	console.log("Action recieved", action);
+	switch (action.commandName) {
+		case "run-local-build":
+			const { buildId } = action.args;
+			console.log("Local build", action);
+			const buildReport = await CloudCrusher.getBuildReportBuildMeta(buildId);
+			const testIds = buildReport.tests.map((test) => test.id);
+			triggerLocalBuild(testIds, buildReport.tests.map((test) => ({...test, testName: test.name})));
+			break;
+		
+	}
 }
 
 const store = getPersistStore();
@@ -56,6 +75,16 @@ function InsideRouter() {
 			performGoToUrl("/unauthorized_error");
 		} else {
 			performGoToUrl("/network_error");
+		}
+
+	}, []);
+
+	React.useEffect(() => {
+		const listener = handleUrlAction.bind(null, store);
+		ipcRenderer.on("url-action", listener);
+		window.triggerLocalBuild = listener.bind(null, null, { action: { commandName: "run-local-build", args: { buildId: "29372" } } });
+		return () => {
+			ipcRenderer.removeListener("url-action", listener);
 		}
 	}, []);
 

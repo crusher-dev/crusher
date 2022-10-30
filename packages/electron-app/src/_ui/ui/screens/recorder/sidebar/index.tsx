@@ -29,16 +29,19 @@ const Sidebar = ({ className }: ISidebarProps) => {
 	}, [currentBuild]);
 
 	return (
-		<div css={containerCss} className={String(className)}>
-			<Conditional showIf={isInRecordingSession}>
-				<>
-					{topPanel}
-					<StepsPanel css={[currentBuild && `height: 100%`]} />
-				</>
-			</Conditional>
-			<ModalManager />
-			<TemplatesModal isOpen={false} handleClose={() => {}} />
-		</div>
+		<ResizeWrapper track={"Resizable"}>
+			<div id="Resizable" css={containerCss} className={String(className)}>
+
+				<Conditional showIf={isInRecordingSession}>
+					<>
+						{topPanel}
+						<StepsPanel css={[currentBuild && `height: 100%`]} />
+					</>
+				</Conditional>
+				<ModalManager />
+				<TemplatesModal isOpen={false} handleClose={() => { }} />
+			</div>
+		</ResizeWrapper>
 	);
 };
 
@@ -51,6 +54,114 @@ const containerCss = css`
 	position: relative;
 	z-index: 1000;
 	background-color: #09090a;
+
+	border-right:  0rem solid #141414;
 `;
 
 export { Sidebar };
+
+
+const ResizeWrapper = ({ children, track }) => {
+	const [mouseOver, setMouseOver] = React.useState(false);
+	const [isDragging, setIsDragging] = React.useState(false);
+	const [initialMousePosition, setInitialMousePosition] = React.useState(false);
+
+
+	const move = React.useCallback((e) => {
+		let resizable = document.getElementById(track);
+
+		// laster subtract initial mouse position
+		let newWidth = e.clientX;
+		if (newWidth < 280) {
+			newWidth = 280
+		}
+		if (newWidth > 400) {
+			newWidth = 400
+		}
+		resizable.style.width = `${newWidth}px`;
+	}, [])
+
+	const remove = React.useCallback((e) => {
+
+		setIsDragging(false)
+		document.removeEventListener("mouseup", remove)
+		document.removeEventListener("mousemove", move)
+		document.body.style.cursor = 'default';
+	}, [])
+
+
+	const dragStart = (e) => {
+		setInitialMousePosition(e.clientX)
+		document.addEventListener("mousemove", move)
+		document.addEventListener("mouseup", remove)
+		setIsDragging(true)
+		document.body.style.cursor = 'ew-resize';
+	}
+
+	const dragStop = () => {
+		setIsDragging(false)
+		setInitialMousePosition(null)
+		document.removeEventListener("mousemove", move)
+	}
+
+	return (
+		<div css={wrapperCSS}>
+			{children}
+			<div id='Draggable'
+				css={[hoverCSS(mouseOver)]}
+				onMouseOver={() => {
+					setTimeout(() => {
+						setMouseOver(true)
+					}, 500)
+				}}
+				onMouseLeave={() => {
+					setMouseOver(false)
+
+				}}
+				onMouseDown={dragStart.bind(this)}
+			// onMouseUp={dragStop.bind(this)}
+			/>
+		</div>
+	);
+
+}
+
+
+const wrapperCSS = css`
+display: flex;
+align-items: center;
+-webkit-touch-callout: none;
+-webkit-user-select: none;
+-khtml-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;	
+
+#Resizable{
+    height: 100%;
+    width: 320px;
+}
+#Draggable{
+    background: #09090a;
+
+
+    height: 100%;
+    width: 2px;
+	border-right: 1px solid #141414;
+
+	:hover{
+		border-right: 1px solid #212121;
+	}
+
+
+	transition: all .1s ease-in;
+}
+`
+
+const hoverCSS = (mouseOver) => css`
+	cursor:  ew-resize;
+	transition: all .5s ease-in;
+	// :hover{
+	// 	background:  ${mouseOver ? "#B341F9" : "#141414"} !important;
+	// }	
+`

@@ -124,6 +124,7 @@ const InputValueEditor = ({ step, stepId }) => {
 	};
 	if (!fieldInfo) return null;
 
+
 	return (
 		<div className={"flex items-center mt-20"}>
 			<div
@@ -144,7 +145,7 @@ const InputValueEditor = ({ step, stepId }) => {
 						font-weight: 400 !important;
 						font-size: 13rem !important;
 						height: 24rem !important;
-						/* or 93% */
+
 						background: rgba(177, 79, 254, 0.04) !important;
 						border: 0.5px solid #b14ffe !important;
 						border-radius: 8rem !important;
@@ -212,9 +213,6 @@ const StepName = ({ stepId }) => {
 						input {
 							width: 180rem;
 							min-width: 180rem !important;
-							font-family: "Gilroy" !important;
-							font-style: normal !important;
-							font-weight: 400 !important;
 							font-size: 14rem !important;
 							/* or 93% */
 							border: 0.5px solid #b14ffe !important;
@@ -226,9 +224,6 @@ const StepName = ({ stepId }) => {
 						}
 					`}
 						labelCss={css`
-						font-family: "Gilroy" !important;
-						font-style: normal !important;
-						font-weight: 400 !important;
 						font-size: 14rem !important;
 						border: 0.5px solid transparent !important;
 						padding: 4rem 0rem !important;
@@ -240,18 +235,19 @@ const StepName = ({ stepId }) => {
 					/>
 				</div>
 				<EditPencilIcon onClick={setIsStepNameEditing.bind(this, stepId + "-stepName")} className={"ml-10"} css={pencilIconCss} />
-				{showStepDescriptionHelper ? (
-					<div
-						className={"ml-10"}
-						css={css`
-						font-size: 13rem;
-						margin-top: 4rem;
-					`}
-					>
-						{TextHighlighter({ text: stepInfo.actionDescription }, true)}
-					</div>
-				) : ""}
+
 			</div>
+			{showStepDescriptionHelper ? (
+				<div
+					css={css`
+						font-size: 12rem;
+						margin-top: 8rem;
+					`}
+					className="ml-2"
+				>
+					{TextHighlighter({ text: stepInfo.actionDescription }, true)}
+				</div>
+			) : ""}
 
 		</>
 	);
@@ -264,8 +260,9 @@ const StepMetaInfo = ({ stepId, setShowAdvanced }) => {
 	const showFieldInput = [ActionsInTestEnum.NAVIGATE_URL, ActionsInTestEnum.WAIT_FOR_NAVIGATION, ActionsInTestEnum.ADD_INPUT].includes(steps[stepId].type);
 
 	return (
-		<div css={stepMetaInfoContainerCss} className={"px-20 py-24 pt-20"}>
+		<div css={stepMetaInfoContainerCss} className={"px-20 py-12"}>
 			<StepName stepId={stepId} />
+
 
 			{showFieldInput ? <InputValueEditor stepId={stepId} step={steps[stepId]} /> : ""}
 
@@ -307,11 +304,12 @@ const stepNameCss = css`
 	font-size: 15rem;
 `;
 const stepMetaInfoContainerCss = css`
-	background: #000000;
+	background: #0F0F0F;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 `;
 
 // Actions map with modal types
-const EDIT_MODE_MAP = {
+export const EDIT_MODE_MAP = {
 	[ActionsInTestEnum.WAIT]: "WAIT",
 	[ActionsInTestEnum.VALIDATE_SEO]: "SHOW_SEO_MODAL",
 	[ActionsInTestEnum.CUSTOM_CODE]: "CUSTOM_CODE",
@@ -418,6 +416,19 @@ const StepOverlayEditor = ({ stepId }) => {
 		}
 	}, [])
 
+	const editMessage = React.useMemo(() => {
+		if ([ActionsInTestEnum.VALIDATE_SEO, ActionsInTestEnum.ASSERT_ELEMENT].includes(step.type)) {
+			return "see checks";
+		}
+		if (step.type === ActionsInTestEnum.CUSTOM_CODE) {
+			return "code editor";
+		}
+		if (step.type === ActionsInTestEnum.WAIT) {
+			return "set wait time";
+		}
+
+		return "edit";
+	});
 
 	return (
 		<div
@@ -433,7 +444,7 @@ const StepOverlayEditor = ({ stepId }) => {
 			) : (
 				<>
 					<StepMetaInfo setShowAdvanced={handleShowAdvanced} stepId={stepId} />
-					<div className={"px-20 py-24"} css={stepMainContentCss}>
+					<div className={"px-20 py-24"}>
 						{false && showPreview ? (
 							<div className="flex">
 								<div css={elementImageCss}></div>
@@ -449,7 +460,7 @@ const StepOverlayEditor = ({ stepId }) => {
 
 						{shouldShowEditButton ? (
 							<Button onClick={handleEditModeClick.bind(this)} bgColor="tertiary-outline" css={buttonCss}>
-								see checks
+								{editMessage}
 							</Button>
 						) : (
 							""
@@ -504,9 +515,6 @@ const elementImageCss = css`
 	height: 172rem;
 	background: rgba(128, 128, 128, 0.8);
 	border-radius: 17rem;
-`;
-const stepMainContentCss = css`
-	background: #0C0C0D;
 `;
 
 const containerCss = css`

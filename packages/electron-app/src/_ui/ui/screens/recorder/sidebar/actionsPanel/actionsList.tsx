@@ -5,6 +5,9 @@ import { getRecorderState } from "electron-app/src/store/selectors/recorder";
 import { useStore } from "react-redux";
 import { sendSnackBarEvent } from "electron-app/src/_ui/ui/containers/components/toast";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
+import { Heading } from "@dyson/components/atoms/heading/Heading";
+import { TextBlock } from "@dyson/components/atoms";
+import { atom, useAtom } from "jotai";
 
 interface IProps {
 	title: string;
@@ -17,10 +20,14 @@ interface IProps {
 	defaultExpanded?: boolean;
 }
 
-const ActionsList = ({ className, ...props }: IProps) => {
-	const { title, description, defaultExpanded, callback, icon, items } = props;
+const expandedAtom = atom("page")
 
-	const [isExpanded, setIsExpanded] = React.useState(defaultExpanded);
+const ActionsList = ({ className, defaultExpanded, ...props }: IProps) => {
+	const { title, description, callback, icon, items } = props;
+
+	const [expandedLabel, setExpandedLabel] = useAtom(expandedAtom)
+
+	const isExpanded = title === expandedLabel || defaultExpanded;
 	const store = useStore();
 
 	const handleClick = React.useCallback(
@@ -49,10 +56,11 @@ const ActionsList = ({ className, ...props }: IProps) => {
 
 	return (
 		<div css={[containerCss, bottomSeperatorCss]} className={String(className)} {...props}>
-			<div className={"action-item-header"} onClick={setIsExpanded.bind(this, !isExpanded)} css={[headingCss, isExpanded ? activeSectionCss : null]}>
+			<div className={"action-item-header"} onClick={setExpandedLabel.bind(this, title)} css={[headingCss, isExpanded ? activeSectionCss : null]}>
 				{icon ? <div css={headingIconCss}>{icon}</div> : ""}
 				<div css={headingContentCss}>
-					<div css={headingTitleCss}>{title}</div>
+					<TextBlock fontSize={14} weight={500}>{title}</TextBlock>
+
 					{description ? <div css={headingDescriptionCss}>{description}</div> : ""}
 				</div>
 				{itemsContent ? <PlayIconV3 css={[playIconCss, isExpanded ? pointerDownCss : undefined]} /> : ""};
@@ -77,11 +85,11 @@ const headingCss = css`
 	padding-right: 12rem;
 	display: flex;
 	:hover {
-		background: rgba(85, 85, 85, 0.1);
+		background: rgba(85, 85, 85, 0.15);
 	}
 `;
 const activeSectionCss = css`
-	background: rgba(85, 85, 85, 0.1);
+	background: rgba(85, 85, 85, 0.15);
 `;
 const headingIconCss = css`
 	margin-top: 1rem;
@@ -100,10 +108,11 @@ const headingTitleCss = css`
 `;
 const headingDescriptionCss = css`
 	font-weight: 400;
-	font-size: 10rem;
+	font-size: 10.5rem;
 
 	color: #a6a6a6;
-	margin-top: 2.25rem;
+	margin-top: 5rem;
+	letter-spacing: .4px;
 `;
 const playIconCss = css`
 	width: 6rem;
@@ -129,6 +138,7 @@ const contentCss = css`
 const actionItemCss = css`
 	font-weight: 400;
 	font-size: 12rem;
+	letter-spacing: .3px;
 	color: #7c7c7c;
 	cursor: default;
 

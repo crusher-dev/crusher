@@ -11,6 +11,7 @@ import { installSameOriginFilter } from "./same-origin-filter";
 import configureStore from "../store/configureStore";
 import { getGlobalAppConfig } from "../lib/global-config";
 import { SettingsManager } from "../lib/settingsManager";
+import path from "path";
 
 //     Sentry.init({ dsn: "https://392b9a7bcc324b2dbdff0146ccfee044@o1075083.ingest.sentry.io/6075223" });
 //     require('update-electron-app')({
@@ -35,7 +36,7 @@ function setupElectronApp() {
 
 	app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
 	app.commandLine.appendSwitch("disable-features", "CrossOriginOpenerPolicy");
-	// app.commandLine.appendSwitch("--disable-site-isolation-trials");
+	app.commandLine.appendSwitch("--disable-site-isolation-trials");
 	// app.commandLine.appendSwitch("--disable-web-security");
 	app.commandLine.appendSwitch("--allow-top-navigation");
 	// For replaying actions
@@ -47,7 +48,12 @@ function setupElectronApp() {
 		copyright: "Copyright © 2021",
 		credits: "Made with ❤️ by crusher team",
 	});
-	app.setAsDefaultProtocolClient("crusher");
+	if(isProduction()) {
+		app.setAsDefaultProtocolClient("crusher");
+	} else {
+		console.log("Registering protocol client", process.execPath, process.argv);
+		app.setAsDefaultProtocolClient("crusher", process.execPath, [path.resolve(process.argv[1])]);
+	}
 }
 setupElectronApp();
 
@@ -105,6 +111,7 @@ function handleAppURL(url: string) {
 		// This manual focus call _shouldn't_ be necessary, but is for Chrome on
 		// macOS. See https://github.com/desktop/desktop/issues/973.
 		window.focus();
+		console.log("Window loaded", action);
 		if (action) window.sendMessage("url-action", { action });
 	});
 }
@@ -181,7 +188,8 @@ function createWindow() {
 	mainWindow = window;
 }
 
-function onDidLoad(fn: OnDidLoadFn) {
+function onDidLoad(fn: OnDidLoadFn) {	
+	console.log(`onDidLoad`, !!onDidLoadFns, !!mainWindow);
 	if (onDidLoadFns) {
 		onDidLoadFns.push(fn);
 	} else {

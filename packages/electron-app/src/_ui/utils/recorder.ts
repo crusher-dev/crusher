@@ -9,6 +9,7 @@ const triggerLocalBuild = (testsList: number[] = undefined, selectedTests: any[]
 		createLocalBuild({
 			id: "CRU-123",
 			tests: testsList,
+			progress: new Map(),
 			queuedTests: testsList,
 			time: Date.now(),
 		}),

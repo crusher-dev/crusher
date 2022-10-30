@@ -96,11 +96,7 @@ export default function Login() {
 		setPassword({ ...password, value: event.target.value });
 	};
 
-	const loginOnEnter = (event: any) => {
-		if (event.key === "Enter") {
-			return onLogin();
-		}
-	};
+
 
 	const verifyInfo = (completeVerify = false) => {
 		const shouldValidateEmail = completeVerify || email.value;
@@ -347,9 +343,10 @@ font-weight: 400;
 `);
 
 export const purpleButton = css`
-	background: linear-gradient(0deg, rgba(11, 11, 13, 0.06), rgba(11, 11, 13, 0.06)), linear-gradient(219.19deg, #9c44f3 23.83%, #902be0 78.16%);
+
+	background: linear-gradient(0deg,rgba(11,11,13,0.06),rgba(11,11,13,0.06)),linear-gradient(161deg,#b921ff 23.83%,#bb27ff 78.16%);
 	:hover {
-		background: linear-gradient(0deg, rgba(11, 11, 13, 0.06), rgba(11, 11, 13, 0.06)), linear-gradient(219.19deg, #9c44f3 23.83%, #902be0 78.16%);
+		background: linear-gradient(0deg,rgba(11,11,13,0.06),rgba(11,11,13,0.06)),linear-gradient(161deg,#b921ff 23.83%,#bb27ff 78.16%);
 		filter: brightness(0.75);
 	}
 `;

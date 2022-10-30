@@ -211,8 +211,9 @@ export default class EventRecording {
 
 			const isDocumentScrolled = target === document;
 			if (isDocumentScrolled) {
-				return _this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.PAGE_SCROLL, null, window.scrollY);
+				return _this.eventsController.saveCapturedEventInBackground(ActionsInTestEnum.PAGE_SCROLL, document.body, window.scrollY);
 			}
+			if(!target) return;
 
 			const isRecorderCover = target.getAttribute("data-recorder-cover");
 			if (!isRecorderCover && !event.simulatedEvent) {
@@ -543,10 +544,10 @@ export default class EventRecording {
 					lastPush = Date.now();
 					this.eventsController.saveCapturedEventInBackground(
 						ActionsInTestEnum.WAIT_FOR_NAVIGATION,
-						null,
+						document.body,
 						argArray[2]
 							? !this.isAbsoluteURL(argArray[2])
-								? new URL(argArray[2], document.baseURI).toString()
+								? `**/*${argArray[2]}`
 								: argArray[2]
 							: window.location.href,
 					);
@@ -563,10 +564,10 @@ export default class EventRecording {
 					lastPush = Date.now();
 					this.eventsController.saveCapturedEventInBackground(
 						ActionsInTestEnum.WAIT_FOR_NAVIGATION,
-						null,
+						document.body,
 						argArray[2]
 							? !this.isAbsoluteURL(argArray[2])
-								? new URL(argArray[2], document.baseURI).toString()
+								? `**/*${argArray[2]}`
 								: argArray[2]
 							: window.location.href,
 					);

@@ -8,7 +8,7 @@ import { userAtom } from "./user";
 
 /*
 	Combine different atom and user
- */
+*/
 export const rootGlobalAtom = atom((get) => ({
 	appState: get(appStateAtom),
 	systemConfig: get(systemConfigAtom),

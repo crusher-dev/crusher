@@ -29,8 +29,6 @@ interface IProps {
 const TestsList = ({ contextMenu, deleteTestsCallback, onEdit, onDelete, onRename, tests }: IProps) => {
     const { runTest } = useContext(TestListContext);
 
-    console.log(runTest)
-
     const items = React.useMemo(() => {
         if (!tests) return null;
         return tests.map((test) => {

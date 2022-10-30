@@ -1,26 +1,43 @@
 import React from "react";
 import { css } from "@emotion/react";
 import { performGoToUrl } from "../../../commands/perform";
-import { getUserAccountInfo } from "electron-app/src/store/selectors/app";
+import { getCurrentSelectedProjct, getUserAccountInfo } from "electron-app/src/store/selectors/app";
 import { useStore } from "react-redux";
 import { CompactAppLayout } from "../../layout/CompactAppLayout";
 import { Footer } from "../../layout/Footer";
 import { NormalButton } from "../../components/buttons/NormalButton";
 import { getGlobalAppConfig, writeGlobalAppConfig } from "electron-app/src/lib/global-config";
 import { setUserAccountInfo } from "electron-app/src/store/actions/app";
+import { TextBlock } from "@dyson/components/atoms";
+import { shell } from "electron";
+import path from "path";
+import os from 'os';
+import { underlineOnHover } from "electron-app/src/_ui/constants/style";
+import { useSelector } from "react-redux";
+import { getCurrentProjectConfigPath } from "electron-app/src/_ui/utils/project";
+
+
+const Info = ({ className }) => {
+	const selectedProject = useSelector(getCurrentSelectedProjct)
+	const configPath = getCurrentProjectConfigPath();
+	return (
+		<div css={css`display: flex; justify-content: center;`}><div className={`flex items-center ${className}`}>
+			<TextBlock fontSize={13} css={css`display: flex; justify-content: flex-end;`} color="#909090">
+				<span>project:</span>
+				<span className="ml-2" css={[linkCSS]}>{selectedProject}</span>
+			</TextBlock>
+
+			<TextBlock fontSize={13} color="#909090" className="flex-1">
+				<span>config path:</span>
+				<span onClick={() => { shell.openPath(configPath); }} className="ml-2" css={[linkCSS, underlineOnHover]}>~/{path.relative(os.homedir(), configPath)}</span>
+			</TextBlock>
+		</div></div>
+	)
+};
 
 const UnAuthorizedErrorContainer = () => {
 	const store = useStore();
 
-	const handeLogout = React.useCallback(() => {
-		const appConfig = getGlobalAppConfig();
-		if (appConfig?.["userInfo"]) {
-			delete appConfig["userInfo"];
-			writeGlobalAppConfig(appConfig);
-		}
-		store.dispatch(setUserAccountInfo(null));
-		performGoToUrl("/");
-	}, []);
 
 	const handleAccountInfo = React.useCallback(() => {
 		const acc = getUserAccountInfo(store.getState() as any);
@@ -39,11 +56,14 @@ const UnAuthorizedErrorContainer = () => {
 					<div css={headingStyle}>
 						You don't have access to this project
 					</div>
-					<div css={descriptionStyle}>
-						Please contact your org admin to gain access or go back.
+					<Info css={css`width: 100%; gap: 16rem;`} className={"mt-12"} />
+
+					<div css={descriptionStyle} >
+						<TextBlock fontSize={13} color="#909090" className="mt-20">Please contact your org admin to gain access or go back.</TextBlock>
+
 
 						<div
-							className="mt-20"
+							className="mt-12"
 							css={css`
 								display: flex;
 								gap: 20rem;
@@ -52,9 +72,6 @@ const UnAuthorizedErrorContainer = () => {
 							<NormalButton onClick={handleAccountInfo} css={accountInfoButtonCss}>
 								Account Info
 							</NormalButton>
-							<NormalButton onClick={handeLogout} css={logoutButtonCss}>
-								Logout
-							</NormalButton>
 						</div>
 					</div>
 				</div>
@@ -62,6 +79,10 @@ const UnAuthorizedErrorContainer = () => {
 		</CompactAppLayout>
 	);
 };
+
+const linkCSS = css`
+	color: #6CB7FC !important;
+`
 
 const containerCss = css`
 	height: 100%;
@@ -81,9 +102,12 @@ const logoutButtonCss = css`
 	width: 52rem;
 `;
 const accountInfoButtonCss = css`
-	margin-top: 16rem;
-	width: 84rem;
+	margin-top: 12rem;
+
 	background: transparent !important;
+	:hover{
+		background: transparent !important;
+	}
 `;
 
 const contentContainerStyle = css`

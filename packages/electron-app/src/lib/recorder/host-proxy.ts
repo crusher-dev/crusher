@@ -36,9 +36,11 @@ const turnOffInspectMode = () => {
 };
 
 const sendRecorderReadySignal = () => {
-	(window as any).recorder.sendMessage({
-		type: "recorder-ready",
-	});
+	if((window as any)?.recorder) {
+		(window as any).recorder.sendMessage({
+			type: "recorder-ready",
+		});
+	}
 };
 
 export { recordAction, turnOnInspectMode, turnOffInspectMode, turnOnElementMode, sendRecorderReadySignal, TRecorderMessagesType };

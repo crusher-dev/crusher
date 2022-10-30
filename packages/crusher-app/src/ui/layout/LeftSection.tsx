@@ -23,7 +23,7 @@ export const InviteMembers = dynamic(() => import("@ui/containers/dashboard/Invi
 
 export function LeftSection() {
 	const [inviteTeammates, setInviteTeamMates] = useState(false);
-	const { route, query } = useRouter();
+	const { route, query, asPath, ...router } = useRouter();
 	const { currentProject: project } = useProjectDetails();
 
 	const menuItems = project ? projectMenu : leftMenu;
@@ -43,7 +43,9 @@ export function LeftSection() {
 					</div>
 					<div className="px-14">
 						{menuItems.map((item) => {
-							const selected = route.includes(item.link);
+							const lathPath = `/${asPath.split("/")[asPath.split("/").length - 1]}`;
+
+							const selected = lathPath === item.link;
 							const { isProject } = item;
 
 							const link = isProject ? `/${project?.id}${item.link}` : item.link;

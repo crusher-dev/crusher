@@ -24,7 +24,7 @@ function isDevelopment() {
 }
 
 export function getAppURl() {
-	if (isDevelopment) {
+	if (isDevelopment()) {
 		return "http://localhost:8080";
 	}
 	return encodePathAsUrl(__dirname, "index.html");
@@ -122,9 +122,13 @@ const getUserAccountProjects: () => Promise<any> = createAuthorizedRequestFunc((
 	return axios.get(resolveToBackend("/users/actions/getUserAndSystemInfo"), authorizationOptions).then((res) => res.data);
 });
 
+const getRelativePath = (pathStr) => {
+	return path.relative(process.cwd(), pathStr)
+}
 
 
 export {
+	getRelativePath,
 	isProduction,
 	getAppIconPath,
 	encodePathAsUrl,

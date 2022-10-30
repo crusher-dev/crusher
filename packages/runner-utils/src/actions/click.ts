@@ -15,10 +15,13 @@ async function clickOnElement(
 ) {
 	try {
 		let pos = undefined;
+		await element.waitFor({state: "visible"});
+
 		if (action.payload.meta.value?.mousePos) {
 			const posObj = action.payload.meta.value.mousePos;
 			if (posObj.x >= 0 && posObj.y >= 0) {
 				const boundingBox = await element.boundingBox();
+				if(!boundingBox) throw new Error("selector resolved to hidden. Can't get bounding box");
 				pos = { x: boundingBox.width * posObj.x, y: boundingBox.height * posObj.y };
 			}
 		}
@@ -35,9 +38,9 @@ module.exports = {
 	description: "Click on element",
 	actionDescriber: (action: iAction) => {
 		if (!action.payload.meta || !action.payload.meta.elementDescription) {
-			return `Click on element`;
+			return `Click element`;
 		}
-		return `Click on [${action.payload.meta.elementDescription}]`;
+		return `Click [${action.payload.meta.elementDescription}]`;
 	},
 	handler: clickOnElement,
 };

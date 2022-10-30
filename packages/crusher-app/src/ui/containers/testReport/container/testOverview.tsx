@@ -1,3 +1,6 @@
+/*
+	Organize and clean test overview page
+*/
 import { css } from "@emotion/react";
 import dynamic from "next/dynamic";
 import React, { useEffect, useState } from "react";
@@ -13,7 +16,7 @@ import { Modal } from "dyson/src/components/molecules/Modal";
 import { plainButtonCSS } from "@constants/style";
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { ActionStatusEnum } from "@crusher-shared/lib/runnerLog/interface";
-import { CheckSquare, FullImageView, ShowSidebySide } from "@svg/builds";
+import { FullImageView, ShowSidebySide, StatusIconSquare } from "@svg/builds";
 import { LoadingSVG, PlaySVG } from "@svg/dashboard";
 import { InfoSVG } from "@svg/testReport";
 import { activeActionIndexAtom, selectedTestAtom, testCardConfigAtom } from "@ui/containers/testReport/atoms";
@@ -39,7 +42,6 @@ enum TestTabEnum {
 
 const imageViewAtom = atomWithImmer<"side" | "compare">("side");
 export const imageTabCSS = css`
-	top: -24rem;
 	div {
 		width: 48px;
 		height: 24px;
@@ -56,6 +58,9 @@ export const imageTabCSS = css`
 	}
 `;
 
+const imageComparison = css`
+	max-width: 900px;
+`
 function RenderImageInfo({ data, index }) {
 	const { meta } = data;
 	const imageName = meta.outputs?.[index].name;
@@ -67,7 +72,7 @@ function RenderImageInfo({ data, index }) {
 	if (!imageName) return null;
 
 	return (
-		<div className={"pl-44 mt-4 text-11"}>
+		<div className={"pl-44 py-23 mt-4 text-11"} css={imageComparison}>
 			<div className={"flex justify-between text-12 mb-20 "}>
 				<span>{imageName}</span>
 				<div>
@@ -298,31 +303,14 @@ function RenderStep({ data, testInstanceData, setIsShowingVideo, testId, index }
 					<div id="second"></div>
 				</div>
 				<div className="flex items-center pl-24 w-full" css={stepBottom}>
-					<div className="flex items-center  mr-12">
-						<CheckSquare />
-						{/* <TestStatusSVG
-						css={
-							status === ActionStatusEnum.STALLED
-								? css`
-										path {
-											fill: #e1c973;
-										}
-								  `
-								: css``
-						}
-						type={status}
-						height={"20rem"}
-						width={"20rem"}
-					/> */}
-					</div>
+					<StatusIconSquare type={status} css={css`
+						align-self: start;
+						margin-top: 20rem;
+						margin-right: 16rem;
+					`} />
 
 					<Conditional showIf={status !== "FAILED"}>
-						<div
-							className={"flex items-center"}
-							css={css`
-								align-items: center;
-							`}
-						>
+						<>
 							<span
 								className={"text-13 font-600"}
 								css={css`
@@ -342,7 +330,7 @@ function RenderStep({ data, testInstanceData, setIsShowingVideo, testId, index }
 									{meta?.actionName ? meta.actionName : message}
 								</span>
 							</Conditional>
-						</div>
+						</>
 					</Conditional>
 					<Conditional showIf={status === "FAILED"}>
 						<ErrorComponent actionName={meta?.actionName} testInstanceData={testInstanceData} actionType={actionType} message={message} />
@@ -432,12 +420,12 @@ function RenderStep({ data, testInstanceData, setIsShowingVideo, testId, index }
 }
 
 const errorBox = css`
-	background: rgb(249 65 192 / 8%);
-	border: 1px solid #c64c7a;
-	box-sizing: border-box;
-	border-radius: 18rem;
-	width: 100%;
-
+background: rgb(249 65 192 / 3%);
+    border: 1px solid #ff3883;
+    box-sizing: border-box;
+    border-radius: 18rem;
+    width: 100%;
+    max-width: 600px;
 	#play-button {
 		:hover {
 			text-decoration: underline;
@@ -770,7 +758,7 @@ function ExpandableStepGroup({
 const stepCSS = (isHovered) => css`
 	min-height: 44rem;
 	display: flex;
-	align-items: center;
+	align-items: start;
 	padding-left: 56rem;
 	flex-direction: column;
 	${isHovered &&

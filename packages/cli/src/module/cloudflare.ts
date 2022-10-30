@@ -15,7 +15,7 @@ const cliProgress = require('cli-progress');
 
 async function installNSetupOnMac() {
   const recorderZipPath = resolvePathToAppDirectory(`cloudflare.tgz`);
-  
+
   const bar = new cliProgress.SingleBar({
     format: `Downloading cloudflare tunnel {percentage}%`,
   });
@@ -79,10 +79,10 @@ export class Cloudflare {
           var spann;
           try {
             spann = spawn(resolvePathToAppDirectory(`bin/cloudflared`), [
-              `tunnel`,`--url`,`${url}`
+              `tunnel`, `--url`, `${url}`
             ]);
 
-            console.log("URL",resolvePathToAppDirectory(`bin/cloudflared`), [
+            console.log("URL", resolvePathToAppDirectory(`bin/cloudflared`), [
               `tunnel --url ${url}`,
             ])
           } catch (e) {
@@ -103,8 +103,8 @@ export class Cloudflare {
                   tunnel: found[0],
                   intercept: null
                 };
-                if(intercept) {
-                  if(intercept instanceof RegExp) resultTunnelMap[name].intercept =  { regex: (intercept as RegExp).toString()};
+                if (intercept) {
+                  if (intercept instanceof RegExp) resultTunnelMap[name].intercept = { regex: (intercept as RegExp).toString() };
                   else resultTunnelMap[name].intercept = intercept;
                 }
 
@@ -119,29 +119,13 @@ export class Cloudflare {
       const proxyKeys = Object.keys(resultTunnelMap);
 
       // Wait until tunnel is reachable using axios
-      await Promise.all(proxyKeys.map((proxyKey)=> {
+      await proxyKeys.map((proxyKey) => {
         const tunnel = resultTunnelMap[proxyKey].tunnel;
         console.log("Tunnel is", `"${tunnel}"`);
 
-        return new Promise((res, rej) => {
-          const interval = setInterval(async () => {
-            try {
-              const tunnelUrl = new URL(tunnel);
-              tunnelUrl.searchParams.append("random_blabla", Date.now().toString());
-              const response = await axios.post(resolveBackendServerUrl("/proxy/actions/validate.response"), { url: tunnelUrl.toString() });
-              if(response && response.data && response.data.status && response.data.status < 500) {
-                res("Tunnel is reachable");
-                clearInterval(interval);
-              }
-            } catch (e) {
-              console.log(e.message);
-            }
-          }, 5000);
-        });
-      }))
+        return "Tunnel is reachable"
+      });
 
-      console.log("Wait for 60 seconds to make sure tunnel is reachable");
-      await new Promise((resolve, reject) => setTimeout(resolve, 60000));
       console.log("results tunnel", JSON.stringify(resultTunnelMap));
       resolve(resultTunnelMap);
     });

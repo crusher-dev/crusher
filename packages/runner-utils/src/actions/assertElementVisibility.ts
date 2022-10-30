@@ -11,7 +11,7 @@ module.exports = {
 	description: "Asserting element visibility",
 	actionDescriber: (action: iAction) => {
 		if (!action.payload.meta || !action.payload.meta.elementDescription) {
-			return `Asserting element visibility`;
+			return `Assert element visibility`;
 		}
 		return `Assert [${action.payload.meta.elementDescription}] visibility`;
 	},

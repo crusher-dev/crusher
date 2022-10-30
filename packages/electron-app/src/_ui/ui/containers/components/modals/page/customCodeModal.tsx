@@ -20,6 +20,7 @@ import {
 } from "electron-app/src/_ui/commands/perform";
 import { DownIcon } from "electron-app/src/_ui/constants/old_icons";
 import { MenuItem } from "electron-app/src/_ui/ui/components/dropdown/menuItems";
+import { LinkPointer } from "electron-app/src/_ui/ui/components/LinkPointer";
 import * as fs from "fs";
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 import * as path from "path";
@@ -121,6 +122,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 		const handleListener = () => {
 			if (editorMainRef.current) {
 				const topbar = document.querySelector("#top-bar");
+				if (!topbar) return;
 				const rect = topbar.parentElement.getBoundingClientRect();
 				const containerNode = (editorMainRef.current as monaco.editor.IStandaloneCodeEditor).getContainerDomNode();
 				const mainContainerNode = containerNode.parentNode.parentNode;
@@ -139,11 +141,11 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 
 		window["resizeCustomCode"] = handleListener;
 
-		window.addEventListener("resize", handleListener.bind(this));
+		window.addEventListener("resize", handleListener);
 
 		return () => {
 			window["resizeCustomCode"] = undefined;
-			window.removeEventListener("resize", handleListener.bind(this));
+			window.removeEventListener("resize", handleListener);
 		};
 	}, []);
 	React.useEffect(() => {
@@ -309,7 +311,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 	};
 
 	const handleUnDock = () => {
-		performUndockCode();
+		performUndockCode(props.stepIndex);
 		props.handleClose();
 	};
 
@@ -321,7 +323,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 		<div
 			id="current-modal"
 			css={css`
-				background: black;
+				background: #09090a;
 				height: 100%;
 				display: flex;
 				flex-direction: column;
@@ -329,7 +331,8 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 		>
 			<ModalTopBar
 				css={css`
-					padding-bottom: 12rem;
+					padding-bottom: 20rem;
+					border-bottom: 0.25px solid rgb(255, 255, 255, 0.08);
 				`}
 				actions={
 					<UnDockIcon
@@ -346,105 +349,21 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 				title={
 					<>
 						<span>Code block</span>
-						<div
-							css={css`
-								font-size: 13rem;
-								font-family: "Cera Pro";
-								display: flex;
-								color: rgba(255, 255, 255, 0.4);
-								align-items: center;
-								padding-top: 1rem;
-								margin-left: 14rem;
-								:hover {
-									opacity: 0.8;
-								}
-							`}
+						<LinkPointer
 							onClick={handleReadDocs}
-						>
-							Read docs
-						</div>
+							css={css`
+						letter-spacing: .4px;
+						
+						margin-left: 8rem;
+						margin-top: -4rem; font-size: 13px; font-weight: 400; 	color: rgba(255, 255, 255, 0.5);`}>docs</LinkPointer>
+
 					</>
 				}
 				closeModal={() => {
 					handleCustomClose();
 				}}
 			/>
-			<div
-				css={css`
-					padding: 12rem 28rem;
-					display: flex;
-					border-bottom: 0.25px solid rgb(255, 255, 255, 0.08);
-					padding-bottom: 17rem;
-				`}
-			>
-				<SelectBox
-					isSearchable={true}
-					dropDownHeight={"auto"}
-					css={css`
-						input {
-							outline: none;
-							width: 80%;
-						}
-						.selectBox {
-							height: 34rem;
-						}
 
-						.selectBox__value {
-							margin-right: 10rem;
-							font-size: 13rem;
-						}
-						width: 250rem;
-					`}
-					placeholder={"Select a template"}
-					size={"large"}
-					selected={selectedTemplate ? [getSelectedOption(transformListToSelectBoxValues(codeTemplates), selectedTemplate)] : undefined}
-					values={transformListToSelectBoxValues(codeTemplates)}
-					callback={(selectedValue) => {
-						const [value] = selectedValue;
-						setSelectedTemplate(selectedValue[0]);
-						const codeTemplate = codeTemplates.find((item) => item.id === value);
-						monacoRef.current.editor.getModel(modalName).setValue(codeTemplate.code);
-					}}
-				/>
-
-				<Global
-					styles={css`
-						.select-dropDownContainer {
-							max-height: 200rem;
-							overflow-y: scroll !important;
-							::-webkit-scrollbar {
-								background: transparent;
-								width: 8rem;
-							}
-							::-webkit-scrollbar-thumb {
-								background: white;
-								border-radius: 14rem;
-							}
-						}
-
-						.dropdown-box .dropdown-label {
-							padding-top: 2rem !important;
-							padding-bottom: 2rem !important;
-						}
-					`}
-				/>
-				<Conditional showIf={selectedTemplate}>
-					<div
-						onClick={handleDeleteTemplate}
-						css={css`
-							align-self: center;
-							margin-left: 20rem;
-							font-size: 14rem;
-							color: #fff;
-							:hover {
-								opacity: 0.8;
-							}
-						`}
-					>
-						Delete
-					</div>
-				</Conditional>
-			</div>
 			<div
 				css={css`
 					height: auto;
@@ -564,7 +483,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 							left: 0rem !important;
 							width: 162rem;
 							z-index: 123123123123123;
-							left: 47rem !important;
+							left: -2rem !important;
 							top: auto;
 							bottom: calc(100% + 4rem);
 						`}

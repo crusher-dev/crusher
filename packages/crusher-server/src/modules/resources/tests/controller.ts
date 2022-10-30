@@ -153,16 +153,6 @@ export class TestController {
 	}
 
 	@Authorized()
-	@Post("/projects/:project_id/tests/save.report")
-	async saveReport(
-		@CurrentUser({ required: true }) user,
-		@Param("project_id") projectId: number,
-		@Body() body: { testId: Array<number>; report: { [key: string]: {} } },
-	): Promise<void> {
-		// await this.testService.saveReport(projectId, body.testId, body.report);
-	}
-
-	@Authorized()
 	@Post("/projects/:project_id/tests/actions/run")
 	async runProjectTests(
 		@CurrentUser({ required: true }) user,

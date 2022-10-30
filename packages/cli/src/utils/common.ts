@@ -1,4 +1,5 @@
 import axios from "axios";
+import { execSync } from "child_process";
 import * as fs from "fs";
 import * as pathModule from "path";
 const open = require('open');
@@ -42,3 +43,23 @@ export const openUrl = async (url: string) => {
   console.log("Opening this url: ", url);
   await open(url);
 };
+
+export const getGitUserInfo = () => {
+  let username, email;
+  try {
+    username = execSync("git config --global user.name", { stdio: "pipe" })
+      .toString()
+      .trim();
+  } catch(ex) {
+    console.debug("Could not get git username");
+  }
+  try {
+    email = execSync("git config --global user.email", { stdio: "pipe" })
+    .toString()
+    .trim();
+  } catch(ex) {
+    console.debug("Could not get git email");
+  }
+
+  return { username, email };
+}

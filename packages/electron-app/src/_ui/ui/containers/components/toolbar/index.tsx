@@ -2,7 +2,7 @@ import React, { memo, useContext, useEffect } from "react";
 import { css } from "@emotion/react";
 import { Conditional } from "@dyson/components/layouts";
 import { LoadingIconV2, RedDotIcon, SettingsIcon } from "../../../../constants/old_icons";
-import { useDispatch, batch, useSelector, useStore } from "react-redux";
+import { useDispatch, batch, useSelector, useStore, shallowEqual } from "react-redux";
 import { devices } from "../../../../../devices";
 import { getRecorderInfo, getRecorderInfoUrl, getRecorderState, getSavedSteps, getTestName, isTestVerified } from "electron-app/src/store/selectors/recorder";
 import { goFullScreen, performExit, performNavigation, performSteps, performVerifyTest, saveTest, updateTest, updateTestName } from "../../../../commands/perform";
@@ -99,13 +99,13 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 			let shouldNotSetupProxy: any = false;
 			// Modify project config here <----
 			const projectConfig = getCurrentProjectConfig();
-			if(projectConfig && proxyWarning?.startUrl) {
+			if (projectConfig && proxyWarning?.startUrl) {
 				const hasProxySetup = projectConfig.proxy && projectConfig.proxy.find((item: any) => item.url === proxyWarning.startUrl.origin);
-				if(hasProxySetup) {
+				if (hasProxySetup) {
 					shouldNotSetupProxy = true;
 				}
 			}
-			if(proxyWarning.shouldShow && proxyWarning?.startUrl && !shouldNotSetupProxy) {
+			if (projectConfig && proxyWarning.shouldShow && proxyWarning?.startUrl && !shouldNotSetupProxy) {
 				projectConfig["proxy"] = projectConfig["proxy"] ? [
 					...projectConfig["proxy"],
 					{
@@ -123,7 +123,7 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 				writeProjectConfig(projectConfig);
 			}
 
-			
+
 			performVerifyTest(shouldAutoSave, autoSaveType, false).then((res) => {
 				if (res) {
 					if (res.draftJobId) {
@@ -381,18 +381,6 @@ const Toolbar = (props: any) => {
 						},
 						{
 							type: "PAGE_NAVIGATE_URL",
-							shouldNotRecord: true,
-							payload: {
-								selectors: [],
-								meta: {
-									value: "about:blank",
-								},
-							},
-							status: "COMPLETED",
-							time: Date.now(),
-						},
-						{
-							type: "PAGE_NAVIGATE_URL",
 							payload: {
 								selectors: [],
 								meta: {
@@ -404,7 +392,13 @@ const Toolbar = (props: any) => {
 						},
 					]);
 				} else {
-					performNavigation(validUrl, store);
+					const recorderState = getRecorderState(store.getState());
+					if (recorderState.type === TRecorderState.RECORDING_ACTIONS) {
+						performNavigation(validUrl, store);
+					} else {
+						sendSnackBarEvent({ type: "error", message: "A action is in progress. Wait and retry again" });
+
+					}
 				}
 				// Just in case onboarding overlay info is still visible
 
@@ -744,9 +738,10 @@ const containerStyle = css`
 	background-color: #09090a;
 	padding: 5rem;
 	padding-left: 11rem;
-	min-height: 70rem;
+	min-height: 72rem;
 	position: relative;
 	z-index: 999;
+	border-bottom:  3rem solid #141414;
 	padding-right: 16rem;
 `;
 const buttonStyle = css`

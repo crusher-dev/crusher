@@ -7,3 +7,8 @@ export const TestListContext = React.createContext({
     runTest: () => { },
 });
 
+export const BuildListContext = React.createContext({
+    showMineCallback: null,
+    showLocalBuildCallback: null,
+    filters: {}
+});

@@ -40,20 +40,25 @@ export const checkForDiscord = async (shouldCheckForDiscord = true) => {
 	const discordArgv = getDiscordInviteCode();
 	if (discordArgv?.shouldIgnore) return;
 
-	if (!discordArgv?.code && shouldCheckForDiscord) {
-		await console.log(chalk.green(`New to crusher?`))
+	await console.log(chalk.green(`Hang with devs building & testing`))
+	await console.log(`Join our discord ${chalk.cyan("https://discord.gg/dHZkSNXQrg")} \n`)
 
-		await console.log(`Get access code - ${chalk.green("https://discord.gg/dHZkSNXQrg")}`)
-		await console.log(`1.) Get access code on home screen`)
-		await console.log(`2.) Run command with access code`)
+	return { code: "CRU-TEST" };
+	// if (!discordArgv?.code && shouldCheckForDiscord) {
+	// 	await console.log(chalk.green(`New to crusher?`))
+	// 	await console.log(`Join discord community ${chalk.green("https://discord.gg/dHZkSNXQrg")}`)
 
-		await console.log(`\n${chalk.yellow('Already have an account?')}
-    run npx crusher-cli login \n`);
+	// 	await console.log(`Get access code - ${chalk.green("https://discord.gg/dHZkSNXQrg")}`)
+	// 	await console.log(`1.) Get access code on home screen`)
+	// 	await console.log(`2.) Run command with access code`)
 
-		process.exit(0)
-	} else {
-		return discordArgv;
-	}
+	// 	await console.log(`\n${chalk.yellow('Already have an account?')}
+	// run npx crusher-cli login \n`);
+
+	// 	process.exit(0)
+	// } else {
+	// 	return discordArgv;
+	// }
 }
 
 const parseDiscordFlag = (flag: string) => {

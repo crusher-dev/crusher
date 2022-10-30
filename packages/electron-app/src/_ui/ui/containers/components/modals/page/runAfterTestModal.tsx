@@ -77,7 +77,7 @@ const RunAfterTestModal = (props: iStartupModalProps) => {
 
 	return (
 		<Modal id="current-modal" modalStyle={modalStyle} onOutsideClick={props.handleClose}>
-			<ModalTopBar title={"Run after test"} desc={"Runs test in the same browser context as specified"} closeModal={props.handleClose} />
+			<ModalTopBar title={"Run base test"} desc={"Run this test before running steps"} closeModal={props.handleClose} />
 			<div
 				css={formContainerStyle}
 				css={css`
@@ -93,6 +93,7 @@ const RunAfterTestModal = (props: iStartupModalProps) => {
 							input {
 								outline: none;
 								width: 80%;
+								font-family: 'Gilroy';
 							}
 							.selectBox {
 								height: 34rem;
@@ -162,9 +163,8 @@ const buttonStyle = css`
 	border: 1px solid rgba(255, 255, 255, 0.23);
 	box-sizing: border-box;
 	border-radius: 4rem;
-	width: 93rem;
-	height: 34rem;
-	margin-left: 20rem;
+	height: 38rem !important;
+	margin-left: 12rem;
 `;
 const inputContainerStyle = {
 	display: "flex",

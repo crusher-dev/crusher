@@ -1,15 +1,24 @@
 import { css } from "@emotion/react";
 import React from "react";
 
-const InfoProgressBar = ({className, id, disableTime, total, value, label}) => {
-	const [elapsedTime, setElapsedTime] = React.useState("0:00");
-    const [startTime, setStartTime] = React.useState(Date.now());
+interface IProps {
+	id: string;
+	total: number;
+	value: number;
+	label: string;
 
-    // Reset timer when id changes
-    React.useEffect(() => {
-        setStartTime(Date.now());
-        setElapsedTime("0:00");
-    }, [id]);
+	disableTime?: boolean;
+	className?: any;
+	segments?: Array<boolean>;
+}
+const InfoProgressBar = ({ className, segments, id, disableTime, total, value, label }: IProps) => {
+	const [elapsedTime, setElapsedTime] = React.useState("0:00");
+	const [startTime, setStartTime] = React.useState(Date.now());
+	// Reset timer when id changes
+	React.useEffect(() => {
+		setStartTime(Date.now());
+		setElapsedTime("0:00");
+	}, [id]);
 
 	React.useEffect(() => {
 		const interval = setInterval(() => {
@@ -21,7 +30,7 @@ const InfoProgressBar = ({className, id, disableTime, total, value, label}) => {
 		return () => clearInterval(interval);
 	}, [startTime]);
 
-    const progress = value === 0 ? 0 : (value / total) * 100;
+	const progress = value === 0 ? 0 : (value / total) * 100;
 
 	return (
 		<div className={className}>
@@ -36,15 +45,36 @@ const InfoProgressBar = ({className, id, disableTime, total, value, label}) => {
 				) : ""}
 			</div>
 			<div className={"flex  mt-8"} css={progressBarContainerCss}>
-				<div
-					className={"tracker-bar"}
-					css={[
-						trackerBarCss,
-						css`
-							width: ${progress}%;
-						`,
-					]}
-				></div>
+				{!segments ? (
+					<div
+						className={"tracker-bar"}
+						css={[
+							trackerBarCss,
+							css`
+								width: ${progress}%;
+							`,
+						]}
+					></div>
+
+				) : (<div className={"flex"} css={css`width: 100%;`}>{new Array(total).fill(null).map((_, index) => {
+					const segment = segments[index];
+					const segmentExist = typeof segment !== "undefined";
+
+					return (
+						<div
+							className={"tracker-bar"}
+							key={index}
+							css={[
+								trackerBarCss,
+								css`
+									background: ${segmentExist ? (segment ? "#a3d761" : "#ff1677") : "transparent"};
+									width: ${segmentExist ? (progress/segments.length) : 0}%;
+								`,
+							]}
+						></div>
+					)
+				})}</div>)}
+			
 			</div>
 		</div>
 	);

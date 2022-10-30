@@ -16,6 +16,7 @@ import { ipcRenderer } from "electron";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
 import { iAction } from "@shared/types/action";
 import { sendSnackBarEvent } from "../../toast";
+import { retryStep } from "electron-app/src/_ui/ui/screens/recorder/sidebar/stepsPanel/failedCard";
 
 interface iSEOModalProps {
 	stepIndex?: number;
@@ -65,7 +66,9 @@ const SeoModalContent = (props: iSEOModalProps) => {
 				},
 				{ title: null, metaTags: {} },
 			);
-			setSeoInfo(seoInfoFromActions);
+			ipcRenderer.invoke("get-page-seo-info").then((res) => {
+				setSeoInfo(res);
+			});
 			setValidationRows(props.stepAction.payload.meta.validations);
 		}
 	}, [props.stepAction, isOpen]);
@@ -157,6 +160,7 @@ const SeoModalContent = (props: iSEOModalProps) => {
 
 		props.stepAction.payload.meta.validations = validationRows;
 		store.dispatch(updateRecordedStep(props.stepAction, props.stepIndex));
+		retryStep(props.stepIndex);
 		sendSnackBarEvent({ type: "success", message: "Updated seo validations" });
 		handleClose();
 	};
@@ -256,8 +260,8 @@ const modalStyle = css`
 	display: flex;
 	flex-direction: column;
 	padding: 0rem;
-	background: #0D0E0E;
-    border: 1px solid rgba(142, 142, 142, 0.1);
+	background: #0F0F0F;
+    border: 1px solid rgba(142, 142, 142, 0.15);
 `;
 
 const bottomBarStyle = {

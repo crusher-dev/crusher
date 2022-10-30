@@ -83,7 +83,7 @@ const WaitModal = (props: iStartupModalProps) => {
 
 	return (
 		<Modal id="current-modal" modalStyle={modalStyle} onOutsideClick={props.handleClose}>
-			<ModalTopBar title={"Wait For Seconds"} desc={"These are used to wait/sleep for the specified interval"} closeModal={props.handleClose} />
+			<ModalTopBar title={"Sleep"} desc={"sleeps for few seconds."} closeModal={props.handleClose} />
 			<div
 				className="flex flex-col"
 				style={{ marginTop: 40 }}
@@ -121,12 +121,12 @@ const buttonStyle = css`
 	box-sizing: border-box;
 	border-radius: 4rem;
 	width: 93rem;
-	height: 34rem;
-	margin-left: 24rem;
+	height: 36rem !important;
+	margin-left: 12rem;
 `;
 
 const modalStyle = css`
-	width: 800rem;
+	width: 400rem;
 	position: absolute;
 	top: 50%;
 	left: 50%;
@@ -138,14 +138,8 @@ const modalStyle = css`
 `;
 
 const inputStyle = css`
-	background: #1a1a1c;
-	border-radius: 6rem;
-	border: 1rem solid #43434f;
+	min-width: 320rem;
 
-	font-size: 14rem;
-	min-width: 358rem;
-	color: #fff;
-	outline: none;
 `;
 
 export { WaitModal };

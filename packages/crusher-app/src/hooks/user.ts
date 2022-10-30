@@ -11,7 +11,6 @@ import { RequestMethod } from "@types/RequestOptions";
 import { backendRequest } from "@utils/common/backendRequest";
 import { resolvePathToBackendURI, resolvePathToFrontendURI } from "@utils/common/url";
 import { redirectUserOnMount } from "@utils/routing";
-import { URLSearchParams } from "next/dist/compiled/@edge-runtime/primitives/url";
 
 /*
 	Two scenarios to check for
@@ -22,7 +21,6 @@ import { URLSearchParams } from "next/dist/compiled/@edge-runtime/primitives/url
  */
 export function loadUserDataAndRedirect({ fetchData = true, userAndSystemData = null }) {
 	const router = useRouter();
-	const {asPath, push} = router;
 
 	const [, updateInitialData] = useAtom(updateInitialDataMutator);
 
@@ -31,7 +29,6 @@ export function loadUserDataAndRedirect({ fetchData = true, userAndSystemData = 
 
 
 	useEffect(() => {
-
 
 		(async () => {
 			let dataToConsider: IUserAndSystemInfoResponse | null = null;

@@ -103,6 +103,8 @@ export const EditTestModal = ({ name, folderId, id, onClose }) => {
 			}}
 			modalStyle={css`
 				padding-left: 28rem;
+				// background: #010101;
+				background: #060606;
 				padding-right: 28rem;
 			`}
 		>
@@ -159,9 +161,6 @@ export const EditTestModal = ({ name, folderId, id, onClose }) => {
 			</div>
 			<div className={"flex justify-end mt-20"}>
 				<Button
-					css={css`
-						min-width: 104rem;
-					`}
 					disabled={!isFormChanged || processing}
 					bgColor={!isFormChanged ? "disabled" : ""}
 					title={!isFormChanged && "Please change form to save"}

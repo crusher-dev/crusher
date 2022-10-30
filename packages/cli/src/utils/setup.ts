@@ -14,7 +14,7 @@ import { getProjectsOfCurrentUser, createProject, getUserInfoFromToken } from ".
 import localTunnel from "localtunnel";
 import { getProjectNameFromGitInfo, isUserLoggedIn } from "./index";
 import { getAppConfig, initializeAppConfig, setAppConfig } from "../utils/appConfig";
-import { downloadFile, openUrl } from "./common";
+import { downloadFile, getGitUserInfo, openUrl } from "./common";
 import chalk from "chalk";
 import ora from "ora";
 import { checkForDiscord, waitForLogin } from "./hooks";
@@ -65,9 +65,7 @@ export async function askUserLogin(shouldCheckForDiscord: boolean = true) {
         });
       });
     } else {
-
-      const email = execSync(`git config --global user.email`);
-      const emailText = email.toString();
+      const emailText = getGitUserInfo().email;
       const emailRes = await inquirer.prompt([
         {
           name: "email",
@@ -186,8 +184,25 @@ export async function makeSureSetupIsCorrect(projectId: string | null = null, as
       addCrusherCommandsToPackageJSON(suggestedGitInfo);
       addCrusherReadmeToProject();
     }
+    // const projectConfig: any = {};
+    // projectConfig.project = 258;
 
+    console.log(`\n${"?"} ${chalk.green("Want to activate more workflows?")}`);
+    console.log(`> ${"Monitoring"}: https://app.crusher.dev/${projectConfig.project}/settings/monitoring`);
+    console.log(`> ${"CI/CD"}: https://app.crusher.dev/${projectConfig.project}/settings/integrations?item=github`);
+    console.log(`> ${"Slack"}: https://app.crusher.dev/${projectConfig.project}/settings/integrations?item=slack`);
 
+    // log line sperator
+    console.log(`\n${chalk.gray("--------------------------------------------------")}\n`);
+
+    // Show continue prompt
+    await inquirer.prompt([
+      {
+        name: "continue",
+        message: "Press enter to continue:",
+        type: "input",
+      },
+    ]);
     // const workflowsPromptRes = await inquirer.prompt([{
     //   type: "list",
     //   name: "workflows",

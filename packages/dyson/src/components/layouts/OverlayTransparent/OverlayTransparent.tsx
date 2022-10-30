@@ -29,7 +29,7 @@ export function OverlayTransparent({ children, onClose, css, className = "", ...
 }
 
 const overlay = css`
-background: rgb(0 0 0 / 65%) !important;
+	background: rgb(0 0 0 / 75%) !important;
 	backdrop-filter: blur(3px);
 	width: 100vw;
 	height: 100vh;

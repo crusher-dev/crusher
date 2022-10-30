@@ -24,15 +24,15 @@ const EmojiPicker = ({ onEmojiSelected, children }) => {
 			<Picker
 				onEmojiSelect={handleEmojiSelect}
 				previewPosition={"none"}
-				searchPosition={"none"}
+				searchPosition={"true"}
 				// skinTonePosition={'none'}
 				// perLine={8}
 				// emojiSize={16}
 				// emojiButtonSize={30}
 				// noCountryFlags={true}
 				skinTonePosition={"none"}
-				perLine={10}
-				emojiSize={16}
+				perLine={11}
+				emojiSize={22}
 				emojiButtonSize={30}
 				noCountryFlags={true}
 				theme={"dark"}
@@ -63,11 +63,11 @@ const globalCss = css`
 		--rgb-accent: 233, 96, 255;
 		--rgb-background: 0, 0, 0;
 		--rgb-color: 255, 255, 255;
-		--rgb-input: 255, 235, 235;
+		--rgb-input: 0, 0, 0;
 
 		border: 1px solid #202020;
 		min-height: 240px;
-		max-height: 300px;
+		max-height: 340px;
 
 		input:focus {
 			background-color: transparent !important;

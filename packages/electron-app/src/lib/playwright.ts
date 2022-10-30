@@ -12,6 +12,7 @@ import * as fs from "fs";
 import * as path from "path";
 import { ACTION_DESCRIPTIONS } from "../_ui/ui/containers/components/sidebar/steps";
 import { uuidv4 } from "runner-utils/src/utils/helper";
+import { StepErrorTypeEnum } from "runner-utils/src/error.types";
 const { performance } = require("perf_hooks");
 //@ts-ignore
 const playwright = typeof __non_webpack_require__ !== "undefined" ? __non_webpack_require__("./playwright/index.js") : require("playwright");
@@ -224,6 +225,54 @@ class PlaywrightInstance {
 		}
 	};
 
+	private getErrorType = (error: Error) => {
+		const isCrusherCustomizedError = error?.meta;
+		let errorType = StepErrorTypeEnum.UNEXPECTED_ERROR_OCCURRED;
+
+		if(isCrusherCustomizedError) {
+			if(error?.meta?.type) {
+				errorType =  error.meta!.type;
+			}
+		} else {
+			if(error?.name) errorType = error.name;
+		}
+
+		return errorType;
+	};
+
+	private handleFailedStep(failedAction: iAction, result: iActionResult, shouldNotSave: boolean) {
+		const { meta } = result;
+		const { error, failedReason } = meta;
+		
+		const errorType = this.getErrorType(error);
+		
+		const isStalled = result.status === ActionStatusEnum.STALLED;			
+		const uniqueId = uuidv4();
+		this.appWindow.recordLog({
+			id: uniqueId,
+			message: `Error performing ${ACTION_DESCRIPTIONS[failedAction.type]} `,
+			type: "error",
+			args: [],
+			time: performance.now(),
+		});
+		this.appWindow.recordLog({
+			id: uuidv4(),
+			message: `<= ${failedReason.replace(/[\u001b\u009b][#();?[]*(?:\d{1,4}(?:;\d{0,4})*)?[\d<=>A-ORZcf-nqry]/g, "")}`,
+			type: "error",
+			args: [],
+			time: performance.now(),
+			parent: uniqueId,
+		});
+		if (!shouldNotSave) {
+			if (isStalled) {
+				// @TODO: Update it ActionStatusEnum.STALLED
+				this.appWindow.getRecorder().markRunningStepCompleted();
+			} else {
+				this.appWindow.getRecorder().markRunningStepFailed(errorType);
+			}
+		}
+	}
+
 	async runActions(actions: iAction[], shouldNotSave = false): Promise<void> {
 		const actionsArr = getMainActions(actions);
 
@@ -247,34 +296,11 @@ class PlaywrightInstance {
 					break;
 				case ActionStatusEnum.FAILED:
 				case ActionStatusEnum.STALLED:
-					this.lastAction = null;
-					const { failedReason } = result.meta;
-					const isStalled = status === ActionStatusEnum.STALLED;
-
-					const uniqueId = uuidv4();
-					this.appWindow.recordLog({
-						id: uniqueId,
-						message: `Error performing ${ACTION_DESCRIPTIONS[action.type]} `,
-						type: "error",
-						args: [],
-						time: performance.now(),
-					});
-					this.appWindow.recordLog({
-						id: uuidv4(),
-						message: `<= ${failedReason.replace(/[\u001b\u009b][#();?[]*(?:\d{1,4}(?:;\d{0,4})*)?[\d<=>A-ORZcf-nqry]/g, "")}`,
-						type: "error",
-						args: [],
-						time: performance.now(),
-						parent: uniqueId,
-					});
-					if (!shouldNotSave) {
-						if (isStalled) {
-							// @TODO: Update it ActionStatusEnum.STALLED
-							this.appWindow.getRecorder().markRunningStepCompleted();
-						} else {
-							this.appWindow.getRecorder().markRunningStepFailed();
-						}
+					if((result.meta as any).error?.name === "TimeoutError") {
+						console.log("Rejoice its timeout error");
 					}
+					this.lastAction = null;
+					this.handleFailedStep(action, result, shouldNotSave);
 					break;
 				case ActionStatusEnum.COMPLETED:
 					this.appWindow.recordLog({
@@ -289,7 +315,7 @@ class PlaywrightInstance {
 					if (!shouldNotSave) this.appWindow.getRecorder().markRunningStepCompleted();
 					break;
 			}
-		});
+		}, true, false);
 	}
 
 	public addInitScript(scriptPath: string) {

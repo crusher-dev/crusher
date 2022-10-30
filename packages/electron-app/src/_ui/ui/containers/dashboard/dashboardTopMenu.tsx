@@ -37,7 +37,7 @@ function DashboardTopDropdownContent({ setShowActionMenu, isRecorder }) {
 		const evt = createEvent({ id: "open-config-file", action: "Open config file", isNavigating: false });
 
 		setShowActionMenu(false, evt);
-		if(!evt.isCanceled()) {
+		if (!evt.isCanceled()) {
 			shell.openPath(projectConfigFile);
 		}
 	}, [projectConfigFile]);
@@ -45,7 +45,7 @@ function DashboardTopDropdownContent({ setShowActionMenu, isRecorder }) {
 	const handleSettings = () => {
 		const evt = createEvent({ id: "settings", action: "Open settings", isNavigating: true });
 		setShowActionMenu(false, evt);
-		if(!evt.isCanceled()) {
+		if (!evt.isCanceled()) {
 			navigate("/settings");
 		}
 	};
@@ -54,7 +54,7 @@ function DashboardTopDropdownContent({ setShowActionMenu, isRecorder }) {
 		const evt = createEvent({ id: "exit", action: "Exit", isNavigating: false });
 		setShowActionMenu(false, evt);
 
-		if(!evt.isCanceled()) {
+		if (!evt.isCanceled()) {
 			performExit();
 		}
 	};
@@ -64,7 +64,7 @@ function DashboardTopDropdownContent({ setShowActionMenu, isRecorder }) {
 		setShowActionMenu(false, evt);
 		store.dispatch(setSelectedProject(null));
 
-		if(!evt.isCanceled()) {
+		if (!evt.isCanceled()) {
 			return navigate("/select-project");
 		}
 	};
@@ -73,7 +73,7 @@ function DashboardTopDropdownContent({ setShowActionMenu, isRecorder }) {
 		const evt = createEvent({ id: "back-to-dashboard", action: "Go back", isNavigating: true });
 		setShowActionMenu(false, evt);
 
-		if(!evt.isCanceled()) {
+		if (!evt.isCanceled()) {
 			return navigate("/");
 		}
 	};
@@ -92,14 +92,14 @@ function DashboardTopDropdownContent({ setShowActionMenu, isRecorder }) {
 		>
 			<div>
 				{isRecorder ? (
-					<MenuItem onClick={handleGoBackToDashboard} label={<span>Go Back</span>} className={"close-on-click"} />
+					<MenuItem onMouseDown={handleGoBackToDashboard} label={<span>Go Back</span>} className={"close-on-click"} />
 				) : (
-					<MenuItem onClick={handleSelectProject} label={<span>Back to projects</span>} className={"close-on-click"} />
+					<MenuItem onMouseDown={handleSelectProject} label={<span>Back to projects</span>} className={"close-on-click"} />
 				)}
-				{projectConfigFile ? <MenuItem onClick={handleOpenConfigFile} label={<span>Edit Project config</span>} className={"close-on-click"} /> : ""}
-				<MenuItem onClick={handleSettings} label={<span>Settings</span>} className={"close-on-click"} />
-				<MenuItem onClick={handleHelpAccount} label={<span>Help & account</span>} className={"close-on-click"} />
-				<MenuItem onClick={handleExit} label={<span>Exit</span>} className={"close-on-click"} />
+				{projectConfigFile ? <MenuItem onMouseDown={handleOpenConfigFile} label={<span>Edit Project config</span>} className={"close-on-click"} /> : ""}
+				<MenuItem onMouseDown={handleSettings} label={<span>Settings</span>} className={"close-on-click"} />
+				<MenuItem onMouseDown={handleHelpAccount} label={<span>Help & account</span>} className={"close-on-click"} />
+				<MenuItem onMouseDown={handleExit} label={<span>Exit</span>} className={"close-on-click"} />
 			</div>
 		</div>
 	);
@@ -113,7 +113,7 @@ export const MenuDropdown = ({ className, isRecorder, hideDropdown, callback }) 
 			if (callback) {
 				callback(value, event);
 			}
-			if(event && !event?.isCanceled()) {
+			if (event && !event?.isCanceled()) {
 				setShowAppMenu(value);
 			}
 		},
@@ -129,8 +129,8 @@ export const MenuDropdown = ({ className, isRecorder, hideDropdown, callback }) 
 			dropdownCSS={css`
 				left: 38rem;
 				width: 162rem;
-				background: #0d0e0e;
-				border: 1px solid #1c1c1c;
+				background: ##0F0F0F;
+				border: 1px solid rgba(142, 142, 142, 0.15);
 				box-shadow: 0px 0px 2px #000000;
 				border-radius: 10px;
 			`}

@@ -3,6 +3,7 @@ import { Store } from "redux";
 import { iReduxState } from "../store/reducers";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
 import { recordStep, updateCurrentRunningStepStatus } from "../store/actions/recorder";
+import { StepErrorTypeEnum } from "runner-utils/src/error.types";
 
 class Recorder {
 	private store: Store<iReduxState>;
@@ -15,8 +16,8 @@ class Recorder {
 		this.store.dispatch(recordStep(action, status));
 	}
 
-	markRunningStepFailed() {
-		this.store.dispatch(updateCurrentRunningStepStatus(ActionStatusEnum.FAILED));
+	markRunningStepFailed(errorType: StepErrorTypeEnum) {
+		this.store.dispatch(updateCurrentRunningStepStatus(ActionStatusEnum.FAILED, {errorType}));
 	}
 
 	markRunningStepCompleted() {

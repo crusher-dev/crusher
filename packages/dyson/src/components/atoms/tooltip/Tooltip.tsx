@@ -89,7 +89,7 @@ export const Tooltip: React.FC<TooltipWrapperProps> = ({ children, autoHide = "t
 			ref: reference,
 			...eventListener(),
 		});
-	}, []);
+	}, [children]);
 
 	useEffect(() => {
 		callback && callback(show);

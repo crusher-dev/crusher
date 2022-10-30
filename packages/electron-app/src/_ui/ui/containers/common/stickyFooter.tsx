@@ -29,8 +29,8 @@ export const StickyFooter = ({ className }: IProps) => {
 	const [projectConfigFile, setProjectConfigFile] = React.useState(null);
 
 	React.useEffect(() => {
-			const projectConfigFile = getCurrentProjectConfigPath();
-			setProjectConfigFile(projectConfigFile);
+		const projectConfigFile = getCurrentProjectConfigPath();
+		setProjectConfigFile(projectConfigFile);
 	}, []);
 
 	const isProxyWorking = Object.keys(proxyState).length;
@@ -62,12 +62,14 @@ export const StickyFooter = ({ className }: IProps) => {
 	}, [latestNotification?.id]);
 
 	const openConfig = () => {
-		if(!projectConfigFile) {
+		if (!projectConfigFile) {
 			alert("Project not linked locally");
 			return;
 		}
 		shell.openPath(projectConfigFile);
 	};
+
+	console.log("Proxy is init", proxyIsInitializing);
 
 	const statusMessage =
 		latestNotification?.status && latestNotification?.status !== "RUNNING" ? "has " + latestNotification.status.toLowerCase() : "is running";
@@ -101,21 +103,23 @@ export const StickyFooter = ({ className }: IProps) => {
 
 				<div css={contextContainerCss}>
 					<Tooltip content={isProxyDisabled ? (<div className={"flex items-center"}>Not configured <div className={"ml-8"} css={css`min-width: 2px; height: 20px; background: rgba(255,255,255,0.15)`}></div><LinkPointer css={css`.pointer-icon { path { fill: rgba(255, 255, 255, 0.35); } } `} onClick={openConfig} className={"ml-8"}>Open config</LinkPointer></div>) : proxyIsInitializing ? "initializng" : "active"} placement="top" type="hover">
-						{!proxyIsInitializing && !isProxyWorking ? (
-							<DisabledCloudIcon
-								css={[
-									cloudIconCss,
-									css`
+						<div>
+							{!proxyIsInitializing && !isProxyWorking ? (
+								<DisabledCloudIcon
+									css={[
+										cloudIconCss,
+										css`
 										width: 22px;
 										height: 16px;
 									`,
-									clickableCss,
-								]}
-								shouldAnimateGreen={false}
-							/>
-						) : (
-							<CloudIcon css={[cloudIconCss, clickableCss]} shouldAnimateGreen={proxyIsInitializing} />
-						)}
+										clickableCss,
+									]}
+									shouldAnimateGreen={false}
+								/>
+							) : (
+								<CloudIcon css={[cloudIconCss, activeCloudIconCss, clickableCss]} shouldAnimateGreen={proxyIsInitializing} />
+							)}
+						</div>
 					</Tooltip>
 					{/* <NotepadIcon css={[notepadIconCss, clickableCss]} /> */}
 				</div>
@@ -192,6 +196,9 @@ const contentCss = css`
 const cloudIconCss = css`
 	width: 16px;
 	height: 11px;
+`;
+const activeCloudIconCss = css`
+
 `;
 const clickableCss = css`
 	:hover {

@@ -29,27 +29,35 @@ import { useBuildNotifications } from "./hooks/tests";
 import { addBuildNotification, clearCurrentLocalBuild, updateCurrentLocalBuild } from "../store/actions/builds";
 import { useAtom } from "jotai";
 import { isStepHoverAtom } from "./store/jotai/testsPage";
+import { CloudCrusher } from "../lib/cloud";
+import { clearAllToasts, clearToast, showToast } from "./ui/components/toasts";
+import { getStore } from "../store/configureStore";
+import { getCurrentLocalBuild } from "../store/selectors/builds";
 
-const handleCompletion = async (store: Store, action: IDeepLinkAction, addNotification) => {
+const handleCompletion = async (store: Store, action: IDeepLinkAction, addNotification, hasCompletedSuccesfully: boolean) => {
 	// @TODO: Change `redirectAfterSuccess` to `isLocalBuild`
-	console.log("Action args", action, window["testsToRun"]);
+	const localBuild = getCurrentLocalBuild(store.getState());
 	if (action.args.redirectAfterSuccess && window["testsToRun"]) {
 		window["testsToRun"].list = window["testsToRun"].list.filter((testId) => testId !== action.args.testId);
 		const logs = await performGetRecorderTestLogs();
-		const recorderState = getRecorderState(store.getState());
 		window["localRunCache"][action.args.testId] = {
 			steps: logs,
 			id: action.args.testId,
-			status: recorderState.type !== TRecorderState.ACTION_REQUIRED ? "FINISHED" : "FAILED",
+			status: hasCompletedSuccesfully ? "FINISHED" : "FAILED",
 		};
 
 		if (window["testsToRun"].list.length) {
+			clearAllToasts();
 			historyInstance.push("/recorder", {});
 			goFullScreen();
 			store.dispatch(setSessionInfoMeta({}));
+
+			const progress = new Map(localBuild.progress);
+			progress.set(action.args.testId, hasCompletedSuccesfully)
 			store.dispatch(
 				updateCurrentLocalBuild({
 					queuedTests: window["testsToRun"].list,
+					progress: progress,
 				} as any),
 			);
 			performReplayTestUrlAction(window["testsToRun"].list[0], true, action.args.selectedTests || []);
@@ -70,18 +78,31 @@ const handleCompletion = async (store: Store, action: IDeepLinkAction, addNotifi
 					time: Date.now(),
 				}),
 			);
-
+			
+			clearAllToasts();
 			historyInstance.push("/", {});
 
 			goFullScreen(false);
 			store.dispatch(clearCurrentLocalBuild());
 			sendSnackBarEvent({ type: "test_report", message: null, meta: { totalCount: totalTestsInBuild, buildReportStatus: localBuild.buildReportStatus } });
 		}
+	} else {
+		if(hasCompletedSuccesfully) {
+			showToast({
+				type: "ready-for-edit",
+				isUnique: true,
+				message: "All steps completed, you can edit now",
+			});
+		}
 	}
 };
 
 const handleUrlAction = (store: Store, addNotification, event: Electron.IpcRendererEvent, { action }: { action: IDeepLinkAction }) => {
 	switch (action.commandName) {
+		case "run-local-build":
+			// const { buildId } = action.args;
+			// const buildReport = CloudCrusher.getBuildReport(buildId)
+			break;
 		case "replay-test":
 			const sessionInfoMeta = getAppSessionMeta(store.getState() as any);
 			const { selectedTests } = action.args;
@@ -97,7 +118,12 @@ const handleUrlAction = (store: Store, addNotification, event: Electron.IpcRende
 					selectedTest: currentTest,
 				}),
 			);
-			performReplayTest(action.args.testId).finally(handleCompletion.bind(this, store, action, addNotification));
+			performReplayTest(action.args.testId).then((hasCompletedSuccesfully: boolean) => {
+				handleCompletion(store, action, addNotification, hasCompletedSuccesfully);
+			}).catch((err) => {
+				console.error(err);
+				handleCompletion(store, action, addNotification, false);
+			})
 			break;
 		case "restore":
 			if (window.localStorage.getItem("saved-steps")) {
@@ -127,13 +153,15 @@ const App = () => {
 		});
 
 		ipcRenderer.on("go-to-dashboard", () => {
+			clearAllToasts();
 			historyInstance.push("/", {});
 			goFullScreen(false);
 		});
-		ipcRenderer.on("url-action", handleUrlAction.bind(this, store, addNotification));
+		const listener = handleUrlAction.bind(this, store, addNotification);
+		ipcRenderer.on("url-action",listener);
 
 		return () => {
-			ipcRenderer.removeAllListeners("url-action");
+			ipcRenderer.removeListener("url-action", listener);
 			ipcRenderer.removeAllListeners("renderer-ready");
 			ipcRenderer.removeAllListeners("webview-initialized");
 			store.dispatch(resetRecorder());
@@ -170,14 +198,25 @@ const App = () => {
 				</div>
 			</div>
 			<Global styles={globalCss} />
-			<InfoOverLay />
+			{/* <InfoOverLay /> */}
 		</div>
 	);
 };
 
 const StepHoverOverlay = () => {
-	const [isStepHovered] = useAtom(isStepHoverAtom)
-	if (!isStepHovered) {
+	const [isStepHovered] = useAtom(isStepHoverAtom);
+	const [show, setShow] = React.useState(false);
+	React.useEffect(() => {
+		let interval;
+		interval = setTimeout(() => {
+				setShow(isStepHovered);
+		}, 25);
+
+		return () => {
+			interval && clearInterval(interval);
+		}
+	}, [isStepHovered]);
+	if (!show) {
 		return null
 	}
 	return (<div css={overLayCSS}></div>)
@@ -188,9 +227,9 @@ const overLayCSS = css`
 	top: 0;
 	width: 100%;
 	min-height: 100vh;
-	background: rgba(0, 0, 0, 0.55);
+	background: rgba(0, 0, 0, 0.75);
 	z-index: 22;
-    backdrop-filter: blur(1px);
+    backdrop-filter: blur(3px);
 `
 
 const dragableCss = () => {
@@ -207,9 +246,12 @@ const dragableCss = () => {
 const contentCss = () => {
 	return css`
 		display: flex;
-		background: #020202;
 		width: 100%;
 		overflow-x: hidden;
+		background: linear-gradient(
+			90deg
+			,#050505 15px,transparent 1%) 50%,linear-gradient(#050505 15px,transparent 1%) 50%,hsla(0,0%,100%,.16);
+				background-size: 16px 16px;
 		color: white;
 		height: ${process.platform === "darwin" ? `calc(100vh - 32px)` : "100vh"};
 	`;
@@ -222,17 +264,16 @@ const globalCss = css`
 		max-width: "100vw";
 	}
 	.custom-scroll::-webkit-scrollbar {
-		width: 12rem;
+		width: 8rem;
 	}
 
 	.custom-scroll::-webkit-scrollbar-track {
 		background-color: #0a0b0e;
 		box-shadow: none;
 	}
-
 	.custom-scroll::-webkit-scrollbar-thumb {
 		background-color: #1b1f23;
-		border-radius: 100rem;
+		border-radius: 12rem;
 	}
 
 	.custom-scroll::-webkit-scrollbar-thumb:hover {

@@ -237,9 +237,9 @@ class TestService {
 
 		let query = `SELECT tests.*, tests.project_id project_id, tests.draft_job_id as draft_job_id, tests.featured_clip_video_url as featured_clip_video_url, tests.featured_video_url as featured_video_url, users.id  as user_id, users.name as user_name, jobs.status as draft_build_status, job_reports.status as draft_build_report_status ${
 			additionalSelectColumns ? `, ${additionalSelectColumns}` : ""
-		} FROM public.tests, public.users, public.jobs, public.job_reports ${additionalFromSource ? `, ${additionalFromSource}` : ""} WHERE ${
-			filter.projectId ? `tests.project_id = ? AND` : ""
-		} ${filter.userId ? `users.id = ? AND` : ""} users.id = tests.user_id AND jobs.id = tests.draft_job_id AND job_reports.id = jobs.latest_report_id`;
+		} FROM public.tests ${additionalFromSource ? `, ${additionalFromSource}` : ""} LEFT JOIN public.users ON users.id = tests.user_id LEFT JOIN public.jobs ON jobs.id = tests.draft_job_id LEFT JOIN public.job_reports ON job_reports.id = jobs.latest_report_id WHERE TRUE ${
+			filter.projectId ? `AND tests.project_id = ?` : ""
+		} ${filter.userId ? ` AND users.id = ? AND` : ""}`;
 
 		if (filter.projectId) {
 			queryParams.push(filter.projectId);

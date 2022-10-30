@@ -37,7 +37,7 @@ class TeamsService {
 	@CamelizeResponse()
 	async getUsersWithRolesInTeam(teamId: number): Promise<Array<KeysToCamelCase<IUserTable> & { role: UserTeamRoleEnum }>> {
 		return this.dbManager.fetchAllRows(
-			"SELECT users.*, user_team_roles.role as role FROM public.users, public.user_team_roles WHERE users.team_id = ? AND users.id = user_team_roles.user_id",
+			"SELECT users.*, user_team_roles.role as role FROM public.users inner join public.user_team_roles on users.id = user_team_roles.user_id  WHERE users.team_id = ?",
 			[teamId],
 		);
 	}

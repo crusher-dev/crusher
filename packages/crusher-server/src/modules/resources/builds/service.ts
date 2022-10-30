@@ -58,9 +58,9 @@ class BuildsService {
 
 		let query = `SELECT jobs.host build_host, jobs.is_local_job is_local_build, jobs.id build_id, jobs.commit_name build_name, jobs.build_trigger build_trigger, EXTRACT(EPOCH FROM (job_reports.updated_at - job_reports.created_at)) build_duration, jobs.created_at build_created_at, job_reports.created_at build_report_created_at, job_reports.updated_at build_report_updated_at, jobs.latest_report_id latest_report_id, job_reports.status build_status, job_reports.total_test_count total_test_count, job_reports.passed_test_count passed_test_count, job_reports.failed_test_count failed_test_count, job_reports.review_required_test_count review_required_test_count, comments.count comment_count, users.id triggered_by_id, users.name triggered_by_name ${
 			additionalSelectColumns.length ? `, ${additionalSelectColumns}` : ""
-		} FROM public.users, public.jobs, public.job_reports LEFT JOIN (SELECT report_id, COUNT(*) count FROM public.comments GROUP BY report_id) as comments ON comments.report_id = job_reports.id ${
+		} FROM public.jobs  INNER JOIN public.job_reports ON job_reports.id = jobs.latest_report_id INNER JOIN public.users ON jobs.user_id = users.id LEFT JOIN (SELECT report_id, COUNT(*) count FROM public.comments GROUP BY report_id) as comments ON comments.report_id = job_reports.id ${
 			additionalFromSource.length ? `, ${additionalFromSource}` : ""
-		} WHERE jobs.project_id = ? AND job_reports.id = jobs.latest_report_id AND jobs.user_id = users.id AND jobs.is_draft_job = ?`;
+		} WHERE jobs.project_id = ? AND jobs.is_draft_job = ?`;
 		queryParams.push(projectId, false);
 
 		if (filter.triggerType) {
@@ -120,7 +120,7 @@ class BuildsService {
 	@CamelizeResponse()
 	async getBuildFromReportId(reportId: number): Promise<KeysToCamelCase<IBuildTable>> {
 		return this.dbManager.fetchSingleRow(
-			`SELECT jobs.* FROM public.jobs, public.job_reports WHERE job_reports.id = ? AND jobs.latest_report_id = job_reports.id`,
+			`SELECT jobs.* FROM public.jobs inner join public.job_reports on jobs.latest_report_id = job_reports.id  WHERE job_reports.id = ?`,
 			[reportId],
 		);
 	}

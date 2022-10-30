@@ -275,7 +275,7 @@ class BuildTestInstancesService {
 	@CamelizeResponse()
 	async getInstanceAllInformation(instanceId: number): Promise<KeysToCamelCase<ITestInstancesTable & { test_name: string; test_events: string }>> {
 		return this.dbManager.fetchSingleRow(
-			"SELECT test_instances.*, tests.name test_name, tests.events test_events FROM public.tests, public.test_instances WHERE test_instances.id = ? AND tests.id = test_instances.test_id",
+			"SELECT test_instances.*, tests.name test_name, tests.events test_events FROM public.test_instances inner join public.tests on tests.id = test_instances.test_id  WHERE test_instances.id = ?",
 			[instanceId],
 		);
 	}
@@ -296,7 +296,7 @@ class BuildTestInstancesService {
 	@CamelizeResponse()
 	async getReferenceInstance(testInstanceId: number, referenceType: "PROJECT_LEVEL" | null = "PROJECT_LEVEL"): Promise<KeysToCamelCase<ITestInstancesTable>> {
 		const testRecord = await this.dbManager.fetchSingleRow(
-			"SELECT tests.* FROM public.test_instances, public.tests WHERE test_instances.id = ? AND tests.id = test_instances.test_id",
+			"SELECT tests.* FROM public.test_instances inner join public.tests on tests.id = test_instances.test_id  WHERE test_instances.id = ?",
 			[testInstanceId],
 		);
 		const testInstanceRecord = await this.getInstance(testInstanceId);

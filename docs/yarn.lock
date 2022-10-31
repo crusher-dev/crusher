@@ -4955,6 +4955,58 @@ __metadata:
   languageName: node
   linkType: hard
 
+"crusher-docs@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "crusher-docs@workspace:."
+  dependencies:
+    "@docusaurus/core": 0.0.0-4192
+    "@docusaurus/mdx-loader": 0.0.0-4192
+    "@docusaurus/module-type-aliases": 0.0.0-4192
+    "@docusaurus/plugin-client-redirects": 0.0.0-4192
+    "@docusaurus/plugin-content-docs": 0.0.0-4192
+    "@docusaurus/plugin-content-pages": 0.0.0-4192
+    "@docusaurus/plugin-debug": 0.0.0-4192
+    "@docusaurus/plugin-google-analytics": 0.0.0-4192
+    "@docusaurus/plugin-google-gtag": 0.0.0-4192
+    "@docusaurus/preset-classic": 0.0.0-4192
+    "@docusaurus/theme-classic": 0.0.0-4192
+    "@docusaurus/theme-search-algolia": 0.0.0-4192
+    "@emotion/babel-preset-css-prop": ^11.10.0
+    "@emotion/css": ^11.7.1
+    "@emotion/react": ^11.10.4
+    "@emotion/styled": ^11.10.4
+    "@ionic-internal/docusaurus-plugin-tag-manager": ^2.0.0
+    "@ionic-internal/ionic-ds": ^7.0.0
+    "@ionic/prettier-config": ^2.0.0
+    "@mdx-js/react": ^1.6.22
+    "@radix-ui/colors": ^0.1.8
+    "@radix-ui/react-accordion": ^1.0.1
+    "@radix-ui/react-icons": ^1.1.1
+    "@stitches/react": ^1.2.8
+    "@tsconfig/docusaurus": ^1.0.4
+    "@types/react": ^17.0.37
+    clsx: ^1.1.1
+    concurrently: ^6.2.0
+    crowdin: ^3.5.0
+    docusaurus-plugin-module-alias: ^0.0.2
+    docusaurus-plugin-sass: ^0.2.1
+    docusaurus-tailwindcss: ^0.1.0
+    emotion: ^11.0.0
+    fs-extra: ^9.1.0
+    modern-normalize: ^1.1.0
+    patch-package: ^6.4.7
+    prettier: ^2.5.0
+    react: ^17.0.1
+    react-dom: ^17.0.1
+    remark-html: ^13.0.1
+    remark-parse: ^8.0.3
+    sass: ^1.44.0
+    semver: ^7.3.5
+    styled: ^1.0.0
+    typescript: ^4.5.2
+  languageName: unknown
+  linkType: soft
+
 "crypt@npm:~0.0.1":
   version: 0.0.2
   resolution: "crypt@npm:0.0.2"
@@ -7229,58 +7281,6 @@ __metadata:
   checksum: 2e5f51268b5941e4a17e4ef0575bc91ed0ab5f8515e3cf77486f7c14d13f3010df9c0959f37063dcc96e78d12dc6b0bb1b9e111cdfe69771f4656d2993d36155
   languageName: node
   linkType: hard
-
-"ionic-docs@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "ionic-docs@workspace:."
-  dependencies:
-    "@docusaurus/core": 0.0.0-4192
-    "@docusaurus/mdx-loader": 0.0.0-4192
-    "@docusaurus/module-type-aliases": 0.0.0-4192
-    "@docusaurus/plugin-client-redirects": 0.0.0-4192
-    "@docusaurus/plugin-content-docs": 0.0.0-4192
-    "@docusaurus/plugin-content-pages": 0.0.0-4192
-    "@docusaurus/plugin-debug": 0.0.0-4192
-    "@docusaurus/plugin-google-analytics": 0.0.0-4192
-    "@docusaurus/plugin-google-gtag": 0.0.0-4192
-    "@docusaurus/preset-classic": 0.0.0-4192
-    "@docusaurus/theme-classic": 0.0.0-4192
-    "@docusaurus/theme-search-algolia": 0.0.0-4192
-    "@emotion/babel-preset-css-prop": ^11.10.0
-    "@emotion/css": ^11.7.1
-    "@emotion/react": ^11.10.4
-    "@emotion/styled": ^11.10.4
-    "@ionic-internal/docusaurus-plugin-tag-manager": ^2.0.0
-    "@ionic-internal/ionic-ds": ^7.0.0
-    "@ionic/prettier-config": ^2.0.0
-    "@mdx-js/react": ^1.6.22
-    "@radix-ui/colors": ^0.1.8
-    "@radix-ui/react-accordion": ^1.0.1
-    "@radix-ui/react-icons": ^1.1.1
-    "@stitches/react": ^1.2.8
-    "@tsconfig/docusaurus": ^1.0.4
-    "@types/react": ^17.0.37
-    clsx: ^1.1.1
-    concurrently: ^6.2.0
-    crowdin: ^3.5.0
-    docusaurus-plugin-module-alias: ^0.0.2
-    docusaurus-plugin-sass: ^0.2.1
-    docusaurus-tailwindcss: ^0.1.0
-    emotion: ^11.0.0
-    fs-extra: ^9.1.0
-    modern-normalize: ^1.1.0
-    patch-package: ^6.4.7
-    prettier: ^2.5.0
-    react: ^17.0.1
-    react-dom: ^17.0.1
-    remark-html: ^13.0.1
-    remark-parse: ^8.0.3
-    sass: ^1.44.0
-    semver: ^7.3.5
-    styled: ^1.0.0
-    typescript: ^4.5.2
-  languageName: unknown
-  linkType: soft
 
 "ip@npm:^2.0.0":
   version: 2.0.0

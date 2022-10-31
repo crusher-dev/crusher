@@ -3,17 +3,15 @@ import { css } from "@emotion/react";
 import { HoverButton } from "../../components/hoverButton";
 import { GithubIcon, ResetIcon, TickIcon } from "electron-app/src/_ui/constants/icons";
 import { TextBlock } from "@dyson/components/atoms";
-import { remote } from "electron";
-import { shell } from "electron/common";
+
 import { linkOpen, resolveToBackend } from "electron-app/src/utils/url";
 import { useStore } from "react-redux";
 import { getCurrentSelectedProjct, getUserAccountInfo } from "electron-app/src/store/selectors/app";
 import { resolveToFrontend } from "electron-app/src/utils/url";
-import useSWR from "swr";
 import { getIntegrationsAPIRequest, removeGithubIntegration, removeSlackIntegration } from "electron-app/src/_ui/api/projects/integrations";
 import useRequest from "electron-app/src/_ui/utils/useRequest";
 import axios from "axios";
-import { HoverCard } from "@dyson/components/atoms/tooltip/Tooltip1";
+import { Link } from "../../components/Link";
 
 const SlackIntegrationItem = () => {
     const store = useStore();
@@ -47,10 +45,10 @@ const SlackIntegrationItem = () => {
         setConnected(false);
     };
     return (
-        <div css={IntegrationItemCss} className="flex items-center py-24 pb-20">
+        <div css={IntegrationItemCss} className="flex items-center py-16">
             <div className={"flex-1"}>
-                <TextBlock weight={600} fontSize={15} color="#A1A1A1">slack integration</TextBlock>
-                <TextBlock fontSize={12} color="#6B6B6B" className="mt-8">We post notifications to Slack on event trigger.</TextBlock>
+                <TextBlock weight={600} fontSize={15} color="#A1A1A1">slack</TextBlock>
+                <TextBlock fontSize={12} color="#6B6B6B" className="mt-4">get event alerts on slack</TextBlock>
             </div>
             <div className={"ml-auto"}>
                 {connected ? (
@@ -59,10 +57,10 @@ const SlackIntegrationItem = () => {
                             <TickIcon css={tickIconCss} />
                             <TextBlock className={"ml-6"} color={"#6B6B6B"} fontSize={12}>{connected}</TextBlock>
                         </div>
-                        <HoverButton className={"ml-12"} onClick={handleRemove} css={buttonCss} width={70} height={24} >remove</HoverButton>
+                        <HoverButton className={"ml-12"} onClick={handleRemove} css={buttonCss} height={28} >remove</HoverButton>
                     </div>
                 ) : (
-                    <HoverButton onClick={handleConnect} css={buttonCss} width={96} height={32} >Connect</HoverButton>
+                    <HoverButton onClick={handleConnect} css={buttonCss} height={28} >Connect</HoverButton>
                 )}
             </div>
         </div>
@@ -79,7 +77,6 @@ const GithubIntegrationItem = () => {
 
     React.useEffect(() => {
         if (integrations?.gitIntegration) {
-            console.log("Git integration", integrations.gitIntegration);
             setConnected(true);
         }
     }, [integrations]);
@@ -99,14 +96,11 @@ const GithubIntegrationItem = () => {
     }
 
     return (
-        <div css={IntegrationItemCss} className="flex items-center py-24 pb-16">
-            <div css={css`height: 100%;`}>
-                <GithubIcon css={githubIconCss} />
-            </div>
-            <div className={"flex-1 ml-12"}>
+        <div css={IntegrationItemCss} className="flex items-center py-16">
+            <GithubIcon css={githubIconCss} className="mt-1" />
+            <div className={"flex-1 ml-10"}>
 
-                <TextBlock weight={600} fontSize={15} color="#A1A1A1">link crusher to git repo</TextBlock>
-                <TextBlock fontSize={12} color="#6B6B6B" className="mt-6">get status check with each commit</TextBlock>
+                <TextBlock weight={600} fontSize={15} color="#A1A1A1">github</TextBlock>
 
             </div>
             <div className={"ml-auto"}>
@@ -117,7 +111,7 @@ const GithubIntegrationItem = () => {
                             <TickIcon css={tickIconCss} />
                             <TextBlock className={"ml-6"} color={"#6B6B6B"} fontSize={12}>{integrations.gitIntegration.repoName}</TextBlock>
                         </div>
-                        <HoverButton className={"ml-12"} onClick={handleUnlink} css={buttonCss} width={70} height={24} >remove</HoverButton>
+                        <HoverButton className={"ml-12"} onClick={handleUnlink} css={buttonCss} width={70} height={28} >remove</HoverButton>
                     </div>
                 ) : (
                     <HoverButton onClick={handleLink} css={buttonCss} width={106} height={32}>
@@ -134,19 +128,22 @@ const GithubIntegrationItem = () => {
 
 const githubIconCss = css`width: 16px; height: 16px;`;
 const IntegrationItemCss = css`
-    :first-of-type {
-        border-bottom: 0.5px solid rgba(217, 217, 217, 0.07);
+    border-bottom: 0.5px solid rgba(217, 217, 217, 0.07);
+    :last-of-type {
+        border-bottom: 0px solid rgba(217, 217, 217, 0.07);
     }
 `;
 const buttonCss = css`
     background: rgba(255, 255, 255, 0.04);
     border: 0.5px solid #222222;
     border-radius: 8px;
+    height: 28px;
+    font-weight: 500;
+    padding: 1px 10px 0 10px;
+    font-size: 12.6px;
 
-    font-weight: 600;
-    font-size: 13px;
-    letter-spacing: -0.003em;
-    padding-top: 1px;
+    width: fit-content;
+
 `;
 
 const IntegrationSettings = () => {
@@ -160,7 +157,7 @@ const IntegrationSettings = () => {
             <div className={"flex"}>
                 <div className={"flex-1"}>
                     <div css={headingCss}>Integration</div>
-                    <div className={"mt-6"} css={descriptionCss}>intergrate services to enhance your workflow</div>
+                    <div className={"mt-6"} css={descriptionCss}>enhance your workflow</div>
                 </div>
                 <div className={"ml-auto"}>
                     <HoverButton onClick={handleRefresh} css={buttonCss} width={32} height={32} title={"refresh"}>
@@ -169,13 +166,27 @@ const IntegrationSettings = () => {
                 </div>
             </div>
 
-            <div className="mt-10">
+            <div className="mt-20">
                 <SlackIntegrationItem />
                 <GithubIntegrationItem />
+                <div css={IntegrationItemCss} className="flex items-center py-20">
+                    <TextBlock color={"#A1A1A1"} fontSize={13}>run test with like
+                        <Link className="ml-3 mr-2" css={linkCSS} href="https://docs.crusher.dev/integrations/with-vercel">vercel</Link>,
+                        <Link className="ml-3 mr-2" css={linkCSS} href="https://docs.crusher.dev/setting-up/github">github action</Link>
+                        , etc.</TextBlock>
+                </div>
             </div>
         </div>
     )
 };
+
+const linkCSS = css`
+    color: #6CB7FC!important;
+    :hover{
+        text-decoration: underline;
+        text-underline-offset : 3px;
+    }
+`
 
 const containerCss = css`
     font-size: 14px;
@@ -190,7 +201,7 @@ const headingCss = css`
     letter-spacing: -0.003em;
 `;
 const descriptionCss = css`
-    font-size: 12.5px;
+    font-size: 12px;
     line-height: 14px;
 
     letter-spacing: .3px;

@@ -1,10 +1,11 @@
-# Ionic Docs
+# Crusher Docs
 
-The official [Ionic](https://ionicframework.com) documentation, built with [Docusaurus](https://docusaurus.io/).
+The official [Crusher](https://crusher.dev) documentation, built with [Docusaurus](https://docusaurus.io/).
 
-[![Crowdin](https://badges.crowdin.net/ionic-docs/localized.svg)](https://crowdin.com/project/ionic-docs)
+This is forked from  https://github.com/ionic-team/ionic-docs
 
----
+To contribute (fastest method):- open the repo in codespace. 
+- go to docs - `cd /docs'
+- run - `yarn install'
+- Submit changes with PR
 
-- [Contributing Guide](./CONTRIBUTING.md) :flashlight:
-<!-- - [Project Board](https://github.com/ionic-team/ionic-docs/projects/3) :pushpin: -->

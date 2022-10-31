@@ -1,0 +1,246 @@
+{
+  "type": "npx",
+  "name": "crusher-cli",
+  "summary": "",
+  "description": "",
+  "groups": [],
+  "commands": [
+    {
+      "name": "init",
+      "namespace": [
+        "crusher-cli"
+      ],
+      "summary": "Initializes crusher in your project",
+      "description": "`crusher-cli test:init` will setup crusher configs in your project.",
+      "footnotes": [],
+      "groups": [],
+      "exampleCommands": [
+        "npx crusher.devinit"
+      ],
+      "aliases": [],
+      "inputs": [],
+      "options": [
+        {
+          "name": "token",
+          "type": "string",
+          "summary": "Specify custom user token",
+          "groups": [
+            "advanced",
+            "flags"
+          ],
+          "aliases": [],
+          "spec": {
+            "value": "token"
+          }
+        },
+        {
+          "name": "project-id",
+          "type": "number",
+          "summary": "Specify custom project id where the test will be created",
+          "groups": [
+            "advanced",
+            "flags"
+          ],
+          "aliases": [],
+          "spec": {
+            "value": "project-id"
+          }
+        }
+      ]
+    },
+    {
+      "name": "test:create",
+      "namespace": [
+        "crusher-cli"
+      ],
+      "summary": "Record and create tests effortlessly",
+      "description": "`crusher-cli test:create` will open up a recorder and allow you to record your test.",
+      "footnotes": [],
+      "groups": [],
+      "exampleCommands": [
+        "npx crusher.devtest:create",
+        "npx crusher.devtest:create --name Hello world"
+      ],
+      "aliases": [],
+      "inputs": [],
+      "options": [
+        {
+          "name": "name",
+          "type": "string",
+          "summary": "The name of the test",
+          "groups": [
+            "flags"
+          ],
+          "aliases": [],
+          "spec": {
+            "value": "Current Date"
+          }
+        },
+        {
+          "name": "token",
+          "type": "string",
+          "summary": "Specify custom user token",
+          "groups": [
+            "advanced",
+            "flags"
+          ],
+          "aliases": [],
+          "spec": {
+            "value": "token"
+          }
+        },
+        {
+          "name": "project-id",
+          "type": "number",
+          "summary": "Specify custom project id where the test will be created",
+          "groups": [
+            "advanced",
+            "flags"
+          ],
+          "aliases": [],
+          "spec": {
+            "value": "project-id"
+          }
+        }
+      ]
+    },
+    {
+      "name": "test:run",
+      "namespace": [
+        "crusher-cli"
+      ],
+      "summary": "Run tests in your project",
+      "description": "`crusher-cli test:run` will run the saved tests in your project and display the results.",
+      "footnotes": [],
+      "groups": [],
+      "exampleCommands": [
+        "npx crusher.devtest:run",
+        "npx crusher.devtest:run --host staging.test-app.com",
+        "npx crusher.devtest:run --browsers chromium,firefox,safari"
+      ],
+      "aliases": [],
+      "inputs": [],
+      "options": [
+        {
+          "name": "project-id",
+          "type": "number",
+          "summary": "Specify custom project id where the test will be created",
+          "groups": [
+            "advanced",
+            "flags"
+          ],
+          "aliases": [],
+          "spec": {
+            "value": "project-id"
+          }
+        },
+        {
+          "name": "browsers",
+          "type": "string",
+          "summary": "List of browsers to run test on (seperated by comma)",
+          "groups": [
+            "flags"
+          ],
+          "aliases": [],
+          "spec": {
+            "value": "chromium,firefox,safari"
+          }
+        },
+        {
+          "name": "token",
+          "type": "string",
+          "summary": "Specify custom user token",
+          "groups": [
+            "advanced",
+            "flags"
+          ],
+          "aliases": [],
+          "spec": {
+            "value": "token"
+          }
+        }
+      ]
+    },
+    {
+      "name": "token",
+      "namespace": [
+        "crusher-cli"
+      ],
+      "summary": "Get crusher access token",
+      "description": "`crusher-cli token` will return crusher access token",
+      "footnotes": [],
+      "groups": [],
+      "exampleCommands": [
+        "npx crusher.devtoken"
+      ],
+      "aliases": [],
+      "inputs": [],
+      "options": []
+    },
+    {
+      "name": "login",
+      "namespace": [
+        "crusher-cli"
+      ],
+      "summary": "Login",
+      "description": "`crusher-cli login` will log you in to your crusher account.",
+      "footnotes": [],
+      "groups": [],
+      "exampleCommands": [
+        "npx crusher.devlogin"
+      ],
+      "aliases": [],
+      "inputs": [],
+      "options": []
+    },
+    {
+      "name": "logout",
+      "namespace": [
+        "crusher-cli"
+      ],
+      "summary": "Logout the current authenticated user",
+      "description": "`crusher-cli logout` will log you out of crusher.",
+      "footnotes": [],
+      "groups": [],
+      "exampleCommands": [
+        "npx crusher.devlogout"
+      ],
+      "aliases": [],
+      "inputs": [],
+      "options": []
+    },
+    {
+      "name": "whoami",
+      "namespace": [
+        "crusher-cli"
+      ],
+      "summary": "Returns info about the authenticated user",
+      "description": "`crusher-cli whoami` will return details of the current authenticated user.",
+      "footnotes": [],
+      "groups": [],
+      "exampleCommands": [
+        "npx crusher.devwhoami"
+      ],
+      "aliases": [],
+      "inputs": [],
+      "options": []
+    },
+    {
+      "name": "info",
+      "namespace": [
+        "crusher-cli"
+      ],
+      "summary": "Returns info about the current initialized project",
+      "description": "`crusher-cli info` will return details of the current project initialized.",
+      "footnotes": [],
+      "groups": [],
+      "exampleCommands": [
+        "npx crusher.devinfo"
+      ],
+      "aliases": [],
+      "inputs": [],
+      "options": []
+    }
+  ],
+  "aliases": []
+}

@@ -1,0 +1,19 @@
+.feature-item {
+    font-size: 13.5px;
+    letter-spacing: 0.2px;
+    color: var(--markdown-text-intro-c);
+
+    .label {
+        color: var(--markdown-text-intro-c);
+        font-weight: 600;
+        margin-left: 4px;
+        font-size: 14px;
+        letter-spacing: .4px;
+    }
+
+    margin-top: 20px;
+}
+
+.feature-description {
+    margin-left: 4px;
+}

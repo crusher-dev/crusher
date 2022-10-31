@@ -1,0 +1,128 @@
+//overrides
+#__docusaurus {
+  .navbar-sidebar {
+    height: 100vh;
+
+    z-index: var(--z-sidebar);
+
+    &__item {
+      padding: 1rem var(--ifm-navbar-padding-horizontal);
+
+      .menu__list {
+        .separator {
+          display: none;
+        }
+
+        .icon-link {
+          display: none;
+        }
+      }
+    }
+
+    &__brand {
+      .navbar__brand {
+        display: flex !important;
+      }
+
+      .navbar__logo {
+        display: block;
+        height: auto;
+
+        img {
+          display: block;
+          height: auto;
+        }
+      }
+    }
+
+    .cta {
+      display: none;
+    }
+
+    [class*='toggle_'] {
+      display: none;
+    }
+
+    &__back {
+      padding-inline-start: 0;
+      padding-inline-end: 0;
+
+      margin: 0;
+
+      background-color: var(--token-primary-bg-c);
+    }
+
+    &__close {
+      padding: 0.5rem;
+      margin-inline-end: -0.5rem;
+
+      svg {
+        width: 1rem;
+        height: 1rem;
+      }
+    }
+
+    &__backdrop {
+      z-index: var(--z-sidebar);
+    }
+  }
+}
+
+#__docusaurus .navbar__logo,
+.navbar__item {
+  display: none;
+}
+
+.navbar_mobile {
+  display: none;
+}
+
+@media (max-width: 996px) {
+
+  // .navbar__items .navbar__logo{
+  //   display: block !important;
+  //   margin-left: 4px;
+  // }
+  // #__docusaurus .navbar__items--right div:nth-of-type(1){
+  //   display: block;
+  // }
+  // .navbar__items--right .testing_button,.navbar__items--right .separator{
+  //   display: none !important;
+  // }
+  [type='search'] {
+    margin-left: 12px !important;
+  }
+
+  .navbar_mobile {
+    min-width: 100%;
+
+    display: flex;
+    align-items: center;
+  }
+
+  .navbar_mobile .navbar__logo,
+  .navbar__item {
+    display: block !important;
+  }
+
+  .navbar_mobile .DocSearch-Button {
+    width: 82% !important;
+    margin-left: 5%;
+    // width: 32px !important;
+    // margin-left: auto;
+    // margin-right: 18px;
+  }
+
+  .navbar_desktop {
+    display: none;
+  }
+
+  // .navbar-sidebar{
+  //   right: 0 !important;
+  //   left: initial;
+  // }
+}
+
+// #__docusaurus .navbar__items--right div:nth-of-type(3), #__docusaurus .navbar__items--right div:nth-of-type(4){
+//   display: block!important;
+// }

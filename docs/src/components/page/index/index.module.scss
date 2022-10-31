@@ -1,0 +1,30 @@
+.appWizard {
+  margin: 40px 0 60px 0;
+  :global {
+    .row {
+      display: flex;
+      margin: 0px 0 40px 0;
+
+      @media only screen and (max-width: 600px) {
+        display: block;
+        margin-left: 0 !important;
+      }
+    }
+    .item {
+      display: flex;
+      align-items: center;
+
+      flex: 1;
+
+      @media only screen and (max-width: 600px) {
+        margin-left: 0 !important;
+        margin-top: 32px;
+      }
+      span {
+        margin-left: 25px;
+        font-weight: 500;
+        font-size: 15px;
+      }
+    }
+  }
+}

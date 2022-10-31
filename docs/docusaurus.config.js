@@ -72,10 +72,9 @@ module.exports = {
       additionalLanguages: ['shell-session', 'http'],
     },
     algolia: {
-      appId: '2IUNW2DWDR',
-      apiKey: 'c69996a42bcad17c5a007b291a08b3b7',
-      indexName: 'crusher_docs',
-      contextualSearch: true,
+      appId: '8T7CVLEBRQ',
+      apiKey: '508b60a5690db93836711a87c8787d13',
+      indexName: 'crusher',
     },
   },
   plugins: [

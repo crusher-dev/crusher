@@ -1,13 +1,13 @@
 const path = require('path');
 
-const BASE_URL = '';
+const BASE_URL = '/';
 
 module.exports = {
   title: 'Crusher docs',
   tagline:
     'Crusher is low-code testing platform, build test remarkably fast. Ship high quality product, faster than ever before.',
-  url: 'https:/crusher.dev',
-  baseUrl: `${BASE_URL}/`,
+  url: 'https://docs.crusher.dev',
+  baseUrl: BASE_URL,
   i18n: {
     defaultLocale: 'en',
     locales: ['en'],
@@ -18,7 +18,7 @@ module.exports = {
   onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'https://app.crusher.dev/assets/img/favicon.png',
-  organizationName: 'crusherdev',
+  organizationName: 'crusher-dev',
   projectName: 'crusher-docs',
   themeConfig: {
     autoCollapseSidebarCategories: true,

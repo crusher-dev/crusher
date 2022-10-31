@@ -12,6 +12,7 @@ import * as qs from "qs";
 import { GithubIntegrationService } from "../githubIntegration.service";
 import { VERCEL_CONFIG } from "../../../../../config/vercel";
 import { BuildReportStatusEnum } from "@modules/resources/buildReports/interface";
+import { TeamsService } from "@modules/resources/teams/service";
 
 
 @Service()
@@ -22,20 +23,23 @@ class VercelService {
     private integrationService: IntegrationsService;
     @Inject()
     private gitIntegrationService: GithubIntegrationService;
+    @Inject()
+    private teamsService: TeamsService;
 
 
-    async getIntegrationRecordFromRepoName(repoFullName: string): Promise<KeysToCamelCase<IIntegrationsTable> & {meta: {accessToken: string; userId: number;}}> {
+    async getIntegrationRecordFromRepoName(repoFullName: string): Promise<{ githubIntegrationRecord: any; vercelIntegrationRecord: KeysToCamelCase<IIntegrationsTable> & {meta: {accessToken: string; userId: number;}}}> {
       const githubIntegrationRecord = await this.gitIntegrationService.getIntegrationRecord(repoFullName);
       if(!githubIntegrationRecord) throw new Error("Github integration not found for " + repoFullName);
 
-      const vercelIntegrationRecord = await this.integrationService.getVercelIntegration(githubIntegrationRecord.projectId);
+      const team = await this.teamsService.getTeamFromProjectId(githubIntegrationRecord.projectId);
+      const vercelIntegrationRecord = await this.integrationService.getVercelIntegration(team.id);
       if(!vercelIntegrationRecord) throw new Error("Vercel integration not found for " + repoFullName);
 
-      return vercelIntegrationRecord;
+      return {githubIntegrationRecord, vercelIntegrationRecord};
     }
 
-    async linkVercelIntegration(payload: { userId: string, projectId: number; accessToken: string; }) {
-      const vercelIntegrationRecord = await this.integrationService.getVercelIntegration(payload.projectId);
+    async linkVercelIntegration(payload: { userId: string; teamId: number; projectId: number; accessToken: string; }) {
+      const vercelIntegrationRecord = await this.integrationService.getVercelIntegration(payload.teamId);
       if(vercelIntegrationRecord) {
         return this.integrationService.updateIntegration({
           accessToken: payload.accessToken,
@@ -44,6 +48,7 @@ class VercelService {
       }
       return this.integrationService.addIntegration({
             userId: payload.userId,
+            teamId: payload.teamId,
             accessToken: payload.accessToken,
       }, IntegrationServiceEnum.VERCEL, payload.projectId);
     }

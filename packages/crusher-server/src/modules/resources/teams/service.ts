@@ -20,6 +20,11 @@ class TeamsService {
 		return this.dbManager.fetchSingleRow("SELECT * FROM public.teams WHERE id = ?", [teamId]);
 	}
 
+	@CamelizeResponse()
+	async getTeamFromProjectId(projectId: number): Promise<KeysToCamelCase<ITeamsTable>> {
+		return this.dbManager.fetchSingleRow("SELECT * FROM public.teams WHERE id = (SELECT team_id FROM public.projects WHERE id = ?)", [projectId]);
+	}
+
 	async updateMeta(meta: string, teamId: number): Promise<{ insertId: number }> {
 		return this.dbManager.update("UPDATE public.teams SET meta = ? WHERE id = ?", [meta, teamId]);
 	}

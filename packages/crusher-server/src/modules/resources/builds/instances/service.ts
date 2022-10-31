@@ -118,6 +118,16 @@ class BuildTestInstancesService {
 		return this.dbManager.fetchSingleRow("SELECT * FROM public.test_instance_action_results WHERE instance_id = ?", [instanceId]);
 	}
 
+	@CamelizeResponse()
+	async getActionsResultAll(instanceIds: Array<number>): Promise<Array<KeysToCamelCase<IBuildInstanceActionResults> & { actionsResult: any }>> {
+		const params = [];
+		const inStr = new Array(instanceIds.length).fill("?").join(",");
+		for(let instanceId of instanceIds) {
+			params.push(instanceId);
+		}
+		return this.dbManager.fetchAllRows(`SELECT * FROM public.test_instance_action_results WHERE instance_id IN (${inStr})`, [...params]);
+	}
+
 	async saveResult(
 		actionsResult: Array<IActionResultItemWithIndex>,
 		savedScreenshotRecords: Array<ISavedActionResultItemWithIndex>,

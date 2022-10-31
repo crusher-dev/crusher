@@ -63,7 +63,6 @@ export class BuildReportService {
 
 	private async getPublicUrl(url: string) {
 		if (!url) return null;
-		console.log("GEt url", url);
 		return url.startsWith("http") ? url : await this.storageManager.getUrl(url);
 	}
 
@@ -138,11 +137,25 @@ export class BuildReportService {
 		);
 		if (!testsWithReportData.length) throw new Error(`No information available about build reports with this build id ${buildId}`);
 
+		const instanceResults = await this.buildTestInstanceService.getActionsResultAll(testsWithReportData.map((test) => test.testInstanceId));
+		const instanceResultsMap = instanceResults.reduce((acc, instanceResult) => {
+			acc[instanceResult.instanceId] = instanceResult;
+			return acc;
+		}, {});
+		
+		const instanceScreenshotsAll = await this.buildTestInstanceScreenshotService.getScreenshotResultWithActionIndexAll(testsWithReportData.map((test) => test.testResultSetId));
+		
+		const instanceScreenshotsMap = instanceScreenshotsAll.reduce((acc, screenshot) => {
+			acc[screenshot.testInstanceResultSetId] = acc[screenshot.testInstanceResultSetId] || [];
+			acc[screenshot.testInstanceResultSetId].push(screenshot);
+			return acc;
+		}, {});
+		
 		const testsWithReportDataAndActionResultsPromises: Array<Promise<TestBuildReport & { actionsResult: Array<any> }>> = testsWithReportData.map(
 			async (reportData) => {
-				const instanceResult = await this.buildTestInstanceService.getActionsResult(reportData.testInstanceId);
+				const instanceResult = instanceResultsMap[reportData.testInstanceId];
 
-				const instanceScreenshots = await this.buildTestInstanceScreenshotService.getScreenshotResultWithActionIndex(reportData.testResultSetId);
+				const instanceScreenshots = instanceScreenshotsMap[reportData.testResultSetId] || [];
 
 				const finalInstanceResult = instanceResult
 					? await this.getInstanceResultWithDiffComparision(instanceResult.actionsResult, instanceScreenshots)

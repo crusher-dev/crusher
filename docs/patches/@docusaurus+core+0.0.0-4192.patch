@@ -1,0 +1,23 @@
+diff --git a/node_modules/@docusaurus/core/lib/client/templates/index.html.template.ejs b/node_modules/@docusaurus/core/lib/client/templates/index.html.template.ejs
+index 233efa9..dc4a7ab 100644
+--- a/node_modules/@docusaurus/core/lib/client/templates/index.html.template.ejs
++++ b/node_modules/@docusaurus/core/lib/client/templates/index.html.template.ejs
+@@ -1,4 +1,4 @@
+-<!DOCTYPE html>
++<!DOCTYPE html data-theme="dark">
+ <html lang="en">
+   <head>
+     <meta charset="utf-8">
+diff --git a/node_modules/@docusaurus/core/lib/client/templates/ssr.html.template.js b/node_modules/@docusaurus/core/lib/client/templates/ssr.html.template.js
+index c2c47a7..5626fe3 100644
+--- a/node_modules/@docusaurus/core/lib/client/templates/ssr.html.template.js
++++ b/node_modules/@docusaurus/core/lib/client/templates/ssr.html.template.js
+@@ -7,7 +7,7 @@
+ 
+ module.exports = `
+ <!DOCTYPE html>
+-<html <%~ it.htmlAttributes %>>
++<html <%~ it.htmlAttributes %> data-theme="dark">
+   <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">

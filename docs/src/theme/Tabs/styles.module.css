@@ -1,0 +1,36 @@
+/**
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+.tabItem {
+  margin-top: 0 !important;
+  border-radius: 8px !important;
+  display: flex;
+  justify-content: center;
+  color: #8e8ea9 !important;
+  font-weight: bold !important;
+  font-size: 13px !important;
+  border: .5px solid rgba(0, 0, 0, 0) !important;
+
+  border-color: rgba(255, 255, 255, .3) !important;
+
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+  align-items: center;
+
+  line-height: 100% important;
+
+  font-weight: 600 !important;
+
+  padding-block-start: 6px !important;
+  padding-block-end: 6px !important;
+}
+
+
+.tabItemActive {
+  background: rgba(255, 255, 255, 0.02);
+  color: rgb(188, 82, 240) !important;
+}

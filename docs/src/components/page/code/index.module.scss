@@ -1,0 +1,29 @@
+.appWizard {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 0;
+  float: none;
+
+  border-radius: 16px;
+
+  max-width: initial;
+
+  margin-inline-start: -32px;
+  margin-inline-end: -32px;
+
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(0, 0, 0, 0.2);
+
+  >div {
+    flex: 1;
+  }
+
+  #dont {
+    background: rgba(255, 0, 50, 0.0509803922);
+  }
+
+  @media screen and (max-width: 600px) {
+    display: block;
+  }
+}

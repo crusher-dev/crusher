@@ -19,11 +19,12 @@ class IntegrationsService {
 	@Inject()
 	private slackService: SlackService;
 
-	async addIntegration(integrationConfig: any, integrationName: IntegrationServiceEnum, projectId: number) {
-		return this.dbManager.insert(`INSERT INTO public.integrations (project_id, integration_name, meta) VALUES (?, ?, ?)`, [
+	async addIntegration(integrationConfig: any, integrationName: IntegrationServiceEnum, projectId: number, teamId: number) {
+		return this.dbManager.insert(`INSERT INTO public.integrations (project_id, integration_name, meta) VALUES (?, ?, ?, ?)`, [
 			projectId,
 			integrationName,
 			JSON.stringify(integrationConfig),
+			teamId,
 		]);
 	}
 

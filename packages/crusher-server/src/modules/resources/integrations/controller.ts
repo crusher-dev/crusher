@@ -35,6 +35,7 @@ class IntegrationsController {
 	@Authorized()
 	@Get("/integrations/slack/actions/add")
 	async addSlackIntegration(@CurrentUser({ required: true }) userInfo, @QueryParams() params, @Res() res) {
+		const { team_id: teamId } = userInfo;
 		const { code: slackCode, state: encodedState } = params;
 
 		const { projectId, redirectUrl } = JSON.parse(decodeURIComponent(encodedState));
@@ -44,7 +45,7 @@ class IntegrationsController {
 		if (existingSlackIntegration) {
 			await this.integrationsService.updateIntegration({ oAuthInfo: integrationConfig }, existingSlackIntegration.id);
 		} else {
-			await this.integrationsService.addIntegration({ oAuthInfo: integrationConfig }, IntegrationServiceEnum.SLACK, projectId);
+			await this.integrationsService.addIntegration({ oAuthInfo: integrationConfig }, IntegrationServiceEnum.SLACK, projectId, teamId);
 		}
 
 		await res.redirect(redirectUrl);

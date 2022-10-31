@@ -50,7 +50,7 @@ class VercelService {
             userId: payload.userId,
             teamId: payload.teamId,
             accessToken: payload.accessToken,
-      }, IntegrationServiceEnum.VERCEL, payload.projectId);
+      }, IntegrationServiceEnum.VERCEL, payload.projectId, payload.teamId);
     }
 
     async getAccessToken(code): Promise<string> {

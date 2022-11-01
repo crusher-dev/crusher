@@ -36,7 +36,7 @@ class VercelIntegrationsController {
 	async getVercelProjects(@CurrentUser({ required: true }) user, @QueryParams() params) {
 		const { user_id: userId, team_id: teamId } = user;
 		const vercelIntegration = await this.integrationsService.getVercelIntegration(teamId);
-		const projects = await this.vercelService.getProjects(vercelIntegration.meta.accessToken, vercelIntegration.meta.teamId);
+		const projects = await this.vercelService.getProjects(vercelIntegration.meta.accessToken, vercelIntegration.meta.vercelTeamId);
 
 		return projects;
 	}

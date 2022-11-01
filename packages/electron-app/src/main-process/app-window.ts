@@ -307,7 +307,13 @@ export class AppWindow {
 
 	async handleTestDeepLink(event: Electron.IpcMainEvent, data: {}) {
 		const action = parseDeepLinkUrlAction(`crusher://run-test-from-build?testId=${50}&buildId=${30074}`);
-		if (action) this.sendMessage("url-action", { action });
+
+		this.getWebContents().loadURL(getAppURl() + "#/recorder").finally(() => {
+			this.handleGoFullScreen(null, {fullScreen: true});
+			this.focus();
+			console.log("Window loaded", action);
+			if (action) this.sendMessage("url-action", { action });
+		});
 	}
 
 	async handlePauseSteps(event: Electron.IpcMainEvent, data: {}) {

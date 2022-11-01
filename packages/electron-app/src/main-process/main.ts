@@ -2,7 +2,7 @@ import { setupLogger } from "@crusher-shared/modules/logger";
 setupLogger("recorder");
 
 require("v8-compile-cache");
-import { isProduction, parseDeepLinkUrlAction } from "./../utils";
+import { getAppURl, isProduction, parseDeepLinkUrlAction } from "./../utils";
 import { app, session } from "electron";
 import { APP_NAME } from "../../config/about";
 import { AppWindow } from "./app-window";
@@ -108,11 +108,14 @@ function handleAppURL(url: string) {
 	const action = parseDeepLinkUrlAction(url);
 	console.log("Got this deep link", action);
 	onDidLoad((window) => {
+		window.getWebContents().loadURL(getAppURl() + "#/recorder").finally(() => {
+			window.focus();
+			console.log("Window loaded", action);
+			if (action) window.sendMessage("url-action", { action });
+		});
 		// This manual focus call _shouldn't_ be necessary, but is for Chrome on
 		// macOS. See https://github.com/desktop/desktop/issues/973.
-		window.focus();
-		console.log("Window loaded", action);
-		if (action) window.sendMessage("url-action", { action });
+
 	});
 }
 

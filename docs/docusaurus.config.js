@@ -64,7 +64,7 @@ module.exports = {
       ],
     },
     tagManager: {
-      trackingID: 'GTM-TKMGCBC',
+      trackingID: '',
     },
     prism: {
       theme: { plain: {}, styles: [] },
@@ -112,7 +112,6 @@ module.exports = {
     '@docusaurus/plugin-content-pages',
     '@docusaurus/plugin-debug',
     '@docusaurus/plugin-sitemap',
-    '@ionic-internal/docusaurus-plugin-tag-manager',
   ],
   themes: [
     [

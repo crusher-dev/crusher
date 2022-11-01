@@ -41,4 +41,18 @@ const removeGithubIntegration = (integrationId: any) => {
 	}, true);
 };
 
-export { getIntegrationsAPIRequest, removeSlackIntegration, removeGithubIntegration };
+const removeVercelIntegration = () => {
+	return createAuthorizedRequestFunc((authorizationOptions: any) => {
+		const store = getStore();
+		const projectId = getCurrentSelectedProjct(store.getState() as any);
+	
+		return {
+			url: resolveToBackend(`/integrations/${projectId}/vercel/actions/disconnect`),
+			method: "POST",
+			data: JSON.stringify({}),
+			...authorizationOptions,
+		};
+	}, true);
+};
+
+export { getIntegrationsAPIRequest, removeSlackIntegration, removeGithubIntegration, removeVercelIntegration };

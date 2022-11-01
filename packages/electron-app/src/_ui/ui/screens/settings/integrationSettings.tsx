@@ -1,14 +1,14 @@
 import React from "react";
 import { css } from "@emotion/react";
 import { HoverButton } from "../../components/hoverButton";
-import { GithubIcon, ResetIcon, TickIcon } from "electron-app/src/_ui/constants/icons";
+import { GithubIcon, ResetIcon, TickIcon, VercelIcon } from "electron-app/src/_ui/constants/icons";
 import { TextBlock } from "@dyson/components/atoms";
 
 import { linkOpen, resolveToBackend } from "electron-app/src/utils/url";
 import { useStore } from "react-redux";
 import { getCurrentSelectedProjct, getUserAccountInfo } from "electron-app/src/store/selectors/app";
 import { resolveToFrontend } from "electron-app/src/utils/url";
-import { getIntegrationsAPIRequest, removeGithubIntegration, removeSlackIntegration } from "electron-app/src/_ui/api/projects/integrations";
+import { getIntegrationsAPIRequest, removeGithubIntegration, removeSlackIntegration, removeVercelIntegration } from "electron-app/src/_ui/api/projects/integrations";
 import useRequest from "electron-app/src/_ui/utils/useRequest";
 import axios from "axios";
 import { Link } from "../../components/Link";
@@ -146,6 +146,67 @@ const buttonCss = css`
 
 `;
 
+const VercelIntegrationItem = () => {
+    const store = useStore();
+    const { data: integrations } = useRequest(getIntegrationsAPIRequest);
+    const [connected, setConnected] = React.useState(false);
+
+    React.useEffect(() => {
+        if (integrations?.vercelIntegration) {
+            setConnected(true);
+        }
+    }, [integrations]);
+    
+    const handleUnlink = () => {
+        axios(removeVercelIntegration()());
+        setConnected(false);
+    };
+
+    const handleLink = () => {
+        const userInfo = getUserAccountInfo(store.getState());
+        const projectId = getCurrentSelectedProjct(store.getState() as any);
+
+        if (userInfo?.token) {
+            linkOpen(resolveToFrontend(`${projectId}/settings/integrations?laccess_token=` + userInfo.token + '&item=vercel'));
+        }
+    };
+
+    return (
+        <div css={IntegrationItemCss} className="flex items-center py-16">
+        <VercelIcon
+									css={vercelIconCss}
+									height={"12rem"}
+									width={"12rem"}
+									className={"mt-1"}
+								/>
+
+        <div className={"flex-1 ml-10"}>
+            <TextBlock weight={600} fontSize={15} color="#A1A1A1">vercel</TextBlock>
+        </div>
+        <div className={"ml-auto"}>
+
+            {connected ? (
+                <div className={"flex items-center"}>
+                    <div className={'flex items-center'}>
+                        <TickIcon css={tickIconCss} />
+                        <TextBlock className={"ml-6"} color={"#6B6B6B"} fontSize={12}>{integrations?.vercelIntegration.name}</TextBlock>
+                    </div>
+                    <HoverButton className={"ml-12"} onClick={handleUnlink} css={buttonCss} width={70} height={28} >remove</HoverButton>
+                </div>
+            ) : (
+                <HoverButton onClick={handleLink} css={buttonCss} width={106} height={32}>
+                    <GithubIcon css={css`width: 13px; height: 13px;`} />
+                    <span className={"ml-6"}>link</span>
+                </HoverButton>
+            )}
+
+
+        </div>
+    </div>
+    );
+};
+const vercelIconCss = css``;
+
 const IntegrationSettings = () => {
 
     const handleRefresh = () => {
@@ -169,6 +230,7 @@ const IntegrationSettings = () => {
             <div className="mt-20">
                 <SlackIntegrationItem />
                 <GithubIntegrationItem />
+                <VercelIntegrationItem/>
                 <div css={IntegrationItemCss} className="flex items-center py-20">
                     <TextBlock color={"#A1A1A1"} fontSize={13}>run test with like
                         <Link className="ml-3 mr-2" css={linkCSS} href="https://docs.crusher.dev/integrations/with-vercel">vercel</Link>,

@@ -949,6 +949,7 @@ export const Integrations = () => {
 					<hr css={basicHR} />
 					{selectedSection === "slack" ? (<SlackIntegration />) : ""}
 					{selectedSection === "github" ? (<GitIntegration />) : ""}
+					{selectedSection === "vercel" ? (<VercelIntegration />) : ""}
 				</div>
 			</SettingsLayout>
 		)

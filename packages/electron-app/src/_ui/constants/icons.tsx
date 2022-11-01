@@ -354,6 +354,18 @@ const BackIconV3 = (props) => (
 	</svg>
 )
 
+const VercelIcon = (props) => (
+    <svg
+      viewBox={"0 0 1155 1000"}
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path d="m577.344 0 577.346 1000H0L577.344 0Z" fill="#fff" />
+    </svg>
+);
+  
+
 const GithubIcon = (props) => (
 	<svg
 		viewBox={"0 0 16 16"}
@@ -480,5 +492,6 @@ export {
 	TickIcon,
 	CorrectCircleIcon,
 	EditIconV4,
-	ExportIcon
+	ExportIcon,
+	VercelIcon
 };

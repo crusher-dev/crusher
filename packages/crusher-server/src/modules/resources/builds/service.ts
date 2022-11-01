@@ -167,9 +167,9 @@ class BuildsService {
 		const githubService = new GithubService();
 		const buildRecord = await this.getBuild(buildId);
 
-		const githubInstallationRecord = await this.githubIntegrationService.getInstallationRepo(githubMeta.repoName, buildRecord.projectId);
+		const githubInstallationRecord = await this.githubIntegrationService.getInstallationRepo(githubMeta.repoName, buildRecord.projectId).catch((err) => (null))
 		if (!githubInstallationRecord) {
-			throw new BadRequestError(`${githubMeta.repoName} is not connected to crusher`);
+			return;
 		}
 
 		await githubService.authenticateAsApp(githubInstallationRecord.installationId);

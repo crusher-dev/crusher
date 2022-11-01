@@ -134,7 +134,8 @@ const handleUrlAction = (store: Store, addNotification, event: Electron.IpcRende
 			});
 			break;
 		case "replay-test":
-			runTest();
+			const localBuild = getCurrentLocalBuild(store.getState());
+			runTest(localBuild.host);
 			break;
 		case "restore":
 			if (window.localStorage.getItem("saved-steps")) {

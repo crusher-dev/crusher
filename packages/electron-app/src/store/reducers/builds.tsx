@@ -15,6 +15,7 @@ export interface ICurrentBuildPayload {
 	tests: any[];
 	queuedTests: any[];
 	progress: Map<number, boolean>;
+	host?: string | null;
 	time: any;
 }
 

@@ -48,9 +48,9 @@ const handleUrlAction = async (store: Store, event: Electron.IpcRendererEvent, {
 	switch (action.commandName) {
 		case "run-local-build":
 			const { buildId } = action.args;
-			console.log("Local build", action);
 			const buildReport = await CloudCrusher.getBuildReportBuildMeta(buildId);
 			const testIds = buildReport.tests.map((test) => test.id);
+			
 			triggerLocalBuild(testIds, buildReport.tests.map((test) => ({...test, testName: test.name})));
 			break;
 		

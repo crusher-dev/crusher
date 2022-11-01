@@ -8,6 +8,7 @@ import { resolvePathToBackendURI, resolvePathToFrontendURI } from "@utils/uri";
 import { Authorized, Body, CurrentUser, Get, JsonController, Param, Post, QueryParams, Res } from "routing-controllers";
 import { Service, Inject } from "typedi";
 import { GithubIntegrationService } from "../githubIntegration.service";
+import { IntegrationsService } from "../service";
 import { DeploymentCreatedEvent, DeploymentPreparedEvent, DeploymentReadyEvent } from "./interface";
 import { VercelService } from "./service";
 
@@ -26,6 +27,8 @@ class VercelIntegrationsController {
     private buildService: BuildsService;
     @Inject()
     private redisManager: RedisManager;
+    @Inject()
+    private integrationsService: IntegrationsService;
 
     @Authorized()
     @Get("/integrations/vercel/actions/link")
@@ -44,6 +47,38 @@ class VercelIntegrationsController {
         return res.redirect(next);
     }
 
+    @Authorized()
+    @Post("/integrations/:project_id/vercel/actions/connect")
+    async connectVercelIntegration(@Param("project_id") projectId: number, @CurrentUser({required: true}) user, @Body() body: {vercel_project_id: string; vercel_project_name: string; meta: any}, @Res() res) {
+        const {user_id: userId, team_id: teamId} = user;
+        const { vercel_project_id: vercelProjectId, vercel_project_name: vercelProjectName, meta } = body;
+
+        const vercelTeamIntegration = await this.integrationsService.getVercelIntegration(teamId);
+
+        const existingProjectVercelIntegration = await this.vercelService.getVercelIntegrationForProject(projectId);
+        if(!existingProjectVercelIntegration) {
+            await this.vercelService.addVercelIntegrationForProject({
+                userId,
+                projectId,
+                vercelProjectId,
+                name: vercelProjectName,
+                meta: meta,
+                integrationId: vercelTeamIntegration.id,
+            });
+        } else {
+            await this.vercelService.updateVercelIntegrationForProject(meta, projectId);
+        }
+
+        return "Successful";
+    }
+
+    @Authorized()
+    @Post("/integrations/:project_id/vercel/actions/disconnect")
+    async disconnectVercelIntegration(@Param("project_id") projectId: number, @CurrentUser({required: true}) user, @Res() res) {
+        await this.vercelService.deleteVercelIntegrationForProject(projectId);
+        return "Successful";
+    }
+
     @Post("/integrations/vercel/webhook")
     async handleVercelWebhook(@Body() body : DeploymentReadyEvent | DeploymentPreparedEvent | DeploymentCreatedEvent, @Res() res) {
         if(body.type === "deployment-prepared") {
@@ -51,12 +86,15 @@ class VercelIntegrationsController {
             const check = await this.redisManager.get(body.payload.deploymentId);
             if(!check) throw new Error("Deployment not found");
 
+            const { projectId: vercelProjectId } = body.payload;
             const { githubOrg, githubRepo, githubCommitSha, githubCommitMessage } = body.payload.deployment.meta;
             const { url: deploymentUrl } = body.payload.deployment;
 
             const repoName = `${githubOrg}/${githubRepo}`;
-            const { githubIntegrationRecord , vercelIntegrationRecord} = await this.vercelService.getIntegrationRecordFromRepoName(repoName);
-            const vercelIntegrationMeta: {accessToken: string; userId: number;} = vercelIntegrationRecord.meta;
+            const vercelIntegrationRecord = await this.vercelService.getVercelIntegrationFromVercelProjectId(vercelProjectId);
+            const vercelTeamIntegration = await this.integrationsService.getIntegrationById(vercelIntegrationRecord.integrationId);
+
+            const vercelIntegrationMeta: {accessToken: string; userId: number;} = vercelTeamIntegration.meta;
             const meta = {
                 disableBaseLineComparisions: false,
                 vercel: {
@@ -74,7 +112,7 @@ class VercelIntegrationsController {
             console.log("Triggering test now for project: " + repoName);
             // await this.vercelService.createDeploymentStatus(vercelIntegrationMeta.accessToken, body.payload.deploymentId, body.teamId, "");
             const build = await this.testService.runTestsInProject(
-                githubIntegrationRecord.projectId,
+                vercelIntegrationRecord.projectId,
                 vercelIntegrationMeta.userId,
                 { host: "https://" + deploymentUrl, context: null },
                 meta,
@@ -91,11 +129,14 @@ class VercelIntegrationsController {
             console.log("Deployment created, webhook called");
             const { githubOrg, githubRepo, githubCommitSha, githubCommitMessage } = body.payload.deployment.meta;
             const { url: deploymentUrl } = body.payload.deployment;
+            const { projectId: vercelProjectId } = body.payload;
 
             const repoName = `${githubOrg}/${githubRepo}`;
-            const {vercelIntegrationRecord} = await this.vercelService.getIntegrationRecordFromRepoName(repoName);
-            const vercelIntegrationMeta: {accessToken: string; userId: number;} = vercelIntegrationRecord.meta;
+            const vercelIntegrationRecord = await this.vercelService.getVercelIntegrationFromVercelProjectId(vercelProjectId);
+            const vercelTeamIntegration = await this.integrationsService.getIntegrationById(vercelIntegrationRecord.integrationId);
 
+            const vercelIntegrationMeta: {accessToken: string; userId: number;} = vercelTeamIntegration.meta;
+            
             console.log("Creating check now: " + repoName);
             const checkIdResponse = await this.vercelService.createDeploymentStatus(vercelIntegrationMeta.accessToken, body.payload.deploymentId, body.teamId, "");
             console.log("Check id: " + checkIdResponse.id);

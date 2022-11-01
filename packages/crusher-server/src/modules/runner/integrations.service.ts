@@ -59,13 +59,15 @@ class RunnerIntegrationsService {
         const buildRecordMeta: { vercel: { checkId: string; deploymentId: string; teamId: string;}, github: { repoName: string; commitId: string;}} = buildRecord.meta ? JSON.parse(buildRecord.meta) : null;
         if(buildRecordMeta && buildRecordMeta.vercel && buildRecordMeta.github) {
             const repoName = buildRecordMeta.github.repoName;
-            const {vercelIntegrationRecord} = await this.vercelService.getIntegrationRecordFromRepoName(repoName);
-            if(!vercelIntegrationRecord) {
+            const vercelIntegration = await this.vercelService.getVercelIntegrationForProject(buildRecord.projectId);
+            const vercelTeamIntegration = await this.integrationsService.getIntegrationById(vercelIntegration.integrationId);
+
+            if(!vercelTeamIntegration) {
                 console.error("Could not find vercel integration record for repo: ", repoName);
                 return;
             }
     
-            const vercelIntegrationMeta : {accessToken: string; userId: number;} = vercelIntegrationRecord.meta;
+            const vercelIntegrationMeta : {accessToken: string; userId: number;} = vercelTeamIntegration.meta;
             const detailsUrl = `${resolvePathToFrontendURI(`/app/build/${buildRecord.id}`)}`;
     
             await this.vercelService.finishDeploymentChecks(

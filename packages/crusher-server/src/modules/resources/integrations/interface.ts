@@ -22,4 +22,15 @@ export interface IGitIntegrations extends BaseRowInterface {
 	installation_id: string;
 }
 
+export interface IVercelIntegrations extends BaseRowInterface {
+	id: number;
+	project_id: number;
+	user_id: number;
+	name: string;
+	vercel_project_id: string;
+	meta: string;
+	integration_id: number;
+}
+
 export type ICreateIntegrationPayload = KeysToCamelCase<Omit<IIntegrationsTable, "id">>;
+export type ICreateVercelIntegrationPayload = KeysToCamelCase<Omit<IVercelIntegrations, "id">>;

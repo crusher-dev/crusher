@@ -5,7 +5,7 @@ import { SlackOAuthResponse } from "@modules/slack/interface";
 import { SlackService } from "@modules/slack/service";
 import { BadRequestError } from "routing-controllers";
 import { Inject, Service } from "typedi";
-import { IIntegrationsTable, IntegrationServiceEnum } from "../interface";
+import { ICreateVercelIntegrationPayload, IIntegrationsTable, IntegrationServiceEnum, IVercelIntegrations } from "../interface";
 import { IntegrationsService } from "../service";
 import axios from "axios";
 import * as qs from "qs";
@@ -53,6 +53,19 @@ class VercelService {
       }, IntegrationServiceEnum.VERCEL, payload.projectId, payload.teamId);
     }
 
+    async getProjects(accessToken: string): Promise<any> {
+      return axios.get(`https://api.vercel.com/v9/projects`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      }).then(function (response) {
+        console.log(response.data);
+        return response.data;
+      }).catch((e)=>{
+        return e;
+      });
+    }
+  
     async getAccessToken(code): Promise<string> {
         const data = await axios.post('https://api.vercel.com/v2/oauth/access_token', qs.stringify({
           code,
@@ -141,6 +154,36 @@ class VercelService {
         default:
           return "neutral";
       }
+    }
+
+
+    async addVercelIntegrationForProject(payload: Omit<ICreateVercelIntegrationPayload, "meta"> & {meta: any}) {
+      return this.dbManager.insert(`INSERT INTO public.vercel_integrations (project_id, user_id, name, vercel_project_id, meta, integration_id) VALUES (?, ?, ?, ?, ?, ?)`, [
+        payload.projectId,
+        payload.userId,
+        payload.name,
+        payload.vercelProjectId,
+        JSON.stringify(payload.meta),
+        payload.integrationId
+      ]);
+    }
+  
+    async updateVercelIntegrationForProject(integrationMeta: any, id: number) {
+      return this.dbManager.update(`UPDATE public.vercel_integrations SET meta = ? WHERE id = ?`, [JSON.stringify(integrationMeta), id]);
+    }
+  
+    async deleteVercelIntegrationForProject(projectId: number) {
+      return this.dbManager.delete(`DELETE FROM public.vercel_integrations WHERE project_id = ?`, [projectId]);
+    }
+
+    @CamelizeResponse()
+    async getVercelIntegrationForProject(projectId: any): Promise<KeysToCamelCase<IVercelIntegrations>> {
+      return this.dbManager.fetchSingleRow(`SELECT * FROM public.vercel_integrations WHERE project_id = ?`, [projectId]);
+    }
+
+    @CamelizeResponse()
+    async getVercelIntegrationFromVercelProjectId(projectId: any): Promise<KeysToCamelCase<IVercelIntegrations>> {
+      return this.dbManager.fetchSingleRow(`SELECT * FROM public.vercel_integrations WHERE vercel_project_id = ?`, [projectId]);
     }
 }
 

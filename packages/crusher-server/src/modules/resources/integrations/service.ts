@@ -45,6 +45,13 @@ class IntegrationsService {
 	}
 
 	@CamelizeResponse()
+	async getIntegrationById(id: number): Promise<KeysToCamelCase<IIntegrationsTable>> {
+		return this.dbManager.fetchSingleRow("SELECT * FROM public.integrations WHERE id = ?", [
+			id,
+		]);
+	}
+
+	@CamelizeResponse()
 	async getVercelIntegration(teamId: number): Promise<KeysToCamelCase<IIntegrationsTable>> {
 		return this.dbManager.fetchSingleRow("SELECT * FROM public.integrations WHERE team_id = ? AND integration_name = ?", [
 			teamId,

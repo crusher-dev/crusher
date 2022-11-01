@@ -14,6 +14,7 @@ import { UserAuthService } from "../users/auth.service";
 import { v4 as uuidv4 } from "uuid";
 import { UsersService } from "../users/service";
 import { ProjectsService } from "../projects/service";
+import { VercelService } from "./vercel/service";
 @Service()
 @JsonController("")
 class IntegrationsController {
@@ -21,6 +22,8 @@ class IntegrationsController {
 	private slackService: SlackService;
 	@Inject()
 	private githubIntegrationService: GithubIntegrationService;
+	@Inject()
+	private vercelService: VercelService;
 	@Inject()
 	private integrationsService: IntegrationsService;
 	@Inject()
@@ -31,6 +34,16 @@ class IntegrationsController {
 	private userService: UsersService;
 	@Inject()
 	private projectsService: ProjectsService;
+
+	@Authorized()
+	@Get("/integrations/vercel/actions/get.projects")
+	async getVercelProjects(@CurrentUser({ required: true }) user, @QueryParams() params) {
+		const { user_id: userId, team_id: teamId } = user;
+		const vercelIntegration = await this.integrationsService.getVercelIntegration(teamId);
+		const projects = await this.vercelService.getProjects(vercelIntegration.meta.accessToken);
+
+		return projects;
+	}
 
 	@Authorized()
 	@Get("/integrations/slack/actions/add")
@@ -82,12 +95,14 @@ class IntegrationsController {
 		const slackIntegration = integrationsList.find((item) => item.integrationName === IntegrationServiceEnum.SLACK);
 		const webhook = await this.projectsService.getProjectWebhook(projectId);
 		const linkedRepo = await this.githubIntegrationService.getLinkedRepo(projectId);
+		const vercelIntegration = await this.vercelService.getVercelIntegrationForProject(projectId);
 
 		return {
 			emailIntegration: true,
 			slackIntegration: slackIntegration,
 			webhook: webhook,
-			gitIntegration: linkedRepo
+			gitIntegration: linkedRepo,
+			vercelIntegration: vercelIntegration
 		};
 	}
 

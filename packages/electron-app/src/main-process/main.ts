@@ -109,6 +109,7 @@ function handleAppURL(url: string) {
 	console.log("Got this deep link", action);
 	onDidLoad((window) => {
 		window.getWebContents().loadURL(getAppURl() + "#/recorder").finally(() => {
+			window.handleGoFullScreen(null, {fullScreen: true});
 			window.focus();
 			console.log("Window loaded", action);
 			if (action) window.sendMessage("url-action", { action });

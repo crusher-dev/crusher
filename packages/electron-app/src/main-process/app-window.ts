@@ -945,7 +945,7 @@ export class AppWindow {
 		return shell.openExternal("https://youtube.com");
 	}
 
-	private handleGoFullScreen(event: Electron.IpcMainInvokeEvent, payload: { fullScreen: boolean }) {
+	handleGoFullScreen(event: Electron.IpcMainInvokeEvent, payload: { fullScreen: boolean }) {
 		if (payload.fullScreen) {
 			if (process.platform === "darwin") {
 				this.window.setTrafficLightPosition({ x: 10, y: 8 });

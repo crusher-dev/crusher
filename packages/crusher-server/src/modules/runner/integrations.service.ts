@@ -36,7 +36,11 @@ class RunnerIntegrationsService {
         const projectRecord = await this.projectsService.getProject(buildRecord.projectId);
         const webhookUrl  = await this.projectsService.getProjectWebhook(buildRecord.projectId);
         // Github Integration
-        await this.buildService.markGithubCheckFlowFinished(reportStatus, buildRecord.id);
+        try {
+            await this.buildService.markGithubCheckFlowFinished(reportStatus, buildRecord.id);
+        } catch(ex) {
+            console.error("Can't trigger github check flow", ex);
+        }
         // Slack Integration
         await this.integrationsService.postSlackMessageIfNeeded(
             buildRecord.projectId,

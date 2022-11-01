@@ -54,6 +54,7 @@ const titleBoldStyle = css`
 `;
 
 const titleStyle = css`
+	width: max-content;
 	font-size: 13rem;
 
 	color: rgba(255, 255, 255, 0.67);

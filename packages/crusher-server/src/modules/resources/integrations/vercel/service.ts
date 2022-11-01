@@ -5,7 +5,7 @@ import { SlackOAuthResponse } from "@modules/slack/interface";
 import { SlackService } from "@modules/slack/service";
 import { BadRequestError } from "routing-controllers";
 import { Inject, Service } from "typedi";
-import { IIntegrationsTable, IntegrationServiceEnum } from "../interface";
+import { ICreateVercelIntegrationPayload, IIntegrationsTable, IntegrationServiceEnum, IVercelIntegrations } from "../interface";
 import { IntegrationsService } from "../service";
 import axios from "axios";
 import * as qs from "qs";
@@ -38,28 +38,48 @@ class VercelService {
       return {githubIntegrationRecord, vercelIntegrationRecord};
     }
 
-    async linkVercelIntegration(payload: { userId: string; teamId: number; projectId: number; accessToken: string; }) {
+    async linkVercelIntegration(payload: { userId: string; teamId: number; projectId: number; vercelTeamId?: string; configurationId?: string; accessToken: string; }) {
       const vercelIntegrationRecord = await this.integrationService.getVercelIntegration(payload.teamId);
       if(vercelIntegrationRecord) {
         return this.integrationService.updateIntegration({
           accessToken: payload.accessToken,
           userId: payload.userId,
+          vercelTeamId: payload.vercelTeamId,
+          configurationId: payload.configurationId,
+          teamId: payload.teamId
         }, vercelIntegrationRecord.id);
       }
       return this.integrationService.addIntegration({
             userId: payload.userId,
             teamId: payload.teamId,
+            vercelTeamId: payload.vercelTeamId,
+            configurationId: payload.configurationId,
             accessToken: payload.accessToken,
       }, IntegrationServiceEnum.VERCEL, payload.projectId, payload.teamId);
     }
 
+    async getProjects(accessToken: string, teamId: string | null = null): Promise<any> {
+      const apiUrl = `https://api.vercel.com/v9/projects` + (teamId ? `?teamId=${teamId}` : "");
+
+      return axios.get(apiUrl, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      }).then(function (response) {
+        console.log(response.data);
+        return response.data;
+      }).catch((e)=>{
+        console.error("Error while requesting projects", e);
+        return null;
+      });
+    }
+  
     async getAccessToken(code): Promise<string> {
         const data = await axios.post('https://api.vercel.com/v2/oauth/access_token', qs.stringify({
           code,
           // @TODO: Add to this env
           client_id: VERCEL_CONFIG.CLIENT_ID,
           client_secret: VERCEL_CONFIG.CLIENT_SECRET,
-          redirect_uri: "https://5000-w3cj-expressapistarte-ktz0dzo1h2l.ws-us54.gitpod.io/configure",
         }), {
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
@@ -141,6 +161,36 @@ class VercelService {
         default:
           return "neutral";
       }
+    }
+
+
+    async addVercelIntegrationForProject(payload: Omit<ICreateVercelIntegrationPayload, "meta"> & {meta: any}) {
+      return this.dbManager.insert(`INSERT INTO public.vercel_integrations (project_id, user_id, name, vercel_project_id, meta, integration_id) VALUES (?, ?, ?, ?, ?, ?)`, [
+        payload.projectId,
+        payload.userId,
+        payload.name,
+        payload.vercelProjectId,
+        JSON.stringify(payload.meta),
+        payload.integrationId
+      ]);
+    }
+  
+    async updateVercelIntegrationForProject(integrationMeta: any, id: number) {
+      return this.dbManager.update(`UPDATE public.vercel_integrations SET meta = ? WHERE id = ?`, [JSON.stringify(integrationMeta), id]);
+    }
+  
+    async deleteVercelIntegrationForProject(projectId: number) {
+      return this.dbManager.delete(`DELETE FROM public.vercel_integrations WHERE project_id = ?`, [projectId]);
+    }
+
+    @CamelizeResponse()
+    async getVercelIntegrationForProject(projectId: any): Promise<KeysToCamelCase<IVercelIntegrations>> {
+      return this.dbManager.fetchSingleRow(`SELECT * FROM public.vercel_integrations WHERE project_id = ?`, [projectId]);
+    }
+
+    @CamelizeResponse()
+    async getVercelIntegrationFromVercelProjectId(projectId: any): Promise<KeysToCamelCase<IVercelIntegrations>> {
+      return this.dbManager.fetchSingleRow(`SELECT * FROM public.vercel_integrations WHERE vercel_project_id = ?`, [projectId]);
     }
 }
 

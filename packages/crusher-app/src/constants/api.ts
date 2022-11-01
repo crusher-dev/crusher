@@ -67,6 +67,10 @@ export const addGithubRepo = (projectId: number) => resolvePathToBackendURI(`/in
 export const unlinkGithubRepo = (projectId: number) => resolvePathToBackendURI(`/integrations/${projectId}/github/actions/unlink/`);
 export const getGitIntegrations = (projectId: number) => resolvePathToBackendURI(`/integrations/${projectId}/github/list/repo/`);
 
+export const getVercelProjects = () => resolvePathToBackendURI(`/integrations/vercel/actions/get.projects`);
+export const linkVercelToProject = (projectId: number) => resolvePathToBackendURI(`/integrations/${projectId}/vercel/actions/connect/`);
+export const unlinkVercelToProject = (projectId: number) => resolvePathToBackendURI(`/integrations/${projectId}/vercel/actions/disconnect/`);
+
 export const getCIIntegrationCommnad = (projectId: number) => resolvePathToBackendURI(`/integrations/${projectId}/ci/command/`);
 export const getIntegrations = (projectId: number) => resolvePathToBackendURI(`/integrations/${projectId}`);
 export const saveWebhookUrlAPI = (projectId: number) => resolvePathToBackendURI(`/integrations/${projectId}/actions/save.webhook`);

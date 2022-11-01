@@ -14,6 +14,7 @@ import { UserAuthService } from "../users/auth.service";
 import { v4 as uuidv4 } from "uuid";
 import { UsersService } from "../users/service";
 import { ProjectsService } from "../projects/service";
+import { VercelService } from "./vercel/service";
 @Service()
 @JsonController("")
 class IntegrationsController {
@@ -21,6 +22,8 @@ class IntegrationsController {
 	private slackService: SlackService;
 	@Inject()
 	private githubIntegrationService: GithubIntegrationService;
+	@Inject()
+	private vercelService: VercelService;
 	@Inject()
 	private integrationsService: IntegrationsService;
 	@Inject()
@@ -82,12 +85,14 @@ class IntegrationsController {
 		const slackIntegration = integrationsList.find((item) => item.integrationName === IntegrationServiceEnum.SLACK);
 		const webhook = await this.projectsService.getProjectWebhook(projectId);
 		const linkedRepo = await this.githubIntegrationService.getLinkedRepo(projectId);
+		const vercelIntegration = await this.vercelService.getVercelIntegrationForProject(projectId);
 
 		return {
 			emailIntegration: true,
 			slackIntegration: slackIntegration,
 			webhook: webhook,
-			gitIntegration: linkedRepo
+			gitIntegration: linkedRepo,
+			vercelIntegration: vercelIntegration
 		};
 	}
 

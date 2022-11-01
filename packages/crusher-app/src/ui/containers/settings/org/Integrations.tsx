@@ -14,7 +14,7 @@ import { Conditional } from "dyson/src/components/layouts";
 import { Card } from "dyson/src/components/layouts/Card/Card";
 import { SelectBox } from "dyson/src/components/molecules/Select/Select";
 
-import { addGithubRepo, getCIIntegrationCommnad, getGitIntegrations, getIntegrations, saveWebhookUrlAPI, unlinkGithubRepo } from "@constants/api";
+import { addGithubRepo, getCIIntegrationCommnad, getGitIntegrations, getIntegrations, getVercelProjects, saveWebhookUrlAPI, unlinkGithubRepo } from "@constants/api";
 import { useProjectDetails } from "@hooks/common";
 import { AddSVG } from "@svg/dashboard";
 import { CopyIconSVG } from "@svg/onboarding";
@@ -29,6 +29,7 @@ import { resolvePathToBackendURI, resolvePathToFrontendURI } from "@utils/common
 import { getGithubOAuthURLLegacy } from "@utils/core/external";
 import { OctokitManager } from "@utils/core/external/ocktokit";
 import { convertToOrganisationInfo, getRepoData } from "@utils/core/settings/project/integrationUtils";
+import { VercelProjectsList } from "./vercel/integration";
 
 const connectedToGitAtom = atomWithImmer<
 	| any
@@ -427,6 +428,101 @@ function CISection() {
 				value={data ?? "Loading.."}
 				onFocus={copyCommand}
 			/>
+		</div>
+	);
+}
+
+
+
+const VercelIntegrationButton = ({...props}) => {
+    return (
+		<a href={"https://vercel.com/integrations/crusher-dev"} target={"_blank"} {...props}>
+				<Button
+					bgColor={"tertiary-white"}
+					css={css`
+						border-width: 0;
+						background: #fff !important;
+						:hover {
+							border-width: 0;
+							background: #fff !important;
+						}
+					`}>
+							<div className={"flex items-center"}>
+								<VercelIcon
+									css={css`
+										path {
+											fill: #000 !important;
+										}
+									`}
+									height={"12rem"}
+									width={"12rem"}
+									className={"mt-1"}
+								/>
+								<span className={"mt-2 ml-8"}>Integrate</span>
+							</div>
+				</Button>
+		</a>
+    )
+};
+
+
+const buttonContainerCss = css`
+    padding: 4rem 12rem;
+    width: fit-content;
+	position: relative;
+    :hover {
+        opacity: 0.7;
+    }
+`;
+
+const textCss = css`
+    margin-left: 20px;
+    font-family: Gilroy;
+    font-weight: 600;
+    color: #FFF;
+`;
+const buttonCss = css`
+    display: flex;
+    background: #1374EF;
+    border-radius: 4px;
+    position: relative;
+    padding: 8px 12px;
+    justify-content: flex-start;
+`;
+
+const seperatorCss = css`
+    width: 2px;
+    height: 100%;
+    background: #1269D3;
+    position: absolute;
+    top: 0;
+    left: 38px;
+`;
+const VercelIcon = (props) => (
+    <svg
+      viewBox={"0 0 1155 1000"}
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path d="m577.344 0 577.346 1000H0L577.344 0Z" fill="#fff" />
+    </svg>
+);
+  
+
+function VercelIntegration() {
+	const { data: projectsRes } = useSWR(getVercelProjects());
+	return (
+		<div>
+			<Heading type={1} fontSize={"16"} className={"mb-8 mt-16"}>
+			Vercel
+			</Heading>
+
+			{projectsRes?.projects?.length ? (
+				<VercelProjectsList className={"mt-20"}/>
+			) : (
+				<VercelIntegrationButton className={"mt-20 flex"}/>
+			)}
 		</div>
 	);
 }
@@ -874,6 +970,8 @@ export const Integrations = () => {
 
 				{/* <hr css={basicHR} /> */}
 				<GitIntegration />
+				<hr css={basicHR} className={"mt-40"} />
+				<VercelIntegration/>
 				<hr css={basicHR} className={"mt-40"} />
 
 				<WebHookIntegration />

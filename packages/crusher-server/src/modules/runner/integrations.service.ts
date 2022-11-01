@@ -36,7 +36,11 @@ class RunnerIntegrationsService {
         const projectRecord = await this.projectsService.getProject(buildRecord.projectId);
         const webhookUrl  = await this.projectsService.getProjectWebhook(buildRecord.projectId);
         // Github Integration
-        await this.buildService.markGithubCheckFlowFinished(reportStatus, buildRecord.id);
+        try {
+            await this.buildService.markGithubCheckFlowFinished(reportStatus, buildRecord.id);
+        } catch(ex) {
+            console.error("Can't trigger github check flow", ex);
+        }
         // Slack Integration
         await this.integrationsService.postSlackMessageIfNeeded(
             buildRecord.projectId,
@@ -59,13 +63,15 @@ class RunnerIntegrationsService {
         const buildRecordMeta: { vercel: { checkId: string; deploymentId: string; teamId: string;}, github: { repoName: string; commitId: string;}} = buildRecord.meta ? JSON.parse(buildRecord.meta) : null;
         if(buildRecordMeta && buildRecordMeta.vercel && buildRecordMeta.github) {
             const repoName = buildRecordMeta.github.repoName;
-            const {vercelIntegrationRecord} = await this.vercelService.getIntegrationRecordFromRepoName(repoName);
-            if(!vercelIntegrationRecord) {
+            const vercelIntegration = await this.vercelService.getVercelIntegrationForProject(buildRecord.projectId);
+            const vercelTeamIntegration = await this.integrationsService.getIntegrationById(vercelIntegration.integrationId);
+
+            if(!vercelTeamIntegration) {
                 console.error("Could not find vercel integration record for repo: ", repoName);
                 return;
             }
     
-            const vercelIntegrationMeta : {accessToken: string; userId: number;} = vercelIntegrationRecord.meta;
+            const vercelIntegrationMeta : {accessToken: string; userId: number;} = vercelTeamIntegration.meta;
             const detailsUrl = `${resolvePathToFrontendURI(`/app/build/${buildRecord.id}`)}`;
     
             await this.vercelService.finishDeploymentChecks(

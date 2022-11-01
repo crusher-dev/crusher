@@ -20,7 +20,7 @@ class IntegrationsService {
 	private slackService: SlackService;
 
 	async addIntegration(integrationConfig: any, integrationName: IntegrationServiceEnum, projectId: number, teamId: number) {
-		return this.dbManager.insert(`INSERT INTO public.integrations (project_id, integration_name, meta) VALUES (?, ?, ?, ?)`, [
+		return this.dbManager.insert(`INSERT INTO public.integrations (project_id, integration_name, meta, team_id) VALUES (?, ?, ?, ?)`, [
 			projectId,
 			integrationName,
 			JSON.stringify(integrationConfig),
@@ -41,6 +41,13 @@ class IntegrationsService {
 		return this.dbManager.fetchSingleRow("SELECT * FROM public.integrations WHERE project_id = ? AND integration_name = ?", [
 			projectId,
 			IntegrationServiceEnum.SLACK,
+		]);
+	}
+
+	@CamelizeResponse()
+	async getIntegrationById(id: number): Promise<KeysToCamelCase<IIntegrationsTable>> {
+		return this.dbManager.fetchSingleRow("SELECT * FROM public.integrations WHERE id = ?", [
+			id,
 		]);
 	}
 

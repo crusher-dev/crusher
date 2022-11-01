@@ -32,6 +32,7 @@ import {
 	getTestIndexByConfig,
 } from "@utils/core/buildReportUtils";
 import { getAssetPath, getCollapsedTestSteps } from "@utils/helpers";
+import { useRouter } from "next/router";
 
 const CompareImage = dynamic(() => import("../components/compareImages"));
 
@@ -280,6 +281,7 @@ const stepBottom = css`
 `;
 
 function RenderStep({ data, testInstanceData, setIsShowingVideo, testId, index }) {
+	const { query } = useRouter();
 	const [showStepInfoModal, setShowStepInfoModal] = useState(false);
 	const { status, message, actionType, meta, actionIndex } = data;
 
@@ -374,7 +376,7 @@ function RenderStep({ data, testInstanceData, setIsShowingVideo, testId, index }
 								display: flex;
 							`}
 						>
-							<a href={`crusher://replay-test?testId=${testId}`}>
+							<a href={`crusher://run-test-from-build?testId=${testId}&buildId=${query.id}`}>
 								<Button>Run locally</Button>
 							</a>
 							<Button css={plainButtonCSS} className={"ml-8"} bgColor={"tertiary"} onClick={setIsShowingVideo.bind(this, true)}>

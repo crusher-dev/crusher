@@ -3,11 +3,12 @@ import { getStore } from "electron-app/src/store/configureStore";
 import { goFullScreen, performReplayTestUrlAction } from "electron-app/src/_ui/commands/perform";
 import historyInstance from "./history";
 
-const triggerLocalBuild = (testsList: number[] = undefined, selectedTests: any[] = []) => {
+const triggerLocalBuild = (testsList: number[] = undefined, selectedTests: any[] = [], host: string | null = null) => {
 	const store = getStore();
 	store.dispatch(
 		createLocalBuild({
 			id: "CRU-123",
+			host: host,
 			tests: testsList,
 			progress: new Map(),
 			queuedTests: testsList,

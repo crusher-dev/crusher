@@ -75,7 +75,7 @@ const linkVercelToRepo = (projectId: number, vercelPayload: any) => {
 	return backendRequest(linkVercelToProject(projectId), {
 		method: RequestMethod.POST,
 		payload: {
-			vercel_project_id: id,
+			vercel_project_id: vercelPayload.id,
 			vercel_project_name: name,		
 			meta: { ...vercelPayload },
 		},

@@ -98,32 +98,43 @@ const handleCompletion = async (store: Store, action: IDeepLinkAction, addNotifi
 };
 
 const handleUrlAction = (store: Store, addNotification, event: Electron.IpcRendererEvent, { action }: { action: IDeepLinkAction }) => {
+	
+	const runTest = (host: string| null = null) => {
+		const sessionInfoMeta = getAppSessionMeta(store.getState() as any);
+		const { selectedTests } = action.args;
+
+		console.log("Selected tests are", selectedTests);
+		const currentTest = selectedTests?.length ? selectedTests.find((test) => test.id === action.args.testId) : null;
+		store.dispatch(
+			setSessionInfoMeta({
+				...sessionInfoMeta,
+				editing: {
+					testId: action.args.testId,
+				},
+				selectedTest: currentTest,
+			}),
+		);
+		performReplayTest(action.args.testId, host).then((hasCompletedSuccesfully: boolean) => {
+			handleCompletion(store, action, addNotification, hasCompletedSuccesfully);
+		}).catch((err) => {
+			console.error(err);
+			handleCompletion(store, action, addNotification, false);
+		})
+	};
+
 	switch (action.commandName) {
 		case "run-local-build":
 			// const { buildId } = action.args;
 			// const buildReport = CloudCrusher.getBuildReport(buildId)
 			break;
+		case "run-test-from-build":
+			const { testId, buildId } = action.args;
+			CloudCrusher.getBuildReport(buildId).then((buildReport) => {
+				runTest(buildReport.host);
+			});
+			break;
 		case "replay-test":
-			const sessionInfoMeta = getAppSessionMeta(store.getState() as any);
-			const { selectedTests } = action.args;
-
-			console.log("Selected tests are", selectedTests);
-			const currentTest = selectedTests?.length ? selectedTests.find((test) => test.id === action.args.testId) : null;
-			store.dispatch(
-				setSessionInfoMeta({
-					...sessionInfoMeta,
-					editing: {
-						testId: action.args.testId,
-					},
-					selectedTest: currentTest,
-				}),
-			);
-			performReplayTest(action.args.testId).then((hasCompletedSuccesfully: boolean) => {
-				handleCompletion(store, action, addNotification, hasCompletedSuccesfully);
-			}).catch((err) => {
-				console.error(err);
-				handleCompletion(store, action, addNotification, false);
-			})
+			runTest();
 			break;
 		case "restore":
 			if (window.localStorage.getItem("saved-steps")) {

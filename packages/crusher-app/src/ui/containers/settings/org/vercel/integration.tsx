@@ -152,7 +152,7 @@ function LinkedVercelProject({vercelIntegration}) {
 			</Card>
 
 			<TextBlock className={"mt-16"} fontSize={"12"} color={"#A7A7A8"}>
-				Learn more about login for connection
+				Learn more about vercel integration
 			</TextBlock>
 		</div>
 	);

@@ -1,7 +1,7 @@
 import { app, BrowserWindow, ipcMain, session, shell } from "electron";
 import windowStateKeeper from "electron-window-state";
 import { APP_NAME } from "../../config/about";
-import { getAppIconPath, getAppURl, getSelectedProjectTests, getUserAccountProjects, getUserInfoFromToken } from "../utils";
+import { getAppIconPath, getAppURl, getSelectedProjectTests, getUserAccountProjects, getUserInfoFromToken, parseDeepLinkUrlAction } from "../utils";
 import { Emitter, Disposable } from "event-kit";
 import { now } from "./now";
 import { AnyAction, Store } from "redux";
@@ -228,6 +228,7 @@ export class AppWindow {
 			}
 		});
 		ipcMain.handle("create-cloud-project", this.handleCreateCloudProject.bind(this));
+		ipcMain.handle("test-deep-link", this.handleTestDeepLink.bind(this));
 		ipcMain.handle("turn-on-recorder-inspect-mode", this.turnOnInspectMode.bind(this));
 		ipcMain.handle("turn-on-element-selector-inspect-mode", this.turnOnElementSelectorInspectMode.bind(this));
 		ipcMain.handle("turn-off-element-selector-inspect-mode", this.turnOffElementSelectorInspectMode.bind(this));
@@ -302,6 +303,11 @@ export class AppWindow {
 			process.argv = process.argv.filter((a) => a.includes("--project-config-file"));
 		}
 		this.handle(projectId).catch((err) => console.error("Can't initialize project config in renderer process", err));
+	}
+
+	async handleTestDeepLink(event: Electron.IpcMainEvent, data: {}) {
+		const action = parseDeepLinkUrlAction(`crusher://run-test-from-build?testId=${50}&buildId=${30074}`);
+		if (action) this.sendMessage("url-action", { action });
 	}
 
 	async handlePauseSteps(event: Electron.IpcMainEvent, data: {}) {
@@ -904,13 +910,13 @@ export class AppWindow {
 		}
 	}
 
-	async handleRemoteReplayTest(event: Electron.IpcMainInvokeEvent, payload: { testId: number }) {
+	async handleRemoteReplayTest(event: Electron.IpcMainInvokeEvent, payload: { testId: number; host: string | null }) {
 		console.log("Replaying test", { testId: payload.testId });
 
 		await this.resetRecorder();
 		const testSteps = await CloudCrusher.getTest(String(payload.testId));
 		this.store.dispatch(updateCurrentTestInfo({ steps: testSteps }));
-		return this.handleReplayTestSteps(testSteps);
+		return this.handleReplayTestSteps(testSteps, payload.host);
 	}
 
 	async handleRemoteReplayTestUrlAction(
@@ -983,8 +989,8 @@ export class AppWindow {
 		return shouldOverrideHost(this);
 	}
 
-	async modifyStepsForEnvironment(steps: any) {
-		const overrideHost = await this.shouldOverrideHost();
+	async modifyStepsForEnvironment(steps: any, host: string | null = null) {
+		const overrideHost = host ? {host} : await this.shouldOverrideHost();
 		if (overrideHost) {
 			steps = steps.map((event) => {
 				if (event.type === ActionsInTestEnum.NAVIGATE_URL) {
@@ -1001,8 +1007,8 @@ export class AppWindow {
 
 		return steps;
 	}
-	async handleReplayTestSteps(steps: iAction[] | null = null) {
-		steps = await this.modifyStepsForEnvironment(steps);
+	async handleReplayTestSteps(steps: iAction[] | null = null, host: string | null = null) {
+		steps = await this.modifyStepsForEnvironment(steps, host);
 		this.store.dispatch(updateRecorderState(TRecorderState.PERFORMING_ACTIONS, {}));
 
 		const browserActions = getBrowserActions(steps);

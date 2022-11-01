@@ -23,7 +23,7 @@ import { SWRConfig } from "swr";
 import { NetworkErrorContainer } from "./ui/containers/errors/networkError";
 import { UnAuthorizedErrorContainer } from "./ui/containers/errors/unauthorizedError";
 import { InvalidCredsErrorContainer } from "./ui/containers/errors/invalidCreds";
-import { performGoToUrl } from "./commands/perform";
+import { performGoToUrl, performTestDeepLink } from "./commands/perform";
 import { Provider as JotaiProvider } from "jotai";
 import { ToastBox } from "./ui/components/toasts";
 import { CloudCrusher } from "../lib/cloud";
@@ -80,6 +80,7 @@ function InsideRouter() {
 	}, []);
 
 	React.useEffect(() => {
+		(window as any).performTestDeepLink = performTestDeepLink;
 		const listener = handleUrlAction.bind(null, store);
 		ipcRenderer.on("url-action", listener);
 		window.triggerLocalBuild = listener.bind(null, null, { action: { commandName: "run-local-build", args: { buildId: "29372" } } });

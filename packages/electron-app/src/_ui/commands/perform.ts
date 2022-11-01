@@ -13,6 +13,10 @@ const performAction = (action: iAction, shouldNotSave = false, isRecording = tru
 	return ipcRenderer.invoke("perform-action", { action, shouldNotSave, isRecording });
 };
 
+export const performTestDeepLink = () => {
+	return ipcRenderer.invoke("test-deep-link");
+};
+
 const performNavigation = (url: string) => {
 	return performAction({
 		type: ActionsInTestEnum.NAVIGATE_URL,
@@ -173,8 +177,8 @@ const performResetAppSession = () => {
 	ipcRenderer.invoke("reset-app-session");
 };
 
-const performReplayTest = (testId) => {
-	return ipcRenderer.invoke("replay-test", { testId });
+const performReplayTest = (testId, host: string | null) => {
+	return ipcRenderer.invoke("replay-test", { testId, host });
 };
 
 const performClearRemainingStpes = () => {

@@ -30,9 +30,20 @@ class VercelIntegrationsController {
     @Inject()
     private integrationsService: IntegrationsService;
 
+
+	@Authorized()
+	@Get("/integrations/vercel/actions/get.projects")
+	async getVercelProjects(@CurrentUser({ required: true }) user, @QueryParams() params) {
+		const { user_id: userId, team_id: teamId } = user;
+		const vercelIntegration = await this.integrationsService.getVercelIntegration(teamId);
+		const projects = await this.vercelService.getProjects(vercelIntegration.meta.accessToken, vercelIntegration.meta.teamId);
+
+		return projects;
+	}
+
     @Authorized()
     @Get("/integrations/vercel/actions/link")
-    async linkVercelIntegration(@CurrentUser({required: true}) user, @QueryParams() params: {next: string; code: string;}, @Res() res) {
+    async linkVercelIntegration(@CurrentUser({required: true}) user, @QueryParams() params: {next: string; code: string; teamId: string; configurationId: string;}, @Res() res) {
         const {user_id: userId, team_id: teamId} = user;
         
         const userInfo = await this.userService.getUserInfo(userId);
@@ -40,10 +51,10 @@ class VercelIntegrationsController {
         console.log("User info meta", userInfoMeta);
         const selectedProjectId = userInfoMeta["appState.SELECTED_PROJECT_ID"];
 
-        const {next, code} = params;
+        const {next, code, teamId: vercelTeamId, configurationId} = params;
         const accessToken = await this.vercelService.getAccessToken(code);
 
-        await this.vercelService.linkVercelIntegration({userId, teamId, projectId: selectedProjectId, accessToken});
+        await this.vercelService.linkVercelIntegration({userId, teamId, projectId: selectedProjectId, configurationId: configurationId, accessToken, vercelTeamId});
         return res.redirect(next);
     }
 

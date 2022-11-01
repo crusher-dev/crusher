@@ -36,16 +36,6 @@ class IntegrationsController {
 	private projectsService: ProjectsService;
 
 	@Authorized()
-	@Get("/integrations/vercel/actions/get.projects")
-	async getVercelProjects(@CurrentUser({ required: true }) user, @QueryParams() params) {
-		const { user_id: userId, team_id: teamId } = user;
-		const vercelIntegration = await this.integrationsService.getVercelIntegration(teamId);
-		const projects = await this.vercelService.getProjects(vercelIntegration.meta.accessToken);
-
-		return projects;
-	}
-
-	@Authorized()
 	@Get("/integrations/slack/actions/add")
 	async addSlackIntegration(@CurrentUser({ required: true }) userInfo, @QueryParams() params, @Res() res) {
 		const { team_id: teamId } = userInfo;

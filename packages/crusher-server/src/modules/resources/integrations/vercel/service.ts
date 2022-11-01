@@ -38,23 +38,30 @@ class VercelService {
       return {githubIntegrationRecord, vercelIntegrationRecord};
     }
 
-    async linkVercelIntegration(payload: { userId: string; teamId: number; projectId: number; accessToken: string; }) {
+    async linkVercelIntegration(payload: { userId: string; teamId: number; projectId: number; vercelTeamId?: string; configurationId?: string; accessToken: string; }) {
       const vercelIntegrationRecord = await this.integrationService.getVercelIntegration(payload.teamId);
       if(vercelIntegrationRecord) {
         return this.integrationService.updateIntegration({
           accessToken: payload.accessToken,
           userId: payload.userId,
+          vercelTeamId: payload.vercelTeamId,
+          configurationId: payload.configurationId,
+          teamId: payload.teamId
         }, vercelIntegrationRecord.id);
       }
       return this.integrationService.addIntegration({
             userId: payload.userId,
             teamId: payload.teamId,
+            vercelTeamId: payload.vercelTeamId,
+            configurationId: payload.configurationId,
             accessToken: payload.accessToken,
       }, IntegrationServiceEnum.VERCEL, payload.projectId, payload.teamId);
     }
 
-    async getProjects(accessToken: string): Promise<any> {
-      return axios.get(`https://api.vercel.com/v9/projects`, {
+    async getProjects(accessToken: string, teamId: string | null = null): Promise<any> {
+      const apiUrl = `https://api.vercel.com/v9/projects` + (teamId ? `?teamId=${teamId}` : "");
+
+      return axios.get(apiUrl, {
         headers: {
           Authorization: `Bearer ${accessToken}`
         }
@@ -62,7 +69,8 @@ class VercelService {
         console.log(response.data);
         return response.data;
       }).catch((e)=>{
-        return e;
+        console.error("Error while requesting projects", e);
+        return null;
       });
     }
   
@@ -72,7 +80,6 @@ class VercelService {
           // @TODO: Add to this env
           client_id: VERCEL_CONFIG.CLIENT_ID,
           client_secret: VERCEL_CONFIG.CLIENT_SECRET,
-          redirect_uri: "https://5000-w3cj-expressapistarte-ktz0dzo1h2l.ws-us54.gitpod.io/configure",
         }), {
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',

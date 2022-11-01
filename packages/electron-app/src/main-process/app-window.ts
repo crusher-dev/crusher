@@ -305,11 +305,12 @@ export class AppWindow {
 		this.handle(projectId).catch((err) => console.error("Can't initialize project config in renderer process", err));
 	}
 
-	async handleTestDeepLink(event: Electron.IpcMainEvent, data: {}) {
-		const action = parseDeepLinkUrlAction(`crusher://run-test-from-build?testId=${50}&buildId=${30074}`);
+	async handleTestDeepLink(event: Electron.IpcMainEvent, data: { deepLink: string }) {
+		if (!data.deepLink) return false;
+		const action = parseDeepLinkUrlAction(data.deepLink);
 
 		this.getWebContents().loadURL(getAppURl() + "#/recorder").finally(() => {
-			this.handleGoFullScreen(null, {fullScreen: true});
+			this.handleGoFullScreen(null, { fullScreen: true });
 			this.focus();
 			console.log("Window loaded", action);
 			if (action) this.sendMessage("url-action", { action });
@@ -317,10 +318,10 @@ export class AppWindow {
 	}
 
 	async handlePauseSteps(event: Electron.IpcMainEvent, data: {}) {
-		if(!global["promises"]) return;
+		if (!global["promises"]) return;
 		await Promise.all(Object.values(global["promises"]).map((promise: any) => {
 			return promise();
-		 }));
+		}));
 	}
 
 	async handle(projectId) {
@@ -996,7 +997,7 @@ export class AppWindow {
 	}
 
 	async modifyStepsForEnvironment(steps: any, host: string | null = null) {
-		const overrideHost = host ? {host} : await this.shouldOverrideHost();
+		const overrideHost = host ? { host } : await this.shouldOverrideHost();
 		if (overrideHost) {
 			steps = steps.map((event) => {
 				if (event.type === ActionsInTestEnum.NAVIGATE_URL) {

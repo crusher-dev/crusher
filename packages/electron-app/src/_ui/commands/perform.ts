@@ -13,8 +13,8 @@ const performAction = (action: iAction, shouldNotSave = false, isRecording = tru
 	return ipcRenderer.invoke("perform-action", { action, shouldNotSave, isRecording });
 };
 
-export const performTestDeepLink = () => {
-	return ipcRenderer.invoke("test-deep-link");
+export const performTestDeepLink = (deepLink: string) => {
+	return ipcRenderer.invoke("test-deep-link", { deepLink });
 };
 
 const performNavigation = (url: string) => {
@@ -158,12 +158,12 @@ export const performAssertElementVisibility = async (selectedElement: iElementIn
 
 const performVerifyTest = (shouldAlsoSave = true, autoSaveType: "UPDATE" | "SAVE" = "SAVE", shouldNotRunTest = true) => {
 	return ipcRenderer.invoke("verify-test", { shouldAlsoSave, autoSaveType, shouldNotRunTest }).then((res) => {
-		if(shouldNotRunTest)
-		showToast({
-			type: "ready-for-edit",
-			isUnique: true,
-			message: "All steps completed, you can edit now",
-		});
+		if (shouldNotRunTest)
+			showToast({
+				type: "ready-for-edit",
+				isUnique: true,
+				message: "All steps completed, you can edit now",
+			});
 
 		return res;
 	});
@@ -311,7 +311,7 @@ const performExit = () => {
 };
 
 const performUndockCode = (stepIndex) => {
-	return ipcRenderer.invoke("undock-code", {stepIndex});
+	return ipcRenderer.invoke("undock-code", { stepIndex });
 };
 
 const turnOnProxy = (configFilePath) => {

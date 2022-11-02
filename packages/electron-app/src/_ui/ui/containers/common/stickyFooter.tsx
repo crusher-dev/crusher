@@ -78,28 +78,28 @@ export const StickyFooter = ({ className }: IProps) => {
 		// Object.entries(this._results).map((a: any) => {
 		// 	return { name: a[0], tunnel: a[1].tunnel, intercept: a[1].intercept };
 		// }),
-		const seperator = (<div className={"ml-8"} css={css`min-width: 2px; height: 20px; background: rgba(255,255,255,0.15)`}></div>);	
+		const seperator = (<div className={"ml-8"} css={css`min-width: 2px; height: 20px; background: rgba(255,255,255,0.15)`}></div>);
 
 		const links = Object.entries(proxyState).map((a: any) => {
 			return (
 				<>
-				{seperator}
-				<LinkPointer
-				css={css`.pointer-icon { path { fill: rgba(255, 255, 255, 0.35); } } `}
-				onClick={() => shell.openExternal(a[1].tunnel)}
-				className={"ml-8"}>
-				{a[0]}
-			</LinkPointer></>
+					{seperator}
+					<LinkPointer
+						css={css`.pointer-icon { path { fill: rgba(255, 255, 255, 0.35); } } `}
+						onClick={() => shell.openExternal(a[1].tunnel)}
+						className={"ml-8"}>
+						{a[0]}
+					</LinkPointer></>
 			)
 		});
-		return  (
+		return (
 			<div className={"flex items-center"}>
 				active
 				{links}
-	
+
 			</div>
 		);
-	}, [isProxyDisabled]);
+	}, [proxyState, isProxyDisabled]);
 
 	console.log("Proxy is init", proxyIsInitializing);
 

@@ -40,6 +40,7 @@ class ProxyManager {
 		console.info("Create tunnel proxy defined in " + getRelativePath(configFilePath));
 		this._logs = [];
 		try {
+			this.isDisabled = true;
 			const cliPath = app.commandLine.getSwitchValue("crusher-cli-path");
 			this._currentProxyProcess = child_process.exec(`node ${cliPath} tunnel --config=${configFilePath}`);
 

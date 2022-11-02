@@ -58,7 +58,7 @@ export const Integrations = () => {
 				<hr css={basicHR} />
 				<SlackIntegration />
 
-				{/* <hr css={basicHR} /> */}
+				<hr css={basicHR} />
 				<GithubIntegration />
 				<hr css={basicHR} className={"mt-40"} />
 				<VercelIntegration/>

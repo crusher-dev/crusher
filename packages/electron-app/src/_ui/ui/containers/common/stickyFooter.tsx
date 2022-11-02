@@ -69,6 +69,38 @@ export const StickyFooter = ({ className }: IProps) => {
 		shell.openPath(projectConfigFile);
 	};
 
+	const openTunneUrl = () => {
+		const appSettings = getAppSettings(store.getState() as any);
+		shell.openExternal(resolveToFrontEndPath("/app/tunnel", appSettings.frontendEndPoint));
+	};
+
+	const activeTooltip = React.useMemo(() => {
+		// Object.entries(this._results).map((a: any) => {
+		// 	return { name: a[0], tunnel: a[1].tunnel, intercept: a[1].intercept };
+		// }),
+		const seperator = (<div className={"ml-8"} css={css`min-width: 2px; height: 20px; background: rgba(255,255,255,0.15)`}></div>);	
+
+		const links = Object.entries(proxyState).map((a: any) => {
+			return (
+				<>
+				{seperator}
+				<LinkPointer
+				css={css`.pointer-icon { path { fill: rgba(255, 255, 255, 0.35); } } `}
+				onClick={() => shell.openExternal(a[1].tunnel)}
+				className={"ml-8"}>
+				{a[0]}
+			</LinkPointer></>
+			)
+		});
+		return  (
+			<div className={"flex items-center"}>
+				active
+				{links}
+	
+			</div>
+		);
+	}, [isProxyDisabled]);
+
 	console.log("Proxy is init", proxyIsInitializing);
 
 	const statusMessage =
@@ -102,7 +134,7 @@ export const StickyFooter = ({ className }: IProps) => {
 				)}
 
 				<div css={contextContainerCss}>
-					<Tooltip content={isProxyDisabled ? (<div className={"flex items-center"}>Not configured <div className={"ml-8"} css={css`min-width: 2px; height: 20px; background: rgba(255,255,255,0.15)`}></div><LinkPointer css={css`.pointer-icon { path { fill: rgba(255, 255, 255, 0.35); } } `} onClick={openConfig} className={"ml-8"}>Open config</LinkPointer></div>) : proxyIsInitializing ? "initializng" : "active"} placement="top" type="hover">
+					<Tooltip content={isProxyDisabled ? (<div className={"flex items-center"}>Not configured <div className={"ml-8"} css={css`min-width: 2px; height: 20px; background: rgba(255,255,255,0.15)`}></div><LinkPointer css={css`.pointer-icon { path { fill: rgba(255, 255, 255, 0.35); } } `} onClick={openConfig} className={"ml-8"}>Open config</LinkPointer></div>) : proxyIsInitializing ? <div className={"flex items-center"}>initializing<div className={"ml-8"} css={css`min-width: 2px; height: 20px; background: rgba(255,255,255,0.15)`}></div><LinkPointer css={css`.pointer-icon { path { fill: rgba(255, 255, 255, 0.35); } } `} onClick={openConfig} className={"ml-8"}>Open config</LinkPointer></div> : activeTooltip} placement="top" type="hover">
 						<div>
 							{!proxyIsInitializing && !isProxyWorking ? (
 								<DisabledCloudIcon

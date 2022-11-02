@@ -51,14 +51,14 @@ export const getGitUserInfo = () => {
       .toString()
       .trim();
   } catch(ex) {
-    console.debug("Could not get git username");
+    // console.debug("Could not get git username");
   }
   try {
     email = execSync("git config --global user.email", { stdio: "pipe" })
     .toString()
     .trim();
   } catch(ex) {
-    console.debug("Could not get git email");
+    // console.debug("Could not get git email");
   }
 
   return { username, email };

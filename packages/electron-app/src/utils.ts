@@ -43,6 +43,7 @@ const addHttpToURLIfNotThere = (uri: string) => {
 };
 
 const parseDeepLinkUrlAction = (url: string): IDeepLinkAction | null => {
+	if(!url) return null;
 	const urlObject = new URL(url);
 	if (urlObject.protocol === "crusher:") {
 		const commandName = urlObject.host;

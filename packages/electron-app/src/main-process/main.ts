@@ -40,7 +40,6 @@ function setupElectronApp() {
 	// app.commandLine.appendSwitch("--disable-web-security");
 	app.commandLine.appendSwitch("--allow-top-navigation");
 	// For replaying actions
-	app.commandLine.appendSwitch("--remote-debugging-port", "0");
 
 	app.setAboutPanelOptions({
 		applicationName: APP_NAME,
@@ -71,6 +70,7 @@ const gotSingleInstanceLock = app.requestSingleInstanceLock();
 isDuplicateInstance = !gotSingleInstanceLock;
 
 if (process.platform === "linux" && !isDuplicateInstance) {
+	app.commandLine.appendSwitch("--remote-debugging-port", "0");
 	onDidLoad(() => {
 		handlePossibleProtocolLauncherArgs(process.argv);
 	});
@@ -95,7 +95,7 @@ function handlePossibleProtocolLauncherArgs(args: string[]) {
 	if (args.length > 1) {
 		const lastArg = args[args.length - 1];
 		if (lastArg.startsWith("crusher://")) {
-			handleAppURL(args[1]);
+			handleAppURL(lastArg);
 		}
 	}
 }
@@ -106,18 +106,22 @@ if (isDuplicateInstance) {
 
 function handleAppURL(url: string) {
 	const action = parseDeepLinkUrlAction(url);
-	console.log("Got this deep link", action);
-	onDidLoad((window) => {
-		window.getWebContents().loadURL(getAppURl() + "#/recorder").finally(() => {
-			window.handleGoFullScreen(null, {fullScreen: true});
-			window.focus();
-			console.log("Window loaded", action);
-			if (action) window.sendMessage("url-action", { action });
-		});
-		// This manual focus call _shouldn't_ be necessary, but is for Chrome on
-		// macOS. See https://github.com/desktop/desktop/issues/973.
+		onDidLoad((window) => {
+			if(action.commandName !== "run-local-build") {
 
-	});
+				window.getWebContents().loadURL(getAppURl() + "#/recorder").finally(() => {
+					window.handleGoFullScreen(null, {fullScreen: true});
+					window.focus();
+					console.log("Window loaded", action);
+					if (action) window.sendMessage("url-action", { action });
+				});
+			} else {
+				if (action) window.sendMessage("url-action", { action });
+			}
+				// This manual focus call _shouldn't_ be necessary, but is for Chrome on
+			// macOS. See https://github.com/desktop/desktop/issues/973.
+
+		});
 }
 
 app.on("open-url", (event, url) => {

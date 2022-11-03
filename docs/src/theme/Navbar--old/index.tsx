@@ -10,7 +10,13 @@ import Translate from '@docusaurus/Translate';
 import SearchBar from '@theme/SearchBar';
 // import  from '@theme/Toggle';
 import Toggle from '@docusaurus/theme-classic/lib/theme/ColorModeToggle';
-import useThemeContext from '@theme/hooks/useThemeContext';
+import useThemeContext from '@docusaurus/theme-common/lib/hooks/use';
+import {
+  splitNavbarItems,
+  useNavbarMobileSidebar,
+  useLockBodyScroll,
+  useHideableNavbar,
+} from '@docusaurus/theme-common/lib/internal';
 import {
   useThemeConfig,
   useMobileSecondaryMenuRenderer,
@@ -18,12 +24,9 @@ import {
   usePrevious,
   useWindowSize,
 } from '@docusaurus/theme-common';
-import useHideableNavbar from '@theme/hooks/useHideableNavbar';
-import useLockBodyScroll from '@theme/hooks/useLockBodyScroll';
 import { useActivePlugin } from '@theme/hooks/useDocs';
 import NavbarItem from '@theme/NavbarItem';
 import Logo from '@theme/Logo';
-// import IconMenu from '@docusaurus/theme-common/lib';
 import IconMenu from '@docusaurus/theme-classic/lib/theme/Icon/Menu';
 import IconClose from '@docusaurus/theme-classic/lib/theme/Icon/Close';
 import styles from './styles.module.css'; // retrocompatible with v1

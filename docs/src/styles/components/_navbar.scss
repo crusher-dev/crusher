@@ -44,11 +44,10 @@ html[data-theme='dark'] {
   background: rgb(11 11 11 / 41%);
 }
 
-
 //overrides
 #__docusaurus {
-  >.navbar {
-    display: none;
+  > .navbar {
+    // display: none;
   }
 
   .navbar {
@@ -124,7 +123,6 @@ html[data-theme='dark'] {
       }
 
       div {
-
         //version dropdown
         &:nth-of-type(1) {
           @media (max-width: 996px) {
@@ -147,7 +145,6 @@ html[data-theme='dark'] {
       }
 
       a {
-
         //twitter icon
         &:nth-of-type(1) {
           order: 5;
@@ -247,11 +244,11 @@ html[data-theme='dark'] {
     }
 
     &__brand {
-      display: none;
+      // display: none;
     }
 
     &__logo {
-      display: none;
+      display: block;
     }
 
     .separator {
@@ -268,7 +265,7 @@ html[data-theme='dark'] {
       margin-inline-start: -0.25rem;
       margin-inline-end: -0.25rem;
 
-      >span,
+      > span,
       &::after {
         display: none;
       }
@@ -280,23 +277,22 @@ html[data-theme='dark'] {
   }
 }
 
-
 @media only screen and (max-width: 600px) {
   .navbar {
     padding: 20px;
   }
 
   .navbar__logo {
-    zoom: .8;
+    zoom: 0.8;
   }
 
   .DocSearch-Button {
-    zoom: .8;
+    zoom: 0.8;
     margin: 0 auto;
   }
 
   .navbar__toggle {
-    zoom: .8;
+    zoom: 0.8;
   }
 
   .navbar-sidebar__item {
@@ -321,11 +317,10 @@ html[data-theme='dark'] {
   }
 
   .DocSearch-MagnifierLabel {
-    zoom: .8;
+    zoom: 0.8;
   }
 
   .DocSearch-Input {
     padding: 0 !important;
   }
-
 }

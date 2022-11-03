@@ -21,7 +21,6 @@ module.exports = {
   organizationName: 'crusher-dev',
   projectName: 'crusher-docs',
   themeConfig: {
-    autoCollapseSidebarCategories: true,
     colorMode: {
       defaultMode: 'dark',
       disableSwitch: true,
@@ -116,7 +115,8 @@ module.exports = {
   themes: [
     [
       //overriding the standard docusaurus-theme-classic to provide custom schema
-      path.resolve(__dirname, 'docusaurus-theme-classic'),
+      // path.resolve(__dirname, 'docusaurus-theme-classic'),
+      '@docusaurus/theme-classic',
       {
         customCss: [
           require.resolve('./node_modules/modern-normalize/modern-normalize.css'),

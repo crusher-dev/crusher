@@ -1,8 +1,8 @@
 import React from 'react';
-import MainHeading from '@theme/Heading';
+import { MainHeading } from '@theme/Heading';
 import { css } from '@emotion/css';
 import Comparison from '../components/page/code';
-import CodeBlock from '@theme/CodeBlock';
+import CodeBlock from './CodeBlock';
 
 const SelectElementContainer = () => {
   return (

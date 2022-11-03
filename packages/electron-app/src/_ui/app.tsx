@@ -166,7 +166,7 @@ const App = () => {
 
 		ipcRenderer.on("go-to-dashboard", () => {
 			clearAllToasts();
-			historyInstance.push("/", {});
+			window.location.href = "/";
 			goFullScreen(false);
 		});
 		const listener = handleUrlAction.bind(this, store, addNotification);

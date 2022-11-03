@@ -152,32 +152,35 @@ const LoadingIconV2 = (props: any) => {
 	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
-			style={{
-				display: "block",
-			}}
-			viewBox="0 0 100 100"
+			style={{ margin: "auto" }}
+			width="18"
+			height="18"
+			display="block"
 			preserveAspectRatio="xMidYMid"
-			{...props}
+			viewBox="0 0 100 100"
+
+
 		>
-			<circle cx={50} cy={50} r={30} stroke="#8746f0" strokeWidth={10} fill="none" />
-			<circle cx={50} cy={50} r={30} stroke="#fff" strokeWidth={8} strokeLinecap="round" fill="none">
+			<circle
+				cx="50"
+				cy="50"
+				r="35"
+				fill="none"
+				stroke="#e097ff"
+				strokeDasharray="164.93361431346415 56.97787143782138"
+				strokeWidth="10"
+			>
 				<animateTransform
 					attributeName="transform"
+					dur="1s"
+					keyTimes="0;1"
+					repeatCount="indefinite"
 					type="rotate"
-					repeatCount="indefinite"
-					dur="1s"
-					values="0 50 50;180 50 50;720 50 50"
-					keyTimes="0;0.5;1"
-				/>
-				<animate
-					attributeName="stroke-dasharray"
-					repeatCount="indefinite"
-					dur="1s"
-					values="18.84955592153876 169.64600329384882;94.2477796076938 94.24777960769377;18.84955592153876 169.64600329384882"
-					keyTimes="0;0.5;1"
-				/>
+					values="0 50 50;360 50 50"
+				></animateTransform>
 			</circle>
 		</svg>
+	);
 	);
 };
 

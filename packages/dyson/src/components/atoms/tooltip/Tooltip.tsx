@@ -142,43 +142,45 @@ const tooltipWrapper = (padding) => css`
 	position: fixed;
 	z-index: 400;
 	padding: 0px;
-	-webkit-animation: fadeIn 1s;
+	-webkit-animation: fadeIn .5s;
 	animation: fadeIn 0.25s;
 	padding: ${padding}px;
 	@-webkit-keyframes fadeIn {
 		from {
 			opacity: 0;
+			transform: translateY(3px);
 		}
 		to {
 			opacity: 1;
+			transform: translateY(0px);
 		}
 	}
 	@keyframes fadeIn {
 		from {
 			opacity: 0;
+			transform: translateY(3px);
 		}
 		to {
 			opacity: 1;
+			transform: translateY(0px);
 		}
 	}
 `;
 
 const tooltipBox = css`
 
-	 border-radius: 8rem;
-
+	border-radius: 8rem;
 	background: #0D0E0E;
-border: 0.6px solid #222225;
+	border: 0.6px solid #222225;
 
-box-shadow: 0px 0px 0px 5px rgba(0, 0, 0, 0.34);
+	box-shadow: 0px 0px 0px 5px rgba(0, 0, 0, 0.34);
 	color: #D1D5DB;
-	padding: 8rem 10rem;
+	padding: 6rem 12rem;
 	font-size: 13.4rem;
 	letter-spacing: .2px;
 
 	background: #161719;
 	position: relative;
-
 	::after {
 		content: " ";
 		position: absolute;

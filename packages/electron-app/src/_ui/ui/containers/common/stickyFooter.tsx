@@ -134,6 +134,7 @@ export const StickyFooter = ({ className }: IProps) => {
 				)}
 
 				<div css={contextContainerCss}>
+
 					<Tooltip content={isProxyDisabled ? (<div className={"flex items-center"}>Not configured <div className={"ml-8"} css={css`min-width: 2px; height: 20px; background: rgba(255,255,255,0.15)`}></div><LinkPointer css={css`.pointer-icon { path { fill: rgba(255, 255, 255, 0.35); } } `} onClick={openConfig} className={"ml-8"}>Open config</LinkPointer></div>) : proxyIsInitializing ? <div className={"flex items-center"}>initializing<div className={"ml-8"} css={css`min-width: 2px; height: 20px; background: rgba(255,255,255,0.15)`}></div><LinkPointer css={css`.pointer-icon { path { fill: rgba(255, 255, 255, 0.35); } } `} onClick={openConfig} className={"ml-8"}>Open config</LinkPointer></div> : activeTooltip} placement="top" type="hover">
 						<div>
 							{!proxyIsInitializing && !isProxyWorking ? (
@@ -153,7 +154,6 @@ export const StickyFooter = ({ className }: IProps) => {
 							)}
 						</div>
 					</Tooltip>
-					{/* <NotepadIcon css={[notepadIconCss, clickableCss]} /> */}
 				</div>
 			</div>
 			<HoverCard content={<HelpContent />} placement="top" type="hover" padding={8} offset={0}>

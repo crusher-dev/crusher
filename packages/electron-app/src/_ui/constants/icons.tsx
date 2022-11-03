@@ -2,37 +2,27 @@ import React from "react";
 
 const CloudIcon = ({ shouldAnimateGreen, color = "#9EF25B", ...props }) => {
 	return (
-		<svg viewBox={"0 0 16 11"} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-			{shouldAnimateGreen ? (
-				<linearGradient id="lg" x1="0.5" y1="1" x2="0.5" y2="0">
-					<stop offset="0%" stopOpacity="1" stopColor={color} />
-					<stop offset="40%" stopOpacity="1" stopColor={color}>
-						<animate attributeName="offset" values="0;1" repeatCount="indefinite" dur="0.8s" begin="0s" />
-					</stop>
-					<stop offset="40%" stopOpacity="0" stopColor={color}>
-						<animate attributeName="offset" values="0;1" repeatCount="indefinite" dur="0.8s" begin="0s" />
-					</stop>
-					<stop offset="100%" stopOpacity="0" stopColor={color} />
-				</linearGradient>
-			) : (
-				""
-			)}
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			fill="currentColor"
+			height={20}
+			width={20}
+			viewBox="0 0 24 24"
+
+		>
 			<path
-				d="M12.854 4.47C12.566 1.953 10.504 0 8 0 5.497 0 3.433 1.953 3.147 4.47 1.409 4.47 0 5.932 0 7.735 0 9.538 1.409 11 3.146 11h9.708C14.59 11 16 9.538 16 7.735c0-1.803-1.409-3.265-3.146-3.265Z"
-				fill={shouldAnimateGreen ? "url(#lg)" : color}
-				stroke={"#fff"}
-				strokeWidth="0.5"
-			/>
+				fillRule="evenodd"
+				d="M4.5 9.75a6 6 0 0111.573-2.226 3.75 3.75 0 014.133 4.303A4.5 4.5 0 0118 20.25H6.75a5.25 5.25 0 01-2.23-10.004 6.072 6.072 0 01-.02-.496z"
+				clipRule="evenodd"
+				fill={shouldAnimateGreen ? "#404040" : "#d8d8d8"}
+			></path>
 		</svg>
 	);
 };
 
 const DisabledCloudIcon = React.forwardRef(({ shouldAnimateGreen, ...props }, ref) => (
 	<svg viewBox="0 0 25 19" fill="none" xmlns="http://www.w3.org/2000/svg" ref={ref} {...props}>
-		<path
-			d="M15.895 6.539c-.342-3.01-2.81-5.344-5.801-5.344-2.992 0-5.459 2.335-5.802 5.344-2.077 0-3.76 1.747-3.76 3.902 0 2.156 1.683 3.903 3.76 3.903h11.603c2.078 0 3.761-1.747 3.761-3.903 0-2.155-1.684-3.902-3.76-3.902Z"
-			fill="#E8407C"
-		/>
+
 		<mask
 			id="a"
 			style={{
@@ -355,16 +345,16 @@ const BackIconV3 = (props) => (
 )
 
 const VercelIcon = (props) => (
-    <svg
-      viewBox={"0 0 1155 1000"}
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      {...props}
-    >
-      <path d="m577.344 0 577.346 1000H0L577.344 0Z" fill="#fff" />
-    </svg>
+	<svg
+		viewBox={"0 0 1155 1000"}
+		fill="none"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	>
+		<path d="m577.344 0 577.346 1000H0L577.344 0Z" fill="#fff" />
+	</svg>
 );
-  
+
 
 const GithubIcon = (props) => (
 	<svg
@@ -463,26 +453,26 @@ const ExportIcon = (props) => (
 
 
 const AddRoundedIcon = (props) => (
-<svg
-	viewBox={'0 0 16 16'}
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    {...props}
-  >
-    <rect width={16} height={16} rx={5} fill="#9867FF" />
-    <g clipPath="url(#a)">
-      <path
-        d="M11.619 6.956H8.844V4.38a.881.881 0 1 0-1.762 0v2.575h-2.7a.881.881 0 0 0 0 1.762h2.7v2.9a.88.88 0 1 0 1.762.001V8.718h2.775a.88.88 0 1 0 0-1.762Z"
-        fill="#000"
-      />
-    </g>
-    <defs>
-      <clipPath id="a">
-        <path fill="#fff" transform="translate(3.5 3.5)" d="M0 0h9v9H0z" />
-      </clipPath>
-    </defs>
-  </svg>
-  )
+	<svg
+		viewBox={'0 0 16 16'}
+		fill="none"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	>
+		<rect width={16} height={16} rx={5} fill="#9867FF" />
+		<g clipPath="url(#a)">
+			<path
+				d="M11.619 6.956H8.844V4.38a.881.881 0 1 0-1.762 0v2.575h-2.7a.881.881 0 0 0 0 1.762h2.7v2.9a.88.88 0 1 0 1.762.001V8.718h2.775a.88.88 0 1 0 0-1.762Z"
+				fill="#000"
+			/>
+		</g>
+		<defs>
+			<clipPath id="a">
+				<path fill="#fff" transform="translate(3.5 3.5)" d="M0 0h9v9H0z" />
+			</clipPath>
+		</defs>
+	</svg>
+)
 
 export {
 	BackIconV3,

@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { css } from "@emotion/react";
 import { getAllSteps, getSavedSteps, getStepInfo } from "electron-app/src/store/selectors/recorder";
 import { useSelector, useDispatch } from "react-redux";
-import { TextHighlighter, TextHighlighterText, transformStringSelectorsToArray } from "./helper";
+import { TextHighlighter, TextHighlighterText, transformStringSelectorsToArray } from "../helper";
 import { deleteRecordedSteps, updateRecordedStep } from "electron-app/src/store/actions/recorder";
 import { FieldSelectorPicker } from "electron-app/src/_ui/ui/containers/components/sidebar/stepEditor/fields";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
@@ -14,6 +14,7 @@ import { sendSnackBarEvent } from "electron-app/src/_ui/ui/containers/components
 import { EditableInput } from "electron-app/src/_ui/ui/components/inputs/editableInput";
 import { useAtom } from "jotai";
 import { editInputAtom, isStepHoverAtom } from "electron-app/src/_ui/store/jotai/testsPage";
+import { SelectorEditorCard } from "./selectorEditor";
 
 const limitString = (string, offset = null) => {
 	if (!string) return string;
@@ -318,70 +319,6 @@ export const EDIT_MODE_MAP = {
 	[ActionsInTestEnum.CUSTOM_ELEMENT_SCRIPT]: "SHOW_CUSTOM_SCRIPT_MODAL",
 };
 
-const StepAdvancedForm = ({ stepId }) => {
-	const textAreaRef = React.useRef(null);
-	const steps = useSelector(getAllSteps);
-	const stepInfo = useSelector(getStepInfo(stepId));
-	const title = TextHighlighter({ text: stepInfo.name }, true);
-	const step = steps[stepId];
-
-	const dispatch = useDispatch();
-
-	const getReadbleSelectors = (selectors: iSelectorInfo[] | null) => {
-		if (!selectors) return "";
-
-		return selectors
-			.map((selector) => {
-				return selector.value;
-			})
-			.join("\n");
-	};
-
-	const handleOnSelectorsPicked = (selectors: iSelectorInfo[], shouldNotify = true) => {
-		step.payload.selectors = selectors;
-		dispatch(updateRecordedStep(step, stepId));
-		if (shouldNotify) {
-			sendSnackBarEvent({ type: "success", message: "Selectors updated" });
-		}
-	};
-	const saveSelectorsOnUserInput = (e) => {
-		handleOnSelectorsPicked(transformStringSelectorsToArray(e.target.value), false);
-	};
-
-	return (
-		<div className={"px-20 py-24"} css={[stepMetaInfoContainerCss]}>
-			<div css={stepNameCss}>{title}</div>
-
-			<div className={"flex mt-34"}>
-				<textarea onChange={saveSelectorsOnUserInput} ref={textAreaRef} css={textAreaCss}>
-					{getReadbleSelectors(steps[stepId].payload.selectors)}
-				</textarea>
-				<div className={"ml-24"}>
-					<ul css={actionsListCss}>
-						<li>
-							<FieldSelectorPicker stepId={stepId}>choose selector</FieldSelectorPicker>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</div>
-	);
-};
-
-const textAreaCss = css`
-	background: rgba(217, 217, 217, 0.05);
-	border: 0.5px solid #212121;
-	border-radius: 10rem;
-	padding: 13rem 15rem;
-	height: 132rem;
-	width: 68%;
-	resize: none;
-
-	font-size: 12rem;
-
-	color: rgba(255, 255, 255, 0.54);
-`;
-
 const StepOverlayEditor = ({ stepId }) => {
 	const [showAdvanced, setShowAdvanced] = React.useState({ show: false, containerHeight: null });
 	const containerRef = React.useRef(null);
@@ -434,12 +371,12 @@ const StepOverlayEditor = ({ stepId }) => {
 		<div
 			onContextMenu={(e) => e.preventDefault()}
 			css={containerCss}
-			style={{ height: showAdvanced.containerHeight ? showAdvanced.containerHeight + "px" : "auto" }}
+			style={{ height: "auto" }}
 			ref={containerRef}
 		>
 			{showAdvanced.show ? (
 				<>
-					<StepAdvancedForm stepId={stepId} />
+					<SelectorEditorCard stepId={stepId} />
 				</>
 			) : (
 				<>
@@ -496,7 +433,7 @@ const deleteCss = css`
 	}
 `;
 const actionsListCss = css`
-	ont-family: "Gilroy";
+	font-family: "Gilroy";
 
 	font-weight: 400;
 	font-size: 12rem;

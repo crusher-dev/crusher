@@ -462,6 +462,28 @@ const ExportIcon = (props) => (
 );
 
 
+const AddRoundedIcon = (props) => (
+<svg
+	viewBox={'0 0 16 16'}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <rect width={16} height={16} rx={5} fill="#9867FF" />
+    <g clipPath="url(#a)">
+      <path
+        d="M11.619 6.956H8.844V4.38a.881.881 0 1 0-1.762 0v2.575h-2.7a.881.881 0 0 0 0 1.762h2.7v2.9a.88.88 0 1 0 1.762.001V8.718h2.775a.88.88 0 1 0 0-1.762Z"
+        fill="#000"
+      />
+    </g>
+    <defs>
+      <clipPath id="a">
+        <path fill="#fff" transform="translate(3.5 3.5)" d="M0 0h9v9H0z" />
+      </clipPath>
+    </defs>
+  </svg>
+  )
+
 export {
 	BackIconV3,
 	DisabledCloudIcon,
@@ -493,5 +515,6 @@ export {
 	CorrectCircleIcon,
 	EditIconV4,
 	ExportIcon,
-	VercelIcon
+	VercelIcon,
+	AddRoundedIcon
 };

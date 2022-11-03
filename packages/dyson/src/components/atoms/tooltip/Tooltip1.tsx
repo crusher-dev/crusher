@@ -28,7 +28,11 @@ export type TooltipWrapperProps = {
     timer?: any;
     wrapperCSS?: SerializedStyles;
     css?: SerializedStyles;
-} & React.DetailedHTMLProps<any, any>;
+} & React.DetailedHTMLProps<any, any
+>;
+export const HoverCardTooltipContext = React.createContext({
+    update: () => {}
+});
 
 export const TooltipBox = ({ children, className = "tooltip-box", el = "div" }) => {
     const [container] = React.useState(() => {
@@ -133,24 +137,26 @@ export const HoverCard: React.FC<TooltipWrapperProps> = (
         <React.Fragment>
             <ClonedElement />
             {content !== null && show && !disabled && (
-                <TooltipBox>
-                    <div
-                        css={[tooltipWrapper(padding), wrapperCSS]}
-                        ref={floating}
-                        style={{
-                            position: strategy,
-                            top: y ?? "",
-                            left: x ?? "",
-                        }}
-                        onMouseOver={eventListener().onMouseOver}
-                        onMouseLeave={eventListener().onMouseLeave}
-                    >
-                        {supportPadding ? (supportPadding) : ""}
-                        <div css={[tooltipBox, props.css, tooltipCSS]} className={className}>
-                            {content}
+                <HoverCardTooltipContext.Provider value={{ update: update }}>
+                    <TooltipBox>
+                        <div
+                            css={[tooltipWrapper(padding), wrapperCSS]}
+                            ref={floating}
+                            style={{
+                                position: strategy,
+                                top: y ?? "",
+                                left: x ?? ""
+                            }}
+                            onMouseOver={eventListener().onMouseOver}
+                            onMouseLeave={eventListener().onMouseLeave}
+                        >
+                            {supportPadding ? (supportPadding) : ""}
+                            <div css={[tooltipBox, props.css, tooltipCSS]} className={className}>
+                                {content}
+                            </div>
                         </div>
-                    </div>
-                </TooltipBox>
+                    </TooltipBox>
+                </HoverCardTooltipContext.Provider>
             )}
         </React.Fragment>
     );

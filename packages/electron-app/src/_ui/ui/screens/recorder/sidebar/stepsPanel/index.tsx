@@ -64,13 +64,6 @@ const StepsPanel = ({ className }: IProps) => {
 
 	const recorderState = useSelector(getRecorderState);
 	React.useEffect(() => {
-		if (failedCard) {
-			// 	requestAnimationFrame(() => {
-			// 	const testListContainer: any = document.querySelector("#steps-list-container");
-			// 	const elementHeight = testListContainer.scrollHeight;
-			// 	testListContainer.scrollBy(0, elementHeight);
-			// });
-		}
 	}, [!!failedCard]);
 	const toggleStatusBar = React.useCallback(() => {
 		setIsStatusBarMaximised(!isStatusBarMaximised);
@@ -82,8 +75,6 @@ const StepsPanel = ({ className }: IProps) => {
 		},
 		[toggleSelectItem],
 	);
-
-
 
 	const remainingStepsList = React.useMemo(() => {
 		if (!remainingSteps) return [];
@@ -228,7 +219,7 @@ const StepsPanel = ({ className }: IProps) => {
 	}, [failedSteps.length]);
 
 	const handlePause = () => {
-		performPauseStepsExecution();	
+		performPauseStepsExecution();
 	}
 
 	return (
@@ -237,7 +228,7 @@ const StepsPanel = ({ className }: IProps) => {
 				<Text css={sectionHeadingCss} className="mt-3">{recordedSteps.length} steps</Text>
 				<div css={sectionActionsCss}>
 					<HoverButton title={"skip this step"} onClick={handlePause}>
-						<ForwardIcon  css={forwrdIconCss} />
+						<ForwardIcon css={forwrdIconCss} />
 					</HoverButton>
 					<HoverButton title={"reload test"} onClick={handleResetTest}>
 						<ResetIcon css={resetIconCss} />

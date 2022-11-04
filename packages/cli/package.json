@@ -16,7 +16,6 @@
   "scripts": {
     "run": "ts-node src/bin/index.ts",
     "build": "webpack && PACKAGE_NAME=crusher.dev node scripts/copyPackageJson.js",
-    "build:debug": "webpack && PACKAGE_NAME=crusher-debug node scripts/copyPackageJson.js",
     "analyzer": "webpack-cli --profile --json > compilation-stats.json",
     "test": "jest"
   },

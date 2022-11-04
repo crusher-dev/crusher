@@ -131,7 +131,7 @@ jobs:
         run: GITHUB_ACTION_EVENT_NAME=${{ github.event_name }} node ./scripts/release-debug.js
         env:
           CRUSHER_GIT_RELEASE_TOKEN: ${{ secrets.CRUSHER_GIT_RELEASE_TOKEN }}
-          DOWNLOADS_REPO_URL: https://github.com/crusher-dev/crusher-debug-downloads/
+          DOWNLOADS_REPO_URL: https://github.com/crusher-dev/crusher-downloads/
 
       - run: cd output/crusher-cli && npm publish
         env:

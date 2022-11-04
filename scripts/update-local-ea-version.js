@@ -18,12 +18,18 @@ async function getLatestVersion(tag) {
    const octokit = new Octokit({ auth: process.env.CRUSHER_GIT_RELEASE_TOKEN });
    const release = await octokit.request('GET /repos/{owner}/{repo}/releases/latest', {
         owner: 'crusher-dev',
-        repo: IS_CRUSHER_MASTER_RELEASE? 'crusher-downloads': 'crusher-debug-downloads'
+        repo: 'crusher-downloads'
     });
 
     const releaseName = release.data.name;
     const releaseVersion = releaseName.substr(1);
-    const newVersion = semver.inc(releaseVersion, "patch");
+ 
+    let newVersion;
+    if(!IS_CRUSHER_MASTER_RELEASE) {
+        newVersion = semver.inc(releaseVersion, "prerelease", "canary");
+    } else {
+        newVersion = semver.inc(releaseVersion, "patch");
+    }
     console.timeEnd("Calculating latest version");
     return newVersion;
 }

@@ -10,14 +10,14 @@ const DIST_PATH = path.resolve(ARTIFACTS_PATH, "dist");
 const { Octokit } = require("@octokit/rest");
 
 const IS_CRUSHER_MASTER_RELEASE = process.env.GITHUB_ACTION_EVENT_NAME == "release";
-process.env.DOWNLOADS_REPO_URL = IS_CRUSHER_MASTER_RELEASE ? "https://github.com/crusher-dev/crusher-downloads/" : "https://github.com/crusher-dev/crusher-debug-downloads/";
+process.env.DOWNLOADS_REPO_URL = "https://github.com/crusher-dev/crusher-downloads/" ;
 
 async function createRelease(tag) {
     const octokit = new Octokit({ auth: process.env.CRUSHER_GIT_RELEASE_TOKEN });
 
     const release = await octokit.request('POST /repos/{owner}/{repo}/releases', {
         owner: 'crusher-dev',
-        repo: IS_CRUSHER_MASTER_RELEASE? 'crusher-downloads': 'crusher-debug-downloads',
+        repo: 'crusher-downloads',
         tag_name: tag,
         target_commitish: 'main',
         name: tag,
@@ -71,7 +71,7 @@ async function createRelease(tag) {
     await createRelease("v" + version);
     process.chdir(path.resolve(ARTIFACTS_PATH, '../'));
 
-    child_process.execSync(`cd packages/cli && RECORDER_VERSION=${version} pnpm ${IS_CRUSHER_MASTER_RELEASE? 'build': 'build:debug'}`);
+    child_process.execSync(`cd packages/cli && RECORDER_VERSION=${version} ${IS_CRUSHER_MASTER_RELEASE ? "IS_CRUSHER_MASTER_RELEASE=true" : ""} pnpm build`);
     const dir = fs.readdirSync(path.resolve(process.cwd(), "output/crusher-cli"));
     console.log("Dir is", dir);
 })();

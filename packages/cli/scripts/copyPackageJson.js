@@ -14,6 +14,9 @@ if (process.env.PACKAGE_NAME) {
 }
 
 const patchVersion = (versionStr) => {
+  if(!process.env.IS_CRUSHER_MASTER_RELEASE) {
+    return semver.inc(versionStr, "prepatch", "canary");
+  }
   return semver.inc(versionStr, "patch");
 };
 

@@ -133,6 +133,12 @@ jobs:
           CRUSHER_GIT_RELEASE_TOKEN: ${{ secrets.CRUSHER_GIT_RELEASE_TOKEN }}
           DOWNLOADS_REPO_URL: https://github.com/crusher-dev/crusher-downloads/
 
-      - run: cd output/crusher-cli && npm publish
+      - if: github.event_name == "release"
+        run: cd output/crusher-cli && npm publish --tag canary
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
+
+      - if: github.event_name != "release"
+        run: cd output/crusher-cli && npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}

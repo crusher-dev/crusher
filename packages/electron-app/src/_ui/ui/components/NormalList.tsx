@@ -103,14 +103,14 @@ const ListItem = ({ isActive, children, onClick, ...props }) => {
 
 const itemCss = (isActive) => css`
 	position: relative;
-	background: ${isActive ? "rgba(199, 81, 255, 0.14)" : "none"};
+	background: ${isActive ? "rgba(66, 66, 66, 0.14)" : "none"};
 	color: ${isActive ? "#fff" : "#A6A6A6"};
 	border-bottom: 1px solid rgba(153, 153, 153, 0.09);
 
 	:hover {
 		background: ${isActive
-			? `rgba(199, 81, 255, 0.14)`
-			: `linear-gradient(0deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.03)), rgba(54, 54, 54, 0.2)`} !important;
+		? `rgba(66, 66, 66, 0.14)`
+		: `linear-gradient(0deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.03)), rgba(54, 54, 54, 0.2)`} !important;
 	}
 `;
 export { NormalList };

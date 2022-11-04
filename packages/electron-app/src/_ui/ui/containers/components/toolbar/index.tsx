@@ -624,14 +624,9 @@ const Toolbar = (props: any) => {
 
 			<Conditional showIf={isTestBeingVerified}>
 				<div css={testBeingVerifiedContainerStyle}>
-					{/* <span
-						css={drinkCupTextStyle}
-					>
-						Drink a cup of coffee meanwhile
-					</span> */}
 					<div css={verifyStatusIconStyle}>
 						<LoadingIconV2 css={loadingIconStyle} />
-						<span css={loadingTextStyle}>Crusher is verifying your test. </span>
+						<TextBlock color="grey" fontSize={14}>Running test steps</TextBlock>
 					</div>
 				</div>
 			</Conditional>
@@ -642,22 +637,6 @@ const Toolbar = (props: any) => {
 					</Button>
 				</Conditional>
 				<Conditional showIf={!isRecorderInInitialState}>
-					{/* <div className={"ml-18 flex items-center"}>
-						<div
-							css={[
-								onlineDotStyle,
-								recorderState.type === TRecorderState.PERFORMING_ACTIONS
-									? css`
-											background: yellow;
-									  `
-									: undefined,
-							]}
-						/>
-						<Text id="recorder-status" css={recTextStyle} className={"ml-8"}>
-							{[TRecorderState.RECORDING_ACTIONS].includes(recorderState.type) ? "Rec." : "Waiting"}
-						</Text>
-					</div> */}
-
 					<div className={"ml-auto flex items-center"}>
 						<SettingsIcon onClick={setShowSettingsModal.bind(this, true)} css={settingsIconStyle} className={"ml-12"} />
 						<div id={"verify-save-test"} css={verifySaveTestContainerStyle}>
@@ -687,9 +666,7 @@ StepActionMenu.whyDidYouRender = true;
 
 Toolbar.whyDidYouRender = true;
 
-const loadingTextStyle = css`
-	margin-left: 12rem;
-`;
+
 const loadingIconStyle = css`
 	width: 24rem;
 `;
@@ -700,7 +677,7 @@ const verifyStatusIconStyle = css`
 	align-items: center;
 	font-size: 14rem;
 	margin-left: auto;
-	margin-right: 20rem;
+	gap: 08rem;
 `;
 const testBeingVerifiedContainerStyle = css`
 	display: flex;

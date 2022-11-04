@@ -50,7 +50,6 @@ const webInput = css`
 
 const TestListItem = ({ id, isItemSelected, onEdit, onUpdateEmoji, onDelete, onRename, test, deleteTestCallback }) => {
 	const [emoji, setEmoji] = React.useState(test.emoji);
-
 	const handleEmojiSelected = (emoji) => {
 		setEmoji(emoji.native);
 		onUpdateEmoji && onUpdateEmoji(id, emoji.native);

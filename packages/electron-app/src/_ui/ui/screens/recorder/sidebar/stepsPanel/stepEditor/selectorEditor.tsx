@@ -60,9 +60,7 @@ const SelectorEditorCard = ({ stepId }) => {
 		});
 		return 	getReadbleSelectors(filteredSelectors).map((selector, index) => {
 			return (
-				<div css={[selectorItemCss, index % 2 == 0 ? undefined : css`background: transparent;`]} key={index} className={"flex flex-col px-20 py-12"}>
-					{selector}
-				</div>
+				<input type="text" defaultValue={selector} css={[selectorItemCss, index % 2 == 0 ? undefined : css`background: transparent;`]} key={index} className={"flex px-20 py-12"}/>
 			);
 		})
 	}, [step, showAll]);
@@ -130,6 +128,7 @@ const selectorItemCss = css`
 	border-style: solid;
 	border-color: rgba(255, 255, 255, 0.06);
 	border-radius: 0px;
+	width: 100%;
 `;
 const addButtonCss = css`
 	width: fit-content;

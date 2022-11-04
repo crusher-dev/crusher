@@ -47,7 +47,7 @@ function setupElectronApp() {
 		copyright: "Copyright © 2021",
 		credits: "Made with ❤️ by crusher team",
 	});
-	if(isProduction()) {
+	if (isProduction()) {
 		app.setAsDefaultProtocolClient("crusher");
 	} else {
 		console.log("Registering protocol client", process.execPath, process.argv);
@@ -69,8 +69,10 @@ let isDuplicateInstance = false;
 const gotSingleInstanceLock = app.requestSingleInstanceLock();
 isDuplicateInstance = !gotSingleInstanceLock;
 
-if (process.platform === "linux" && !isDuplicateInstance) {
+if (!isDuplicateInstance) {
 	app.commandLine.appendSwitch("--remote-debugging-port", "0");
+}
+if (process.platform === "linux" && !isDuplicateInstance) {
 	onDidLoad(() => {
 		handlePossibleProtocolLauncherArgs(process.argv);
 	});
@@ -106,22 +108,22 @@ if (isDuplicateInstance) {
 
 function handleAppURL(url: string) {
 	const action = parseDeepLinkUrlAction(url);
-		onDidLoad((window) => {
-			if(action.commandName !== "run-local-build") {
+	onDidLoad((window) => {
+		if (action.commandName !== "run-local-build") {
 
-				window.getWebContents().loadURL(getAppURl() + "#/recorder").finally(() => {
-					window.handleGoFullScreen(null, {fullScreen: true});
-					window.focus();
-					console.log("Window loaded", action);
-					if (action) window.sendMessage("url-action", { action });
-				});
-			} else {
+			window.getWebContents().loadURL(getAppURl() + "#/recorder").finally(() => {
+				window.handleGoFullScreen(null, { fullScreen: true });
+				window.focus();
+				console.log("Window loaded", action);
 				if (action) window.sendMessage("url-action", { action });
-			}
-				// This manual focus call _shouldn't_ be necessary, but is for Chrome on
-			// macOS. See https://github.com/desktop/desktop/issues/973.
+			});
+		} else {
+			if (action) window.sendMessage("url-action", { action });
+		}
+		// This manual focus call _shouldn't_ be necessary, but is for Chrome on
+		// macOS. See https://github.com/desktop/desktop/issues/973.
 
-		});
+	});
 }
 
 app.on("open-url", (event, url) => {
@@ -196,7 +198,7 @@ function createWindow() {
 	mainWindow = window;
 }
 
-function onDidLoad(fn: OnDidLoadFn) {	
+function onDidLoad(fn: OnDidLoadFn) {
 	console.log(`onDidLoad`, !!onDidLoadFns, !!mainWindow);
 	if (onDidLoadFns) {
 		onDidLoadFns.push(fn);

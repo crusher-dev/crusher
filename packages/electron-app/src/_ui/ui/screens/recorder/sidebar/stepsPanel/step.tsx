@@ -135,7 +135,7 @@ const containerCss = (isDisabled) => css`
 	}
 	border-top: .5px solid transparent !important;
 	:hover {
-		background: ${isDisabled ? `inherit` : `rgba(199, 81, 255, 0.14)`};
+		background: ${isDisabled ? `inherit` : `rgba(66, 66, 66, 0.14)`};
 	}
 `;
 const activeItemCss = css`

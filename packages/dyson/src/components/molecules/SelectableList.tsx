@@ -226,14 +226,14 @@ const ListItem = ({ isActive, children, onClick, ...props }) => {
 
 const itemCss = (isActive) => css`
 	position: relative;
-	background: ${isActive ? "rgba(199, 81, 255, 0.14)" : "none"};
+	background: ${isActive ? "rgba(66, 66, 66, 0.14)" : "none"};
 	color: ${isActive ? "#fff" : "#A6A6A6"};
 	border-bottom: 0.5rem solid rgba(153, 153, 153, 0.09);
 
 	transition: background 150ms ease-out, border 150ms ease-out, transform 150ms ease-out;
 
 	:hover {
-		background: ${isActive ? `rgba(199, 81, 255, 0.14)` : `rgba(255, 255, 255, 0.03)`} !important;
+		background: ${isActive ? `rgba(66, 66, 66, 0.14)` : `rgba(255, 255, 255, 0.03)`} !important;
 	}
 `;
 export { ListBox };

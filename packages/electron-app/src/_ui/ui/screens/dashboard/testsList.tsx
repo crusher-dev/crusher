@@ -31,7 +31,7 @@ const EditableTestName = ({ testName, testId }) => {
 		<ResizableInput
 			id={testId}
 			labelCss={css`
-				padding-left: 12px;
+			padding-left: 10px;
 			`}
 			ref={inputRef}
 			onChange={handleOnChange}

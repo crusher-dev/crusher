@@ -18,6 +18,7 @@ class ProxyManager {
 
 	private handleProxyResults(result: string) {
 		const jsonContentRaw = result.replace(/(\r\n|\n|\r)/gm, "").replace(/ /g, "");
+		console.log("JSON content", jsonContentRaw);
 		this._results = JSON.parse(jsonContentRaw);
 
 		console.info("[ProxyManager]: Tunnel is ready and live");

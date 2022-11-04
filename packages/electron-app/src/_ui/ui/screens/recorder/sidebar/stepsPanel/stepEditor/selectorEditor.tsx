@@ -84,9 +84,6 @@ const SelectorEditorCard = ({ stepId }) => {
 				</div>
 			</div>
 			<div className={"flex-column mt-12 custom-scroll"} style={{overflowY: "overlay", overflowX: "hidden", flex: 1}}>
-				{/* <textarea onChange={saveSelectorsOnUserInput} ref={textAreaRef} css={textAreaCss}>
-					{getReadbleSelectors(steps[stepId].payload.selectors)}
-				</textarea> */}
 				<div css={selectorListCss} >
 					{selectorsComponent}
 				</div>

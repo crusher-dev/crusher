@@ -181,7 +181,6 @@ const LoadingIconV2 = (props: any) => {
 			</circle>
 		</svg>
 	);
-	);
 };
 
 const DownIcon = (props: any) => {

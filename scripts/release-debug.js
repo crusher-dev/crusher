@@ -10,8 +10,7 @@ const DIST_PATH = path.resolve(ARTIFACTS_PATH, "dist");
 const { Octokit } = require("@octokit/rest");
 
 const IS_CRUSHER_MASTER_RELEASE = process.env.GITHUB_ACTION_EVENT_NAME == "release";
-
-console.log("event", process.env.GITHUB_ACTION_EVENT_NAME )
+process.env.DOWNLOADS_REPO_URL = IS_CRUSHER_MASTER_RELEASE ? "https://github.com/crusher-dev/crusher-downloads/" : "https://github.com/crusher-dev/crusher-debug-downloads/";
 
 async function createRelease(tag) {
     const octokit = new Octokit({ auth: process.env.CRUSHER_GIT_RELEASE_TOKEN });

@@ -17,8 +17,10 @@ class ProxyManager {
 	constructor(private store: Store<unknown, AnyAction>) { }
 
 	private handleProxyResults(result: string) {
-		const jsonContentRaw = result.replace(/(\r\n|\n|\r)/gm, "").replace(/ /g, "");
-		console.log("JSON content", jsonContentRaw);
+		const extractJsonRegex = new RegExp(/\{.*}/gm);
+		const matches = result.match(extractJsonRegex);
+		if (!matches) throw new Error("Error while reading tunnel logs");
+		const jsonContentRaw = matches[0].replace(/(\r\n|\n|\r)/gm, "").replace(/ /g, "");
 		this._results = JSON.parse(jsonContentRaw);
 
 		console.info("[ProxyManager]: Tunnel is ready and live");

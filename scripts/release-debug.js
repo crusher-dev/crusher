@@ -66,7 +66,7 @@ async function createRelease(tag) {
     }
 
     const dists = fs.readdirSync(DIST_PATH);
-    const [_, version] = new RegExp(/Crusher\.Recorder\-([\d.]*)\-/gm).exec(dists[0]);
+    const [_, version] = new RegExp(/Crusher\.Recorder\-(.*)-(mac|linux)/gm).exec(dists[0]);
 
     await createRelease("v" + version);
     process.chdir(path.resolve(ARTIFACTS_PATH, '../'));

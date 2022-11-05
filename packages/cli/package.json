@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "ora": "^5.0.0",
+    "string-width": "^5.1.2",
     "yargs": "^17.5.1"
   },
   "devDependencies": {

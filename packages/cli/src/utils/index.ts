@@ -3,6 +3,8 @@ import { IUserInfo } from "../state/userInfo";
 import * as path from "path";
 import * as fs from "fs";
 import * as ini from "ini";
+import axios from "axios";
+import * as semver from "semver";
 
 const getLoggedInUser = (): IUserInfo => {
   if (!isCrusherConfigured()) {
@@ -96,10 +98,37 @@ const findClosestPackageJson = (start = null, finalDir = null) => {
   return findClosestPackageJson(dir, finalDir);
 };
 
+let _latestVersion = null;
+
+const getLatestCliVersion = async () => {
+  if(_latestVersion) return _latestVersion;
+
+  return axios.get("https://registry.npmjs.org/crusher.dev").then((res) => {
+    const latestVersion = res.data["dist-tags"].latest;
+    _latestVersion = latestVersion;
+    return latestVersion;
+  }).catch((err) => null);
+}
+
+const getCurrentCLIVersion = () => {
+  const packageJson = eval("require")("../../package.json");
+  return packageJson.version;
+}
+
+const checkIfNewUpdateAvilable = async () => {
+  const latestVersion = await getLatestCliVersion();
+  const currentVersion = eval("require")("../../package.json").version;
+
+  return semver.gt(latestVersion, currentVersion);
+};
+
 export {
   getLoggedInUser,
   isUserLoggedIn,
   findGitRoot,
   getProjectNameFromGitInfo,
-  findClosestPackageJson
+  findClosestPackageJson,
+  getLatestCliVersion,
+  checkIfNewUpdateAvilable,
+  getCurrentCLIVersion
 };

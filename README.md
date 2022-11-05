@@ -14,7 +14,7 @@
 
 <h3 align="center">Fast all-in-one testing with low-code</h3>
 <p align="center">
-<img src="https://user-images.githubusercontent.com/6849438/197889752-c1f60b2a-873b-4579-b651-e43010452483.gif"/>
+<img src="https://user-images.githubusercontent.com/6849438/200099357-eaadec7f-8692-42f7-95a4-96b162370c2e.gif"/>
 <br/>
   Open-source testing framework to test with minimal effort
 </p>

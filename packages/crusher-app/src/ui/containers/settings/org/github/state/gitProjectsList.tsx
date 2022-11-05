@@ -10,7 +10,7 @@ import { useAtom } from "jotai";
 import React, { useCallback } from "react";
 import { mutate } from "swr";
 import { addGithubProject } from "../api";
-import { connectedToGitAtom, useGithubAuthorize } from "../hooks";
+import { connectedToGitAtom, useGithubAuthorize, useGithubData } from "../hooks";
 
 export const  GithubProjectsList = () => {
 	const [gitInfo] = useAtom(connectedToGitAtom);

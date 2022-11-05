@@ -15,7 +15,7 @@ if (process.env.PACKAGE_NAME) {
 
 const patchVersion = (versionStr) => {
   if(!process.env.IS_CRUSHER_MASTER_RELEASE) {
-    return semver.inc(versionStr, "prepatch", "canary");
+    return semver.inc(versionStr, "prerelease", "canary");
   }
   return semver.inc(versionStr, "patch");
 };
@@ -23,6 +23,11 @@ const patchVersion = (versionStr) => {
 (async () => {
   const version = await axios.get(url.resolve("https://registry.npmjs.org/", packageJSON.name)).then((res) => {
     const latestVersion = res.data["dist-tags"].latest;
+    const canaryVersion = res.data["dist-tags"].canary;
+    // check if canaryVersions is greater than latest version
+    if(canaryVersion && semver.gt(canaryVersion, latestVersion)) {
+      return canaryVersion;
+    }
     return latestVersion;
   }).catch((err) => null);
 

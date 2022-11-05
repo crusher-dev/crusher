@@ -168,7 +168,7 @@ class IntegrationsController {
 			} else {
 				await this.userAuthService.setUserAuthCookies(githubRegisteredUser.id, githubRegisteredUser.teamId, req, res);
 			}
-			const url = new URL(resolvePathToFrontendURI("/login_sucessful?github_token=" + (tokenInfo as any).token));
+			const url = new URL(resolvePathToFrontendURI("/?github_token=" + (tokenInfo as any).token));
 			if(state.lK) {
 				url.searchParams.append("lK", state.lK);
 			}

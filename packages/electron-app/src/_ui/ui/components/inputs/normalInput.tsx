@@ -3,7 +3,7 @@ import { css } from "@emotion/react";
 import React, { useState, useCallback } from "react";
 
 const NormalInput = React.forwardRef(
-	({ placeholder, handleUrlReturn, inputCss: _inputCss, inputWrapperCss, initialValue, className, rightIcon, ...props }, ref) => {
+	({ placeholder, handleUrlReturn, inputCss: _inputCss, inputWrapperCss, initialValue, rightIcon, ...props }, ref) => {
 		const [isInFocus, setIsInFocus] = useState(false);
 		const [url, setIsUrl] = useState(initialValue);
 

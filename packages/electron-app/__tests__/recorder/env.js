@@ -26,7 +26,7 @@ export function getLaunchOptions() {
       case "linux":
               executableConfig = {
                   executablePath: process.env.VARIANT === "release" ? path.resolve(__dirname, `../../../../output/crusher-electron-app-release/linux/linux-unpacked/electron-app`) :  path.resolve(__dirname, `../../bin/linux-x64/electron`),
-                  args: process.env.VARIANT === "release" ? undefined : [path.resolve(__dirname, "../../../../output/crusher-electron-app"), "--open-recorder"],
+                  args: process.env.VARIANT === "release" ? undefined : [path.resolve(__dirname, "../../../../output/crusher-electron-app"), "--no-sandbox", "--open-recorder"],
               };
           break;
       default:

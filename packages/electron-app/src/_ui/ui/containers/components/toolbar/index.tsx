@@ -590,7 +590,7 @@ const Toolbar = (props: any) => {
 										: undefined,
 								]}
 							/>
-							<span className={"ml-6"} css={recorderStatusTextCss}>
+							<span className={"ml-6 recorder-status"} css={recorderStatusTextCss}>
 								{[TRecorderState.RECORDING_ACTIONS].includes(recorderState.type) ? "recording" : "waiting"}
 							</span>
 						</div>
@@ -609,6 +609,7 @@ const Toolbar = (props: any) => {
 					`}
 				>
 					<NormalInput
+						className={"url-input"}
 						placeholder={"Enter URL to test"}
 						onReturn={handleUrlReturn}
 						isError={urlInputError.value}

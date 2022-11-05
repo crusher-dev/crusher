@@ -239,7 +239,7 @@ class TestService {
 			additionalSelectColumns ? `, ${additionalSelectColumns}` : ""
 		} FROM public.tests ${additionalFromSource ? `, ${additionalFromSource}` : ""} LEFT JOIN public.users ON users.id = tests.user_id LEFT JOIN public.jobs ON jobs.id = tests.draft_job_id LEFT JOIN public.job_reports ON job_reports.id = jobs.latest_report_id WHERE TRUE ${
 			filter.projectId ? `AND tests.project_id = ?` : ""
-		} ${filter.userId ? ` AND users.id = ? AND` : ""}`;
+		} ${filter.userId ? ` AND users.id = ?` : ""}`;
 
 		if (filter.projectId) {
 			queryParams.push(filter.projectId);

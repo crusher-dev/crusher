@@ -18,8 +18,7 @@ export const BlankBase: React.FC<BlankBaseProps> = ({ className, children }) => 
 };
 
 const baseCSS = css`
-	background: linear-gradient(179deg, #0a0b0c 10.44%, #0c0d0e 100%);
-
+    background: linear-gradient(rgb(8, 8, 8) 0%, rgb(10, 10, 10) 100%);
 	color: white;
 	height: 100vh;
 	width: 100vw;

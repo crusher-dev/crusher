@@ -10,12 +10,8 @@ const DeveloperInput = () => {
 	return (
 		<div ref={mainRef} css={[contentCss]}>
 			<div css={headerCss}>
-				<div css={headingCss}>In project, run</div>
-				<div css={docsLinkCss}>
-					<a href="https://docs.crusher.dev" target="_blank" className="flex">
-						Docs <NewTabSVG className={"ml-8 mb-4"} />
-					</a>
-				</div>
+				<div css={headingCss}>In git project, run</div>
+
 			</div>
 			<div css={inputFormContainerCss}>
 				<LinkBox css={linkBoxCss} value="npx crusher-cli">
@@ -24,8 +20,8 @@ const DeveloperInput = () => {
 							width: 13px;
 							height: 13px;
 							position: absolute;
-							right: 13px;
-							top: 13px;
+							right: 20px;
+							top: 16px;
 							:hover {
 								opacity: 0.8;
 							}
@@ -33,17 +29,7 @@ const DeveloperInput = () => {
 					/>
 				</LinkBox>
 			</div>
-			<div
-				css={[
-					noteCss,
-					css`
-						padding-left: 2px;
-						margin-top: 10px;
-					`,
-				]}
-			>
-				Run in git repo
-			</div>
+
 
 			<div css={waitinContainerCss}>
 				<div css={waitingLeftContainerCss}>
@@ -51,7 +37,13 @@ const DeveloperInput = () => {
 					<div>Waiting for a test to be created.</div>
 				</div>
 
-				<div css={howToDoItTextCss}>How to do it?</div>
+				<div css={howToDoItTextCss}>
+					<div css={docsLinkCss}>
+						<a href="https://docs.crusher.dev" target="_blank" className="flex">
+							Docs <NewTabSVG className={"ml-8 mb-4"} />
+						</a>
+					</div>
+				</div>
 			</div>
 		</div>
 	);
@@ -117,20 +109,25 @@ const docsLinkCss = css`
 	}
 `;
 const linkBoxCss = css`
-	font-family: "Gilroy";
-	font-style: normal;
-	font-weight: 500;
-	font-size: 14px;
+
+	input{
+		font-family: "Gilroy";
+		font-style: normal;
+		font-weight: 500;
+		font-size: 15px;
+		letter-spacing: .8px;
+	}
 	text-align: center;
-	letter-spacing: 0.01em;
-	padding: 10rem 18rem;
-	width: 250px;
+
+	padding: 14rem 18rem;
+	width: 280px;
 	background: #000;
-	color: #a864ff;
+	color: #d13cff;
+	letter-spacing: 1.4px !important;
 	position: relative;
 
 	border: 0.5px solid rgba(255, 255, 255, 0.21);
-	border-radius: 11px;
+	border-radius: 14px;
 `;
 
 const headingCss = css`
@@ -151,26 +148,10 @@ const contentCss = css`
 const inputFormContainerCss = css`
 	display: flex;
 	gap: 10px;
-	margin-top: 16px;
+	margin-top: 24px;
 	width: 100%;
 `;
-const noteCss = css`
-	font-family: "Gilroy";
-	font-style: normal;
-	font-weight: 400;
-	font-size: 12px;
-	letter-spacing: 0.03em;
-	margin-top: 20px;
-	color: rgba(255, 255, 255, 0.35);
 
-	font-family: "Gilroy";
-	font-style: normal;
-	font-weight: 400;
-	font-size: 13rem;
-	letter-spacing: 0.03em;
-
-	color: rgba(255, 255, 255, 0.35);
-`;
 
 const ClipboardIcon = (props) => (
 	<svg css={css`0 0 13 13`} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>

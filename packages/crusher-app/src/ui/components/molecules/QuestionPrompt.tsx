@@ -12,8 +12,8 @@ const QuestionPrompt = ({ className, defaultValue, callback, ...props }: { class
 	return (
 		<div css={[developerQuestionCss]} className={String(className)}>
 			<div css={titleContainerCss}>
-				<div css={headingCss}>Are you a developer</div>
-				<div css={titleTaglineCss}>run commands in terminal</div>
+				<div css={headingCss}>Are you a developer?</div>
+				<div css={titleTaglineCss}>you need to run a command in terminal</div>
 			</div>
 			<div css={yesNoButtonContainerCss} {...props}>
 				<div css={[yesNoButtonCss, isYes ? selectedButtonCss : undefined]} onClick={handleSelect.bind(this, true)}>
@@ -35,7 +35,10 @@ const titleContainerCss = css`
 `;
 
 const titleTaglineCss = css`
-	margin-top: 6rem;
+	margin-top: 10rem;
+	letter-spacing: .3px;
+	color: grey;
+	font-size: 13rem;
 `;
 
 const developerQuestionCss = css`
@@ -46,15 +49,14 @@ const developerQuestionCss = css`
 	width: 100%;
 	transition: transform 0.3s;
 	display: flex;
-	align-items: center;
+	align-items: baseline;
 `;
 
 const headingCss = css`
 	font-family: "Cera Pro";
 	font-style: normal;
-	font-weight: 800;
+	font-weight: 500;
 	font-size: 18rem;
-	/* identical to box height */
 	color: #ffffff;
 `;
 
@@ -72,17 +74,18 @@ const yesNoButtonContainerCss = css`
 `;
 
 const yesNoButtonCss = css`
-	border: 0.5px solid #212121;
-	border-radius: 23423px;
+	border: 0.5px solid #454545;
+	border-radius: 12px;
 	font-family: "Gilroy";
 	font-style: normal;
 	font-weight: 600;
 	font-size: 14px;
+	letter-spacing: .4px;
 	text-align: center;
 
 	color: #ffffff;
-	padding: 6px 4px;
-	width: 116px;
+	padding: 8px 4px;
+	width: 84px;
 	display: flex;
 	justify-content: center;
 
@@ -103,8 +106,9 @@ const SelectedIcon = (props) => (
 );
 
 const selectedButtonCss = css`
-	background: linear-gradient(0deg, #9651ef, #9651ef), linear-gradient(0deg, #8c45e8, #8c45e8), #cd60ff;
-	border: 1px solid rgba(169, 84, 255, 0.4);
+	color: #fffff;
+    background: #ffffff1a;
+	border: .5px solid rgba(255, 255, 255, 0.2);
 	gap: 8px;
 	:hover {
 		opacity: 1;

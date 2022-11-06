@@ -55,7 +55,7 @@ const CrusherOnboarding = () => {
 	const NoProjectContainer = (
 		<div className="flex mt-60 flex-col">
 			<div>
-				<div css={welcomeHeadingCss}>Create test with Crusher</div>
+				<div css={welcomeHeadingCss}>Install Crusher in your project</div>
 			</div>
 			<QuestionPrompt
 				css={css`
@@ -81,10 +81,10 @@ const CrusherOnboarding = () => {
 								css={[
 									_step.id === selectedOnboardingStep
 										? css`
-												color: #9f72ff;
+												color: #747474;
 										  `
 										: css`
-												color: #515151;
+												color: #747474;
 										  `,
 									css`
 										:hover {
@@ -116,13 +116,13 @@ const CrusherOnboarding = () => {
 };
 
 const welcomeHeadingCss = css`
-	font-family: "Gilroy";
+	font-family: "Cera pro";
 	font-style: normal;
-	font-weight: 700;
-	font-size: 20rem;
-	/* identical to box height, or 90% */
+	font-weight: 500;
+	font-size: 16rem;
+	color: #d0d0d0;
 
-	letter-spacing: -0.003em;
+	letter-spacing: .4px;
 `;
 
 const contentContainer = css`

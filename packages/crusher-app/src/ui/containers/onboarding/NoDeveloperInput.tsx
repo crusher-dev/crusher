@@ -8,8 +8,8 @@ const NoDeveloperInput = () => {
 		<div ref={mainRef} css={[contentCss]}>
 			<div css={mainContainerCss}>
 				<div css={titleContainerCss}>
-					<div css={headingCss}>download binary</div>
-					<div css={titleTaglineCss}>with recorder you can create and run test</div>
+					<div css={headingCss}>download app binary</div>
+					<div css={titleTaglineCss}>use recorder to create and run test</div>
 				</div>
 
 				<div css={downloadButtonContainerCss}>
@@ -35,7 +35,7 @@ const NoDeveloperInput = () => {
 };
 
 const downloadButtonCss = css`
-	background: linear-gradient(0deg, #9651ef, #9651ef), linear-gradient(0deg, #8c45e8, #8c45e8), #cd60ff;
+	background: #c819ff !important;
 	border: 0.5px solid rgba(169, 84, 255, 0.4);
 	border-radius: 8px;
 	font-family: "Gilroy";
@@ -65,7 +65,7 @@ const DownloadIcon = (props) => (
 
 const mainContainerCss = css`
 	display: flex;
-	align-items: center;
+	align-items: baseline;
 `;
 const downloadButtonContainerCss = css`
 	margin-left: auto;
@@ -76,14 +76,14 @@ const titleContainerCss = css`
 `;
 
 const titleTaglineCss = css`
-	margin-top: 6rem;
+	margin-top: 10rem;
 	font-family: "Gilroy";
 	font-style: normal;
 	font-weight: 400;
-	font-size: 12rem;
-	letter-spacing: 0.03em;
+	font-size: 13rem;
+	letter-spacing: .3px;16px
 
-	color: rgba(255, 255, 255, 0.35);
+	color: grey;
 `;
 
 const clockIconCss = css`
@@ -91,7 +91,7 @@ const clockIconCss = css`
 `;
 const waitinContainerCss = css`
 	display: flex;
-	align-items: center;
+	align-items: baseline;
 	margin-top: 100rem;
 
 	font-family: "Gilroy";
@@ -124,13 +124,13 @@ const ClockIcon = (props: any) => (
 const headingCss = css`
 	font-family: "Cera Pro";
 	font-style: normal;
-	font-weight: 800;
+	font-weight: 500;
 	font-size: 18rem;
 	/* identical to box height */
 	color: #ffffff;
 `;
 const contentCss = css`
-	margin-top: 20px;
+	margin-top: 16px;
 	width: 100%;
 	padding-top: 34px;
 	transition: height 0.3s;

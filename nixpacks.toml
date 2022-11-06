@@ -1,5 +1,5 @@
 [setup]
-aptPkgs = ["...", "nodePackages.pm2"] 
+aptPkgs = ["...", "nodePackages.pm2", "playwright"] 
 
 [phases.build]
 cmds = ['cp ecosystem.config.sample.js ecosystem.config.js', 'pnpm setup:ee']

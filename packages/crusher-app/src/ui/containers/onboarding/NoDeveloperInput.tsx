@@ -81,7 +81,7 @@ const titleTaglineCss = css`
 	font-style: normal;
 	font-weight: 400;
 	font-size: 13rem;
-	letter-spacing: .3px;16px
+	letter-spacing: .3px;
 
 	color: grey;
 `;

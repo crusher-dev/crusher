@@ -1,1 +1,1 @@
-npm run build && cd ../../output/crusher-server && node app.js
+pnpm run build && cd ../../output/crusher-server && node app.js

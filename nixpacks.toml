@@ -2,7 +2,4 @@
 aptPkgs = ["...", "nodePackages.pm2"] 
 
 [phases.build]
-cmds = ['cp ecosystem.config.sample.js ecosystem.config.js', 'pnpm setup:ee', 'sh scripts/build/build-crusher-server.sh']
-
-[start]
-cmd = 'pm2 start --only=crusher-server'
+cmds = ['cp ecosystem.config.sample.js ecosystem.config.js', 'pnpm setup:ee']

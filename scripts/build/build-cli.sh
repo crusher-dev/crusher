@@ -1,1 +1,1 @@
-cd packages/cli && pnpm build:debug && cd ../../
+cd packages/cli && pnpm build && cd ../../

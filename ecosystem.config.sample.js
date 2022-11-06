@@ -4,11 +4,13 @@ const { IS_PRODUCTION } = require('./ecosystem/config');
 
 console.log(`Starting pm2 for ${IS_PRODUCTION ? 'production' : 'development'}`);
 
+const USE_OUTPUTS_DIR = process.env.USE_OUTPUTS_DIR;
+
 module.exports = {
 	apps: [
 		{
 			name: 'crusher-app',
-			cwd: './packages/crusher-app',
+			cwd: USE_OUTPUTS_DIR ? './output/crusher-app/' : './packages/crusher-app',
 			script: IS_PRODUCTION ? 'node' : 'pnpm',
 			args: IS_PRODUCTION ? 'server.js' : 'run dev',
 			env: CRUSHER_APP_ENV,
@@ -16,7 +18,7 @@ module.exports = {
 		},
 		{
 			name: 'crusher-server',
-			cwd: './packages/crusher-server',
+			cwd: USE_OUTPUTS_DIR ? './output/crusher-server' : './packages/crusher-server',
 			script: IS_PRODUCTION ? 'node' : 'pnpm',
 			args: IS_PRODUCTION ? '-r source-map-support/register app.js' : 'run dev',
 			env: CRUSHER_SERVER_ENV,
@@ -24,7 +26,7 @@ module.exports = {
 		},
 		{
 			name: 'crusher-server-cron',
-			cwd: './packages/crusher-server',
+			cwd: USE_OUTPUTS_DIR ? './output/crusher-server' : './packages/crusher-server',
 			script: IS_PRODUCTION ? 'node' : 'pnpm',
 			args: IS_PRODUCTION ? 'cron.js' : 'run dev:cron',
 			env: CRUSHER_SERVER_ENV,
@@ -33,7 +35,7 @@ module.exports = {
 		{
 			merge_logs: true,
 			name: 'crusher-server-queue',
-			cwd: './packages/crusher-server',
+			cwd: USE_OUTPUTS_DIR ? './output/crusher-server' : './packages/crusher-server',
 			script: IS_PRODUCTION ? 'node' : 'pnpm',
 			args: IS_PRODUCTION ? '-r source-map-support/register queue.js' : 'run dev:queue',
 			env: CRUSHER_SERVER_ENV,
@@ -41,7 +43,7 @@ module.exports = {
 		},
 		{
 			name: 'test-runner',
-			cwd: './packages/test-runner',
+			cwd: USE_OUTPUTS_DIR ? './output/test-runner' : './packages/test-runner',
 			script: IS_PRODUCTION ? 'node' : 'pnpm',
 			args: IS_PRODUCTION ? 'index.js' : 'run start',
 			watch: ['src', 'config', 'util'],
@@ -49,14 +51,14 @@ module.exports = {
 		},
 		{
 			name: 'video-processor',
-			cwd: './packages/video-processor',
+			cwd: USE_OUTPUTS_DIR ? './output/video-processor' : './packages/video-processor',
 			script: IS_PRODUCTION ? 'node' : 'pnpm',
 			args: IS_PRODUCTION ? 'index.js' : 'run start',
 			env: VIDEO_PROCESSOR_ENV,
 		},
 		{
 			name: 'local-storage',
-			cwd: './packages/crusher-server',
+			cwd: USE_OUTPUTS_DIR ? './output/crusher-server' : './packages/crusher-server',
 			script: IS_PRODUCTION ? 'node' : 'pnpm',
 			args: IS_PRODUCTION ? '-r source-map-support/register storage.js' : 'run dev:storage',
 			watch: ['src', 'config'],

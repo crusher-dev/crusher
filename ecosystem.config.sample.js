@@ -5,6 +5,7 @@ const { IS_PRODUCTION } = require('./ecosystem/config');
 console.log(`Starting pm2 for ${IS_PRODUCTION ? 'production' : 'development'}`);
 
 const USE_OUTPUTS_DIR = process.env.USE_OUTPUTS_DIR;
+console.log(USE_OUTPUTS_DIR);
 
 module.exports = {
 	apps: [

@@ -18,6 +18,7 @@ import CrusherBase from "crusher-app/src/ui/layout/CrusherBase";
 import { DeveloperInput } from "./DeveloperInput";
 import { NoDeveloperInput } from "./NoDeveloperInput";
 import { SelectProjectContainer } from "./selectProject";
+import { usePageTitle } from "@hooks/seo";
 
 const steps = [{ id: OnboardingStepEnum.SURVEY, text: "Setup" }];
 
@@ -26,6 +27,8 @@ const CrusherOnboarding = () => {
 	const [isDeveloper, setIsDeveloper] = React.useState(true);
 	const [, updateOnboarding] = useAtom(updateMeta);
 	const [projects] = useAtom(projectsAtom);
+
+	usePageTitle("Install")
 
 	React.useEffect(() => {
 		const testCreatedPoll = setInterval(async () => {

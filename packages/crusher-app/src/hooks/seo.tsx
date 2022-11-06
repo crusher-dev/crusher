@@ -2,9 +2,9 @@ import { useEffect } from "react";
 
 export const usePageTitle = (title: string) => {
 	useEffect(() => {
-		setTimeout(() => {
+		requestAnimationFrame(() => {
 			document.title = `${title} | Crusher`;
-		}, 10);
+		});
 	}, [title]);
 };
 

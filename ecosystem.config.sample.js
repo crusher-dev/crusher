@@ -1,5 +1,5 @@
 // Centralize this config file
-const { CRUSHER_APP_ENV, CRUSHER_SERVER_ENV, TEST_RUNNER_ENV, VIDEO_PROCESSOR_ENV, CRUSHER_EXTENSION_ENV } = require('./ecosystem/env');
+const { CRUSHER_APP_ENV, CRUSHER_SERVER_ENV, TEST_RUNNER_ENV, VIDEO_PROCESSOR_ENV } = require('./ecosystem/env');
 const { IS_PRODUCTION } = require('./ecosystem/config');
 
 console.log(`Starting pm2 for ${IS_PRODUCTION ? 'production' : 'development'}`);
@@ -9,7 +9,7 @@ module.exports = {
 		{
 			name: 'crusher-app',
 			cwd: './packages/crusher-app',
-			script: IS_PRODUCTION ? 'node' : "pnpm",
+			script: IS_PRODUCTION ? 'node' : 'pnpm',
 			args: IS_PRODUCTION ? 'server.js' : 'run dev',
 			env: CRUSHER_APP_ENV,
 			merge_logs: true,

@@ -1,13 +1,12 @@
 require("dotenv").config();
-
-import "reflect-metadata";
-import { CronJob } from "cron";
-import { Container } from "typedi";
+import { BuildTriggerEnum } from "@modules/resources/builds/interface";
+import { ProjectEnvironmentService } from "@modules/resources/projects/environments/service";
 import { ProjectMonitoringService } from "@modules/resources/projects/monitoring/service";
 import { TestService } from "@modules/resources/tests/service";
-import { BuildTriggerEnum } from "@modules/resources/builds/interface";
 import { UsersService } from "@modules/resources/users/service";
-import { ProjectEnvironmentService } from "@modules/resources/projects/environments/service";
+import { CronJob } from "cron";
+import "reflect-metadata";
+import { Container } from "typedi";
 import { setupMetricsWatcher } from "./ee/metrics-watcher";
 
 const projectMonitoringService = Container.get(ProjectMonitoringService);
@@ -85,6 +84,4 @@ export async function init() {
 	await setupMetricsWatcher();
 }
 
-
 init();
-

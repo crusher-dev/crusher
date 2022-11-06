@@ -1,13 +1,12 @@
 require("dotenv").config();
 
-import "reflect-metadata";
-import { QueueManager } from "@modules/queue";
-import Container from "typedi";
 import { TEST_COMPLETE_QUEUE, TEST_EXECUTION_QUEUE, VIDEO_PROCESSOR_QUEUE } from "@crusher-shared/constants/queues";
-import * as path from "path";
-import * as fs from "fs";
+import { QueueManager } from "@modules/queue";
 import axios from "axios";
-import { Worker } from "bullmq";
+import * as fs from "fs";
+import * as path from "path";
+import "reflect-metadata";
+import Container from "typedi";
 
 const queueManager = Container.get(QueueManager);
 
@@ -134,4 +133,3 @@ async function setupInstanceHeartbeat(worker, redisClient) {
 }
 
 boot();
-

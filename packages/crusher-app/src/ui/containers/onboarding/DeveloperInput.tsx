@@ -55,20 +55,20 @@ const clockIconCss = css`
 const waitinContainerCss = css`
 	display: flex;
 	align-items: center;
-	margin-top: 100rem;
+	margin-top: 120rem;
 
 	font-family: "Gilroy";
 	font-style: normal;
 	font-weight: 400;
 	font-size: 13.7rem;
-	letter-spacing: 0.01em;
+	letter-spacing: .55px;
 
 	color: rgba(255, 255, 255, 0.62);
 `;
 const waitingLeftContainerCss = css`
 	display: flex;
 	align-items: center;
-	gap: 14rem;
+	gap: 12rem;
 `;
 const howToDoItTextCss = css`
 	margin-left: auto;

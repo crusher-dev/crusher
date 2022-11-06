@@ -28,7 +28,7 @@ const NoDeveloperInput = () => {
 					<div>Waiting for a test to be created.</div>
 				</div>
 
-				<div css={howToDoItTextCss}>How to do it?</div>
+
 			</div>
 		</div>
 	);
@@ -92,7 +92,7 @@ const clockIconCss = css`
 const waitinContainerCss = css`
 	display: flex;
 	align-items: baseline;
-	margin-top: 100rem;
+	margin-top: 160rem;
 
 	font-family: "Gilroy";
 	font-style: normal;
@@ -105,11 +105,10 @@ const waitinContainerCss = css`
 const waitingLeftContainerCss = css`
 	display: flex;
 	align-items: center;
-	gap: 8rem;
+	gap: 12rem;
+	letter-spacing: .5px;
 `;
-const howToDoItTextCss = css`
-	margin-left: auto;
-`;
+
 const ClockIcon = (props: any) => (
 	<svg viewBox={"0 0 16 16"} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 		<path

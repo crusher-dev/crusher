@@ -3,10 +3,11 @@ import "../utils/inquirer-patch";
 import { execSync } from 'child_process';
 import EntryCommand from '../commands/index';
 import { loadUserInfoOnLoad } from '../utils/hooks';
-import { Message } from '../utils/cliMessages';
+import { BlankMessage, Message } from '../utils/cliMessages';
 import { getProjectConfig, getProjectConfigPath } from '../utils/projectConfig';
 import { askUserLogin, installCrusherRecorder, makeSureSetupIsCorrect } from '../utils/setup';
 import { getRecorderDistCommand } from '../utils/utils';
+import { recorderVersion, RECORDER_MAC_BUILD } from '../constants';
 import { checkIfNewUpdateAvilable, getCurrentCLIVersion, getLatestCliVersion } from '../utils';
 import stringWidth from 'string-width';
 
@@ -39,10 +40,9 @@ const nodeVersion = process.version.match(/^v(\d+\.\d+)/)[1];
 		}
 
 		const cliVersion = await getCurrentCLIVersion();
-
-		Message(chalk.bgBlueBright.bold, ' crusher ', `${chalk.magenta.bold('v' + cliVersion)} launch sequence initiated 🦖\n`);
-
-		// Message(chalk.bgGray.bold, '  setup  ', `Few new commands added \n`);
+		
+		Message(chalk.bgBlueBright.bold, ' crusher ', `${chalk.magenta.bold('v' + cliVersion)} launch sequence initiated 🦖`);
+		BlankMessage(` app version ${chalk.gray('-->')} ${chalk.magenta.bold('v' + recorderVersion)}\n`);
 
 		const hasDiscordInveite = args && args[0]?.includes('--');
 

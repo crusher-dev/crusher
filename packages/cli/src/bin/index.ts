@@ -39,7 +39,6 @@ const nodeVersion = process.version.match(/^v(\d+\.\d+)/)[1];
 
 			console.log(output);
 		}
-
 		const cliVersion = await getCurrentCLIVersion();
 		
 		Message(chalk.bgBlueBright.bold, ' crusher ', `${chalk.magenta.bold('v' + cliVersion)} launch sequence initiated 🦖`);

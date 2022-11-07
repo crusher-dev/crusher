@@ -17,8 +17,10 @@ import { useBasicSEO } from "/src/hooks/seo";
 import { loadUserDataAndRedirect } from "/src/hooks/user";
 import { rootGlobalAtom } from "/src/store/atoms/global/rootAtom";
 import "/src/tailwind.css";
+import { useLoadTempData } from "@hooks/tempData";
 
 function App({ Component, pageProps }: AppProps<any>) {
+	useLoadTempData();
 
 	const [userDataLoaded] = loadUserDataAndRedirect({ fetchData: true, userAndSystemData: null });
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment

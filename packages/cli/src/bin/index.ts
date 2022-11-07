@@ -3,42 +3,41 @@ import "../utils/inquirer-patch";
 import { execSync } from 'child_process';
 import EntryCommand from '../commands/index';
 import { loadUserInfoOnLoad } from '../utils/hooks';
-import { Message } from '../utils/messages';
+import { Message } from '../utils/cliMessages';
 import { getProjectConfig, getProjectConfigPath } from '../utils/projectConfig';
 import { askUserLogin, installCrusherRecorder, makeSureSetupIsCorrect } from '../utils/setup';
 import { getRecorderDistCommand } from '../utils/utils';
-import { RECORDER_MAC_BUILD } from '../constants';
 import { checkIfNewUpdateAvilable, getCurrentCLIVersion, getLatestCliVersion } from '../utils';
 import stringWidth from 'string-width';
 
 const nodeVersion = process.version.match(/^v(\d+\.\d+)/)[1];
-(async() => {
+(async () => {
 	if (parseFloat(nodeVersion) >= 10.0) {
 
 		const args = process.argv.slice(2);
 		const helpArgs = ['-h', '--h', 'help', '--help', '-help'];
 
-		if(await checkIfNewUpdateAvilable()) {
+		if (await checkIfNewUpdateAvilable()) {
 			const latestVersion = await getLatestCliVersion();
 			const lines = [
 				`Crusher CLI update available: ${chalk.gray(await getCurrentCLIVersion())} → ${chalk.greenBright(latestVersion)}`,
 				`Run ${chalk.magentaBright(`npm install -g crusher.dev`)} to update`,
-			  ];
-			
-			  // TODO: Pull this into utils/format
-			
-			  const padding = 3;
-			  const longestLineLength = Math.max(...lines.map(line => stringWidth(line)));
-			  const horizontalRule = `  ${'─'.repeat(longestLineLength + padding * 2)}`;
-			  const output = (
+			];
+
+			// TODO: Pull this into utils/format
+
+			const padding = 3;
+			const longestLineLength = Math.max(...lines.map(line => stringWidth(line)));
+			const horizontalRule = `  ${'─'.repeat(longestLineLength + padding * 2)}`;
+			const output = (
 				`\n${horizontalRule}\n\n` +
 				`${lines.map(line => `  ${' '.repeat((longestLineLength - stringWidth(line)) / 2 + padding)}${line}`).join('\n')}\n\n` +
 				`${horizontalRule}\n\n`
-			  );
+			);
 
-			  console.log(output);
+			console.log(output);
 		}
-		
+
 		const cliVersion = await getCurrentCLIVersion();
 
 		Message(chalk.bgBlueBright.bold, ' crusher ', `${chalk.magenta.bold('v' + cliVersion)} launch sequence initiated 🦖\n`);

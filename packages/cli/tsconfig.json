@@ -2,7 +2,7 @@
   "compilerOptions": {
     "module": "commonjs",
     "esModuleInterop": true,
-    "target": "es6",
+    "target": "ES2017",
     "moduleResolution": "node",
     "declaration": true,
     "sourceMap": true,
@@ -10,7 +10,13 @@
     "noEmitOnError": false,
     "resolveJsonModule": true
   },
-  "include": ["src/**/*"],
-  "exclude": ["**/*.spec.ts"],
-  "lib": ["es2015"]
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "**/*.spec.ts"
+  ],
+  "lib": [
+    "es2017"
+  ]
 }

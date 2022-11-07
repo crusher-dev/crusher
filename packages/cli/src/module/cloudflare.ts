@@ -63,7 +63,7 @@ export class Cloudflare {
       const cloudflareDFile = resolvePathToAppDirectory("bin/cloudflared");
 
       Message(chalk.bgMagentaBright.bold, ' tools  ', `🚇 Creating cloudflare tunnel ${chalk.gray("-------")}\n`);
-      BlankMessage(`${chalk.gray('run with --debug mode if tunnel is not working.')}`);
+      BlankMessage(`${chalk.gray('run with CRUSHER_DEBUG=1 mode if tunnel is not working.')}`);
 
       if (!fs.existsSync(cloudflareDFile)) {
         BlankMessage(`${chalk.gray('Downloading cloudflare')}`);

@@ -100,12 +100,10 @@ const waitForLogin = async (loginKey) => {
 	const spinner = ora('Waiting for login').start();
 
 	const token = await new Promise((resolve) => {
-		console.log("Checking url", resolveBackendServerUrl(`/cli/status.key?loginKey=${loginKey}`));
 		const interval = setInterval(async () => {
 			const loginKeyStatus = await axios
 				.get(resolveBackendServerUrl(`/cli/status.key?loginKey=${loginKey}`))
 				.then((res) => res.data);
-				console.log("Status is", loginKeyStatus);
 			if (loginKeyStatus.status === "Validated") {
 				clearInterval(interval);
 				resolve(loginKeyStatus.userToken);

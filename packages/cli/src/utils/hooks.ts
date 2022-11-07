@@ -24,7 +24,7 @@ export const getDiscordInviteCode = () => {
 	const argv = yargs(hideBin(process.argv)).help(false).argv;
 	const commandsArr: Array<string> = argv["_"];
 
-	const shouldIgnoreParsing = argv["help"] || argv["h"] || commandsArr.some((cmd) => (["help", "login"].includes(cmd)));
+	const shouldIgnoreParsing = argv["help"] || argv["h"] || commandsArr.some((cmd) => (["help"].includes(cmd)));
 	if (shouldIgnoreParsing) return { shouldIgnore: true };
 	if (!argv["code"]) return;
 

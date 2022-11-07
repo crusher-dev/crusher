@@ -50,7 +50,7 @@ function setupElectronApp() {
 	if (isProduction()) {
 		app.setAsDefaultProtocolClient("crusher");
 	} else {
-		console.log("Registering protocol client", process.execPath, process.argv);
+		console.debug("Registering protocol client", process.execPath, process.argv);
 		app.setAsDefaultProtocolClient("crusher", process.execPath, [path.resolve(process.argv[1])]);
 	}
 }
@@ -199,7 +199,7 @@ function createWindow() {
 }
 
 function onDidLoad(fn: OnDidLoadFn) {
-	console.log(`onDidLoad`, !!onDidLoadFns, !!mainWindow);
+	console.debug(`onDidLoad`, !!onDidLoadFns, !!mainWindow);
 	if (onDidLoadFns) {
 		onDidLoadFns.push(fn);
 	} else {

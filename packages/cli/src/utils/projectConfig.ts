@@ -5,7 +5,7 @@ import * as path from 'path';
 import { findClosestPackageJson } from '.';
 import { APP_DIRECTORY } from '../constants';
 import { createDirIfNotExist } from '../utils/utils';
-import { BlankMessage, Message } from './messages';
+import { BlankMessage, Message } from './cliMessages';
 
 export function findCrusherProjectConfig(_start = null) {
 	let start: any = _start || process.cwd();

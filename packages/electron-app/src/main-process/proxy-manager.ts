@@ -4,6 +4,8 @@ import { AnyAction, Store } from "redux";
 import { readProjectConfig } from "../lib/project-config";
 import { setProxyInitializing, setProxyState } from "../store/actions/app";
 import { getRelativePath } from "../utils";
+import { Message, BlankMessage } from "@crusher-shared/modules/logger/utils";
+import { chalkShared } from "@shared/modules/logger";
 
 const resultsTunnelRegexp = new RegExp(/results\stunnel\s(.*)/gms);
 
@@ -22,10 +24,11 @@ class ProxyManager {
 		if (!matches) throw new Error("Error while reading tunnel logs");
 		const jsonContentRaw = matches[0].replace(/(\r\n|\n|\r)/gm, "").replace(/ /g, "");
 		this._results = JSON.parse(jsonContentRaw);
+		Message(chalkShared.bgMagentaBright.bold, ' tools  ', `🚇 Tunnel is ready and live\n`);
 
-		console.info("[ProxyManager]: Tunnel is ready and live");
-		// console.table
-		console.table(
+		// console.info("[ProxyManager]: Tunnel is ready and live");
+		// // console.table
+		(console as any).tablePlain(
 			Object.entries(this._results).map((a: any) => {
 				return { name: a[0], tunnel: a[1].tunnel, intercept: a[1].intercept };
 			}),
@@ -40,21 +43,30 @@ class ProxyManager {
 
 		const projectConfig = readProjectConfig(configFilePath);
 		if (!(projectConfig && projectConfig.proxy)) return;
-		console.info("Create tunnel proxy defined in " + getRelativePath(configFilePath));
+		(console as any).logPlain("\n");
+		// Message(chalkShared.bgMagentaBright.bold, ' tools  ', `🚇 Creating cloudflare tunnel from ${chalkShared.magentaBright(getRelativePath(configFilePath))}\n`);
+		// BlankMessage(`${chalkShared.gray('run with CRUSHER_DEBUG=1 mode if tunnel is not working.')}`);
+		// BlankMessage("Create tunnel proxy defined in " + getRelativePath(configFilePath));
 		this._logs = [];
 		try {
 			this.isDisabled = true;
 			const cliPath = app.commandLine.getSwitchValue("crusher-cli-path");
-			this._currentProxyProcess = child_process.exec(`node ${cliPath} tunnel --config=${configFilePath}`);
+			this._currentProxyProcess = child_process.exec(`node ${cliPath} tunnel --config=${configFilePath} --colors`);
 
 			this.store.dispatch(setProxyInitializing(true));
 
 			this._currentProxyProcess.stdout.on("data", (data) => {
 				const matches = resultsTunnelRegexp.exec(data.toString());
+	
+				if(data.includes(" ")) {
+					(console as any).logPlain(data);
+				}
+				else {
+					console.debug(`[ProxyManager/cloudflared] ${data.toString()}`);
+				}
 				if (data.includes("results tunnel") && matches) {
 					return this.handleProxyResults(matches[1]);
 				}
-				console.debug(`[ProxyManager/cloudflared] ${data.toString()}`);
 				this._logs.push(data.toString());
 			});
 			this._currentProxyProcess.stderr.on("data", (data) => {

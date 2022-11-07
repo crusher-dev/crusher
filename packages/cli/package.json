@@ -14,17 +14,16 @@
   },
   "engineStrict": true,
   "scripts": {
-    "run": "ts-node src/bin/index.ts",
+    "runcli": "ts-node src/bin/index.ts",
     "build": "webpack && PACKAGE_NAME=crusher.dev node scripts/copyPackageJson.js",
     "analyzer": "webpack-cli --profile --json > compilation-stats.json",
     "test": "jest"
   },
-  "dependencies": {
-    "ora": "^5.0.0",
-    "string-width": "^5.1.2",
-    "yargs": "^17.5.1"
-  },
+  "dependencies": {},
   "devDependencies": {
+    "ora": "^5.0.0",
+    "string-width": "4.2.2",
+    "yargs": "^17.5.1",
     "@babel/plugin-transform-modules-commonjs": "^7.16.8",
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-typescript": "^7.16.7",

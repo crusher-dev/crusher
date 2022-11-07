@@ -20,6 +20,7 @@ export default class CommandBase {
     this.program
       .option("-t, --token <string>", "Crusher user token")
       .option("-c, --config <string>", "Config file of the project")
+      .option("-c, --colors", "Enable colors for this")
       .parse(process.argv);
 
   }

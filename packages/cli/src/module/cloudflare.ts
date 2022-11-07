@@ -1,15 +1,16 @@
 import { downloadFile } from "../utils/common";
-
-import { resolveBackendServerUrl, resolvePathToAppDirectory } from "../utils/utils";
+import { resolvePathToAppDirectory } from "../utils/utils";
 import { execSync } from "child_process";
 import path from "path";
 import { getProjectConfig } from "../utils/projectConfig";
-import { getAppConfig } from "../utils/appConfig";
 import axios from "axios";
 
-import { CLOUDFLARED_URL } from "../constants";
 
-var { spawn, exec } = require("child_process");
+import { CLOUDFLARED_URL } from "../constants";
+import chalk from "chalk";
+import { BlankMessage, Message } from "../utils/cliMessages";
+
+var { spawn } = require("child_process");
 const fs = require("fs");
 const cliProgress = require('cli-progress');
 
@@ -44,12 +45,7 @@ async function installLinuxBuild() {
 
   await downloadFile(CLOUDFLARED_URL.LINUX, recorderZipPath, bar);
   execSync(`cd ${path.dirname(recorderZipPath)}  `, { stdio: "ignore" });
-
-  // await new Promise((res, rej) => {
-  //   setTimeout(res, 50);
-  // });
 }
-
 async function setupCloudflare() {
   if (process.platform === "darwin") {
     await installNSetupOnMac();
@@ -58,6 +54,7 @@ async function setupCloudflare() {
   }
 }
 export class Cloudflare {
+
   static async install() {
     await setupCloudflare();
   }
@@ -65,8 +62,12 @@ export class Cloudflare {
   static runTunnel(config: any | null = null) {
     return new Promise(async (resolve, rej) => {
       const cloudflareDFile = resolvePathToAppDirectory("bin/cloudflared");
+
+      Message(chalk.bgMagentaBright.bold, ' tools  ', `🚇 Creating cloudflare tunnel ${chalk.gray("-------")}\n`, true);
+      BlankMessage(`${chalk.gray('run with CRUSHER_DEBUG=1 mode if tunnel is not working.')}`, true);
+
       if (!fs.existsSync(cloudflareDFile)) {
-        console.log("Downloading cloudflared");
+        BlankMessage(`${chalk.gray('Downloading cloudflare')}`, true);
         await Cloudflare.install();
       }
 
@@ -74,6 +75,8 @@ export class Cloudflare {
       var data = projectConfig.proxy;
 
       const resultTunnelMap = {};
+
+      BlankMessage(`${chalk.gray(resolvePathToAppDirectory(`bin/cloudflared`))}\n`, true)
       const tunnelPromises = data.map(({ name, url, intercept }) => {
         return new Promise((res, rej) => {
           var spann;
@@ -82,19 +85,20 @@ export class Cloudflare {
               `tunnel`, `--url`, `${url}`
             ]);
 
-            console.log("URL", resolvePathToAppDirectory(`bin/cloudflared`), [
-              `tunnel --url ${url}`,
-            ])
+            BlankMessage(`init ${chalk.magenta(url)}`, true);
+
           } catch (e) {
             console.log("error", e);
           }
 
           spann.stdout.on("data", function (msg) {
+            // NOTE - run with debug mode only
             console.log(`[${name}]: `, msg);
           });
+
           spann.stderr.on("data", function (msg) {
             const msgInString = msg.toString();
-            console.log(`[${name}]: `, msgInString);
+            console.debug(`[${name}]: `, msgInString);
             if (msgInString.includes("trycloudflare")) {
               const regex = /https.*trycloudflare.com/g;
               const found = msgInString.match(regex);
@@ -119,12 +123,26 @@ export class Cloudflare {
       const proxyKeys = Object.keys(resultTunnelMap);
 
       // Wait until tunnel is reachable using axios
-      await proxyKeys.map((proxyKey) => {
+      await Promise.all(proxyKeys.map((proxyKey)=> {
         const tunnel = resultTunnelMap[proxyKey].tunnel;
         console.log("Tunnel is", `"${tunnel}"`);
 
-        return "Tunnel is reachable"
-      });
+        return new Promise((res, rej) => {
+          const interval = setInterval(async () => {
+            try {
+              const tunnelUrl = new URL(tunnel);
+              tunnelUrl.searchParams.append("random_blabla", Date.now().toString());
+              const response = await axios.get(`https://meta-api.crusher.dev/api/dev/cli/status?url=${tunnelUrl.toString()}`);
+              if(response && response.data && response.data.status && response.data.status < 500) {
+                res("Tunnel is reachable");
+                clearInterval(interval);
+              }
+            } catch (e) {
+              console.log(e.message);
+            }
+          }, 5000);
+        });
+      }))
 
       console.log("results tunnel", JSON.stringify(resultTunnelMap));
       resolve(resultTunnelMap);

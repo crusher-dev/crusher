@@ -8,6 +8,8 @@ const { checkIfBuildPresent } = require("./utils");
 const fs = require("fs");
 // shell.exec(`cd ${path.resolve("../../output/crusher-electron-app/playwright")} && pnpm install`);
 
+const SKIP_NOTARIZATION = process.env.SKIP_NOTARIZATION;
+
 const getIsArm = () => {
 	try {
 		const isCurrentlyTranslated = execSync("sysctl sysctl.proc_translated", { stdio: "pipe" });
@@ -37,7 +39,7 @@ builder
 				if (process.env.PUBLISH_RELEASE !== "always") return;
 
 				const { electronPlatformName, appOutDir } = context;
-				if (electronPlatformName !== "darwin") {
+				if (electronPlatformName !== "darwin" || SKIP_NOTARIZATION) {
 					return;
 				}
 

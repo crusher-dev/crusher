@@ -61,7 +61,16 @@ jobs:
         name: Build release for electron app
         run: cd packages/electron-app && BACKEND_URL=https://backend.crusher.dev FRONTEND_URL=https://app.crusher.dev pnpm release
 
-      - if: matrix.os == 'macos-latest'
+      - if: ${{ matrix.os == 'macos-latest' && github.event_name != 'release'  }} 
+        name: Build release for electron app
+        run: cd packages/electron-app && SKIP_NOTARIZATION=true BACKEND_URL=https://backend.crusher.dev FRONTEND_URL=https://app.crusher.dev PUBLISH_RELEASE=always pnpm release
+        env:
+          CSC_LINK: ${{ secrets.mac_certs }}
+          CSC_KEY_PASSWORD: ${{ secrets.mac_certs_password }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
+
+      - if: ${{ matrix.os == 'macos-latest' && github.event_name == 'release'  }} 
         name: Build release for electron app
         run: cd packages/electron-app && BACKEND_URL=https://backend.crusher.dev FRONTEND_URL=https://app.crusher.dev PUBLISH_RELEASE=always pnpm release
         env:

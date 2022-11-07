@@ -3,6 +3,7 @@ import { resolvePathToAppDirectory } from "../utils/utils";
 import { execSync } from "child_process";
 import path from "path";
 import { getProjectConfig } from "../utils/projectConfig";
+import axios from "axios";
 
 
 import { CLOUDFLARED_URL } from "../constants";
@@ -95,26 +96,26 @@ export class Cloudflare {
             console.log(`[${name}]: `, msg);
           });
 
-          // spann.stderr.on("data", function (msg) {
-          //   const msgInString = msg.toString();
-          //   console.log(`[${name}]: `, msgInString);
-          //   if (msgInString.includes("trycloudflare")) {
-          //     const regex = /https.*trycloudflare.com/g;
-          //     const found = msgInString.match(regex);
-          //     if (!!found) {
-          //       resultTunnelMap[name] = {
-          //         tunnel: found[0],
-          //         intercept: null
-          //       };
-          //       if (intercept) {
-          //         if (intercept instanceof RegExp) resultTunnelMap[name].intercept = { regex: (intercept as RegExp).toString() };
-          //         else resultTunnelMap[name].intercept = intercept;
-          //       }
+          spann.stderr.on("data", function (msg) {
+            const msgInString = msg.toString();
+            console.debug(`[${name}]: `, msgInString);
+            if (msgInString.includes("trycloudflare")) {
+              const regex = /https.*trycloudflare.com/g;
+              const found = msgInString.match(regex);
+              if (!!found) {
+                resultTunnelMap[name] = {
+                  tunnel: found[0],
+                  intercept: null
+                };
+                if (intercept) {
+                  if (intercept instanceof RegExp) resultTunnelMap[name].intercept = { regex: (intercept as RegExp).toString() };
+                  else resultTunnelMap[name].intercept = intercept;
+                }
 
-          //       res("Found tunnel");
-          //     }
-          //   }
-          // });
+                res("Found tunnel");
+              }
+            }
+          });
         });
       });
 
@@ -122,12 +123,26 @@ export class Cloudflare {
       const proxyKeys = Object.keys(resultTunnelMap);
 
       // Wait until tunnel is reachable using axios
-      await proxyKeys.map((proxyKey) => {
+      await Promise.all(proxyKeys.map((proxyKey)=> {
         const tunnel = resultTunnelMap[proxyKey].tunnel;
         console.log("Tunnel is", `"${tunnel}"`);
 
-        return "Tunnel is reachable"
-      });
+        return new Promise((res, rej) => {
+          const interval = setInterval(async () => {
+            try {
+              const tunnelUrl = new URL(tunnel);
+              tunnelUrl.searchParams.append("random_blabla", Date.now().toString());
+              const response = await axios.get(`https://meta-api.crusher.dev/api/dev/cli/status?url=${tunnelUrl.toString()}`);
+              if(response && response.data && response.data.status && response.data.status < 500) {
+                res("Tunnel is reachable");
+                clearInterval(interval);
+              }
+            } catch (e) {
+              console.log(e.message);
+            }
+          }, 5000);
+        });
+      }))
 
       console.log("results tunnel", JSON.stringify(resultTunnelMap));
       resolve(resultTunnelMap);

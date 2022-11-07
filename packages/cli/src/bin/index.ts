@@ -12,9 +12,10 @@ import { checkIfNewUpdateAvilable, getCurrentCLIVersion, getLatestCliVersion } f
 import stringWidth from 'string-width';
 
 const nodeVersion = process.version.match(/^v(\d+\.\d+)/)[1];
+
 (async () => {
 	if (parseFloat(nodeVersion) >= 10.0) {
-
+		
 		const args = process.argv.slice(2);
 		const helpArgs = ['-h', '--h', 'help', '--help', '-help'];
 

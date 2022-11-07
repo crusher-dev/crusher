@@ -61,6 +61,13 @@ export function setupLogger(crusherModuleName: string) {
 
 	function modifyNativeConsoleFunctions() {
 		(console as any).logPlain = console.log;
+		// Write original table function
+		(console as any).tablePlain = (...props) => {
+			const mainLog = console.log;
+			console.log = _log;
+			console.table(...props);
+			console.log = mainLog;
+		};
 		console.log = consoleMiddleware.bind(this, "info");
 		console.error = consoleMiddleware.bind(this, "error");
 		console.warn = consoleMiddleware.bind(this, "warn");

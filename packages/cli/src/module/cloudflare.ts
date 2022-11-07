@@ -63,11 +63,11 @@ export class Cloudflare {
     return new Promise(async (resolve, rej) => {
       const cloudflareDFile = resolvePathToAppDirectory("bin/cloudflared");
 
-      Message(chalk.bgMagentaBright.bold, ' tools  ', `🚇 Creating cloudflare tunnel ${chalk.gray("-------")}\n`);
-      BlankMessage(`${chalk.gray('run with CRUSHER_DEBUG=1 mode if tunnel is not working.')}`);
+      Message(chalk.bgMagentaBright.bold, ' tools  ', `🚇 Creating cloudflare tunnel ${chalk.gray("-------")}\n`, true);
+      BlankMessage(`${chalk.gray('run with CRUSHER_DEBUG=1 mode if tunnel is not working.')}`, true);
 
       if (!fs.existsSync(cloudflareDFile)) {
-        BlankMessage(`${chalk.gray('Downloading cloudflare')}`);
+        BlankMessage(`${chalk.gray('Downloading cloudflare')}`, true);
         await Cloudflare.install();
       }
 
@@ -76,7 +76,7 @@ export class Cloudflare {
 
       const resultTunnelMap = {};
 
-      BlankMessage(`${chalk.gray(resolvePathToAppDirectory(`bin/cloudflared`))}\n`)
+      BlankMessage(`${chalk.gray(resolvePathToAppDirectory(`bin/cloudflared`))}\n`, true)
       const tunnelPromises = data.map(({ name, url, intercept }) => {
         return new Promise((res, rej) => {
           var spann;
@@ -85,7 +85,7 @@ export class Cloudflare {
               `tunnel`, `--url`, `${url}`
             ]);
 
-            BlankMessage(`init ${chalk.magenta(url)}`);
+            BlankMessage(`init ${chalk.magenta(url)}`, true);
 
           } catch (e) {
             console.log("error", e);

@@ -27,7 +27,6 @@ export function loadUserDataAndRedirect({ fetchData = true, userAndSystemData = 
 	const [dataLoaded, setDataLoaded] = useState(false);
 	const [loginKey, setLoginKey] = useAtom(cliLoginUserKeyAtom);
 
-
 	useEffect(() => {
 
 		(async () => {
@@ -40,11 +39,9 @@ export function loadUserDataAndRedirect({ fetchData = true, userAndSystemData = 
 			}
 			updateInitialData(dataToConsider);
 
-			console.log("Redirecting user", loginKey, dataToConsider);
 			if (loginKey && loginKey !== "null" && dataToConsider.isUserLoggedIn) {
 				backendRequest(resolvePathToBackendURI("/cli/actions/login.user"), { method: RequestMethod.POST, payload: { loginKey } })
 					.then(() => {
-						alert("Login successful");
 						setLoginKey(null);
 						window.location.href = "/login_sucessful";
 					})

@@ -8,7 +8,7 @@ const LinkBox = ({ value, ...props }) => {
 	const handleOnClick = () => {
 		ref.current.select();
 		document.execCommand("copy");
-		sendSnackBarEvent({ type: "success", message: `Copied to clipbaord!` });
+		sendSnackBarEvent({ type: "success", message: `Copied to clipboard!` });
 	};
 	return (
 		<div css={linkContainerStyle} onClick={handleOnClick} {...props}>

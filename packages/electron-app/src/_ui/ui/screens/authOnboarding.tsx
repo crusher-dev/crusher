@@ -109,7 +109,7 @@ const yesNoButtonCss = css`
 	}
 `;
 
-const ProjectInput = () => {
+export const ProjectInput = () => {
 	const mainRef = React.useRef(null);
 	const inputRef: React.Ref<HTMLInputElement> = React.useRef(null);
 	const navigate = useNavigate();
@@ -146,7 +146,7 @@ const ProjectInput = () => {
 	);
 };
 
-const DeveloperInput = () => {
+export const DeveloperInput = () => {
 	const mainRef = React.useRef(null);
 	const navigate = useNavigate();
 	const store = useStore();
@@ -205,7 +205,7 @@ const DeveloperInput = () => {
 	);
 };
 
-const ClipboardIcon = (props) => (
+export const ClipboardIcon = (props) => (
 	<svg css={css`0 0 13 13`} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 		<path
 			d="M12.037 0H4.851a.93.93 0 0 0-.928.929v2.18h4.226c.98 0 1.776.797 1.776 1.776v4.159h2.112a.93.93 0 0 0 .929-.93V.93A.93.93 0 0 0 12.037 0Z"

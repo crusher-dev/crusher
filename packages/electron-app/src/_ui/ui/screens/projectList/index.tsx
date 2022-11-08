@@ -11,24 +11,80 @@ import { NormalList } from "../../components/NormalList";
 import { BasketBallIcon, ConsoleIconV3 } from "../../../constants/icons";
 import { EmojiPicker } from "../../components/emojiPicker";
 import { CloudCrusher } from "electron-app/src/lib/cloud";
+import { remote } from "electron";
+import { ClipboardIcon } from "../authOnboarding";
+import { LinkBox } from "../../components/LinkBox";
+import { sendSnackBarEvent } from "../../containers/components/toast";
 
 const CreateProjectBanner = ({ className, ...props }) => {
+	const [showCommand, setShowCommand] = React.useState(false);
+
+	const handleChooseDir = () => {
+		remote.dialog.showOpenDialog({
+			title: "Select your git repo",
+			properties: ['openDirectory']
+		}).then((res) => {
+			console.log("Res is", res);
+		});
+	};
+
+	const handleCopyCommand = () => {
+		remote.clipboard.write({text: "npx crusher.dev init"}, "clipboard");
+		sendSnackBarEvent({ type: "success", message: `Copied to clipboard!` });
+	};
+
 	return (
 		<div css={createProjectBannerContainerCss} className={String(className)} {...props}>
 			<div css={createProjecTitleCss}>
 				<span css={createProjectTitleTextCss}>Create new project</span>
+				
 			</div>
 			<div css={createProjectDescriptionCss}>running command in git repo is faster way</div>
+
+			{ showCommand ? (
+				<div css={css`position: relative;`}>
+					<LinkBox css={linkBoxCss} className={"mt-16"} value="npx crusher.dev init">
+					
+					</LinkBox>	
+					<ClipboardIcon
+						onClick={handleCopyCommand}
+								css={css`
+									width: 13px;
+									height: 13px;
+									position: absolute;
+									right: 13px;
+									top: 55%;
+									:hover {
+										opacity: 0.8;
+									}
+								`}
+							/>
+				</div>
+				
+
+			) : <>
 			<div css={createProjectActionsCss}>
-				<div css={[chooseDirButtonCss, hoverButtonCss]}>Choose dir</div>
-				<div css={[runCommandButtonCss, hoverButtonCss]}>
+				<div css={[chooseDirButtonCss, hoverButtonCss]} onClick={handleChooseDir}>Choose dir</div>
+				<div onClick={setShowCommand.bind(this, true)} css={[runCommandButtonCss, hoverButtonCss]}>
 					<ConsoleIconV3 css={consoleIconCss} />
 					<span>run command</span>
 				</div>
-			</div>
+			</div></>}
+		
 		</div>
 	);
 };
+const linkBoxCss = css`
+	font-weight: 500;
+	font-size: 16px;
+	text-align: center;
+	letter-spacing: 0.01em;
+	padding: 10rem 18rem;
+	width: 250px;
+	background: #000;
+	color: #a864ff;
+	position: relative;
+`;
 
 const chooseDirButtonCss = css`
 	display: flex;

@@ -24,7 +24,7 @@ const buttonCss = css`
 	border: none;
 	justify-content: center;
 	height: 30rem !important;
-	border-color: #b341f9 !important;
+	border-color: gray !important;
 	:hover {
 		background: #b341f9 !important;
 		opacity: 0.8;

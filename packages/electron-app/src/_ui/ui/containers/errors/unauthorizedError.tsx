@@ -15,6 +15,7 @@ import os from 'os';
 import { underlineOnHover } from "electron-app/src/_ui/constants/style";
 import { useSelector } from "react-redux";
 import { getCurrentProjectConfigPath } from "electron-app/src/_ui/utils/project";
+import historyInstance from "electron-app/src/_ui/utils/history";
 
 
 const Info = ({ className }) => {
@@ -38,7 +39,6 @@ const Info = ({ className }) => {
 const UnAuthorizedErrorContainer = () => {
 	const store = useStore();
 
-
 	const handleAccountInfo = React.useCallback(() => {
 		const acc = getUserAccountInfo(store.getState() as any);
 		if (acc) {
@@ -46,6 +46,10 @@ const UnAuthorizedErrorContainer = () => {
 		} else {
 			alert("No account info available.");
 		}
+	}, []);
+
+	const handleGoToProjects = React.useCallback(() => {
+		historyInstance.push("/select-project");
 	}, []);
 
 	return (
@@ -69,6 +73,9 @@ const UnAuthorizedErrorContainer = () => {
 								gap: 20rem;
 							`}
 						>
+							<NormalButton onClick={handleGoToProjects} css={accountInfoButtonCss}>
+								{"←" }&nbsp; &nbsp;Projects&nbsp;&nbsp;
+							</NormalButton>
 							<NormalButton onClick={handleAccountInfo} css={accountInfoButtonCss}>
 								Account Info
 							</NormalButton>

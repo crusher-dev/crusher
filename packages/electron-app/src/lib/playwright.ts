@@ -140,6 +140,19 @@ class PlaywrightInstance {
 		return page;
 	}
 
+
+	private async handleWebviewScreenshot() {
+		const page = this.page;
+		const base64 = (await (await page.context().newCDPSession(this.page)).send('Page.captureScreenshot')).data;
+		
+		await this.appWindow.getWebContents().executeJavaScript(`console.log(${JSON.stringify(base64)})`);
+		return base64;
+	}
+
+	private async handleWebviewElementScreenshot(elementHandle: ElementHandle) {
+		const elScreenshot = await elementHandle.screenshot()
+	}
+
 	private async handleWebviewLogInfo(source, message: string) {
 		console.log(message);
 	}
@@ -156,6 +169,7 @@ class PlaywrightInstance {
 		const properties = await args.getProperties();
 		const uniqueElementId = await properties.get("uniqueElementId").jsonValue();
 		const elementHandle = await properties.get("element").asElement();
+		this.handleWebviewElementScreenshot(elementHandle);
 
 		const ownerFrame = await elementHandle.ownerFrame();
 		const parentFrame = await ownerFrame.parentFrame();
@@ -185,6 +199,7 @@ class PlaywrightInstance {
 		this.sdkManager = new CrusherSdk(this.page, this._exportsManager as any, this._storageManager as any);
 
 		try {
+			this.page.exposeBinding("crusherSdk.screenshot", this.handleWebviewScreenshot.bind(this));
 			this.page.exposeBinding("crusherSdk.logInfo", this.handleWebviewLogInfo.bind(this));
 			this.page.exposeBinding("crusherSdk.click", this.handleWebviewClick.bind(this));
 			this.page.exposeBinding("crusherSdk.hover", this.handleWebviewHover.bind(this));

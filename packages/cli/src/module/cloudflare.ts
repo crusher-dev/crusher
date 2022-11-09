@@ -8,7 +8,7 @@ import axios from "axios";
 
 import { CLOUDFLARED_URL } from "../constants";
 import chalk from "chalk";
-import { BlankMessage, Message } from "../utils/cliMessages";
+import { BlankMessage, BlankMessageDebug, Message } from "../utils/cliMessages";
 
 var { spawn } = require("child_process");
 const fs = require("fs");
@@ -85,20 +85,27 @@ export class Cloudflare {
               `tunnel`, `--url`, `${url}`
             ]);
 
-            BlankMessage(`init ${chalk.magenta(url)}`, true);
-
+            BlankMessage(`init ${chalk.magenta(url)}\n`, true);
           } catch (e) {
             console.log("error", e);
           }
 
+          const processBlankMessage = (msg: string, padding: number = 0) => {
+            return msg.split("\n").map((line, index) => {
+              if(index === 0) return line;
+              return `          ` + new String(" ").repeat(padding) + line;
+            }).join("\n");
+          }
+
           spann.stdout.on("data", function (msg) {
             // NOTE - run with debug mode only
-            console.log(`[${name}]: `, msg);
+            BlankMessageDebug(`[${name}]: ` + processBlankMessage(msg, `[${name}]: `.length + 1));
           });
 
           spann.stderr.on("data", function (msg) {
             const msgInString = msg.toString();
-            console.debug(`[${name}]: `, msgInString);
+
+            BlankMessageDebug(`[${name}]: ` + processBlankMessage(msgInString, `[${name}]: `.length + 1));
             if (msgInString.includes("trycloudflare")) {
               const regex = /https.*trycloudflare.com/g;
               const found = msgInString.match(regex);
@@ -125,7 +132,6 @@ export class Cloudflare {
       // Wait until tunnel is reachable using axios
       await Promise.all(proxyKeys.map((proxyKey)=> {
         const tunnel = resultTunnelMap[proxyKey].tunnel;
-        console.log("Tunnel is", `"${tunnel}"`);
 
         return new Promise((res, rej) => {
           const interval = setInterval(async () => {
@@ -144,7 +150,21 @@ export class Cloudflare {
         });
       }))
 
-      console.log("results tunnel", JSON.stringify(resultTunnelMap));
+      Message(chalk.bgMagentaBright.bold, ' tools  ', `🚇 Cloudflare tunnel created ${chalk.gray("-------")}`, true);
+      const _log = console.log;
+      console.log = (...args) => {
+        const spacing = " ".repeat(10);
+        let finalString = "";
+        args[0].split("\n").forEach((line, index) => {
+          if(index === 0) finalString += spacing + line;
+          else finalString += "\n" + spacing + line;
+        });
+        _log(finalString);
+      }
+      
+      console.table(resultTunnelMap);
+      console.log = _log;
+
       resolve(resultTunnelMap);
     });
   }

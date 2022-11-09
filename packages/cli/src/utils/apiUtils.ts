@@ -1,4 +1,5 @@
 import axios from "axios";
+import chalk from "chalk";
 import { getUserInfo } from "../state/userInfo";
 import { getLoggedInUser } from "../utils/index";
 import {
@@ -6,6 +7,7 @@ import {
   resolveFrontendServerUrl,
 } from "../utils/utils";
 import { CI } from "./ci";
+import { BlankMessage, Message } from "./cliMessages";
 import { getProjectConfig } from "./projectConfig";
 
 const getUserInfoFromToken = async (token: string) => {
@@ -155,7 +157,8 @@ const runTests = async (host: string | undefined, proxyUrlsMap: { [name: string]
     const projectConfig = getProjectConfig();
     _projectId = projectConfig.project;
   }
-  await console.log("Running tests now");
+
+  Message(chalk.bgMagentaBright.bold, ' cloud  ', `Running tests now`, true);
 
   try {
     const context = getContextEnvVariables();
@@ -186,7 +189,8 @@ const runTests = async (host: string | undefined, proxyUrlsMap: { [name: string]
     const buildInfo = res.data.buildInfo;
     const buildId = buildInfo.buildId;
 
-    await console.log("Waiting for tests to finish");
+    BlankMessage(`${chalk.gray("Waiting for tests to finish")}\n `);
+    
     // sleep for 20 seconds
     await new Promise((resolve) => {
       // create a poll to check if tests are done
@@ -209,13 +213,15 @@ const runTests = async (host: string | undefined, proxyUrlsMap: { [name: string]
           buildInfo.status === "MANUAL_REVIEW_REQUIRED"
         ) {
           clearInterval(poll);
-          console.log(
+          Message(
+            chalk.bgGreenBright.bold, ' report  ', 
             buildInfo.status === "PASSED"
               ? `Build passed in ${parseInt(buildInfo.duration)}s`
-              : `Build failed in ${parseInt(buildInfo.duration)}s`
+              : `Build failed in ${parseInt(buildInfo.duration)}s`,
+              true
           );
-          await console.log(
-            "View build report at " +
+          BlankMessage(
+            " View build report at " +
               resolveFrontendServerUrl(`/app/build/${buildId}`)
           );
           resolve(true);

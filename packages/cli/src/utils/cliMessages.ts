@@ -5,3 +5,11 @@ export const Message = (chalk, firstMessage, secondMessage, shouldShowInEverySer
 export const BlankMessage = (firstMessage, shouldShowInEveryService: boolean = false) => {
 	console.log('          ', firstMessage + (shouldShowInEveryService ? " " : ""));
 };
+
+export const MessageDebug = (chalk, firstMessage, secondMessage, shouldShowInEveryService: boolean = false) => {
+	console.debug(chalk(firstMessage), ' ', secondMessage + (shouldShowInEveryService ? " " : ""));
+};
+
+export const BlankMessageDebug = (firstMessage, shouldShowInEveryService: boolean = false) => {
+	console.debug('          ', firstMessage + (shouldShowInEveryService ? " " : ""));
+};

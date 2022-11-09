@@ -6,7 +6,9 @@ import { loadUserInfoOnLoad } from "../../utils/hooks";
 import { getUserInfo } from "../../state/userInfo";
 import { Cloudflare } from "../../module/cloudflare";
 import { BROWSERS_MAP } from "../../constants";
-import { execSync } from "child_process";
+import { ChildProcess, exec, execSync } from "child_process";
+import { BlankMessage, Message } from "../../utils/cliMessages";
+import chalk from "chalk";
 
 export default class CommandBase {
   program: Command;
@@ -62,14 +64,34 @@ export default class CommandBase {
       );
   }
 
+  async handlePrescript(command: string): Promise<any>{
+    Message(chalk.bgMagentaBright.bold, ' pre:script  ', `🔋Running pre-script in background`, true);
+    BlankMessage(`      ${chalk.gray(command)}\n`);
+
+    return new Promise((resolve, reject) => {
+      const process = exec(command);
+      process.stdout.on('data', (data) => {
+        console.debug("[pre:script]", data);
+      });
+
+      process.stderr.on('data', (data) => {
+        console.debug(`[pre:script]`, data);
+      });
+
+      resolve(process); 
+    });
+  }
+
   async runTests(flags) {
     const disableProjectConfig = flags["disable-project-config"];
 
     const projectConfig = !disableProjectConfig ? getProjectConfig() : null;
     const { testId, testGroup, browser, token, host, preScript } = flags;
 
+    let preScriptProcess: ChildProcess | null = null;
+
     if (preScript) {
-      execSync(preScript, { stdio: 'inherit' });
+     preScriptProcess =  await this.handlePrescript(preScript);
     }
     let proxyUrls = null;
 
@@ -101,7 +123,11 @@ export default class CommandBase {
     } catch (err) {
       console.error("Error is", err);
     } finally {
-
+      if(preScriptProcess) {
+        console.log("\n");
+        Message(chalk.bgMagentaBright.bold, ' pre:script  ', `🚪Closing pre-script process`, true);
+        preScriptProcess?.kill();
+      }
     }
   }
 }

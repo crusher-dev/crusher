@@ -1,5 +1,6 @@
 import axios from "axios";
 import chalk from "chalk";
+import { Cloudflare } from "../module/cloudflare";
 import { getUserInfo } from "../state/userInfo";
 import { getLoggedInUser } from "../utils/index";
 import {
@@ -213,6 +214,8 @@ const runTests = async (host: string | undefined, proxyUrlsMap: { [name: string]
           buildInfo.status === "MANUAL_REVIEW_REQUIRED"
         ) {
           clearInterval(poll);
+          Cloudflare.killAnyProcess();
+          
           Message(
             chalk.bgGreenBright.bold, ' report  ', 
             buildInfo.status === "PASSED"

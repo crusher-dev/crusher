@@ -13,6 +13,11 @@ import stringWidth from 'string-width';
 
 const nodeVersion = process.version.match(/^v(\d+\.\d+)/)[1];
 
+// only allow console.debug if DEBUG env variable is set
+if (!process.env.CRUSHER_DEBUG) {
+	  console.debug = () => {};
+}
+
 (async () => {
 	if (parseFloat(nodeVersion) >= 10.0) {
 		

@@ -1,6 +1,6 @@
 import { downloadFile } from "../utils/common";
 import { resolvePathToAppDirectory } from "../utils/utils";
-import { execSync } from "child_process";
+import { ChildProcess, execSync } from "child_process";
 import path from "path";
 import { getProjectConfig } from "../utils/projectConfig";
 import axios from "axios";
@@ -54,9 +54,16 @@ async function setupCloudflare() {
   }
 }
 export class Cloudflare {
-
+ 
+  static existingProcess: ChildProcess | null;
   static async install() {
     await setupCloudflare();
+  }
+
+  static killAnyProcess() {
+    if (this.existingProcess) {
+      this.existingProcess.kill();
+    }
   }
 
   static runTunnel(config: any | null = null) {
@@ -84,7 +91,7 @@ export class Cloudflare {
             spann = spawn(resolvePathToAppDirectory(`bin/cloudflared`), [
               `tunnel`, `--url`, `${url}`
             ]);
-
+            this.existingProcess = spann;
             BlankMessage(`init ${chalk.magenta(url)}\n`, true);
           } catch (e) {
             console.log("error", e);

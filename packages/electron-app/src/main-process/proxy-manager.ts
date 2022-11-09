@@ -6,6 +6,7 @@ import { setProxyInitializing, setProxyState } from "../store/actions/app";
 import { getRelativePath } from "../utils";
 import { Message, BlankMessage } from "@crusher-shared/modules/logger/utils";
 import { chalkShared } from "@shared/modules/logger";
+import { processTunnelTableLog } from "../utils/cli";
 
 const resultsTunnelRegexp = new RegExp(/results\stunnel\s(.*)/gms);
 
@@ -18,12 +19,8 @@ class ProxyManager {
 
 	constructor(private store: Store<unknown, AnyAction>) { }
 
-	private handleProxyResults(result: string) {
-		const extractJsonRegex = new RegExp(/\{.*}/gm);
-		const matches = result.match(extractJsonRegex);
-		if (!matches) throw new Error("Error while reading tunnel logs");
-		const jsonContentRaw = matches[0].replace(/(\r\n|\n|\r)/gm, "").replace(/ /g, "");
-		this._results = JSON.parse(jsonContentRaw);
+	private handleProxyResults(results: any) {
+		this._results = results
 		Message(chalkShared.bgMagentaBright.bold, ' tools  ', `🚇 Tunnel is ready and live\n`);
 
 		// console.info("[ProxyManager]: Tunnel is ready and live");
@@ -64,11 +61,10 @@ class ProxyManager {
 				else {
 					console.debug(`[ProxyManager/cloudflared] ${data.toString()}`);
 				}
-				if (data.includes("intercept") && data.includes("url")) {
-					const consoleTableOutput = data.toString();
-					(console as any).logPlain(consoleTableOutput);
-					return;
-					// return this.handleProxyResults(data);
+				if (data.includes("intercept") && data.includes("tunnel")) {
+					const result = processTunnelTableLog(data.toString());
+					console.debug("tunnel-results: ", JSON.stringify(result));
+					return this.handleProxyResults(result);
 				}
 				this._logs.push(data.toString());
 			});

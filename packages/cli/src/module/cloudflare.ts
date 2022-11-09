@@ -55,14 +55,17 @@ async function setupCloudflare() {
 }
 export class Cloudflare {
  
-  static existingProcess: ChildProcess | null;
+  static existingProcess: Array<ChildProcess> = [];
   static async install() {
     await setupCloudflare();
   }
 
   static killAnyProcess() {
-    if (this.existingProcess) {
-      this.existingProcess.kill();
+    if (this.existingProcess.length) {
+      this.existingProcess.forEach((process) => {
+        process.kill("SIGKILL");
+      });
+      this.existingProcess = [];
     }
   }
 
@@ -84,6 +87,7 @@ export class Cloudflare {
       const resultTunnelMap = {};
 
       BlankMessage(`${chalk.gray(resolvePathToAppDirectory(`bin/cloudflared`))}\n`, true)
+
       const tunnelPromises = data.map(({ name, url, intercept }) => {
         return new Promise((res, rej) => {
           var spann;
@@ -91,8 +95,8 @@ export class Cloudflare {
             spann = spawn(resolvePathToAppDirectory(`bin/cloudflared`), [
               `tunnel`, `--url`, `${url}`
             ]);
-            this.existingProcess = spann;
-            BlankMessage(`init ${chalk.magenta(url)}\n`, true);
+            this.existingProcess.push(spann);
+            BlankMessage(`init tunnel for ${chalk.magenta(url)}\n`, true);
           } catch (e) {
             console.log("error", e);
           }
@@ -106,7 +110,7 @@ export class Cloudflare {
 
           spann.stdout.on("data", function (msg) {
             // NOTE - run with debug mode only
-            BlankMessageDebug(`[${name}]: ` + processBlankMessage(msg, `[${name}]: `.length + 1));
+            BlankMessageDebug(`cf_tunnel:[${name}]: ` + processBlankMessage(msg, `[${name}]: `.length + 1));
           });
 
           spann.stderr.on("data", function (msg) {
@@ -157,7 +161,7 @@ export class Cloudflare {
         });
       }))
 
-      Message(chalk.bgMagentaBright.bold, ' tools  ', `🚇 Cloudflare tunnel created ${chalk.gray("-------")}`, true);
+      Message(chalk.bgMagentaBright.bold, ' tools  ', `🚇 Cloudflare tunnel ready ${chalk.gray("-------")}`, true);
       const _log = console.log;
       console.log = (...args) => {
         const spacing = " ".repeat(10);

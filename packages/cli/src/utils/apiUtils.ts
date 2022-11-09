@@ -214,7 +214,6 @@ const runTests = async (host: string | undefined, proxyUrlsMap: { [name: string]
           buildInfo.status === "MANUAL_REVIEW_REQUIRED"
         ) {
           clearInterval(poll);
-          Cloudflare.killAnyProcess();
           
           Message(
             chalk.bgGreenBright.bold, ' report  ', 

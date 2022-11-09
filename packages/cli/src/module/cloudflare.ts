@@ -84,6 +84,7 @@ export class Cloudflare {
       const resultTunnelMap = {};
 
       BlankMessage(`${chalk.gray(resolvePathToAppDirectory(`bin/cloudflared`))}\n`, true)
+
       const tunnelPromises = data.map(({ name, url, intercept }) => {
         return new Promise((res, rej) => {
           var spann;
@@ -92,7 +93,7 @@ export class Cloudflare {
               `tunnel`, `--url`, `${url}`
             ]);
             this.existingProcess = spann;
-            BlankMessage(`init ${chalk.magenta(url)}\n`, true);
+            BlankMessage(`init tunnel for ${chalk.magenta(url)}\n`, true);
           } catch (e) {
             console.log("error", e);
           }
@@ -106,7 +107,7 @@ export class Cloudflare {
 
           spann.stdout.on("data", function (msg) {
             // NOTE - run with debug mode only
-            BlankMessageDebug(`[${name}]: ` + processBlankMessage(msg, `[${name}]: `.length + 1));
+            BlankMessageDebug(`cf_tunnel:[${name}]: ` + processBlankMessage(msg, `[${name}]: `.length + 1));
           });
 
           spann.stderr.on("data", function (msg) {
@@ -157,7 +158,7 @@ export class Cloudflare {
         });
       }))
 
-      Message(chalk.bgMagentaBright.bold, ' tools  ', `🚇 Cloudflare tunnel created ${chalk.gray("-------")}`, true);
+      Message(chalk.bgMagentaBright.bold, ' tools  ', `🚇 Cloudflare tunnel ready ${chalk.gray("-------")}`, true);
       const _log = console.log;
       console.log = (...args) => {
         const spacing = " ".repeat(10);

@@ -64,8 +64,11 @@ class ProxyManager {
 				else {
 					console.debug(`[ProxyManager/cloudflared] ${data.toString()}`);
 				}
-				if (data.includes("results tunnel") && matches) {
-					return this.handleProxyResults(matches[1]);
+				if (data.includes("intercept") && data.includes("url")) {
+					const consoleTableOutput = data.toString();
+					(console as any).logPlain(consoleTableOutput);
+					return;
+					// return this.handleProxyResults(data);
 				}
 				this._logs.push(data.toString());
 			});

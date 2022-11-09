@@ -55,14 +55,17 @@ async function setupCloudflare() {
 }
 export class Cloudflare {
  
-  static existingProcess: ChildProcess | null;
+  static existingProcess: Array<ChildProcess> = [];
   static async install() {
     await setupCloudflare();
   }
 
   static killAnyProcess() {
-    if (this.existingProcess) {
-      this.existingProcess.kill();
+    if (this.existingProcess.length) {
+      this.existingProcess.forEach((process) => {
+        process.kill("SIGKILL");
+      });
+      this.existingProcess = [];
     }
   }
 
@@ -92,7 +95,7 @@ export class Cloudflare {
             spann = spawn(resolvePathToAppDirectory(`bin/cloudflared`), [
               `tunnel`, `--url`, `${url}`
             ]);
-            this.existingProcess = spann;
+            this.existingProcess.push(spann);
             BlankMessage(`init tunnel for ${chalk.magenta(url)}\n`, true);
           } catch (e) {
             console.log("error", e);

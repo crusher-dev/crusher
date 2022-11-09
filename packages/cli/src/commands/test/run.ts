@@ -6,7 +6,9 @@ import { loadUserInfoOnLoad } from "../../utils/hooks";
 import { getUserInfo } from "../../state/userInfo";
 import { Cloudflare } from "../../module/cloudflare";
 import { BROWSERS_MAP } from "../../constants";
-import { execSync } from "child_process";
+import { ChildProcess, exec, execSync, spawn } from "child_process";
+import { BlankMessage, Message } from "../../utils/cliMessages";
+import chalk from "chalk";
 
 export default class CommandBase {
   program: Command;
@@ -24,7 +26,7 @@ export default class CommandBase {
       .option("-b, --browsers <string>", "Browsers to run test on")
       .option("-host, --host <string>", "Browsers to run test on")
       .option("-C, --disable-project-config", "Disable project config", false)
-      .option("-p, --pre-script <string>", "Script to run before running tests")
+      .option("-p, --pre-run <string>", "Script to run before running tests")
       .parse(process.argv);
   }
 
@@ -62,14 +64,38 @@ export default class CommandBase {
       );
   }
 
+  async handlePrescript(command: string): Promise<any>{
+    Message(chalk.bgMagentaBright.bold, ' pre:run  ', `🔋Running pre-run script in background`, true);
+    BlankMessage(`  ${chalk.gray(command)}\n`);
+
+    return new Promise((resolve, reject) => {
+      // Spawn shell command
+      const process = spawn ("sh", ["-c", command], {
+        detached: true,
+      });
+      process.stdout.on('data', (data) => {
+        console.debug("[pre:run]", data.toString());
+      });
+
+      process.stderr.on('data', (data) => {
+        console.debug(`[pre:run]`, data.toString());
+      });
+
+      
+      resolve(process); 
+    });
+  }
+
   async runTests(flags) {
     const disableProjectConfig = flags["disable-project-config"];
 
     const projectConfig = !disableProjectConfig ? getProjectConfig() : null;
-    const { testId, testGroup, browser, token, host, preScript } = flags;
+    const { testId, testGroup, browser, token, host, preRun } = flags;
 
-    if (preScript) {
-      execSync(preScript, { stdio: 'inherit' });
+    let preScriptProcess: ChildProcess | null = null;
+
+    if (preRun) {
+     preScriptProcess =  await this.handlePrescript(preRun);
     }
     let proxyUrls = null;
 
@@ -102,6 +128,12 @@ export default class CommandBase {
       console.error("Error is", err);
     } finally {
 
+      Cloudflare.killAnyProcess();
+      if(preScriptProcess) {
+        console.log("\n");
+        Message(chalk.bgMagentaBright.bold, ' pre:run  ', `🚪Closing pre-script process`, true);
+        process.kill(-preScriptProcess.pid, "SIGKILL");
+      }
     }
   }
 }

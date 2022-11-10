@@ -23,32 +23,38 @@ const NotConfigured = ()=>{
     return (
         <div className={"flex items-center"}>
             Not configured 
-            <div className={"ml-8"} css={dotCSS}></div>
+            <div className={"ml-8"} css={lineCSS}></div>
             <LinkPointer css={pointerCSS} onClick={openConfig} className={"ml-8"}>Open config</LinkPointer>
         </div>
     )
 }
 
-const dotCSS = css`min-width: 2px; height: 20px; background: rgba(255,255,255,0.15)`
+const lineCSS = css`min-width: 1px; height: 16px; background: rgba(255,255,255,0.10)`
 const pointerCSS = css`.pointer-icon { path { fill: rgba(255, 255, 255, 0.35); } } `
 const separatorCSS = css`min-width: 2px; height: 20px; background: rgba(255,255,255,0.15)`
 
 const ProxyToolTip = ({status})=>{
+    const [projectConfigFile, setProjectConfigFile] = React.useState(null);
+	React.useEffect(() => {
+		const projectConfigFile = getCurrentProjectConfigPath();
+		setProjectConfigFile(projectConfigFile);
+	}, []);
 
     return (
         <div className={"flex items-center"}>
-            <Conditional showIf={status === "initializing"}>
-                initializing
-            </Conditional>
-            <Conditional showIf={status === "disabled"}>
-                error with tunnel
-            </Conditional>
-            <Conditional showIf={status === "not_configured"}>
-                Not configured
-            </Conditional>
-
-             <div className={"ml-8"} css={dotCSS}></div>
-            <LinkPointer css={pointerCSS} onClick={openConfig} className={"ml-8"}>config</LinkPointer>
+            <div className="mt-1">
+                <Conditional showIf={status === "initializing"}>
+                    initializing
+                </Conditional>
+                <Conditional showIf={status === "tunnel_error"}>
+                    error with tunnel
+                </Conditional>
+                <Conditional showIf={status === "not_configured"}>
+                    tunnel not configured
+                </Conditional>
+            </div>
+             <div className={"ml-8"} css={lineCSS}></div>
+            <LinkPointer css={pointerCSS} onClick={openConfig.bind(this,projectConfigFile)} className={"ml-8"}>config</LinkPointer>
         </div> 
     )
 }
@@ -80,16 +86,10 @@ const TunnelsList = ()=>{
 
 export function TunnelStatus({}) {
 	const proxyState = useSelector(getProxyState);
-	const [projectConfigFile, setProjectConfigFile] = React.useState(null);
-
     const proxyIsInitializing = useSelector(getIsProxyInitializing);
     const isProxyWorking = Object.keys(proxyState).length;
 	const isProxyDisabled = !proxyIsInitializing && !isProxyWorking;
 
-	React.useEffect(() => {
-		const projectConfigFile = getCurrentProjectConfigPath();
-		setProjectConfigFile(projectConfigFile);
-	}, []);
 
     const proxyStatus = getStatus({
         isProxyDisabled, isProxyWorking,proxyIsInitializing

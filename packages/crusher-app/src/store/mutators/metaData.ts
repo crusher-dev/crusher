@@ -89,11 +89,15 @@ export const updateMeta = atom(
 					});
 					_set(projectsAtom, newState);
 
-					updateProjectMeta(selectedProjectId, payload).finally(() => {
-						if (callback) {
-							callback();
-						}
-					});
+					if(selectedProjectId) {
+						updateProjectMeta(selectedProjectId, payload).finally(() => {
+							if (callback) {
+								callback();
+							}
+						});
+					} else {
+						console.debug("Can't update project meta because selectedProjectId is not set");
+					}
 				}
 				break;
 

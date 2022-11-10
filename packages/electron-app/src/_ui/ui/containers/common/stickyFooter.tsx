@@ -1,21 +1,21 @@
+import { TunnelStatus } from './tunnelStatus';
 import React from "react";
 import { css } from "@emotion/react";
-import { CloudIcon, ConsoleIcon, DisabledCloudIcon, DocsIcon } from "../../../constants/icons";
+import {  ConsoleIcon, DocsIcon } from "../../../constants/icons";
 import { Link } from "../../components/Link";
 import { TextBlock } from "@dyson/components/atoms/textBlock/TextBlock";
 import { HoverCard } from "@dyson/components/atoms/tooltip/Tooltip1";
 
 import { linkOpen } from "electron-app/src/utils/url";
-import { getAppSettings, getCurrentSelectedProjct, getIsProxyInitializing, getProxyState } from "electron-app/src/store/selectors/app";
-import { useSelector, useStore } from "react-redux";
+import { getAppSettings} from "electron-app/src/store/selectors/app";
+import { useStore } from "react-redux";
 import { useBuildNotifications } from "../../../hooks/tests";
-import { Tooltip } from "@dyson/components/atoms/tooltip/Tooltip";
+
 import { resolveToFrontEndPath } from "@shared/utils/url";
 import { shell } from "electron";
 import { CloudCrusher } from "electron-app/src/lib/cloud";
 import { FailedCheckboxIcon, GreenCheckboxIcon } from "electron-app/src/_ui/constants/old_icons";
 import { Conditional } from "@dyson/components/layouts";
-import { LinkPointer } from "../../components/LinkPointer";
 import { getCurrentProjectConfigPath } from "electron-app/src/_ui/utils/project";
 
 interface IProps {
@@ -24,18 +24,12 @@ interface IProps {
 export const StickyFooter = ({ className }: IProps) => {
 	const { latestNotification, updateNotification } = useBuildNotifications();
 	const store = useStore();
-	const proxyIsInitializing = useSelector(getIsProxyInitializing);
-	const proxyState = useSelector(getProxyState);
 	const [projectConfigFile, setProjectConfigFile] = React.useState(null);
 
 	React.useEffect(() => {
 		const projectConfigFile = getCurrentProjectConfigPath();
 		setProjectConfigFile(projectConfigFile);
 	}, []);
-
-	const isProxyWorking = Object.keys(proxyState).length;
-
-	const isProxyDisabled = !proxyIsInitializing && !isProxyWorking;
 
 	const handleViewReport = (reportId) => {
 		const appSettings = getAppSettings(store.getState() as any);
@@ -61,47 +55,7 @@ export const StickyFooter = ({ className }: IProps) => {
 		}
 	}, [latestNotification?.id]);
 
-	const openConfig = () => {
-		if (!projectConfigFile) {
-			alert("Project not linked locally");
-			return;
-		}
-		shell.openPath(projectConfigFile);
-	};
 
-	const openTunneUrl = () => {
-		const appSettings = getAppSettings(store.getState() as any);
-		shell.openExternal(resolveToFrontEndPath("/app/tunnel", appSettings.frontendEndPoint));
-	};
-
-	const activeTooltip = React.useMemo(() => {
-		// Object.entries(this._results).map((a: any) => {
-		// 	return { name: a[0], tunnel: a[1].tunnel, intercept: a[1].intercept };
-		// }),
-		const seperator = (<div className={"ml-8"} css={css`min-width: 2px; height: 20px; background: rgba(255,255,255,0.15)`}></div>);
-
-		const links = Object.entries(proxyState).map((a: any) => {
-			return (
-				<>
-					{seperator}
-					<LinkPointer
-						css={css`.pointer-icon { path { fill: rgba(255, 255, 255, 0.35); } } `}
-						onClick={() => shell.openExternal(a[1].tunnel)}
-						className={"ml-8"}>
-						{a[0]}
-					</LinkPointer></>
-			)
-		});
-		return (
-			<div className={"flex items-center"}>
-				active
-				{links}
-
-			</div>
-		);
-	}, [proxyState, isProxyDisabled]);
-
-	console.log("Proxy is init", proxyIsInitializing);
 
 	const statusMessage =
 		latestNotification?.status && latestNotification?.status !== "RUNNING" ? "has " + latestNotification.status.toLowerCase() : "is running";
@@ -134,26 +88,7 @@ export const StickyFooter = ({ className }: IProps) => {
 				)}
 
 				<div css={contextContainerCss}>
-
-					<Tooltip content={isProxyDisabled ? (<div className={"flex items-center"}>Not configured <div className={"ml-8"} css={css`min-width: 2px; height: 20px; background: rgba(255,255,255,0.15)`}></div><LinkPointer css={css`.pointer-icon { path { fill: rgba(255, 255, 255, 0.35); } } `} onClick={openConfig} className={"ml-8"}>Open config</LinkPointer></div>) : proxyIsInitializing ? <div className={"flex items-center"}>initializing<div className={"ml-8"} css={css`min-width: 2px; height: 20px; background: rgba(255,255,255,0.15)`}></div><LinkPointer css={css`.pointer-icon { path { fill: rgba(255, 255, 255, 0.35); } } `} onClick={openConfig} className={"ml-8"}>Open config</LinkPointer></div> : activeTooltip} placement="top" type="hover">
-						<div>
-							{!proxyIsInitializing && !isProxyWorking ? (
-								<DisabledCloudIcon
-									css={[
-										cloudIconCss,
-										css`
-										width: 22px;
-										height: 16px;
-									`,
-										clickableCss,
-									]}
-									shouldAnimateGreen={false}
-								/>
-							) : (
-								<CloudIcon css={[cloudIconCss, activeCloudIconCss, clickableCss]} shouldAnimateGreen={proxyIsInitializing} />
-							)}
-						</div>
-					</Tooltip>
+					<TunnelStatus />
 				</div>
 			</div>
 			<HoverCard content={<HelpContent />} placement="top" type="hover" padding={8} offset={0}>
@@ -165,6 +100,7 @@ export const StickyFooter = ({ className }: IProps) => {
 		</div>
 	);
 };
+
 
 const greenCheckboxCss = css`
 	width: 14px;
@@ -225,18 +161,7 @@ const contentCss = css`
 	padding-left: 27px;
 	padding-right: 13px;
 `;
-const cloudIconCss = css`
-	width: 16px;
-	height: 11px;
-`;
-const activeCloudIconCss = css`
 
-`;
-const clickableCss = css`
-	:hover {
-		opacity: 0.8;
-	}
-`;
 const consoleIconCss = css`
 	width: 11px;
 	height: 11px;

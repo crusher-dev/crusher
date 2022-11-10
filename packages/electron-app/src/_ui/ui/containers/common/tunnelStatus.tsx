@@ -1,37 +1,20 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { Tooltip } from "@dyson/components/atoms/tooltip/Tooltip";
-import { shell } from "electron";
-import {  getIsProxyInitializing, getProxyState } from "electron-app/src/store/selectors/app";
 import { useSelector } from "react-redux";
+import { Tooltip } from "@dyson/components/atoms/tooltip/Tooltip";
 
+import {  getIsProxyInitializing, getProxyState } from "electron-app/src/store/selectors/app";
 import { getCurrentProjectConfigPath } from "electron-app/src/_ui/utils/project";
+
 import { CloudIcon } from "./tunnelStatus/components/cloudIcon";
 import { LinkPointer } from "../../components/LinkPointer";
-import { getStatus } from "./tunnelStatus/utils";
+import { getStatus, openConfig } from "./tunnelStatus/utils";
 import { Conditional } from "@dyson/components/layouts";
-
-const openConfig = (projectConfigFile) => {
-    if (!projectConfigFile) {
-        alert("Project not linked locally");
-        return;
-    }
-    shell.openPath(projectConfigFile);
-};
-
-const NotConfigured = ()=>{
-    return (
-        <div className={"flex items-center"}>
-            Not configured 
-            <div className={"ml-8"} css={lineCSS}></div>
-            <LinkPointer css={pointerCSS} onClick={openConfig} className={"ml-8"}>Open config</LinkPointer>
-        </div>
-    )
-}
 
 const lineCSS = css`min-width: 1px; height: 16px; background: rgba(255,255,255,0.10)`
 const pointerCSS = css`.pointer-icon { path { fill: rgba(255, 255, 255, 0.35); } } `
 const separatorCSS = css`min-width: 2px; height: 20px; background: rgba(255,255,255,0.15)`
+
 
 const ProxyToolTip = ({status})=>{
     const [projectConfigFile, setProjectConfigFile] = React.useState(null);
@@ -83,8 +66,7 @@ const TunnelsList = ()=>{
         </div>
     );
 }
-
-export function TunnelStatus({}) {
+export function TunnelStatus() {
 	const proxyState = useSelector(getProxyState);
     const proxyIsInitializing = useSelector(getIsProxyInitializing);
     const isProxyWorking = Object.keys(proxyState).length;
@@ -106,19 +88,11 @@ export function TunnelStatus({}) {
                           isProxyDisabled={isProxyDisabled}
                           isProxyWorking={isProxyWorking}
                           proxyIsInitializing={proxyIsInitializing}
-                          css={[cloudIconCss, clickableCss]}
+                    
                         />
 						</div>
 					</Tooltip>
   );
 }
   
-const cloudIconCss = css`
-	width: 16px;
-	height: 11px;
-`;
-const clickableCss = css`
-	:hover {
-		opacity: 0.8;
-	}
-`;
+

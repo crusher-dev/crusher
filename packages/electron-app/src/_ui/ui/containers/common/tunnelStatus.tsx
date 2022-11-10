@@ -2,6 +2,7 @@ import React from "react";
 import { css } from "@emotion/react";
 import { useSelector } from "react-redux";
 import { Tooltip } from "@dyson/components/atoms/tooltip/Tooltip";
+import { shell } from "electron";
 
 import {  getIsProxyInitializing, getProxyState } from "electron-app/src/store/selectors/app";
 import { getCurrentProjectConfigPath } from "electron-app/src/_ui/utils/project";
@@ -27,7 +28,7 @@ const ProxyToolTip = ({status})=>{
         <div className={"flex items-center"}>
             <div className="mt-1">
                 <Conditional showIf={status === "initializing"}>
-                    initializing
+                    Initializing. This takes few seconds.
                 </Conditional>
                 <Conditional showIf={status === "tunnel_error"}>
                     error with tunnel

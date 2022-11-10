@@ -38,21 +38,21 @@ export const CloudIcon = ({  ...props }) => {
 				status === "initializing" && initializing,
 				status === "working" && workingCSS,
 				status === "tunnel_error" && disabledCSS
-				]} className="ml-2"></div>
+				]} className="ml-4"></div>
 		</div>
 	);
 };
 
 const dot = css`
-min-width: 6px;
-min-height: 6px;
-border: 1.5px solid rgba(255, 255, 255, 0.14);
+min-width: 5px;
+min-height: 5px;
+border: 3px solid rgba(255, 255, 255, 0.14);
 border-radius: 12px;
 `
 
 const initializing = css`
 background: #F7533D;
-animation: 1.5s blink ease infinite;
+animation: 3.5s blink linear infinite;
 @keyframes "blink" {
 	from, to {
 	  opacity: 0;

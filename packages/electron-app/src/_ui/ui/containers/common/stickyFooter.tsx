@@ -84,7 +84,7 @@ export const StickyFooter = ({ className }: IProps) => {
 						</div>
 					</div>
 				) : (
-					<span css={footerBottomLabel}>test page</span>
+					<span css={footerBottomLabel} className="mt-4">tests</span>
 				)}
 
 				<div css={contextContainerCss}>

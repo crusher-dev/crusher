@@ -60,6 +60,10 @@ export class Cloudflare {
     await setupCloudflare();
   }
 
+  static hasAnyActiveTunnel() {
+    return this.existingProcess.length > 0;
+  }
+
   static killAnyProcess() {
     if (this.existingProcess.length) {
       this.existingProcess.forEach((process) => {

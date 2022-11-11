@@ -215,13 +215,42 @@ const runTests = async (host: string | undefined, proxyUrlsMap: { [name: string]
         ) {
           clearInterval(poll);
           
-          Message(
-            chalk.bgGreenBright.bold, ' report  ', 
-            buildInfo.status === "PASSED"
-              ? `Build passed in ${parseInt(buildInfo.duration)}s`
-              : `Build failed in ${parseInt(buildInfo.duration)}s`,
-              true
-          );
+          switch(buildInfo.status) {
+            case "PASSED":
+              Message(
+                chalk.bgGreenBright.bold, ' report  ', 
+                `Build passed in ${parseInt(buildInfo.duration)}s`,
+                  true
+              );
+              break;
+            case "MANUAL_REVIEW_REQUIRED":
+              Message(
+                chalk.bgYellowBright.bold, ' report  ',
+                `Build passed and requires manual review in ${parseInt(buildInfo.duration)}s`,
+                true
+              );
+              break;
+            case "FAILED":
+
+              if(Cloudflare.hasAnyActiveTunnel) {
+                // Show warning box that it might be due to cloudflare tunnel
+                Message(
+                  chalk.bgYellowBright.bold, ' warning  ',
+                  `It seems you are using cloudflare tunnel. Please make sure that you have added your cloudflare tunnel url in your project settings.`,
+                  true
+                );
+              }
+              
+              Message(
+                chalk.bgRedBright.bold, ' report  ',
+                `Build failed in ${parseInt(buildInfo.duration)}s`,
+                  true
+              );
+              break;
+            default:
+              break;
+          }
+       
           BlankMessage(
             " View build report at " +
               resolveFrontendServerUrl(`/app/build/${buildId}`)

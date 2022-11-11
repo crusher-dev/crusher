@@ -127,7 +127,6 @@ export default class CommandBase {
     } catch (err) {
       console.error("Error is", err);
     } finally {
-
       Cloudflare.killAnyProcess();
       if(preScriptProcess) {
         console.log("\n");

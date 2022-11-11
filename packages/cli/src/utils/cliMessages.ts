@@ -23,3 +23,4 @@ export const MessageDebug = (chalk, firstMessage, secondMessage, shouldShowInEve
 export const BlankMessageDebug = (firstMessage, shouldShowInEveryService: boolean = false) => {
 	console.debug('          ', firstMessage + (shouldShowInEveryService ? " " : ""));
 };
+

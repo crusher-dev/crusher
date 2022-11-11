@@ -47,11 +47,11 @@ steps:
   - name: Install node modules
     run: npm i
  
-  - name: Build and start in background
-    run: npm run build && npm run start &
+  - name: Build app
+    run: npm run build
  
-  - name: Run tests and exit
-    run: npx crusher.dev test:run && kill -9 $!`}
+  - name: Run tests
+    run: npx crusher.dev test:run --pre-run="npm run start" `}
     </CodeBlock>
   </TabItem>
   <TabItem value="starters" label="React" attributes={{className: "tab-item"}}>
@@ -68,12 +68,9 @@ steps:
       cache: 'npm'
   - name: Install node modules
     run: npm i
- 
-  - name: Start in background
-    run: npm run start &
- 
-  - name: Run tests and exit
-    run: npx crusher.dev test:run && kill -9 $!`}
+
+  - name: Run tests
+    run: npx crusher.dev test:run --pre-run="npm run start" `}
     </CodeBlock>
   </TabItem>
   <TabItem value="vue.js" label="Vue.js" attributes={{ className: "tab-item"}}>
@@ -91,11 +88,11 @@ steps:
   - name: Install node modules
     run: npm i
  
-  - name: Build & Start in background
-    run: npm run build && npm run serve &
+  - name: Build app
+    run: npm run build
  
-  - name: Run tests and exit
-    run: npx crusher.dev test:run && kill -9 $!`}
+  - name: Run tests
+    run: npx crusher.dev test:run --pre-run="npm run serve" `}
     </CodeBlock>
   </TabItem>
 </Tabs>

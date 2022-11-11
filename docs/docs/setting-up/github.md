@@ -68,13 +68,13 @@ steps:
       cache: 'npm'
   - name: Install node modules
     run: npm i
-
+ 
   - name: Run tests
     run: npx crusher.dev test:run --pre-run="npm run start" `}
     </CodeBlock>
   </TabItem>
-  <TabItem value="vue.js" label="Vue.js" attributes={{ className: "tab-item"}}>
-      <CodeBlock className={"language-yaml"}>{`name: Running tests for Vue.js
+  <TabItem value="vue.js" label="Vue.js" attributes={{className: "tab-item"}}>
+    <CodeBlock className={"language-yaml"}>{`name: Running tests for Vue.js
 on:
   push:
     branches:
@@ -87,13 +87,14 @@ steps:
       cache: 'npm'
   - name: Install node modules
     run: npm i
- 
+  
   - name: Build app
     run: npm run build
  
   - name: Run tests
     run: npx crusher.dev test:run --pre-run="npm run serve" `}
     </CodeBlock>
+
   </TabItem>
 </Tabs>
 

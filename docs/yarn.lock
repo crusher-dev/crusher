@@ -2351,16 +2351,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ionic-internal/docusaurus-plugin-tag-manager@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "@ionic-internal/docusaurus-plugin-tag-manager@npm:2.0.0"
-  peerDependencies:
-    react: ^16.8.4 || ^17.0.0
-    react-dom: ^16.8.4 || ^17.0.0
-  checksum: 6e9823c39a8ae43d34bb21b6c476d619cf13c0741102793aaa9f8c38370511ffdef49d4bc5acc75bf4aba0eec55e7ccf80cf2e01a48c095a36113f77592540e4
-  languageName: node
-  linkType: hard
-
 "@ionic-internal/ionic-ds@npm:^7.0.0":
   version: 7.1.0
   resolution: "@ionic-internal/ionic-ds@npm:7.1.0"
@@ -4975,7 +4965,6 @@ __metadata:
     "@emotion/css": ^11.7.1
     "@emotion/react": ^11.10.4
     "@emotion/styled": ^11.10.4
-    "@ionic-internal/docusaurus-plugin-tag-manager": ^2.0.0
     "@ionic-internal/ionic-ds": ^7.0.0
     "@ionic/prettier-config": ^2.0.0
     "@mdx-js/react": ^1.6.22

@@ -1,7 +1,7 @@
 import { ipcRenderer, webFrame } from "electron";
 import { getInitialStateRenderer } from "electron-redux";
 import React from "react";
-import { setShowShouldOnboardingOverlay } from "../store/actions/app";
+import { setSelectedProject, setShowShouldOnboardingOverlay } from "../store/actions/app";
 import configureStore from "../store/configureStore";
 import { iReduxState } from "../store/reducers";
 import { render } from "react-dom";
@@ -49,6 +49,7 @@ const handleUrlAction = async (store: Store, event: Electron.IpcRendererEvent, {
 		case "run-local-build":
 			const { buildId } = action.args;
 			const buildReport = await CloudCrusher.getBuildReportBuildMeta(buildId);
+			store.dispatch(setSelectedProject(buildReport.projectId));
 			const testIds = buildReport.tests.map((test) => test.id);
 				
 			triggerLocalBuild(testIds, buildReport.tests.map((test) => ({...test, testName: test.name})), buildReport.host);

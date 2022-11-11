@@ -34,6 +34,7 @@ import {
 import { getAssetPath, getCollapsedTestSteps } from "@utils/helpers";
 import { useRouter } from "next/router";
 import { TestNetwork } from "../components/network";
+import { useQueryParams } from "@hooks/common";
 
 const CompareImage = dynamic(() => import("../components/compareImages"));
 
@@ -627,6 +628,7 @@ const tableStyle = css`
 
 function TestOverviewTabTopSection({ currentTestTab, testInstanceData, expand, isShowingVideo, setIsShowingVideo, setCurrentTestTab }) {
 	const videoUrl = testInstanceData?.output?.video;
+	const { params } = useQueryParams();
 
 	return (
 		<div
@@ -661,7 +663,7 @@ function TestOverviewTabTopSection({ currentTestTab, testInstanceData, expand, i
 				>
 					logs
 				</div>
-				{testInstanceData.har ? (
+				{testInstanceData.har && params.network ? (
 					<div
 						css={[testNavBarItemStyle, currentTestTab === TestTabEnum.NETWORK ? selectedTabStyle : undefined]}
 						onClick={() => {
@@ -805,6 +807,7 @@ function RenderSteps({ steps, testInstanceData, testId, setIsShowingVideo }: { s
 export function TestOverview() {
 	const [selectedTest] = useAtom(selectedTestAtom);
 
+	const { params } = useQueryParams();
 	const { testData } = useBasicTestData();
 	const id = selectedTest;
 
@@ -851,7 +854,7 @@ export function TestOverview() {
 
 			{currentTestTab === TestTabEnum.LOGS && <TestLogs testId={testData.testId} testInstanceData={testInstanceData} />}
 
-			{ currentTestTab === TestTabEnum.NETWORK && <TestNetwork testId={testData.testId} testInstanceData={testInstanceData} />}
+			{ currentTestTab === TestTabEnum.NETWORK && params.network && <TestNetwork testId={testData.testId} testInstanceData={testInstanceData} />}
 
 			<Conditional showIf={expand && showLoading}>
 				<div className={"flex flex-col items-center w-full mt-80 mb-80"}>

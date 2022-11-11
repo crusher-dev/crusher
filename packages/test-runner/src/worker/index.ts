@@ -75,7 +75,7 @@ module.exports = async function (bullJob: iTestRunnerJob): Promise<any> {
 			persistentContextDir,
 			bullJob.data.context,
 		);
-		const { recordedRawVideo, hasPassed, error, actionResults, persistenContextZipURL } = await codeRunnerService.runTest();
+		const { recordedRawVideo, hasPassed, error, actionResults, persistenContextZipURL, harUrl } = await codeRunnerService.runTest();
 		if (recordedRawVideo) {
 			console.log("Adding video in processing queue", recordedRawVideo);
 			await videoProcessorQueue.add(
@@ -100,7 +100,6 @@ module.exports = async function (bullJob: iTestRunnerJob): Promise<any> {
 		// Cleanup persistent context dir after test execution
 		deleteDirIfThere(persistentContextDir);
 
-		console.log("options are", bullJob);
 		const parentJob = await Job.fromId(queueManager.queues[TEST_COMPLETE_QUEUE].value, bullJob.opts.parent.id);
 		await parentJob.update({
 			...parentJob.data,
@@ -117,6 +116,7 @@ module.exports = async function (bullJob: iTestRunnerJob): Promise<any> {
 			failedReason: error ? error : null,
 			isStalled: error && error.isStalled ? error.isStalled : false,
 			storageState: globalManager.get("storageState"),
+			harUrl: harUrl,
 			persistenContextZipURL: persistenContextZipURL,
 		} as ITestCompleteQueuePayload);
 	} catch (err) {

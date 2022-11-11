@@ -100,7 +100,7 @@ class EnterpriseTestRunnerBootstrap extends TestRunnerBootstrap {
 		const shutDownInterval = setInterval(async () => {
 			if (Date.now() - this._lastJobPickedUpTime >= 120000 && this._bootAfterNJobsOffset != 0) {
 				console.log("Shutting down...");
-				await this._worker.close();
+				if(process.env.ECS_ENABLE_CONTAINER_METADATA) await this._worker.close();
 
 				if (process.env.ECS_ENABLE_CONTAINER_METADATA) {
 					// Get the container metadata
@@ -129,7 +129,7 @@ class EnterpriseTestRunnerBootstrap extends TestRunnerBootstrap {
 
 	private setOffNodeOffset(instanceIndexKeys: number[]) {
 		const orderedInstanceNo = instanceIndexKeys.sort().findIndex((key) => key === this._registeredInstanceNo);
-		this._bootAfterNJobsOffset = orderedInstanceNo * TEST_PER_INSTANCE;
+		this._bootAfterNJobsOffset = process.env.ECS_ENABLE_CONTAINER_METADATA ? orderedInstanceNo * TEST_PER_INSTANCE : 0;
 	}
 }
 

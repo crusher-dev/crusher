@@ -33,12 +33,14 @@ import {
 } from "@utils/core/buildReportUtils";
 import { getAssetPath, getCollapsedTestSteps } from "@utils/helpers";
 import { useRouter } from "next/router";
+import { TestNetwork } from "../components/network";
 
 const CompareImage = dynamic(() => import("../components/compareImages"));
 
 enum TestTabEnum {
 	OVERVIEW = "overview",
 	LOGS = "logs",
+	NETWORK = "network",
 }
 
 const imageViewAtom = atomWithImmer<"side" | "compare">("side");
@@ -659,6 +661,17 @@ function TestOverviewTabTopSection({ currentTestTab, testInstanceData, expand, i
 				>
 					logs
 				</div>
+				{testInstanceData.har ? (
+					<div
+						css={[testNavBarItemStyle, currentTestTab === TestTabEnum.NETWORK ? selectedTabStyle : undefined]}
+						onClick={() => {
+							setCurrentTestTab("network");
+						}}
+					>
+						network
+					</div>
+				) : ""}
+		
 			</div>
 
 			<div className={"flex items-center mr-60"}>
@@ -837,6 +850,8 @@ export function TestOverview() {
 			)}
 
 			{currentTestTab === TestTabEnum.LOGS && <TestLogs testId={testData.testId} testInstanceData={testInstanceData} />}
+
+			{ currentTestTab === TestTabEnum.NETWORK && <TestNetwork testId={testData.testId} testInstanceData={testInstanceData} />}
 
 			<Conditional showIf={expand && showLoading}>
 				<div className={"flex flex-col items-center w-full mt-80 mb-80"}>

@@ -11,6 +11,7 @@ interface iCodeGeneratorOptions {
 	usePlaywrightChromium?: boolean;
 	videoSavePath: string;
 	turnOnTracing?: boolean;
+	recordHarPath?: string;
 	tracePath?: string;
 	persistentContextDir?: string;
 	proxyUrlsMap?: { [key: string]: { tunnel: string; intercept: string | { regex: string } } };
@@ -47,6 +48,7 @@ export class CodeGenerator {
 				args: ["--disable-shm-usage", "--disable-gpu"],
 				...this.options.defaultBrowserLaunchOptions,
 			},
+			recordHarPath: this.options.recordHarPath,
 			persistentContextDir: this.options.persistentContextDir,
 		});
 

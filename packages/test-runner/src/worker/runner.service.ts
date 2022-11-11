@@ -41,6 +41,8 @@ export class CodeRunnerService {
 		persistentContextDir: string | null = null,
 		context: any = {},
 	) {
+
+		console.log("HAR PATH",  path.resolve(`/tmp/crusher/`, identifer, "test.har"));
 		this.codeGenerator = new CodeGenerator({
 			shouldRecordVideo: isOpenSource() ? false : runnerConfig.shouldRecordVideo,
 			usePlaywrightChromium: isOpenSource(),
@@ -54,6 +56,8 @@ export class CodeRunnerService {
 			},
 			proxyUrlsMap: runnerConfig.proxyUrlsMap || {},
 			persistentContextDir: persistentContextDir,
+
+			recordHarPath: path.resolve(`/tmp/crusher/`, identifer, "test.har")
 		});
 		this.actions = actions;
 		this.runnerConfig = runnerConfig;
@@ -87,6 +91,7 @@ export class CodeRunnerService {
 		error: (Error & { isStalled?: boolean }) | undefined;
 		actionResults: any;
 		persistenContextZipURL: string | null;
+		harUrl: string | null;
 	}> {
 		const code = await this.codeGenerator.getCode(this.actions);
 		let error, recordedRawVideoUrl;
@@ -152,8 +157,14 @@ export class CodeRunnerService {
 			);
 		}
 
+		const harUrl = await this.storageManager.upload(
+			path.resolve(`/tmp/crusher/`, codeGeneratorConfig.assetsDir, "test.har"),
+			path.join("00_temp_folder/", codeGeneratorConfig.assetsDir, "test.har"),
+		);
+
 		return {
 			recordedRawVideo: recordedRawVideoUrl,
+			harUrl: harUrl,
 			hasPassed: !error ? true : error.isStalled ? true : false,
 			error: error,
 			actionResults: this.getCompleteActionsResult(testActionResults),

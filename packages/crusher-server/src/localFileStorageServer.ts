@@ -30,6 +30,13 @@ class LocalServer {
 		this.server = new express();
 		this.server.use(bodyParser.json({ limit: "50mb" }));
 		this.server.use(bodyParser.urlencoded({ extended: false, limit: "50mb" }));
+		// allow cors
+		this.server.use((req, res, next) => {
+			res.header("Access-Control-Allow-Origin", `${"http://localhost:3000"}`);
+			res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+			res.header("Access-Control-Allow-Credentials", "true");
+			next();
+		});
 		this.server.use(fileUpload());
 		this.initRoutes();
 

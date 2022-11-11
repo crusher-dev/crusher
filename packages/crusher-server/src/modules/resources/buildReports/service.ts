@@ -36,6 +36,7 @@ interface TestBuildReport {
 	testId?: number;
 	testBuildReportId?: number;
 	testInstanceId?: number;
+	testInstanceHarUrl?: string;
 	testBaselineInstanceId?: number;
 	testName?: string;
 	testStepsJson?: string;
@@ -129,7 +130,7 @@ export class BuildReportService {
 		const testsWithReportData: Array<TestBuildReport> = await this.dbManager.fetchAllRows(
 			"SELECT jobs.id build_id, jobs.host build_host, jobs.meta build_meta, jobs.project_id build_project_id, jobs.commit_name build_name, job_reports.id build_report_id, job_reports.reference_job_id build_baseline_id, job_reports.created_at build_report_created_at, jobs.created_at build_created_at, jobs.updated_at build_updated_at, job_reports.updated_at build_report_updated_at, job_reports.status build_report_status, build_tests.* FROM public.jobs" +
 			" inner join public.job_reports on job_reports.id = jobs.latest_report_id" +
-			" right outer join (SELECT test_instances.id test_instance_id, test_instances.meta test_instance_meta, test_instances.group_id test_instance_group_id, test_instances.context test_instance_context, test_instance_result_sets.report_id test_build_report_id, test_instance_result_sets.status test_result_status, test_instance_result_sets.conclusion test_Result_conclusion, test_instance_result_sets.id test_result_set_id, test_instance_result_sets.target_instance_id test_baseline_instance_id, tests.name test_name, test_instances.browser test_instance_browser, tests.id test_id, tests.events test_steps_json, test_instances.host test_instance_host, test_instances.recorded_video_url recorded_video_url FROM public.test_instances" +
+			" right outer join (SELECT test_instances.id test_instance_id, test_instances.meta test_instance_meta, test_instances.har_url test_instance_har_url, test_instances.group_id test_instance_group_id, test_instances.context test_instance_context, test_instance_result_sets.report_id test_build_report_id, test_instance_result_sets.status test_result_status, test_instance_result_sets.conclusion test_Result_conclusion, test_instance_result_sets.id test_result_set_id, test_instance_result_sets.target_instance_id test_baseline_instance_id, tests.name test_name, test_instances.browser test_instance_browser, tests.id test_id, tests.events test_steps_json, test_instances.host test_instance_host, test_instances.recorded_video_url recorded_video_url FROM public.test_instances" +
 			" inner join public.tests on tests.id = test_instances.test_id" +
 			" inner join public.test_instance_result_sets on test_instance_result_sets.instance_id = test_instances.id   ) build_tests on build_tests.test_build_report_id = job_reports.id  WHERE  jobs.id = ?",
 			[buildId],
@@ -151,7 +152,7 @@ export class BuildReportService {
 			return acc;
 		}, {});
 		
-		const testsWithReportDataAndActionResultsPromises: Array<Promise<TestBuildReport & { actionsResult: Array<any> }>> = testsWithReportData.map(
+		const testsWithReportDataAndActionResultsPromises: Array<Promise<TestBuildReport & { har?; string; actionsResult: Array<any> }>> = testsWithReportData.map(
 			async (reportData) => {
 				const instanceResult = instanceResultsMap[reportData.testInstanceId];
 
@@ -163,6 +164,7 @@ export class BuildReportService {
 
 				return {
 					...reportData,
+					har:  reportData.testInstanceHarUrl ? await this.getPublicUrl(reportData.testInstanceHarUrl) : null,
 					actionsResult: finalInstanceResult,
 				};
 			},
@@ -200,6 +202,7 @@ export class BuildReportService {
 					video: current.recordedVideoUrl,
 				},
 				steps: current.actionsResult,
+				har: current.har,
 			};
 
 			const uniqueId = current.testInstanceGroupId ? `${current.testId}/${current.testInstanceGroupId}` : `${current.testId}`;

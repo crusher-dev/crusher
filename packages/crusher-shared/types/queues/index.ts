@@ -30,6 +30,7 @@ export interface ITestCompleteQueuePayload {
 	failedReason?: Error & { isStalled: boolean };
 	isStalled?: boolean;
 	persistenContextZipURL: string | null;
+	harUrl?: string | null;
 }
 
 export interface IVideoProcessorQueuePayload {

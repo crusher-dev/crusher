@@ -136,9 +136,14 @@ class BuildTestInstancesService {
 		assetIdentifer: string,
 		wasTestExecutionSuccessful: boolean,
 		isStalled: boolean = false,
+		harUrl: string | null = null,
 	) {
 		await this.updateResultSetStatus(TestInstanceResultSetStatusEnum.RUNNING_CHECKS, null, instanceId);
 
+		if(harUrl) {
+			await this.dbManager.update("UPDATE public.test_instances SET har_url = ? WHERE id = ?", [harUrl, instanceId]);
+		}
+		
 		const buildTestInstanceResultSet = await this.getBuildTestInstanceResultSet(instanceId);
 		const project = await this.projectsService.getProject(projectId);
 

@@ -199,6 +199,8 @@ class TestRunnerQueue {
             savedScreenshotRecords = await this.buildTestInstanceScreenshotService.saveScreenshots(screenshotActionsResultWithIndex, bullJob.data.testInstanceId);
         }
 
+
+        console.log("Bull job data", bullJob.data);
 		// Compare visual diffs and save the final result
 		await this.buildTestInstanceService.saveResult(
 			actionsResultWithIndex,
@@ -208,6 +210,7 @@ class TestRunnerQueue {
 			bullJob.name,
 			bullJob.data.hasPassed,
 			bullJob.data.isStalled,
+            bullJob.data.harUrl
 		);
 
 		// Wait for the final test in the list here

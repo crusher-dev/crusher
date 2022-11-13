@@ -10,6 +10,11 @@
     "noEmitOnError": false,
     "resolveJsonModule": true
   },
+  "baseUrl": "../",
+  "typeRoots": [",./@types", ",./node_modules/@types"],
+  "paths": {
+    "@crusher-shared/*": ["crusher-shared/*"],
+  },
   "include": [
     "src/**/*"
   ],

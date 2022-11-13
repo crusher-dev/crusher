@@ -7,9 +7,11 @@ import { BlankMessage, Message } from '../utils/cliMessages';
 import { getProjectConfig, getProjectConfigPath } from '../utils/projectConfig';
 import { askUserLogin, installCrusherRecorder, makeSureSetupIsCorrect } from '../utils/setup';
 import { getRecorderDistCommand } from '../utils/utils';
-import { recorderVersion, RECORDER_MAC_BUILD } from '../constants';
+import { recorderVersion } from '../constants';
 import { checkIfNewUpdateAvilable, getCurrentCLIVersion, getLatestCliVersion } from '../utils';
 import stringWidth from 'string-width';
+
+import {Analytics} from '../../../crusher-shared/modules/analytics/AnalyticsManager';
 
 const nodeVersion = process.version.match(/^v(\d+\.\d+)/)[1];
 
@@ -20,14 +22,23 @@ if (!process.env.CRUSHER_DEBUG) {
 
 (async () => {
 	if (parseFloat(nodeVersion) >= 10.0) {
-		
 		const args = process.argv.slice(2);
 		const helpArgs = ['-h', '--h', 'help', '--help', '-help'];
 
 		if (await checkIfNewUpdateAvilable()) {
+			const currentVersion = await getCurrentCLIVersion();
 			const latestVersion = await getLatestCliVersion();
+
+			Analytics.track({
+				event: 'START_UPDATE_FROM_RECORDER',
+				properties: {
+					currentVersion,
+					latestVersion
+				}
+			})
+		
 			const lines = [
-				`Crusher CLI update available: ${chalk.gray(await getCurrentCLIVersion())} → ${chalk.greenBright(latestVersion)}`,
+				`Crusher CLI update available: ${chalk.gray(currentVersion)} → ${chalk.greenBright(latestVersion)}`,
 				`Run ${chalk.magentaBright(`npm install -g crusher.dev`)} to update`,
 			];
 
@@ -44,20 +55,30 @@ if (!process.env.CRUSHER_DEBUG) {
 
 			console.log(output);
 		}
+
+
+		await new Promise((res)=>{
+			setTimeout(res,10000)
+		})
+		
 		const cliVersion = await getCurrentCLIVersion();
 		
 		Message(chalk.bgBlueBright.bold, ' crusher ', `${chalk.magenta.bold('v' + cliVersion)} launch sequence initiated 🦖`);
-		BlankMessage(` app version ${chalk.gray('-->')} ${chalk.magenta.bold('v' + recorderVersion)}\n`);
-
-		const hasDiscordInveite = args && args[0]?.includes('--');
+		BlankMessage(`app version ${chalk.gray('-->')} ${chalk.magenta.bold('v' + recorderVersion)}\n`);
 
 		const commandArgs = args ? args.filter((a) => !a.startsWith('-')) : [];
 		const isDefaultCommand = commandArgs.length === 0 || ['open', '.'].some((x) => args && args[0] === x);
 		const isHelpArg = helpArgs.includes(args[0]);
-		if (['version', '--version', '-v'].includes(args[0])) {
-			// Do nothing since version gets printed for every command
-		} else {
-			if (isDefaultCommand && !isHelpArg) {
+
+		Analytics.track({
+			event: 'RAN_CLI_COMMAND',
+			properties: {
+				cliVersion,
+				recorderVersion
+			}
+		})
+
+		if (isDefaultCommand && !isHelpArg) {
 				new Promise(async () => {
 					const { token } = await askUserLogin();
 					// @Todo: Add support for flag token here
@@ -71,12 +92,12 @@ if (!process.env.CRUSHER_DEBUG) {
 
 					execSync(`${getRecorderDistCommand()} --crusher-cli-path=${eval('__dirname') + '/index.js'} ${customFlags} --no-sandbox`, { stdio: 'inherit' });
 				});
-			} else if (isHelpArg) {
+		} else if (isHelpArg) {
 				new EntryCommand().help();
-			} else {
+		} else {
 				new EntryCommand().run();
-			}
 		}
+
 	} else {
 		console.error('Node version must be >= 10.0.0. You are using version: ' + nodeVersion);
 	}

@@ -26,12 +26,6 @@ export class Analytics {
             mode,
         });
 
-        const CRUSHER_USER_ID = getAllCookies()["CRUSHER_USER_ID"];
-        if (CRUSHER_USER_ID) {
-            window["analytics"].identify(CRUSHER_USER_ID, {
-                email,
-            });
-        }
     }
 
     static async trackPage() {

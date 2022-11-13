@@ -14,3 +14,9 @@ export enum DesktopAppEventsEnum {
 
     SAVE_STEP = 'SAVE_STEP',
 };
+
+export enum ServerEventsEnum {
+    BUILD_TRIGGERED = 'BUILD_TRIGGERED',
+    BUILD_FAILED = 'BUILD_FAILED',
+    BUILD_PASSED = 'BUILD_PASSED'
+}

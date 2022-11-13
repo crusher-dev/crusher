@@ -17,6 +17,8 @@ import { BadRequestError } from "routing-controllers";
 import { merge } from "lodash";
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { CodeTemplateService } from "../teams/codeTemplate/service";
+import { Analytics } from "@crusher-shared/modules/analytics/AnalyticsManager";
+import { ServerEventsEnum } from "@crusher-shared/modules/analytics/constants";
 @Service()
 class TestService {
 	private dbManager: DBManager;
@@ -150,7 +152,11 @@ class TestService {
 		projectId: number,
 		userId: number,
 		customTestsConfig: Partial<ICreateBuildRequestPayload> = {},
-		buildMeta: { github?: { repoName: string; commitId: string }; disableBaseLineComparisions?: boolean } = {},
+		buildMeta: { github?: { repoName: string; commitId: string }; disableBaseLineComparisions?: boolean; vercel?: {
+			checkId: string,
+			deploymentId: string,
+			teamId: string,
+		} } = {},
 		overideBaseLineBuildId: number | null = null,
 		browsers = [BrowserEnum.CHROME],
 		folder = null,
@@ -163,6 +169,31 @@ class TestService {
 		console.log("TestIds is", testIds);
 		const testsData = await this.getTestsInProject(projectId, true, { folder: folder, folderIds: folderIds, testIds: testIds });
 		console.log("Test list is", testsData);
+
+
+		const getSource = () => {
+			if(buildMeta.vercel?.checkId) {
+				return "vercel";
+			}
+
+			if(buildMeta.github?.repoName) {
+				return "github";
+			}
+
+			return "manual";
+		};
+
+		Analytics.trackProject({
+			groupId: projectId,
+			event: ServerEventsEnum.BUILD_TRIGGERED,
+			properties: {
+				userId: userId,
+				triggerType: getSource(),
+				testCount: testsData.totalCount,
+			}
+		});
+
+		
 		if (!testsData.list.length) return;
 
 		const projectRecord = await this.projectService.getProject(projectId);
@@ -308,7 +339,7 @@ class TestService {
 			queryParams.push(`${filter.page * PER_PAGE_LIMIT}`);
 		}
 
-		return { totalPages: Math.ceil(totalRecordCountQueryResult.count / PER_PAGE_LIMIT), list: await this._runCamelizeFetchAllQuery(query, queryParams) };
+		return { totalCount: totalRecordCountQueryResult.count, totalPages: Math.ceil(totalRecordCountQueryResult.count / PER_PAGE_LIMIT), list: await this._runCamelizeFetchAllQuery(query, queryParams) };
 	}
 
 	@CamelizeResponse()

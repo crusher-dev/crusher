@@ -20,7 +20,7 @@ export default class CommandBase {
 
 	async init() {
 		const options = this.program.opts();
-		const { help, version } = options;
+		const { help } = options;
 		if (help === true) {
 			await this.help();
 			return;
@@ -30,7 +30,7 @@ export default class CommandBase {
 	}
 
 	help() {
-		console.log(`Log in as a user.`);
+		console.log(`Log in as a user`);
 	}
 
 	async run() {

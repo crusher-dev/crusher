@@ -13,9 +13,6 @@ interface UserInitialData {
 	projects: any;
 }
 
-/**
- * EE
- */
 export const updateInitialDataMutator = atom(null, (_get, _set, data: UserInitialData) => {
 	_set(userAtom, data.userData);
 	_set(teamAtom, data.team);
@@ -33,8 +30,4 @@ export const updateInitialDataMutator = atom(null, (_get, _set, data: UserInitia
 			process.env.NEXT_PUBLIC_CRUSHER_MODE,
 		);
 	}
-});
-
-export const selectInitialProjectMutator = atom(null, (_get, _set, data: UserInitialData) => {
-
 });

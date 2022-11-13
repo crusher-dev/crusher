@@ -1,6 +1,8 @@
+import { DesktopAppEventsEnum } from "@shared/modules/analytics/constants";
 import { createHashHistory } from "history";
 import React from "react";
 import { HashRouterProps, Router } from "react-router-dom";
+import { performTrackEvent } from "../commands/perform";
 import { clearAllToasts } from "../ui/components/toasts";
 const historyInstance = createHashHistory();
 
@@ -22,6 +24,10 @@ export function CustomRouter({ basename, children }: HashRouterProps) {
 		clearAllToasts();
 	}, [state.location]);
 
+
+	React.useEffect(() => {
+		performTrackEvent(DesktopAppEventsEnum.PAGE_OPEN, { page: state?.location?.pathname });
+	}, [state.location]);
 	return <Router basename={basename} children={children} location={state.location} navigationType={state.action} navigator={history} />;
 }
 

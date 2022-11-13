@@ -46,7 +46,7 @@ import template from "@crusher-shared/utils/templateString";
 import { ILog } from "../store/reducers/logger";
 import { clearLogs, recordLog } from "../store/actions/logger";
 import axios from "axios";
-import { identify } from "../lib/analytics";
+import { trackAppStartedEvent, trackEvent } from "../lib/analytics";
 
 import { screen } from "electron";
 import { ProxyManager } from "./proxy-manager";
@@ -55,6 +55,7 @@ import { getLogs } from "../store/selectors/logger";
 import path from "path";
 import { shouldOverrideHost } from "../lib/project-config";
 import { chalkShared, _log } from "@shared/modules/logger";
+import { DesktopAppEventsEnum } from "@shared/modules/analytics/constants";
 
 export class AppWindow {
 	private window: Electron.BrowserWindow;
@@ -149,6 +150,9 @@ export class AppWindow {
 		};
 		process.on("SIGINT", cleanExit);
 		process.on("SIGTERM", cleanExit);
+
+		// Send analytics
+		trackAppStartedEvent();
 	}
 
 	public load() {
@@ -169,7 +173,6 @@ export class AppWindow {
 			process.env.CRUSHER_SCALE_FACTOR = this.window.webContents.zoomFactor + "";
 
 			this._loadTime = now() - startLoad;
-			identify(4);
 
 			this.maybeEmitDidLoad();
 		});

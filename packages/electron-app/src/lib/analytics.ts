@@ -3,6 +3,8 @@ import { Analytics } from "@shared/modules/analytics/AnalyticsManager";
 import { app } from "electron";
 import { getUserAccountInfo } from "../store/selectors/app";
 import { getStore } from "../store/configureStore";
+import { iAction } from "@shared/types/action";
+import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 
 export const trackEvent = (event: DesktopAppEventsEnum,  properties: any = {}) => {
 	const store = getStore();
@@ -24,6 +26,16 @@ export const trackEvent = (event: DesktopAppEventsEnum,  properties: any = {}) =
 export const trackAppStartedEvent = (properties: any = {}) => {
 	return trackEvent(DesktopAppEventsEnum.APP_STARTED, {
 		args: process.argv,
+		...properties,
+	});
+}
+
+export const trackStepSaved = (step: iAction, properties: any = {}) => {\
+	return trackEvent(DesktopAppEventsEnum.SAVE_STEP, {
+		step: {
+			type: step.type,
+			name: step.name,
+		},
 		...properties,
 	});
 }

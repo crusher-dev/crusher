@@ -11,4 +11,6 @@ export enum DesktopAppEventsEnum {
     APP_CLOSED = 'DESKTOP_APP_CLOSED',
     PAGE_OPEN = 'PAGE_OPEN',
     RECORDER_PAGE_OPEN = "RECORDER_PAGE_OPEN",
+
+    SAVE_STEP = 'SAVE_STEP',
 };

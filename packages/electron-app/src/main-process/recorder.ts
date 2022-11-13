@@ -7,13 +7,14 @@ import { StepErrorTypeEnum } from "runner-utils/src/error.types";
 
 class Recorder {
 	private store: Store<iReduxState>;
-
-	constructor(store) {
+	private recordStep: any;
+	constructor(store, recordStep: any) {
 		this.store = store;
+		this.recordStep = recordStep;
 	}
 
 	saveRecordedStep(action: iAction, status: ActionStatusEnum) {
-		this.store.dispatch(recordStep(action, status));
+		this.recordStep(action, status);
 	}
 
 	markRunningStepFailed(errorType: StepErrorTypeEnum) {

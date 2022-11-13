@@ -46,7 +46,7 @@ import template from "@crusher-shared/utils/templateString";
 import { ILog } from "../store/reducers/logger";
 import { clearLogs, recordLog } from "../store/actions/logger";
 import axios from "axios";
-import { trackAppStartedEvent, trackEvent } from "../lib/analytics";
+import { trackAppStartedEvent, trackEvent, trackStepSaved } from "../lib/analytics";
 
 import { screen } from "electron";
 import { ProxyManager } from "./proxy-manager";
@@ -56,6 +56,7 @@ import path from "path";
 import { shouldOverrideHost } from "../lib/project-config";
 import { chalkShared, _log } from "@shared/modules/logger";
 import { DesktopAppEventsEnum } from "@shared/modules/analytics/constants";
+import _ from "lodash";
 
 export class AppWindow {
 	private window: Electron.BrowserWindow;
@@ -86,7 +87,7 @@ export class AppWindow {
 		this.savedWindowState = windowStateKeeper({
 			maximize: true,
 		});
-		this.recorder = new Recorder(store);
+		this.recorder = new Recorder(store, this.recordStepWrapper.bind(this));
 		this.store = store;
 
 		this.proxyManager = new ProxyManager(store);
@@ -654,7 +655,7 @@ export class AppWindow {
 
 	handleSaveStep(event: Electron.IpcMainInvokeEvent, payload: { action: iAction }) {
 		const { action } = payload;
-		console.log("Saving step", { type: action.type });
+
 		if (!this.webView.playwrightInstance) return;
 		const elementInfo = this.webView.playwrightInstance.getElementInfoFromUniqueId(action.payload.meta?.uniqueNodeId);
 		if (elementInfo?.parentFrameSelectors) {
@@ -671,7 +672,7 @@ export class AppWindow {
 				this.store.dispatch(updateRecordedStep(action, lastRecordedStep.index));
 			} else {
 				if (lastRecordedStep.step.type !== ActionsInTestEnum.NAVIGATE_URL) {
-					this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
+					this.recordStepWrapper(action, ActionStatusEnum.COMPLETED);
 				}
 			}
 		} else if (action.type === ActionsInTestEnum.ADD_INPUT) {
@@ -682,7 +683,7 @@ export class AppWindow {
 			) {
 				this.store.dispatch(updateRecordedStep(action, lastRecordedStep.index));
 			} else {
-				this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
+				this.recordStepWrapper(action, ActionStatusEnum.COMPLETED);
 			}
 		} else if ([ActionsInTestEnum.PAGE_SCROLL, ACTIONS_IN_TEST.ELEMENT_SCROLL].includes(action.type)) {
 			const lastRecordedStep = this.getLastRecordedStep(this.store, true);
@@ -694,13 +695,13 @@ export class AppWindow {
 				this.store.dispatch(updateRecordedStep(action, lastRecordedStep.index));
 			} else {
 				action.payload.meta.value = [action.payload.meta.value];
-				this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
+				this.recordStepWrapper(action, ActionStatusEnum.COMPLETED);
 			}
 		} else {
 			if (action.type === ActionsInTestEnum.NAVIGATE_URL) {
-				this.store.dispatch(recordStep(action, ActionStatusEnum.STARTED));
+				this.recordStepWrapper(action, ActionStatusEnum.STARTED);
 			} else {
-				this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
+				this.recordStepWrapper(action, ActionStatusEnum.COMPLETED);
 			}
 		}
 	}
@@ -834,15 +835,18 @@ export class AppWindow {
 		this.store.dispatch(updateRecorderState(TRecorderState.RECORDING_ACTIONS, {}));
 	}
 
+	recordStepWrapper(step: iAction, status: ActionStatusEnum = ActionStatusEnum.STARTED) {
+		trackStepSaved(step);
+		return this.store.dispatch(recordStep(step, status));
+	}
+
 	async handleReloadPage() {
 		this.store.dispatch(updateRecorderState(TRecorderState.PERFORMING_ACTIONS, {}));
 
-		this.store.dispatch(
-			recordStep({
+		this.recordStepWrapper({
 				type: ActionsInTestEnum.RELOAD_PAGE,
 				payload: {},
-			}),
-		);
+		});
 
 		this.webView.webContents.reload();
 
@@ -1065,7 +1069,7 @@ export class AppWindow {
 				} else {
 					if (browserAction.type !== ActionsInTestEnum.RUN_AFTER_TEST) {
 						// @Todo: Add support for future browser actions
-						this.store.dispatch(recordStep(browserAction, ActionStatusEnum.COMPLETED));
+						this.recordStepWrapper(browserAction, ActionStatusEnum.COMPLETED);
 					} else {
 						await this.handleRunAfterTest(browserAction, false);
 					}
@@ -1189,7 +1193,7 @@ export class AppWindow {
 					app.userAgentFallback = userAgent;
 
 					if (!shouldNotSave) {
-						this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
+						this.recordStepWrapper(action, ActionStatusEnum.COMPLETED);
 					}
 					// await this.waitForWebView();
 					break;
@@ -1222,7 +1226,7 @@ export class AppWindow {
 					this.webView.webContents.reload();
 					await this.webView.playwrightInstance.page.waitForNavigation({ waitUntil: "networkidle" });
 					if (!shouldNotSave) {
-						this.store.dispatch(recordStep(action, ActionStatusEnum.COMPLETED));
+						this.recordStepWrapper(action, ActionStatusEnum.COMPLETED);
 					}
 					break;
 				default:
@@ -1279,12 +1283,12 @@ export class AppWindow {
 					await this.handlePerformAction(null, { action: browserAction, shouldNotSave: !shouldRecordSetDevice });
 				} else {
 					if (browserAction.type !== ActionsInTestEnum.RUN_AFTER_TEST) {
-						this.store.dispatch(recordStep(browserAction, ActionStatusEnum.COMPLETED));
+						this.recordStepWrapper(browserAction, ActionStatusEnum.COMPLETED);
 					}
 				}
 			}
 
-			this.store.dispatch(recordStep(action, ActionStatusEnum.STARTED));
+			this.recordStepWrapper(action, ActionStatusEnum.STARTED);
 
 			for (const savedStep of getMainActions(replayableTestSteps)) {
 				await this.handlePerformAction(null, { action: savedStep, shouldNotSave: true });

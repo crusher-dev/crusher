@@ -279,6 +279,7 @@ export class AppWindow {
 		ipcMain.handle("get-recorder-test-logs", this.handleGetRecorderTestLogs.bind(this));
 		ipcMain.handle("save-local-build", this.handleSaveLocalBuild.bind(this));
 		ipcMain.handle("goto-url", this.handleGotoUrl.bind(this));
+		ipcMain.handle("track-event", this.handleTrackEvent.bind(this));
 		ipcMain.on("get-var-context", this.handleGetVarContext.bind(this));
 		ipcMain.on("get-is-advanced-selector", this.handleGetVarContext.bind(this));
 		ipcMain.handle("turn-on-webview-dev-tools", this.handleTurnOnWebviewDevtools.bind(this));
@@ -306,6 +307,10 @@ export class AppWindow {
 			process.argv = process.argv.filter((a) => a.includes("--project-config-file"));
 		}
 		this.handle(projectId).catch((err) => console.error("Can't initialize project config in renderer process", err));
+	}
+
+	async handleTrackEvent(event: Electron.IpcMainEvent, data: { event: DesktopAppEventsEnum, properties: any }) {
+		return trackEvent(data.event, data.properties);
 	}
 
 	async handleTestDeepLink(event: Electron.IpcMainEvent, data: { deepLink: string }) {

@@ -9,4 +9,5 @@ export const CLI_EVENTS = {
 export enum DesktopAppEventsEnum {
     APP_STARTED = 'DESKTOP_APP_STARTED',
     APP_CLOSED = 'DESKTOP_APP_CLOSED',
+    RECORDER_PAGE_OPEN = "RECORDER_PAGE_OPEN",
 };

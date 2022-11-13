@@ -9,6 +9,8 @@ export const trackEvent = (event: DesktopAppEventsEnum,  properties: any = {}) =
 	const userInfo = getUserAccountInfo(store.getState() as any);
 	
 	const recorderVersion = app.getVersion();
+
+	console.log("Will start now", event, properties);
 	return Analytics.track({
 		event: event,
 		userId: userInfo?.id,

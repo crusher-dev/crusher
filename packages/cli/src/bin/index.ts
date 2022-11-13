@@ -11,6 +11,7 @@ import { checkIfNewUpdateAvilable, getCurrentCLIVersion, getLatestCliVersion } f
 import stringWidth from 'string-width';
 import {Analytics} from '../../../crusher-shared/modules/analytics/AnalyticsManager';
 import {CLI_EVENTS} from '../../../crusher-shared/modules/analytics/constants';
+import { getAppConfig } from '../utils/appConfig';
 
 const nodeVersion = process.version.match(/^v(\d+\.\d+)/)[1];
 
@@ -27,15 +28,7 @@ if (!process.env.CRUSHER_DEBUG) {
 		if (await checkIfNewUpdateAvilable()) {
 			const currentVersion = await getCurrentCLIVersion();
 			const latestVersion = await getLatestCliVersion();
-
-			Analytics.track({
-				event:  CLI_EVENTS.RAN_CLI_COMMAND,
-				properties: {
-					currentVersion,
-					latestVersion
-				}
-			})
-		
+	
 			const lines = [
 				`Crusher CLI update available: ${chalk.gray(currentVersion)} → ${chalk.greenBright(latestVersion)}`,
 				`Run ${chalk.magentaBright(`npm install -g crusher.dev`)} to update`,
@@ -62,7 +55,10 @@ if (!process.env.CRUSHER_DEBUG) {
 		const isDefaultCommand = commandArgs.length === 0 || ['open', '.'].some((x) => args && args[0] === x);
 		const isHelpArg = helpArgs.includes(args[0]);
 
+		const appConfig = getAppConfig();
+		
 		Analytics.track({
+			userId: appConfig?.userInfo?.id,
 			event: 'RAN_CLI_COMMAND',
 			properties: {
 				cliVersion,

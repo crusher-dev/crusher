@@ -1,3 +1,4 @@
+// @ts-nocheck
 const AnalyticsNode = require('analytics-node');
 import getMAC from 'getmac'
 
@@ -34,8 +35,6 @@ export class Analytics{
 
     static track({userId = null, event,properties}){
         if(Analytics.disabledTelemetry) return;
-        console.log("track")
-        console.log({userId, event, properties})
 
         Analytics.analyticsObj.track({
             userId,

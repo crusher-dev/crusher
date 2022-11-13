@@ -53,6 +53,16 @@ class IntegrationsController {
 			await this.integrationsService.addIntegration({ oAuthInfo: integrationConfig }, IntegrationServiceEnum.SLACK, projectId, teamId);
 		}
 
+		Analytics.trackProject({
+			groupId: projectId,
+			event: ServerEventsEnum.SLACK_INTEGRATION_ADDED,
+			properties: {
+				userId: userInfo.user_id,
+				slackTeamId: integrationConfig.team.id,
+				slackTeamName: integrationConfig.team.name
+			}
+		});
+
 		await res.redirect(redirectUrl);
 		return res;
 	}
@@ -66,7 +76,14 @@ class IntegrationsController {
 		}
 
 		await this.integrationsService.deleteIntegration(existingSlackIntegration.id);
-
+		Analytics.trackProject({
+			groupId: projectId,
+			event: ServerEventsEnum.SLACK_INTEGRATION_REMOVED,
+			properties: {
+				userId: userInfo.user_id,
+				integrationId: existingSlackIntegration.id,
+			}
+		});
 		return { status: "Successful" };
 	}
 
@@ -77,7 +94,20 @@ class IntegrationsController {
 		@Param("project_id") projectId: number,
 		@Body() body: { alertChannel: any; normalChannel: any },
 	) {
-		return this.integrationsService.saveSlackSettings({ alertChannel: body.alertChannel, normalChannel: body.normalChannel }, projectId);
+		const { user_id } = user;
+		const response = await this.integrationsService.saveSlackSettings({ alertChannel: body.alertChannel, normalChannel: body.normalChannel }, projectId);
+		
+		Analytics.trackProject({
+			groupId: projectId,
+			event: ServerEventsEnum.SET_SLACK_INTEGRATION_CHANNELS,
+			properties: {
+				userId: user_id,
+				alertChannel: body.alertChannel,
+				normalChannel: body.normalChannel
+			}
+		});
+
+		return response;
 	}
 
 	@Authorized()
@@ -125,6 +155,7 @@ class IntegrationsController {
 				repoId: repoId,
 			}
 		});
+
 		return {
 			status: "Successful",
 			data: {

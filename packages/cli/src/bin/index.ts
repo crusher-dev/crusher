@@ -12,6 +12,7 @@ import { checkIfNewUpdateAvilable, getCurrentCLIVersion, getLatestCliVersion } f
 import stringWidth from 'string-width';
 
 import {Analytics} from '../../../crusher-shared/modules/analytics/AnalyticsManager';
+import {CLI_EVENTS} from '../../../crusher-shared/modules/analytics/constants';
 
 const nodeVersion = process.version.match(/^v(\d+\.\d+)/)[1];
 
@@ -30,7 +31,7 @@ if (!process.env.CRUSHER_DEBUG) {
 			const latestVersion = await getLatestCliVersion();
 
 			Analytics.track({
-				event: 'START_UPDATE_FROM_RECORDER',
+				event:  CLI_EVENTS.RAN_CLI_COMMAND,
 				properties: {
 					currentVersion,
 					latestVersion

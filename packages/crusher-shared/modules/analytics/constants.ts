@@ -1,0 +1,5 @@
+
+export const CLI_EVENTS = {
+    'RAN_CLI_COMMAND' : 'RAN_CLI_COMMAND',
+    'UPDATE_VERSION' : 'UPDATE_VERSION'
+}

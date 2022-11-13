@@ -1,3 +1,5 @@
+import { Analytics } from "../../../crusher-shared/modules/analytics/AnalyticsManager";
+
 // eslint-disable-next-line unicorn/filename-case
 export interface IUserInfo {
   id: number;
@@ -10,6 +12,12 @@ export interface IUserInfo {
 let userInfo: IUserInfo | null = null;
 
 const setUserInfo = (_userInfo: IUserInfo) => {
+  Analytics.identifyUser(
+    {
+      userId: _userInfo.email
+    }
+  );
+  
   userInfo = _userInfo;
 };
 

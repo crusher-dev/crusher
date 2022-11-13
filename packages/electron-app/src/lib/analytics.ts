@@ -5,6 +5,7 @@ import { getUserAccountInfo } from "../store/selectors/app";
 import { getStore } from "../store/configureStore";
 import { iAction } from "@shared/types/action";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
+import { logToAxiom } from "@shared/modules/logger";
 
 export const trackEvent = (event: DesktopAppEventsEnum,  properties: any = {}) => {
 	const store = getStore();
@@ -13,6 +14,18 @@ export const trackEvent = (event: DesktopAppEventsEnum,  properties: any = {}) =
 	const recorderVersion = app.getVersion();
 
 	console.log("Will start now", event, properties);
+
+	logToAxiom(
+		'recroder',
+		{
+			event: event,
+			userId: userInfo?.id,
+			properties: {
+				recorderVersion,
+				...properties,
+			}
+		}
+	)
 	return Analytics.track({
 		event: event,
 		userId: userInfo?.id,

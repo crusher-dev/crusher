@@ -48,6 +48,7 @@ export const trackStepSaved = (step: iAction, properties: any = {}) => {\
 		step: {
 			type: step.type,
 			name: step.name,
+			status: step.status
 		},
 		...properties,
 	});

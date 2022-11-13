@@ -2,7 +2,7 @@ const AnalyticsNode = require('analytics-node');
 import getMAC from 'getmac'
 
 const devKey = 'IM0t0F7DFPxWwbDrd8WStLqOjJYLYuaq'
-var analytics = new AnalyticsNode(process.env.SEGMENT_API_KEy || devKey);
+var analytics = new AnalyticsNode(process.env.SEGMENT_API_KEY || devKey, {flushAfter: 5, flushInterval: 3});
 
 const getUniqueID =  ()=>{
     if (typeof window === 'undefined'){

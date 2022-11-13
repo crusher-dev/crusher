@@ -2,15 +2,13 @@ import chalk from 'chalk';
 import "../utils/inquirer-patch";
 import { execSync } from 'child_process';
 import EntryCommand from '../commands/index';
-import { loadUserInfoOnLoad } from '../utils/hooks';
 import { BlankMessage, Message } from '../utils/cliMessages';
 import { getProjectConfig, getProjectConfigPath } from '../utils/projectConfig';
-import { askUserLogin, installCrusherRecorder, makeSureSetupIsCorrect } from '../utils/setup';
+import {  installCrusherRecorder, makeSureSetupIsCorrect } from '../utils/setup';
 import { getRecorderDistCommand } from '../utils/utils';
 import { recorderVersion } from '../constants';
 import { checkIfNewUpdateAvilable, getCurrentCLIVersion, getLatestCliVersion } from '../utils';
 import stringWidth from 'string-width';
-
 import {Analytics} from '../../../crusher-shared/modules/analytics/AnalyticsManager';
 import {CLI_EVENTS} from '../../../crusher-shared/modules/analytics/constants';
 
@@ -43,8 +41,6 @@ if (!process.env.CRUSHER_DEBUG) {
 				`Run ${chalk.magentaBright(`npm install -g crusher.dev`)} to update`,
 			];
 
-			// TODO: Pull this into utils/format
-
 			const padding = 3;
 			const longestLineLength = Math.max(...lines.map(line => stringWidth(line)));
 			const horizontalRule = `  ${'─'.repeat(longestLineLength + padding * 2)}`;
@@ -57,11 +53,6 @@ if (!process.env.CRUSHER_DEBUG) {
 			console.log(output);
 		}
 
-
-		await new Promise((res)=>{
-			setTimeout(res,10000)
-		})
-		
 		const cliVersion = await getCurrentCLIVersion();
 		
 		Message(chalk.bgBlueBright.bold, ' crusher ', `${chalk.magenta.bold('v' + cliVersion)} launch sequence initiated 🦖`);
@@ -75,30 +66,24 @@ if (!process.env.CRUSHER_DEBUG) {
 			event: 'RAN_CLI_COMMAND',
 			properties: {
 				cliVersion,
-				recorderVersion
+				recorderVersion,
+				command: process.argv[2] || ' ',	
 			}
 		})
 
 		if (isDefaultCommand && !isHelpArg) {
-				new Promise(async () => {
-					const { token } = await askUserLogin();
-					// @Todo: Add support for flag token here
-					await loadUserInfoOnLoad({ token: undefined });
-					await installCrusherRecorder();
-					await makeSureSetupIsCorrect(null, true);
+			await installCrusherRecorder();
+			await makeSureSetupIsCorrect(null, true);
+			const projectConfigPath = getProjectConfigPath();
+			const projectConfig = getProjectConfig();
+			const customFlags = projectConfig && projectConfig.project ? `--project-config-file=${projectConfigPath} --projectId=${projectConfig.project}` : '';
 
-					const projectConfigPath = getProjectConfigPath();
-					const projectConfig = getProjectConfig();
-					const customFlags = projectConfig && projectConfig.project ? `--project-config-file=${projectConfigPath} --projectId=${projectConfig.project}` : '';
-
-					execSync(`${getRecorderDistCommand()} --crusher-cli-path=${eval('__dirname') + '/index.js'} ${customFlags} --no-sandbox`, { stdio: 'inherit' });
-				});
+			execSync(`${getRecorderDistCommand()} --crusher-cli-path=${eval('__dirname') + '/index.js'} ${customFlags} --no-sandbox`, { stdio: 'inherit' });
 		} else if (isHelpArg) {
-				new EntryCommand().help();
+			new EntryCommand().help();
 		} else {
-				new EntryCommand().run();
+			new EntryCommand().run();
 		}
-
 	} else {
 		console.error('Node version must be >= 10.0.0. You are using version: ' + nodeVersion);
 	}

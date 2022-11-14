@@ -20,6 +20,7 @@
     "tests": "jest --runInBand --detectOpenHandles --verbose"
   },
   "dependencies": {
+    "@axiomhq/axiom-node": "^0.5.0",
     "@babel/preset-react": "^7.16.5",
     "@emoji-mart/react": "^1.0.1",
     "@emotion/babel-plugin": "^11.1.2",
@@ -34,7 +35,10 @@
     "@radix-ui/react-toast": "^1.0.0",
     "@reactour/tour": "^2.7.1",
     "@reduxjs/toolkit": "^1.5.0",
-    "@sentry/electron": "^2.5.4",
+    "@sentry/browser": "^7.19.0",
+    "@sentry/electron": "^4.1.0",
+    "@sentry/react": "^7.19.0",
+    "@sentry/tracing": "^7.19.0",
     "@stitches/react": "^1.2.8",
     "@types/analytics-node": "^3.1.8",
     "@types/node": "^17.0.2",

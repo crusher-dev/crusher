@@ -380,9 +380,9 @@ function RenderStep({ data, testInstanceData, setIsShowingVideo, testId, index }
 							`}
 						>
 							<a href={`crusher://run-test-from-build?testId=${testId}&buildId=${query.id}`}>
-								<Button>Run locally</Button>
+								<Button>Debug locally</Button>
 							</a>
-							<Button css={plainButtonCSS} className={"ml-8"} bgColor={"tertiary"} onClick={setIsShowingVideo.bind(this, true)}>
+							<Button css={plainButtonCSS} disabled={!testInstanceData?.output.video} className={"ml-8"} bgColor={"tertiary"} onClick={setIsShowingVideo.bind(this, true)}>
 								<span className={"font-400"}>View Video</span>
 							</Button>
 						</div>

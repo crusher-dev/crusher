@@ -79,8 +79,8 @@ async function stupCronForTestingAccountsCleanup() {
 }
 
 export async function init() {
-	await setupCronForBuilds();
-	await stupCronForTestingAccountsCleanup();
+	// await setupCronForBuilds();
+	// await stupCronForTestingAccountsCleanup();
 	await setupMetricsWatcher();
 }
 

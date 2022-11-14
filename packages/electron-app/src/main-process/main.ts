@@ -1,9 +1,13 @@
+import * as Sentry from "@sentry/electron/main";
+import { app, session } from "electron";
+
+Sentry.init({ dsn: "https://392b9a7bcc324b2dbdff0146ccfee044@o1075083.ingest.sentry.io/6075223" });
+
 import { setupLogger } from "@crusher-shared/modules/logger";
 setupLogger("recorder");
 
 require("v8-compile-cache");
 import { getAppURl, isProduction, parseDeepLinkUrlAction } from "./../utils";
-import { app, session } from "electron";
 import { APP_NAME } from "../../config/about";
 import { AppWindow } from "./app-window";
 import { now } from "./now";
@@ -12,15 +16,6 @@ import configureStore from "../store/configureStore";
 import { getGlobalAppConfig } from "../lib/global-config";
 import { SettingsManager } from "../lib/settingsManager";
 import path from "path";
-
-//     Sentry.init({ dsn: "https://392b9a7bcc324b2dbdff0146ccfee044@o1075083.ingest.sentry.io/6075223" });
-//     require('update-electron-app')({
-// 		repo: 'crusherdev/crusher-downloads',
-// 		updateInterval: '5 minutes',
-// 		logger: require('electron-log')
-// 	});
-
-// app.setAppLogsPath();
 
 let mainWindow: AppWindow | null = null;
 

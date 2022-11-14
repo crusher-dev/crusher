@@ -13,19 +13,6 @@ export const trackEvent = (event: DesktopAppEventsEnum,  properties: any = {}) =
 	
 	const recorderVersion = app.getVersion();
 
-	console.log("Will start now", event, properties);
-
-	logToAxiom(
-		'recroder',
-		{
-			event: event,
-			userId: userInfo?.id,
-			properties: {
-				recorderVersion,
-				...properties,
-			}
-		}
-	)
 	return Analytics.track({
 		event: event,
 		userId: userInfo?.id,

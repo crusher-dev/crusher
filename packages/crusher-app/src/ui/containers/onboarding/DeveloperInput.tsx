@@ -14,7 +14,7 @@ const DeveloperInput = () => {
 
 			</div>
 			<div css={inputFormContainerCss}>
-				<LinkBox css={linkBoxCss} value="npx crusher-cli">
+				<LinkBox css={linkBoxCss} value="npx crusher.dev">
 					<ClipboardIcon
 						css={css`
 							width: 13px;

@@ -53,7 +53,7 @@ export const checkForDiscord = async (shouldCheckForDiscord = true) => {
 	// 	await console.log(`2.) Run command with access code`)
 
 	// 	await console.log(`\n${chalk.yellow('Already have an account?')}
-	// run npx crusher-cli login \n`);
+	// run npx crusher.dev login \n`);
 
 	// 	process.exit(0)
 	// } else {

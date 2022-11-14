@@ -48,20 +48,20 @@ function BuildInfoTop() {
 						{status === "PASSED" ? `All passed` : status.toLowerCase()}
 					</Text>
 				</div>
-				<div className="flex items-center">
+				{/* <div className="flex items-center">
 					<GithubSquare className="mr-8" />
 					<Text color="#E7E7E7" fontSize={13}>
 						Github #2132
 					</Text>
-				</div>
-				<div className="flex items-center">
+				</div> */}
+				{/* <div className="flex items-center">
 					<Text color="#696969" fontSize={13}>
 						duration :{" "}
 					</Text>
 					<Text color="#E7E7E7" fontSize={13}>
 						12s
 					</Text>
-				</div>
+				</div> */}
 				<div className="flex items-center">
 					<Text color="#696969" fontSize={13}>
 						test count :{" "}
@@ -129,7 +129,7 @@ function BuildMainInfo() {
 					<Conditional showIf={!!data?.host}>
 						<div>
 							<TextBlock color="#696969" fontSize={13}>
-								host
+								host |  { (!!data?.host) && data?.host.includes("cloudflare.com") ? ("with tunnel 🚇") : null}
 							</TextBlock>
 							<TextBlock color="#D0D0D0" fontSize={13} className="mt-8">
 								<a href={data?.host} css={link} className="flex items-center" target="_blank">
@@ -138,21 +138,21 @@ function BuildMainInfo() {
 							</TextBlock>
 						</div>
 					</Conditional>
-					<div>
+					{/* <div>
 						<TextBlock color="#696969" fontSize={13}>
 							env
 						</TextBlock>
 						<TextBlock color="#D0D0D0" fontSize={13} className="mt-8">
 							Prod
 						</TextBlock>
-					</div>
+					</div> */}
 				</div>
-				<div className="flex items-center">
+				{/* <div className="flex items-center">
 					<GithubSquare className="mr-12" />
 					<Text color="#696969" fontSize={13}>
 						by himanshu
 					</Text>
-				</div>
+				</div> */}
 			</div>
 		</React.Fragment>
 	);

@@ -46,7 +46,7 @@ export default function NewProject() {
 								<span className="run-headline06 flex items-center " css={commandBox}>
 									<span className="next-sign mr-8">&gt;</span>
 									<TextBlock color="#acec6d" weight={"700"} fontSize={17.5} className="command">
-										npx crusher-cli
+										npx crusher.dev
 									</TextBlock>
 								</span>
 							</div>

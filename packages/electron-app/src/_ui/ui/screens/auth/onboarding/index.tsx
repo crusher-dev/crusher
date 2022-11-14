@@ -172,7 +172,7 @@ const DeveloperInput = () => {
 		<div ref={mainRef} css={[contentCss]}>
 			<div css={headingCss}>Add crusher to your project</div>
 			<div css={inputFormContainerCss}>
-				<LinkBox css={linkBoxCss} value="npx crusher-cli init">
+				<LinkBox css={linkBoxCss} value="npx crusher.dev init">
 					<ClipboardIcon
 						css={css`
 							width: 13px;

@@ -1,17 +1,17 @@
 🦖 Crusher is all in one test framework. Use low-code/code to run test.
 
-+ <span>+ you can run tests with new commits or on production</span>
+- <span>+ you can run tests with new commits or on production</span>
 
 **Commands** [docs](https://docs.crusher.dev)
 
-`npx crusher-cli` - Opens crusher
+`npx crusher.dev` - Opens crusher
 
-`npx crusher-cli run` - Run all your test
- 
+`npx crusher.dev run` - Run all your test
 
 **Checklist**
-- Run test automatically with new commit 
-- Get alerts when builds fail 
+
+- Run test automatically with new commit
+- Get alerts when builds fail
 - Monitor production for errors
 
 **resource**

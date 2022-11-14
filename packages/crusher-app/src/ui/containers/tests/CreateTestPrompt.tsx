@@ -68,7 +68,7 @@ export const CreateTestPrompt = ({ className }: { className?: any }) => (
 						`}
 						size={"medium"}
 						className={"mr-10"}
-						initialValue={"npx crusher-cli test:create"}
+						initialValue={"npx crusher.dev test:create"}
 					/>
 
 					<RenderDownloadLink>

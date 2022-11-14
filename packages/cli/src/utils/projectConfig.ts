@@ -89,8 +89,8 @@ export const addCrusherCommandsToPackageJSON = (gitInfo: { location?: string } |
 		packageJSON.scripts = {};
 	}
 	packageJSON.scripts = {
-		"crusher": "npx crusher-cli",
-		"crusher:run": "npx crusher-cli test:run",
+		"crusher": "npx crusher.dev",
+		"crusher:run": "npx crusher.dev test:run",
 		...packageJSON.scripts,
 	}
 
@@ -102,5 +102,5 @@ export const addCrusherReadmeToProject = () => {
 	const readmePath = path.resolve(PROJECT_CONFIG_PATH, './README.md');
 	if (fs.existsSync(readmePath)) return;
 
-	fs.writeFileSync(readmePath, "🦖 Crusher is all in one test framework. Use low-code/code to run test.\n\n+ <span>+ you can run tests with new commits or on production</span>\n\n**Commands** [docs](https://docs.crusher.dev)\n\n`npx crusher-cli` - Opens crusher\n\n`npx crusher-cli run` - Run all your test\n \n\n**Checklist**\n- Run test automatically with new commit \n- Get alerts when builds fail \n- Monitor production for errors\n\n**resource**\n[documentation](https://docs.crusher.dev) | [app](https://app.crusher.dev)\n", 'utf8');
+	fs.writeFileSync(readmePath, "🦖 Crusher is all in one test framework. Use low-code/code to run test.\n\n+ <span>+ you can run tests with new commits or on production</span>\n\n**Commands** [docs](https://docs.crusher.dev)\n\n`npx crusher.dev` - Opens crusher\n\n`npx crusher.dev run` - Run all your test\n \n\n**Checklist**\n- Run test automatically with new commit \n- Get alerts when builds fail \n- Monitor production for errors\n\n**resource**\n[documentation](https://docs.crusher.dev) | [app](https://app.crusher.dev)\n", 'utf8');
 }

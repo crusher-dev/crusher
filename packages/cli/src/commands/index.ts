@@ -22,8 +22,8 @@ export default class CommandBase {
 
   help() {
     console.log(`
-  Run a command: ${chalk(`npx crusher-cli [command]`)}
-  Example:       ${chalk(`npx crusher-cli test:create`)}
+  Run a command: ${chalk(`npx crusher.dev [command]`)}
+  Example:       ${chalk(`npx crusher.dev test:create`)}
 
   ${chalk.hex("C1C1C1")("Commands")}
 

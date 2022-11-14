@@ -116,7 +116,7 @@ function CreateTest() {
 								<span className="run-headline06 flex items-center " css={commandBox}>
 									<span className="next-sign mr-8">&gt;</span>
 									<TextBlock color="#acec6d" weight={"600"} fontSize={17} className="command">
-										npx crusher-cli test:create
+										npx crusher.dev test:create
 									</TextBlock>
 								</span>
 							</div>

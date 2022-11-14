@@ -80,9 +80,9 @@ export default class CommandBase {
 
     console.log("Created your test. Few command that might be helpful\n");
     console.log("1.) Run all tests in your project");
-    console.log(`${chalk.hex("9A4AFF")(`npx crusher-cli test:run`)}`);
+    console.log(`${chalk.hex("9A4AFF")(`npx crusher.dev test:run`)}`);
 
     console.log("2.) Invite team members to the project");
-    console.log(`${chalk.hex("9A4AFF")(`npx crusher-cli invite`)}`);
+    console.log(`${chalk.hex("9A4AFF")(`npx crusher.dev invite`)}`);
   }
 }

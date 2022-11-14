@@ -1,3 +1,9 @@
+import * as Sentry from "@sentry/electron/renderer";
+
+Sentry.init({ 
+	dsn: "https://392b9a7bcc324b2dbdff0146ccfee044@o1075083.ingest.sentry.io/6075223"
+ });
+
 import { ipcRenderer, webFrame } from "electron";
 import { getInitialStateRenderer } from "electron-redux";
 import React from "react";
@@ -30,6 +36,7 @@ import { CloudCrusher } from "../lib/cloud";
 import { Store } from "redux";
 import { IDeepLinkAction } from "../types";
 import { triggerLocalBuild } from "./utils/recorder";
+
 webFrame.setVisualZoomLevelLimits(1, 3);
 
 function getPersistStore() {

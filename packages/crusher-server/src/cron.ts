@@ -1,3 +1,4 @@
+import "reflect-metadata";
 require("dotenv").config();
 import { BuildTriggerEnum } from "@modules/resources/builds/interface";
 import { ProjectEnvironmentService } from "@modules/resources/projects/environments/service";

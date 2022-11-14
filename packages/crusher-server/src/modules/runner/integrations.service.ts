@@ -1,3 +1,5 @@
+import { Analytics } from "@crusher-shared/modules/analytics/AnalyticsManager";
+import { ServerEventsEnum } from "@crusher-shared/modules/analytics/constants";
 import { KeysToCamelCase } from "@modules/common/typescript/interface";
 import { EmailManager } from "@modules/email";
 import { IBuildReportTable, BuildReportStatusEnum } from "@modules/resources/buildReports/interface";
@@ -83,6 +85,15 @@ class RunnerIntegrationsService {
                 detailsUrl
             );
         };
+
+        Analytics.trackProject({
+			groupId: buildRecord.projectId,
+			event: ServerEventsEnum.BUILD_FINISHED,
+			properties: {
+                status: reportStatus,
+                userId: buildRecord.userId,
+			}
+		});
     }
 
 

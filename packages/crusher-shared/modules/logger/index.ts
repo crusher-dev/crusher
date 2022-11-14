@@ -102,3 +102,21 @@ export function setupLogger(crusherModuleName: string) {
 
 }
 
+
+export function logToAxiom(databaseName = 'crusher-prod', message) {
+	(async () => {
+			const str = JSON.stringify(message);
+			const stream = Readable.from(str);
+			try {
+				await client.datasets.ingest(
+					databaseName,
+					stream,
+					datasets.ContentType.JSON,
+					datasets.ContentEncoding.Identity,
+				);
+			} catch (e) {
+				console.log("error", e)
+			}
+	})()
+}
+

@@ -15,6 +15,8 @@ import { v4 as uuidv4 } from "uuid";
 import { UsersService } from "../users/service";
 import { ProjectsService } from "../projects/service";
 import { VercelService } from "./vercel/service";
+import { Analytics } from "@crusher-shared/modules/analytics/AnalyticsManager";
+import { ServerEventsEnum } from "@crusher-shared/modules/analytics/constants";
 @Service()
 @JsonController("")
 class IntegrationsController {
@@ -51,6 +53,16 @@ class IntegrationsController {
 			await this.integrationsService.addIntegration({ oAuthInfo: integrationConfig }, IntegrationServiceEnum.SLACK, projectId, teamId);
 		}
 
+		Analytics.trackProject({
+			groupId: projectId,
+			event: ServerEventsEnum.SLACK_INTEGRATION_ADDED,
+			properties: {
+				userId: userInfo.user_id,
+				slackTeamId: integrationConfig.team.id,
+				slackTeamName: integrationConfig.team.name
+			}
+		});
+
 		await res.redirect(redirectUrl);
 		return res;
 	}
@@ -64,7 +76,14 @@ class IntegrationsController {
 		}
 
 		await this.integrationsService.deleteIntegration(existingSlackIntegration.id);
-
+		Analytics.trackProject({
+			groupId: projectId,
+			event: ServerEventsEnum.SLACK_INTEGRATION_REMOVED,
+			properties: {
+				userId: userInfo.user_id,
+				integrationId: existingSlackIntegration.id,
+			}
+		});
 		return { status: "Successful" };
 	}
 
@@ -75,7 +94,20 @@ class IntegrationsController {
 		@Param("project_id") projectId: number,
 		@Body() body: { alertChannel: any; normalChannel: any },
 	) {
-		return this.integrationsService.saveSlackSettings({ alertChannel: body.alertChannel, normalChannel: body.normalChannel }, projectId);
+		const { user_id } = user;
+		const response = await this.integrationsService.saveSlackSettings({ alertChannel: body.alertChannel, normalChannel: body.normalChannel }, projectId);
+		
+		Analytics.trackProject({
+			groupId: projectId,
+			event: ServerEventsEnum.SET_SLACK_INTEGRATION_CHANNELS,
+			properties: {
+				userId: user_id,
+				alertChannel: body.alertChannel,
+				normalChannel: body.normalChannel
+			}
+		});
+
+		return response;
 	}
 
 	@Authorized()
@@ -114,6 +146,16 @@ class IntegrationsController {
 
 		const doc = await this.githubIntegrationService.linkRepo(repoId, repoFullName, installationId, repoLink, projectId, user_id);
 
+		Analytics.trackProject({
+			groupId: projectId,
+			event: ServerEventsEnum.LINK_GITHUB_REPO,
+			properties: {
+				userId: user_id,
+				repo: repoFullName,
+				repoId: repoId,
+			}
+		});
+
 		return {
 			status: "Successful",
 			data: {
@@ -124,10 +166,21 @@ class IntegrationsController {
 
 	@Authorized()
 	@Post("/integrations/:project_id/github/actions/unlink")
-	async unlinkGithubRepo(@CurrentUser({ required: true }) user, @Body() body: { id: string }) {
+	async unlinkGithubRepo(@CurrentUser({ required: true }) user, @Param("project_id") projectId: number, @Body() body: { id: string }) {
+		const { user_id } = user;
 		if (!body.id) throw new BadRequestError("Integration id not provided");
 
 		await this.githubIntegrationService.unlinkRepo(body.id);
+
+
+		Analytics.trackProject({
+			groupId: projectId,
+			event: ServerEventsEnum.UNLINK_GITHUB_REPO,
+			properties: {
+				userId: user_id,
+				integrationId: body.id
+			}
+		});
 		return "Successful";
 	}
 

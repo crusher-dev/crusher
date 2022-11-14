@@ -16,6 +16,7 @@ import {
 	performReplayTestUrlAction,
 	performSaveLocalBuild,
 	performSteps,
+	performTrackEvent,
 	resetStorage,
 } from "./commands/perform";
 import DeviceFrame from "./ui/containers/components/device-frame";
@@ -33,6 +34,7 @@ import { CloudCrusher } from "../lib/cloud";
 import { clearAllToasts, clearToast, showToast } from "./ui/components/toasts";
 import { getStore } from "../store/configureStore";
 import { getCurrentLocalBuild } from "../store/selectors/builds";
+import { DesktopAppEventsEnum } from "@shared/modules/analytics/constants";
 
 const handleCompletion = async (store: Store, action: IDeepLinkAction, addNotification, hasCompletedSuccesfully: boolean) => {
 	// @TODO: Change `redirectAfterSuccess` to `isLocalBuild`
@@ -160,6 +162,7 @@ const App = () => {
 	}, []);
 
 	React.useEffect(() => {
+		performTrackEvent(DesktopAppEventsEnum.RECORDER_PAGE_OPEN, {});
 		ipcRenderer.on("webview-initialized", () => {
 			store.dispatch(setIsWebViewInitialized(true));
 		});

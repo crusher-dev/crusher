@@ -1,3 +1,5 @@
+import { Analytics } from "@crusher-shared/modules/analytics/AnalyticsManager";
+import { ServerEventsEnum } from "@crusher-shared/modules/analytics/constants";
 import { RedisManager } from "@modules/redis";
 import { BuildsService } from "@modules/resources/builds/service";
 import { TestService } from "@modules/resources/tests/service";
@@ -55,6 +57,7 @@ class VercelIntegrationsController {
         const accessToken = await this.vercelService.getAccessToken(code);
 
         await this.vercelService.linkVercelIntegration({userId, teamId, projectId: selectedProjectId, configurationId: configurationId, accessToken, vercelTeamId});
+        
         return res.redirect(next);
     }
 
@@ -79,6 +82,16 @@ class VercelIntegrationsController {
         } else {
             await this.vercelService.updateVercelIntegrationForProject(meta, projectId);
         }
+
+        Analytics.trackProject({
+			groupId: projectId,
+			event: ServerEventsEnum.LINK_VERCEL_REPO,
+			properties: {
+				userId: userId,
+				vercelProjectName: vercelProjectName,
+                vercelProjectId: vercelProjectId,
+			}
+		});
 
         return "Successful";
     }

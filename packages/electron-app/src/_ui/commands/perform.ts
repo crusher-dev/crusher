@@ -1,5 +1,6 @@
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
+import { DesktopAppEventsEnum } from "@shared/modules/analytics/constants";
 import { iAction } from "@shared/types/action";
 import { iDevice } from "@shared/types/extension/device";
 import { ipcRenderer } from "electron";
@@ -346,6 +347,10 @@ const performPauseStepsExecution = () => {
 	return ipcRenderer.invoke("pause-steps", {});
 };
 
+const performTrackEvent = (event: DesktopAppEventsEnum, properties: any = {}) => {
+	return ipcRenderer.invoke("track-event", { event, properties });
+};
+
 export {
 	recordHoverDependencies,
 	performAction,
@@ -402,5 +407,6 @@ export {
 	performCreateCloudProject,
 	performGoToUrl,
 	turnOnWebviewDevTools,
-	performPauseStepsExecution
+	performPauseStepsExecution,
+	performTrackEvent
 };

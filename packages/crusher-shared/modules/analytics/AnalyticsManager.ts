@@ -46,7 +46,7 @@ export class Analytics{
 
     static trackProject({groupId, event, properties}){
         if(Analytics.disabledTelemetry) return;
-        Analytics.analyticsObj.identify({userID: `gp-${groupId}`, event, ...properties})
+        Analytics.analyticsObj.track({userId: `gp-${groupId}`, event, ...properties})
     }
 
     static identifyUser({

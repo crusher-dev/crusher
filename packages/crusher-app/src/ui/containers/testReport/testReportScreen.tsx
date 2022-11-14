@@ -265,11 +265,11 @@ const creatTestCSS = css`
 	}
 `;
 const section = [
-	{
-		name: "Home",
-		icon: null,
-		key: "reports",
-	},
+	// {
+	// 	name: "Home",
+	// 	icon: null,
+	// 	key: "reports",
+	// },
 	{
 		name: "Tests",
 		icon: null,
@@ -336,8 +336,14 @@ function TabBar() {
 	return (
 		<div css={Tab} className={"flex"}>
 			{section.map(({ name, icon, key }, i) => (
-				<div onClick={setSelectedTabIndex.bind(this, i)} key={key}>
-					<div css={[TabItem, selectedTabIndex === i && selected]} className={`flex items-center justify-center text-14`}>
+				<div 
+				// onClick={setSelectedTabIndex.bind(this, i)}
+				
+				key={key}>
+					<div css={[TabItem, selected
+						// selectedTabIndex === i && selected
+						
+						]} className={`flex items-center justify-center text-14`}>
 						<Conditional showIf={icon}>
 							<span className={"mr-8"}>{icon}</span>
 						</Conditional>

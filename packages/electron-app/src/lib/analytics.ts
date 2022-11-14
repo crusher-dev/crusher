@@ -43,7 +43,7 @@ export const trackAppStartedEvent = (properties: any = {}) => {
 	});
 }
 
-export const trackStepSaved = (step: iAction, properties: any = {}) => {\
+export const trackStepSaved = (step: iAction, properties: any = {}) => {
 	return trackEvent(DesktopAppEventsEnum.SAVE_STEP, {
 		step: {
 			type: step.type,

@@ -53,16 +53,6 @@ class IntegrationsController {
 			await this.integrationsService.addIntegration({ oAuthInfo: integrationConfig }, IntegrationServiceEnum.SLACK, projectId, teamId);
 		}
 
-		Analytics.trackProject({
-			groupId: projectId,
-			event: ServerEventsEnum.SLACK_INTEGRATION_ADDED,
-			properties: {
-				userId: userInfo.user_id,
-				slackTeamId: integrationConfig.team.id,
-				slackTeamName: integrationConfig.team.name
-			}
-		});
-
 		await res.redirect(redirectUrl);
 		return res;
 	}
@@ -76,14 +66,6 @@ class IntegrationsController {
 		}
 
 		await this.integrationsService.deleteIntegration(existingSlackIntegration.id);
-		Analytics.trackProject({
-			groupId: projectId,
-			event: ServerEventsEnum.SLACK_INTEGRATION_REMOVED,
-			properties: {
-				userId: userInfo.user_id,
-				integrationId: existingSlackIntegration.id,
-			}
-		});
 		return { status: "Successful" };
 	}
 
@@ -172,15 +154,6 @@ class IntegrationsController {
 
 		await this.githubIntegrationService.unlinkRepo(body.id);
 
-
-		Analytics.trackProject({
-			groupId: projectId,
-			event: ServerEventsEnum.UNLINK_GITHUB_REPO,
-			properties: {
-				userId: user_id,
-				integrationId: body.id
-			}
-		});
 		return "Successful";
 	}
 

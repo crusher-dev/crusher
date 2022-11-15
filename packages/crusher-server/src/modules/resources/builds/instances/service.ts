@@ -197,13 +197,13 @@ class BuildTestInstancesService {
 						outputDiffImageUrl: "",
 					};
 					diffResultStatus = TestInstanceResultStatusEnum.PASSED;
-					return;
+				} else {
+					diffResult = await this.visualDiffService.getDiffResult(
+						baseImageUrl,
+						referenceImageUrl,
+						path.join("00_folder_7_day_expiration/", assetIdentifer, `${baseImage.name}_${referenceImage.name}_diff.jpeg`),
+					);
 				}
-				diffResult = await this.visualDiffService.getDiffResult(
-					baseImageUrl,
-					referenceImageUrl,
-					path.join("00_folder_7_day_expiration/", assetIdentifer, `${baseImage.name}_${referenceImage.name}_diff.jpeg`),
-				);
 			} catch (err) {
 				console.error("Error is", err);
 				diffResult = {

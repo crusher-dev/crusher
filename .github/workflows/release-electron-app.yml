@@ -69,6 +69,7 @@ jobs:
           CSC_KEY_PASSWORD: ${{ secrets.mac_certs_password }}
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
+          SEGMENT_API_KEY: ${{ secrets.SEGMENT_API_KEY }}
 
       - if: ${{ matrix.os == 'macos-latest' && github.event_name == 'release'  }} 
         name: Build release for electron app
@@ -78,6 +79,7 @@ jobs:
           CSC_KEY_PASSWORD: ${{ secrets.mac_certs_password }}
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
+          SEGMENT_API_KEY: ${{ secrets.SEGMENT_API_KEY }}
 
       - if: matrix.os == 'macos-latest'
         name: 'Store crusher-darwin-arm64 as artifact'

@@ -169,7 +169,6 @@ class PlaywrightInstance {
 		const properties = await args.getProperties();
 		const uniqueElementId = await properties.get("uniqueElementId").jsonValue();
 		const elementHandle = await properties.get("element").asElement();
-		this.handleWebviewElementScreenshot(elementHandle);
 
 		const ownerFrame = await elementHandle.ownerFrame();
 		const parentFrame = await ownerFrame.parentFrame();

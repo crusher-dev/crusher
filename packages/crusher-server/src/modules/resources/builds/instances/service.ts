@@ -103,7 +103,7 @@ class BuildTestInstancesService {
 	async insertScrenshotResult(payload: ICreateBuildTestInstanceResultPayload) {
 		return this.dbManager.insert(
 			"INSERT INTO public.test_instance_results (screenshot_id, target_screenshot_id, instance_result_set_id, diff_delta, diff_image_url, status, meta) VALUES (?, ?, ?, ?, ?, ?, ?)",
-			[payload.screenshotId, payload.targetScreenshotId, payload.instanceResultSetId, payload.diffDelta, payload.diffImageUrl, payload.status, payload.meta ? JSON.parse(payload.meta) : null],
+			[payload.screenshotId, payload.targetScreenshotId, payload.instanceResultSetId, payload.diffDelta, payload.diffImageUrl, payload.status, payload.meta ? JSON.stringify(payload.meta) : null],
 		);
 	}
 

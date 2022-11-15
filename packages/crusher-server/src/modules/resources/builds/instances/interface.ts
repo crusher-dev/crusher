@@ -44,9 +44,12 @@ export interface IBuildTestInstanceResultsTable {
 	diff_delta: number;
 	diff_image_url: string;
 	status: TestInstanceResultStatusEnum;
+	meta?: string | null;
 }
 
-export type ICreateBuildTestInstanceResultPayload = KeysToCamelCase<Omit<IBuildTestInstanceResultsTable, "id">>;
+export type ICreateBuildTestInstanceResultPayload = KeysToCamelCase<Omit<IBuildTestInstanceResultsTable, "id" | "meta"> & {
+	meta?: any;
+}>;
 
 export enum TestInstanceResultSetStatusEnum {
 	WAITING_FOR_TEST_EXECUTION = "WAITING_FOR_TEST_EXECUTION",

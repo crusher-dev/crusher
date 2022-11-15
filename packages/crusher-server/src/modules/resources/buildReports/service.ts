@@ -69,10 +69,10 @@ export class BuildReportService {
 
 	private async getInstanceResultWithDiffComparision(
 		actionResults: Array<any>,
-		instanceScreenshotsRecords: Array<KeysToCamelCase<IBuildTestInstanceResultsTable> & { actionIndex: number; targetScreenshotUrl: string }>,
+		instanceScreenshotsRecords: Array<KeysToCamelCase<IBuildTestInstanceResultsTable> & { actionIndex: number; targetScreenshotUrl: string; testInstanceScreenshotResultMeta?: string; }>,
 	) {
 		const instanceScreenshotsRecordsMap: {
-			[key: string]: KeysToCamelCase<IBuildTestInstanceResultsTable> & { actionIndex: number; targetScreenshotUrl: string; currentScreenshotUrl: string };
+			[key: string]: KeysToCamelCase<IBuildTestInstanceResultsTable> & { actionIndex: number; targetScreenshotUrl: string; currentScreenshotUrl: string; testInstanceScreenshotResultMeta?: string; };
 		} = instanceScreenshotsRecords.reduce((prev, current) => {
 			return { ...prev, [current.actionIndex]: current };
 		}, {});
@@ -101,6 +101,10 @@ export class BuildReportService {
 							actionResult.meta.outputs[imageIndex].targetScreenshotUrl = await this.getPublicUrl(screenshotResultRecord.targetScreenshotUrl);
 							actionResult.meta.outputs[imageIndex].diffDelta = screenshotResultRecord.diffDelta;
 							actionResult.meta.outputs[imageIndex].index = `${actionIndex}.${imageIndex}`;
+
+							if(screenshotResultRecord.testInstanceScreenshotResultMeta) {
+								actionResult.meta.outputs[imageIndex].meta = JSON.parse(screenshotResultRecord.testInstanceScreenshotResultMeta);
+							}
 						}
 					}
 				}

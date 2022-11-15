@@ -75,14 +75,14 @@ class BuildTestInstanceScreenshotService {
 	}
 
 	@CamelizeResponse()
-	async getScreenshotResultWithActionIndexAll(resultSSetIds: Array<number>): Promise<Array<KeysToCamelCase<IBuildTestInstanceResultsTable> & { actionIndex: number; targetScreenshotUrl: string; testInstanceResultSetId: number }>> {
+	async getScreenshotResultWithActionIndexAll(resultSSetIds: Array<number>): Promise<Array<KeysToCamelCase<IBuildTestInstanceResultsTable> & { actionIndex: number; targetScreenshotUrl: string; testInstanceResultSetId: number; testInstanceScreenshotResultMeta?: string }>> {
 		const params = [];
 		const inStr = new Array(resultSSetIds.length).fill("?").join(",");
 		for(let resultSetId of resultSSetIds) {
 			params.push(resultSetId);
 		}
 		return this.dbManager.fetchAllRows(
-			`SELECT test_instance_results.*, test_instance_results.instance_result_set_id test_instance_result_set_id, current_screenshot.url current_screenshot_url, current_screenshot.action_index action_index, target_screenshot.url target_screenshot_url FROM public.test_instance_results LEFT JOIN (SELECT test_instance_screenshots.action_index, test_instance_screenshots.id, test_instance_screenshots.url url FROM public.test_instance_screenshots) current_screenshot ON current_screenshot.id = test_instance_results.screenshot_id LEFT JOIN (SELECT test_instance_screenshots.id, test_instance_screenshots.url FROM public.test_instance_screenshots) target_screenshot ON target_screenshot.id = test_instance_results.target_screenshot_id WHERE test_instance_results.instance_result_set_id IN (${inStr})`,
+			`SELECT test_instance_results.*, test_instance_results.meta test_instance_screenshot_result_meta, test_instance_results.instance_result_set_id test_instance_result_set_id, current_screenshot.url current_screenshot_url, current_screenshot.action_index action_index, target_screenshot.url target_screenshot_url FROM public.test_instance_results LEFT JOIN (SELECT test_instance_screenshots.action_index, test_instance_screenshots.id, test_instance_screenshots.url url FROM public.test_instance_screenshots) current_screenshot ON current_screenshot.id = test_instance_results.screenshot_id LEFT JOIN (SELECT test_instance_screenshots.id, test_instance_screenshots.url FROM public.test_instance_screenshots) target_screenshot ON target_screenshot.id = test_instance_results.target_screenshot_id WHERE test_instance_results.instance_result_set_id IN (${inStr})`,
 			[...params],
 		);
 	}

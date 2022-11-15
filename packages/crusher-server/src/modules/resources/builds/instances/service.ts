@@ -23,6 +23,7 @@ import { BrowserEnum } from "@modules/runner/interface";
 import { ProjectsService } from "@modules/resources/projects/service";
 import { StorageManager } from "@modules/storage";
 import { ActionStatusEnum } from "@crusher-shared/lib/runnerLog/interface";
+import axios from "axios";
 
 // Diff delta percent should be lower than 0.05 to be considered as pass
 const DIFF_DELTA_PASS_THRESHOLD = 0.25;
@@ -101,8 +102,8 @@ class BuildTestInstancesService {
 
 	async insertScrenshotResult(payload: ICreateBuildTestInstanceResultPayload) {
 		return this.dbManager.insert(
-			"INSERT INTO public.test_instance_results (screenshot_id, target_screenshot_id, instance_result_set_id, diff_delta, diff_image_url, status) VALUES (?, ?, ?, ?, ?, ?)",
-			[payload.screenshotId, payload.targetScreenshotId, payload.instanceResultSetId, payload.diffDelta, payload.diffImageUrl, payload.status],
+			"INSERT INTO public.test_instance_results (screenshot_id, target_screenshot_id, instance_result_set_id, diff_delta, diff_image_url, status, meta) VALUES (?, ?, ?, ?, ?, ?, ?)",
+			[payload.screenshotId, payload.targetScreenshotId, payload.instanceResultSetId, payload.diffDelta, payload.diffImageUrl, payload.status, payload.meta ? JSON.parse(payload.meta) : null],
 		);
 	}
 
@@ -174,10 +175,33 @@ class BuildTestInstancesService {
 
 			let diffResult: { diffDeltaFactor: number; diffDelta: number; outputDiffImageUrl: string } | null = null;
 			let diffResultStatus: TestInstanceResultStatusEnum | null = null;
+			let isReferenceImageValid = true;
+
 			try {
+
+				const baseImageUrl = await this.storageManager.getUrl(baseImage.value);
+				const referenceImageUrl = await this.storageManager.getUrl(referenceImage.value);
+
+				// Check if referenceImageUrl is valid and exists
+				// (avoiding using head-object API call to avoid cost)
+				try {
+					await axios.head(referenceImageUrl);
+				} catch (e) {
+					isReferenceImageValid = false;
+				}
+
+				if(!isReferenceImageValid) {
+					diffResult = {
+						diffDeltaFactor: 0,
+						diffDelta: 0,
+						outputDiffImageUrl: "",
+					};
+					diffResultStatus = TestInstanceResultStatusEnum.PASSED;
+					return;
+				}
 				diffResult = await this.visualDiffService.getDiffResult(
-					await this.storageManager.getUrl(baseImage.value),
-					await this.storageManager.getUrl(referenceImage.value),
+					baseImageUrl,
+					referenceImageUrl,
 					path.join("00_folder_7_day_expiration/", assetIdentifer, `${baseImage.name}_${referenceImage.name}_diff.jpeg`),
 				);
 			} catch (err) {
@@ -198,6 +222,9 @@ class BuildTestInstancesService {
 				diffDelta: diffResult.diffDelta,
 				diffImageUrl: diffResult.outputDiffImageUrl,
 				status: this.getScreenshotStatusFromDiffDelta(diffResult.diffDelta, project.visualBaseline),
+				meta: {
+					isPassedDueToExpiredImage: !isReferenceImageValid,
+				}
 			});
 
 			return {

@@ -60,6 +60,7 @@ module.exports = {
 		SENDGRID: process.env.SENDGRID_API_KEY,
 		LOGDNA: process.env.LOGDNA_API_KEY,
 		STRIPE: process.env.STRIPE_API_KEY,
+		SEGMENT: process.env.SEGMENT_API_KEY,
 	},
 	GOOGLE_CONFIG: {
 		CLIENT_ID: process.env.GOOGLE_CLIENT_ID,

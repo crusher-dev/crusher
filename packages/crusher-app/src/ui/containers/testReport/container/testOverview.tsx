@@ -16,7 +16,7 @@ import { Modal } from "dyson/src/components/molecules/Modal";
 import { plainButtonCSS } from "@constants/style";
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { ActionStatusEnum } from "@crusher-shared/lib/runnerLog/interface";
-import { FullImageView, ShowSidebySide, StatusIconSquare } from "@svg/builds";
+import { CheckSquare, FullImageView, ShowSidebySide, StatusIconSquare } from "@svg/builds";
 import { LoadingSVG, PlaySVG } from "@svg/dashboard";
 import { InfoSVG } from "@svg/testReport";
 import { activeActionIndexAtom, selectedTestAtom, testCardConfigAtom } from "@ui/containers/testReport/atoms";
@@ -65,6 +65,23 @@ export const imageTabCSS = css`
 const imageComparison = css`
 	max-width: 900px;
 `
+
+const ErrorBoxCrossIcon = (props: any) => (
+	<svg
+	  viewBox={"0 0 14 14"}
+	  fill="none"
+	  xmlns="http://www.w3.org/2000/svg"
+	  {...props}
+	>
+	  <path
+		fillRule="evenodd"
+		clipRule="evenodd"
+		d="M5.395 4.405a.7.7 0 0 0-.99.99L6.01 7 4.405 8.605a.7.7 0 0 0 .99.99L7 7.99l1.605 1.605a.7.7 0 0 0 .99-.99L7.99 7l1.605-1.605a.7.7 0 0 0-.99-.99L7 6.01 5.395 4.405ZM3.675.271C4.585.07 5.687 0 7 0c1.313 0 2.416.07 3.325.271.917.204 1.68.552 2.266 1.139.586.586.934 1.348 1.138 2.265C13.93 4.585 14 5.687 14 7c0 1.313-.07 2.416-.271 3.325-.204.917-.552 1.68-1.138 2.266-.587.586-1.349.934-2.266 1.138C9.415 13.93 8.313 14 7 14c-1.313 0-2.416-.07-3.325-.271-.917-.204-1.68-.552-2.265-1.138-.587-.587-.935-1.349-1.139-2.266C.07 9.415 0 8.313 0 7c0-1.313.07-2.416.271-3.325.204-.917.552-1.68 1.139-2.265C1.996.823 2.758.475 3.675.27Z"
+		fill="#fff"
+	  />
+	</svg>
+);
+
 function RenderImageInfo({ data, index }) {
 	const { meta } = data;
 	const imageName = meta.outputs?.[index].name;
@@ -77,6 +94,19 @@ function RenderImageInfo({ data, index }) {
 
 	return (
 		<div className={"pl-44 py-23 mt-4 text-11"} css={imageComparison}>
+			{meta.outputs[index]?.meta?.isPassedDueToExpiredImage ? (
+			<div className={" py-20 px-22 mt-4 mb-20 flex"} css={errorBox}>
+				<div>
+					<ErrorBoxCrossIcon  css={css`width: 14rem; height: 14rem;`}/>
+				</div>
+				<div className={"ml-12 flex-1"}>
+					<div className={"font-cera text-14 font-600 leading-none"} css={css`color: rgba(255, 97, 87, 1)`}>baseline image not available</div>
+					<hr className={"mt-8"} css={css`color: rgba(217, 217, 217, 0.13);`}/>
+					<div className={"text-13 mt-16"}>{"we’re"} passing this screenshot. Upgrade to pro to get more than 3 days storage.</div>
+				</div>
+
+			</div>
+			) : ""} 
 			<div className={"flex justify-between text-12 mb-20 "}>
 				<span>{imageName}</span>
 				<div>

@@ -45,7 +45,7 @@ To know more about this command, [check out this doc](https://docs.crusher.dev/c
 ## Running tests
 
 ```shell
-npx crusher.devtest:run
+npx crusher.dev test:run
 ```
 
 This will run all the tests present in your project and return the results after they are finished. This will be how it&#39;ll look,

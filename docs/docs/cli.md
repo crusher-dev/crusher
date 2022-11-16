@@ -23,7 +23,7 @@ npx crusher.devtest:create
 And run test with
 
 ```shell
-npx crusher.devtest:run
+npx crusher.dev test:run
 ```
 
 The Crusher CLI works with node > v10

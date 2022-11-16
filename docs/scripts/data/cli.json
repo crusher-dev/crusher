@@ -114,9 +114,9 @@
       "footnotes": [],
       "groups": [],
       "exampleCommands": [
-        "npx crusher.devtest:run",
-        "npx crusher.devtest:run --host staging.test-app.com",
-        "npx crusher.devtest:run --browsers chromium,firefox,safari"
+        "npx crusher.dev test:run",
+        "npx crusher.dev test:run --host staging.test-app.com",
+        "npx crusher.dev test:run --browsers chromium,firefox,safari"
       ],
       "aliases": [],
       "inputs": [],

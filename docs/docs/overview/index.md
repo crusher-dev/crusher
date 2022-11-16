@@ -31,7 +31,7 @@ We're owning e2e testing toolchain, building framework for:-
 - Making testing <span className="highlight_cyan">robust</span> and collborative
 
 <p style={{ marginTop: 32 }}>
-  Crusher is built on top of playwright, an open source by library Microsoft.
+  Crusher is built on top of playwright, an open source library by Microsoft.
   <br /> Start by recording <span className="highlight_green">low-code</span> test or write in <span className="highlight_green">
     native JS code
   </span>

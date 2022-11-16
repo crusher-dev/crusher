@@ -5,8 +5,8 @@ export const UseCrusher = ({ children, color }) => (
   <div className="useCrusher_in_project">
     <CommandInput>
       <div className="flex justify-between" id="command-heading">
-        <div>create new test</div>
-        <div className="demo-video">play demo</div>
+        <div>Install & use crusher</div>
+        <a className="demo-video" href="https://www.youtube.com/watch?v=Nc-TlgeKBSE">play demo</a>
       </div>
 
       <div id="command" className="flex items-center justify-between">
@@ -39,19 +39,19 @@ export const UseCrusher = ({ children, color }) => (
     <ItemListBox>
       <Item>
         <ChekSVG className="check" />
-        create some test <span className="docs">docs</span>
+        Create few tests <span className="docs">docs</span>
       </Item>
       <Item>
         <ChekSVG className="check" />
-        run crusher test with each commit <span className="docs">docs</span>
+        Run crusher test with each commit <span className="docs">docs</span>
       </Item>
       <Item>
         <ChekSVG className="check" />
-        monitor production <span className="docs">docs</span>
+        Monitor production <span className="docs">docs</span>
       </Item>
       <Item>
         <ChekSVG className="check" />
-        get alerts on slack/discord <span className="docs">docs</span>
+        Get alerts on slack/discord <span className="docs">docs</span>
       </Item>
     </ItemListBox>
 

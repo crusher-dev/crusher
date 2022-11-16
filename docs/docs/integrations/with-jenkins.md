@@ -22,7 +22,7 @@ pipeline {
         stage('Test') {
             steps {
                 // run crusher tests
-                sh 'npx crusher.devtest:run --token=<random_token_here> --project-id=<your_project_id>'
+                sh 'npx crusher.dev test:run --token=<random_token_here> --project-id=<your_project_id>'
             }
         }
     }

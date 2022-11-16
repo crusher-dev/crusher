@@ -35,7 +35,8 @@ npx crusher.dev
   </TabItem>
   <TabItem value="starters" label="Others" attributes={{className: "tab-item"}}>
 
- <br/> 
+{' '}
+<br />{' '}
 
 | Operation System | Download Link                                                                    |
 | ---------------- | -------------------------------------------------------------------------------- |
@@ -43,19 +44,29 @@ npx crusher.dev
 | Linux (Deb)      | [Download](https://github.com/crusherdev/crusher-downloads/releases/tag/v1.0.32) |
 
 Download and install native recorder. This is recommeded if you're not a developers or don't have access to the repo.
+
   </TabItem>
 </Tabs>
 
-###  Recording first test
-<iframe style={{borderRadius: 10, border: '1px solid #1d1d1d'}} width="640" height="416" src="https://www.loom.com/embed/4d7671daaea5401c89731d2f7c333388?t=20" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+### Recording first test
 
+<iframe
+  style={{ borderRadius: 10, border: '1px solid #1d1d1d' }}
+  width="640"
+  height="416"
+  src="https://www.loom.com/embed/4d7671daaea5401c89731d2f7c333388?t=20"
+  frameborder="0"
+  webkitallowfullscreen
+  mozallowfullscreen
+  allowfullscreen
+></iframe>
 
 ### Running the test
 
 Using CLI - Once you have created your first test, you can run it with CLI directly.
 
 ```shell
-npx crusher.devtest:run
+npx crusher.dev test:run
 ```
 
- Using App - In app or frontend click on test run test by opening app `npx crusher.dev.`
+Using App - In app or frontend click on test run test by opening app `npx crusher.dev.`

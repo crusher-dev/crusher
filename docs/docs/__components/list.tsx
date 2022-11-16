@@ -172,7 +172,7 @@ const CommandInput = styled.div`
     color: #dfdfdf;
 
     height: 46px;
-    font-size: 14px;
+    font-size: 13.5px;
     letter-spacing: .4px !important;
 
     font-family: ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
@@ -191,7 +191,7 @@ const CommandInput = styled.div`
     margin-bottom: 08px;
 
     .crusherDevLabel {
-      color: #ABFF56;
+      color: #45c3fa;
     }
   }
 

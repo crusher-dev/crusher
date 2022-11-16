@@ -12,11 +12,13 @@ export interface IUserInfo {
 let userInfo: IUserInfo | null = null;
 
 const setUserInfo = (_userInfo: IUserInfo) => {
-  Analytics.identifyUser(
-    {
-      userId: _userInfo.email
-    }
-  );
+  if(_userInfo) {
+    Analytics.identifyUser(
+      {
+        userId: _userInfo.email
+      }
+    );
+  }
   
   userInfo = _userInfo;
 };

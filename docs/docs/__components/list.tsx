@@ -1,6 +1,7 @@
 import React from "react";
 
 import styled from "@emotion/styled";
+import {css} from "@emotion/css";
 export const UseCrusher = ({ children, color }) => (
   <div className="useCrusher_in_project">
     <CommandInput>
@@ -11,7 +12,7 @@ export const UseCrusher = ({ children, color }) => (
 
       <div id="command" className="flex items-center justify-between">
         <div>
-          <span className="arrow">  ></span> npx <span className="crusherDevLabel">crusher.dev</span>
+          <span className="arrow">  ></span> <span className={css`color: #e450e7;`}>npx</span> <span className="crusherDevLabel">crusher.dev</span>
         </div>
         <CopyIcon
           height={20}
@@ -171,9 +172,10 @@ const CommandInput = styled.div`
     color: #dfdfdf;
 
     height: 46px;
-    font-size: 15px;
-    letter-spacing: .4px;
+    font-size: 14px;
+    letter-spacing: .4px !important;
 
+    font-family: ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
     #copy-icon:hover {
       cursor: pointer;
       path {
@@ -186,7 +188,7 @@ const CommandInput = styled.div`
     border-radius: 12px;
     font-weight: 500;
     margin-top: 16px;
-    margin-bottom: 06px;
+    margin-bottom: 08px;
 
     .crusherDevLabel {
       color: #ABFF56;

@@ -41,10 +41,19 @@ export function setupLogger(crusherModuleName: string) {
 			new winston.transports.Console({
 				format: winston.format.combine(winston.format.colorize(), winston.format.printf((info) => {
 					const values = Object.keys(info).filter((a) => !["level", "message"].includes(a)).map((a) => info[a]);
-
-					return `${info.level}: ${info.message && typeof info.message === "string" ? info.message.replace(/^(\[.+\])/, (x) => {
+					
+					let out = `${info.level}: ${info.message && typeof info.message === "string" ? info.message.replace(/^(\[.+\])/, (x) => {
 						return chalk.bold(x);
 					}) : info.message} ` + (values && values.length ? values.map((v) => { return JSON.stringify(v, null) }).join(", ") : "");
+					
+					// Print error stack if error
+					if (info.message && (info as any).message?.stack) {
+						// Remove title line from stack
+						const lines = (info as any).message.stack.split("\n");
+						if(lines[0].includes("Error")) lines.shift();
+						out += "\n" + lines.join("\n");
+					}
+					return out;
 				})), level: process.env.CRUSHER_DEBUG ? "debug" : "info"
 			}),
 		],

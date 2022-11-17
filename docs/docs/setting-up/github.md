@@ -38,20 +38,23 @@ on:
   push:
     branches:
       - main
-steps:
-  - uses: actions/checkout@v3
-  - uses: actions/setup-node@v3
-    with:
-      node-version: 16
-      cache: 'npm'
-  - name: Install node modules
-    run: npm i
- 
-  - name: Build app
-    run: npm run build
- 
-  - name: Run tests
-    run: npx crusher.dev test:run --pre-run="npm run start" `}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'npm'
+      - name: Install node modules
+        run: npm i
+    
+      - name: Build app
+        run: npm run build
+    
+      - name: Run tests
+        run: npx crusher.dev test:run --pre-run="npm run start" --token="<crusher_token>"`}
     </CodeBlock>
   </TabItem>
   <TabItem value="starters" label="React" attributes={{className: "tab-item"}}>
@@ -60,17 +63,20 @@ on:
   push:
     branches:
       - main
-steps:
-  - uses: actions/checkout@v3
-  - uses: actions/setup-node@v3
-    with:
-      node-version: 16
-      cache: 'npm'
-  - name: Install node modules
-    run: npm i
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'npm'
+      - name: Install node modules
+        run: npm i
  
-  - name: Run tests
-    run: npx crusher.dev test:run --pre-run="npm run start" `}
+      - name: Run tests
+        run: npx crusher.dev test:run --pre-run="npm run start" --token="<crusher_token>"`}
     </CodeBlock>
   </TabItem>
   <TabItem value="vue.js" label="Vue.js" attributes={{className: "tab-item"}}>
@@ -79,24 +85,30 @@ on:
   push:
     branches:
       - main
-steps:
-  - uses: actions/checkout@v3
-  - uses: actions/setup-node@v3
-    with:
-      node-version: 16
-      cache: 'npm'
-  - name: Install node modules
-    run: npm i
-  
-  - name: Build app
-    run: npm run build
- 
-  - name: Run tests
-    run: npx crusher.dev test:run --pre-run="npm run serve" `}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'npm'
+      - name: Install node modules
+        run: npm i
+      
+      - name: Build app
+        run: npm run build
+    
+      - name: Run tests
+        run: npx crusher.dev test:run --pre-run="npm run serve" --token="<crusher_token>" `}
     </CodeBlock>
 
   </TabItem>
 </Tabs>
+
+1. Copy the above code and paste it in your github actions file. You can find the file in your repo at `.github/workflows/crusher.yml`
+2. Replace `<crusher_token>` with your crusher token. You can get it by running `npx crusher.dev token` from your terminal
 
 
 ### Checks on commit & PR

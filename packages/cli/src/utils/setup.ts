@@ -141,7 +141,7 @@ export async function makeSureSetupIsCorrect(projectId: string | null = null, as
                 value: p.id,
               })),
             ],
-            default: projects[0].id,
+            default: projects && projects[0] ? projects[0].id : "new",
           },
         ]);
 

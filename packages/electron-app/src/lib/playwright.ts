@@ -13,6 +13,9 @@ import * as path from "path";
 import { ACTION_DESCRIPTIONS } from "../_ui/ui/containers/components/sidebar/steps";
 import { uuidv4 } from "runner-utils/src/utils/helper";
 import { StepErrorTypeEnum } from "runner-utils/src/error.types";
+import { ActionsInTestEnum } from "@shared/constants/recordedActions";
+import Table from "cli-table";
+
 const { performance } = require("perf_hooks");
 //@ts-ignore
 const playwright = typeof __non_webpack_require__ !== "undefined" ? __non_webpack_require__("./playwright/index.js") : require("playwright");
@@ -277,6 +280,36 @@ class PlaywrightInstance {
 			time: performance.now(),
 			parent: uniqueId,
 		});
+
+		if(failedAction.type === ActionsInTestEnum.ASSERT_ELEMENT) {
+			if(result?.meta?.meta?.type) {
+				const {type, meta: assertMeta } = result.meta.meta;
+
+				if(type === StepErrorTypeEnum.ASSERTIONS_FAILED) {
+					const { logs } = assertMeta;
+					// Create table
+					const table = new Table({ head: ["Field", "Operation", "Current", "Expected", "Status"],
+					colors: false, colAligns: ["middle", "middle", "middle", "middle", "middle"],
+					colWidths: [15, 15, 40, 40, 10]
+				});
+
+
+					logs.forEach((log) => {
+						const { meta: logItemMeta, status }= log;
+						table.push([logItemMeta.field, logItemMeta.operation, logItemMeta.elementValue, logItemMeta.valueToMatch, status !== "FAILED" ? "✅" : "❌"]);
+					});
+
+					this.appWindow.recordLog({
+						id: uuidv4(),
+						message: table.toString(),
+						type: "error",
+						args: [],
+						time: performance.now(),
+						parent: uniqueId,
+					});
+				}
+			}
+		}
 		if (!shouldNotSave) {
 			if (isStalled) {
 				// @TODO: Update it ActionStatusEnum.STALLED
@@ -314,6 +347,7 @@ class PlaywrightInstance {
 						console.log("Rejoice its timeout error");
 					}
 					this.lastAction = null;
+
 					this.handleFailedStep(action, result, shouldNotSave);
 					break;
 				case ActionStatusEnum.COMPLETED:

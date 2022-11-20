@@ -593,6 +593,7 @@ importers:
       '@types/analytics-node': ^3.1.8
       '@types/body-scroll-lock': ^2.6.1
       '@types/chrome': ^0.0.122
+      '@types/cli-table': ^0.3.1
       '@types/copy-webpack-plugin': ^6.4.0
       '@types/event-kit': ^2.4.1
       '@types/html2canvas': ^0.0.36
@@ -618,6 +619,8 @@ importers:
       babel-preset-react: ^6.24.1
       body-scroll-lock: ^3.1.5
       child_process: ^1.0.2
+      cli-table: ^0.3.11
+      cli-table3: ^0.6.3
       copy-webpack-plugin: 6.0.3
       css-loader: ^5.2.4
       css-selector-tools: ^1.0.9
@@ -754,6 +757,8 @@ importers:
       axios: 0.21.4_debug@4.3.3
       body-scroll-lock: 3.1.5
       child_process: 1.0.2
+      cli-table: 0.3.11
+      cli-table3: 0.6.3
       copy-webpack-plugin: 6.0.3_webpack@5.41.1
       css-selector-tools: 1.0.9
       debug: 4.3.3
@@ -835,6 +840,7 @@ importers:
       '@pmmmwh/react-refresh-webpack-plugin': 0.5.7_g5a74w6fgi3y6u2qolgpcn4c5e
       '@types/body-scroll-lock': 2.6.1
       '@types/chrome': 0.0.122
+      '@types/cli-table': 0.3.1
       '@types/copy-webpack-plugin': 6.4.2
       '@types/event-kit': 2.4.1
       '@types/html2canvas': 0.0.36
@@ -10068,6 +10074,10 @@ packages:
       '@types/har-format': 1.2.6
     dev: true
 
+  /@types/cli-table/0.3.1:
+    resolution: {integrity: sha512-m3+6WWfSSl6zqoXy8uQQifbgqV7Gt6fsyWnHLgUWVtJQk75+OfUB+edSZ52YDj7leSiZtX7w1/E4w2x/Hb0orA==}
+    dev: true
+
   /@types/connect/3.4.34:
     resolution: {integrity: sha512-ePPA/JuI+X0vb+gSWlPKOY0NdNAie/rPUqX2GUPpbZwiKTkSPhjXWuee47E4MtE54QVzGCQMQkAL6JhV2E1+cQ==}
     dependencies:
@@ -13898,6 +13908,13 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
+  /cli-table/0.3.11:
+    resolution: {integrity: sha512-IqLQi4lO0nIB4tcdTpN4LCB9FI3uqrJZK7RC515EnhZ6qBaglkIgICb1wjeAqpdoOabm1+SuQtkXIPdYC93jhQ==}
+    engines: {node: '>= 0.2.0'}
+    dependencies:
+      colors: 1.0.3
+    dev: false
+
   /cli-table3/0.6.2:
     resolution: {integrity: sha512-QyavHCaIC80cMivimWu4aWHilIpiDpfm3hGmqAmXVL1UsnbLuBSMd21hTX6VY4ZSDSM73ESLeF8TOYId3rBTbw==}
     engines: {node: 10.* || >= 12.*}
@@ -13906,6 +13923,15 @@ packages:
     optionalDependencies:
       '@colors/colors': 1.5.0
     dev: true
+
+  /cli-table3/0.6.3:
+    resolution: {integrity: sha512-w5Jac5SykAeZJKntOxJCrm63Eg5/4dhMWIcuTbo9rpE+brgaSZo0RuNJZeOyMgsUdhDeojvgyQLmjI+K50ZGyg==}
+    engines: {node: 10.* || >= 12.*}
+    dependencies:
+      string-width: 4.2.3
+    optionalDependencies:
+      '@colors/colors': 1.5.0
+    dev: false
 
   /cli-tableau/2.0.1:
     resolution: {integrity: sha512-he+WTicka9cl0Fg/y+YyxcN6/bfQ/1O3QmgxRXDhABKqLzvoOSM4fMzp39uMyLBulAFuywD2N7UaoQE7WaADxQ==}

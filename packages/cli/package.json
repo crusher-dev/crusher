@@ -6,6 +6,7 @@
   "main": "./src/bin/index.js",
   "private": true,
   "license": "MIT",
+  "keywords": "automation,browser,e2e,end-to-end,crusher,crusher.dev,integration,runner,low-code,no-code,playwright,frontend,react,javascript,visual,test,testing",
   "bin": {
     "crusher.dev": "./src/bin/index.js"
   },

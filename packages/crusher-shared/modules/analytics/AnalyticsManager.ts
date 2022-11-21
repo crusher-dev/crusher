@@ -50,10 +50,14 @@ export class Analytics{
     }
 
     static identifyUser({
-        userId, anonymousId = getUniqueID()
+        userId, email, anonymousId = getUniqueID()
     }){
         if(Analytics.disabledTelemetry) return;
-        Analytics.analyticsObj.identify({userId,anonymousId});
+        Analytics.analyticsObj.identify({userId,anonymousId, 
+            traits:{
+            email
+        }});
+
     }
 
     static identifyGroup({

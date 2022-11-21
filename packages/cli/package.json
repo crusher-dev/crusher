@@ -2,7 +2,7 @@
   "name": "crusher.dev",
   "version": "2.0.46",
   "author": "Himanshu @himanshu-dixit",
-  "repository": "https://github.com/crusherdev/CLI",
+  "repository": "https://github.com/crusher-dev/crusher",
   "main": "./src/bin/index.js",
   "private": true,
   "license": "MIT",

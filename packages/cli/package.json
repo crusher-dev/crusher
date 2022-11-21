@@ -90,5 +90,5 @@
     "test",
     "testing"
   ],
-  "description": "All-in-one open source framework, with low-code recorder, runner + batteries built-in."
+  "description": "All-in-one open source e2e testing framework, with low-code recorder, runner + batteries built-in."
 }

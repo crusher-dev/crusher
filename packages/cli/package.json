@@ -6,7 +6,6 @@
   "main": "./src/bin/index.js",
   "private": true,
   "license": "MIT",
-  "keywords": "automation,browser,e2e,end-to-end,crusher,crusher.dev,integration,runner,low-code,no-code,playwright,frontend,react,javascript,visual,test,testing",
   "bin": {
     "crusher.dev": "./src/bin/index.js"
   },
@@ -71,5 +70,25 @@
     "webpack-bundle-analyzer": "^4.6.1",
     "webpack-bundle-size-analyzer": "^3.1.0",
     "webpack-cli": "^4.10.0"
-  }
+  },
+  "keywords": [
+    "automation",
+    "browser",
+    "e2e",
+    "end-to-end",
+    "crusher",
+    "crusher.dev",
+    "integration",
+    "runner",
+    "low-code",
+    "no-code",
+    "playwright",
+    "frontend",
+    "react",
+    "javascript",
+    "visual",
+    "test",
+    "testing"
+  ],
+  "description": "All-in-one open source framework, with low-code recorder, runner + batteries built-in."
 }

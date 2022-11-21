@@ -106,21 +106,24 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 				}
 			}
 			if (projectConfig && proxyWarning.shouldShow && proxyWarning?.startUrl && !shouldNotSetupProxy) {
-				projectConfig["proxy"] = projectConfig["proxy"] ? [
-					...projectConfig["proxy"],
-					{
-						name: "frontend-" + projectConfig["proxy"].length + "-" + Math.floor(Math.random() * 100),
-						url: proxyWarning.startUrl.origin,
-						intercept: proxyWarning.startUrl.host
-					}
-				] : [
-					{
-						name: "frontend",
-						url: proxyWarning.startUrl.origin,
-						intercept: proxyWarning.startUrl.host
-					}
-				]
-				writeProjectConfig(projectConfig);
+				const hasOriginRecord = projectConfig.proxy && projectConfig.proxy.find((item: any) => item.url === proxyWarning.startUrl.origin);
+				if(!hasOriginRecord) {
+					projectConfig["proxy"] = projectConfig["proxy"] ? [
+						...projectConfig["proxy"],
+						{
+							name: "frontend-" + projectConfig["proxy"].length + "-" + Math.floor(Math.random() * 100),
+							url: proxyWarning.startUrl.origin,
+							intercept: proxyWarning.startUrl.host
+						}
+					] : [
+						{
+							name: "frontend",
+							url: proxyWarning.startUrl.origin,
+							intercept: proxyWarning.startUrl.host
+						}
+					]
+					writeProjectConfig(projectConfig);
+				}
 			}
 
 

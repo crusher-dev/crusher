@@ -5,6 +5,7 @@ const { FixSharedOutputPlugin } = require("./webpack/plugins/fixShardOutput");
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 var WebpackBundleSizeAnalyzerPlugin = require('webpack-bundle-size-analyzer').WebpackBundleSizeAnalyzerPlugin;
 const StatoscopeWebpackPlugin = require('@statoscope/webpack-plugin').default;
+const CopyPlugin = require("copy-webpack-plugin");
 
 console.log( glob.sync("./src/**/*.ts").reduce(function (obj, el) {
   obj[el.replace(".ts", "")] = {
@@ -57,6 +58,11 @@ module.exports = {
     new webpack.BannerPlugin({ banner: "#!/usr/bin/env node", raw: true }),
     new webpack.DefinePlugin({
       ...environmentVariables
+    }),
+    new CopyPlugin({
+      patterns: [
+        { from: path.resolve(__dirname, "../../README.md"), to: "README.md" },
+      ],
     }),
     // new StatoscopeWebpackPlugin()
     // new FixSharedOutputPlugin(),

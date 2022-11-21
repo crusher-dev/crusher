@@ -169,7 +169,7 @@ const App = () => {
 
 		ipcRenderer.on("go-to-dashboard", () => {
 			clearAllToasts();
-			window.location.href = "/";
+			window.location.href = window.location.href.split("#")[0];
 			goFullScreen(false);
 		});
 		const listener = handleUrlAction.bind(this, store, addNotification);

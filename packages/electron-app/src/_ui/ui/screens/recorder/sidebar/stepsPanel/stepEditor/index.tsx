@@ -15,6 +15,8 @@ import { EditableInput } from "electron-app/src/_ui/ui/components/inputs/editabl
 import { useAtom } from "jotai";
 import { editInputAtom, isStepHoverAtom } from "electron-app/src/_ui/store/jotai/testsPage";
 import { SelectorEditorCard } from "./selectorEditor";
+import { addHttpToURLIfNotThere } from "electron-app/src/utils";
+import _ from "lodash";
 
 const limitString = (string, offset = null) => {
 	if (!string) return string;
@@ -96,6 +98,7 @@ const InputValueEditor = ({ step, stepId }) => {
 					step.payload.meta.value.value = value;
 					dispatch(updateRecordedStep(step, stepId));
 					sendSnackBarEvent({ type: "success", message: "Value updated" });
+					return { value: finalValue };
 				}
 			};
 
@@ -104,10 +107,12 @@ const InputValueEditor = ({ step, stepId }) => {
 		}
 		if ([ActionsInTestEnum.NAVIGATE_URL, ActionsInTestEnum.WAIT_FOR_NAVIGATION].includes(step.type)) {
 			const updateNavigationUrlValue = (value: string) => {
-				if (step.payload.meta.value !== value) {
-					step.payload.meta.value = value;
+				const finalValue = step.type === ActionsInTestEnum.NAVIGATE_URL ? addHttpToURLIfNotThere(value) : value;
+				if (step.payload.meta.value !== finalValue) {
+					step.payload.meta.value = finalValue;
 					dispatch(updateRecordedStep(step, stepId));
 					sendSnackBarEvent({ type: "success", message: "Navigation value updated" });
+					return { value: finalValue };
 				}
 			};
 
@@ -120,8 +125,8 @@ const InputValueEditor = ({ step, stepId }) => {
 
 	const fieldInfo = getInfo(step);
 	const handleUpdate = (value) => {
-		fieldInfo.updateCallback(value);
 		setIsEditMode(false);
+		return fieldInfo.updateCallback(value);
 	};
 	if (!fieldInfo) return null;
 
@@ -164,7 +169,7 @@ const InputValueEditor = ({ step, stepId }) => {
 					padding: 4rem 0rem !important;
 				`}
 				defaultValue={fieldInfo.value}
-				id={stepId + "-nav-url"}
+				id={`nav-${stepId}-url`}
 				onChange={handleUpdate.bind(this)}
 			/>
 			<EditPencilIcon onClick={setIsStepNameEditing.bind(this, stepId + "-nav-url")} className={"ml-10"} css={editUrlIconCss} />

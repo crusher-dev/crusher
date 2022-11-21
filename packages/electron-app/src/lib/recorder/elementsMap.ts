@@ -5,7 +5,6 @@ class ElementsIdMap {
 
 	static getUniqueId(node: Node): { value: string; isNew: boolean } {
 		if (this.map.has(node)) {
-			window["crusherSdk.logInfo"]("Returning saved element handle");
 			return { value: this.map.get(node), isNew: false };
 		}
 		const id = uuidv4();

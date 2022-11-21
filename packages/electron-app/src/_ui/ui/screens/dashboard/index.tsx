@@ -81,7 +81,11 @@ const DashboardScreen = () => {
 	const store = useStore();
 
 	React.useEffect(() => {
-		setTimeout(setAnimationComplete.bind(this, true), 200);
+		const interval = setTimeout(setAnimationComplete.bind(this, true), 200);
+
+		return () => {
+			clearTimeout(interval);
+		}
 	}, []);
 
 	const handleTestDelete = React.useCallback(

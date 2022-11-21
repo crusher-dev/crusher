@@ -95,9 +95,13 @@ const StepsPanel = ({ className }: IProps) => {
 	const handleOutSideClick = React.useCallback(() => {
 		// @Note: setTimeOut is here as an hack, to
 		// allow selectedList to be sent to contextMenu onClick
-		setTimeout(() => {
+		const interval = setTimeout(() => {
 			resetSelected();
 		}, 100);
+
+		return () => {
+			clearTimeout(interval);
+		}
 	}, [resetSelected]);
 
 	const handleMenuOpenChange = () => { };

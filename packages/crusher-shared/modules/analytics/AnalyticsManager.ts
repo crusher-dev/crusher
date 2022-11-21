@@ -1,6 +1,7 @@
 // @ts-nocheck
 const AnalyticsNode = require('analytics-node');
 import getMAC from 'getmac'
+import os from "os"
 
 const devKey = 'IM0t0F7DFPxWwbDrd8WStLqOjJYLYuaq'
 var analytics = new AnalyticsNode(process.env.SEGMENT_API_KEY || devKey, {flushAfter: 5, flushInterval: 3});
@@ -48,7 +49,14 @@ export class Analytics{
             userId,
             anonymousId: getUniqueID(),
             event, 
-            properties
+            properties: {
+                ...(properties || {}),
+                device: {
+                    name: `${process.platform}-${process.arch}`,
+                    nodeVersion: process.version,
+                    cpu: os.cpus()[0].model + ` (${os.cpus().length} cores)`,
+                }
+            }
         })
     }
 

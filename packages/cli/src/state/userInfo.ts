@@ -15,7 +15,8 @@ const setUserInfo = (_userInfo: IUserInfo) => {
   if(_userInfo) {
     Analytics.identifyUser(
       {
-        userId: _userInfo.email
+        userId: _userInfo.id,
+        email: _userInfo?.email
       }
     );
   }

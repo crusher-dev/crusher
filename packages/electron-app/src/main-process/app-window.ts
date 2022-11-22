@@ -25,7 +25,7 @@ import {
 	updateRecorderState,
 } from "../store/actions/recorder";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
-import { getAllSteps, getRecorderState, getSavedSteps, getTestName } from "../store/selectors/recorder";
+import { getAllSteps, getRecorderContext, getRecorderState, getSavedSteps, getTestName } from "../store/selectors/recorder";
 import { CloudCrusher } from "../lib/cloud";
 import { getMainActions, getBrowserActions, toCrusherSelectorsFormat } from "runner-utils/src/utils/helper";
 import { iElementInfo, TRecorderState } from "../store/reducers/recorder";
@@ -919,12 +919,27 @@ export class AppWindow {
 		const isSuccessful = await this.handleReplayTestSteps(recordedSteps as any);
 		this.store.dispatch(setIsTestVerified(true));
 		if (isSuccessful) {
+			{ // Trackng
+				const context = getRecorderContext(this.store.getState() as any);
+				trackEvent(DesktopAppEventsEnum.TEST_SUCCESS, {
+					context,
+					actionType: autoSaveType
+				});
+			}
+
 			if (shouldAlsoSave && autoSaveType === "SAVE") {
 				return this.handleSaveTest(!!payload.shouldNotRunTest);
 			} else if (shouldAlsoSave && autoSaveType === "UPDATE") {
 				return this.handleUpdateTest(null);
 			}
 		} else {
+			{ // Trackng
+				const context = getRecorderContext(this.store.getState() as any);
+				trackEvent(DesktopAppEventsEnum.TEST_FAILURE, {
+					context,
+					actionType: autoSaveType
+				});
+			}
 			throw new Error("Error occurred while verifying");
 		}
 	}

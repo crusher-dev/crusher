@@ -20,6 +20,9 @@ export enum DesktopAppEventsEnum {
     SAVE_TEST = "SAVE_TEST",
     UPDATE_TEST = "UPDATE_TEST",
     REVERIFY_CURRENT_TEST = "REVERIFY_CURRENT_TEST",
+
+    TEST_SUCCESS = "TEST_SUCCESS",
+    TEST_FAILURE = "TEST_FAILURE",
 };
 
 export enum ServerEventsEnum {

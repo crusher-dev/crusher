@@ -162,7 +162,6 @@ const App = () => {
 	}, []);
 
 	React.useEffect(() => {
-		performTrackEvent(DesktopAppEventsEnum.RECORDER_PAGE_OPEN, {});
 		ipcRenderer.on("webview-initialized", () => {
 			store.dispatch(setIsWebViewInitialized(true));
 		});

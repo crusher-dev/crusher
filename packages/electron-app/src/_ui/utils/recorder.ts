@@ -1,6 +1,7 @@
+import { DesktopAppEventsEnum } from "@shared/modules/analytics/constants";
 import { createLocalBuild } from "electron-app/src/store/actions/builds";
 import { getStore } from "electron-app/src/store/configureStore";
-import { goFullScreen, performReplayTestUrlAction } from "electron-app/src/_ui/commands/perform";
+import { goFullScreen, performReplayTestUrlAction, performTrackEvent } from "electron-app/src/_ui/commands/perform";
 import historyInstance from "./history";
 
 const triggerLocalBuild = (testsList: number[] = undefined, selectedTests: any[] = [], host: string | null = null) => {
@@ -17,6 +18,10 @@ const triggerLocalBuild = (testsList: number[] = undefined, selectedTests: any[]
 	);
 	window["testsToRun"] = { list: testsList, count: testsList.length };
 	window["localRunCache"] = {};
+
+	performTrackEvent(DesktopAppEventsEnum.TRIGGER_LOCAL_BUILD, {
+		testsCount: testsList.length,
+	});
 
 	historyInstance.push("/recorder", "");
 	goFullScreen();

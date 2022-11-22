@@ -16,7 +16,6 @@ import { BuildsService } from "../builds/service";
 import { StorageManager } from "@modules/storage";
 import { Auth } from "googleapis";
 import axios from "axios";
-import { Analytics } from "@crusher-shared/modules/analytics/AnalyticsManager";
 import { ServerEventsEnum } from "@crusher-shared/modules/analytics/constants";
 
 

@@ -15,8 +15,8 @@ import { v4 as uuidv4 } from "uuid";
 import { UsersService } from "../users/service";
 import { ProjectsService } from "../projects/service";
 import { VercelService } from "./vercel/service";
-import { Analytics } from "@crusher-shared/modules/analytics/AnalyticsManager";
 import { ServerEventsEnum } from "@crusher-shared/modules/analytics/constants";
+import { AnalyticsManager } from "@modules/analytics";
 @Service()
 @JsonController("")
 class IntegrationsController {
@@ -76,17 +76,14 @@ class IntegrationsController {
 		@Param("project_id") projectId: number,
 		@Body() body: { alertChannel: any; normalChannel: any },
 	) {
-		const { user_id } = user;
+		const { user_id, team_id } = user;
 		const response = await this.integrationsService.saveSlackSettings({ alertChannel: body.alertChannel, normalChannel: body.normalChannel }, projectId);
 		
-		Analytics.trackProject({
-			groupId: projectId,
-			event: ServerEventsEnum.SET_SLACK_INTEGRATION_CHANNELS,
-			properties: {
-				userId: user_id,
-				alertChannel: body.alertChannel,
-				normalChannel: body.normalChannel
-			}
+		AnalyticsManager.identifyUser(user_id, team_id);
+		AnalyticsManager.trackEvent(projectId, ServerEventsEnum.SET_SLACK_INTEGRATION_CHANNELS, {
+			userId: user_id,
+			alertChannel: body.alertChannel,
+			normalChannel: body.normalChannel
 		});
 
 		return response;
@@ -117,7 +114,7 @@ class IntegrationsController {
 		@Param("project_id") projectId: number,
 		@Body() body: { repoId: number; repoName: string; repoFullName: string; repoLink: string; installationId: string },
 	) {
-		const { user_id } = user;
+		const { user_id, team_id } = user;
 		const { repoId, repoName, repoLink, installationId, repoFullName } = body;
 
 		const gitLinkedProject = await this.githubIntegrationService.getIntegrationRecord(repoFullName);
@@ -128,14 +125,11 @@ class IntegrationsController {
 
 		const doc = await this.githubIntegrationService.linkRepo(repoId, repoFullName, installationId, repoLink, projectId, user_id);
 
-		Analytics.trackProject({
-			groupId: projectId,
-			event: ServerEventsEnum.LINK_GITHUB_REPO,
-			properties: {
-				userId: user_id,
-				repo: repoFullName,
-				repoId: repoId,
-			}
+		AnalyticsManager.identifyUser(user_id, team_id);
+		AnalyticsManager.trackEvent(projectId, ServerEventsEnum.LINK_GITHUB_REPO, {
+			userId: user_id,
+			repo: repoFullName,
+			repoId: repoId,
 		});
 
 		return {

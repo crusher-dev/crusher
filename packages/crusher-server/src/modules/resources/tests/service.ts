@@ -17,8 +17,8 @@ import { BadRequestError } from "routing-controllers";
 import { merge } from "lodash";
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { CodeTemplateService } from "../teams/codeTemplate/service";
-import { Analytics } from "@crusher-shared/modules/analytics/AnalyticsManager";
 import { ServerEventsEnum } from "@crusher-shared/modules/analytics/constants";
+import { AnalyticsManager } from "@modules/analytics";
 @Service()
 class TestService {
 	private dbManager: DBManager;
@@ -182,22 +182,18 @@ class TestService {
 
 			return "manual";
 		};
-
-		Analytics.trackProject({
-			groupId: projectId,
-			event: ServerEventsEnum.BUILD_TRIGGERED,
-			properties: {
-				userId: userId,
-				triggerType: getSource(),
-				testCount: testsData.totalCount,
-			}
-		});
-
 		
 		if (!testsData.list.length) return;
 
 		const projectRecord = await this.projectService.getProject(projectId);
 
+		AnalyticsManager.identifyUser(userId, projectRecord.teamId);
+		AnalyticsManager.trackEvent(projectId, ServerEventsEnum.BUILD_TRIGGERED, {
+			userId: userId,
+			triggerType: getSource(),
+			testCount: testsData.totalCount,
+		});
+	
 		const meta: { isProjectLevelBuild: boolean; github?: { repoName: string }; disableBaseLineComparisions?: boolean } = {
 			isProjectLevelBuild: true,
 			disableBaseLineComparisions: !!buildMeta.disableBaseLineComparisions,

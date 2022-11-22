@@ -53,19 +53,21 @@ export class Analytics{
         })
     }
 
-    static trackProject({groupId, event, properties}){
+    static trackProject({projectId, event, properties}){
         if(Analytics.disabledTelemetry) return;
-        Analytics.analyticsObj.track({userId: `gp-${groupId}`, event, properties})
+        Analytics.analyticsObj.track({userId: `gp-${projectId}`, event, properties})
     }
 
     static identifyUser({
-        userId, email, anonymousId = getUniqueID()
+        userId, email, anonymousId = getUniqueID(),
+         traits = {}
     }){
         if(Analytics.disabledTelemetry) return;
-        Analytics.analyticsObj.identify({userId,anonymousId, 
+        return Analytics.analyticsObj.identify({userId,anonymousId, 
         traits:{
             email,
             device: {
+                ...traits,
                 name: `${process.platform}-${process.arch}`,
                 nodeVersion: process.version,
                 cpu: os.cpus()[0].model + ` (${os.cpus().length} cores)`,
@@ -75,9 +77,10 @@ export class Analytics{
     }
 
     static identifyGroup({
-        groupId
+        groupId,
+        traits = {}
     }){
         if(Analytics.disabledTelemetry) return;
-        Analytics.analyticsObj.identify({groupId});
+        return Analytics.analyticsObj.identify({groupId, traits});
     }
 }

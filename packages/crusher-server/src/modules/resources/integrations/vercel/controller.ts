@@ -1,5 +1,5 @@
-import { Analytics } from "@crusher-shared/modules/analytics/AnalyticsManager";
 import { ServerEventsEnum } from "@crusher-shared/modules/analytics/constants";
+import { AnalyticsManager } from "@modules/analytics";
 import { RedisManager } from "@modules/redis";
 import { BuildsService } from "@modules/resources/builds/service";
 import { TestService } from "@modules/resources/tests/service";
@@ -83,14 +83,11 @@ class VercelIntegrationsController {
             await this.vercelService.updateVercelIntegrationForProject(meta, projectId);
         }
 
-        Analytics.trackProject({
-			groupId: projectId,
-			event: ServerEventsEnum.LINK_VERCEL_REPO,
-			properties: {
-				userId: userId,
-				vercelProjectName: vercelProjectName,
-                vercelProjectId: vercelProjectId,
-			}
+        AnalyticsManager.identifyUser(userId, teamId);
+		AnalyticsManager.trackEvent(projectId, ServerEventsEnum.LINK_VERCEL_REPO, {
+			userId: userId,
+			vercelProjectName: vercelProjectName,
+            vercelProjectId: vercelProjectId,
 		});
 
         return "Successful";

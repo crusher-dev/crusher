@@ -19,7 +19,7 @@ class AnalyticsManager {
             traits: {
                 teamID: teamId,
             }
-        });
+        }, false);
         
         await Analytics.identifyGroup({
             groupId: `team-${teamId}`,

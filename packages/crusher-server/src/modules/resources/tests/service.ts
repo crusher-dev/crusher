@@ -186,14 +186,6 @@ class TestService {
 		if (!testsData.list.length) return;
 
 		const projectRecord = await this.projectService.getProject(projectId);
-
-		await AnalyticsManager.identifyUser(projectId, projectRecord.teamId);
-		AnalyticsManager.trackEvent(projectId, ServerEventsEnum.BUILD_TRIGGERED, {
-			userId: userId,
-			teamId: projectRecord.teamId,
-			triggerType: getSource(),
-			testCount: testsData.totalCount,
-		});
 	
 		const meta: { isProjectLevelBuild: boolean; github?: { repoName: string }; disableBaseLineComparisions?: boolean } = {
 			isProjectLevelBuild: true,
@@ -206,7 +198,7 @@ class TestService {
 			(meta as any).vercel = (buildMeta as any).vercel;
 		}
 
-		return this.testsRunner.runTests(
+		const output = await this.testsRunner.runTests(
 			await this.getFullTestArr(testsData.list),
 			merge(
 				{
@@ -224,6 +216,17 @@ class TestService {
 			),
 			overideBaseLineBuildId ? overideBaseLineBuildId : projectRecord.baselineJobId,
 		);
+
+		await AnalyticsManager.identifyUser(projectId, projectRecord.teamId);
+		AnalyticsManager.trackEvent(projectId, ServerEventsEnum.BUILD_TRIGGERED, {
+			userId: userId,
+			teamId: projectRecord.teamId,
+			buildId: output.buildId,
+			triggerType: getSource(),
+			testCount: testsData.totalCount,
+		});
+
+		return output;
 	}
 
 	@CamelizeResponse()

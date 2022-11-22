@@ -91,6 +91,7 @@ class RunnerIntegrationsService {
             status: reportStatus,
             userId: buildRecord.userId,
             teamId: projectRecord.teamId,
+            buildId: buildRecord.id,
 		});
     }
 

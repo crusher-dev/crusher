@@ -86,7 +86,7 @@ class RunnerIntegrationsService {
             );
         };
 
-		AnalyticsManager.identifyUser(buildRecord.userId, buildRecord.projectId);
+		await AnalyticsManager.identifyUser(buildRecord.projectId, projectRecord.teamId);
 		AnalyticsManager.trackEvent(buildRecord.projectId, ServerEventsEnum.BUILD_FINISHED, {
             status: reportStatus,
             userId: buildRecord.userId,

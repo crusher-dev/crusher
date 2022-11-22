@@ -10,18 +10,20 @@ const teamsService = Container.get(TeamsService);
 class AnalyticsManager {
     static async identifyUser(projectId, teamId){ 
         const customEmail = `gp-${projectId}`
+
+        const team = await teamsService.getTeam(teamId);
         await Analytics.identifyUser({
             userId: customEmail,
-            email: customEmail,
+            email: team.teamEmail,
             anonymousId: null,
             traits: {
-                teamId: teamId,
+                teamID: teamId,
             }
         });
         
-        const team = await teamsService.getTeam(teamId);
         await Analytics.identifyGroup({
             groupId: `team-${teamId}`,
+            userId: customEmail,
             traits: {
                 name: team.name,
                 email: team.teamEmail,

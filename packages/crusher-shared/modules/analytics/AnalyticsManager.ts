@@ -1,7 +1,7 @@
 // @ts-nocheck
 const AnalyticsNode = require('analytics-node');
 import getMAC from 'getmac'
-import os from "os"
+const os = require("os");
 
 const devKey = 'IM0t0F7DFPxWwbDrd8WStLqOjJYLYuaq'
 var analytics = new AnalyticsNode(process.env.SEGMENT_API_KEY || devKey, {flushAfter: 5, flushInterval: 3});
@@ -61,26 +61,30 @@ export class Analytics{
     static identifyUser({
         userId, email, anonymousId = getUniqueID(),
          traits = {}
-    }){
+    }, sendDeviceTrait = true){
         if(Analytics.disabledTelemetry) return;
-        return Analytics.analyticsObj.identify({userId,anonymousId, 
-        traits:{
+        const traitsPayload = {
+            ...traits,
             email,
-            device: {
-                ...traits,
+        };
+
+        if(sendDeviceTrait) {
+            traitsPayload.device = {
                 name: `${process.platform}-${process.arch}`,
                 nodeVersion: process.version,
                 cpu: os.cpus()[0].model + ` (${os.cpus().length} cores)`,
-            }
-        }});
+            };
+        }
+        return Analytics.analyticsObj.identify({userId,anonymousId, traits: traitsPayload });
 
     }
 
     static identifyGroup({
         groupId,
+        userId,
         traits = {}
     }){
         if(Analytics.disabledTelemetry) return;
-        return Analytics.analyticsObj.identify({groupId, traits});
+        return Analytics.analyticsObj.group({groupId, userId, traits});
     }
 }

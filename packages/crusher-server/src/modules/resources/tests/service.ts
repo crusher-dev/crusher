@@ -187,7 +187,7 @@ class TestService {
 
 		const projectRecord = await this.projectService.getProject(projectId);
 
-		AnalyticsManager.identifyUser(userId, projectRecord.teamId);
+		await AnalyticsManager.identifyUser(projectId, projectRecord.teamId);
 		AnalyticsManager.trackEvent(projectId, ServerEventsEnum.BUILD_TRIGGERED, {
 			userId: userId,
 			triggerType: getSource(),

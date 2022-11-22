@@ -79,7 +79,7 @@ class IntegrationsController {
 		const { user_id, team_id } = user;
 		const response = await this.integrationsService.saveSlackSettings({ alertChannel: body.alertChannel, normalChannel: body.normalChannel }, projectId);
 		
-		AnalyticsManager.identifyUser(user_id, team_id);
+		await AnalyticsManager.identifyUser(projectId, team_id);
 		AnalyticsManager.trackEvent(projectId, ServerEventsEnum.SET_SLACK_INTEGRATION_CHANNELS, {
 			userId: user_id,
 			alertChannel: body.alertChannel,
@@ -125,7 +125,7 @@ class IntegrationsController {
 
 		const doc = await this.githubIntegrationService.linkRepo(repoId, repoFullName, installationId, repoLink, projectId, user_id);
 
-		AnalyticsManager.identifyUser(user_id, team_id);
+		AnalyticsManager.identifyUser(projectId, team_id);
 		AnalyticsManager.trackEvent(projectId, ServerEventsEnum.LINK_GITHUB_REPO, {
 			userId: user_id,
 			repo: repoFullName,

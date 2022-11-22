@@ -6,6 +6,7 @@ import { getStore } from "../store/configureStore";
 import { iAction } from "@shared/types/action";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { logToAxiom } from "@shared/modules/logger";
+import { getRecorderContext } from "../store/selectors/recorder";
 
 export const trackEvent = (event: DesktopAppEventsEnum,  properties: any = {}) => {
 	const store = getStore();
@@ -31,12 +32,15 @@ export const trackAppStartedEvent = (properties: any = {}) => {
 }
 
 export const trackStepSaved = (step: iAction, properties: any = {}) => {
-	return trackEvent(DesktopAppEventsEnum.SAVE_STEP, {
+	const store = getStore();
+	const context = getRecorderContext(store.getState() as any);
+	return trackEvent(DesktopAppEventsEnum.EXECUTING_STEP, {
 		step: {
 			type: step.type,
 			name: step.name,
 			status: step.status
 		},
+		context: context,
 		...properties,
 	});
 }

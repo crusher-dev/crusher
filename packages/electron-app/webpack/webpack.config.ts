@@ -68,6 +68,11 @@ const commonConfig = {
 	},
 };
 
+let injectedEnv: any = {};
+if(process.env.SEGMENT_API_KEY) {
+	injectedEnv["SEGMENT_API_KEY"] = process.env.SEGMENT_API_KEY;
+}
+
 const finalConfig = [
 	extensionConfig,
 	{
@@ -77,7 +82,7 @@ const finalConfig = [
 			new IgnorePlugin({ resourceRegExp: /^fsevents$/ }),
 			new webpack.EnvironmentPlugin({
 				NODE_ENV: "production",
-				SEGMENT_API_KEY: process.env.SEGMENT_API_KEY || undefined,
+				...injectedEnv,
 				...dotEnv.parsed,
 			}),
 			new CopyPlugin({

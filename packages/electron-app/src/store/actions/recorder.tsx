@@ -1,6 +1,6 @@
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
 import { iAction } from "@shared/types/action";
-import { iElementInfo, TRecorderState } from "../reducers/recorder";
+import { iElementInfo, TRecorderState, TRecorderVariant } from "../reducers/recorder";
 
 export const UPDATE_RECORDER_STATE = "UPDATE_RECORDER_STATE";
 export const SET_IS_WEBVIEW_INITIALIZED = "SET_IS_WEBVIEW_INITIALIZED";
@@ -26,6 +26,7 @@ export const SET_RECORDER_CRASH_STATE = "SET_RECORDER_CRASH_STATE";
 export const SET_STATUS_BAR_VISIBILITY = "SET_STATUS_BAR_VISIBILITY";
 
 export const SET_TEST_NAME = "SET_TEST_NAME";
+export const SET_RECORDER_CONTEXT = "SET_RECORDER_CONTEXT";
 
 export const setTestName = (testName) => {
 	return {
@@ -149,4 +150,11 @@ export const setStatusBarVisibility = (isVisible: boolean) => {
 		type: SET_STATUS_BAR_VISIBILITY,
 		payload: { isVisible },
 	};
+};
+
+export const setRecorderContext = (context: {} | {variant: TRecorderVariant; origin?: "deeplink" | "app" | null } ) => {
+	return {
+		type: SET_RECORDER_CONTEXT,
+		payload: { context }
+	}
 };

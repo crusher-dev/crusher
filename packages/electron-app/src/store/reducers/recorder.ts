@@ -11,6 +11,7 @@ import {
 	SET_IS_TEST_VERIFIED,
 	SET_IS_WEBVIEW_INITIALIZED,
 	SET_RECORDER_CRASH_STATE,
+	SET_RECORDER_CONTEXT,
 	SET_SELECTED_ELEMENT,
 	SET_SITE_URL,
 	SET_STATUS_BAR_VISIBILITY,
@@ -40,6 +41,12 @@ export enum TRecorderState {
 
 	ACTION_REQUIRED = "ACTION_REQURED",
 }
+
+export enum TRecorderVariant {
+	CREATE_TEST = "CREATE_TEST",
+	EDIT_TEST = "EDIT_TEST",
+	LOCAL_BUILD = "LOCAL_BUILD",
+};
 
 export enum TRecorderCrashState {
 	CRASHED = "CRASHED",
@@ -98,6 +105,11 @@ interface IRecorderReducer {
 
 	isVerified: boolean;
 	showStatusBar: boolean;
+
+	context:  {
+		variant: TRecorderVariant.CREATE_TEST,
+		origin: "app",
+	}
 }
 
 const initialState: IRecorderReducer = {
@@ -114,6 +126,10 @@ const initialState: IRecorderReducer = {
 	crashState: null,
 
 	showStatusBar: true,
+	context:  {
+		variant: TRecorderVariant.CREATE_TEST,
+		origin: "app",
+	}
 };
 
 const recorderReducer = (state: IRecorderReducer = initialState, action: AnyAction) => {
@@ -248,6 +264,11 @@ const recorderReducer = (state: IRecorderReducer = initialState, action: AnyActi
 				...state,
 				testName: action.payload.testName,
 			};
+		case SET_RECORDER_CONTEXT: 
+			return {
+				...state,
+				context: action.payload.context,
+			}
 		default:
 			return state;
 	}

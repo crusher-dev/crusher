@@ -4,8 +4,8 @@ import React from "react";
 import { useSelector, useStore } from "react-redux";
 import { Store } from "redux";
 import { setSessionInfoMeta } from "../store/actions/app";
-import { resetRecorder, setIsWebViewInitialized } from "../store/actions/recorder";
-import { TRecorderState } from "../store/reducers/recorder";
+import { resetRecorder, setIsWebViewInitialized, setRecorderContext } from "../store/actions/recorder";
+import { TRecorderState, TRecorderVariant } from "../store/reducers/recorder";
 import { getAppSessionMeta } from "../store/selectors/app";
 import { getIsStatusBarVisible, getRecorderState } from "../store/selectors/recorder";
 import { IDeepLinkAction } from "../types";
@@ -131,6 +131,14 @@ const handleUrlAction = (store: Store, addNotification, event: Electron.IpcRende
 			break;
 		case "run-test-from-build":
 			const { testId, buildId } = action.args;
+			store.dispatch(
+				setRecorderContext({ 
+					variant: TRecorderVariant.EDIT_TEST,
+					origin: "deeplink",
+					testId: testId,
+					buildId: buildId,
+				})
+			);
 			CloudCrusher.getBuildReport(buildId).then((buildReport) => {
 				runTest(buildReport.host);
 			});

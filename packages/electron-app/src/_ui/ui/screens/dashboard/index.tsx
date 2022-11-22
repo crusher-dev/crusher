@@ -144,6 +144,8 @@ const DashboardScreen = () => {
 			triggerLocalBuild(
 				tests.list.map((test) => test.id),
 				tests.list,
+				null,
+				"app"
 			);
 		}
 	};

@@ -4,8 +4,8 @@ import { Conditional } from "@dyson/components/layouts";
 import { LoadingIconV2, RedDotIcon, SettingsIcon } from "../../../../constants/old_icons";
 import { useDispatch, batch, useSelector, useStore, shallowEqual } from "react-redux";
 import { devices } from "../../../../../devices";
-import { getRecorderInfo, getRecorderInfoUrl, getRecorderState, getSavedSteps, getTestName, isTestVerified } from "electron-app/src/store/selectors/recorder";
-import { goFullScreen, performExit, performNavigation, performSteps, performVerifyTest, saveTest, updateTest, updateTestName } from "../../../../commands/perform";
+import { getRecorderContext, getRecorderInfo, getRecorderInfoUrl, getRecorderState, getSavedSteps, getTestName, isTestVerified } from "electron-app/src/store/selectors/recorder";
+import { goFullScreen, performExit, performNavigation, performSteps, performTrackEvent, performVerifyTest, saveTest, updateTest, updateTestName } from "../../../../commands/perform";
 import { addHttpToURLIfNotThere, isValidHttpUrl } from "../../../../../utils";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 import { getAppEditingSessionMeta, getCurrentTestInfo, getProxyState, shouldShowOnboardingOverlay } from "electron-app/src/store/selectors/app";
@@ -25,6 +25,7 @@ import { NormalInput } from "electron-app/src/_ui/ui/components/inputs/normalInp
 import { setTestName } from "electron-app/src/store/actions/recorder";
 import ConfirmDialog from "dyson/src/components/sharedComponets/ConfirmModal";
 import { getCurrentProjectConfig, getCurrentProjectConfigPath, writeProjectConfig } from "electron-app/src/_ui/utils/project";
+import { DesktopAppEventsEnum } from "@shared/modules/analytics/constants";
 
 const DeviceItem = ({ label }) => {
 	return (
@@ -189,6 +190,17 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 
 	const handleCallback = React.useCallback(
 		async (actionType: ITestActionEnum) => {
+			{ // Tracking 
+				const context = getRecorderContext(store.getState() as any);
+			   performTrackEvent(
+				actionType === ITestActionEnum.SAVE || actionType === ITestActionEnum.VERIFY_SAVE ? DesktopAppEventsEnum.SAVE_TEST : DesktopAppEventsEnum.UPDATE_TEST,
+				   {
+					   context,
+					   actionType
+				   }
+			   );
+		   }
+
 			switch (actionType) {
 				case ITestActionEnum.UPDATE:
 					await updateTest().then(() => {

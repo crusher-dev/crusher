@@ -59,10 +59,13 @@ const handleUrlAction = async (store: Store, event: Electron.IpcRendererEvent, {
 			const buildReport = await CloudCrusher.getBuildReportBuildMeta(buildId);
 			store.dispatch(setSelectedProject(buildReport.projectId));
 			const testIds = buildReport.tests.map((test) => test.id);
+	
 			performTrackEvent(DesktopAppEventsEnum.DEEPLINK_RUN_LOCAL_BUILD, {
 				buildId: buildId
 			});
-			triggerLocalBuild(testIds, buildReport.tests.map((test) => ({...test, testName: test.name})), buildReport.host);
+			triggerLocalBuild(testIds, buildReport.tests.map((test) => ({...test, testName: test.name})), buildReport.host, "deeplink", {
+				buildId: buildId
+			});
 			break;
 		
 	}

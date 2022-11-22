@@ -90,6 +90,7 @@ class RunnerIntegrationsService {
 		AnalyticsManager.trackEvent(buildRecord.projectId, ServerEventsEnum.BUILD_FINISHED, {
             status: reportStatus,
             userId: buildRecord.userId,
+            teamId: projectRecord.teamId,
 		});
     }
 

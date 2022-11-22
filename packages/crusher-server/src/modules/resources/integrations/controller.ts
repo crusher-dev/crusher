@@ -82,6 +82,7 @@ class IntegrationsController {
 		await AnalyticsManager.identifyUser(projectId, team_id);
 		AnalyticsManager.trackEvent(projectId, ServerEventsEnum.SET_SLACK_INTEGRATION_CHANNELS, {
 			userId: user_id,
+			teamId: team_id,
 			alertChannel: body.alertChannel,
 			normalChannel: body.normalChannel
 		});
@@ -128,6 +129,7 @@ class IntegrationsController {
 		AnalyticsManager.identifyUser(projectId, team_id);
 		AnalyticsManager.trackEvent(projectId, ServerEventsEnum.LINK_GITHUB_REPO, {
 			userId: user_id,
+			teamId: team_id,
 			repo: repoFullName,
 			repoId: repoId,
 		});

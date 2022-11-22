@@ -190,6 +190,7 @@ class TestService {
 		await AnalyticsManager.identifyUser(projectId, projectRecord.teamId);
 		AnalyticsManager.trackEvent(projectId, ServerEventsEnum.BUILD_TRIGGERED, {
 			userId: userId,
+			teamId: projectRecord.teamId,
 			triggerType: getSource(),
 			testCount: testsData.totalCount,
 		});

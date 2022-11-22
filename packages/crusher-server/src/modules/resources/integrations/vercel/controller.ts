@@ -86,6 +86,7 @@ class VercelIntegrationsController {
         await AnalyticsManager.identifyUser(projectId, teamId);
 		AnalyticsManager.trackEvent(projectId, ServerEventsEnum.LINK_VERCEL_REPO, {
 			userId: userId, 
+            teamId: teamId,
 			vercelProjectName: vercelProjectName,
             vercelProjectId: vercelProjectId,
 		});

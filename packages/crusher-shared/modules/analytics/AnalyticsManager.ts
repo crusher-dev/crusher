@@ -49,14 +49,7 @@ export class Analytics{
             userId,
             anonymousId: getUniqueID(),
             event, 
-            properties: {
-                ...(properties || {}),
-                device: {
-                    name: `${process.platform}-${process.arch}`,
-                    nodeVersion: process.version,
-                    cpu: os.cpus()[0].model + ` (${os.cpus().length} cores)`,
-                }
-            }
+            properties
         })
     }
 
@@ -70,8 +63,13 @@ export class Analytics{
     }){
         if(Analytics.disabledTelemetry) return;
         Analytics.analyticsObj.identify({userId,anonymousId, 
-            traits:{
-            email
+        traits:{
+            email,
+            device: {
+                name: `${process.platform}-${process.arch}`,
+                nodeVersion: process.version,
+                cpu: os.cpus()[0].model + ` (${os.cpus().length} cores)`,
+            }
         }});
 
     }

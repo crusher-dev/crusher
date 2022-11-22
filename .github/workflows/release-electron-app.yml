@@ -61,7 +61,7 @@ jobs:
         name: Build release for electron app
         run: cd packages/electron-app && BACKEND_URL=https://backend.crusher.dev FRONTEND_URL=https://app.crusher.dev pnpm release
         env:
-          SEGMENT_API_KEY: ${{ secrets.SEGMENT_API_KEY }}
+          SEGMENT_API_KEY: ${{ secrets.RECORDER_SEGMENT_API_KEY }}
 
       - if: ${{ matrix.os == 'macos-latest' && github.event_name != 'release'  }} 
         name: Build release for electron app
@@ -71,7 +71,7 @@ jobs:
           CSC_KEY_PASSWORD: ${{ secrets.mac_certs_password }}
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
-          SEGMENT_API_KEY: ${{ secrets.SEGMENT_API_KEY }}
+          SEGMENT_API_KEY: ${{ secrets.RECORDER_SEGMENT_API_KEY }}
 
       - if: ${{ matrix.os == 'macos-latest' && github.event_name == 'release'  }} 
         name: Build release for electron app
@@ -81,7 +81,7 @@ jobs:
           CSC_KEY_PASSWORD: ${{ secrets.mac_certs_password }}
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
-          SEGMENT_API_KEY: ${{ secrets.SEGMENT_API_KEY }}
+          SEGMENT_API_KEY: ${{ secrets.RECORDER_SEGMENT_API_KEY }}
 
       - if: matrix.os == 'macos-latest'
         name: 'Store crusher-darwin-arm64 as artifact'
@@ -145,6 +145,7 @@ jobs:
         env:
           CRUSHER_GIT_RELEASE_TOKEN: ${{ secrets.CRUSHER_GIT_RELEASE_TOKEN }}
           DOWNLOADS_REPO_URL: https://github.com/crusher-dev/crusher-downloads/
+          SEGMENT_API_KEY: ${{ secrets.SEGMENT_API_KEY }}
 
       - if: github.event_name != 'release'
         run: cd output/crusher-cli && npm publish --tag canary

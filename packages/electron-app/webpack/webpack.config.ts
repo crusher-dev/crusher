@@ -77,6 +77,7 @@ const finalConfig = [
 			new IgnorePlugin({ resourceRegExp: /^fsevents$/ }),
 			new webpack.EnvironmentPlugin({
 				NODE_ENV: "production",
+				SEGMENT_API_KEY: process.env.SEGMENT_API_KEY || undefined,
 				...dotEnv.parsed,
 			}),
 			new CopyPlugin({

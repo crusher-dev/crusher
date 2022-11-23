@@ -1,60 +1,49 @@
-<p align="center">
-  <p align="center">
+<p>
+  <p >
   <a href="https://crusher.dev/#gh-light-mode-only">
-    <img src="https://i.imgur.com/BRG9MxQ.png" width="140px" alt="Crusher logo" />
+    <img src="https://i.imgur.com/BRG9MxQ.png" width="180px" alt="Crusher logo" />
   </a>
   <a href="https://crusher.dev/#gh-dark-mode-only">
-    <img src="https://i.imgur.com/ncVx1vo.png"  width="140px" alt="Crusher logo" />
+    <img src="https://i.imgur.com/ncVx1vo.png"  width="180px" alt="Crusher logo" />
   </a>
 </p>
 </p>
+<img src="https://img.shields.io/discord/789815044669177867"/>
 
 
+<h2 > Fast all-in-one testing framework</h3>
 
+Crusher is a fast all-in-one open source testing framework, it includes low-code recorder, runner + batteries built-in. 
 
-<h3 align="center">Fast all-in-one testing with low-code</h3>
-<p align="center">
-<img src="https://user-images.githubusercontent.com/6849438/200099357-eaadec7f-8692-42f7-95a4-96b162370c2e.gif"/>
-<br/>
-  Open-source testing framework to test with minimal effort
-</p>
+Instead of wrestling with 100s of tools & libraries, you only need crusher.
 
+**Crusher replaces tasks with one solution, tasks like**
+-  choosing testing library & runner (Jest, Cypress, Playwright, Puppeteer, etc.)
+-   Setup framework according to your needs
+-  writing stable tests sometime takes hours
 
+<details>
+  <summary> 🤦 More annoying tasks during testing</summary>
 
-<div align="center">
-  <table>
-    <tbody>
-      <tr>
-         <td>
-             <a href="https://discord.gg/dHZkSNXQrg">☄️ Try Crusher</a>
-        </td>
-        <td>
-          <a href="https://docs.crusher.dev">⠀ Read docs</a>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  </div>
+-  🔋  Find the right selectors that work.
+-  🚥  Setup CI/CD to run tests
+-  Start paying for every little thing ( or start building your own framework )
+-  Pay for cloud services to run tests on different browser
+-  Set up a reporting system to view test results - Cypress cloud
+-  Image comparison tool to compare visual changes - Percy
+-  🚨 And don't forget to set up alerts for test failures - Slack/Discord/Emails - plus lot more things like test management, debug, updating breaking tests etc.
+
+</details>
+
+Crusher uses low-code approach, is an integrated solution to test locally or with team. 
+It's in `v0.5` and should work with most projects, our focus is stability and DX.
+
+Join crusher's [discord](https://discord.com/invite/dHZkSNXQrg) to try crusher and help fix things that don't work yet.
+
+Checkout [docs](https://docs.crusher.dev) or [website](https://crusher.dev)
+
 <hr/>
-
-
-[Crusher](https://crusher.dev) is an *all-in-one* testing framework. It includes everything w.r.t to e2e testing, with *low-code recorder*, *runner* + *batteries* built-in.
-
-**Create, run and debug tests** with a simple workflow, using **low-code or code**. With Crusher, you can create tests for your web app **in minutes**.
-
-It's an alternative to the traditional workflow of cypress, playwright, selenium, etc. [See more here](https://crusher.dev)
-
-<div>
-<h5  align="center">Like what we are doing? Support us :heart:</h5>
-</div>
-
-<div align="center">
-  <img src="https://img.shields.io/github/stars/crusherdev/crusher.svg?style=social&label=Star" height="24"/>  
-  <img src="https://img.shields.io/github/forks/crusherdev/crusher.svg?style=social&label=Fork" height="24"/>
-  <img src="https://img.shields.io/github/watchers/crusherdev/crusher.svg?style=social&label=Watch" height="24"/>
-</div>
-
-<br/>
+<img src="https://user-images.githubusercontent.com/6849438/200099357-eaadec7f-8692-42f7-95a4-96b162370c2e.gif"/>
 
 ##  Getting started
 
@@ -140,4 +129,3 @@ For general help using Crusher, please refer to [the official documentation](htt
 ### License
 
 This repo is entirely MIT licensed, except the **/src_ee directory (if applicable)**.
-

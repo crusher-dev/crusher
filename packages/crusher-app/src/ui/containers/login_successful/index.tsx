@@ -1,7 +1,14 @@
 import { css } from "@emotion/react";
+import { useRouter } from "next/router";
 import React from "react";
 
 const LoginSuccessfulContainer = () => {
+	const router = useRouter();
+
+	const handleGoBack = () => {
+		router.push("/");
+	};
+
 	return (
 		<div css={containerCss}>
 			<div css={contentCss}>
@@ -10,7 +17,7 @@ const LoginSuccessfulContainer = () => {
 					<div css={loginSuccessfulTextCss}>Login Successful!</div>
 					<div css={returnTextCss}>you can return to your flow</div>
 				</div>
-				<div css={goBackLinkCSS}>Go back</div>
+				<div css={goBackLinkCSS} onClick={handleGoBack}>Go back</div>
 			</div>
 		</div>
 	);

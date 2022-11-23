@@ -105,11 +105,11 @@ Testing solves this, but it hasn't evolved. It's too complicated and sometimes h
 
 ## FAQs
 
-- **I don't have any prior experience, Can I use Crusher?** Yes, we primarily designed crusher to make testing easy. If you have used a browser before, you can use crusher.
-- **Low-code ain't powerful, I believe code is more powerful:-** Fair enough, we believe in both. We're also working on code-first approach.
+- **I don't have any prior experience, Can I use Crusher?** Yes, we primarily designed Crusher to make testing easy. If you have used a browser before, you can use Crusher.
+- **Low-code ain't powerful, I believe code is more powerful:-** Fair enough, we believe in both. We're also working on a code-first approach.
 - **Why use this over selenium, cypress, etc?** With any library, you'll have to spend a lot of time setting up the testing framework for your project. With us, you can start testing right away. We're also built on top of playwright, which is a more stable and faster automation library.
 - **Why a new framework?** Testing has not evolved. It can be quite frustrating to setup and maintain. With Crusher, we're trying to make it easy and fun.
-- **Is crusher using electron?** Yes, we forked electron to create our own chromium based browser.
+- **Is Crusher using Electron?** Yes, we forked electron to create our own chromium based browser.
 
 ### Contribute to Crusher
 

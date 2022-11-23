@@ -1,63 +1,50 @@
-<p align="center">
-  <p align="center">
+<p>
   <a href="https://crusher.dev/#gh-light-mode-only">
-    <img src="https://i.imgur.com/BRG9MxQ.png" width="140px" alt="Crusher logo" />
+    <img src="https://i.imgur.com/BRG9MxQ.png" width="180px" alt="Crusher logo" />
   </a>
   <a href="https://crusher.dev/#gh-dark-mode-only">
-    <img src="https://i.imgur.com/ncVx1vo.png"  width="140px" alt="Crusher logo" />
+    <img src="https://i.imgur.com/ncVx1vo.png"  width="180px" alt="Crusher logo" />
   </a>
 </p>
+
+
+<p>
+  <a href="https://discord.com/invite/dHZkSNXQrg" target="_blank"><img src="https://img.shields.io/discord/789815044669177867?&labelColor=black"/></a>
+ <a href="https://docs.crusher.dev" target="_blank"><img src="https://img.shields.io/static/v1?label=read&message=docs&color=blueviolet&logo=docs&labelColor=black"/></a>
+ <a href="https://www.youtube.com/watch?v=Nc-TlgeKBSE" target="_blank"><img src="https://img.shields.io/static/v1?label=play&message=demo&color=e77335&logo=docs&labelColor=black"/></a>
+
 </p>
 
+<h2 > Fast all-in-one testing framework</h3>
+
+[Crusher](https://crusher.dev) is an *all-in-one* testing framework. It includes everything w.r.t to e2e testing, with *low-code recorder*, *runner* + *batteries* built-in.
 
 
+It's an alternative to the *"traditional" testing workflow*, where you:
 
-<h3 align="center">Fast all-in-one testing with low-code</h3>
-<p align="center">
-<img src="https://user-images.githubusercontent.com/6849438/200099357-eaadec7f-8692-42f7-95a4-96b162370c2e.gif"/>
-<br/>
-  Open-source testing framework to test with minimal effort
-</p>
+-  Choose a testing library & runner (Jest, Cypress, Playwright, Puppeteer, etc.)
+-  Setup framework according to your needs
+-  Write stable tests that take hours
 
+<details>
+  <summary> 🤦 More annoying tasks during testing</summary>
 
+*  🔋  Find the right selectors that work.
+*  🚥  Setup CI/CD to run tests
+* 💰 Start paying for every little thing ( or start building your own framework )
+  * Pay for cloud services to run tests on different browser
+  * Set up a reporting system to view test results - Cypress cloud
+  * Image comparison tool to compare visual changes - Percy
+*  🚨 And don't forget to set up alerts for test failures - Slack/Discord/Emails - plus lot more things like test management, debug, updating breaking tests etc.
 
-<div align="center">
-  <table>
-    <tbody>
-      <tr>
-         <td>
-             <a href="https://discord.gg/dHZkSNXQrg">☄️ Try Crusher</a>
-        </td>
-        <td>
-          <a href="https://docs.crusher.dev">⠀ Read docs</a>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  </div>
+</details>
+
+Crusher uses low-code approach and is built on top of playwright. Our primary focus is stability, speed, and better developer experience.
+
+**Crusher is in beta(v0.5)**. Join [Crusher's discord](https://discord.gg/dHZkSNXQrg) and help us make it better 🚀
+
 <hr/>
-
-
-[Crusher](https://crusher.dev) all in one testing framework. It includes everything w.r.t to e2e testing, like test recorder(local app), test runner and web app for you. 
-
-**Create, run and debug tests** with simple workflow, use **low-code or code**.
-Making testing to make it simple, fast and robust.
-
-It's an alternative to cypress, playwright, selenium, etc.
-
-
-
-<div>
-<h5  align="center"> Star repo to support us and get updates :heart: </h5>
-</div>
-
-<div align="center">
-  <img src="https://img.shields.io/github/stars/crusherdev/crusher.svg?style=social&label=Star" height="24"/>  
-  <img src="https://img.shields.io/github/forks/crusherdev/crusher.svg?style=social&label=Fork" height="24"/>
-  <img src="https://img.shields.io/github/watchers/crusherdev/crusher.svg?style=social&label=Watch" height="24"/>
-</div>
-
-<br/>
+<img src="https://user-images.githubusercontent.com/6849438/200099357-eaadec7f-8692-42f7-95a4-96b162370c2e.gif"/>
 
 ##  Getting started
 
@@ -76,9 +63,9 @@ or [download binary](https://docs.crusher.dev/getting-started/create-your-first-
 npx crusher.dev test:run
 ```
 
-You can run test locally on your machine to debug. Run it on cloud for faster execution.
+You can run tests locally on your machine to debug. Run it on cloud for faster execution.
 
-Reference/ [Getting Started](https://docs.crusher.dev/getting-started/create-your-first-test#using-cli) | [What is Crusher](https://docs.crusher.dev/getting-started/what-is-crusher) 
+Reference: [Getting Started](https://docs.crusher.dev/getting-started/create-your-first-test#using-cli) | [What is Crusher](https://docs.crusher.dev/getting-started/what-is-crusher) 
 
 
 ## 👨🏽‍💻 Features
@@ -107,7 +94,7 @@ If you are involved in software development, you are no stranger to things break
 
 It seems like every time you are changing something, there is a chance of stuff breaking. The worst part is you're lost, and then someone reports the issue in prod.
 
-Testing solves this, but it hasn't evolved. We're changing it by creating an integrated solution that simply works.
+Testing solves this, but it hasn't evolved. It's too complicated and sometimes hard. We're solving it by creating an integrated solution that simply works.
 
 ## 🧱 Deployment
 
@@ -119,20 +106,10 @@ Testing solves this, but it hasn't evolved. We're changing it by creating an int
 ## FAQs
 
 - **I don't have any prior experience, Can I use Crusher?** Yes, we primarily designed crusher to make testing easy. Most developer have never created test.
-- **Low-code ain't powerful? I believe code is more powerful:** Fair enough, you can write code too. We might support other frameworks later on. 
-- **Why use this over selenium, cypress, etc?** With any library, you'll have to spend a lot of time setting up testing framework. For us the whole experience was frustrating, from both time and reliability.
-- **Why a new framework?** Testing has not evolved. We still have old flaky APIs that don't work.
+- **Low-code ain't powerful, I believe code is more powerful:-** Fair enough, you can write code too. 
+- **Why use this over selenium, cypress, etc?** With any library, you'll have to spend a lot of time setting up testing framework. For us the whole experience was frustrating, from both time and reliability perspective.
+- **Why a new framework?** Testing has not evolved. It can be quite hard for moder setup.
 - **Is crusher using electron?** We need to use chromium to build the recorder and also to run tests locally. We also modify V8 and Blink to make the recorder more powerful.
-
-## Resources
-- [Documentation🌱](https://docs.crusher.dev)
-- [Getting started](https://docs.crusher.dev/getting-started/create-your-first-test)
-- [Developing locally](https://docs.crusher.dev/development/setting-up-development-env)
-
-For general help using Crusher, please refer to [the official documentation](https://docs.crusher.dev).
-
-- [GitHub](https://github.com/crusherdev/crusher) (Bug reports, Contributions)
-- support@crusher.dev
 
 ### Contribute to Crusher
 
@@ -141,6 +118,4 @@ For general help using Crusher, please refer to [the official documentation](htt
 - Wanna help. We love pull requests, too!
 
 ### License
-
 This repo is entirely MIT licensed, except the **/src_ee directory (if applicable)**.
-

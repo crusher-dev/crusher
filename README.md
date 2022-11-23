@@ -39,10 +39,9 @@ It's an alternative to the *"traditional" testing workflow*, where you:
 
 </details>
 
-Crusher uses low-code approach and is built on top of playwright.
-It's in `v0.5` and should work with most projects, our focus is stability and DX.
+Crusher uses low-code approach and is built on top of playwright. Our primary focus is stability and better DX.
 
-**Crusher is in beta**. Join [Crusher's discord](https://discord.gg/dHZkSNXQrg) for help.
+**Crusher is in beta(v0.5)**. Join [Crusher's discord](https://discord.gg/dHZkSNXQrg) and help us make it better.
 
 <hr/>
 <img src="https://user-images.githubusercontent.com/6849438/200099357-eaadec7f-8692-42f7-95a4-96b162370c2e.gif"/>

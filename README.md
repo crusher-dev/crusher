@@ -18,7 +18,11 @@
 
 It's an alternative to the *"traditional" testing workflow*, where you:
 
+<<<<<<< HEAD
 -  Choose testing library & runner (Jest, Cypress, Playwright, Puppeteer, etc.)
+=======
+-  Choose a testing library & runner (Jest, Cypress, Playwright, Puppeteer, etc.)
+>>>>>>> 469750cf (.)
 -  Setup framework according to your needs
 -  Write stable tests that take hours
 
@@ -38,9 +42,7 @@ It's an alternative to the *"traditional" testing workflow*, where you:
 Crusher uses low-code approach and is built on top of playwright.
 It's in `v0.5` and should work with most projects, our focus is stability and DX.
 
-Join crusher's [discord](https://discord.com/invite/dHZkSNXQrg) to try crusher and help fix things that don't work yet.
-
-Checkout [docs](https://docs.crusher.dev) or [website](https://crusher.dev)
+**Crusher is in beta**. Join [Crusher's discord](https://discord.gg/dHZkSNXQrg) for help.
 
 <hr/>
 <img src="https://user-images.githubusercontent.com/6849438/200099357-eaadec7f-8692-42f7-95a4-96b162370c2e.gif"/>

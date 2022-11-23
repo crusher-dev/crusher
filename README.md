@@ -38,17 +38,14 @@
 <hr/>
 
 
-[Crusher](https://crusher.dev) all in one testing framework. It includes everything w.r.t to e2e testing, like test recorder(local app), test runner and web app for you. 
+[Crusher](https://crusher.dev) is an all-in-one testing framework. It includes everything w.r.t to e2e testing, with low-code recorder, runner + batteries built-in.
 
-**Create, run and debug tests** with simple workflow, use **low-code or code**.
-Making testing to make it simple, fast and robust.
+**Create, run and debug tests** with a simple workflow, using **low-code or code**. With Crusher, you can create **tests for your web app in minutes**.
 
-It's an alternative to cypress, playwright, selenium, etc.
-
-
+It's an alternative to the traditional workflow of cypress, playwright, selenium, etc. [See more here](https://crusher.dev)
 
 <div>
-<h5  align="center"> Star repo to support us and get updates :heart: </h5>
+<h5  align="center"> Star this repo and show us some love :heart: </h5>
 </div>
 
 <div align="center">

@@ -19,8 +19,6 @@
 
 It's an alternative to the traditional workflow of cypress, playwright, selenium, etc. [See more here](https://crusher.dev)
 
-
-**Crusher replaces tasks with one solution, tasks like**
 -  choosing testing library & runner (Jest, Cypress, Playwright, Puppeteer, etc.)
 -   Setup framework according to your needs
 -  writing stable tests sometime takes hours

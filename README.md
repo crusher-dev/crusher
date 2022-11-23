@@ -1,19 +1,17 @@
 <p>
-  <p >
   <a href="https://crusher.dev/#gh-light-mode-only">
     <img src="https://i.imgur.com/BRG9MxQ.png" width="180px" alt="Crusher logo" />
   </a>
   <a href="https://crusher.dev/#gh-dark-mode-only">
     <img src="https://i.imgur.com/ncVx1vo.png"  width="180px" alt="Crusher logo" />
   </a>
+</p>
 
+
+<p>
 <img src="https://img.shields.io/discord/789815044669177867?&labelColor=black"/>
 <img src="https://img.shields.io/static/v1?label=read&message=docs&color=blueviolet&logo=docs&labelColor=black"/>
 <img src="https://img.shields.io/static/v1?label=play&message=demo&color=9cf&logo=docs&labelColor=black"/>
-</p>
-</p>
-<p>
-
 
 </p>
 

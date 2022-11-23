@@ -63,7 +63,7 @@ or [download binary](https://docs.crusher.dev/getting-started/create-your-first-
 npx crusher.dev test:run
 ```
 
-You can run test locally on your machine to debug. Run it on cloud for faster execution.
+You can run tests locally on your machine to debug. Run it on cloud for faster execution.
 
 Reference: [Getting Started](https://docs.crusher.dev/getting-started/create-your-first-test#using-cli) | [What is Crusher](https://docs.crusher.dev/getting-started/what-is-crusher) 
 

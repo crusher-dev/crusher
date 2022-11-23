@@ -13,9 +13,12 @@
 
 <h2 > Fast all-in-one testing framework</h3>
 
-Crusher is a fast all-in-one open source testing framework, it includes low-code recorder, runner + batteries built-in. 
+[Crusher](https://crusher.dev) is an *all-in-one* testing framework. It includes everything w.r.t to e2e testing, with *low-code recorder*, *runner* + *batteries* built-in.
 
-Instead of wrestling with 100s of tools & libraries, you only need crusher.
+**Create, run and debug tests** with a simple workflow, using **low-code or code**. With Crusher, you can create tests for your web app **in minutes**.
+
+It's an alternative to the traditional workflow of cypress, playwright, selenium, etc. [See more here](https://crusher.dev)
+
 
 **Crusher replaces tasks with one solution, tasks like**
 -  choosing testing library & runner (Jest, Cypress, Playwright, Puppeteer, etc.)

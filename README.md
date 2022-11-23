@@ -8,8 +8,12 @@
   </a>
 </p>
 </p>
-<img src="https://img.shields.io/discord/789815044669177867"/>
+<p>
 
+<img src="https://img.shields.io/discord/789815044669177867?&labelColor=black"/>
+<img src="https://img.shields.io/static/v1?label=read&message=docs&color=blueviolet&logo=docs&labelColor=black"/>
+<img src="https://img.shields.io/static/v1?label=play&message=demo&color=9cf&logo=docs&labelColor=black"/>
+</p>
 
 <h2 > Fast all-in-one testing framework</h3>
 

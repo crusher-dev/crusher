@@ -17,7 +17,7 @@
 
 <h2 > Fast all-in-one testing framework</h3>
 
-[Crusher](https://crusher.dev) is an *all-in-one* testing framework. It includes everything w.r.t to e2e testing, with *low-code recorder*, *runner* + *batteries* built-in.
+[Crusher](https://crusher.dev) is an all-in-one testing framework. It includes everything w.r.t to e2e testing, with low-code recorder, runner + batteries built-in.
 
 
 It's an alternative to the *"traditional" testing workflow*, where you:

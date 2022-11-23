@@ -1,10 +1,12 @@
 import { DesktopAppEventsEnum } from "@shared/modules/analytics/constants";
 import { createLocalBuild } from "electron-app/src/store/actions/builds";
+import { setRecorderContext } from "electron-app/src/store/actions/recorder";
 import { getStore } from "electron-app/src/store/configureStore";
+import { TRecorderVariant } from "electron-app/src/store/reducers/recorder";
 import { goFullScreen, performReplayTestUrlAction, performTrackEvent } from "electron-app/src/_ui/commands/perform";
 import historyInstance from "./history";
 
-const triggerLocalBuild = (testsList: number[] = undefined, selectedTests: any[] = [], host: string | null = null) => {
+const triggerLocalBuild = (testsList: number[] = undefined, selectedTests: any[] = [], host: string | null = null, origin: "deeplink" | "app" = "app", extraContext = {}) => {
 	const store = getStore();
 	store.dispatch(
 		createLocalBuild({
@@ -19,6 +21,11 @@ const triggerLocalBuild = (testsList: number[] = undefined, selectedTests: any[]
 	window["testsToRun"] = { list: testsList, count: testsList.length };
 	window["localRunCache"] = {};
 
+	store.dispatch(setRecorderContext({
+		variant: TRecorderVariant.LOCAL_BUILD,
+		origin: origin,
+		...extraContext
+	}));
 	performTrackEvent(DesktopAppEventsEnum.TRIGGER_LOCAL_BUILD, {
 		testsCount: testsList.length,
 	});

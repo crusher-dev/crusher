@@ -3,13 +3,13 @@ import { css } from "@emotion/react";
 import { Text } from "@dyson/components/atoms/text/Text";
 import { ConsoleIcon, ForwardIcon, StopIcon } from "electron-app/src/_ui/constants/old_icons";
 import { useSelector, useStore } from "react-redux";
-import { getIsStatusBarVisible, getRecorderState, getSavedSteps } from "electron-app/src/store/selectors/recorder";
+import { getIsStatusBarVisible, getRecorderContext, getRecorderState, getSavedSteps } from "electron-app/src/store/selectors/recorder";
 import { Step } from "./step";
 import { useSelectableList } from "electron-app/src/_ui/hooks/list";
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
 import { RightClickMenu } from "@dyson/components/molecules/RightClick/RightClick";
 import { deleteRecordedSteps } from "electron-app/src/store/actions/recorder";
-import { performJumpTo, performPauseStepsExecution, performVerifyTest, turnOnElementSelectorInspectMode } from "electron-app/src/_ui/commands/perform";
+import { performJumpTo, performPauseStepsExecution, performTrackEvent, performVerifyTest, turnOnElementSelectorInspectMode } from "electron-app/src/_ui/commands/perform";
 import { useAtom } from "jotai";
 import { stepHoverAtom } from "electron-app/src/_ui/store/jotai/steps";
 import { editInputAtom } from "electron-app/src/_ui/store/jotai/testsPage";
@@ -27,6 +27,7 @@ import { iAction } from "@shared/types/action";
 import { emitShowModal } from "electron-app/src/_ui/ui/containers/components/modals";
 import { EDIT_MODE_MAP } from "./stepEditor";
 import { getErrorMessage } from "./helper";
+import { DesktopAppEventsEnum } from "@shared/modules/analytics/constants";
 
 interface IProps {
 	className?: string;
@@ -168,7 +169,18 @@ const StepsPanel = ({ className }: IProps) => {
 			window.removeEventListener("keyup", keyPressListener, false);
 		};
 	}, [recordedSteps, selectedList]);
-	const handleResetTest = () => performVerifyTest(false);
+	const handleResetTest = () => { 
+		{ // Tracking 
+			const context = getRecorderContext(store.getState() as any);
+			performTrackEvent(
+				DesktopAppEventsEnum.REVERIFY_CURRENT_TEST,
+				{
+					context
+				}
+			);
+	   }
+		performVerifyTest(false);
+	}
 
 	const showNextSteps = remainingSteps && remainingSteps.length && [TRecorderState.RECORDING_ACTIONS, TRecorderState.ACTION_REQUIRED].includes(recorderState.type);
 	const showPausedCard = remainingSteps && remainingSteps.length && [TRecorderState.RECORDING_ACTIONS].includes(recorderState.type);

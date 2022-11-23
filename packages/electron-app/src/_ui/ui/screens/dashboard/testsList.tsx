@@ -13,6 +13,9 @@ import { ResizableInput } from "../../components/ResizableInput";
 import { Conditional } from "@dyson/components/layouts";
 import { useAtom } from "jotai";
 import { editInputAtom } from "electron-app/src/_ui/store/jotai/testsPage";
+import { setRecorderContext } from "electron-app/src/store/actions/recorder";
+import { useStore } from "react-redux";
+import { TRecorderVariant } from "electron-app/src/store/reducers/recorder";
 
 const EditableTestName = ({ testName, testId }) => {
 	const [testEditName, setTestEditName] = useAtom(editInputAtom);
@@ -45,17 +48,25 @@ const TestItem = ({ test, isItemSelected, isEditingName, setIsEditingName }) => 
 	const [isHover] = React.useState(false);
 	const [emoji, setEmoji] = React.useState(test.emoji);
 	const navigate = useNavigate();
+	const store = useStore();
 
 	const listItemActionsStyle = React.useMemo(() => listItemActionsCss(isHover), [isHover]);
 
 	const handleEdit = React.useCallback(() => {
+		store.dispatch(setRecorderContext({
+			origin: "app",
+			variant: TRecorderVariant.EDIT_TEST,
+			testId: test.id,
+			testName: test.testName,
+		}));
+
 		navigate("/recorder");
 		goFullScreen();
 		performReplayTestUrlAction(test.id, false, [test]);
 	}, [test]);
 
 	const handleRunTest = React.useCallback(() => {
-		triggerLocalBuild([test.id], [test]);
+		triggerLocalBuild([test.id], [test], null, "app");
 	}, [test]);
 
 	const handleEmojiSelected = React.useCallback((emoji) => {
@@ -272,6 +283,7 @@ const MULTI_SELECTED_MENU = [
 const TestList = ({ tests, deleteTest }) => {
 	const [, setTestEditName] = useAtom(editInputAtom);
 	const navigate = useNavigate();
+	const store = useStore();
 
 	const items: any[] = React.useMemo(() => {
 		if (!tests) return null;
@@ -305,7 +317,7 @@ const TestList = ({ tests, deleteTest }) => {
 		() =>
 			({ items, toggleSelectAll, selectedList }) => {
 				const handleRun = React.useCallback(() => {
-					triggerLocalBuild(selectedList);
+					triggerLocalBuild(selectedList, [], null, "app");
 				}, [items, selectedList]);
 
 				const handleDelete = React.useCallback(() => {
@@ -360,10 +372,18 @@ const TestList = ({ tests, deleteTest }) => {
 			if (id === "delete" || id === "delete-all") {
 				deleteTest(selectedList);
 			} else if (id === "run" || id === "run-all") {
-				triggerLocalBuild(selectedList, selectedTests);
+				triggerLocalBuild(selectedList, selectedTests, null, "app");
 			} else if (id === "edit") {
+				store.dispatch(setRecorderContext({
+					origin: "app",
+					variant: TRecorderVariant.EDIT_TEST,
+					testId: selectedList[0],
+					testName: selectedTests[0].testName,
+				}));
 				navigate("/recorder");
 				goFullScreen();
+				
+	
 				performReplayTestUrlAction(selectedList[0], false, selectedTests);
 			} else if (id === "rename") {
 				setTestEditName(selectedList[0]);

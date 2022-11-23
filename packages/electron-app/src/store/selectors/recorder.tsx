@@ -59,3 +59,5 @@ export const getRecorderCrashState = (state: iReduxState) => state.recorder.cras
 export const getIsStatusBarVisible = (state: iReduxState) => state.recorder.showStatusBar;
 
 export const getTestName = (state: iReduxState) => state.recorder.testName;
+
+export const getRecorderContext = (state: iReduxState) => state.recorder.context;

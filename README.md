@@ -9,9 +9,9 @@
 
 
 <p>
-  <a href="https://discord.com/invite/dHZkSNXQrg"><img src="https://img.shields.io/discord/789815044669177867?&labelColor=black"/></a>
- <a href="https://docs.crusher.dev"><img src="https://img.shields.io/static/v1?label=read&message=docs&color=blueviolet&logo=docs&labelColor=black"/></a>
- <a href="https://www.youtube.com/watch?v=Nc-TlgeKBSE"><img src="https://img.shields.io/static/v1?label=play&message=demo&color=e77335&logo=docs&labelColor=black"/></a>
+  <a href="https://discord.com/invite/dHZkSNXQrg" target="_blank"><img src="https://img.shields.io/discord/789815044669177867?&labelColor=black"/></a>
+ <a href="https://docs.crusher.dev" target="_blank"><img src="https://img.shields.io/static/v1?label=read&message=docs&color=blueviolet&logo=docs&labelColor=black"/></a>
+ <a href="https://www.youtube.com/watch?v=Nc-TlgeKBSE" target="_blank"><img src="https://img.shields.io/static/v1?label=play&message=demo&color=e77335&logo=docs&labelColor=black"/></a>
 
 </p>
 

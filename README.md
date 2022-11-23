@@ -32,9 +32,9 @@ It's an alternative to the *"traditional" testing workflow*, where you:
 -  🔋  Find the right selectors that work.
 -  🚥  Setup CI/CD to run tests
 -  Start paying for every little thing ( or start building your own framework )
-  -  Pay for cloud services to run tests on different browser
-  -  Set up a reporting system to view test results - Cypress cloud
-  -  Image comparison tool to compare visual changes - Percy
+  - Pay for cloud services to run tests on different browser
+  - Set up a reporting system to view test results - Cypress cloud
+  - Image comparison tool to compare visual changes - Percy
 -  🚨 And don't forget to set up alerts for test failures - Slack/Discord/Emails - plus lot more things like test management, debug, updating breaking tests etc.
 
 </details>

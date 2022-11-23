@@ -17,8 +17,8 @@
 It's an alternative to the traditional workflow of cypress, playwright, selenium, etc. [See more here](https://crusher.dev)
 
 -  choosing testing library & runner (Jest, Cypress, Playwright, Puppeteer, etc.)
--   Setup framework according to your needs
--  writing stable tests sometime takes hours
+-  Setup framework according to your needs
+-  writing stable tests sometimes take hours
 
 <details>
   <summary> 🤦 More annoying tasks during testing</summary>

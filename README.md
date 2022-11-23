@@ -18,11 +18,7 @@
 
 It's an alternative to the *"traditional" testing workflow*, where you:
 
-<<<<<<< HEAD
--  Choose testing library & runner (Jest, Cypress, Playwright, Puppeteer, etc.)
-=======
 -  Choose a testing library & runner (Jest, Cypress, Playwright, Puppeteer, etc.)
->>>>>>> 469750cf (.)
 -  Setup framework according to your needs
 -  Write stable tests that take hours
 

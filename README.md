@@ -20,7 +20,7 @@ It's an alternative to the *"traditional" testing workflow*, where you:
 
 -  Choose testing library & runner (Jest, Cypress, Playwright, Puppeteer, etc.)
 -  Setup framework according to your needs
--  writing stable tests sometimes take hours
+-  Write stable tests that take hours
 
 <details>
   <summary> 🤦 More annoying tasks during testing</summary>

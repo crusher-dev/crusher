@@ -35,7 +35,7 @@ It's an alternative to the *"traditional" testing workflow*, where you:
 
 </details>
 
-Crusher uses low-code approach, is an integrated solution to test locally or with team. 
+Crusher uses low-code approach and is built on top of playwright.
 It's in `v0.5` and should work with most projects, our focus is stability and DX.
 
 Join crusher's [discord](https://discord.com/invite/dHZkSNXQrg) to try crusher and help fix things that don't work yet.

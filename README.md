@@ -93,7 +93,7 @@ If you are involved in software development, you are no stranger to things break
 
 It seems like every time you are changing something, there is a chance of stuff breaking. The worst part is you're lost, and then someone reports the issue in prod.
 
-Testing solves this, but it hasn't evolved. We're changing it by creating an integrated solution that simply works.
+Testing solves this, but it hasn't evolved. It's too complicated and sometimes hard. We're solving it by creating an integrated solution that simply works.
 
 ## 🧱 Deployment
 
@@ -105,20 +105,10 @@ Testing solves this, but it hasn't evolved. We're changing it by creating an int
 ## FAQs
 
 - **I don't have any prior experience, Can I use Crusher?** Yes, we primarily designed crusher to make testing easy. Most developer have never created test.
-- **Low-code ain't powerful? I believe code is more powerful:** Fair enough, you can write code too. We might support other frameworks later on. 
-- **Why use this over selenium, cypress, etc?** With any library, you'll have to spend a lot of time setting up testing framework. For us the whole experience was frustrating, from both time and reliability.
-- **Why a new framework?** Testing has not evolved. We still have old flaky APIs that don't work.
+- **Low-code ain't powerful, I believe code is more powerful:-** Fair enough, you can write code too. 
+- **Why use this over selenium, cypress, etc?** With any library, you'll have to spend a lot of time setting up testing framework. For us the whole experience was frustrating, from both time and reliability perspective.
+- **Why a new framework?** Testing has not evolved. It can be quite hard for moder setup.
 - **Is crusher using electron?** We need to use chromium to build the recorder and also to run tests locally. We also modify V8 and Blink to make the recorder more powerful.
-
-## Resources
-- [Documentation🌱](https://docs.crusher.dev)
-- [Getting started](https://docs.crusher.dev/getting-started/create-your-first-test)
-- [Developing locally](https://docs.crusher.dev/development/setting-up-development-env)
-
-For general help using Crusher, please refer to [the official documentation](https://docs.crusher.dev).
-
-- [GitHub](https://github.com/crusherdev/crusher) (Bug reports, Contributions)
-- support@crusher.dev
 
 ### Contribute to Crusher
 
@@ -127,5 +117,4 @@ For general help using Crusher, please refer to [the official documentation](htt
 - Wanna help. We love pull requests, too!
 
 ### License
-
 This repo is entirely MIT licensed, except the **/src_ee directory (if applicable)**.

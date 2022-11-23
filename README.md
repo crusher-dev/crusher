@@ -16,9 +16,9 @@
 [Crusher](https://crusher.dev) is an *all-in-one* testing framework. It includes everything w.r.t to e2e testing, with *low-code recorder*, *runner* + *batteries* built-in.
 
 
-It's an alternative to the *"traditional" testing workflow*:
+It's an alternative to the *"traditional" testing workflow*, where you:
 
--  choosing testing library & runner (Jest, Cypress, Playwright, Puppeteer, etc.)
+-  Choose testing library & runner (Jest, Cypress, Playwright, Puppeteer, etc.)
 -  Setup framework according to your needs
 -  writing stable tests sometimes take hours
 

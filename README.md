@@ -63,7 +63,7 @@ or [download binary](https://docs.crusher.dev/getting-started/create-your-first-
 npx crusher.dev test:run
 ```
 
-You can run tests locally on your machine to debug. Run it on cloud for faster execution.
+You can run tests locally on your machine to debug. Run it on our cloud for faster execution.
 
 Reference: [Getting Started](https://docs.crusher.dev/getting-started/create-your-first-test#using-cli) | [What is Crusher](https://docs.crusher.dev/getting-started/what-is-crusher) 
 
@@ -79,8 +79,6 @@ Crusher has a lot of features, some of the major ones are
 - ⚡ **Blazing Fast:** Built on top of Playwright, Crusher delivers an amazing performance during execution
 - 📼 **Easy integration** with your projects
 - 🦄 Central **reporting & dashboard**: See how your app is doing overall anytime-anywhere
-
-Crusher works framework on top of playwright. We're focusing on engineering, e2e experience of testing.
 
 ## ⏩ Use cases
 - **Test e2e user flows:** Never compromise your user experience by testing important end-to-end user flows.
@@ -105,11 +103,11 @@ Testing solves this, but it hasn't evolved. It's too complicated and sometimes h
 
 ## FAQs
 
-- **I don't have any prior experience, Can I use Crusher?** Yes, we primarily designed crusher to make testing easy. Most developer have never created test.
-- **Low-code ain't powerful, I believe code is more powerful:-** Fair enough, you can write code too. 
-- **Why use this over selenium, cypress, etc?** With any library, you'll have to spend a lot of time setting up testing framework. For us the whole experience was frustrating, from both time and reliability perspective.
-- **Why a new framework?** Testing has not evolved. It can be quite hard for moder setup.
-- **Is crusher using electron?** We need to use chromium to build the recorder and also to run tests locally. We also modify V8 and Blink to make the recorder more powerful.
+- **I don't have any prior experience, Can I use Crusher?** Yes, we primarily designed Crusher to make testing easy. If you have used a browser before, you can use Crusher.
+- **Low-code ain't powerful, I believe code is more powerful:-** Fair enough, we believe in both. We're also working on a code-first approach.
+- **Why use this over selenium, cypress, etc?** With any library, you'll have to spend a lot of time setting up the testing framework for your project. With us, you can start testing right away. We're also built on top of playwright, which is a more stable and faster automation library.
+- **Why a new framework?** Testing has not evolved. It can be quite frustrating to setup and maintain. With Crusher, we're trying to make it easy and fun.
+- **Is Crusher using Electron?** Yes, we forked Electron to create our own chromium-based browser.
 
 ### Contribute to Crusher
 

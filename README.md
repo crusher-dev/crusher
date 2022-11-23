@@ -65,7 +65,7 @@ npx crusher.dev test:run
 
 You can run test locally on your machine to debug. Run it on cloud for faster execution.
 
-Reference/ [Getting Started](https://docs.crusher.dev/getting-started/create-your-first-test#using-cli) | [What is Crusher](https://docs.crusher.dev/getting-started/what-is-crusher) 
+Reference: [Getting Started](https://docs.crusher.dev/getting-started/create-your-first-test#using-cli) | [What is Crusher](https://docs.crusher.dev/getting-started/what-is-crusher) 
 
 
 ## 👨🏽‍💻 Features

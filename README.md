@@ -1,11 +1,4 @@
-<p>
-  <a href="https://crusher.dev/#gh-light-mode-only">
-    <img src="https://i.imgur.com/BRG9MxQ.png" width="180px" alt="Crusher logo" />
-  </a>
-  <a href="https://crusher.dev/#gh-dark-mode-only">
-    <img src="https://i.imgur.com/ncVx1vo.png"  width="180px" alt="Crusher logo" />
-  </a>
-</p>
+![Group 571](https://user-images.githubusercontent.com/6849438/204067174-df9d276d-5c34-4c5e-a45a-7775cdd68a5e.png)
 
 
 <p>

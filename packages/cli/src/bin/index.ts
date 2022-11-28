@@ -48,9 +48,16 @@ if (!process.env.CRUSHER_DEBUG) {
 		}
 
 		const cliVersion = await getCurrentCLIVersion();
-		
+
 		Message(chalk.bgBlueBright.bold, ' crusher ', `${chalk.magenta.bold('v' + cliVersion)} launch sequence initiated 🦖`);
 		BlankMessage(`app version ${chalk.gray('-->')} ${chalk.magenta.bold('v' + recorderVersion)}\n`);
+
+				
+		console.log(`  Please join:        
+     Our \x1b[35mDiscord\x1b[0m community at \x1b[35mhttps://discord.gg/dHZkSNXQrg\x1b[0m
+     Our \x1b[1;32mGitHub\x1b[0m repository is at \x1b[1;32mhttps://github.com/crusher-dev/crusher\x1b[0m
+     Our \x1b[32mDocumentation\x1b[0m is located at \x1b[32mhttps://docs.crusher.dev\x1b[0m
+`);
 
 		const commandArgs = args ? args.filter((a) => !a.startsWith('-')) : [];
 		const isDefaultCommand = commandArgs.length === 0 || ['open', '.'].some((x) => args && args[0] === x);

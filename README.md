@@ -8,10 +8,10 @@
 
 </p>
 
-<h2 >Fast all-in-one testing framework</h3>
+<h2 >Crusher is fast all-in-one testing you'll ever need</h3>
 
 
-[Crusher](https://crusher.dev) is an all-in-one testing framework/tool. It includes everything you need to test, low-code recorder, runner + batteries built-in.
+New all-in-one testing framework/tool. It includes everything you need to test, low-code recorder, runner + batteries built-in.
 
 
 An alternative to the *"old" testing*, where you:

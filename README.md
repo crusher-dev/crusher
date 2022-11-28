@@ -7,7 +7,6 @@
  <a href="https://www.youtube.com/watch?v=Nc-TlgeKBSE" target="_blank"><img src="https://img.shields.io/static/v1?label=play&message=demo&color=e77335&logo=docs&labelColor=black"/></a>
 
 </p>
-<img src="https://user-images.githubusercontent.com/6849438/200099357-eaadec7f-8692-42f7-95a4-96b162370c2e.gif"/>
 
 <h2 >Fast all-in-one testing framework</h3>
 
@@ -30,6 +29,8 @@ An alternative to the *"old" testing*, where you:
   * Image comparison tool to compare visual changes - Percy
 *  🚨 And don't forget to set up alerts for test failures - Slack/Discord/Emails - plus lot more things like test management, debug, updating breaking tests etc.
 </details>
+
+<img src="https://user-images.githubusercontent.com/6849438/200099357-eaadec7f-8692-42f7-95a4-96b162370c2e.gif"/>
 
 It's an integrated framework built on top of playwright. Record test using **low-code or code** and it handles rest.
 

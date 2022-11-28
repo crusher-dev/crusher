@@ -7,8 +7,10 @@
  <a href="https://www.youtube.com/watch?v=Nc-TlgeKBSE" target="_blank"><img src="https://img.shields.io/static/v1?label=play&message=demo&color=e77335&logo=docs&labelColor=black"/></a>
 
 </p>
+<img src="https://user-images.githubusercontent.com/6849438/200099357-eaadec7f-8692-42f7-95a4-96b162370c2e.gif"/>
 
 <h2 > Fast all-in-one testing framework</h3>
+
 
 [Crusher](https://crusher.dev) is an all-in-one testing framework. It includes everything w.r.t to e2e testing, with low-code recorder, runner + batteries built-in.
 
@@ -21,9 +23,8 @@ It's an alternative to the *"traditional" testing workflow*, where you:
 
 <details>
   <summary> 🤦 More annoying tasks during testing</summary>
-
-*  🔋  Find the right selectors that work.
-*  🚥  Setup CI/CD to run tests
+* 🔋  Find the right selectors that work.
+* 🚥  Setup CI/CD to run tests
 * 💰 Start paying for every little thing ( or start building your own framework )
   * Pay for cloud services to run tests on different browser
   * Set up a reporting system to view test results - Cypress cloud
@@ -37,7 +38,6 @@ Crusher uses low-code approach and is built on top of playwright. Our primary fo
 **Crusher is in beta(v0.5)**. Join [Crusher's discord](https://discord.gg/dHZkSNXQrg) and help us make it better 🚀
 
 <hr/>
-<img src="https://user-images.githubusercontent.com/6849438/200099357-eaadec7f-8692-42f7-95a4-96b162370c2e.gif"/>
 
 ##  Getting started
 

@@ -38,8 +38,6 @@ Our primary focus is stability, speed, and better developer experience.
 
 **Crusher is in beta(v0.5)**. Join [Crusher's discord](https://discord.gg/dHZkSNXQrg) and help us make it better 🚀
 
-<hr/>
-
 ##  Getting started
 
 **☄️Create your first test**

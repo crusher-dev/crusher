@@ -9,7 +9,7 @@ export const APP_DIRECTORY =
   getRuntimeEnv().CRUSHER_GLOBAL_DIR ||
   `/${getRuntimeEnv().HOME}/.crusher`;
 
-export const recorderVersion = process.env.RECORDER_VERSION || `1.0.33`;
+export const recorderVersion = process.env.RECORDER_VERSION || `1.0.41-canary.5`;
 
 const repoDownloadURL = "https://github.com/crusher-dev/crusher-downloads/"
 export const RECORDER_MAC_BUILD = url.resolve(process.env.DOWNLOADS_REPO_URL || repoDownloadURL, `./releases/download/v${recorderVersion}/Crusher.Recorder-${recorderVersion}-mac-x64.zip`);

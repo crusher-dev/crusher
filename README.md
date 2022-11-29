@@ -18,7 +18,7 @@ An alternative to the *"old" testing*, where you:
 -  Choose a library & runner (Jest, Cypress, Playwright, Puppeteer, etc.)
 -  Build your own framework with different tools
 -  Write tests that take hours
--  Maintain test eats up your time
+-  Maintain test whichs eats up your time
 <details>
   <summary> 🤦 + more</summary>
 * 🔋  Find the right selectors that work.

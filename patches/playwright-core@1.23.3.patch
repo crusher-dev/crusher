@@ -85,10 +85,11 @@ diff --git a/lib/common/timeoutSettings.js b/lib/common/timeoutSettings.js
 index 353f73fdf89d1b97158e4a64b6a2d7e4068d7b1e..7b43e0cb2dad8326809b729efa57f20278ab49d8 100644
 --- a/lib/common/timeoutSettings.js
 +++ b/lib/common/timeoutSettings.js
-@@ -43,24 +43,24 @@ class TimeoutSettings {
+@@ -43,25 +43,25 @@ class TimeoutSettings {
    }
  
    navigationTimeout(options) {
++    // console.log("Calling for navigation timeout");
      if (typeof options.timeout === 'number') return options.timeout;
      if (this._defaultNavigationTimeout !== undefined) return this._defaultNavigationTimeout;
 -    if ((0, _utils.debugMode)()) return 0;

@@ -1,5 +1,7 @@
-![Group 571](https://user-images.githubusercontent.com/6849438/204067174-df9d276d-5c34-4c5e-a45a-7775cdd68a5e.png)
 
+![Group 580](https://user-images.githubusercontent.com/6849438/204544882-a0ea7aa0-625b-4547-8657-ba1a9e0acc44.png)
+
+![white](https://user-images.githubusercontent.com/6849438/204544857-3c97d69c-de3e-4421-a7a3-040b7b02025d.png)
 
 <p>
   <a href="https://discord.com/invite/dHZkSNXQrg" target="_blank"><img src="https://img.shields.io/discord/789815044669177867?&labelColor=black"/></a>

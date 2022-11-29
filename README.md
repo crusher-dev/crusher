@@ -1,7 +1,8 @@
 
 ![Crusher- Low-code testing framework](https://user-images.githubusercontent.com/6849438/204544882-a0ea7aa0-625b-4547-8657-ba1a9e0acc44.png#gh-dark-mode-only)
 
-![Crusher- Low-code testing framework](https://user-images.githubusercontent.com/6849438/204545457-efbdfa5b-595f-4da5-aaff-dfa9ff03c210.png#gh-light-mode-only)
+
+![Crusher- Low-code testing framework](https://user-images.githubusercontent.com/6849438/204549422-6047aa61-10d8-441e-a2c7-ddf448b007d4.png#gh-light-mode-only)
 
 <p>
   <a href="https://discord.com/invite/dHZkSNXQrg" target="_blank"><img src="https://img.shields.io/discord/789815044669177867?&labelColor=black"/></a>

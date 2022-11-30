@@ -20,6 +20,7 @@ import { appStateAtom } from "../../../store/atoms/global/appState";
 import { tempTestAtom } from "../../../store/atoms/global/temp/tempTestId";
 import { tempTestNameAtom } from "../../../store/atoms/global/temp/tempTestName";
 import { RequestMethod } from "../../../types/RequestOptions";
+import { OpenDeepLinkPrompt } from "../dashboard/OpenDeepLinkPrompt";
 
 
 const EditTest = dynamic(() => import("@ui/containers/tests/editTest"));
@@ -59,6 +60,8 @@ function TestSearchableList() {
 	const [tempTestType, setTempTestType] = useAtom(tempTestTypeAtom);
 	const [tempTestUpdateId, setTempTestUpdateId] = useAtom(tempTestUpdateIdAtom);
 	const [showEditBox, setShowEditBox] = useState(false);
+	const [currentRenameInput, setCurrentRenameInput] = useState(null);
+	const [showRunTestPrompt, setShowRunTestPrompt] = useState(false);
 
 	const [filters] = useAtom(testFiltersAtom);
 
@@ -107,10 +110,14 @@ function TestSearchableList() {
 				await mutate(getTestListAPI(project.id), { ...data, list: filteredProjects }, false);
 				break;
 			case "run":
-				alert("Running");
+				window.location.href = `crusher://replay-test?testId=${selectedList[0]}`;
+				setShowRunTestPrompt(true);
 				break;
 			case "edit":
 				setShowEditBox(selectedList[0]);
+				break;
+			case "rename":
+				setCurrentRenameInput(selectedList[0]);
 				break;
 		}
 	};
@@ -119,13 +126,17 @@ function TestSearchableList() {
 
 	return (
 		<div css={testListCSS}>
+			{showRunTestPrompt ? (<OpenDeepLinkPrompt onClose={setShowRunTestPrompt.bind(this, false)}/>) : ""}
 			<Conditional showIf={data && data.list.length > 0}>
 
 				<TestListContext.Provider value={{
 					type: "web",
-					runTest: () => {
-						console.log("DS")
-					}
+					runTest: (selectedList) => {
+						window.location.href = `crusher://replay-test?testId=${selectedList[0]}`;
+						setShowRunTestPrompt(true);
+					},
+					currentRenameInput,
+					setCurrentRenameInput,
 				}}>
 					<TestsList contextMenu={{
 						"single": {
@@ -135,7 +146,7 @@ function TestSearchableList() {
 							callback: handleMenuCallback,
 							menuItems: MULTI_SELECTED_MENU
 						}
-					}} onDelete={handleMenuCallback.bind(this, "delete")} onEdit={handleMenuCallback.bind(this, "edit")} tests={data.list} />
+					}} onDelete={handleMenuCallback.bind(this, "delete")} onRename={handleMenuCallback.bind(this, "rename")} onEdit={handleMenuCallback.bind(this, "edit")} tests={data.list} />
 
 				</TestListContext.Provider>
 				{showEditBox ? (

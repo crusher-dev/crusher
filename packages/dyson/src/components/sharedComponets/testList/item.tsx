@@ -49,6 +49,7 @@ const webInput = css`
 
 
 const TestListItem = ({ id, isItemSelected, onEdit, onUpdateEmoji, onDelete, onRename, test, deleteTestCallback }) => {
+	const { runTest } = useContext(TestListContext);
 	const [emoji, setEmoji] = React.useState(test.emoji);
 	const handleEmojiSelected = (emoji) => {
 		setEmoji(emoji.native);
@@ -56,7 +57,9 @@ const TestListItem = ({ id, isItemSelected, onEdit, onUpdateEmoji, onDelete, onR
 	};
 
 	const handleEdit = () => { onEdit && onEdit([id]); };
-	const handleRunTest = () => { };
+	const handleRunTest = () => {
+		runTest([id]);
+	 };
 
 
 	return (

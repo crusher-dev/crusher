@@ -98,18 +98,19 @@ function CreateTest() {
 						`}
 					>
 						<div className=" flex flex-col items-center mb-40">
-							<span className="run-headline">
-								<span>Use recorder/CLI to create a test</span>
-							</span>
-
-							<TextBlock color="#FDFDFD" fontSize="18" weight="800">
-								Create a new test
+							<TextBlock color="#FDFDFD" fontSize="18" weight="600">
+								Waiting for app to start. Please wait...
 							</TextBlock>
+					
 						</div>
-						<div className="run-local-box">
+						<div className="run-headline mt-32">
+								<span>If it doesn't start, please </span>
+						</div>
+						<div className="run-local-box mt-16">
+							
 							<div className="run-locally">
 								<TextBlock fontSize={15} color={"#A7A7A7"} className="flex items-center">
-									run in a git repo <TerminalIcon className="ml-12" />
+									run in your local git repo <TerminalIcon className="ml-12" />
 								</TextBlock>
 							</div>
 							<div className="wexdsf-frame420">
@@ -121,12 +122,6 @@ function CreateTest() {
 								</span>
 							</div>
 						</div>
-						<TextBlock color="#646464" fontSize="13.5">
-							Not a dev?{" "}
-							<a href="https://docs.crusher.dev/getting-started/create-your-first-test#or-install-recorder" target="_blank" css={hoverUnderline}>
-								Download recorder
-							</a>
-						</TextBlock>
 					</div>
 				</div>
 
@@ -164,7 +159,7 @@ function CreateTest() {
 						font-weight: 400;
 						line-height: 15.5rem;
 
-						margin-bottom: 17rem;
+						margin-bottom: 0rem;
 					}
 
 					.run-local-box {
@@ -173,7 +168,7 @@ function CreateTest() {
 
 						align-items: center;
 
-						margin-bottom: 40rem;
+						margin-bottom: 0rem;
 					}
 					.run-locally {
 						display: flex;
@@ -331,7 +326,7 @@ const hoverUnderline = css`
 /*
 	@Note - Extract component overlay to dyson
  */
-export function Download({ onClose }: { onClose: Function }) {
+function OpenDeepLinkPrompt({ onClose }: { onClose: Function }) {
 	return (
 		<OverlayTransparent onClose={onClose} css={overLayCSS}>
 			<CenterLayout>
@@ -346,4 +341,4 @@ const overLayCSS = css`
 	backdrop-filter: blur(3px);
 `;
 
-export default Download;
+export { OpenDeepLinkPrompt };

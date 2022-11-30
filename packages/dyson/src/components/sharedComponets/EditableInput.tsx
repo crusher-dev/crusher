@@ -1,11 +1,12 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext } from "react";
 import { css } from "@emotion/react";
 import Input from "../../components/atoms/input/Input";
 import { OnOutsideClick } from "../../components/layouts/onOutsideClick/onOutsideClick";
+import { TestListContext } from "./utils/basic";
 
 const EditableInput = React.forwardRef(
 	({ isEditingProp = false, id, onChange, inputCSS, selectAllOnDoubleClick = true, labelCss, labelComponent = null, className, value, ...props }) => {
-		const [currentItemId, setTestEditName] = React.useState(null);
+		const { setCurrentRenameInput, currentRenameInput } = useContext(TestListContext);
 
 		const [isEditing, setIsEditing] = useState(isEditingProp);
 		const inputRef = useRef();
@@ -14,18 +15,18 @@ const EditableInput = React.forwardRef(
 		React.useEffect(() => {
 			return () => {
 				if (isEditing) {
-					setTestEditName(false as any);
+					setCurrentRenameInput(false as any);
 				}
 			};
 		}, [isEditing]);
 
 		React.useEffect(() => {
-			if (currentItemId === id) {
+			if (currentRenameInput === id) {
 				setIsEditing(true);
 			} else {
 				setIsEditing(false);
 			}
-		}, [currentItemId]);
+		}, [currentRenameInput]);
 
 		React.useEffect(() => {
 			if (isEditing) {
@@ -39,7 +40,7 @@ const EditableInput = React.forwardRef(
 
 		if (!isEditing) {
 			return (
-				<div title="edit name" ref={inputRef} css={[labelCSS, labelCss]} onDoubleClick={setTestEditName.bind(this, id)}>
+				<div title="edit name" ref={inputRef} css={[labelCSS, labelCss]} onDoubleClick={setCurrentRenameInput.bind(this, id)}>
 					{labelComponent || value}
 				</div>
 			);
@@ -49,17 +50,17 @@ const EditableInput = React.forwardRef(
 			<OnOutsideClick
 				onOutsideClick={() => {
 					onChange && onChange(inputRef.current?.value || inputRef?.current.innerText);
-					setTestEditName(null);
+					setCurrentRenameInput(null);
 				}}
 				className={className}
 			>
 				<Input
 					onReturn={(value) => {
-						setTestEditName(null);
+						setCurrentRenameInput(null);
 						onChange && onChange(value);
 					}}
 					onBlur={(e) => {
-						setTestEditName(null);
+						setCurrentRenameInput(null);
 						onChange && onChange(e.target.value);
 					}}
 					title=""

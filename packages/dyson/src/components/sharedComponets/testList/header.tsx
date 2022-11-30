@@ -1,10 +1,13 @@
 import { css } from "@emotion/react";
-import React from "react";
+import React, { useContext } from "react";
 import { GarbageIcon, PlayIcon } from "../svg/list";
+import { TestListContext } from "../utils/basic";
 
 const SelectedTestActions = ({ items, onEdit, onDelete, onRename, toggleSelectAll, selectedList }) => {
+	const {runTest} = useContext(TestListContext);
+
 	const handleRun = React.useCallback(() => {
-		// triggerLocalBuild(selectedList);
+		runTest(selectedList);
 	}, [items, selectedList]);
 
 	const handleDelete = React.useCallback(() => {

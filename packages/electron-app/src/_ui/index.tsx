@@ -67,7 +67,6 @@ const handleUrlAction = async (store: Store, event: Electron.IpcRendererEvent, {
 				buildId: buildId
 			});
 			break;
-		
 	}
 }
 

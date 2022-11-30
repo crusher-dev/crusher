@@ -21,6 +21,7 @@ An alternative to the *"old" testing*, where you:
 -  Maintain test whichs eats up your time
 <details>
   <summary> 🤦 + more</summary>
+
 * 🔋  Find the right selectors that work.
 * 🚥  Setup CI/CD to run tests
 * 💰 Start paying for every little thing ( or start building your own framework )
@@ -32,28 +33,17 @@ An alternative to the *"old" testing*, where you:
 
 ![Crusher demo for test creation, running, cli](https://user-images.githubusercontent.com/6849438/204720236-4139dae2-a0e6-4ce6-a9fb-ab6788ec3cc9.gif)
 
-It's an integrated framework built on top of playwright. Record test using **low-code or code** and it handles rest.
+It's an integrated framework built on top of playwright. Record test using **low-code or code** and it handles the rest.
 
 Our primary focus is stability, speed, and better developer experience. **Crusher is in beta(v0.5)**. Join [Crusher's discord](https://discord.gg/dHZkSNXQrg) and help us make it better 🚀
 
-##  Getting started
+##  Create your first test
 
-**☄️Create your first test**
 
-```
-npx crusher.dev
-```
+Run ```npx crusher.dev``` in your git repo.
 
 or [download binary](https://docs.crusher.dev/getting-started/create-your-first-test#or-install-recorder)
 
-
-**🚖 Run test**
-
-```
-npx crusher.dev test:run
-```
-
-You can run tests locally on your machine to debug. Run it on our cloud for faster execution.
 Reference: [Getting Started](https://docs.crusher.dev/getting-started/create-your-first-test#using-cli) | [What is Crusher](https://docs.crusher.dev/getting-started/what-is-crusher) 
 
 

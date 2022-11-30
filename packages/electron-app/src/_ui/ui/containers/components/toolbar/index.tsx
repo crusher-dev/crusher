@@ -7,7 +7,7 @@ import { devices } from "../../../../../devices";
 import { getRecorderContext, getRecorderInfo, getRecorderInfoUrl, getRecorderState, getSavedSteps, getTestName, isTestVerified } from "electron-app/src/store/selectors/recorder";
 import { goFullScreen, performExit, performNavigation, performSteps, performTrackEvent, performVerifyTest, saveTest, updateTest, updateTestName } from "../../../../commands/perform";
 import { addHttpToURLIfNotThere, isValidHttpUrl } from "../../../../../utils";
-import { TRecorderState } from "electron-app/src/store/reducers/recorder";
+import { TRecorderState, TRecorderVariant } from "electron-app/src/store/reducers/recorder";
 import { getAppEditingSessionMeta, getCurrentTestInfo, getProxyState, shouldShowOnboardingOverlay } from "electron-app/src/store/selectors/app";
 import { SettingsModal } from "./settingsModal";
 import { TourContext, useTour } from "@reactour/tour";
@@ -352,6 +352,7 @@ const Toolbar = (props: any) => {
 	const recorderInfo = useSelector(getRecorderInfo);
 	const recorderState = useSelector(getRecorderState);
 	const isTestVerificationComplete = useSelector(isTestVerified);
+	const recorderContext = useSelector(getRecorderContext);
 
 	const dispatch = useDispatch();
 	const store = useStore();
@@ -596,7 +597,7 @@ const Toolbar = (props: any) => {
 										height: 8rem;
 										margin-left: 10rem;
 									`,
-									[TRecorderState.RECORDING_ACTIONS].includes(recorderState.type)
+									recorderContext.variant !== TRecorderVariant.LOCAL_BUILD && [TRecorderState.RECORDING_ACTIONS].includes(recorderState.type)
 										? css`
 												& > rect {
 													fill: #83EA5E;
@@ -606,7 +607,9 @@ const Toolbar = (props: any) => {
 								]}
 							/>
 							<span className={"ml-6 recorder-status"} css={recorderStatusTextCss}>
-								{[TRecorderState.RECORDING_ACTIONS].includes(recorderState.type) ? "recording" : "waiting"}
+								{ recorderContext.variant === TRecorderVariant.LOCAL_BUILD ? "replaying" : (
+									[TRecorderState.RECORDING_ACTIONS].includes(recorderState.type) ? "recording" : "waiting"
+								) }
 							</span>
 						</div>
 					</Conditional>

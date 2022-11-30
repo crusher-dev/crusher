@@ -11,7 +11,6 @@
 
 <h2 >Crusher is fast all-in-one testing you'll ever need</h3>
 
-
 New all-in-one testing framework/tool. It includes everything you need to test, low-code recorder, runner + batteries built-in.
 
 
@@ -31,13 +30,11 @@ An alternative to the *"old" testing*, where you:
 *  🚨 And don't forget to set up alerts for test failures - Slack/Discord/Emails - plus lot more things like test management, debug, updating breaking tests etc.
 </details>
 
-<img src="https://user-images.githubusercontent.com/6849438/200099357-eaadec7f-8692-42f7-95a4-96b162370c2e.gif"/>
+![Crusher demo for test creation, running, cli](https://user-images.githubusercontent.com/6849438/204720236-4139dae2-a0e6-4ce6-a9fb-ab6788ec3cc9.gif)
 
 It's an integrated framework built on top of playwright. Record test using **low-code or code** and it handles rest.
 
-Our primary focus is stability, speed, and better developer experience.
-
-**Crusher is in beta(v0.5)**. Join [Crusher's discord](https://discord.gg/dHZkSNXQrg) and help us make it better 🚀
+Our primary focus is stability, speed, and better developer experience. **Crusher is in beta(v0.5)**. Join [Crusher's discord](https://discord.gg/dHZkSNXQrg) and help us make it better 🚀
 
 ##  Getting started
 
@@ -61,12 +58,18 @@ Reference: [Getting Started](https://docs.crusher.dev/getting-started/create-you
 
 
 ## 👨🏽‍💻 Features
+
+### Create test
 - 👨🏽‍💻 **Test using low-code:** Create tests using our customized recorder based on chromium
 - 📇 **Use code files:** Better APIs and more control with playwright APIs
+
+### Run tests
 - 🔋 **All major browsers supported:** 
 - 👨🏽‍💻 **Built for developers:** Use modern javascript to write tests with simple workflow
 - 🔥 **Fast test execution** 
 - ⚡ **Blazing Fast:** Built on top of Playwright, Crusher delivers an amazing performance during execution
+
+### Alert & Integration
 - 📼 **Easy integration** with your projects
 - 🦄 Central **reporting & dashboard**: See how your app is doing overall anytime-anywhere
 

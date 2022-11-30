@@ -58,7 +58,7 @@ const BuildListItem = ({ isItemSelected, viewTestCallback, build }) => {
 
 				<div onClick={(e) => { e.stopPropagation(); }}><a css={linkCss} target={"_blank"} href={build.host ? new URL(build.host) : "#"}>
 					{build.host ? (new URL(build.host)).host : "~"} 
-					{build.host.includes("cloudflare.com") || true ? " - tunnel 🚇" : null} 
+					{build.host?.includes("cloudflare.com") ? " - tunnel 🚇" : null} 
 				</a></div>
 					{/* <div className={"ml-20"}>ft-branch-new  33814</div> */}
 				</div>

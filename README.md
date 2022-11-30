@@ -1,12 +1,6 @@
-<p>
-  <a href="https://crusher.dev/#gh-light-mode-only">
-    <img src="https://i.imgur.com/BRG9MxQ.png" width="180px" alt="Crusher logo" />
-  </a>
-  <a href="https://crusher.dev/#gh-dark-mode-only">
-    <img src="https://i.imgur.com/ncVx1vo.png"  width="180px" alt="Crusher logo" />
-  </a>
-</p>
 
+![Crusher- Low-code testing framework](https://user-images.githubusercontent.com/6849438/204544882-a0ea7aa0-625b-4547-8657-ba1a9e0acc44.png#gh-dark-mode-only)
+![Crusher- Low-code testing framework](https://user-images.githubusercontent.com/6849438/204549825-4ab1f713-6068-4da4-86b0-58ddf7747f87.png#gh-light-mode-only)
 
 <p>
   <a href="https://discord.com/invite/dHZkSNXQrg" target="_blank"><img src="https://img.shields.io/discord/789815044669177867?&labelColor=black"/></a>
@@ -15,68 +9,57 @@
 
 </p>
 
-<h2 > Fast all-in-one testing framework</h3>
+<h2 >Crusher is fast all-in-one testing you'll ever need</h3>
 
-[Crusher](https://crusher.dev) is an all-in-one testing framework. It includes everything w.r.t to e2e testing, with low-code recorder, runner + batteries built-in.
+New all-in-one testing framework/tool. It includes everything you need to test, low-code recorder, runner + batteries built-in.
 
 
-It's an alternative to the *"traditional" testing workflow*, where you:
-
--  Choose a testing library & runner (Jest, Cypress, Playwright, Puppeteer, etc.)
--  Setup framework according to your needs
--  Write stable tests that take hours
-
+An alternative to the *"old" testing*, where you:
+-  Choose a library & runner (Jest, Cypress, Playwright, Puppeteer, etc.)
+-  Build your own framework with different tools
+-  Write tests that take hours
+-  Maintain test whichs eats up your time
 <details>
-  <summary> 🤦 More annoying tasks during testing</summary>
+  <summary> 🤦 + more</summary>
 
-*  🔋  Find the right selectors that work.
-*  🚥  Setup CI/CD to run tests
+* 🔋  Find the right selectors that work.
+* 🚥  Setup CI/CD to run tests
 * 💰 Start paying for every little thing ( or start building your own framework )
   * Pay for cloud services to run tests on different browser
   * Set up a reporting system to view test results - Cypress cloud
   * Image comparison tool to compare visual changes - Percy
 *  🚨 And don't forget to set up alerts for test failures - Slack/Discord/Emails - plus lot more things like test management, debug, updating breaking tests etc.
-
 </details>
 
-Crusher uses low-code approach and is built on top of playwright. Our primary focus is stability, speed, and better developer experience.
+![Crusher demo for test creation, running, cli](https://user-images.githubusercontent.com/6849438/204720236-4139dae2-a0e6-4ce6-a9fb-ab6788ec3cc9.gif)
 
-**Crusher is in beta(v0.5)**. Join [Crusher's discord](https://discord.gg/dHZkSNXQrg) and help us make it better 🚀
+It's an integrated framework built on top of playwright. Record test using **low-code or code** and it handles the rest.
 
-<hr/>
-<img src="https://user-images.githubusercontent.com/6849438/200099357-eaadec7f-8692-42f7-95a4-96b162370c2e.gif"/>
+Our primary focus is stability, speed, and better developer experience. **Crusher is in beta(v0.5)**. Join [Crusher's discord](https://discord.gg/dHZkSNXQrg) and help us make it better 🚀
 
-##  Getting started
+##  Create your first test
 
-**☄️Create your first test**
 
-```
-npx crusher.dev
-```
+Run ```npx crusher.dev``` in your git repo.
 
 or [download binary](https://docs.crusher.dev/getting-started/create-your-first-test#or-install-recorder)
-
-
-**🚖 Run test**
-
-```
-npx crusher.dev test:run
-```
-
-You can run tests locally on your machine to debug. Run it on our cloud for faster execution.
 
 Reference: [Getting Started](https://docs.crusher.dev/getting-started/create-your-first-test#using-cli) | [What is Crusher](https://docs.crusher.dev/getting-started/what-is-crusher) 
 
 
 ## 👨🏽‍💻 Features
 
-Crusher has a lot of features, some of the major ones are
+### Create test
 - 👨🏽‍💻 **Test using low-code:** Create tests using our customized recorder based on chromium
 - 📇 **Use code files:** Better APIs and more control with playwright APIs
+
+### Run tests
 - 🔋 **All major browsers supported:** 
 - 👨🏽‍💻 **Built for developers:** Use modern javascript to write tests with simple workflow
 - 🔥 **Fast test execution** 
 - ⚡ **Blazing Fast:** Built on top of Playwright, Crusher delivers an amazing performance during execution
+
+### Alert & Integration
 - 📼 **Easy integration** with your projects
 - 🦄 Central **reporting & dashboard**: See how your app is doing overall anytime-anywhere
 

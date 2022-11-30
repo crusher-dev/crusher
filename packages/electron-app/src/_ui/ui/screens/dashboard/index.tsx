@@ -122,7 +122,7 @@ const DashboardScreen = () => {
 		turnOnProxyServers();
 		// @TODO: Cache this API
 		if (selectedProjectId && userInfo && userInfo.projects) {
-			const project = userInfo.projects.find((p) => p.id === selectedProjectId);
+			const project = userInfo.projects.find((p) => p.id == selectedProjectId);
 			if (project) {
 				setSelectedProject(project);
 			}

@@ -54,7 +54,7 @@ export default class CommandBase {
     console.log(`  Config File:  ${green(findCrusherProjectConfig())}`);
     console.log(`  Team:         ${userAccount.teamName}`);
     
-    console.log(`\n\n> to create new project?\nrun crusher-cli --blank`);
+    console.log(`\n\n> to create new project?\nrun crusher.dev --blank`);
     console.log(
       `\n\n> ${dim(underline('View docs'))} | ${magenta('or use --help')}\n`
     );

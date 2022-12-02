@@ -181,24 +181,39 @@ export const getIsArm = () => {
   __DEV__ => Use development binaries (helps with hot-reloading)
 */
 export const getRecorderDistCommand = () => {
-  const useDevelopmentBinary = getRuntimeEnv().__DEV__ && getRuntimeEnv().__DEV_CRUSHER_PROJECT_DIR__;
+
+  const isCLIexecuteLocally = process.argv[0].includes("ts-node") || process.argv[0].includes("crusher-dev");
+  const useDevelopmentBinary = isCLIexecuteLocally || getRuntimeEnv().__DEV__ && getRuntimeEnv().__DEV_CRUSHER_PROJECT_DIR__;
 
   switch (process.platform) {
     case "darwin":
       const arch = getIsArm() ? "arm64" : "x64";
+      
       if (useDevelopmentBinary) {
-        const electronDist = path.resolve(getRuntimeEnv().__DEV_CRUSHER_PROJECT_DIR__, `./packages/electron-app/bin/darwin-${arch}/Electron.app/Contents/MacOS/Electron`);
-        if (!fs.existsSync(electronDist)) throw new Error("Electron dist is not available");
-        return `${electronDist} ${path.resolve(getRuntimeEnv().__DEV_CRUSHER_PROJECT_DIR__, './output/crusher-electron-app')}` + " --no-color";;
+
+        const basePathForCLI =  getRuntimeEnv().__DEV_CRUSHER_PROJECT_DIR__ || path.resolve(__dirname,"../../../../");
+        const localDebugDist = path.resolve(basePathForCLI, `./packages/electron-app/bin/darwin-${arch}/Electron.app/Contents/MacOS/Electron`);
+
+        if (!fs.existsSync(localDebugDist)){
+          console.log("Local dist not available, using from master")
+          return resolvePathToAppDirectory('bin/"Crusher Recorder.app"/Contents/MacOS/"Crusher Recorder"') + " --no-color";
+        }
+        return `${localDebugDist} ${path.resolve(basePathForCLI, './output/crusher-electron-app')}` + " --no-color";;
       }
 
       return resolvePathToAppDirectory('bin/"Crusher Recorder.app"/Contents/MacOS/"Crusher Recorder"') + " --no-color";
     case "linux":
       if (useDevelopmentBinary) {
         const arch = "x64";
-        const electronDist = path.resolve(getRuntimeEnv().__DEV_CRUSHER_PROJECT_DIR__, `./packages/electron-app/bin/linux-${arch}/electron`);
+        const basePathForCLI =  getRuntimeEnv().__DEV_CRUSHER_PROJECT_DIR__ || path.resolve(__dirname,"../../../../");
+        const localDebugDist = path.resolve(basePathForCLI, `./packages/electron-app/bin/linux-${arch}/electron`);
 
-        return `${electronDist} ${path.resolve(getRuntimeEnv().__DEV_CRUSHER_PROJECT_DIR__, './output/crusher-electron-app')}` + " --no-color";
+        if (!fs.existsSync(localDebugDist)){
+          console.log("Local dist not available, using from master")
+          return resolvePathToAppDirectory("bin/electron-app") + " --no-color";
+        }
+
+        return `${localDebugDist} ${path.resolve(getRuntimeEnv().__DEV_CRUSHER_PROJECT_DIR__, './output/crusher-electron-app')}` + " --no-color";
       }
 
       return resolvePathToAppDirectory("bin/electron-app") + " --no-color";

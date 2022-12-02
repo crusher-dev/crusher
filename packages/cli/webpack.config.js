@@ -27,7 +27,7 @@ if(process.env.DOWNLOADS_REPO_URL) {
 }
 
 if(process.env.SEGMENT_API_KEY) {
-	environmentVariables["process.env.SEGMENT_API_KEY"] = process.env.SEGMENT_API_KEY;
+	environmentVariables["process.env.SEGMENT_API_KEY"] = JSON.stringify(process.env.SEGMENT_API_KEY);
 }
 
 module.exports = {

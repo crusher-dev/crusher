@@ -12,9 +12,10 @@ export class WebhookManager {
         if (webhookUrl.includes("discord.com")) {
             DiscordWebhookManager.send(webhookUrl, messageBody)
         }
-        if (webhookUrl.includes("slack.com")) {
+        else if (webhookUrl.includes("slack.com")) {
             SlackWebHook.send(webhookUrl, messageBody)
+        } else {
+            RemoteWebhook.send(webhookUrl, messageBody)
         }
-        RemoteWebhook.send(webhookUrl, messageBody)
     }
 }

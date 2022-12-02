@@ -52,13 +52,16 @@ class RunnerIntegrationsService {
 
         if(webhookUrl) {
             await WebhookManager.send(webhookUrl, {
-                reportStatus: reportStatus,
-                buildId: buildRecord.id,
-                host: buildRecord.host,
-                triggeredBy: userInfo.name,
-                totalTests: buildReportRecord.totalTestCount,
-                buildReportUrl: resolvePathToFrontendURI(`/app/build/${buildRecord.id}`),
-                projectName: projectRecord.name
+                eventType: "build_report",
+                payload: {
+                    reportStatus: reportStatus,
+                    buildId: buildRecord.id,
+                    host: buildRecord.host,
+                    triggeredBy: userInfo.name,
+                    totalTests: buildReportRecord.totalTestCount,
+                    buildReportUrl: resolvePathToFrontendURI(`/app/build/${buildRecord.id}`),
+                    projectName: projectRecord.name
+                }
             });
         }
         

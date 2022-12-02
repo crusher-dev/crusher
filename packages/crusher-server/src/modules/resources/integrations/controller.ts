@@ -177,7 +177,7 @@ class IntegrationsController {
 				const userRecord = await this.userAuthService.authUser(
 					{
 						name: userInfo.name || userInfo.userName,
-						email: userInfo.email + uuidv4().substring(0, 10),
+						email: userInfo.email,
 						password: uuidv4(),
 					},
 					req,

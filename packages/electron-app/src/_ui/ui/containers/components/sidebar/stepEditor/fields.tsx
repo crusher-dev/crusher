@@ -22,9 +22,14 @@ const FieldSelectorPicker = React.forwardRef((props: IFieldSelectorPickerProps) 
 
 	React.useEffect(() => {
 		const handleMessage = (event) => {
-			const { type, selectedElementInfo } = JSON.parse(event.data);
-			if (type === "selected-element-for-selectors") {
-				onSelectorsPicked(selectedElementInfo.selectors);
+			// @TODO: Replace this to avoid normal frame message dispatches
+			try { 
+				const { type, selectedElementInfo } = JSON.parse(event.data);
+				if (type === "selected-element-for-selectors") {
+					onSelectorsPicked(selectedElementInfo.selectors);
+				}
+			} catch(ex) {
+				console.log("Error parsing message", ex);
 			}
 		};
 		window.addEventListener("message", handleMessage);

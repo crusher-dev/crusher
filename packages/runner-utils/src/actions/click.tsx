@@ -1,9 +1,12 @@
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { IGlobalManager } from "@crusher-shared/lib/globals/interface";
 import { iAction } from "@crusher-shared/types/action";
-import { Locator } from "playwright";
+import { Locator, Page } from "playwright";
 import { CrusherSdk } from "../sdk/sdk";
 import { ExportsManager } from "../functions/exports";
+import { StepErrorTypeEnum } from "src/error.types";
+import React from "react";
+import { css } from "@emotion/react";
 
 async function clickOnElement(
 	element: Locator,
@@ -33,9 +36,59 @@ async function clickOnElement(
 	}
 }
 
+
+const ClickError = ({ }) => {
+	return (
+		<div className={"flex items-center"} style={actionsContainerStyle}>
+			<div className={"flex items-center"} onClick={() =>{}} syle={actionStyle}>
+				<div className="px-12 flex items-center" style={{color: "red", fontSize: 14}}>
+					{/* <EditIconV4 css={editIcoNCss} /> */}
+					{"Navigation failed"}
+				</div>
+			</div>
+
+
+		<div className={"px-12 pl-10"}>
+			{/* <HoverButton onClick={setOpen.bind(this, false)}>
+				<CloseIcon css={css`width: 8rem; height: 8rem;`} />
+			</HoverButton> */}
+		</div>
+	</div>
+	);
+};
+
+const actionsContainerStyle = {
+	height: "100%",
+};
+const actionStyle = {
+	height: "100%",
+	borderWidth: "0px 0.5px",
+	borderStyle: "solid",
+	borderColor: "rgba(255, 255, 255, 0.05)",
+	borderRadius: "0px",
+};
+
+
+
 module.exports = {
 	name: ActionsInTestEnum.CLICK,
 	description: "Click on element",
+	error: ({ActionsToast, page}: any) => {
+		const handleClick = async () => {
+			const pageRes: Page = await page();
+			const res = await pageRes.goto("https://google.com");
+			alert("URL IS: " + await res.url());
+		};
+		return (
+			<ActionsToast
+            duration={1000 * 60 * 60 * 60}
+            open={true}
+            setOpen={()=>{}}
+            actions={<ClickError />}
+            message={<div onClick={handleClick}>Goto google.com</div>}
+        />
+		)
+	},
 	actionDescriber: (action: iAction) => {
 		if (!action.payload.meta || !action.payload.meta.elementDescription) {
 			return `Click element`;
@@ -44,3 +97,4 @@ module.exports = {
 	},
 	handler: clickOnElement,
 };
+

@@ -198,6 +198,7 @@ class PlaywrightInstance {
 		[this.browserContext] = await this.browser.contexts();
 		// @TODO: Look into this
 		this.page = await this._getWebViewPage();
+		(global as any).page = this.page;
 		this.sdkManager = new CrusherSdk(this.page, this._exportsManager as any, this._storageManager as any);
 
 		try {

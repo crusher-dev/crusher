@@ -1,5 +1,5 @@
 import { css, Global } from "@emotion/react";
-import { ipcRenderer } from "electron";
+import { ipcRenderer, remote } from "electron";
 import React from "react";
 import { useSelector, useStore } from "react-redux";
 import { Store } from "redux";
@@ -10,6 +10,7 @@ import { getAppSessionMeta } from "../store/selectors/app";
 import { getIsStatusBarVisible, getRecorderState } from "../store/selectors/recorder";
 import { IDeepLinkAction } from "../types";
 import {
+	getPlaywrightPage,
 	goFullScreen,
 	performGetRecorderTestLogs,
 	performReplayTest,
@@ -35,6 +36,8 @@ import { clearAllToasts, clearToast, showToast } from "./ui/components/toasts";
 import { getStore } from "../store/configureStore";
 import { getCurrentLocalBuild } from "../store/selectors/builds";
 import { DesktopAppEventsEnum } from "@shared/modules/analytics/constants";
+import { ActionToast, ToastProvider, ToastViewport } from "./ui/components/toasts/variants/actionToast";
+const { error: Error } = require("../../../runner-utils/src/actions/click");
 
 const handleCompletion = async (store: Store, action: IDeepLinkAction, addNotification, hasCompletedSuccesfully: boolean) => {
 	// @TODO: Change `redirectAfterSuccess` to `isLocalBuild`
@@ -80,7 +83,7 @@ const handleCompletion = async (store: Store, action: IDeepLinkAction, addNotifi
 					time: Date.now(),
 				}),
 			);
-			
+
 			clearAllToasts();
 			historyInstance.push("/", {});
 
@@ -89,7 +92,7 @@ const handleCompletion = async (store: Store, action: IDeepLinkAction, addNotifi
 			sendSnackBarEvent({ type: "test_report", message: null, meta: { totalCount: totalTestsInBuild, buildReportStatus: localBuild.buildReportStatus } });
 		}
 	} else {
-		if(hasCompletedSuccesfully) {
+		if (hasCompletedSuccesfully) {
 			showToast({
 				type: "ready-for-edit",
 				isUnique: true,
@@ -100,8 +103,8 @@ const handleCompletion = async (store: Store, action: IDeepLinkAction, addNotifi
 };
 
 const handleUrlAction = (store: Store, addNotification, event: Electron.IpcRendererEvent, { action }: { action: IDeepLinkAction }) => {
-	
-	const runTest = (host: string| null = null) => {
+
+	const runTest = (host: string | null = null) => {
 		const sessionInfoMeta = getAppSessionMeta(store.getState() as any);
 		const { selectedTests } = action.args;
 
@@ -132,7 +135,7 @@ const handleUrlAction = (store: Store, addNotification, event: Electron.IpcRende
 		case "run-test-from-build":
 			const { testId, buildId } = action.args;
 			store.dispatch(
-				setRecorderContext({ 
+				setRecorderContext({
 					variant: TRecorderVariant.EDIT_TEST,
 					origin: "deeplink",
 					testId: testId,
@@ -180,7 +183,7 @@ const App = () => {
 			goFullScreen(false);
 		});
 		const listener = handleUrlAction.bind(this, store, addNotification);
-		ipcRenderer.on("url-action",listener);
+		ipcRenderer.on("url-action", listener);
 
 		return () => {
 			ipcRenderer.removeListener("url-action", listener);
@@ -205,6 +208,15 @@ const App = () => {
 		toolbarCss(recorderState.type === TRecorderState.CUSTOM_CODE_ON);
 	}, [recorderState]);
 
+	const ActionsToast = (props) => {
+		return (
+			<ToastProvider swipeDirection="right">
+				<ActionToast open={true} {...props} />
+				<ToastViewport />
+
+			</ToastProvider>
+		)
+	}
 	return (
 		// <Wrapper figmaUrl={"https://www.figma.com/proto/MsJZCnY5NvrDF4kL1oczZq/Crusher-%7C-Aug?node-id=2305%3A6559&scaling=min-zoom&page-id=2305%3A5930"}>
 		// </Wrapper>
@@ -220,6 +232,9 @@ const App = () => {
 				</div>
 			</div>
 			<Global styles={globalCss} />
+			<div css={css`position: fixed; width: 200px; height: 200px; left: 50%; transform: translateX(-50%); z-index: 123123123; bottom: 0px;`}>
+				<Error page={() => (remote.getGlobal("page"))} ActionsToast={ActionsToast} />
+			</div>
 			{/* <InfoOverLay /> */}
 		</div>
 	);
@@ -231,7 +246,7 @@ const StepHoverOverlay = () => {
 	React.useEffect(() => {
 		let interval;
 		interval = setTimeout(() => {
-				setShow(isStepHovered);
+			setShow(isStepHovered);
 		}, 25);
 
 		return () => {

@@ -890,6 +890,7 @@ importers:
       '@babel/plugin-transform-typescript': ^7.19.0
       '@babel/preset-env': ^7.14.4
       '@babel/preset-typescript': ^7.13.0
+      '@emotion/react': ^11.4.0
       '@types/jest': ^26.0.23
       '@types/node': ^14.14.27
       '@typescript-eslint/parser': ^4.14.1
@@ -899,10 +900,13 @@ importers:
       browserify-zlib: ^0.2.0
       expect: ^28.1.3
       jest: ^27.0.3
+      jsx-runtime: link:@emotion/react/jsx-runtime
       node-fetch: ^2.6.1
       node-polyfill-webpack-plugin: 1.1.4
       playwright: 1.23.3
       playwright-core: 1.23.3
+      react: ^18.2.0
+      react-dom: ^18.2.0
       ts-loader: ^8.0.14
       ts-node: ^9.1.1
       tsconfig-paths-webpack-plugin: ^3.5.1
@@ -912,11 +916,15 @@ importers:
       webpack-dev-server: ^3.11.0
     dependencies:
       '@babel/cli': 7.18.10_@babel+core@7.16.7
+      '@emotion/react': 11.4.0_eg6e6cbs2dbvs6ypej232m4mt4
       '@zerollup/ts-transform-paths': 1.7.18_typescript@4.3.5
       browserify-zlib: 0.2.0
       expect: 28.1.3
+      jsx-runtime: link:@emotion/react/jsx-runtime
       playwright: 1.23.3
       playwright-core: 1.23.3_vj6pgcce5ah725asmajn7kzhb4
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
     devDependencies:
       '@babel/core': 7.16.7
       '@babel/plugin-transform-typescript': 7.19.0_@babel+core@7.16.7
@@ -4143,6 +4151,29 @@ packages:
 
   /@emotion/memoize/0.7.5:
     resolution: {integrity: sha512-igX9a37DR2ZPGYtV6suZ6whr8pTFtyHL3K/oLUotxpSVO2ASaprmAe2Dkq7tBo7CRY7MMDrAa9nuQP9/YG8FxQ==}
+    dev: false
+
+  /@emotion/react/11.4.0_eg6e6cbs2dbvs6ypej232m4mt4:
+    resolution: {integrity: sha512-4XklWsl9BdtatLoJpSjusXhpKv9YVteYKh9hPKP1Sxl+mswEFoUe0WtmtWjxEjkA51DQ2QRMCNOvKcSlCQ7ivg==}
+    peerDependencies:
+      '@babel/core': ^7.0.0
+      '@types/react': '*'
+      react: '>=16.8.0'
+    peerDependenciesMeta:
+      '@babel/core':
+        optional: true
+      '@types/react':
+        optional: true
+    dependencies:
+      '@babel/core': 7.16.7
+      '@babel/runtime': 7.18.9
+      '@emotion/cache': 11.4.0
+      '@emotion/serialize': 1.0.2
+      '@emotion/sheet': 1.0.1
+      '@emotion/utils': 1.0.0
+      '@emotion/weak-memoize': 0.2.5
+      hoist-non-react-statics: 3.3.2
+      react: 18.2.0
     dev: false
 
   /@emotion/react/11.4.0_twhmquipderspefzrdtckcsjp4:
@@ -17877,6 +17908,17 @@ packages:
       debug:
         optional: true
 
+  /follow-redirects/1.14.7_debug@4.3.3:
+    resolution: {integrity: sha512-+hbxoLbFMbRKDwohX8GkTataGqO6Jb7jGwpAlwgy2bIz25XtRm7KEzJM76R1WiNT5SwZkX4Y75SwBolkpmE7iQ==}
+    engines: {node: '>=4.0'}
+    peerDependencies:
+      debug: '*'
+    peerDependenciesMeta:
+      debug:
+        optional: true
+    dependencies:
+      debug: 4.3.3_supports-color@6.1.0
+
   /follow-redirects/1.15.1:
     resolution: {integrity: sha512-yLAMQs+k0b2m7cVxpS1VKJVvoz7SS9Td1zss3XRwXj+ZDH00RJgnuLx7E44wx02kQLrdM3aOOy+FpzS7+8OizA==}
     engines: {node: '>=4.0'}
@@ -19245,7 +19287,7 @@ packages:
     engines: {node: '>=8.0.0'}
     dependencies:
       eventemitter3: 4.0.7
-      follow-redirects: 1.14.7
+      follow-redirects: 1.14.7_debug@4.3.3
       requires-port: 1.0.0
     transitivePeerDependencies:
       - debug

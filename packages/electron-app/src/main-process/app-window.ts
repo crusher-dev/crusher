@@ -285,6 +285,7 @@ export class AppWindow {
 		ipcMain.on("get-is-advanced-selector", this.handleGetVarContext.bind(this));
 		ipcMain.handle("turn-on-webview-dev-tools", this.handleTurnOnWebviewDevtools.bind(this));
 		ipcMain.handle("pause-steps", this.handlePauseSteps.bind(this));
+		ipcMain.handle("get-playwright-page", this.handleGetPlaywrightPage.bind(this));
 
 		this.window.on("focus", () => this.window.webContents.send("focus"));
 		this.window.on("blur", () => this.window.webContents.send("blur"));
@@ -310,6 +311,12 @@ export class AppWindow {
 		this.handle(projectId).catch((err) => console.error("Can't initialize project config in renderer process", err));
 	}
 
+	async handleGetPlaywrightPage(event: Electron.IpcMainEvent, data: { pageId: string }) {
+		const pageObject = this.webView?.playwrightInstance?.page;
+
+		
+		return { test: () => { console.log("h"); }};
+	}
 	async handleTrackEvent(event: Electron.IpcMainEvent, data: { event: DesktopAppEventsEnum, properties: any }) {
 		return trackEvent(data.event, data.properties);
 	}

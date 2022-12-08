@@ -351,7 +351,11 @@ const performTrackEvent = (event: DesktopAppEventsEnum, properties: any = {}) =>
 	return ipcRenderer.invoke("track-event", { event, properties });
 };
 
+const getPlaywrightPage = () => {
+	return ipcRenderer.invoke("get-playwright-page", {});
+};
 export {
+	getPlaywrightPage,
 	recordHoverDependencies,
 	performAction,
 	performSetDevice,

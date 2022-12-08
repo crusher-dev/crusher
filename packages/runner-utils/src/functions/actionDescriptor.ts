@@ -9,7 +9,7 @@ class ActionDescriptor {
 	initActionHandlers() {
 		if (isWebpack()) {
 			//@ts-ignore
-			const actionsRequireContext = require.context("../actions/", true, /\.ts$/);
+			const actionsRequireContext = require.context("../actions/", true, /\.tsx?$/);
 
 			actionsRequireContext.keys().forEach((fileName) => {
 				const { name, description, handler, actionDescriber } = actionsRequireContext(fileName);

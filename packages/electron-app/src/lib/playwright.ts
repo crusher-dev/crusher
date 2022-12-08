@@ -343,11 +343,7 @@ class PlaywrightInstance {
 					break;
 				case ActionStatusEnum.FAILED:
 				case ActionStatusEnum.STALLED:
-					if((result.meta as any).error?.name === "TimeoutError") {
-						console.log("Rejoice its timeout error");
-					}
 					this.lastAction = null;
-
 					this.handleFailedStep(action, result, shouldNotSave);
 					break;
 				case ActionStatusEnum.COMPLETED:

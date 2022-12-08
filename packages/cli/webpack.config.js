@@ -26,6 +26,10 @@ if(process.env.DOWNLOADS_REPO_URL) {
   environmentVariables['process.env.DOWNLOADS_REPO_URL'] = JSON.stringify(process.env.DOWNLOADS_REPO_URL);
 }
 
+if(process.env.SEGMENT_API_KEY) {
+	environmentVariables["process.env.SEGMENT_API_KEY"] = JSON.stringify(process.env.SEGMENT_API_KEY);
+}
+
 module.exports = {
   mode: "production",
   entry: glob.sync("./src/bin/*.ts").reduce(function (obj, el) {

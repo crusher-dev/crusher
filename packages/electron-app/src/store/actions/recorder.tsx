@@ -153,6 +153,9 @@ export const setStatusBarVisibility = (isVisible: boolean) => {
 };
 
 export const setRecorderContext = (context: {} | {variant: TRecorderVariant; origin?: "deeplink" | "app" | null } ) => {
+	if(context) {
+		(context as any).startedAt = Date.now();
+	}
 	return {
 		type: SET_RECORDER_CONTEXT,
 		payload: { context }

@@ -18,6 +18,7 @@ import {
 	setInspectElementSelectorMode,
 	setInspectMode,
 	setIsTestVerified,
+	setRecorderContext,
 	setSiteUrl,
 	updateCurrentRunningStepStatus,
 	updateRecordedStep,
@@ -25,10 +26,10 @@ import {
 	updateRecorderState,
 } from "../store/actions/recorder";
 import { ActionStatusEnum } from "@shared/lib/runnerLog/interface";
-import { getAllSteps, getRecorderContext, getRecorderState, getSavedSteps, getTestName } from "../store/selectors/recorder";
+import { getAllSteps, getRecorderContext, getRecorderState, getSavedSteps, getTestName, getTotalTimeSpentInRecorder } from "../store/selectors/recorder";
 import { CloudCrusher } from "../lib/cloud";
 import { getMainActions, getBrowserActions, toCrusherSelectorsFormat } from "runner-utils/src/utils/helper";
-import { iElementInfo, TRecorderState } from "../store/reducers/recorder";
+import { iElementInfo, TRecorderState, TRecorderVariant } from "../store/reducers/recorder";
 import { iSeoMetaInformationMeta } from "../types";
 import { getUserAgentFromName } from "@shared/constants/userAgents";
 import {
@@ -344,6 +345,11 @@ export class AppWindow {
 		}
 		if (app.commandLine.hasSwitch("open-recorder")) {
 			process.argv = process.argv.filter((a) => a !== "--open-recorder");
+			this.store.dispatch(setRecorderContext({
+				variant: TRecorderVariant.CREATE_TEST,
+				origin: "app",
+				startedAt: Date.now()
+			}));
 			this.window.loadURL(getAppURl() + "#/recorder");
 			this.handleGoFullScreen(null, { fullScreen: true });
 		} else {
@@ -923,7 +929,8 @@ export class AppWindow {
 				const context = getRecorderContext(this.store.getState() as any);
 				trackEvent(DesktopAppEventsEnum.TEST_SUCCESS, {
 					context,
-					actionType: autoSaveType
+					actionType: autoSaveType,
+					totalTime: getTotalTimeSpentInRecorder(this.store.getState() as any)
 				});
 			}
 
@@ -937,7 +944,8 @@ export class AppWindow {
 				const context = getRecorderContext(this.store.getState() as any);
 				trackEvent(DesktopAppEventsEnum.TEST_FAILURE, {
 					context,
-					actionType: autoSaveType
+					actionType: autoSaveType,
+					totalTime: getTotalTimeSpentInRecorder(this.store.getState() as any)
 				});
 			}
 			throw new Error("Error occurred while verifying");

@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 
 class SettingsManager {
-	static appPath = path.resolve(app ? app.getAppPath() : eval("require")("electron/renderer").remote.app.getAppPath(), "crusher-settings.json");
+	static appPath = path.resolve(app ? app.getPath("userData") : eval("require")("electron/renderer").remote.app.getPath("userData"), "crusher-settings.json");
 
 	static initSettingsConfig() {
 		if (!fs.existsSync(this.appPath)) {

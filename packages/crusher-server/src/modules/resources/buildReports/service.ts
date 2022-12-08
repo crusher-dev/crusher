@@ -18,6 +18,7 @@ import { CamelizeResponse } from "@modules/decorators/camelizeResponse";
 import { BuildTestInstanceScreenshotService } from "../builds/instances/screenshots.service";
 import { ActionStatusEnum } from "@crusher-shared/lib/runnerLog/interface";
 import { StorageManager } from "@modules/storage";
+import { TestService } from "../tests/service";
 interface TestBuildReport {
 	buildId: number;
 	buildMeta: string;
@@ -59,6 +60,8 @@ export class BuildReportService {
 	private buildTestInstanceService: BuildTestInstancesService;
 	@Inject()
 	private buildTestInstanceScreenshotService: BuildTestInstanceScreenshotService;
+	@Inject()
+	private testsService: TestService;
 	@Inject()
 	private storageManager: StorageManager;
 
@@ -226,7 +229,7 @@ export class BuildReportService {
 
 		const testsArray: Array<any> = Object.values(testsMap);
 
-		const buildHost = testsWithReportData[0].buildHost;
+		let buildHost = testsWithReportData[0].buildHost;
 		const buildMeta = testsWithReportData[0].buildMeta ? JSON.parse(testsWithReportData[0].buildMeta) : {};
 
 		if(buildMeta.github) {
@@ -234,6 +237,22 @@ export class BuildReportService {
 			buildMeta.github.repoLink = `https://github.com/${repoName}/commit/${commitId}`;
 		}
 	
+		if(!buildHost || buildHost === "null") {
+			const tests = await this.testsService.getTestsInBuild(buildId);
+			const events = tests.map((test) => test.events);
+			let finalHost = null;
+			for(let event of events) {
+				try {
+					const events = JSON.parse(event);
+					finalHost = events.find((event) => event.type === "PAGE_NAVIGATE_URL").payload.meta.value;
+					break;
+				} catch(ex) {}
+			}
+			if(finalHost) {
+				buildHost = finalHost;
+			}
+		}
+
 		return {
 			buildId: testsWithReportData[0].buildId,
 			buildReportId: testsWithReportData[0].buildReportId,

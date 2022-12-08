@@ -6,11 +6,20 @@ import { css } from "@emotion/react";
 import { shell } from "electron";
 import { NormalButton } from "electron-app/src/_ui/ui/containers/components/buttons/normalButton";
 import { newButtonStyle } from "electron-app/src/_ui/constants/style";
+import { setRecorderContext } from "electron-app/src/store/actions/recorder";
+import { TRecorderVariant } from "electron-app/src/store/reducers/recorder";
+import { useStore } from "react-redux";
 
 const CreateFirstTest = () => {
 	const navigate = useNavigate();
+	const store = useStore();
 
 	const handleCreateTest = React.useCallback(() => {
+		store.dispatch(setRecorderContext({
+			variant: TRecorderVariant.CREATE_TEST,
+			origin: "app",
+			startedAt: Date.now(),
+		}));
 		navigate("/recorder");
 		goFullScreen();
 	}, []);

@@ -108,7 +108,8 @@ interface IRecorderReducer {
 
 	context:  {
 		variant: TRecorderVariant.CREATE_TEST,
-		origin: "app",
+		origin: "app" | 'deeplink',
+		startedAt?: number, // <- Date.now()
 	}
 }
 
@@ -129,6 +130,7 @@ const initialState: IRecorderReducer = {
 	context:  {
 		variant: TRecorderVariant.CREATE_TEST,
 		origin: "app",
+		startedAt: Date.now()
 	}
 };
 

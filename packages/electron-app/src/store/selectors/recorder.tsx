@@ -61,3 +61,12 @@ export const getIsStatusBarVisible = (state: iReduxState) => state.recorder.show
 export const getTestName = (state: iReduxState) => state.recorder.testName;
 
 export const getRecorderContext = (state: iReduxState) => state.recorder.context;
+
+// In ms
+export const getTotalTimeSpentInRecorder = (state: iReduxState) => {
+	const currentTime = Date.now();
+	const recorderContext = getRecorderContext(state);
+	return {
+		totalTime: currentTime - recorderContext.startedAt,
+	}
+}

@@ -66,7 +66,5 @@ export const getRecorderContext = (state: iReduxState) => state.recorder.context
 export const getTotalTimeSpentInRecorder = (state: iReduxState) => {
 	const currentTime = Date.now();
 	const recorderContext = getRecorderContext(state);
-	return {
-		totalTime: currentTime - recorderContext.startedAt,
-	}
+	return currentTime - recorderContext.startedAt;
 }

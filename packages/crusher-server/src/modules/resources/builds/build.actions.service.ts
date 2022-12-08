@@ -51,20 +51,21 @@ class BuildsActionService {
 		const buildRecordMeta: { testIds: Array<number>; shouldRecordVideo: boolean } = buildRecord.config;
 		const testsList = await this.testService.getTestsFromIdList(buildRecordMeta.testIds);
 
+		// @TODO: Add support to use exact same build config (like proxy, etc)
 		return this.testRunner.runTests(
 			await this.testService.getFullTestArr(await this.testService.getCompleteTestsArray(testsList)),
 			{
 				userId: user_id,
 				projectId: buildRecord.projectId,
 				// @TODO: Use proper value of host here
-				host: "null",
+				host: buildRecord.host || "null",
 				status: BuildStatusEnum.CREATED,
 				buildTrigger: BuildTriggerEnum.MANUAL,
 				browser: buildRecord.browser,
 				isDraftJob: false,
 				config: buildRecord.config,
 				meta: buildRecord.meta ? JSON.parse(buildRecord.meta) : null,
-			},
+			} as any,
 			buildReportRecord.referenceJobId,
 		);
 	}

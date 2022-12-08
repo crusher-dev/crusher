@@ -1,4 +1,4 @@
-import { Inject, Service } from "typedi";
+import Container, { Inject, Service } from "typedi";
 import { DBManager } from "@modules/db";
 import { JobReportStatus } from "@crusher-shared/types/jobReportStatus";
 import { PLATFORM } from "@crusher-shared/types/platform";
@@ -60,8 +60,6 @@ export class BuildReportService {
 	private buildTestInstanceService: BuildTestInstancesService;
 	@Inject()
 	private buildTestInstanceScreenshotService: BuildTestInstanceScreenshotService;
-	@Inject()
-	private testsService: TestService;
 	@Inject()
 	private storageManager: StorageManager;
 
@@ -238,7 +236,8 @@ export class BuildReportService {
 		}
 	
 		if(!buildHost || buildHost === "null") {
-			const tests = await this.testsService.getTestsInBuild(buildId);
+			const testsService = Container.get(TestService);
+			const tests = await testsService.getTestsInBuild(buildId);
 			const events = tests.map((test) => test.events);
 			let finalHost = null;
 			for(let event of events) {

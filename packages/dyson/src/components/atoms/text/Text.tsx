@@ -5,7 +5,7 @@ export type TextProps = {
 	/**
 	 * Emotion CSS style if any
 	 */
-	fontSize?: number;
+	fontSize: number;
 	leading?: string;
 	weight?: number;
 	letterSpacing?: boolean;
@@ -20,20 +20,20 @@ const TextDefaultProps = {
 	color: "#fff",
 };
 
-const getLetterSpacing = (fontSize) => {
+const getLetterSpacing = (fontSize: number) => {
 	if (fontSize < 12) {
-		return { letterSpacing: `.4px` };
+		return { letterSpacing: `.5px` };
 	}
 
 	if (fontSize < 13) {
-		return { letterSpacing: `.35px` };
+		return { letterSpacing: `.4px` };
 	}
 
 	if (fontSize < 14) {
-		return { letterSpacing: `.3px` };
+		return { letterSpacing: `.35px` };
 	}
 	if (fontSize <= 15) {
-		return { letterSpacing: `.25px` };
+		return { letterSpacing: `.3px` };
 	}
 
 	return { letterSpacing: `0` };

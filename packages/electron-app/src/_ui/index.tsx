@@ -97,6 +97,7 @@ function InsideRouter() {
 		const listener = handleUrlAction.bind(null, store);
 		ipcRenderer.on("url-action", listener);
 		window.triggerLocalBuild = listener.bind(null, null, { action: { commandName: "run-local-build", args: { buildId: "29372" } } });
+
 		return () => {
 			ipcRenderer.removeListener("url-action", listener);
 		}

@@ -58,6 +58,7 @@ import { shouldOverrideHost } from "../lib/project-config";
 import { chalkShared, _log } from "@shared/modules/logger";
 import { DesktopAppEventsEnum } from "@shared/modules/analytics/constants";
 import _ from "lodash";
+import { saveNewDraftTest } from "../_ui/api/tests/draft.tests";
 
 export class AppWindow {
 	private window: Electron.BrowserWindow;
@@ -350,6 +351,20 @@ export class AppWindow {
 				origin: "app",
 				startedAt: Date.now()
 			}));
+
+			axios(saveNewDraftTest({name: "Untitled Test", events: []})).then((res) => {
+				const {draftId} = res.data;
+				const recorderContext = getRecorderContext(this.store.getState() as any);
+				if(recorderContext && recorderContext.variant === TRecorderVariant.CREATE_TEST) {
+					this.store.dispatch(setRecorderContext({
+						...recorderContext,
+						draftId: draftId
+					}))
+				}
+			}).catch((err) => {
+				console.log("Failed to create draft for this session", err);
+			})
+
 			this.window.loadURL(getAppURl() + "#/recorder");
 			this.handleGoFullScreen(null, { fullScreen: true });
 		} else {

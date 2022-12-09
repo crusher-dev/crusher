@@ -7,7 +7,7 @@ import { setSessionInfoMeta } from "../store/actions/app";
 import { resetRecorder, setIsWebViewInitialized, setRecorderContext } from "../store/actions/recorder";
 import { TRecorderState, TRecorderVariant } from "../store/reducers/recorder";
 import { getAppSessionMeta } from "../store/selectors/app";
-import { getIsStatusBarVisible, getRecorderState } from "../store/selectors/recorder";
+import { getAllSteps, getIsStatusBarVisible, getRecorderContext, getRecorderState } from "../store/selectors/recorder";
 import { IDeepLinkAction } from "../types";
 import {
 	goFullScreen,
@@ -35,6 +35,8 @@ import { clearAllToasts, clearToast, showToast } from "./ui/components/toasts";
 import { getStore } from "../store/configureStore";
 import { getCurrentLocalBuild } from "../store/selectors/builds";
 import { DesktopAppEventsEnum } from "@shared/modules/analytics/constants";
+import axios from "axios";
+import { updateDraftTest } from "./api/tests/draft.tests";
 
 const handleCompletion = async (store: Store, action: IDeepLinkAction, addNotification, hasCompletedSuccesfully: boolean) => {
 	// @TODO: Change `redirectAfterSuccess` to `isLocalBuild`
@@ -165,11 +167,28 @@ const App = () => {
 	const isStatusBarVisible = useSelector(getIsStatusBarVisible);
 	const recorderState = useSelector(getRecorderState);
 
+
+	const handleDraftInterval = async () => {
+		// Auto save
+		const allSteps = getAllSteps(store.getState() as any);
+		const recorderState = getRecorderState(store.getState() as any);
+		const recorderContext = getRecorderContext(store.getState() as any);
+
+		if (allSteps.length && recorderContext.draftId) {
+			console.log("Auto saving now...");
+			await axios(updateDraftTest({events: allSteps as any}, recorderContext.draftId!));
+			console.log("Auto saved");
+		}
+	};
+
+
 	React.useEffect(() => {
 		document.querySelector("html").style = "";
 	}, []);
 
 	React.useEffect(() => {
+		const draftInterval = setInterval(handleDraftInterval, 10000);
+
 		ipcRenderer.on("webview-initialized", () => {
 			store.dispatch(setIsWebViewInitialized(true));
 		});
@@ -183,6 +202,7 @@ const App = () => {
 		ipcRenderer.on("url-action",listener);
 
 		return () => {
+			clearInterval(draftInterval);
 			ipcRenderer.removeListener("url-action", listener);
 			ipcRenderer.removeAllListeners("renderer-ready");
 			ipcRenderer.removeAllListeners("webview-initialized");

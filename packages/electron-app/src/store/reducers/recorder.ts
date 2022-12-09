@@ -107,9 +107,10 @@ interface IRecorderReducer {
 	showStatusBar: boolean;
 
 	context:  {
-		variant: TRecorderVariant.CREATE_TEST,
-		origin: "app" | 'deeplink',
-		startedAt?: number, // <- Date.now()
+		draftId?: number;
+		variant: TRecorderVariant.CREATE_TEST;
+		origin: "app" | 'deeplink';
+		startedAt?: number; // <- Date.now()
 	}
 }
 
@@ -128,6 +129,7 @@ const initialState: IRecorderReducer = {
 
 	showStatusBar: true,
 	context:  {
+		draftId: null,
 		variant: TRecorderVariant.CREATE_TEST,
 		origin: "app",
 		startedAt: Date.now()

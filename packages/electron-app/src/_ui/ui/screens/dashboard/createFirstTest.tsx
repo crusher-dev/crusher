@@ -9,6 +9,9 @@ import { newButtonStyle } from "electron-app/src/_ui/constants/style";
 import { setRecorderContext } from "electron-app/src/store/actions/recorder";
 import { TRecorderVariant } from "electron-app/src/store/reducers/recorder";
 import { useStore } from "react-redux";
+import axios from "axios";
+import { saveNewDraftTest } from "electron-app/src/_ui/api/tests/draft.tests";
+import { getRecorderContext } from "electron-app/src/store/selectors/recorder";
 
 const CreateFirstTest = () => {
 	const navigate = useNavigate();
@@ -20,6 +23,21 @@ const CreateFirstTest = () => {
 			origin: "app",
 			startedAt: Date.now(),
 		}));
+
+		axios(saveNewDraftTest({name: "Untitled Test", events: []})).then((res) => {
+			const {draftId} = res.data;
+			const recorderContext = getRecorderContext(store.getState() as any);
+			if(recorderContext && recorderContext.variant === TRecorderVariant.CREATE_TEST) {
+				store.dispatch(setRecorderContext({
+					...recorderContext,
+					draftId: draftId
+				}))
+			}
+		}).catch((err) => {
+			console.log("Failed to create draft for this session", err);
+		})
+
+
 		navigate("/recorder");
 		goFullScreen();
 	}, []);

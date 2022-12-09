@@ -81,7 +81,7 @@ const StyledRadioItem = styled(ContextMenuPrimitive.RadioItem, {
 });
 const StyledSubTrigger = styled(ContextMenuPrimitive.SubTrigger, {
   '&[data-state="open"]': {
-    backgroundColor: violet.violet4,
+    backgroundColor: "#8735D9",
     color: violet.violet11
   },
   ...itemStyles

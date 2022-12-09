@@ -1,7 +1,6 @@
 import { css } from "@emotion/react";
 import { CloudCrusher } from "electron-app/src/lib/cloud";
 import { getCurrentSelectedProjct, getProxyState } from "electron-app/src/store/selectors/app";
-import { ProxyWarningContainer } from "electron-app/src/_ui/ui/containers/components/proxy-warning";
 import { sendSnackBarEvent } from "electron-app/src/_ui/ui/containers/components/toast";
 import { turnOnProxyServers } from "electron-app/src/utils/renderer";
 import React from "react";
@@ -57,18 +56,17 @@ const titleStyle = css`
 	font-size: 13rem;
 
 	color: rgba(255, 255, 255, 0.67);
-
 	display: flex;
 	align-items: center;
 	position: absolute;
 	top: 65%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-
 	display: flex;
 	align-items: center;
 	gap: 2px;
 `;
+
 const DashboardScreen = () => {
 	const [animationComplete, setAnimationComplete] = React.useState(false);
 	const { userInfo, projects } = useUser();
@@ -213,6 +211,7 @@ const DashboardScreen = () => {
 		{filteredTests.length < 3 && (<OnboardingSection />)}
 	</>;
 	const hasNotLoaded = isLoading || !animationComplete;
+	
 	return (
 		<CompactAppLayout
 			footer={

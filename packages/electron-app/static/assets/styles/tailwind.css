@@ -15,6 +15,10 @@ body {
 	text-rendering: optimizeLegibility;
 }
 
+body{
+	font-size: 13rem;
+}
+
 a {
 	cursor: default !important;
 }

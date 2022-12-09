@@ -25,7 +25,6 @@
     "@emoji-mart/react": "^1.0.1",
     "@emotion/babel-plugin": "^11.1.2",
     "@emotion/babel-preset-css-prop": "^10.0.27",
-    "@emotion/core": "^10.0.35",
     "@emotion/eslint-plugin": "^11.0.0",
     "@emotion/react": "^11.4.0",
     "@medv/finder": "^2.0.0",

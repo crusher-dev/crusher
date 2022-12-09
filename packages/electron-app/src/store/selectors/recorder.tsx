@@ -68,3 +68,5 @@ export const getTotalTimeSpentInRecorder = (state: iReduxState) => {
 	const recorderContext = getRecorderContext(state);
 	return currentTime - recorderContext.startedAt;
 }
+
+export const getCurrentDraftTest = (state: iReduxState) => state.recorder.context.draftId;

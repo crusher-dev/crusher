@@ -59,6 +59,7 @@ import { chalkShared, _log } from "@shared/modules/logger";
 import { DesktopAppEventsEnum } from "@shared/modules/analytics/constants";
 import _ from "lodash";
 import { saveNewDraftTest } from "../_ui/api/tests/draft.tests";
+import { generateRandomTestName } from "../utils/renderer";
 
 export class AppWindow {
 	private window: Electron.BrowserWindow;
@@ -352,12 +353,14 @@ export class AppWindow {
 				startedAt: Date.now()
 			}));
 
-			axios(saveNewDraftTest({name: "Untitled Test", events: []})).then((res) => {
+			const testName = generateRandomTestName();
+			axios(saveNewDraftTest({name: testName, events: []})).then((res) => {
 				const {draftId} = res.data;
 				const recorderContext = getRecorderContext(this.store.getState() as any);
 				if(recorderContext && recorderContext.variant === TRecorderVariant.CREATE_TEST) {
 					this.store.dispatch(setRecorderContext({
 						...recorderContext,
+						testName,
 						draftId: draftId
 					}))
 				}

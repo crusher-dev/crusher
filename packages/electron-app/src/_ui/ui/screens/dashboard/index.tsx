@@ -3,7 +3,7 @@ import { CloudCrusher } from "electron-app/src/lib/cloud";
 import { getCurrentSelectedProjct, getProxyState } from "electron-app/src/store/selectors/app";
 import { ProxyWarningContainer } from "electron-app/src/_ui/ui/containers/components/proxy-warning";
 import { sendSnackBarEvent } from "electron-app/src/_ui/ui/containers/components/toast";
-import { turnOnProxyServers } from "electron-app/src/utils/renderer";
+import { generateRandomTestName, turnOnProxyServers } from "electron-app/src/utils/renderer";
 import React from "react";
 import { useStore } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -26,6 +26,11 @@ import { linkOpen } from "electron-app/src/utils/url";
 import { resolveToFrontEndPath } from "@shared/utils/url";
 import { ProxyConfigModifedToast } from "../projectList/proxyConfigModifiedToast";
 import { OnboardingSection } from "./testList/onboarding";
+import axios from "axios";
+import { saveNewDraftTest } from "electron-app/src/_ui/api/tests/draft.tests";
+import { getRecorderContext } from "electron-app/src/store/selectors/recorder";
+import { TRecorderVariant } from "electron-app/src/store/reducers/recorder";
+import { setRecorderContext } from "electron-app/src/store/actions/recorder";
 
 const TitleComponent = ({ project }) => {
 	const { name, id } = project;
@@ -129,7 +134,29 @@ const DashboardScreen = () => {
 		}
 	}, [projects]);
 
-	const handleCreateTest = React.useCallback(() => {
+	const handleCreateTest = React.useCallback(async () => {
+		store.dispatch(setRecorderContext({
+			variant: TRecorderVariant.CREATE_TEST,
+			origin: "app",
+			startedAt: Date.now(),
+		}));
+
+		const testName = generateRandomTestName();
+		await axios(saveNewDraftTest({name: testName, events: []})).then((res) => {
+			const {draftId} = res.data;
+			const recorderContext = getRecorderContext(store.getState() as any);
+			if(recorderContext && recorderContext.variant === TRecorderVariant.CREATE_TEST) {
+				store.dispatch(setRecorderContext({
+					...recorderContext,
+					testName,
+					draftId: draftId
+				}))
+			}
+		}).catch((err) => {
+			console.log("Failed to create draft for this session", err);
+		})
+
+
 		navigate("/recorder");
 		goFullScreen();
 	}, []);

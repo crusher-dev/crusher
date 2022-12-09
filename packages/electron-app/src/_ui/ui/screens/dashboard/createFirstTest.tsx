@@ -12,24 +12,27 @@ import { useStore } from "react-redux";
 import axios from "axios";
 import { saveNewDraftTest } from "electron-app/src/_ui/api/tests/draft.tests";
 import { getRecorderContext } from "electron-app/src/store/selectors/recorder";
+import { generateRandomTestName } from "electron-app/src/utils/renderer";
 
 const CreateFirstTest = () => {
 	const navigate = useNavigate();
 	const store = useStore();
 
-	const handleCreateTest = React.useCallback(() => {
+	const handleCreateTest = React.useCallback(async () => {
 		store.dispatch(setRecorderContext({
 			variant: TRecorderVariant.CREATE_TEST,
 			origin: "app",
 			startedAt: Date.now(),
 		}));
 
-		axios(saveNewDraftTest({name: "Untitled Test", events: []})).then((res) => {
+		const testName = generateRandomTestName();
+		await axios(saveNewDraftTest({name: testName, events: []})).then((res) => {
 			const {draftId} = res.data;
 			const recorderContext = getRecorderContext(store.getState() as any);
 			if(recorderContext && recorderContext.variant === TRecorderVariant.CREATE_TEST) {
 				store.dispatch(setRecorderContext({
 					...recorderContext,
+					testName,
 					draftId: draftId
 				}))
 			}

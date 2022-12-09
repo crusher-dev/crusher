@@ -41,15 +41,16 @@ const getLetterSpacing = (fontSize) => {
 /**
  * Crusher Text component.
  */
-export const Text: React.FC<TextProps> = (props: TextProps) => {
+export const Text: React.FC<TextProps> = React.forwardRef((props: TextProps,ref) => {
 	const { children, fontSize, weight, className, color, letterSpacing = true, ...otherProps } = props;
 	return (
 		<span
 			className={`font-gilroy font-${weight} ${className}`}
+			ref={ref}
 			css={css`
 				font-size: ${fontSize}rem;
 				color: ${color};
-				${otherProps.onClick && `cursor:default`}
+				${otherProps.onClick && `cursor:default;`}
 				letter-spacing: ${!!letterSpacing ? getLetterSpacing(fontSize).letterSpacing : "0"}
 			`}
 			{...otherProps}
@@ -57,6 +58,6 @@ export const Text: React.FC<TextProps> = (props: TextProps) => {
 			{children}
 		</span>
 	);
-};
+});
 
 Text.defaultProps = TextDefaultProps;

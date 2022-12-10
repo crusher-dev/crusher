@@ -70,5 +70,5 @@ img {
 }
 
 *{
-	transition: all .1s ease-in;
+	transition: color .1s ease-in;
 }

@@ -75,7 +75,7 @@ export class AppWindow {
 	private _rendererReadyTime: number | null = null;
 
 	private minWidth = 1028;
-	private minHeight = 680;
+	private minHeight = 688;
 	private savedWindowState: any = null;
 
 	private shouldMaximizeOnShow = true;

@@ -73,6 +73,7 @@
     "figma-design-scaler": "link:/home/utkarsh/crusher/figma-scale",
     "file-loader": "^6.2.0",
     "file-url": "^4.0.0",
+    "framer-motion": "^7.6.19",
     "fuse.js": "^6.6.2",
     "history": "^5.3.0",
     "html-tags": "^3.1.0",

@@ -27,7 +27,7 @@ import { resolveToFrontEndPath } from "@shared/utils/url";
 import { ProxyConfigModifedToast } from "../projectList/proxyConfigModifiedToast";
 import { OnboardingSection } from "./testList/onboarding";
 import axios from "axios";
-import { saveNewDraftTest } from "electron-app/src/_ui/api/tests/draft.tests";
+import { getAllDrafts, saveNewDraftTest } from "electron-app/src/_ui/api/tests/draft.tests";
 import { getRecorderContext } from "electron-app/src/store/selectors/recorder";
 import { TRecorderVariant } from "electron-app/src/store/reducers/recorder";
 import { setRecorderContext } from "electron-app/src/store/actions/recorder";

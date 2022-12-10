@@ -36,6 +36,18 @@ const saveNewDraftTest: (payload: ISaveDraftPayload) => AxiosRequestConfig = cre
 	} as AxiosRequestConfig;
 }, true);
 
+const getAllDrafts = createAuthorizedRequestFunc((authorizationOptions: any) => {
+    const store = getStore();
+    const selectedProject = getCurrentSelectedProjct(store.getState() as any);
+    if (!selectedProject) return null;
+
+    return {
+        url: resolveToBackend(`/projects/${selectedProject}/drafts`),
+        method: "GET",
+        ...authorizationOptions,
+    } as AxiosRequestConfig;
+}, true);
+
 const updateDraftTest: (payload: ISaveDraftPayload, id: number) => AxiosRequestConfig = createAuthorizedRequestFunc((authorizationOptions: any, payload: ISaveDraftPayload, draftId: number) => {
     const store = getStore();
     const selectedProject = getCurrentSelectedProjct(store.getState() as any);
@@ -49,5 +61,4 @@ const updateDraftTest: (payload: ISaveDraftPayload, id: number) => AxiosRequestC
     } as AxiosRequestConfig;
 }, true);
 
-
-export { saveNewDraftTest, updateDraftTest };
+export { saveNewDraftTest, updateDraftTest, getAllDrafts };

@@ -16,6 +16,8 @@ import { editInputAtom } from "electron-app/src/_ui/store/jotai/testsPage";
 import { setRecorderContext } from "electron-app/src/store/actions/recorder";
 import { useStore } from "react-redux";
 import { TRecorderVariant } from "electron-app/src/store/reducers/recorder";
+import useRequest from "electron-app/src/_ui/utils/useRequest";
+import { getAllDrafts } from "electron-app/src/_ui/api/tests/draft.tests";
 
 const EditableTestName = ({ testName, testId }) => {
 	const [testEditName, setTestEditName] = useAtom(editInputAtom);
@@ -281,6 +283,8 @@ const MULTI_SELECTED_MENU = [
 ];
 
 const TestList = ({ tests, deleteTest }) => {
+	const { data: draftTests } = useRequest( getAllDrafts, { refreshInterval: 5000 });
+
 	const [, setTestEditName] = useAtom(editInputAtom);
 	const navigate = useNavigate();
 	const store = useStore();
@@ -396,7 +400,20 @@ const TestList = ({ tests, deleteTest }) => {
 		[ContextMenuTypeEnum.SINGLE]: { callback: handleRightCallback, menuItems: SELECTED_TESTS_MENU },
 		[ContextMenuTypeEnum.MULTI]: { callback: handleRightCallback, menuItems: MULTI_SELECTED_MENU },
 	};
-	return <ListBox contextMenu={contextMenu} selectedHeaderActions={SelectedTestActions} items={items} />;
+	return (
+		<div>
+			{draftTests?.length ? <div className={"px-20"} css={css`color: #fff; font-size: 14rem;`}>
+				<h4>{draftTests.length} drafts</h4>
+				{draftTests.map((draft) => {
+					return <div key={draft.id} css={css`display: flex; align-items: center; color: red;`}>
+						<div css={css`margin-right: 10rem;`}>{draft.name}</div>
+						<div css={css`margin-right: 10rem;`}>{draft.id}</div>
+						</div>
+				})}
+			</div>: null}
+			<ListBox contextMenu={contextMenu} selectedHeaderActions={SelectedTestActions} items={items} />
+		</div>
+	);
 };
 
 export { TestList };

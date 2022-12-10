@@ -71,10 +71,16 @@ const getColor = (color: string, impact: string): { main: Color; hover: Color } 
 			break;
 		case "secondary-green":
 			return {
-				main: { background: "#A5EA6F", border: "#A5EA6F", color: "#333F24" },
-				hover: { background: "#A5EA6F", border: "#A5EA6F", color: "#333F24" },
+				main: { background: "#89DB47", border: "#89DB47", color: "#333F24" },
+				hover: { background: "#89DB47", border: "#89DB47", color: "#333F24" },
 			};
 			break;
+			case "secondary-cyan":
+				return {
+					main: { background: "#3095CE", border: "#3095CE", color: "#333F24" },
+					hover: { background: "#3095CE", border: "#3095CE", color: "#333F24" },
+				};
+				break;
 		case "tertiary-white-outline":
 			return {
 				main: { background: "rgba(0,0,0,0)", border: "rgba(255, 255, 255, 0.66)", color: "#fff" },
@@ -116,79 +122,6 @@ const getColor = (color: string, impact: string): { main: Color; hover: Color } 
 			break;
 	}
 
-	// const finalColor = color === "primary" ? color + "-" + impact : color;
-
-	switch (finalColor) {
-		case "primary-high":
-			return {
-				main: { background: "#b341f9", border: "#b341f9", color: "#fff" },
-				hover: { background: "#b341f9", border: "#b341f9", color: "#fff" },
-			};
-			break;
-		case "primary-medium":
-			return {
-				main: { background: "#917DFA", border: "#917DFA", color: "#171522" },
-				hover: { background: "#917DFA", border: "#917DFA", color: "#171522" },
-			};
-			break;
-		case "primary-low":
-			return {
-				main: { background: "rgba(0,0,0,0)", border: "#917DFA", color: "#917DFA" },
-				hover: { background: "rgba(0,0,0,0)", border: "#917DFA", color: "#917DFA" },
-			};
-			break;
-		case "secondary-pink":
-			return {
-				main: { background: "#F471CF", border: "#F471CF", color: "#fff" },
-				hover: { background: "#F471CF", border: "#F471CF", color: "#fff" },
-			};
-			break;
-		case "secondary-green":
-			return {
-				main: { background: "#A5EA6F", border: "#A5EA6F", color: "#333F24" },
-				hover: { background: "#A5EA6F", border: "#A5EA6F", color: "#333F24" },
-			};
-			break;
-		case "tertiary-white-outline":
-			return {
-				main: { background: "rgba(0,0,0,0)", border: "rgba(255, 255, 255, 0.66)", color: "#fff" },
-				hover: { background: "rgba(0,0,0,0)", border: "rgba(255, 255, 255, 0.66)", color: "#fff" },
-			};
-			break;
-		case "tertiary-white":
-			return {
-				main: { background: "#fff", border: "#fff", color: "#0B0B0D" },
-				hover: { background: "#fff", border: "#fff", color: "#0B0B0D" },
-			};
-			break;
-		case "tertiary-dark":
-			return {
-				main: { background: "#0B0B0D", border: "#292d33", color: "#fff" },
-				hover: { background: "#0B0B0D", border: "#292d33", color: "#fff" },
-			};
-			break;
-		case "tertiary":
-			return {
-				main: { background: "#1E242C", border: "#353e4b", color: "#fff" },
-				hover: { background: "#1E242C", border: "#353e4b", color: "#fff" },
-			};
-			break;
-		case "danger":
-			return {
-				main: {
-					background: colors.RED[600],
-					border: colors.RED[600], color: "#fff"
-				},
-				hover: { background: colors.RED[700], border: colors.RED[700], color: "#fff" },
-			};
-			break;
-		default:
-			return {
-				main: { background: "#8860DE", border: "#8860DE", color: "#fff" },
-				hover: { background: "#8860DE", border: "#8860DE", color: "#fff" },
-			};
-			break;
-	}
 };
 
 type primaryButton = "primary";

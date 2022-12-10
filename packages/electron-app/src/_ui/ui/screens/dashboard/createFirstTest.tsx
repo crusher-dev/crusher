@@ -26,7 +26,7 @@ const CreateFirstTest = () => {
 		}));
 
 		const testName = generateRandomTestName();
-		await axios(saveNewDraftTest({name: testName, events: []})).then((res) => {
+		axios(saveNewDraftTest({name: testName, events: []})).then((res) => {
 			const {draftId} = res.data;
 			const recorderContext = getRecorderContext(store.getState() as any);
 			if(recorderContext && recorderContext.variant === TRecorderVariant.CREATE_TEST) {

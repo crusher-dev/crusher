@@ -1,4 +1,4 @@
-import { Authorized, Body, Delete, Get, JsonController, Param, Post, Put } from "routing-controllers";
+import { Authorized, Body, CurrentUser, Delete, Get, JsonController, Param, Post, Put } from "routing-controllers";
 import { Inject, Service } from "typedi";
 import { ProjectEnvironmentController } from "../projects/environments/controller";
 import { ICreateDraftTestsPayload, IUpdateDraftTestsPayload } from "./interface";
@@ -12,8 +12,18 @@ class DraftTestsController {
 
     @Authorized()
     @Post("/projects/:project_id/drafts")
-    async createDraftTest(@Param("project_id") projectId: number, @Body() payload: ICreateDraftTestsPayload) {
-        return this.draftTestsService.createDraftTest({ ...payload, projectId });
+    async createDraftTest(@CurrentUser({require: true}) user, @Param("project_id") projectId: number, @Body() payload: ICreateDraftTestsPayload) {
+        const { user_id: userId } = user;
+
+        const insertRecord = await this.draftTestsService.createDraftTest({ 
+            ...payload,
+            projectId,
+            userId
+        });
+
+        return {
+            draftId: insertRecord.insertId,
+        }
     }
 
     @Authorized()

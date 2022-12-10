@@ -42,7 +42,7 @@ const updateDraftTest: (payload: ISaveDraftPayload, id: number) => AxiosRequestC
     if (!selectedProject) return null;
 
     return {
-        url: resolveToBackend(`/projects/${selectedProject}/drafts`),
+        url: resolveToBackend(`/drafts/${draftId}`),
         method: "PUT",
         data: payload,
         ...authorizationOptions,

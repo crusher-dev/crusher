@@ -35,7 +35,19 @@ class DraftTestsService {
     }
 
     async updateDraftById(draftId: number, payload: KeysToCamelCase<IUpdateDraftTestsPayload>) {
-        return this.dbManager.update("UPDATE public.draft_tests SET name = ?, events = ? WHERE id = ?", [payload.name, JSON.stringify(payload.events), draftId]);
+        let query = "UPDATE public.draft_tests SET";
+        let params = [];
+        if (payload.name) {
+            query += ` name = ?,`;
+            params.push(payload.name);
+        }
+        if (payload.events) {
+            query += ` events = ?`;
+            params.push(JSON.stringify(payload.events));
+        }
+        query += ` WHERE id = ?`;
+        params.push(draftId);
+        return this.dbManager.update(query, params);
     }
 }
 

@@ -449,9 +449,29 @@ const ClipboardIcon = (props) => (
   )
   
 
+ function NextIcon(props) {
+	return (
+	  <svg
+		width={10}
+		height={10}
+		fill="none"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	  >
+		<path
+		  d="M5.333 1.583h0a.413.413 0 000 .583h0l2.421 2.421H1.25a.413.413 0 000 .825h6.504l-2.42 2.42a.412.412 0 10.584.583l3.124-3.124h0a.412.412 0 000-.583h0L5.917 1.583h0a.412.412 0 00-.583 0z"
+		  fill="#000"
+		  stroke="#000"
+		  strokeWidth={0.2}
+		/>
+	  </svg>
+	);
+  }
+
 export {
 	ClipboardIcon,
 	BackIconV3,
+	NextIcon,
 	DisabledCloudIcon,
 	CloudIcon,
 	NotepadIcon,

@@ -165,6 +165,11 @@ const DashboardScreen = () => {
 
 		navigate("/recorder");
 		goFullScreen();
+		navigate({
+				pathname: '/recorder',
+				search: '?firstTest=true',
+			  });
+	
 	}, []);
 
 	const handleRunCallback = (id) => {

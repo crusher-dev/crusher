@@ -243,15 +243,20 @@ const DashboardScreen = () => {
 				<div css={[headingCss, hoverTab, currentTab === ITestTypeEnum.DRAFT ? notSelectedTextCss : undefined]} onClick={setCurrentTab.bind(this, ITestTypeEnum.SAVED)}>
 					{filteredTests?.length} tests
 				</div>
-				<div css={[hoverTab]} className={"flex items-center ml-16"} onClick={setCurrentTab.bind(this, ITestTypeEnum.DRAFT)}>
-					<ClipboardIcon css={[css`path { fill: #4A4A4A}`, currentTab === ITestTypeEnum.DRAFT ? css`path { fill: rgba(255, 255, 255, 0.83) }` : undefined]} />
-					<span className={"ml-8"} css={[draftHeadingCss, currentTab === ITestTypeEnum.SAVED ? notSelectedTextCss : undefined]}>{draftTests.length} drafts</span>
-				</div>
+				{draftTests?.length ? (
+					<div css={[hoverTab]} className={"flex items-center ml-16"} onClick={setCurrentTab.bind(this, ITestTypeEnum.DRAFT)}>
+						<ClipboardIcon css={[css`path { fill: #4A4A4A}`, currentTab === ITestTypeEnum.DRAFT ? css`path { fill: rgba(255, 255, 255, 0.83) }` : undefined]} />
+						<span className={"ml-8"} css={[draftHeadingCss, currentTab === ITestTypeEnum.SAVED ? notSelectedTextCss : undefined]}>{draftTests.length} drafts</span>
+					</div>
+				) : null}
 			</div>
 	);
 
+	const filteredDraftTests = draftTests?.map((draft) => {
+		return {...draft, testName: draft.name};
+	});
 	const testContent = filteredTests.length && currentTab === ITestTypeEnum.SAVED ? <TestList listHeading={listHeading} deleteTest={handleTestDelete} tests={filteredTests} /> : null;
-	const draftContent = (draftTests?.length && currentTab === ITestTypeEnum.DRAFT ? <TestList listHeading={listHeading} deleteTest={handleTestDelete} tests={draftTests} />: null);
+	const draftContent = (draftTests?.length && currentTab === ITestTypeEnum.DRAFT ? <TestList listHeading={listHeading} deleteTest={handleTestDelete} tests={filteredDraftTests} />: null);
 	
 
 

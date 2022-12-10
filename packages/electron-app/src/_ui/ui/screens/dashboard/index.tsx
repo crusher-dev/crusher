@@ -31,6 +31,7 @@ import { getAllDrafts, saveNewDraftTest } from "electron-app/src/_ui/api/tests/d
 import { getRecorderContext } from "electron-app/src/store/selectors/recorder";
 import { TRecorderVariant } from "electron-app/src/store/reducers/recorder";
 import { setRecorderContext } from "electron-app/src/store/actions/recorder";
+import { ClipboardIcon } from "electron-app/src/_ui/constants/icons";
 
 const TitleComponent = ({ project }) => {
 	const { name, id } = project;
@@ -74,10 +75,18 @@ const titleStyle = css`
 	align-items: center;
 	gap: 2px;
 `;
+
+enum ITestTypeEnum {
+	"DRAFT" = "DRAFT",
+	"SAVED" = "SAVED",
+}
 const DashboardScreen = () => {
+	const [currentTab, setCurrentTab] = React.useState<ITestTypeEnum>(ITestTypeEnum.DRAFT);
 	const [animationComplete, setAnimationComplete] = React.useState(false);
 	const { userInfo, projects } = useUser();
 	const { data: tests, mutate } = useRequest(userInfo?.isUserLoggedIn ? getSelectedProjectTestsRequest : () => null, { refreshInterval: 5000 });
+	const { data: draftTests } = useRequest(getAllDrafts, { refreshInterval: 5000 });
+
 	const [selectedProject, setSelectedProject] = React.useState(null);
 	const [showProxyWarning, setShowProxyWarning] = React.useState({ show: false, testId: null, startUrl: null });
 	const { addNotification } = useBuildNotifications();
@@ -142,10 +151,10 @@ const DashboardScreen = () => {
 		}));
 
 		const testName = generateRandomTestName();
-		axios(saveNewDraftTest({name: testName, events: []})).then((res) => {
-			const {draftId} = res.data;
+		axios(saveNewDraftTest({ name: testName, events: [] })).then((res) => {
+			const { draftId } = res.data;
 			const recorderContext = getRecorderContext(store.getState() as any);
-			if(recorderContext && recorderContext.variant === TRecorderVariant.CREATE_TEST) {
+			if (recorderContext && recorderContext.variant === TRecorderVariant.CREATE_TEST) {
 				store.dispatch(setRecorderContext({
 					...recorderContext,
 					testName,
@@ -229,14 +238,33 @@ const DashboardScreen = () => {
 		})
 		: [];
 
-	const testContent = filteredTests.length ? <TestList deleteTest={handleTestDelete} tests={filteredTests} /> : <CreateFirstTest />;
+	const listHeading = (
+			<div className={"flex items-center"} css={css`color: #fff; font-size: 14rem;`}>
+				<div css={[headingCss, hoverTab, currentTab === ITestTypeEnum.DRAFT ? notSelectedTextCss : undefined]} onClick={setCurrentTab.bind(this, ITestTypeEnum.SAVED)}>
+					{filteredTests?.length} tests
+				</div>
+				<div css={[hoverTab]} className={"flex items-center ml-16"} onClick={setCurrentTab.bind(this, ITestTypeEnum.DRAFT)}>
+					<ClipboardIcon css={[css`path { fill: #4A4A4A}`, currentTab === ITestTypeEnum.DRAFT ? css`path { fill: rgba(255, 255, 255, 0.83) }` : undefined]} />
+					<span className={"ml-8"} css={[draftHeadingCss, currentTab === ITestTypeEnum.SAVED ? notSelectedTextCss : undefined]}>{draftTests.length} drafts</span>
+				</div>
+			</div>
+	);
+
+	const testContent = filteredTests.length && currentTab === ITestTypeEnum.SAVED ? <TestList listHeading={listHeading} deleteTest={handleTestDelete} tests={filteredTests} /> : null;
+	const draftContent = (draftTests?.length && currentTab === ITestTypeEnum.DRAFT ? <TestList listHeading={listHeading} deleteTest={handleTestDelete} tests={draftTests} />: null);
+	
+
+
 	const content = <>
 		{
 			showProxyWarning.show ? (
 				<ProxyConfigModifedToast onClose={() => setShowProxyWarning(false)} />
 			) : ""
 		}
+		
 		{testContent}
+		{draftContent}
+		{!testContent && !draftContent ? (<CreateFirstTest/>) : null}
 		{filteredTests.length < 3 && (<OnboardingSection />)}
 	</>;
 	const hasNotLoaded = isLoading || !animationComplete;
@@ -260,6 +288,21 @@ const DashboardScreen = () => {
 	);
 };
 
+const hoverTab = css`
+	&:hover {
+		opacity: 0.8;
+	}
+`;
+const headingCss = css`
+font-family: 'Gilroy';
+font-style: normal;
+font-weight: 400;
+font-size: 14rem;
+letter-spacing: 0.03em;
+
+color: rgba(255, 255, 255, 0.83);
+
+`;
 const headerComponentCss = css`
 	display: flex;
 	position: relative;
@@ -312,5 +355,19 @@ const createTestCss = css`
 	}
 `;
 
+const draftHeadingCss = css`
+	font-family: Gilroy;
+	font-style: normal;
+	font-weight: 400;
+	font-size: 14rem;
+	letter-spacing: 0.03em;
+	color: rgba(255, 255, 255, 0.83);
+
+`;
+
+const notSelectedTextCss = css`
+color: #A6A6A6;
+
+`;
 export { DashboardScreen };
 

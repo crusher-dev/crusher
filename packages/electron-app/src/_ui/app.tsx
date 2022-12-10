@@ -16,11 +16,9 @@ import {
 	performReplayTestUrlAction,
 	performSaveLocalBuild,
 	performSteps,
-	performTrackEvent,
 	resetStorage,
 } from "./commands/perform";
 import DeviceFrame from "./ui/containers/components/device-frame";
-import { InfoOverLay } from "./ui/containers/components/overlays/infoOverlay";
 import { Sidebar } from "./ui/screens/recorder/sidebar";
 import { StatusBar } from "./ui/containers/components/status-bar";
 import { sendSnackBarEvent } from "./ui/containers/components/toast";
@@ -32,9 +30,10 @@ import { useAtom } from "jotai";
 import { isStepHoverAtom } from "./store/jotai/testsPage";
 import { CloudCrusher } from "../lib/cloud";
 import { clearAllToasts, clearToast, showToast } from "./ui/components/toasts";
-import { getStore } from "../store/configureStore";
 import { getCurrentLocalBuild } from "../store/selectors/builds";
-import { DesktopAppEventsEnum } from "@shared/modules/analytics/constants";
+import { useSearchParams } from "react-router-dom";
+
+import {motion} from "framer-motion"
 
 const handleCompletion = async (store: Store, action: IDeepLinkAction, addNotification, hasCompletedSuccesfully: boolean) => {
 	// @TODO: Change `redirectAfterSuccess` to `isLocalBuild`
@@ -161,6 +160,7 @@ const handleUrlAction = (store: Store, addNotification, event: Electron.IpcRende
 
 const App = () => {
 	const { addNotification } = useBuildNotifications();
+	const [searchParams, setSearchParams] = useSearchParams();
 	const store = useStore();
 	const isStatusBarVisible = useSelector(getIsStatusBarVisible);
 	const recorderState = useSelector(getRecorderState);
@@ -206,9 +206,9 @@ const App = () => {
 	}, [recorderState]);
 
 	return (
-		// <Wrapper figmaUrl={"https://www.figma.com/proto/MsJZCnY5NvrDF4kL1oczZq/Crusher-%7C-Aug?node-id=2305%3A6559&scaling=min-zoom&page-id=2305%3A5930"}>
-		// </Wrapper>
-		<div>
+		<motion.div 
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1  }}>
 			<div css={dragableStyle} className={"drag"}></div>
 			<div css={contentStyle}>
 				<Sidebar css={sidebarCss} />
@@ -221,7 +221,7 @@ const App = () => {
 			</div>
 			<Global styles={globalCss} />
 			{/* <InfoOverLay /> */}
-		</div>
+		</motion.div>
 	);
 };
 

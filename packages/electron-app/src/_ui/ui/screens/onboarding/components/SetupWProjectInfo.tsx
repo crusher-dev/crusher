@@ -2,11 +2,14 @@
 import { Button, TextBlock } from "@dyson/components/atoms"
 import { Heading } from "@dyson/components/atoms/heading/Heading"
 import { css } from "@emotion/react"
+import { goFullScreen } from "electron-app/src/_ui/commands/perform";
 import { motion } from "framer-motion";
 import { useAtom,atom } from "jotai";
+import { useNavigate } from "react-router-dom";
 import { ONBOARDING_STAGE_ATOM } from "..";
 import { CTABar, HeaderBlock } from "./Common";
 
+import React from "react";
 
 const isDevAtom = atom(null)
 const isLowCodePref = atom(null)
@@ -33,7 +36,6 @@ const TestingPreference = ()=>{
 }
 
 const DirSelector = ()=>{
-    const [isDev, setIsDec] = useAtom(isLowCodePref)
     
     return (
         <div className="flex pointer" css={css`gap: 8px; :hover{text-decoration: underline;}`}>
@@ -61,6 +63,12 @@ const formItems = [
 
 export const PROJECT_INFO = ()=>{
     const [_, setOnboarding] = useAtom(ONBOARDING_STAGE_ATOM)
+    const navigate = useNavigate()
+
+    const handleCreateTest = React.useCallback(() => {
+        navigate("/recorder");
+        goFullScreen();
+    }, []);
     return (
         <div>
          <HeaderBlock title="setup project" desc={"you'll be able to create test after this"}/>
@@ -87,7 +95,7 @@ export const PROJECT_INFO = ()=>{
 
             
     </motion.div>
-    <CTABar onClick={setOnboarding.bind(this,3)} btnText="setup project"/>
+    <CTABar onClick={handleCreateTest.bind(this)} btnText="setup project"/>
     </div>)
 
 }

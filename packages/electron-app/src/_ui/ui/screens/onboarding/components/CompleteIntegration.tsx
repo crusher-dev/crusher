@@ -41,7 +41,7 @@ const DirSelector = ()=>{
 
 const formItems = [
     {
-        heading: (<>setup with CI?</>),
+        heading: (<>run with CI</>),
             desc: "we'll customize your experience",
             formComponent: <DevBox/>
     },  {

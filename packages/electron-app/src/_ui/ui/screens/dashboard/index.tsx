@@ -128,8 +128,13 @@ const DashboardScreen = () => {
 	}, [projects]);
 
 	const handleCreateTest = React.useCallback(() => {
-		navigate("/recorder");
+
 		goFullScreen();
+		navigate({
+				pathname: '/recorder',
+				search: '?firstTest=true',
+			  });
+	
 	}, []);
 
 	const handleRunCallback = (id) => {

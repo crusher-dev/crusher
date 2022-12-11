@@ -14,6 +14,7 @@ interface IProps {
 	selectedHeaderActions: any;
 	items?: { content: any; id: any }[];
 	contextMenu?: { [type: string]: { callback?: any; menuItems?: any } };
+	listHeading?: any;
 }
 const ListBox = ({ className, listHeading, contextMenu, selectedHeaderActions: SelectedHeaderActions, items, ...props }: IProps) => {
 	const { selectedList, selectItem, isItemSelected, resetSelected, toggleSelectAll, toggleSelectItem } = useSelectableList();

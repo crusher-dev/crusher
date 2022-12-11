@@ -1,36 +1,32 @@
 import { css } from "@emotion/react";
-import { CloudCrusher } from "electron-app/src/lib/cloud";
 import { getCurrentSelectedProjct, getProxyState } from "electron-app/src/store/selectors/app";
-import { sendSnackBarEvent } from "electron-app/src/_ui/ui/containers/components/toast";
 import { generateRandomTestName, turnOnProxyServers } from "electron-app/src/utils/renderer";
 import React from "react";
 import { useStore } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { getSelectedProjectTestsRequest } from "../../../../api/tests/tests.request";
 import { useUser } from "../../../hooks/user";
 import { LoadingProgressBar } from "../../containers/common/LoadingProgressBar";
 import { CompactAppLayout } from "../../layout/CompactAppLayout";
-import useRequest from "../../../utils/useRequest";
-import { CreateFirstTest } from "./createFirstTest";
-import { TestList } from "./testsList";
 import { ButtonDropdown } from "../../components/buttonDropdown";
 import { AddIconV3 } from "electron-app/src/_ui/constants/old_icons";
 import { goFullScreen, performRunTests } from "electron-app/src/ipc/perform";
 import { StickyFooter } from "../../containers/common/stickyFooter";
 import { Footer } from "../../containers/common/footer";
-import { useBuildNotifications } from "../../../hooks/tests";
+import { useBuildNotifications, useProjectTests } from "../../../hooks/tests";
 import { triggerLocalBuild } from "../../../utils/recorder";
 import { LinkPointer } from "../../components/LinkPointer";
 import { linkOpen } from "electron-app/src/utils/url";
 import { resolveToFrontEndPath } from "@shared/utils/url";
 import { ProxyConfigModifedToast } from "../projectList/proxyConfigModifiedToast";
-import { OnboardingSection } from "./testList/onboarding";
+import { OnboardingSection } from "./containers/onboarding";
 import axios from "axios";
-import { getAllDrafts, saveNewDraftTest } from "electron-app/src/api/tests/draft.tests";
+import { saveNewDraftTest } from "electron-app/src/api/tests/draft.tests";
 import { getRecorderContext } from "electron-app/src/store/selectors/recorder";
 import { TRecorderVariant } from "electron-app/src/store/reducers/recorder";
 import { setRecorderContext } from "electron-app/src/store/actions/recorder";
-import { ClipboardIcon } from "electron-app/src/_ui/constants/icons";
+import { DashboardTestsList } from "./list";
+import { useCallback } from "react";
+import { CreateFirstTest } from "./containers/createFirstTest";
 
 const TitleComponent = ({ project }) => {
 	const { name, id } = project;
@@ -73,72 +69,28 @@ const titleStyle = css`
 	gap: 2px;
 `;
 
-enum ITestTypeEnum {
-	"DRAFT" = "DRAFT",
-	"SAVED" = "SAVED",
-}
-const DashboardScreen = () => {
-	const [currentTab, setCurrentTab] = React.useState<ITestTypeEnum>(ITestTypeEnum.SAVED);
-	const [animationComplete, setAnimationComplete] = React.useState(false);
-	const { userInfo, projects } = useUser();
-	const { data: tests, mutate } = useRequest(userInfo?.isUserLoggedIn ? getSelectedProjectTestsRequest : () => null, { refreshInterval: 5000 });
-	const { data: draftTests } = useRequest(getAllDrafts, { refreshInterval: 5000 });
 
-	const [selectedProject, setSelectedProject] = React.useState(null);
-	const [showProxyWarning, setShowProxyWarning] = React.useState({ show: false, testId: null, startUrl: null });
+const useDashboardHeader = () => {
+	const { tests } = useProjectTests();
 	const { addNotification } = useBuildNotifications();
 
-	const navigate = useNavigate();
 	const store = useStore();
+	const navigate = useNavigate();
 
-	React.useEffect(() => {
-		const interval = setTimeout(setAnimationComplete.bind(this, true), 200);
-
-		return () => {
-			clearTimeout(interval);
-		}
-	}, []);
-
-	const handleTestDelete = React.useCallback(
-		(idArr: any[]) => {
-			if (!(window as any).deletedTest) {
-				(window as any).deletedTest = [];
-			}
-			(window as any).deletedTest.push(...idArr);
-			console.log("Id arr", idArr);
-			mutate({
-				...tests,
-				list: tests.list.filter((test) => {
-					return !((window as any).deletedTest || []).includes(test.id);
-				}),
+	const handleRunCallback = (id) => {
+		if (id === "RUN_CLOUD") {
+			performRunTests(null).then((buildRes) => {
+				addNotification({ id: buildRes.buildId });
 			});
-			for (let id of idArr) {
-				CloudCrusher.deleteTest(id).catch(() => {
-					sendSnackBarEvent({ message: "Error deleting test", type: "error" });
-				});
-			}
-		},
-		[tests],
-	);
-
-	React.useEffect(() => {
-		const selectedProjectId = getCurrentSelectedProjct(store.getState());
-		if (!selectedProjectId) return navigate("/select-project");
-		const proxyState = getProxyState(store.getState());
-		if (window["showProxyWarning"] && !Object.keys(proxyState).length) {
-			setShowProxyWarning({ show: true, testId: window["showProxyWarning"].testId, startUrl: window["showProxyWarning"].startUrl });
-			window["showProxyWarning"] = false;
+		} else if (id === "RUN_LOCAL") {
+			triggerLocalBuild(
+				tests.map((test) => test.id),
+				tests,
+				null,
+				"app"
+			);
 		}
-
-		turnOnProxyServers();
-		// @TODO: Cache this API
-		if (selectedProjectId && userInfo && userInfo.projects) {
-			const project = userInfo.projects.find((p) => p.id == selectedProjectId);
-			if (project) {
-				setSelectedProject(project);
-			}
-		}
-	}, [projects]);
+	};
 
 	const handleCreateTest = React.useCallback(async () => {
 		store.dispatch(setRecorderContext({
@@ -172,22 +124,7 @@ const DashboardScreen = () => {
 	
 	}, []);
 
-	const handleRunCallback = (id) => {
-		if (id === "RUN_CLOUD") {
-			performRunTests(null).then((buildRes) => {
-				addNotification({ id: buildRes.buildId });
-				// sendSnackBarEvent({ type: "success", message: "Test started successfully!" });
-			});
-		} else if (id === "RUN_LOCAL") {
-			triggerLocalBuild(
-				tests.list.map((test) => test.id),
-				tests.list,
-				null,
-				"app"
-			);
-		}
-	};
-	const headerComponent = React.useMemo(() => {
+	const getHeaderActions = useCallback(() => {
 		return (
 			<div css={headerComponentCss}>
 				<ButtonDropdown
@@ -232,50 +169,74 @@ const DashboardScreen = () => {
 			</div>
 		);
 	}, [handleRunCallback]);
-	const isLoading = React.useMemo(() => !tests, [tests]);
-	// To make delete experience fast
-	const filteredTests = tests?.list?.length
-		? tests.list.filter((test) => {
-			return !((window as any).deletedTest || []).includes(test.id);
-		})
-		: [];
-
-	const listHeading = (
-			<div className={"flex items-center"} css={css`color: #fff; font-size: 14rem;`}>
-				<div css={[headingCss, hoverTab, currentTab === ITestTypeEnum.DRAFT ? notSelectedTextCss : undefined]} onClick={setCurrentTab.bind(this, ITestTypeEnum.SAVED)}>
-					{filteredTests?.length} tests
-				</div>
-				{draftTests?.length ? (
-					<div css={[hoverTab]} className={"flex items-center ml-16"} onClick={setCurrentTab.bind(this, ITestTypeEnum.DRAFT)}>
-						<ClipboardIcon css={[css`path { fill: #4A4A4A}`, currentTab === ITestTypeEnum.DRAFT ? css`path { fill: rgba(255, 255, 255, 0.83) }` : undefined]} />
-						<span className={"ml-8"} css={[draftHeadingCss, currentTab === ITestTypeEnum.SAVED ? notSelectedTextCss : undefined]}>{draftTests.length} drafts</span>
-					</div>
-				) : null}
-			</div>
-	);
-
-	const filteredDraftTests = draftTests?.map((draft) => {
-		return {...draft, testName: draft.name, firstRunCompleted: true};
-	});
-	const testContent = filteredTests.length && currentTab === ITestTypeEnum.SAVED ? <TestList listHeading={listHeading} deleteTest={handleTestDelete} tests={filteredTests} /> : null;
-	const draftContent = (draftTests?.length && currentTab === ITestTypeEnum.DRAFT ? <TestList listHeading={listHeading} deleteTest={handleTestDelete} tests={filteredDraftTests} />: null);
-	
 
 
-	const content = <>
-		{
-			showProxyWarning.show ? (
-				<ProxyConfigModifedToast onClose={() => setShowProxyWarning(false)} />
-			) : ""
+	return { headerActions: getHeaderActions() }
+}
+
+const DashboardScreen = () => {
+	const [animationComplete, setAnimationComplete] = React.useState(false);
+	const { userInfo, projects } = useUser();
+	const { tests } = useProjectTests();
+	const { headerActions } = useDashboardHeader();
+
+	const [selectedProject, setSelectedProject] = React.useState(null);
+	const [showProxyWarning, setShowProxyWarning] = React.useState({ show: false, testId: null, startUrl: null });
+
+	const navigate = useNavigate();
+	const store = useStore();
+
+	React.useEffect(() => {
+		const interval = setTimeout(setAnimationComplete.bind(this, true), 200);
+
+		return () => {
+			clearTimeout(interval);
 		}
-		
-		{testContent}
-		{draftContent}
-		{!testContent && !draftContent ? (<CreateFirstTest/>) : null}
-		{filteredTests.length < 3 && (<OnboardingSection />)}
-	</>;
+	}, []);
+
+	React.useEffect(() => {
+		const selectedProjectId = getCurrentSelectedProjct(store.getState());
+		if (!selectedProjectId) return navigate("/select-project");
+		const proxyState = getProxyState(store.getState());
+		if (window["showProxyWarning"] && !Object.keys(proxyState).length) {
+			setShowProxyWarning({ show: true, testId: window["showProxyWarning"].testId, startUrl: window["showProxyWarning"].startUrl });
+			window["showProxyWarning"] = false;
+		}
+
+		turnOnProxyServers();
+		// @TODO: Cache this API
+		if (selectedProjectId && userInfo && userInfo.projects) {
+			const project = userInfo.projects.find((p) => p.id == selectedProjectId);
+			if (project) {
+				setSelectedProject(project);
+			}
+		}
+	}, [projects]);
+
+
+
+
+	const isLoading = React.useMemo(() => !tests, [tests]);
 	const hasNotLoaded = isLoading || !animationComplete;
 	
+	const getMainContent = () => {
+		if(!tests.length) {
+			return (
+				<CreateFirstTest/>
+			)
+		}
+		return (
+			<>
+					{
+						showProxyWarning.show ? (
+							<ProxyConfigModifedToast onClose={() => setShowProxyWarning(false)} />
+						) : ""
+					}
+					<DashboardTestsList/>
+					{tests.length < 3 && (<OnboardingSection />)}
+			</>
+		);
+	}
 	return (
 		<CompactAppLayout
 			footer={
@@ -286,31 +247,16 @@ const DashboardScreen = () => {
 					</>
 				)
 			}
-			headerRightSection={headerComponent}
+			headerRightSection={headerActions}
 			showHeader={!hasNotLoaded}
 			css={loadingCSS()}
 			title={selectedProject && !hasNotLoaded ? <TitleComponent project={selectedProject} /> : null}
 		>
-			{hasNotLoaded ? <LoadingProgressBar inAppLoading={false} /> : content}
+			{hasNotLoaded ? <LoadingProgressBar inAppLoading={false} /> : getMainContent()}
 		</CompactAppLayout>
 	);
 };
 
-const hoverTab = css`
-	&:hover {
-		opacity: 0.8;
-	}
-`;
-const headingCss = css`
-font-family: 'Gilroy';
-font-style: normal;
-font-weight: 400;
-font-size: 14rem;
-letter-spacing: 0.03em;
-
-color: rgba(255, 255, 255, 0.83);
-
-`;
 const headerComponentCss = css`
 	display: flex;
 	position: relative;
@@ -363,19 +309,6 @@ const createTestCss = css`
 	}
 `;
 
-const draftHeadingCss = css`
-	font-family: Gilroy;
-	font-style: normal;
-	font-weight: 400;
-	font-size: 14rem;
-	letter-spacing: 0.03em;
-	color: rgba(255, 255, 255, 0.83);
 
-`;
-
-const notSelectedTextCss = css`
-color: #A6A6A6;
-
-`;
 export { DashboardScreen };
 

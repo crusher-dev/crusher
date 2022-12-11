@@ -280,7 +280,7 @@ const MULTI_SELECTED_MENU = [
 	{ id: "delete-all", label: "Delete all", shortcut: <div>Delete</div> },
 ];
 
-const TestList = ({ tests, deleteTest, listHeading }) => {
+const TestList = ({ tests, deleteTest, listHeading }: any) => {
 	const [, setTestEditName] = useAtom(editInputAtom);
 	const navigate = useNavigate();
 	const store = useStore();

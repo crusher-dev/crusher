@@ -114,6 +114,10 @@ class CloudCrusher {
 		return axios.post(resolveToBackend(`/tests/${testId}/actions/delete`), {}, authorizationOptions).then((res) => res.data);
 	});
 
+	public static deleteTests: (testIds: string[]) => Promise<any> = createAuthorizedRequestFunc((authorizationOptions, testIds) => {
+		return Promise.all(testIds.map((testId) => axios.post(resolveToBackend(`/tests/${testId}/actions/delete`), {}, authorizationOptions)));
+	});
+
 	public static saveTest: (testPayload: { events: iAction[]; name: string }, shouldAutorun: boolean) => Promise<any> = createAuthorizedRequestFunc(
 		async (authorizationOptions, testPayload) => {
 			const tempTest = await axios

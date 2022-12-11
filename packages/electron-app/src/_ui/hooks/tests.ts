@@ -1,7 +1,13 @@
 import { addBuildNotification, clearBuildNotifications, removeBuildNotification, updateBuildNotification } from "electron-app/src/store/actions/builds";
 import { getBuildNotifications, getBuilds, getCurrentLocalBuild, getLastBuildNotification } from "electron-app/src/store/selectors/builds";
+import { getSelectedProjectTestsRequest } from "electron-app/src/utils";
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
+import useRequest from "../utils/useRequest";
+import { useState } from "react";
+import { CloudCrusher } from "electron-app/src/lib/cloud";
+import { sendSnackBarEvent } from "../ui/containers/components/toast";
+import { getAllDrafts } from "electron-app/src/api/tests/draft.tests";
 
 const useBuildNotifications = () => {
 	const notifications = useSelector(getBuildNotifications);
@@ -82,4 +88,47 @@ const useLocalBuild = () => {
 	return { handleTestCompleted, builds, currentBuild };
 };
 
-export { useBuildNotifications, useLocalBuild };
+
+const useProjectTests = () => {
+	const [deletedTests, setDeletedTests] = useState([]);
+	const [deletedDraftTests, setDeletedDraftTests] = useState([]);
+
+	const { data: tests } = useRequest(getSelectedProjectTestsRequest, { refreshInterval: 5000 });
+	const { data: draftTests } = useRequest(getAllDrafts, { refreshInterval: 5000 });
+
+	const deleteTests = (idArr: any[]) => {
+		setDeletedTests([...deletedTests, ...idArr]);
+		CloudCrusher.deleteTests(idArr).catch(() => {
+			sendSnackBarEvent({ message: "Error deleting test", type: "error" });
+		});
+	};
+
+	const deleteDraftTests = (idArr: any[]) => {
+		setDeletedDraftTests([...deletedDraftTests, ...idArr]);
+		console.log("Deleting draft tests", idArr);	
+	};
+
+	const filterTests = (tests: any[]) => {
+		return tests.filter((test) => {
+			return !deletedTests.includes(test.id);
+		});
+	};
+
+	const filterDraftTests = (tests: any[]) => {
+		return draftTests?.filter((draft) => {
+			return !deletedDraftTests.includes(draft.id);
+		}).map((draft) => {
+			return { ...draft, testName: draft.name, firstRunCompleted: true};
+		});
+	};
+
+
+	return { 
+		tests: filterTests(tests?.list || []),
+		draftTests: filterDraftTests(draftTests) || [],
+		deleteTests,
+		deleteDraftTests,
+	};
+};
+
+export { useBuildNotifications, useLocalBuild, useProjectTests };

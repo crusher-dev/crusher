@@ -112,7 +112,6 @@ const CrossIcon = (props) => (
 		height={12}
 		fill="none"
 		xmlns="http://www.w3.org/2000/svg"
-		viewBox={"0 0 12 12"}
 		css={css`
 			fill: #ffffff1a;
 			path {
@@ -430,7 +429,6 @@ export {
 	LogoV2,
 	DroppdownIconV2,
 	RedDotIcon,
-	ActionHeadingIcon,
 	PlayIconV3,
 	GreenCheckboxIcon,
 	FailedCheckboxIcon,

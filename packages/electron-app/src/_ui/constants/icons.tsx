@@ -468,7 +468,6 @@ export {
 	EditPencilIcon,
 	ReselectPointerIcon,
 	AddedIcon,
-	EllipseIcon,
 	FailedStepIcon,
 	OptionsIcon,
 	InfoIcon,

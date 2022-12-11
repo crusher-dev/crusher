@@ -75,7 +75,7 @@ export class AppWindow {
 	private _rendererReadyTime: number | null = null;
 
 	private minWidth = 1028;
-	private minHeight = 660;
+	private minHeight = 688;
 	private savedWindowState: any = null;
 
 	private shouldMaximizeOnShow = true;
@@ -97,8 +97,8 @@ export class AppWindow {
 
 		const windowOptions: Electron.BrowserWindowConstructorOptions = {
 			title: APP_NAME,
-			titleBarStyle: "hidden",
-			trafficLightPosition: { x: 12, y: 16 },
+			trafficLightPosition: { x: 12, y: 12 },
+			titleBarStyle: 'hiddenInset',
 			width: this.minWidth,
 			height: this.minHeight,
 			minWidth: this.minWidth,

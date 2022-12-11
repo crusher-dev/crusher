@@ -56,20 +56,31 @@ const getDefaultFontSize = (type) => {
 	}
 };
 
+
+const letterSpacing = (finalFontSize:number)=>{
+	if(finalFontSize<18){
+		return ".05em;"
+	}
+
+	return "0px;"
+}
+
+
 /**
  * Crusher Text component.
  */
 export const Heading: React.FC<HeadingProps> = (props: HeadingProps) => {
 	const { type, children, fontSize, className, weight, color, ...otherProps } = props;
 
+	const finalFontSize = fontSize || getDefaultFontSize(type);
 	return (
 		<HeadingElement
 			size={type}
 			className={`font-cera leading-none font-${weight} ${className}`}
 			css={css`
-				font-size: ${fontSize || getDefaultFontSize(type)}rem;
+				font-size: ${finalFontSize}rem;
 				color: ${color};
-				letter-spacing: -0.003em;
+				letter-spacing: ${letterSpacing(finalFontSize)};
 			`}
 			{...otherProps}
 		>

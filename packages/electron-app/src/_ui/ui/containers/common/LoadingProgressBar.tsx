@@ -12,7 +12,7 @@ function LoadingProgressBar({ inAppLoading = true }) {
 		<div css={containerCss}>
 			<div ref={ref} css={loadingContainerCss}>
 				<Conditional showIf={!inAppLoading}>
-					<LogoAnimated />
+					<LogoAnimated  className="pt-4"/>
 				</Conditional>
 				<div css={loadingProgressBarCss}>
 					<div css={progressStyle}></div>

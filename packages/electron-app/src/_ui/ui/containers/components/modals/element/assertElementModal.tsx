@@ -6,7 +6,7 @@ import uniqueId from "lodash/uniqueId";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { getSelectedElement } from "electron-app/src/store/selectors/recorder";
-import { enableJavascriptInDebugger, recordHoverDependencies, registerActionAsSavedStep } from "electron-app/src/_ui/commands/perform";
+import { enableJavascriptInDebugger, recordHoverDependencies, registerActionAsSavedStep } from "electron-app/src/ipc/perform";
 import { setSelectedElement, updateRecordedStep } from "electron-app/src/store/actions/recorder";
 import { Modal } from "@dyson/components/molecules/Modal";
 import { ModalTopBar } from "../topBar";

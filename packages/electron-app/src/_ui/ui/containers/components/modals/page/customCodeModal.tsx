@@ -17,7 +17,7 @@ import {
 	performUndockCode,
 	saveCodeTemplate,
 	updateCodeTemplate,
-} from "electron-app/src/_ui/commands/perform";
+} from "electron-app/src/ipc/perform";
 import { DownIcon } from "electron-app/src/_ui/constants/old_icons";
 import { MenuItem } from "electron-app/src/_ui/ui/components/dropdown/menuItems";
 import { LinkPointer } from "electron-app/src/_ui/ui/components/LinkPointer";

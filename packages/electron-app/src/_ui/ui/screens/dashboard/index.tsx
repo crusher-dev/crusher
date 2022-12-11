@@ -16,7 +16,7 @@ import { CreateFirstTest } from "./createFirstTest";
 import { TestList } from "./testsList";
 import { ButtonDropdown } from "../../components/buttonDropdown";
 import { AddIconV3 } from "electron-app/src/_ui/constants/old_icons";
-import { goFullScreen, performRunTests } from "electron-app/src/_ui/commands/perform";
+import { goFullScreen, performRunTests } from "electron-app/src/ipc/perform";
 import { StickyFooter } from "../../containers/common/stickyFooter";
 import { Footer } from "../../containers/common/footer";
 import { useBuildNotifications } from "../../../hooks/tests";

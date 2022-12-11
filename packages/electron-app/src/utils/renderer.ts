@@ -1,6 +1,6 @@
 import { getStore } from "../store/configureStore";
 import { getCurrentSelectedProjct, getProxyState } from "../store/selectors/app";
-import { turnOnProxy } from "../_ui/commands/perform";
+import { turnOnProxy } from "../ipc/perform";
 import { resolveToBackend } from "./url";
 const words = require("./words.json");
 

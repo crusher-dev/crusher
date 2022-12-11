@@ -29,7 +29,7 @@ import { SWRConfig } from "swr";
 import { NetworkErrorContainer } from "./ui/containers/errors/networkError";
 import { UnAuthorizedErrorContainer } from "./ui/containers/errors/unauthorizedError";
 import { InvalidCredsErrorContainer } from "./ui/containers/errors/invalidCreds";
-import { performGoToUrl, performTestDeepLink, performTrackEvent } from "./commands/perform";
+import { performGoToUrl, performTestDeepLink, performTrackEvent } from "../ipc/perform";
 import { Provider as JotaiProvider } from "jotai";
 import { ToastBox } from "./ui/components/toasts";
 import { CloudCrusher } from "../lib/cloud";

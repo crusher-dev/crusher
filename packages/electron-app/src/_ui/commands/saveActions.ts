@@ -1,6 +1,6 @@
 import { iAction } from "@shared/types/action";
 
-import { registerActionAsSavedStep } from "./perform";
+import { registerActionAsSavedStep } from "../../ipc/perform";
 
 function saveAutoAction(action: iAction) {
 	switch (action.type) {

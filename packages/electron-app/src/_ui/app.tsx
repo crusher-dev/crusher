@@ -18,7 +18,7 @@ import {
 	performSteps,
 	performTrackEvent,
 	resetStorage,
-} from "./commands/perform";
+} from "../ipc/perform";
 import DeviceFrame from "./ui/containers/components/device-frame";
 import { InfoOverLay } from "./ui/containers/components/overlays/infoOverlay";
 import { Sidebar } from "./ui/screens/recorder/sidebar";

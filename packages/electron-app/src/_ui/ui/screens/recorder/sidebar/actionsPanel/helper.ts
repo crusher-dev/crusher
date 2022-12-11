@@ -7,7 +7,7 @@ import {
 	performAssertElementVisibility,
 	performClick,
 	performHover,
-} from "electron-app/src/_ui/commands/perform";
+} from "electron-app/src/ipc/perform";
 import { emitShowModal } from "electron-app/src/_ui/ui/containers/components/modals";
 import { sendSnackBarEvent } from "electron-app/src/_ui/ui/containers/components/toast";
 import Fuse from "fuse.js";

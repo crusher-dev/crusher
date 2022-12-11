@@ -4,7 +4,7 @@ import { css } from "@emotion/react";
 import { iSelectorInfo } from "@shared/types/selectorInfo";
 import { updateRecordedStep } from "electron-app/src/store/actions/recorder";
 import { getAllSteps, getStepInfo } from "electron-app/src/store/selectors/recorder";
-import { turnOnElementSelectorInspectMode } from "electron-app/src/_ui/commands/perform";
+import { turnOnElementSelectorInspectMode } from "electron-app/src/ipc/perform";
 import { AddRoundedIcon, BackIconV3 } from "electron-app/src/_ui/constants/icons";
 import { NormalButton } from "electron-app/src/_ui/ui/components/buttons/NormalButton";
 import { HoverButton } from "electron-app/src/_ui/ui/components/hoverButton";

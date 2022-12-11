@@ -8,7 +8,7 @@ import { recordStep } from "electron-app/src/store/actions/recorder";
 import { iElementInfo } from "electron-app/src/store/reducers/recorder";
 import { getSavedSteps } from "electron-app/src/store/selectors/recorder";
 import { AnyAction, Store } from "redux";
-import { showToast } from "../ui/components/toasts";
+import { showToast } from "../_ui/ui/components/toasts";
 
 const performAction = (action: iAction, shouldNotSave = false, isRecording = true) => {
 	return ipcRenderer.invoke("perform-action", { action, shouldNotSave, isRecording });

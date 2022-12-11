@@ -1,6 +1,6 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { performGoToUrl } from "../../../commands/perform";
+import { performGoToUrl } from "../../../../ipc/perform";
 import { getCurrentSelectedProjct, getUserAccountInfo } from "electron-app/src/store/selectors/app";
 import { useStore } from "react-redux";
 import { CompactAppLayout } from "../../layout/CompactAppLayout";

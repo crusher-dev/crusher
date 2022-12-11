@@ -3,7 +3,7 @@ import { createLocalBuild } from "electron-app/src/store/actions/builds";
 import { setRecorderContext } from "electron-app/src/store/actions/recorder";
 import { getStore } from "electron-app/src/store/configureStore";
 import { TRecorderVariant } from "electron-app/src/store/reducers/recorder";
-import { goFullScreen, performReplayTestUrlAction, performTrackEvent } from "electron-app/src/_ui/commands/perform";
+import { goFullScreen, performReplayTestUrlAction, performTrackEvent } from "electron-app/src/ipc/perform";
 import historyInstance from "./history";
 
 const triggerLocalBuild = (testsList: number[] = undefined, selectedTests: any[] = [], host: string | null = null, origin: "deeplink" | "app" = "app", extraContext = {}) => {

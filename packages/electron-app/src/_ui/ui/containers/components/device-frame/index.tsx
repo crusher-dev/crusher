@@ -21,7 +21,7 @@ import {
 	turnOffInspectMode,
 	turnOnInspectMode,
 	turnOnWebviewDevTools,
-} from "../../../../commands/perform";
+} from "../../../../../ipc/perform";
 import { setSelectedElement, updateRecordedStep, updateRecorderCrashState } from "electron-app/src/store/actions/recorder";
 import { saveAutoAction } from "../../../../commands/saveActions";
 import { TRecorderMessagesType } from "../../../../../lib/recorder/host-proxy";

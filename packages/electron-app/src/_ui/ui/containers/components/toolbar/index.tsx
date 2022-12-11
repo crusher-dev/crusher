@@ -5,7 +5,7 @@ import { LoadingIconV2, RedDotIcon, SettingsIcon } from "../../../../constants/o
 import { useDispatch, batch, useSelector, useStore, shallowEqual } from "react-redux";
 import { devices } from "../../../../../devices";
 import { getRecorderContext, getRecorderInfo, getRecorderInfoUrl, getRecorderState, getSavedSteps, getTestName, isTestVerified } from "electron-app/src/store/selectors/recorder";
-import { goFullScreen, performExit, performNavigation, performSteps, performTrackEvent, performVerifyTest, saveTest, updateTest, updateTestName } from "../../../../commands/perform";
+import { goFullScreen, performExit, performNavigation, performSteps, performTrackEvent, performVerifyTest, saveTest, updateTest, updateTestName } from "../../../../../ipc/perform";
 import { addHttpToURLIfNotThere, isValidHttpUrl } from "../../../../../utils";
 import { TRecorderState, TRecorderVariant } from "electron-app/src/store/reducers/recorder";
 import { getAppEditingSessionMeta, getCurrentTestInfo, getProxyState, shouldShowOnboardingOverlay } from "electron-app/src/store/selectors/app";

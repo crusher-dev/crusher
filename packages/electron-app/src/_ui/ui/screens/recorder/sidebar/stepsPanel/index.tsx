@@ -9,7 +9,7 @@ import { useSelectableList } from "electron-app/src/_ui/hooks/list";
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
 import { RightClickMenu } from "@dyson/components/molecules/RightClick/RightClick";
 import { deleteRecordedSteps } from "electron-app/src/store/actions/recorder";
-import { performJumpTo, performPauseStepsExecution, performTrackEvent, performVerifyTest, turnOnElementSelectorInspectMode } from "electron-app/src/_ui/commands/perform";
+import { performJumpTo, performPauseStepsExecution, performTrackEvent, performVerifyTest, turnOnElementSelectorInspectMode } from "electron-app/src/ipc/perform";
 import { useAtom } from "jotai";
 import { stepHoverAtom } from "electron-app/src/_ui/store/jotai/steps";
 import { editInputAtom } from "electron-app/src/_ui/store/jotai/testsPage";

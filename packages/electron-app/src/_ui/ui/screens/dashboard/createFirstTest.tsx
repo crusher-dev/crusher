@@ -1,4 +1,4 @@
-import { goFullScreen } from "electron-app/src/_ui/commands/perform";
+import { goFullScreen } from "electron-app/src/ipc/perform";
 import { CreateIcon, PlayV2Icon } from "electron-app/src/_ui/constants/old_icons";
 import React from "react";
 import { useNavigate } from "react-router-dom";

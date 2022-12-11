@@ -1,5 +1,5 @@
 import React from "react";
-import { turnOnInspectMode } from "electron-app/src/_ui/commands/perform";
+import { turnOnInspectMode } from "electron-app/src/ipc/perform";
 import { ActionsList } from "./actionsList";
 import { ElementsHelper, getItemsFromActionsData } from "./helper";
 import { useSelector } from "react-redux";

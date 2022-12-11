@@ -104,7 +104,6 @@ const useProjectTests = () => {
 	};
 
 	const deleteDraftTests = (idArr: any[]) => {
-		alert("Deleting draft tests");
 		setDeletedDraftTests([...deletedDraftTests, ...idArr]);
 		console.log("Deleting draft tests", idArr);	
 	};

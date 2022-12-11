@@ -220,11 +220,6 @@ const DashboardScreen = () => {
 	const hasNotLoaded = isLoading || !animationComplete;
 	
 	const getMainContent = () => {
-		if(!tests.length) {
-			return (
-				<CreateFirstTest/>
-			)
-		}
 		return (
 			<>
 					{
@@ -233,7 +228,7 @@ const DashboardScreen = () => {
 						) : ""
 					}
 					<DashboardTestsList/>
-					{tests.length < 3 && (<OnboardingSection />)}
+					{(tests.length < 3 && tests.length) ? (<OnboardingSection />) : null}
 			</>
 		);
 	}

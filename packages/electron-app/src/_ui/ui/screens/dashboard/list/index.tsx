@@ -5,6 +5,7 @@ import { DraftsList } from "./drafts";
 import { css } from "@emotion/react";
 import { useProjectTests } from "electron-app/src/_ui/hooks/tests";
 import { ClipboardIcon } from "electron-app/src/_ui/constants/icons";
+import { CreateFirstTest } from "../containers/createFirstTest";
 
 export enum IListTypeEnum {
     DRAFTS = "drafts",
@@ -40,11 +41,23 @@ const DashboardTestsList = () => {
     return (
         <div>
             {listHeading}
-            {getContent()}
+            {!tests.length && activeSection === IListTypeEnum.SAVED ? (
+                <div css={createFirstTestContainerCss}>
+                    <CreateFirstTest/>
+                </div>
+            ): getContent()}
         </div>
     );
 };
 
+const createFirstTestContainerCss = css`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    top: 50%;
+    transform: translateY(50%);
+`;
 
 const hoverTab = css`
 	&:hover {

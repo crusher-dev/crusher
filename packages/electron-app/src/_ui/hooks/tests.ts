@@ -93,11 +93,17 @@ const useProjectTests = () => {
 	const [deletedTests, setDeletedTests] = useState([]);
 	const [deletedDraftTests, setDeletedDraftTests] = useState([]);
 
-	const { data: tests } = useRequest(getSelectedProjectTestsRequest, { refreshInterval: 5000 });
-	const { data: draftTests } = useRequest(getAllDrafts, { refreshInterval: 5000 });
+	const { data: tests, mutate: mutateTests } = useRequest(getSelectedProjectTestsRequest, { refreshInterval: 5000 });
+	const { data: draftTests, mutate: mutateDraftTests } = useRequest(getAllDrafts, { refreshInterval: 5000 });
 
 	const deleteTests = (idArr: any[]) => {
 		setDeletedTests([...deletedTests, ...idArr]);
+		mutateTests({
+			...tests,
+			list: tests.list.filter((test) => {
+				return ![...deletedTests, ...idArr].includes(test.id);
+			}),
+		}, false);
 		CloudCrusher.deleteTests(idArr).catch(() => {
 			sendSnackBarEvent({ message: "Error deleting test", type: "error" });
 		});
@@ -105,7 +111,12 @@ const useProjectTests = () => {
 
 	const deleteDraftTests = (idArr: any[]) => {
 		setDeletedDraftTests([...deletedDraftTests, ...idArr]);
-		console.log("Deleting draft tests", idArr);	
+		mutateDraftTests(draftTests?.filter((draft) => {
+			return ![...deletedDraftTests, ...idArr].includes(draft.id);
+		}), false);
+		CloudCrusher.deleteDraftTests(idArr).catch(() => {
+			sendSnackBarEvent({ message: "Error deleting drafts", type: "error" });
+		});
 	};
 
 	const filterTests = (tests: any[]) => {

@@ -3,6 +3,7 @@ import { iAction } from "@shared/types/action";
 import axios from "axios";
 import { shell } from "electron";
 import { getBrowserActions, getMainActions } from "runner-utils/src/utils/helper";
+import { deleteDraftTest } from "../api/tests/draft.tests";
 import { getStore } from "../store/configureStore";
 import { getCurrentSelectedProjct } from "../store/selectors/app";
 import { createAuthorizedRequestFunc, resolveToBackend, resolveToFrontend } from "../utils/url";
@@ -116,6 +117,14 @@ class CloudCrusher {
 
 	public static deleteTests: (testIds: string[]) => Promise<any> = createAuthorizedRequestFunc((authorizationOptions, testIds) => {
 		return Promise.all(testIds.map((testId) => axios.post(resolveToBackend(`/tests/${testId}/actions/delete`), {}, authorizationOptions)));
+	});
+
+	public static deleteDraftTest: (draftTestId: string) => Promise<any> = createAuthorizedRequestFunc((authorizationOptions, draftTestId) => {
+		return axios(deleteDraftTest(draftTestId)).then((res) => res.data);
+	});
+
+	public static deleteDraftTests: (draftTestIds: string[]) => Promise<any> = createAuthorizedRequestFunc((authorizationOptions, draftTestIds) => {
+		return Promise.all(draftTestIds.map((draftTestId) => axios(deleteDraftTest(draftTestId))));
 	});
 
 	public static saveTest: (testPayload: { events: iAction[]; name: string }, shouldAutorun: boolean) => Promise<any> = createAuthorizedRequestFunc(

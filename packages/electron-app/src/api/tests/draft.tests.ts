@@ -61,4 +61,16 @@ const updateDraftTest: (payload: ISaveDraftPayload, id: number) => AxiosRequestC
     } as AxiosRequestConfig;
 }, true);
 
-export { saveNewDraftTest, updateDraftTest, getAllDrafts };
+const deleteDraftTest = createAuthorizedRequestFunc((authorizationOptions: any, draftId: number) => {
+    const store = getStore();
+    const selectedProject = getCurrentSelectedProjct(store.getState() as any);
+    if (!selectedProject) return null;
+
+    return {
+        url: resolveToBackend(`/drafts/${draftId}`),
+        method: "DELETE",
+        ...authorizationOptions,
+    } as AxiosRequestConfig;
+}, true);
+
+export { saveNewDraftTest, updateDraftTest, getAllDrafts, deleteDraftTest };

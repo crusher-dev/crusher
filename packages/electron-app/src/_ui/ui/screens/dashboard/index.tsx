@@ -7,7 +7,7 @@ import React from "react";
 import { useStore } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getSelectedProjectTestsRequest } from "../../../../api/tests/tests.request";
-import { useUser } from "../../../../api/user/user";
+import { useUser } from "../../../hooks/user";
 import { LoadingProgressBar } from "../../containers/common/LoadingProgressBar";
 import { CompactAppLayout } from "../../layout/CompactAppLayout";
 import useRequest from "../../../utils/useRequest";

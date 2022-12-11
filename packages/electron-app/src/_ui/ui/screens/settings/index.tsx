@@ -5,12 +5,10 @@ import { SettingsModalContent } from "../../containers/components/toolbar/settin
 import { StickyFooter } from "../../containers/common/stickyFooter";
 import { GoBackIcon, SelectedSVG } from "electron-app/src/_ui/constants/icons";
 import { hoverStyle } from "electron-app/src/_ui/constants/style";
-import { TextBlock } from "@dyson/components/atoms";
 import { Conditional } from "@dyson/components/layouts";
 import { useNavigate } from "react-router-dom";
 import { IntegrationSettings } from "./integrationSettings";
 import { atom, useAtom } from "jotai";
-import { useUser } from "electron-app/src/api/user/user";
 import { getCurrentSelectedProjct } from "electron-app/src/store/selectors/app";
 import { useStore } from "react-redux";
 

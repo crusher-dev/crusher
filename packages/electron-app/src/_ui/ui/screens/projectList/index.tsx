@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useStore } from "react-redux";
 import { setSelectedProject } from "electron-app/src/store/actions/app";
 import { LoadingScreen } from "../loading";
-import { useUser } from "../../../../api/user/user";
+import { useUser } from "../../../hooks/user";
 import { NormalList } from "../../components/NormalList";
 import { BasketBallIcon, ConsoleIconV3 } from "../../../constants/icons";
 import { EmojiPicker } from "../../components/emojiPicker";

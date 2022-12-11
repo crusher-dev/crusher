@@ -15,7 +15,7 @@ import { Provider } from "react-redux";
 import { Route, Routes } from "react-router-dom";
 import { Global } from "@emotion/react";
 import { css } from "@emotion/react";
-import { App } from "./app";
+import { App } from "./ui/screens/recorder/app";
 import "../../static/assets/styles/tailwind.css";
 import { LoginScreen } from "./ui/screens/auth/login";
 import { DashboardScreen } from "./ui/screens/dashboard";

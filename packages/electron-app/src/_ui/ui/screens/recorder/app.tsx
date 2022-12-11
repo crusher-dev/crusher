@@ -3,12 +3,12 @@ import { ipcRenderer } from "electron";
 import React from "react";
 import { useSelector, useStore } from "react-redux";
 import { Store } from "redux";
-import { setSessionInfoMeta } from "../store/actions/app";
-import { resetRecorder, setIsWebViewInitialized, setRecorderContext } from "../store/actions/recorder";
-import { TRecorderState, TRecorderVariant } from "../store/reducers/recorder";
-import { getAppSessionMeta } from "../store/selectors/app";
-import { getAllSteps, getIsStatusBarVisible, getRecorderContext, getRecorderState } from "../store/selectors/recorder";
-import { IDeepLinkAction } from "../types";
+import { setSessionInfoMeta } from "../../../../store/actions/app";
+import { resetRecorder, setIsWebViewInitialized, setRecorderContext } from "../../../../store/actions/recorder";
+import { TRecorderState, TRecorderVariant } from "../../../../store/reducers/recorder";
+import { getAppSessionMeta } from "../../../../store/selectors/app";
+import { getAllSteps, getIsStatusBarVisible, getRecorderContext, getRecorderState } from "../../../../store/selectors/recorder";
+import { IDeepLinkAction } from "../../../../types";
 import {
 	goFullScreen,
 	performGetRecorderTestLogs,
@@ -18,25 +18,25 @@ import {
 	performSteps,
 	performTrackEvent,
 	resetStorage,
-} from "../ipc/perform";
-import DeviceFrame from "./ui/containers/components/device-frame";
-import { InfoOverLay } from "./ui/containers/components/overlays/infoOverlay";
-import { Sidebar } from "./ui/screens/recorder/sidebar";
-import { StatusBar } from "./ui/containers/components/status-bar";
-import { sendSnackBarEvent } from "./ui/containers/components/toast";
-import Toolbar from "./ui/containers/components/toolbar";
-import historyInstance from "./utils/history";
-import { useBuildNotifications } from "./hooks/tests";
-import { addBuildNotification, clearCurrentLocalBuild, updateCurrentLocalBuild } from "../store/actions/builds";
+} from "../../../../ipc/perform";
+import DeviceFrame from "../../containers/components/device-frame";
+import { InfoOverLay } from "../../containers/components/overlays/infoOverlay";
+import { Sidebar } from "./sidebar";
+import { StatusBar } from "../../containers/components/status-bar";
+import { sendSnackBarEvent } from "../../containers/components/toast";
+import Toolbar from "../../containers/components/toolbar";
+import historyInstance from "../../../utils/history";
+import { useBuildNotifications } from "../../../hooks/tests";
+import { addBuildNotification, clearCurrentLocalBuild, updateCurrentLocalBuild } from "../../../../store/actions/builds";
 import { useAtom } from "jotai";
-import { isStepHoverAtom } from "./store/jotai/testsPage";
-import { CloudCrusher } from "../lib/cloud";
-import { clearAllToasts, clearToast, showToast } from "./ui/components/toasts";
-import { getStore } from "../store/configureStore";
-import { getCurrentLocalBuild } from "../store/selectors/builds";
+import { isStepHoverAtom } from "../../../store/jotai/testsPage";
+import { CloudCrusher } from "../../../../lib/cloud";
+import { clearAllToasts, clearToast, showToast } from "../../components/toasts";
+import { getStore } from "../../../../store/configureStore";
+import { getCurrentLocalBuild } from "../../../../store/selectors/builds";
 import { DesktopAppEventsEnum } from "@shared/modules/analytics/constants";
 import axios from "axios";
-import { updateDraftTest } from "../api/tests/draft.tests";
+import { updateDraftTest } from "../../../../api/tests/draft.tests";
 
 const handleCompletion = async (store: Store, action: IDeepLinkAction, addNotification, hasCompletedSuccesfully: boolean) => {
 	// @TODO: Change `redirectAfterSuccess` to `isLocalBuild`

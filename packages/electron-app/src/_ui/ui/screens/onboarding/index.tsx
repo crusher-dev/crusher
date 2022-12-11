@@ -8,11 +8,12 @@ import { CompactAppLayout } from "../../layout/CompactAppLayout"
 import { PROJECT_INFO } from "./components/SetupWProjectInfo"
 import { COMPLETE_INTEGRATION } from "./components/CompleteIntegration"
 import { WelcomMessageBlock } from "./components/WelcomeMessageBlock"
+import { useEffect } from "react";
 
 export const ONBOARDING_STAGE_ATOM = atom(0)
     
 export const OnboardingWrapper = ()=>{
-    const [onboardingStage] = useAtom(ONBOARDING_STAGE_ATOM)
+    const [onboardingStage] = useAtom(ONBOARDING_STAGE_ATOM);
     return (
         <CompactAppLayout showHeader={false} css={css`background: #0C0C0C;`}>
             <div css={wrappeCSS} className="flex flex-col justify-between">

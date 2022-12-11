@@ -63,7 +63,7 @@ const ActionsList = ({ className, defaultExpanded, ...props }: IProps) => {
 
 					{description ? <div css={headingDescriptionCss}>{description}</div> : ""}
 				</div>
-				{itemsContent ? <PlayIconV3 css={[playIconCss, isExpanded ? pointerDownCss : undefined]} /> : ""};
+				{itemsContent ? <PlayIconV3 css={[playIconCss, isExpanded ? pointerDownCss : undefined]} /> : ""}
 			</div>
 			{isExpanded && itemsContent ? <div css={contentCss}>{itemsContent}</div> : ""}
 		</div>

@@ -119,7 +119,7 @@ function InsideRouter() {
 					<Route path="/onboarding" element={<AuthOnboardingScreen />} />
 					{/* Revert this after commit */}
 					<Route path="/dashboard" element={<DashboardScreen />} />
-					<Route path="/" element={<OnboardingWrapper />} />
+					<Route path="/" element={<DashboardScreen />} />
 					<Route path="/select-project" element={<ProjectsListScreen />} />
 					<Route path="/code-editor" element={<UnDockCodeScreen />} />
 					<Route path="/settings" element={<SettingsScreen />} />

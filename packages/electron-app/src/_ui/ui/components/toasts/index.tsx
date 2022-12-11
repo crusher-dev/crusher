@@ -69,7 +69,7 @@ const Toasts = ({toasts}) => {
         return (
          <NormalToast key={toast.id} setOpen={handleClearToastWithId.bind(this, toast.id)} message={toast.message} meta={toast.meta} /> 
         );
-      })};
+      })}
     </>
   )
 }

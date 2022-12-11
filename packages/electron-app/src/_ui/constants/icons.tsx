@@ -66,17 +66,6 @@ const EditIcon = (props) => (
 	</svg>
 );
 
-const ConsoleIconV3 = (props) => (
-	<svg viewBox={"0 0 18 16"} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-		<path
-			fillRule="evenodd"
-			clipRule="evenodd"
-			d="M2.5 4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-9a2 2 0 0 1-2-2V4Zm2.647.647a.5.5 0 0 1 .706 0l1.5 1.5a.5.5 0 0 1 0 .706l-1.5 1.5a.5.5 0 0 1-.706-.706L6.293 6.5 5.147 5.353a.5.5 0 0 1 0-.706ZM8 7.5a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1H8Z"
-			fill="#FAFAFA"
-		/>
-	</svg>
-);
-
 const BasketBallIcon = React.forwardRef((props, ref) => (
 	<svg viewBox={"0 0 18 18"} fill="none" xmlns="http://www.w3.org/2000/svg" ref={ref} {...props}>
 		<path d="M15.75 9a6.75 6.75 0 1 1-13.5 0 6.75 6.75 0 0 1 13.5 0Z" stroke="#303030" strokeWidth={1.5} />
@@ -174,11 +163,6 @@ const AddedIcon = (props) => (
 			d="M6.5 0a6 6 0 1 0 0 12 6 6 0 0 0 0-12Zm.462 4.154a.462.462 0 0 0-.924 0v1.384H4.654a.462.462 0 0 0 0 .924h1.384v1.384a.462.462 0 0 0 .924 0V6.462h1.384a.462.462 0 0 0 0-.924H6.962V4.154Z"
 			fill="#C852FF"
 		/>
-	</svg>
-);
-const EllipseIcon = (props) => (
-	<svg viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-		<circle cx={5} cy={5} r={4.5} stroke="#fff" />
 	</svg>
 );
 
@@ -341,30 +325,6 @@ const TickIcon = (props) => (
 )
 
 
-const CorrectCircleIcon = (props) => (
-	<svg
-		viewBox={"0 0 14 14"}
-		fill="none"
-		xmlns="http://www.w3.org/2000/svg"
-		{...props}
-	>
-		<path
-			fillRule="evenodd"
-			clipRule="evenodd"
-			d="M0 7a7 7 0 1 1 14 0A7 7 0 0 1 0 7Zm9.595-1.895a.7.7 0 0 1 0 .99L7.017 8.673a1.014 1.014 0 0 1-1.434 0L4.405 7.495a.7.7 0 0 1 .99-.99l.905.905 2.305-2.305a.7.7 0 0 1 .99 0Z"
-			fill="#9EF25B"
-		/>
-		<path
-			fillRule="evenodd"
-			clipRule="evenodd"
-			d="M0 7a7 7 0 1 1 14 0A7 7 0 0 1 0 7Zm9.595-1.895a.7.7 0 0 1 0 .99L7.017 8.673a1.014 1.014 0 0 1-1.434 0L4.405 7.495a.7.7 0 0 1 .99-.99l.905.905 2.305-2.305a.7.7 0 0 1 .99 0Z"
-			fill="#9EF25B"
-		/>
-	</svg>
-)
-
-
-
 const EditIconV4 = (props) => (
 	<svg
 		viewBox={"0 0 14 14"}
@@ -494,13 +454,10 @@ export {
 	RerunIcon,
 	BackIconV3,
 	NextIcon,
-	DisabledCloudIcon,
-	CloudIcon,
 	NotepadIcon,
 	ConsoleIcon,
 	PointerIcon,
 	EditIcon,
-	ConsoleIconV3,
 	BasketBallIcon,
 	ResetIcon,
 	PageIcon,
@@ -520,7 +477,6 @@ export {
 	UpDownSizeIcon,
 	GithubIcon,
 	TickIcon,
-	CorrectCircleIcon,
 	EditIconV4,
 	ExportIcon,
 	VercelIcon,

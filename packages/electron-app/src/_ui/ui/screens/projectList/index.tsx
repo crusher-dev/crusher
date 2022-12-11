@@ -8,7 +8,7 @@ import { setSelectedProject } from "electron-app/src/store/actions/app";
 import { LoadingScreen } from "../loading";
 import { useUser } from "../../../hooks/user";
 import { NormalList } from "../../components/NormalList";
-import { BasketBallIcon, ConsoleIconV3 } from "../../../constants/icons";
+import { BasketBallIcon, ConsoleIcon } from "../../../constants/icons";
 import { EmojiPicker } from "../../components/emojiPicker";
 import { CloudCrusher } from "electron-app/src/lib/cloud";
 import { remote } from "electron";
@@ -66,7 +66,7 @@ const CreateProjectBanner = ({ className, ...props }) => {
 			<div css={createProjectActionsCss}>
 				<div css={[chooseDirButtonCss, hoverButtonCss]} onClick={handleChooseDir}>Choose dir</div>
 				<div onClick={setShowCommand.bind(this, true)} css={[runCommandButtonCss, hoverButtonCss]}>
-					<ConsoleIconV3 css={consoleIconCss} />
+					<ConsoleIcon css={consoleIconCss} />
 					<span>run command</span>
 				</div>
 			</div></>}
@@ -132,8 +132,11 @@ const createProjectActionsCss = css`
 	padding-bottom: 36px;
 `;
 const consoleIconCss = css`
-	width: 17px;
+	width: 16px;
 	height: 16px;
+	path {
+		fill: #FAFAFA;
+	}
 `;
 const createProjectBannerContainerCss = css`
 	position: relative;

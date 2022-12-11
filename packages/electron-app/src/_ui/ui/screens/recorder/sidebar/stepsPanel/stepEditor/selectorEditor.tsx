@@ -2,28 +2,17 @@ import { Button } from "@dyson/components/atoms";
 import { HoverCardTooltipContext } from "@dyson/components/atoms/tooltip/Tooltip1";
 import { css } from "@emotion/react";
 import { iSelectorInfo } from "@shared/types/selectorInfo";
-import { updateRecordedStep } from "electron-app/src/store/actions/recorder";
-import { getAllSteps, getStepInfo } from "electron-app/src/store/selectors/recorder";
+import { getAllSteps } from "electron-app/src/store/selectors/recorder";
 import { turnOnElementSelectorInspectMode } from "electron-app/src/ipc/perform";
 import { AddRoundedIcon, BackIconV3 } from "electron-app/src/_ui/constants/icons";
-import { NormalButton } from "electron-app/src/_ui/ui/components/buttons/NormalButton";
-import { HoverButton } from "electron-app/src/_ui/ui/components/hoverButton";
-import { ActionButton } from "electron-app/src/_ui/ui/containers/components/create-first-test";
-import { FieldSelectorPicker } from "electron-app/src/_ui/ui/containers/components/sidebar/stepEditor/fields";
-import { sendSnackBarEvent } from "electron-app/src/_ui/ui/containers/components/toast";
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { TextHighlighter, transformStringSelectorsToArray } from "../helper";
+import { useSelector } from "react-redux";
 
 const SelectorEditorCard = ({ stepId }) => {
 	const [showAll, setShowAll] = React.useState(false);
-	const textAreaRef = React.useRef(null);
 	const steps = useSelector(getAllSteps);
-	const stepInfo = useSelector(getStepInfo(stepId));
-	const title = TextHighlighter({ text: stepInfo.name }, true);
 	const step = steps[stepId];
 
-	const dispatch = useDispatch();
     const { update } = React.useContext(HoverCardTooltipContext);
 
 	React.useEffect(() => {
@@ -39,16 +28,6 @@ const SelectorEditorCard = ({ stepId }) => {
 			});
 	};
 
-	const handleOnSelectorsPicked = (selectors: iSelectorInfo[], shouldNotify = true) => {
-		step.payload.selectors = selectors;
-		dispatch(updateRecordedStep(step, stepId));
-		if (shouldNotify) {
-			sendSnackBarEvent({ type: "success", message: "Selectors updated" });
-		}
-	};
-	const saveSelectorsOnUserInput = (e) => {
-		handleOnSelectorsPicked(transformStringSelectorsToArray(e.target.value), false);
-	};
 
 	const selectorsComponent = React.useMemo(() => {
 		let filteredSelectors = step.payload.selectors;
@@ -115,9 +94,6 @@ const moreButtonCss = css`
 		opacity: 0.8;
 	}
 `;
-const noteTextCss = css`
-	color: rgba(144, 144, 144, 0.58);
-`;
 
 const selectorListCss= css`
 	color: rgba(144, 144, 144, 0.78);
@@ -162,34 +138,6 @@ const stepMetaInfoContainerCss = css`
 	background: #0F0F0F;
 	border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 `;
-const actionsListCss = css`
-	font-family: "Gilroy";
 
-	font-weight: 400;
-	font-size: 12rem;
-
-	color: rgba(255, 255, 255, 0.53);
-
-	li {
-		:hover {
-			text-decoration: underline;
-			opacity: 0.8;
-		}
-	}
-`;
-
-const textAreaCss = css`
-	background: rgba(217, 217, 217, 0.05);
-	border: 0.5px solid #212121;
-	border-radius: 10rem;
-	padding: 13rem 15rem;
-	height: 132rem;
-	width: 68%;
-	resize: none;
-
-	font-size: 12rem;
-
-	color: rgba(255, 255, 255, 0.54);
-`;
 
 export { SelectorEditorCard };

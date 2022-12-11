@@ -2,7 +2,7 @@ import * as React from 'react';
 import { styled, keyframes } from '@stitches/react';
 import { violet, blackA, mauve, slate, green } from '@radix-ui/colors';
 import * as ToastPrimitive from '@radix-ui/react-toast';
-import { CloseIcon, CorrectCircleIcon, EditIconV4 } from '../../../../constants/icons';
+import { CloseIcon, EditIconV4 } from '../../../../constants/icons';
 import { css } from '@emotion/react';
 import { HoverButton } from '../../hoverButton';
 import { TextBlock } from '@dyson/components/atoms';

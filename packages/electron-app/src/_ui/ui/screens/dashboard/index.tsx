@@ -81,7 +81,7 @@ enum ITestTypeEnum {
 	"SAVED" = "SAVED",
 }
 const DashboardScreen = () => {
-	const [currentTab, setCurrentTab] = React.useState<ITestTypeEnum>(ITestTypeEnum.DRAFT);
+	const [currentTab, setCurrentTab] = React.useState<ITestTypeEnum>(ITestTypeEnum.SAVED);
 	const [animationComplete, setAnimationComplete] = React.useState(false);
 	const { userInfo, projects } = useUser();
 	const { data: tests, mutate } = useRequest(userInfo?.isUserLoggedIn ? getSelectedProjectTestsRequest : () => null, { refreshInterval: 5000 });
@@ -253,7 +253,7 @@ const DashboardScreen = () => {
 	);
 
 	const filteredDraftTests = draftTests?.map((draft) => {
-		return {...draft, testName: draft.name};
+		return {...draft, testName: draft.name, firstRunCompleted: true};
 	});
 	const testContent = filteredTests.length && currentTab === ITestTypeEnum.SAVED ? <TestList listHeading={listHeading} deleteTest={handleTestDelete} tests={filteredTests} /> : null;
 	const draftContent = (draftTests?.length && currentTab === ITestTypeEnum.DRAFT ? <TestList listHeading={listHeading} deleteTest={handleTestDelete} tests={filteredDraftTests} />: null);

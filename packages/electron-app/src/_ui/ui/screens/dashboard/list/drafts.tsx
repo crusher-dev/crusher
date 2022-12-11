@@ -54,6 +54,8 @@ const DraftItem = ({ test, isItemSelected, isEditingName, setIsEditingName }) =>
 	const listItemActionsStyle = React.useMemo(() => listItemActionsCss(isHover), [isHover]);
 
 	const handleEdit = React.useCallback(() => {
+		alert("Triggering edit test");
+
 		store.dispatch(setRecorderContext({
 			origin: "app",
 			variant: TRecorderVariant.EDIT_TEST,
@@ -257,7 +259,6 @@ const listItemActionsCss = (isActive: boolean) => {
 const SELECTED_TESTS_MENU = [
 	{ id: "rename", label: "Rename", shortcut: <div>Enter</div> },
 	{ id: "edit", label: "Edit test", shortcut: null },
-	{ id: "edit", label: "Run test", shortcut: null },
 	{ id: "delete", label: "Delete", shortcut: <div>Delete</div> },
 ];
 
@@ -301,8 +302,8 @@ const TestList = ({ tests, deleteTest, listHeading }: any) => {
 	const SelectedTestActions = React.useMemo(
 		() =>
 			({ items, toggleSelectAll, selectedList }) => {
-				const handleRun = React.useCallback(() => {
-					triggerLocalBuild(selectedList, [], null, "app");
+				const handleEdit = React.useCallback(() => {
+					alert("Triggering edit test");
 				}, [items, selectedList]);
 
 				const handleDelete = React.useCallback(() => {
@@ -341,7 +342,7 @@ const TestList = ({ tests, deleteTest, listHeading }: any) => {
 							</span>
 						</div>
                         {selectedList.length === 1 && (
-                          			<div onClick={handleRun} css={runTestsCSS}>
+                          			<div onClick={handleEdit} css={runTestsCSS}>
                                       <PlayIcon css={playIconCss} />
                                       <span css={runTextCss}>edit</span>
                                   </div>  
@@ -359,9 +360,8 @@ const TestList = ({ tests, deleteTest, listHeading }: any) => {
 
 			if (id === "delete" || id === "delete-all") {
 				deleteTest(selectedList);
-			} else if (id === "run" || id === "run-all") {
-				triggerLocalBuild(selectedList, selectedTests, null, "app");
 			} else if (id === "edit") {
+				alert("Triggering edit test");
 				store.dispatch(setRecorderContext({
 					origin: "app",
 					variant: TRecorderVariant.EDIT_TEST,

@@ -351,7 +351,18 @@ const performTrackEvent = (event: DesktopAppEventsEnum, properties: any = {}) =>
 	return ipcRenderer.invoke("track-event", { event, properties });
 };
 
+
+function saveAutoAction(action: iAction) {
+	switch (action.type) {
+		default:
+			registerActionAsSavedStep(action);
+			break;
+	}
+}
+
+
 export {
+	saveAutoAction,
 	recordHoverDependencies,
 	performAction,
 	performSetDevice,

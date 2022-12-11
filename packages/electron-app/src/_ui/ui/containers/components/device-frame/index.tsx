@@ -23,7 +23,7 @@ import {
 	turnOnWebviewDevTools,
 } from "../../../../../ipc/perform";
 import { setSelectedElement, updateRecordedStep, updateRecorderCrashState } from "electron-app/src/store/actions/recorder";
-import { saveAutoAction } from "../../../../commands/saveActions";
+import { saveAutoAction } from "electron-app/src/ipc/perform";
 import { TRecorderMessagesType } from "../../../../../lib/recorder/host-proxy";
 import { TRecorderCrashState, TRecorderState } from "electron-app/src/store/reducers/recorder";
 import { StopIcon } from "../../../../constants/old_icons";

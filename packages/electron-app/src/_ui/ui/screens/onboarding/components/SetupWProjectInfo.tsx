@@ -2,7 +2,7 @@
 import { Button, TextBlock } from "@dyson/components/atoms"
 import { Heading } from "@dyson/components/atoms/heading/Heading"
 import { css } from "@emotion/react"
-import { goFullScreen } from "electron-app/src/_ui/commands/perform";
+import { goFullScreen } from "electron-app/src/ipc/perform";
 import { motion } from "framer-motion";
 import { useAtom,atom } from "jotai";
 import { useNavigate } from "react-router-dom";

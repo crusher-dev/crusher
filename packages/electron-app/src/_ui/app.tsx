@@ -36,7 +36,7 @@ import { getStore } from "../store/configureStore";
 import { getCurrentLocalBuild } from "../store/selectors/builds";
 import { DesktopAppEventsEnum } from "@shared/modules/analytics/constants";
 import axios from "axios";
-import { updateDraftTest } from "./api/tests/draft.tests";
+import { updateDraftTest } from "../api/tests/draft.tests";
 
 const handleCompletion = async (store: Store, action: IDeepLinkAction, addNotification, hasCompletedSuccesfully: boolean) => {
 	// @TODO: Change `redirectAfterSuccess` to `isLocalBuild`

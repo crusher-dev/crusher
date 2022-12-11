@@ -58,7 +58,7 @@ import { shouldOverrideHost } from "../lib/project-config";
 import { chalkShared, _log } from "@shared/modules/logger";
 import { DesktopAppEventsEnum } from "@shared/modules/analytics/constants";
 import _ from "lodash";
-import { saveNewDraftTest } from "../_ui/api/tests/draft.tests";
+import { saveNewDraftTest } from "../api/tests/draft.tests";
 import { generateRandomTestName } from "../utils/renderer";
 
 export class AppWindow {

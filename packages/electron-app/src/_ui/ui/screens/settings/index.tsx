@@ -10,7 +10,7 @@ import { Conditional } from "@dyson/components/layouts";
 import { useNavigate } from "react-router-dom";
 import { IntegrationSettings } from "./integrationSettings";
 import { atom, useAtom } from "jotai";
-import { useUser } from "electron-app/src/_ui/api/user/user";
+import { useUser } from "electron-app/src/api/user/user";
 import { getCurrentSelectedProjct } from "electron-app/src/store/selectors/app";
 import { useStore } from "react-redux";
 

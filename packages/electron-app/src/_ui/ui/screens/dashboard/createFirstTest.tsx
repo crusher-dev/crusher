@@ -10,7 +10,7 @@ import { setRecorderContext } from "electron-app/src/store/actions/recorder";
 import { TRecorderVariant } from "electron-app/src/store/reducers/recorder";
 import { useStore } from "react-redux";
 import axios from "axios";
-import { saveNewDraftTest } from "electron-app/src/_ui/api/tests/draft.tests";
+import { saveNewDraftTest } from "electron-app/src/api/tests/draft.tests";
 import { getRecorderContext } from "electron-app/src/store/selectors/recorder";
 import { generateRandomTestName } from "electron-app/src/utils/renderer";
 

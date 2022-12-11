@@ -1,5 +1,5 @@
 import React from "react";
-import useRequest from "../../utils/useRequest";
+import useRequest from "../../_ui/utils/useRequest";
 import { getUserInfoAPIRequest } from "./user.requests";
 import { useNavigate } from "react-router-dom";
 import { getUserAccountInfo } from "electron-app/src/store/selectors/app";

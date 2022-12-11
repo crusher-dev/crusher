@@ -7,7 +7,7 @@ import { setSessionInfoMeta } from "../../../../store/actions/app";
 import { resetRecorder, setIsWebViewInitialized, setRecorderContext } from "../../../../store/actions/recorder";
 import { TRecorderState, TRecorderVariant } from "../../../../store/reducers/recorder";
 import { getAppSessionMeta } from "../../../../store/selectors/app";
-import { getAllSteps, getIsStatusBarVisible, getRecorderContext, getRecorderState } from "../../../../store/selectors/recorder";
+import { getAllSteps, getCurrentDraftTest, getIsStatusBarVisible, getRecorderContext, getRecorderState } from "../../../../store/selectors/recorder";
 import { IDeepLinkAction } from "../../../../types";
 import {
 	goFullScreen,
@@ -35,7 +35,7 @@ import { getStore } from "../../../../store/configureStore";
 import { getCurrentLocalBuild } from "../../../../store/selectors/builds";
 import { DesktopAppEventsEnum } from "@shared/modules/analytics/constants";
 import axios from "axios";
-import { updateDraftTest } from "../../../../api/tests/draft.tests";
+import { getAllDrafts, getDraft, updateDraftTest } from "../../../../api/tests/draft.tests";
 import { useSearchParams } from "react-router-dom";
 
 import {motion} from "framer-motion"
@@ -146,6 +146,25 @@ const handleUrlAction = (store: Store, addNotification, event: Electron.IpcRende
 			CloudCrusher.getBuildReport(buildId).then((buildReport) => {
 				runTest(buildReport.host);
 			});
+			break;
+		case "continue-draft-test":
+			const { draftId } = action.args;
+			axios(getDraft(draftId)).then((res) => {
+				const { name, events } = res.data;
+
+				store.dispatch(setRecorderContext({
+					variant: TRecorderVariant.CREATE_TEST,
+					origin: "app",
+					startedAt: Date.now(),
+					testName: name,
+					draftId: draftId
+				}));
+
+				const eventsJSON = JSON.parse(events);
+				performSteps(eventsJSON);
+			}).catch((err) => {
+				console.error("Error while fetching draft", err);
+			})
 			break;
 		case "replay-test":
 			const localBuild = getCurrentLocalBuild(store.getState());

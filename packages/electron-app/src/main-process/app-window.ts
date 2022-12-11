@@ -244,6 +244,7 @@ export class AppWindow {
 		ipcMain.handle("run-tests", this.handleCloudRunTests.bind(this));
 		ipcMain.handle("replay-test", this.handleRemoteReplayTest.bind(this));
 		ipcMain.handle("replay-test-url-action", this.handleRemoteReplayTestUrlAction.bind(this));
+		ipcMain.handle("continue-draft-test", this.handleContinueDraftTest.bind(this));
 		ipcMain.handle("update-test", this.handleUpdateTest.bind(this));
 		ipcMain.handle("save-test", this._handleSaveTestCall.bind(this));
 		ipcMain.handle("run-draft-test", this.handleRunDraftTest.bind(this));
@@ -987,6 +988,18 @@ export class AppWindow {
 			action: {
 				commandName: "replay-test",
 				args: { testId: payload.testId, redirectAfterSuccess: payload.redirectAfterSuccess, selectedTests: payload.selectedTests },
+			},
+		});
+	}
+
+	async handleContinueDraftTest(
+		event: Electron.IpcMainInvokeEvent,
+		payload: { draftId: number; },
+	) {
+		this.sendMessage("url-action", {
+			action: {
+				commandName: "continue-draft-test",
+				args: { draftId: payload.draftId },
 			},
 		});
 	}

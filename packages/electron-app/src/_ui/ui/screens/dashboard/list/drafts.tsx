@@ -4,7 +4,7 @@ import { css } from "@emotion/react";
 import { GarbageIcon, LoadingIconV2, PlayIcon } from "electron-app/src/_ui/constants/old_icons";
 import { BasketBallIcon, EditIcon } from "../../../../constants/icons";
 import { useNavigate } from "react-router-dom";
-import { goFullScreen, performReplayTestUrlAction } from "electron-app/src/ipc/perform";
+import { continueDraftTest, goFullScreen, performReplayTestUrlAction } from "electron-app/src/ipc/perform";
 import { triggerLocalBuild } from "../../../../utils/recorder";
 import { CloudCrusher } from "electron-app/src/lib/cloud";
 import { ContextMenuTypeEnum, ListBox } from "../../../components/selectableList";
@@ -54,22 +54,9 @@ const DraftItem = ({ test, isItemSelected, isEditingName, setIsEditingName }) =>
 	const listItemActionsStyle = React.useMemo(() => listItemActionsCss(isHover), [isHover]);
 
 	const handleEdit = React.useCallback(() => {
-		alert("Triggering edit test");
-
-		store.dispatch(setRecorderContext({
-			origin: "app",
-			variant: TRecorderVariant.EDIT_TEST,
-			testId: test.id,
-			testName: test.testName,
-		}));
-
 		navigate("/recorder");
 		goFullScreen();
-		performReplayTestUrlAction(test.id, false, [test]);
-	}, [test]);
-
-	const handleRunTest = React.useCallback(() => {
-		triggerLocalBuild([test.id], [test], null, "app");
+		continueDraftTest(test.id);
 	}, [test]);
 
 	const handleEmojiSelected = React.useCallback((emoji) => {
@@ -146,12 +133,6 @@ const testItem = (isItemSelected) => css`
 	}
 `;
 
-const loadingContainerCss = css`
-	display: flex;
-	align-items: center;
-	gap: 4px;
-	font-size: 11px;
-`;
 
 const checkboxCss = css`
 	.checkbox-container {
@@ -303,7 +284,9 @@ const TestList = ({ tests, deleteTest, listHeading }: any) => {
 		() =>
 			({ items, toggleSelectAll, selectedList }) => {
 				const handleEdit = React.useCallback(() => {
-					alert("Triggering edit test");
+					navigate("/recorder");
+					goFullScreen();
+					continueDraftTest(selectedList[0]);
 				}, [items, selectedList]);
 
 				const handleDelete = React.useCallback(() => {
@@ -361,18 +344,10 @@ const TestList = ({ tests, deleteTest, listHeading }: any) => {
 			if (id === "delete" || id === "delete-all") {
 				deleteTest(selectedList);
 			} else if (id === "edit") {
-				alert("Triggering edit test");
-				store.dispatch(setRecorderContext({
-					origin: "app",
-					variant: TRecorderVariant.EDIT_TEST,
-					testId: selectedList[0],
-					testName: selectedTests[0].testName,
-				}));
+				alert(selectedList[0]);
 				navigate("/recorder");
 				goFullScreen();
-				
-	
-				performReplayTestUrlAction(selectedList[0], false, selectedTests);
+				continueDraftTest(selectedList[0]);
 			} else if (id === "rename") {
 				setTestEditName(selectedList[0]);
 			}

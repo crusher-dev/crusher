@@ -360,8 +360,12 @@ function saveAutoAction(action: iAction) {
 	}
 }
 
+const continueDraftTest = (draftId: string) => {
+	return ipcRenderer.invoke("continue-draft-test", { draftId });
+};
 
 export {
+	continueDraftTest,
 	saveAutoAction,
 	recordHoverDependencies,
 	performAction,

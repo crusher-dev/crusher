@@ -79,6 +79,7 @@ const ElementActions = ({ className, filteredList, defaultExpanded }: IProps) =>
 
 	return (
 		<ActionsList
+			id={"element_action"}
 			className={String(className)}
 			title={"element"}
 			description={"checks over element"}

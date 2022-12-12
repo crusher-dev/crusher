@@ -690,6 +690,7 @@ importers:
       react-refresh-typescript: ^2.0.7
       react-router-dom: ^6.3.0
       react-select: ^4.3.0
+      react-shepherd: ^4.1.0
       reactour: ^1.18.1
       redux: ^4.0.5
       redux-devtools-extension: ^2.13.8
@@ -768,7 +769,7 @@ importers:
       electron-debug: 3.2.0
       electron-devtools-installer: 3.2.0
       electron-notarize: 1.1.1
-      electron-redux: 1.5.4_redux@4.1.2
+      electron-redux: 1.5.4
       electron-updater: 4.6.1
       electron-window-state: 5.0.3
       emoji-mart: 5.2.2
@@ -807,6 +808,7 @@ importers:
       react-redux: 7.2.4_sfoxds7t5ydpegc3knd667wn6m
       react-router-dom: 6.3.0_sfoxds7t5ydpegc3knd667wn6m
       react-select: 4.3.1_37alspmz7orhfskwjuyttisydi
+      react-shepherd: 4.1.0_sfoxds7t5ydpegc3knd667wn6m
       reactour: 1.18.4_7o42zhftx36oddvjwkcwxn2pri
       redux: 4.1.2
       redux-devtools-extension: 2.13.9_redux@4.1.2
@@ -5834,6 +5836,10 @@ packages:
   /@polka/url/1.0.0-next.15:
     resolution: {integrity: sha512-15spi3V28QdevleWBNXE4pIls3nFZmBbUGrW9IVPwiQczuSb9n76TCB4bsk8TSel+I1OkHEdPhu5QKMfY6rQHA==}
     dev: true
+
+  /@popperjs/core/2.11.6:
+    resolution: {integrity: sha512-50/17A98tWUfQ176raKiOGXuYpLyyVMkxxG6oylzL3BPOlA6ADGdK7EYunSa4I064xerltq9TGXs8HmOk5E+vw==}
+    dev: false
 
   /@popperjs/core/2.9.2:
     resolution: {integrity: sha512-VZMYa7+fXHdwIq1TDhSXoVmSPEGM/aa+6Aiq3nVVJ9bXr24zScr+NlKFKC3iPljA7ho/GAZr+d2jOf5GIRC30Q==}
@@ -11516,10 +11522,8 @@ packages:
     dependencies:
       ajv: 6.12.6
 
-  /ajv-formats/2.1.1_ajv@8.11.0:
+  /ajv-formats/2.1.1:
     resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
-    peerDependencies:
-      ajv: ^8.0.0
     peerDependenciesMeta:
       ajv:
         optional: true
@@ -11781,10 +11785,10 @@ packages:
     resolution: {integrity: sha512-Bxn8U3KIVthgBVXN//hgF6gD+LPHwXl/pcoKxVR64JlyMKdcrmpFssahO71O07RLEZnXzcwBXh4qIjK74xJ/bw==}
     engines: {node: '>=14.0.0'}
     dependencies:
-      7zip-bin: 5.1.1
       '@develar/schema-utils': 2.6.5
       '@electron/universal': 1.2.1
       '@malept/flatpak-bundler': 0.4.0
+      7zip-bin: 5.1.1
       async-exit-hook: 2.0.1
       bluebird-lst: 1.0.9
       builder-util: 23.3.0
@@ -13354,9 +13358,9 @@ packages:
   /builder-util/23.3.0:
     resolution: {integrity: sha512-m7RRd21N2yrnuGFd+ZqOY0ryeqWmBslDKmGDVz0wETqoEEqpiJsF3CGlsb6MRN2EQKDubvE5e+lBf8ATt06fnA==}
     dependencies:
-      7zip-bin: 5.1.1
       '@types/debug': 4.1.7
       '@types/fs-extra': 9.0.13
+      7zip-bin: 5.1.1
       app-builder-bin: 4.0.0
       bluebird-lst: 1.0.9
       builder-util-runtime: 9.0.3
@@ -14522,8 +14526,8 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
     dependencies:
-      JSONStream: 1.3.5
       is-text-path: 1.0.1
+      JSONStream: 1.3.5
       lodash: 4.17.21
       meow: 8.1.2
       split2: 3.0.0
@@ -16246,10 +16250,8 @@ packages:
       - supports-color
     dev: false
 
-  /electron-redux/1.5.4_redux@4.1.2:
+  /electron-redux/1.5.4:
     resolution: {integrity: sha512-7fM7OLVR34prk/ZlIv3yRbB4XCZPPQJ9ZfYLPmWPvKIONe2qm1e0on+cMLGgwzREapQrzCmc1VAxs8WNbWgncg==}
-    peerDependencies:
-      redux: ^4.0.1
     dependencies:
       debug: 4.3.3
       redux: 4.1.2
@@ -27720,6 +27722,18 @@ packages:
       - '@types/react'
     dev: false
 
+  /react-shepherd/4.1.0_sfoxds7t5ydpegc3knd667wn6m:
+    resolution: {integrity: sha512-g+SCP5DDLFEqM/Q+ted6/yMNf2fpHvoyq6GDGWjDk1IlvfAcIshW/BulKjqkq5tAibd0bUpDFSGCYn3o7GWE+g==}
+    engines: {node: '>=14', npm: '>=7'}
+    peerDependencies:
+      react: ^17.0.2 || 18.x
+      react-dom: ^17.0.2 || 18.x
+    dependencies:
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+      shepherd.js: 10.0.1
+    dev: false
+
   /react-smooth/2.0.1_3bsg7idxxazmtsqzddt2xlcgzi:
     resolution: {integrity: sha512-Own9TA0GPPf3as4vSwFhDouVfXP15ie/wIHklhyKBH5AN6NFtdk0UpHBnonV11BtqDkAWlt40MOUc+5srmW7NA==}
     peerDependencies:
@@ -29130,7 +29144,7 @@ packages:
     dependencies:
       '@types/json-schema': 7.0.11
       ajv: 8.11.0
-      ajv-formats: 2.1.1_ajv@8.11.0
+      ajv-formats: 2.1.1
       ajv-keywords: 5.1.0_ajv@8.11.0
 
   /scroll-smooth/1.1.0:
@@ -29516,6 +29530,15 @@ packages:
     resolution: {integrity: sha512-vFwSUfQvqybiICwZY5+DAWIPLKsWO31Q91JSKl3UYv+K5c2QRPzn0qzec6QPu1Qc9eHYItiP3NdJqNVqetYAww==}
     optional: true
 
+  /shepherd.js/10.0.1:
+    resolution: {integrity: sha512-R32v4b4b0N1gK/vxvRtdhty+SBZlBPcPTSYCwcaAQvFd0n6Xki7cRH6Sx0oD9WB/HCkqCNM1msyIyylXmq635w==}
+    engines: {node: 12.* || 14.* || >= 16}
+    dependencies:
+      '@popperjs/core': 2.11.6
+      deepmerge: 4.2.2
+      smoothscroll-polyfill: 0.4.4
+    dev: false
+
   /shimmer/1.2.1:
     resolution: {integrity: sha512-sQTKC1Re/rM6XyFM6fIAGHRPVGvyXfgzIDvzoq608vM+jeyVD0Tu1E6Np0Kc2zAIFWIj963V2800iF/9LPieQw==}
     dev: true
@@ -29641,6 +29664,10 @@ packages:
     resolution: {integrity: sha512-94hK0Hh8rPqQl2xXc3HsaBoOXKV20MToPkcXvwbISWLEs+64sBq5kFgn2kJDHb1Pry9yrP0dxrCI9RRci7RXKg==}
     engines: {node: '>= 6.0.0', npm: '>= 3.0.0'}
     requiresBuild: true
+
+  /smoothscroll-polyfill/0.4.4:
+    resolution: {integrity: sha512-TK5ZA9U5RqCwMpfoMq/l1mrH0JAR7y7KRvOBx0n2869aLxch+gT9GhN3yUfjiw+d/DiF1mKo14+hd62JyMmoBg==}
+    dev: false
 
   /snapdragon-node/2.1.1:
     resolution: {integrity: sha512-O27l4xaMYt/RSQ5TR3vpWCAB5Kb/czIcqUFOM/C4fYcLnbZUc1PkjTAMjof2pBWaSTwOUd6qUHcFGVGj7aIwnw==}

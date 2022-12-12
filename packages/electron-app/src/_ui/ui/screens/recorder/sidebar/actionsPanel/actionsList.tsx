@@ -22,7 +22,7 @@ interface IProps {
 
 const expandedAtom = atom("page")
 
-const ActionsList = ({ className, defaultExpanded, ...props }: IProps) => {
+const ActionsList = ({ className, id, defaultExpanded, ...props }: IProps) => {
 	const { title, description, callback, icon, items } = props;
 
 	const [expandedLabel, setExpandedLabel] = useAtom(expandedAtom)
@@ -48,14 +48,14 @@ const ActionsList = ({ className, defaultExpanded, ...props }: IProps) => {
 			return null;
 		}
 		return items.map((item) => (
-			<div onClick={handleClick.bind(this, item.id)} css={actionItemCss}>
+			<div id={id + `_${item.id}`} onClick={handleClick.bind(this, item.id)} css={actionItemCss}>
 				{item.content}
 			</div>
 		));
 	}, [items]);
 
 	return (
-		<div css={[containerCss, bottomSeperatorCss]} className={String(className)} {...props}>
+		<div id={id} css={[containerCss, bottomSeperatorCss]} className={String(className)} {...props}>
 			<div className={"action-item-header"} onClick={setExpandedLabel.bind(this, title)} css={[headingCss, isExpanded ? activeSectionCss : null]}>
 				{icon ? <div css={headingIconCss}>{icon}</div> : ""}
 				<div css={headingContentCss}>

@@ -17,6 +17,7 @@ import { editInputAtom } from "electron-app/src/_ui/store/jotai/testsPage";
 import { setRecorderContext } from "electron-app/src/store/actions/recorder";
 import { useStore } from "react-redux";
 import { TRecorderVariant } from "electron-app/src/store/reducers/recorder";
+import { timeSince } from "electron-app/src/_ui/utils/project";
 
 const EditableTestName = ({ testName, testId }) => {
 	const [testEditName, setTestEditName] = useAtom(editInputAtom);
@@ -98,7 +99,14 @@ const DraftItem = ({ test, isItemSelected, isEditingName, setIsEditingName }) =>
 				setIsEditing={setIsEditingName}
 				testName={test.testName}
 			/>
+
+			{test.host ? (
+				<div className={"host ml-8"} css={hostCss}>
+					{test.host}
+				</div>
+			) : null}
         
+			<span className={"ml-auto"} css={timeAgoCss}>{  timeSince(new Date(test.createdAt)) } ago</span>
 			<div className={"action-buttons"} css={listItemActionsStyle}>
 				<div onClick={handleEdit} css={editContainerCss} title="edit this test">
 					<EditIcon css={editIconCss} />
@@ -111,6 +119,13 @@ const DraftItem = ({ test, isItemSelected, isEditingName, setIsEditingName }) =>
 	);
 };
 
+const hostCss = css`
+	font-size: 12rem;
+	color: #3f3f3f;
+`;
+const timeAgoCss = css`
+	font-size: 12.5rem;
+`;
 const testItem = (isItemSelected) => css`
 	#checkbox {
 		visibility: ${isItemSelected ? "visible" : "hidden"};
@@ -231,9 +246,9 @@ const listItemActionsCss = (isActive: boolean) => {
 	return css`
 		display: ${isActive ? "flex" : "none"};
 		color: #9f87ff;
-		margin-left: auto;
 		align-items: center;
 		gap: 4rem;
+		margin-left: 8rem;
 	`;
 };
 
@@ -315,6 +330,7 @@ const TestList = ({ tests, deleteTest, listHeading }: any) => {
 							listItemActionsCss,
 							css`
 								display: flex;
+								margin-left: auto;
 							`,
 						]}
 					>

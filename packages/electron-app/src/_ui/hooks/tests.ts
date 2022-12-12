@@ -8,6 +8,7 @@ import { useState } from "react";
 import { CloudCrusher } from "electron-app/src/lib/cloud";
 import { sendSnackBarEvent } from "../ui/containers/components/toast";
 import { getAllDrafts } from "electron-app/src/api/tests/draft.tests";
+import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 
 const useBuildNotifications = () => {
 	const notifications = useSelector(getBuildNotifications);
@@ -129,7 +130,15 @@ const useProjectTests = () => {
 		return draftTests?.filter((draft) => {
 			return !deletedDraftTests.includes(draft.id);
 		}).map((draft) => {
-			return { ...draft, testName: draft.name, firstRunCompleted: true};
+			const events = JSON.parse(draft.events);
+			const navigationEvents = events.find((event: any) => {
+				return event.type === ActionsInTestEnum.NAVIGATE_URL;
+			});
+			const host = navigationEvents?.payload.meta.value;
+
+			return { ...draft, testName: draft.name, firstRunCompleted: true, host};
+		}).sort((a, b) => {
+			return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
 		});
 	};
 

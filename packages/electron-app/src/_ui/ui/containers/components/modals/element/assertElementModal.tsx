@@ -291,7 +291,7 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 					`}
 				>
 					<div style={formButtonStyle}>
-						<Text css={linkStyle} onClick={createNewElementAssertionRow}>
+						<Text id={"assert-element-add-check"} css={linkStyle} onClick={createNewElementAssertionRow}>
 							Add a check
 						</Text>
 						<Text

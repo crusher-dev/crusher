@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { getSelectedElement } from "electron-app/src/store/selectors/recorder";
 import { ElementIcon } from "electron-app/src/_ui/constants/icons";
 import { css } from "@emotion/react";
+import { ShepherdTourContext } from "react-shepherd";
 
 const actionsData = require("./actions.json");
 interface IProps {
@@ -16,6 +17,7 @@ interface IProps {
 
 const ElementActions = ({ className, filteredList, defaultExpanded }: IProps) => {
 	const selectedElement = useSelector(getSelectedElement);
+	const tour = React.useContext(ShepherdTourContext);
 
 	const handleCallback = React.useCallback(
 		(id) => {
@@ -49,6 +51,9 @@ const ElementActions = ({ className, filteredList, defaultExpanded }: IProps) =>
 				case "SHOW_ASSERT_MODAL":
 					if (selectedElement) {
 						ElementsHelper.showAssertModal();
+						setTimeout(() => {
+							tour.next();
+						}, 250);
 					} else {
 						window["elementActionsCallback"] = ElementsHelper.showAssertModal;
 					}

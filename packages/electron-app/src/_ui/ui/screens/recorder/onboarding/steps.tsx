@@ -164,7 +164,30 @@ const steps = [
       title: 'Click on this button',
       text: ['Click on this button to see the assert info'],
     },
-    
+    {
+      id: "assert-element-add",
+      attachTo: { element: '#assert-element-add-check', on: 'bottom' },
+      buttons: [
+        {
+          classes: 'shepherd-button-secondary',
+          text: 'Exit',
+          type: 'cancel'
+        },
+        {
+          classes: 'shepherd-button-primary',
+          text: 'Next',
+          type: 'next'
+        }
+      ],
+      classes: 'custom-class-name-1 custom-class-name-2',
+      highlightClass: 'highlight',
+      scrollTo: false,
+      cancelIcon: {
+        enabled: true,
+      },
+      title: 'Click to add element asserts',
+      text: ['Add element asserts'],
+    },
     // ...
   ];
 

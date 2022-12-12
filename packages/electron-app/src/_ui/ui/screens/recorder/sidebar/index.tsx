@@ -17,12 +17,13 @@ interface ISidebarProps {
 	className?: string;
 }
 
-const Sidebar = ({ className }: ISidebarProps) => {
+const Sidebar = ({ className }: ISidebarProps) => {	
 	const { currentBuild } = useLocalBuild();
 	const isInRecordingSession = useSelector(getIsInRecordingSession);
 	const isCustomCodeOn = useSelector(getIsCustomCodeOn);
 
 	const tour = useContext(ShepherdTourContext);
+	
 	
 	const topPanel = React.useMemo(() => {
 		if (currentBuild) {
@@ -32,14 +33,17 @@ const Sidebar = ({ className }: ISidebarProps) => {
 		}
 	}, [currentBuild]);
 
+	React.useEffect(() => {
+		if (isInRecordingSession && tour) {
+			setTimeout(() => {
+				tour.start();
 
-	const handleClick = () => {
-		tour.start();
-	}
-
+			}, 50);
+		}
+	}, [isInRecordingSession]);
 	return (
 		<ResizeWrapper track={"Resizable"}>
-			<div id="Resizable" onClick={handleClick} css={containerCss} className={String(className)}>
+			<div id="Resizable" css={containerCss} className={`recorder-sidebar ${String(className)}`}>
 
 				<Conditional showIf={isInRecordingSession}>
 					<>

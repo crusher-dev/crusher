@@ -2,7 +2,7 @@
 import { Button, TextBlock } from "@dyson/components/atoms"
 import { Heading } from "@dyson/components/atoms/heading/Heading"
 import { css } from "@emotion/react"
-import { goFullScreen } from "electron-app/src/ipc/perform";
+import { goFullScreen, performReplayTest, performSteps } from "electron-app/src/ipc/perform";
 import { motion } from "framer-motion";
 import { useAtom,atom } from "jotai";
 import { useNavigate } from "react-router-dom";
@@ -16,9 +16,10 @@ import { updateProjectMeta } from "electron-app/src/api/projects/integrations";
 import { useUser } from "electron-app/src/_ui/hooks/user";
 import { useStore } from "react-redux";
 import { getCurrentSelectedProjct } from "electron-app/src/store/selectors/app";
+import { devices } from "electron-app/src/devices";
 
-const isDevAtom = atom(null)
-const isLowCodePref = atom(null)
+export const isDevAtom = atom(null)
+export const isLowCodePref = atom(null)
 const DevBox = ()=>{
     const [isDev, setIsDec] = useAtom(isDevAtom)
     
@@ -64,6 +65,14 @@ const formItems = [
     },
 ]
 
+const recorderDevices = devices
+	.filter((device) => device.visible)
+	.map((device) => ({
+		device: device,
+		value: device.id,
+		label: device.name,
+	}));
+
 export const PROJECT_INFO = ()=>{
     const { userInfo, mutate } = useUser();
 
@@ -93,8 +102,35 @@ export const PROJECT_INFO = ()=>{
         mutate({
             ...userInfo
         }, false);
-        navigate("/");
+        navigate("/recorder");
+        goFullScreen();
+
+        performSteps([
+            {
+                type: "BROWSER_SET_DEVICE",
+                payload: {
+                    meta: {
+                        device: recorderDevices[0].device,
+                    },
+                },
+                time: Date.now(),
+            },
+            {
+                type: "PAGE_NAVIGATE_URL",
+                payload: {
+                    selectors: [],
+                    meta: {
+                        value: "https://i8svx9.sse.codesandbox.io/?step=3",
+                    },
+                },
+                status: "COMPLETED",
+                time: Date.now(),
+            },
+        ]);
     }, [isDev, isLowCode]);
+
+    const isSubmitDisabled = isDev === null || isLowCode === null;
+
 
     return (
         <div>
@@ -122,7 +158,7 @@ export const PROJECT_INFO = ()=>{
 
             
     </motion.div>
-    <CTABar onClick={handleCreateTest.bind(this)} btnText="setup project"/>
+    <CTABar isDisabled={isSubmitDisabled} onClick={handleCreateTest.bind(this)} btnText="setup project"/>
     </div>)
 
 }

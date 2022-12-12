@@ -38,17 +38,17 @@ import axios from "axios";
 import { getAllDrafts, getDraft, updateDraftTest } from "../../../../api/tests/draft.tests";
 import { useSearchParams } from "react-router-dom";
 import { ShepherdTour, ShepherdTourContext } from 'react-shepherd'
-import {motion} from "framer-motion"
+import { motion } from "framer-motion"
 import onboardingSteps from "./onboarding/steps";
 
 const tourOptions = {
 	defaultStepOptions: {
-	  cancelIcon: {
-		enabled: true
-	  }
+		cancelIcon: {
+			enabled: true
+		}
 	},
 	useModalOverlay: true
-  };
+};
 
 const handleCompletion = async (store: Store, action: IDeepLinkAction, addNotification, hasCompletedSuccesfully: boolean) => {
 	// @TODO: Change `redirectAfterSuccess` to `isLocalBuild`
@@ -94,7 +94,7 @@ const handleCompletion = async (store: Store, action: IDeepLinkAction, addNotifi
 					time: Date.now(),
 				}),
 			);
-			
+
 			clearAllToasts();
 			historyInstance.push("/", {});
 
@@ -103,7 +103,7 @@ const handleCompletion = async (store: Store, action: IDeepLinkAction, addNotifi
 			sendSnackBarEvent({ type: "test_report", message: null, meta: { totalCount: totalTestsInBuild, buildReportStatus: localBuild.buildReportStatus } });
 		}
 	} else {
-		if(hasCompletedSuccesfully) {
+		if (hasCompletedSuccesfully) {
 			showToast({
 				type: "ready-for-edit",
 				isUnique: true,
@@ -114,8 +114,8 @@ const handleCompletion = async (store: Store, action: IDeepLinkAction, addNotifi
 };
 
 const handleUrlAction = (store: Store, addNotification, event: Electron.IpcRendererEvent, { action }: { action: IDeepLinkAction }) => {
-	
-	const runTest = (host: string| null = null) => {
+
+	const runTest = (host: string | null = null) => {
 		const sessionInfoMeta = getAppSessionMeta(store.getState() as any);
 		const { selectedTests } = action.args;
 
@@ -146,7 +146,7 @@ const handleUrlAction = (store: Store, addNotification, event: Electron.IpcRende
 		case "run-test-from-build":
 			const { testId, buildId } = action.args;
 			store.dispatch(
-				setRecorderContext({ 
+				setRecorderContext({
 					variant: TRecorderVariant.EDIT_TEST,
 					origin: "deeplink",
 					testId: testId,
@@ -208,7 +208,7 @@ const App = () => {
 
 		if (allSteps.length && recorderContext.draftId) {
 			console.log("Auto saving now...");
-			await axios(updateDraftTest({events: allSteps as any}, recorderContext.draftId!));
+			await axios(updateDraftTest({ events: allSteps as any }, recorderContext.draftId!));
 			console.log("Auto saved");
 		}
 	};
@@ -231,7 +231,7 @@ const App = () => {
 			goFullScreen(false);
 		});
 		const listener = handleUrlAction.bind(this, store, addNotification);
-		ipcRenderer.on("url-action",listener);
+		ipcRenderer.on("url-action", listener);
 
 		return () => {
 			clearInterval(draftInterval);
@@ -259,9 +259,9 @@ const App = () => {
 
 	return (
 		<ShepherdTour steps={onboardingSteps} tourOptions={tourOptions}>
-			<motion.div 
-			initial={{ opacity: 0 }}
-			whileInView={{ opacity: 1  }}>
+			<motion.div
+				initial={{ opacity: 0 }}
+				whileInView={{ opacity: 1 }}>
 				<div css={dragableStyle} className={"drag"}></div>
 				<div css={contentStyle}>
 					<Sidebar css={sidebarCss} />
@@ -285,7 +285,7 @@ const StepHoverOverlay = () => {
 	React.useEffect(() => {
 		let interval;
 		interval = setTimeout(() => {
-				setShow(isStepHovered);
+			setShow(isStepHovered);
 		}, 25);
 
 		return () => {
@@ -367,12 +367,12 @@ const globalCss = css`
 		}
 	}
 	
-	.shepherd-button{background:#3288e6;border:0;border-radius:3px;color:hsla(0,0%,100%,.75);cursor:pointer;margin-right:.5rem;padding:.5rem 1.5rem;transition:all .5s ease}.shepherd-button:not(:disabled):hover{background:#196fcc;color:hsla(0,0%,100%,.75)}.shepherd-button.shepherd-button-secondary{background:#f1f2f3;color:rgba(0,0,0,.75)}.shepherd-button.shepherd-button-secondary:not(:disabled):hover{background:#d6d9db;color:rgba(0,0,0,.75)}.shepherd-button:disabled{cursor:not-allowed}
-	.shepherd-footer{border-bottom-left-radius:5px;border-bottom-right-radius:5px;display:flex;justify-content:flex-end;padding:0 .75rem .75rem}.shepherd-footer .shepherd-button:last-child{margin-right:0}
+	.shepherd-button{background:#3288e6;border:0;border-radius:3px;color:hsla(0,0%,100%,.75);cursor:pointer;margin-right:8rem;padding:8rem 24rem;transition:all .05s ease}.shepherd-button:not(:disabled):hover{background:#196fcc;color:hsla(0,0%,100%,.75)}.shepherd-button.shepherd-button-secondary{background:#f1f2f3;color:rgba(0,0,0,.75)}.shepherd-button.shepherd-button-secondary:not(:disabled):hover{background:#d6d9db;color:rgba(0,0,0,.75)}.shepherd-button:disabled{cursor:not-allowed}
+	.shepherd-footer{border-bottom-left-radius:5px;border-bottom-right-radius:5px;display:flex;justify-content:flex-end;padding:12rem 12rem}.shepherd-footer .shepherd-button:last-child{margin-right:0}
 	.shepherd-cancel-icon{background:transparent;border:none;color:hsla(0,0%,50%,.75);cursor:pointer;font-size:2em;font-weight:400;margin:0;padding:0;transition:color .5s ease}.shepherd-cancel-icon:hover{color:rgba(0,0,0,.75)}.shepherd-has-title .shepherd-content .shepherd-cancel-icon{color:hsla(0,0%,50%,.75)}.shepherd-has-title .shepherd-content .shepherd-cancel-icon:hover{color:rgba(0,0,0,.75)}
-	.shepherd-title{color:rgba(0,0,0,.75);display:flex;flex:1 0 auto;font-size:12rem;font-weight:400;margin:0;padding:0}
-	.shepherd-header{align-items:center;border-top-left-radius:5px;border-top-right-radius:5px;display:flex;justify-content:flex-end;line-height:2em;padding:.75rem .75rem 0}.shepherd-has-title .shepherd-content .shepherd-header{background:#e6e6e6;padding:1em}
-	.shepherd-text{color:rgba(0,0,0,.75);font-size:12rem;line-height:1.3em;padding:.75em}.shepherd-text p{margin-top:0}.shepherd-text p:last-child{margin-bottom:0}
+	.shepherd-title{color:rgba(0,0,0,.75);display:flex;flex:1 0 auto;font-size:16rem;font-weight:400;margin:0;padding:0}
+	.shepherd-header{align-items:center;border-top-left-radius:5px;border-top-right-radius:5px;display:flex;justify-content:flex-end;line-height:2em;padding:12rem 12rem 0}.shepherd-has-title .shepherd-content .shepherd-header{background:#e6e6e6;padding:1em}
+	.shepherd-text{color:rgba(0,0,0,.75);font-size:16rem;line-height:1.3em;padding:.75em}.shepherd-text p{margin-top:0}.shepherd-text p:last-child{margin-bottom:0}
 	.shepherd-content{border-radius:5px;outline:none;padding:0}
 	.shepherd-element{background:#fff;border-radius:5px;box-shadow:0 1px 4px rgba(0,0,0,.2);max-width:400px;opacity:0;outline:none;transition:opacity .3s,visibility .3s;visibility:hidden;width:100%;z-index:9999}.shepherd-enabled.shepherd-element{opacity:1;visibility:visible}.shepherd-element[data-popper-reference-hidden]:not(.shepherd-centered){opacity:0;pointer-events:none;visibility:hidden}.shepherd-element,.shepherd-element *,.shepherd-element :after,.shepherd-element :before{box-sizing:border-box}.shepherd-arrow,.shepherd-arrow:before{height:16px;position:absolute;width:16px;z-index:-1}.shepherd-arrow:before{background:#fff;content:"";transform:rotate(45deg)}.shepherd-element[data-popper-placement^=top]>.shepherd-arrow{bottom:-8px}.shepherd-element[data-popper-placement^=bottom]>.shepherd-arrow{top:-8px}.shepherd-element[data-popper-placement^=left]>.shepherd-arrow{right:-8px}.shepherd-element[data-popper-placement^=right]>.shepherd-arrow{left:-8px}.shepherd-element.shepherd-centered>.shepherd-arrow{opacity:0}.shepherd-element.shepherd-has-title[data-popper-placement^=bottom]>.shepherd-arrow:before{background-color:#e6e6e6}.shepherd-target-click-disabled.shepherd-enabled.shepherd-target,.shepherd-target-click-disabled.shepherd-enabled.shepherd-target *{pointer-events:none}
 	.shepherd-modal-overlay-container{height:0;left:0;opacity:0;overflow:hidden;pointer-events:none;position:fixed;top:0;transition:all .3s ease-out,height 0ms .3s,opacity .3s 0ms;width:100vw;z-index:9997}.shepherd-modal-overlay-container.shepherd-modal-is-visible{height:100vh;opacity:.5;transform:translateZ(0);transition:all .3s ease-out,height 0s 0s,opacity .3s 0s}.shepherd-modal-overlay-container.shepherd-modal-is-visible path{pointer-events:all}
@@ -418,10 +418,10 @@ const globalCss = css`
 		display: flex;
 		flex-grow: 1;
 		font-family: "GT Pressura", sans-serif;
-		font-size: 12rem;
+		font-size: 13rem;
 		justify-content: center;
 		margin: 0;
-		padding: 1rem;
+		padding: 10rem 12rem;
 		text-align: center;
 		text-transform: uppercase;
 	  }
@@ -444,7 +444,7 @@ const globalCss = css`
 	  .shepherd-enabled.shepherd-element {
 		opacity: 1;
 		visibility: visible;
-		border-radius: 21px;
+		border-radius: 0px;
 		overflow: hidden;
 	  }
 	  
@@ -525,18 +525,21 @@ const globalCss = css`
 	  .shepherd-has-title .shepherd-content .shepherd-header {
 		background: transparent;
 		font-family: "Cera Pro", sans-serif;
+		font-weight: 900;
 		padding-bottom: 0;
-		padding-left:   1.2rem;
+		padding-left: 18rem;
 	  }
 	  
 	  .shepherd-has-title .shepherd-content .shepherd-header .shepherd-title {
-		font-size: 12rem;
+		font-size: 16rem;
+		font-weight: 700;
 		text-transform: uppercase;
 	  }
 	  
 	  .shepherd-text {
-		font-size: 12rem;
-		padding: 2rem;
+		font-size: 14rem !important;
+		line-height: 1.8;
+		padding: 12rem 20rem !important;
 	  }
 	  
 	  .shepherd-text a,
@@ -568,7 +571,7 @@ const globalCss = css`
 	  
 	  .shepherd-text {
 		font-size: 12rem;
-		padding: 1.2rem 1rem;
+		padding: 18rem 16rem;
 	  }
 
 `;

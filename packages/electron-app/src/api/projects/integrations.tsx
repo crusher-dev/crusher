@@ -55,4 +55,18 @@ const removeVercelIntegration = () => {
 	}, true);
 };
 
-export { getIntegrationsAPIRequest, removeSlackIntegration, removeGithubIntegration, removeVercelIntegration };
+const updateProjectMeta = (meta: any) => {
+	return createAuthorizedRequestFunc((authorizationOptions: any) => {
+		const store = getStore();
+		const projectId = getCurrentSelectedProjct(store.getState() as any);
+
+		return {
+			url: resolveToBackend(`/projects/${projectId}/actions/update.meta`),
+			method: "POST",
+			data: {meta},
+			...authorizationOptions,
+		}
+	}, true);
+};
+
+export { getIntegrationsAPIRequest, removeSlackIntegration, removeGithubIntegration, removeVercelIntegration, updateProjectMeta };

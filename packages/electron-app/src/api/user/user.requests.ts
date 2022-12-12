@@ -9,4 +9,13 @@ const getUserInfoAPIRequest: () => AxiosRequestConfig = createAuthorizedRequestF
 	};
 }, true);
 
-export { getUserInfoAPIRequest };
+const updateUserMetaRequest: (data: any) => AxiosRequestConfig = createAuthorizedRequestFunc((authorizationOptions: any, data: any) => {
+	return {
+		url: resolveToBackend(`/users/actions/update.meta`),
+		method: "POST",
+		data,
+		...authorizationOptions,
+	};
+}, true);
+
+export { getUserInfoAPIRequest, updateUserMetaRequest };

@@ -6,7 +6,7 @@ import { getUserAccountInfo } from "electron-app/src/store/selectors/app";
 import { useStore } from "react-redux";
 
 export function useUser() {
-	const { data: userInfo, error } = useRequest(getUserInfoAPIRequest);
+	const { data: userInfo, error, mutate } = useRequest(getUserInfoAPIRequest);
 	const navigate = useNavigate();
 	const store = useStore();
 
@@ -28,5 +28,5 @@ export function useUser() {
 		return null;
 	}, [userInfo]);
 
-	return { userInfo, projects, error: error };
+	return { userInfo, projects, error: error, mutate };
 }

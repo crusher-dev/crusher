@@ -10,6 +10,12 @@ import { ONBOARDING_STAGE_ATOM } from "..";
 import { CTABar, HeaderBlock } from "./Common";
 
 import React from "react";
+import { updateUserMetaRequest } from "electron-app/src/api/user/user.requests";
+import axios from "axios";
+import { updateProjectMeta } from "electron-app/src/api/projects/integrations";
+import { useUser } from "electron-app/src/_ui/hooks/user";
+import { useStore } from "react-redux";
+import { getCurrentSelectedProjct } from "electron-app/src/store/selectors/app";
 
 const isDevAtom = atom(null)
 const isLowCodePref = atom(null)
@@ -46,29 +52,50 @@ const DirSelector = ()=>{
 
 const formItems = [
     {
+        id: "isDev",
         heading: (<>are you a dev?</>),
             desc: "we'll customize your experience",
             formComponent: <DevBox/>
     },  {
+        id: "testingPreference",
         heading: (<>testing preference</>),
             desc: "you can change it later",
             formComponent: <TestingPreference/>
     },
-    {
-        heading: (<>directory</>),
-            desc: "",
-            formComponent: (<DirSelector/>)
-    }
 ]
 
 export const PROJECT_INFO = ()=>{
-    const [_, setOnboarding] = useAtom(ONBOARDING_STAGE_ATOM)
-    const navigate = useNavigate()
+    const { userInfo, mutate } = useUser();
 
-    const handleCreateTest = React.useCallback(() => {
-        navigate("/recorder");
-        goFullScreen();
-    }, []);
+    const [_, setOnboarding] = useAtom(ONBOARDING_STAGE_ATOM);
+    const [isDev, setIsDev] = useAtom(isDevAtom)
+    const [isLowCode, setIsLowCode] = useAtom(isLowCodePref)
+
+    const navigate = useNavigate()
+    const store = useStore();
+
+    const handleCreateTest = React.useCallback(async () => {
+        await axios(updateProjectMeta({
+            isDev,
+            isLowCode,
+            ONBOARDING_COMPLETED: true,
+        })());
+        const currentProjectId = getCurrentSelectedProjct(store.getState() as any);
+        const currentProject = userInfo.projects.find((project) => project.id === currentProjectId);
+        if (currentProject) {
+            currentProject.meta = {
+                ...currentProject.meta,
+                isDev,
+                isLowCode,
+                ONBOARDING_COMPLETED: true,
+            };
+        }
+        mutate({
+            ...userInfo
+        }, false);
+        navigate("/");
+    }, [isDev, isLowCode]);
+
     return (
         <div>
          <HeaderBlock title="setup project" desc={"you'll be able to create test after this"}/>
@@ -77,7 +104,7 @@ export const PROJECT_INFO = ()=>{
         whileInView={{ opacity: 1  }}
     css={box} className="mt-32 py-32 px-40 mb-44">
             {
-                formItems.map(({heading,formComponent,desc})=>{
+                formItems.map(({heading,formComponent,desc}, index)=>{
                     return ( <div>
                         <div className="flex justify-between items-start">
                             <div>  
@@ -88,7 +115,7 @@ export const PROJECT_INFO = ()=>{
                                 {formComponent}
                             </div>
                         </div>
-                        <hr className="mt-24 mb-24" css={ruleCSS}/>
+                        {index !== formItems.length - 1 ? <hr className="mt-24 mb-24" css={ruleCSS}/> : null}
                     </div>)
                 })
             }

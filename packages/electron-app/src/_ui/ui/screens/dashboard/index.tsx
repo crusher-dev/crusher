@@ -197,6 +197,13 @@ const DashboardScreen = () => {
 	React.useEffect(() => {
 		const selectedProjectId = getCurrentSelectedProjct(store.getState());
 		if (!selectedProjectId) return navigate("/select-project");
+
+		const selectedProject = projects.find((p) => p.id == selectedProjectId);
+		// console.log("Selected project", selectedProject);
+		if(!selectedProject.meta.ONBOARDING_COMPLETED){
+			return navigate("/project-onboarding");
+		}
+
 		const proxyState = getProxyState(store.getState());
 		if (window["showProxyWarning"] && !Object.keys(proxyState).length) {
 			setShowProxyWarning({ show: true, testId: window["showProxyWarning"].testId, startUrl: window["showProxyWarning"].startUrl });

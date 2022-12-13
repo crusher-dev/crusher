@@ -9,7 +9,8 @@
 
 </p>
 
-<h2 >Crusher is a fast way to test app UI, modern alternative to ancient testing workflow</h3>
+<h2 >Fast way to test app UI with low-code</h3>
+Crusher is a fast way to test app UI, modern alternative to ancient testing workflow
 It's complete testing framework, includes local app, low-code recorder, runner and batteries are built in.
 
 

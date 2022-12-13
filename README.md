@@ -9,7 +9,7 @@
 
 </p>
 
-<h2 >Test app UI with low-code</h3>
+<h2 >Crusher: test app UI with low-code</h3>
 Crusher is a fast way to test app UI, a fast modern alternative to old workflows.
 
 Testing is clumsy - there are simply lot of tools, patching and repetitive code.

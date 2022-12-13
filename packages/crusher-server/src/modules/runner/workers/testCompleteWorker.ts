@@ -4,6 +4,7 @@ import Container from "typedi";
 import { ITestCompleteQueuePayload } from "@crusher-shared/types/queues/";
 import { TestRunnerQueue } from "../queue.service";
 
+const runnerQueueService = Container.get(TestRunnerQueue);
 
 interface ITestResultWorkerJob extends Job {
 	data: ITestCompleteQueuePayload;
@@ -31,8 +32,6 @@ function setupGracefulShutdown() {
 
 setupGracefulShutdown();
 const processTestAfterExecution = async function (bullJob: ITestResultWorkerJob): Promise<any> {
-	const runnerQueueService = Container.get(TestRunnerQueue);
-
 	return runnerQueueService.handleWorkerJob(bullJob);
 };
 

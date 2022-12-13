@@ -9,7 +9,7 @@
 
 </p>
 
-<h2 >Crusher is fast all-in-one testing you'll ever need</h3>
+<h2 >Crusher is a fast all-in-one testing you'll ever need</h3>
 
 New all-in-one testing framework/tool. It includes everything you need to test, low-code recorder, runner + batteries built-in.
 

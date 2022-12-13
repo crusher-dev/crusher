@@ -8,9 +8,9 @@ import { newInputBoxCSS } from "../login";
 	@Note - Wrong implementation of the loading state.
 						It should be implemented in the parent component.
  */
-export function FormInput({ type, data, onChange, placeholder, autoComplete, onBlur, onKeyDown, onReturn, className }: any) {
+export function FormInput({ type, hidden, data, onChange, placeholder, autoComplete, onBlur, onKeyDown, onReturn, className }: any) {
 	return (
-		<div>
+		<div css={hidden ? css`display: none;` : undefined}>
 			<Input
 				className={`${className} md-20 bg`}
 				autoComplete={autoComplete}

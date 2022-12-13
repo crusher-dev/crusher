@@ -120,7 +120,7 @@ export const PROJECT_INFO = ()=>{
                 payload: {
                     selectors: [],
                     meta: {
-                        value: "https://i8svx9.sse.codesandbox.io/?step=0",
+                        value: "https://crusher-demo-site.vercel.app/",
                     },
                 },
                 status: "COMPLETED",

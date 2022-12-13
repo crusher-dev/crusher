@@ -198,10 +198,12 @@ const DashboardScreen = () => {
 		const selectedProjectId = getCurrentSelectedProjct(store.getState());
 		if (!selectedProjectId) return navigate("/select-project");
 
-		const selectedProject = projects.find((p) => p.id == selectedProjectId);
-		// console.log("Selected project", selectedProject);
-		if(!selectedProject.meta.ONBOARDING_COMPLETED){
-			return navigate("/project-onboarding");
+		if(projects) {
+			const selectedProject = projects.find((p) => p.id == selectedProjectId);
+			// console.log("Selected project", selectedProject);
+			if(!selectedProject.meta.ONBOARDING_COMPLETED){
+				return navigate("/project-onboarding");
+			}
 		}
 
 		const proxyState = getProxyState(store.getState());

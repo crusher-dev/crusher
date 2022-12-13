@@ -26,12 +26,15 @@ class TestsRunner {
 	private dbManager: DBManager;
 	@Inject()
 	private buildTestInstanceService: BuildTestInstancesService;
-	@Inject()
 	private buildReportService: BuildReportService;
 	@Inject()
 	private queueManager: QueueManager;
 	@Inject()
 	private githubService: GithubService;
+
+	constructor() {
+		this.buildReportService = Container.get(BuildReportService);
+	}
 
 	// @Caution: Make sure to prevent race condition here
 	async addTestRequestToQueue(payload: any, parent: any) {

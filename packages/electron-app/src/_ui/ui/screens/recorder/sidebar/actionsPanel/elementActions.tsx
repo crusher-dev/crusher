@@ -51,9 +51,26 @@ const ElementActions = ({ className, filteredList, defaultExpanded }: IProps) =>
 				case "SHOW_ASSERT_MODAL":
 					if (selectedElement) {
 						ElementsHelper.showAssertModal();
-						setTimeout(() => {
-							tour.next();
-						}, 250);
+						if(tour.isActive()){
+							setTimeout(() => {
+								const out = (window as any)._createNewElementAssertionRow();
+								if(out) return;
+								// Try until window._createNewElementAssertionRow() returns true (timeout after 5s)
+								const maxTimeout = 5000;
+								const interval = 100;
+								let timeout = 0;
+								const intervalId = setInterval(() => {
+									if (timeout >= maxTimeout) {
+										clearInterval(intervalId);
+									}
+									if ((window as any)._createNewElementAssertionRow()) {
+										clearInterval(intervalId);
+										tour.next();
+									}
+									timeout += interval;
+								});
+							}, 500);
+						}
 					} else {
 						window["elementActionsCallback"] = ElementsHelper.showAssertModal;
 					}

@@ -29,6 +29,8 @@ import { useStore } from "react-redux";
 import { sendSnackBarEvent } from "../../toast";
 import { ModalTopBar } from "../topBar";
 import { newTheme } from "./monaco.theme";
+import Tour from "@reactour/tour";
+import { ShepherdTourContext } from "react-shepherd";
 
 function ensureFirstBackSlash(str) {
 	return str.length > 0 && str.charAt(0) !== "/" ? "/" + str : str;
@@ -98,11 +100,21 @@ const initialCodeTemplate = `/*
 async function validate(crusherSdk: CrusherSdk) {
 	const { page } = crusherSdk;
 
-    // page.goto("https://news.ycombinator.com/login?goto=news");
-	// const input = page.waitForSelector("input[name=acct]");
-	// input.type(page.url());
-    // expect(input.inputValue()).toBe(page.url());
+    // await page.goto("https://news.ycombinator.com/login?goto=news");
+	// const input = await page.waitForSelector("input[name=acct]");
+	// await input.type(await page.url());
+    // expect(await input.inputValue()).toBe(await page.url());
 }`;
+
+const onboardingCodeTemplate = `/*
+	Docs: https://docs.crusher.dev/sdk
+*/
+async function validate(crusherSdk: CrusherSdk) {
+	const { page } = crusherSdk;
+
+	await page.click("div");
+}`;
+
 const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 	const { isOpen } = props;
 	const store = useStore();
@@ -117,6 +129,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 	const editorMainRef = React.useRef(null);
 
 	const codeTextAreaRef = useRef(null as null | HTMLTextAreaElement);
+	const tour = React.useContext(ShepherdTourContext);
 
 	React.useEffect(() => {
 		const handleListener = () => {
@@ -213,28 +226,9 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 		}
 	};
 
-	const handleDeleteTemplate = async () => {
-		if (selectedTemplate) {
-			await deleteCodeTemplate(selectedTemplate);
-			setCodeTemplates(codeTemplates.filter((a) => a.id !== selectedTemplate));
-			setSelectedTemplate(null);
-			sendSnackBarEvent({ type: "success", message: "Custom code template deleted" });
-		}
-	};
-
-	const transformListToSelectBoxValues = (codeTemplates) => {
-		return codeTemplates.map((test) => ({
-			value: test.id,
-			label: test.name,
-			component: <DropdownOption label={test.name} />,
-		}));
-	};
 
 	if (!isOpen) return null;
 
-	const getSelectedOption = (arr, id) => {
-		return arr.find((a) => a.value === id);
-	};
 
 	const handleOnMount = (editor: any) => {
 		editorMainRef.current = editor;
@@ -255,7 +249,18 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 				}
 			});
 		}
+
+		if(tour.isActive()) {
+			editor.getModel(modalName).setValue(onboardingCodeTemplate);
+		}
 	};
+
+	(window as any).updateCodeEditorValue = (value: string) => {
+		if (editorMainRef.current) {
+			editorMainRef.current.getModel(modalName).setValue(value);
+		}
+	};
+
 	const handleEditorWillMount = (monaco: Monaco) => {
 		monacoRef.current = monaco;
 
@@ -490,10 +495,14 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 						`}
 					>
 						<Button
+							id="save-code-button"
 							css={saveButtonStyle}
 							onClick={(e) => {
 								e.preventDefault();
 								e.stopPropagation();
+								if(tour.isActive()) {
+									tour.next();
+								}
 								if (props.stepAction) {
 									updateCustomCode();
 								} else {

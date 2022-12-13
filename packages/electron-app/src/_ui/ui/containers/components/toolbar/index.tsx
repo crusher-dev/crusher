@@ -26,6 +26,7 @@ import { setTestName } from "electron-app/src/store/actions/recorder";
 import ConfirmDialog from "dyson/src/components/sharedComponets/ConfirmModal";
 import { getCurrentProjectConfig, getCurrentProjectConfigPath, writeProjectConfig } from "electron-app/src/_ui/utils/project";
 import { DesktopAppEventsEnum } from "@shared/modules/analytics/constants";
+import { ShepherdTourContext } from "react-shepherd";
 
 const DeviceItem = ({ label }) => {
 	return (
@@ -72,6 +73,7 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 
 	const dispatch = useDispatch();
 	const store = useStore();
+	const tour = React.useContext(ShepherdTourContext); 
 
 	const handleProxyWarning = React.useCallback(() => {
 		const steps = getSavedSteps(store.getState());
@@ -128,6 +130,9 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 			}
 
 
+			if(tour.isActive()) {
+				tour.complete();
+			}
 			performVerifyTest(shouldAutoSave, autoSaveType, false).then((res) => {
 				if (res) {
 					if (res.draftJobId) {
@@ -641,6 +646,7 @@ const Toolbar = (props: any) => {
 				</div>
 			</div>
 
+<div id={"test-actions"}>
 			<Conditional showIf={isTestBeingVerified}>
 				<div css={testBeingVerifiedContainerStyle}>
 					<div css={verifyStatusIconStyle}>
@@ -663,7 +669,7 @@ const Toolbar = (props: any) => {
 						</div>
 					</div>
 				</Conditional>
-			</Conditional>
+			</Conditional></div>
 			<SettingsModal isOpen={showSettingsModal} handleClose={handleCloseSettingsModal} />
 		</div >
 	);

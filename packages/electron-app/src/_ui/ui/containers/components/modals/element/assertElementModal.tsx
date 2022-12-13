@@ -46,7 +46,7 @@ const getValidationFields = (elementInfo: any): iField[] => {
 };
 
 const getElementFieldValue = (fieldInfo: iField) => {
-	if(!fieldInfo) return null;
+	if (!fieldInfo) return null;
 	return fieldInfo.value;
 };
 
@@ -66,7 +66,7 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 		if (isOpen && !props.stepAction) {
 			setValidationRows([]);
 			ipcRenderer
-				.invoke("get-element-assert-info", {elementInfo: selectedElement})
+				.invoke("get-element-assert-info", { elementInfo: selectedElement })
 				.then((res) => {
 					console.log("Element info is", res);
 					setElementInfo(res);
@@ -98,30 +98,32 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 			// setValidationRows(props.stepAction.payload.meta.validations);
 
 			ipcRenderer
-			.invoke("get-element-assert-info", {elementInfo: {
-				selectors: props.stepAction.payload.selectors,
-				uniqueId: -1
-			}, useSelectors: true})
-			.then((res) => {
-				let validationRows = JSON.parse(JSON.stringify(props.stepAction.payload.meta.validations));
+				.invoke("get-element-assert-info", {
+					elementInfo: {
+						selectors: props.stepAction.payload.selectors,
+						uniqueId: -1
+					}, useSelectors: true
+				})
+				.then((res) => {
+					let validationRows = JSON.parse(JSON.stringify(props.stepAction.payload.meta.validations));
 
-				if(res) {
-					setElementInfo(res);
-					const fields = getValidationFields(res);
-					for (const validation of validationRows) {
-						validation.field = fields.find((field) => field.name === validation.field.name)!;
+					if (res) {
+						setElementInfo(res);
+						const fields = getValidationFields(res);
+						for (const validation of validationRows) {
+							validation.field = fields.find((field) => field.name === validation.field.name)!;
+						}
+					} else {
+						setElementInfo(elementInfoFromActions);
 					}
-				} else {
-					setElementInfo(elementInfoFromActions);
-				}
-			
-				setValidationRows(validationRows);
 
-			})
-			.catch((err) => {
-				setElementInfo(elementInfoFromActions);
-				setValidationRows(props.stepAction.payload.meta.validations);
-			});
+					setValidationRows(validationRows);
+
+				})
+				.catch((err) => {
+					setElementInfo(elementInfoFromActions);
+					setValidationRows(props.stepAction.payload.meta.validations);
+				});
 
 			// setElementInfo(elementInfoFromActions);
 		}
@@ -159,10 +161,13 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 	};
 
 	const createNewElementAssertionRow = () => {
-		if(tour.getCurrentStep()?.id === "assert-element-add-checks") {
-			tour.next();
-		}
 		addValidationRow(validationFields[0], validationOperations[0], getElementFieldValue(validationFields[0]));
+	};
+
+	(window as any)._createNewElementAssertionRow = () => {
+		if(!elementInfo) return;
+		createNewElementAssertionRow();
+		return true;
 	};
 
 	const generateDefaultChecksForPage = () => {
@@ -246,39 +251,38 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 	};
 
 	const handleCloseWrapper = (isAfterSave = false) => {
-			if (handleClose) {
-				handleClose();
-			}
+		if (handleClose) {
+			handleClose();
+		}
 	};
 
 	const handleOutSideClick = () => {
-		if(!tour.isActive()) {
+		if (!tour.isActive()) {
 			handleCloseWrapper();
 		}
 	}
 
 	React.useEffect(() => {
-		if(!isOpen) {
+		if (!isOpen) {
 			setValidationRows([]);
 			setElementInfo(null);
 		}
 	}, [isOpen]);
-	
+
 	React.useEffect(() => {
 		const handleWindowMessage = (event) => {
-			console.log("window.event", event);
-			if (event.data.type === "save-assertions") {
+			const type = event.data?.type;
+			if (type === "save-assertions") {
 				saveElementValidationAction().finally(() => {
 					handleCloseWrapper();
 				});
-				
 			}
 		};
 		window.addEventListener("message", handleWindowMessage);
 		return () => {
 			window.removeEventListener("message", handleWindowMessage);
 		}
-	}, [selectedElement]);
+	}, [selectedElement, validationFields, elementInfo]);
 	if (!isOpen) return null;
 
 	return (

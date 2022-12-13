@@ -322,6 +322,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 	return (
 		<div
 			id="current-modal"
+			className="custom-code-modal"
 			css={css`
 				background: #09090a;
 				height: 100%;

@@ -165,7 +165,7 @@ const steps = [
       text: ['Click on this button to see the assert info'],
     },
     {
-      id: "assert-element-add",
+      id: "assert-element-add-checks",
       attachTo: { element: '#assert-element-add-check', on: 'bottom' },
       buttons: [
         {
@@ -187,7 +187,123 @@ const steps = [
       },
       title: 'Click to add element asserts',
       text: ['Add element asserts'],
+      when: {
+        show: function () {
+          const el = this.getElement();
+          el.style.opacity = 1;
+          el.style.visibility = 'visible';
+          el.style.pointerEvents = 'auto';
+        }
+      }
     },
+    {
+      id: "assert-element-add-checks",
+      attachTo: { element: '#assertion-rows', on: 'bottom' },
+      buttons: [
+        {
+          classes: 'shepherd-button-secondary',
+          text: 'Exit',
+          type: 'cancel'
+        },
+        {
+          classes: 'shepherd-button-primary',
+          text: 'Save',
+          action: function() {
+            const event = new CustomEvent('save-assertions', { detail: { assertions: [] } });
+            window.postMessage({ type: 'save-assertions', assertions: [] });
+            return this.next();
+          }
+        }
+      ],
+      classes: 'custom-class-name-1 custom-class-name-2',
+      highlightClass: 'highlight',
+      scrollTo: false,
+      cancelIcon: {
+        enabled: true,
+      },
+      title: 'Specify your assertions',
+      text: ['This is where you specify your assertions'],
+      when: {
+        show: function () {
+          const el = this.getElement();
+          el.style.opacity = 1;
+          el.style.visibility = 'visible';
+          el.style.pointerEvents = 'auto';
+        }
+      }
+    },
+    {
+      id: 'steps-list',
+      attachTo: { element: '#steps-list', on: 'right' },
+      buttons: [
+        {
+          classes: 'shepherd-button-secondary',
+          text: 'Exit',
+          type: 'cancel'
+        },
+        {
+          classes: 'shepherd-button-primary',
+          text: 'Next',
+          type: 'next'
+        }
+      ],
+      classes: 'custom-class-name-1 custom-class-name-2',
+      highlightClass: 'highlight',
+      scrollTo: false,
+      cancelIcon: {
+        enabled: true,
+      },
+      title: 'Your action has been saved',
+      text: ['Do you see it?'],
+    },
+    {
+      id: 'add-custom-code',
+      attachTo: { element: '#custom-code-action', on: 'bottom' },
+      buttons: [
+        {
+          classes: 'shepherd-button-secondary',
+          text: 'Exit',
+          type: 'cancel'
+        },
+        {
+          classes: 'shepherd-button-primary',
+          text: 'Next',
+          action: function() {}
+        }
+      ],
+      classes: 'custom-class-name-1 custom-class-name-2',
+      highlightClass: 'highlight',
+      scrollTo: false,
+      cancelIcon: {
+        enabled: true,
+      },
+      title: 'Add some custom code',
+      text: ['We use playwright to execute your code'],
+    },
+    {
+      id: 'write-custom-code',
+      attachTo: { element: '.custom-code-modal', on: 'left' },
+      buttons: [
+        {
+          classes: 'shepherd-button-secondary',
+          text: 'Exit',
+          type: 'cancel'
+        },
+        {
+          classes: 'shepherd-button-primary',
+          text: 'Next',
+          type: 'next'
+        }
+      ],
+      classes: 'custom-class-name-1 custom-class-name-2',
+      highlightClass: 'highlight',
+      scrollTo: false,
+      cancelIcon: {
+        enabled: true,
+      },
+      title: 'You can write your code here',
+      text: ['Comment out the code in editor as an example'],
+    }
     // ...
   ];
 

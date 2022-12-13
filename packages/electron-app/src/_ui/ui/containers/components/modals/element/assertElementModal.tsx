@@ -17,6 +17,7 @@ import { useTour } from "@reactour/tour";
 import { iAction } from "@shared/types/action";
 import { sendSnackBarEvent } from "../../toast";
 import { retryStep } from "electron-app/src/_ui/ui/screens/recorder/sidebar/stepsPanel/failedCard";
+import { ShepherdTourContext } from "react-shepherd";
 
 interface iAssertElementModalProps {
 	stepIndex?: number;
@@ -59,6 +60,7 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 	const [validationRows, setValidationRows] = useState([] as iAssertionRow[]);
 	const validationFields = getValidationFields(elementInfo!);
 	const validationOperations = [ASSERTION_OPERATION_TYPE.MATCHES, ASSERTION_OPERATION_TYPE.CONTAINS, ASSERTION_OPERATION_TYPE.REGEX];
+	const tour = React.useContext(ShepherdTourContext);
 
 	React.useEffect(() => {
 		if (isOpen && !props.stepAction) {
@@ -157,6 +159,9 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 	};
 
 	const createNewElementAssertionRow = () => {
+		if(tour.getCurrentStep()?.id === "assert-element-add-checks") {
+			tour.next();
+		}
 		addValidationRow(validationFields[0], validationOperations[0], getElementFieldValue(validationFields[0]));
 	};
 
@@ -241,21 +246,16 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 	};
 
 	const handleCloseWrapper = (isAfterSave = false) => {
-		if (isOnboardingOpen) {
-			if (isAfterSave) {
-				setCurrentStep(5);
-			} else {
-				// Timeout so that it can find the element to highlight,
-				// (which will be mounted after closing current modal)
-				setTimeout(() => {
-					setCurrentStep(3);
-				}, 50);
+			if (handleClose) {
+				handleClose();
 			}
-		}
-		if (handleClose) {
-			handleClose();
-		}
 	};
+
+	const handleOutSideClick = () => {
+		if(!tour.isActive()) {
+			handleCloseWrapper();
+		}
+	}
 
 	React.useEffect(() => {
 		if(!isOpen) {
@@ -263,10 +263,26 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 			setElementInfo(null);
 		}
 	}, [isOpen]);
+	
+	React.useEffect(() => {
+		const handleWindowMessage = (event) => {
+			console.log("window.event", event);
+			if (event.data.type === "save-assertions") {
+				saveElementValidationAction().finally(() => {
+					handleCloseWrapper();
+				});
+				
+			}
+		};
+		window.addEventListener("message", handleWindowMessage);
+		return () => {
+			window.removeEventListener("message", handleWindowMessage);
+		}
+	}, [selectedElement]);
 	if (!isOpen) return null;
 
 	return (
-		<Modal id="current-modal" modalStyle={modalStyle} onOutsideClick={handleCloseWrapper}>
+		<Modal id="current-modal" modalStyle={modalStyle} onOutsideClick={handleOutSideClick}>
 			<ModalTopBar title={"Assert element"} desc={"These are run over the selected element"} closeModal={handleCloseWrapper} />
 			<div
 				className={"assert-rows"}

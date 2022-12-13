@@ -9,9 +9,8 @@
 
 </p>
 
-<h2 >Crusher is a fast all-in-one testing you'll ever need</h3>
-
-New all-in-one testing framework/tool. It includes everything you need to test, low-code recorder, runner + batteries built-in.
+<h2 >Crusher is a fast way to test app UI, modern alternative to ancient testing workflow</h3>
+It's complete testing framework, includes local app, low-code recorder, runner and batteries are built in.
 
 
 An alternative to the *"old" testing*, where you:

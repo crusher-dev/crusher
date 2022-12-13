@@ -10,7 +10,7 @@ import { COMPLETE_INTEGRATION } from "./components/CompleteIntegration"
 import { WelcomMessageBlock } from "./components/WelcomeMessageBlock"
 import { useEffect } from "react";
 
-export const ONBOARDING_STAGE_ATOM = atom(3)
+export const ONBOARDING_STAGE_ATOM = atom(0)
     
 export const OnboardingWrapper = ()=>{
     const [onboardingStage] = useAtom(ONBOARDING_STAGE_ATOM);

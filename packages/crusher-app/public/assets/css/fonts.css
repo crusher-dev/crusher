@@ -1,146 +1,146 @@
-/* @font-face {
+@font-face {
 	font-family: "Cera Pro";
-	src: url("../fonts/CeraPro/Cera_Pro_Thin.woff2") format("woff2");
+	src: url("/fonts/CeraPro/Cera_Pro_Thin.woff2") format("woff2");
 	font-weight: 200;
 	font-style: normal;
 }
 
 @font-face {
 	font-family: "Cera Pro";
-	src: url("../fonts/CeraPro/Cera_Pro_Thin_Italic.woff2") format("woff2");
+	src: url("/fonts/CeraPro/Cera_Pro_Thin_Italic.woff2") format("woff2");
 	font-weight: 200;
 	font-style: italic;
 }
 
 @font-face {
 	font-family: "Cera Pro";
-	src: url("../fonts/CeraPro/Cera_Pro_Light.woff2") format("woff2");
+	src: url("/fonts/CeraPro/Cera_Pro_Light.woff2") format("woff2");
 	font-weight: 300;
 	font-style: normal;
 }
 
 @font-face {
 	font-family: "Cera Pro";
-	src: url("../fonts/CeraPro/Cera_Pro_Light_Italic.woff2") format("woff2");
+	src: url("/fonts/CeraPro/Cera_Pro_Light_Italic.woff2") format("woff2");
 	font-weight: 300;
 	font-style: italic;
 }
 
 @font-face {
 	font-family: "Cera Pro";
-	src: url("../fonts/CeraPro/Cera_Pro_Regular.woff2") format("woff2");
+	src: url("/fonts/CeraPro/Cera_Pro_Regular.woff2") format("woff2");
 	font-weight: 400;
 	font-style: normal;
 }
 
 @font-face {
 	font-family: "Cera Pro";
-	src: url("../fonts/CeraPro/Cera_Pro_Regular_Italic.woff2") format("woff2");
+	src: url("/fonts/CeraPro/Cera_Pro_Regular_Italic.woff2") format("woff2");
 	font-weight: 400;
 	font-style: italic;
 }
 
 @font-face {
 	font-family: "Cera Pro";
-	src: url("../fonts/CeraPro/Cera_Pro_Medium.woff2") format("woff2");
+	src: url("/fonts/CeraPro/Cera_Pro_Medium.woff2") format("woff2");
 	font-weight: 500;
 	font-style: normal;
 }
 
 @font-face {
 	font-family: "Cera Pro";
-	src: url("../fonts/CeraPro/Cera_Pro_Medium_Italic.woff2") format("woff2");
+	src: url("/fonts/CeraPro/Cera_Pro_Medium_Italic.woff2") format("woff2");
 	font-weight: 500;
 	font-style: italic;
 }
 
 @font-face {
 	font-family: "Cera Pro";
-	src: url("../fonts/CeraPro/Cera_Pro_Bold.woff2") format("woff2");
+	src: url("/fonts/CeraPro/Cera_Pro_Bold.woff2") format("woff2");
 	font-weight: 700;
 	font-style: normal;
 }
 
 @font-face {
 	font-family: "Cera Pro";
-	src: url("../fonts/CeraPro/Cera_Pro_Bold_Italic.woff2") format("woff2");
+	src: url("/fonts/CeraPro/Cera_Pro_Bold_Italic.woff2") format("woff2");
 	font-weight: 700;
 	font-style: italic;
 }
 
 @font-face {
 	font-family: "Cera Pro";
-	src: url("../fonts/CeraPro/Cera_Pro_Black.woff2") format("woff2");
+	src: url("/fonts/CeraPro/Cera_Pro_Black.woff2") format("woff2");
 	font-weight: 900;
 	font-style: normal;
 }
 
 @font-face {
 	font-family: "Cera Pro";
-	src: url("../fonts/CeraPro/Cera_Pro_Black_Italic.woff2") format("woff2");
+	src: url("/fonts/CeraPro/Cera_Pro_Black_Italic.woff2") format("woff2");
 	font-weight: 900;
 	font-style: italic;
 }
 
 @font-face {
 	font-family: "Gilroy";
-	src: url("../fonts/Gilroy/Gilroy-Regular.woff2") format("woff2");
+	src: url("/fonts/Gilroy/Gilroy-Regular.woff2") format("woff2");
 	font-weight: 400;
 	font-style: normal;
 }
 
 @font-face {
 	font-family: "Gilroy";
-	src: url("../fonts/Gilroy/Gilroy-RegularItalic.woff2") format("woff2");
+	src: url("/fonts/Gilroy/Gilroy-RegularItalic.woff2") format("woff2");
 	font-weight: 400;
 	font-style: italic;
 }
 
 @font-face {
 	font-family: "Gilroy";
-	src: url("../fonts/Gilroy/Gilroy-Medium.woff2") format("woff2");
+	src: url("/fonts/Gilroy/Gilroy-Medium.woff2") format("woff2");
 	font-weight: 500;
 	font-style: normal;
 }
 
 @font-face {
 	font-family: "Gilroy";
-	src: url("../fonts/Gilroy/Gilroy-MediumItalic.woff2") format("woff2");
+	src: url("/fonts/Gilroy/Gilroy-MediumItalic.woff2") format("woff2");
 	font-weight: 500;
 	font-style: italic;
 }
 
 @font-face {
 	font-family: "Gilroy";
-	src: url("../fonts/Gilroy/Gilroy-SemiBold.woff2") format("woff2");
+	src: url("/fonts/Gilroy/Gilroy-SemiBold.woff2") format("woff2");
 	font-weight: 600;
 	font-style: normal;
 }
 
 @font-face {
 	font-family: "Gilroy";
-	src: url("../fonts/Gilroy/Gilroy-SemiBoldItalic.woff2") format("woff2");
+	src: url("/fonts/Gilroy/Gilroy-SemiBoldItalic.woff2") format("woff2");
 	font-weight: 600;
 	font-style: italic;
 }
 
 @font-face {
 	font-family: "Gilroy";
-	src: url("../fonts/Gilroy/Gilroy-Bold.woff2") format("woff2");
+	src: url("/fonts/Gilroy/Gilroy-Bold.woff2") format("woff2");
 	font-weight: 700;
 	font-style: normal;
 }
 
 @font-face {
 	font-family: "Gilroy";
-	src: url("../fonts/Gilroy/Gilroy-ExtraBold.woff2") format("woff2");
+	src: url("/fonts/Gilroy/Gilroy-ExtraBold.woff2") format("woff2");
 	font-weight: 800;
 	font-style: normal;
 }
 
 @font-face {
 	font-family: "Gilroy";
-	src: url("../fonts/Gilroy/Gilroy-Black.woff2") format("woff2");
+	src: url("/fonts/Gilroy/Gilroy-Black.woff2") format("woff2");
 	font-weight: 900;
 	font-style: normal;
-} */
+} 

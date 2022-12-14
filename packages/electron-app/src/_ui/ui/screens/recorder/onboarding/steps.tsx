@@ -55,8 +55,8 @@ const steps = [
               cancelIcon: {
                 enabled: true,
               },
-              title: 'Click on this button',
-              text: ['Just click on it!!'],
+              title: 'Click on button',
+              text: ["We'll record this step in your test"],
             }, 1);
             return this.next();
           }
@@ -68,8 +68,8 @@ const steps = [
       cancelIcon: {
         enabled: true,
       },
-      title: 'Welcome to Crusher!',
-      text: ['This is a quick tour to get you started.'],
+      title: 'Get familiar w recorder',
+      text: ['Quick 1 min tour to help you start'],
     },
 
     {
@@ -126,7 +126,7 @@ const steps = [
               cancelIcon: {
                 enabled: true,
               },
-              title: 'Right click on this element & click again',
+              title: '🖱️ Righ click on this element & click again',
               text: ['Select this element'],
             }, 3);
             return this.next();
@@ -139,8 +139,8 @@ const steps = [
       cancelIcon: {
         enabled: true,
       },
-      title: 'Your action has been saved',
-      text: ['Do you see it?'],
+      title: '💾 Your action has been saved',
+      text: [`We automatically record step as you're browsing`],
       beforeShowPromise: async function () {
         if(document.querySelector("#highlight-current")) {
           document.querySelector("#highlight-current").remove();
@@ -168,8 +168,8 @@ const steps = [
       cancelIcon: {
         enabled: true,
       },
-      title: 'Click on this button',
-      text: ['Click on this button to see the assert info'],
+      title: 'Click on assert info button',
+      text: [`We'll add a check`],
       beforeShowPromise: async function () {
         if(document.querySelector("#highlight-current")) {
           document.querySelector("#highlight-current").remove();
@@ -204,8 +204,8 @@ const steps = [
       cancelIcon: {
         enabled: true,
       },
-      title: 'Specify your assertions',
-      text: ['This is where you specify your assertions'],
+      title: 'Specify assertions',
+      text: ['Add check on element, etc'],
       when: {
         show: function () {
           const el = this.getElement();

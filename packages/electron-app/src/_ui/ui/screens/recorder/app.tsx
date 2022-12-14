@@ -378,7 +378,21 @@ const globalCss = css`
 	.shepherd-modal-overlay-container{height:0;left:0;opacity:0;overflow:hidden;pointer-events:none;position:fixed;top:0;transition:all .3s ease-out,height 0ms .3s,opacity .3s 0ms;width:100vw;z-index:9997}.shepherd-modal-overlay-container.shepherd-modal-is-visible{height:100vh;opacity:.5;transform:translateZ(0);transition:all .3s ease-out,height 0s 0s,opacity .3s 0s}.shepherd-modal-overlay-container.shepherd-modal-is-visible path{pointer-events:all}
 
 	.shepherd-element{
-		border-radius: 18px 18px 18px 8px;
+		border-radius: 18px 18px 18px 8px !important;
+
+	}
+
+	.shepherd-has-title .shepherd-content .shepherd-cancel-icon {
+		margin-top: -14px !important;
+	}
+
+	.shepherd-footer{
+		padding: 12rem 20rem !important;
+		display: flex; 
+		gap:12px;
+	}
+	.shepherd-footer button:not(:last-of-type) {
+		border-right: solid 0px #2d2d2d !important;
 	}
 	.shepherd-logo {
 		height: auto;
@@ -415,8 +429,9 @@ const globalCss = css`
 	  
 	  .shepherd-button {
 		background: #9f38de;
-		border-top: solid 4px #2d2d2d;
-		border-radius: 0;
+
+		border: 2px solid #54107d;
+		border-radius: 8px;
 		color: #fff;
 		display: flex;
 		flex-grow: 1;
@@ -436,6 +451,7 @@ const globalCss = css`
 	  
 	  .shepherd-button.shepherd-button-secondary {
 		background: #0b0b0b;
+		border: 2px solid #0b0b0b;
 		color: grey;
 	  }
 	  
@@ -530,13 +546,13 @@ const globalCss = css`
 		font-family: "Cera Pro", sans-serif;
 		font-weight: 900;
 		padding-bottom: 0;
-		padding-left: 18rem;
+		padding-left: 20rem;
+		padding-top: 16rem;
 	  }
 	  
 	  .shepherd-has-title .shepherd-content .shepherd-header .shepherd-title {
 		font-size: 16rem;
 		font-weight: 700;
-		text-transform: uppercase;
 	  }
 	  
 	  .shepherd-text {
@@ -576,6 +592,16 @@ const globalCss = css`
 		font-size: 12rem;
 		padding: 18rem 16rem;
 	  }
+
+	  #highlight-current{
+		border: 2px solid #fd6cff !important;
+		opacity: 1;
+		background: #444244 !important;
+	  }
+
+	.shepherd-modal-overlay-container.shepherd-modal-is-visible {
+		opacity: .8 !important;
+	}
 
 `;
 const sidebarCss = css`

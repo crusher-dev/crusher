@@ -12,6 +12,8 @@ import { ReplaySidebarHeader } from "./replay/header";
 import { Conditional } from "@dyson/components/layouts";
 import { ShepherdTourContext } from "react-shepherd";
 import { useContext } from "react";
+import { shouldShowOnboardingOverlay } from "electron-app/src/store/selectors/app";
+import { useStore}  from "react-redux";
 
 interface ISidebarProps {
 	className?: string;
@@ -23,7 +25,7 @@ const Sidebar = ({ className }: ISidebarProps) => {
 	const isCustomCodeOn = useSelector(getIsCustomCodeOn);
 
 	const tour = useContext(ShepherdTourContext);
-	
+	const store = useStore();
 	
 	const topPanel = React.useMemo(() => {
 		if (currentBuild) {
@@ -34,11 +36,9 @@ const Sidebar = ({ className }: ISidebarProps) => {
 	}, [currentBuild]);
 
 	React.useEffect(() => {
-		if (isInRecordingSession && tour) {
-			setTimeout(() => {
-				tour.start();
-
-			}, 50);
+		const shouldShowOnboarding = localStorage.getItem("app.showShouldOnboardingOverlay") !== "false";
+		if (isInRecordingSession && shouldShowOnboarding) {
+			tour.start();
 		}
 	}, [isInRecordingSession]);
 	return (

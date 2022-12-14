@@ -1,7 +1,9 @@
-import { AxiosRequestConfig } from "axios";
+import axios, { AxiosRequestConfig } from "axios";
+import { CloudCrusher } from "electron-app/src/lib/cloud";
 import { getStore } from "electron-app/src/store/configureStore";
-import { getCurrentSelectedProjct } from "electron-app/src/store/selectors/app";
+import { getCurrentSelectedProjct, getUserAccountInfo } from "electron-app/src/store/selectors/app";
 import { createAuthorizedRequestFunc, resolveToBackend } from "electron-app/src/utils/url";
+import { getUserInfoAPIRequest } from "../user/user.requests";
 
 const getIntegrationsAPIRequest: () => AxiosRequestConfig = createAuthorizedRequestFunc((authorizationOptions: any) => {
 	const store = getStore();
@@ -69,4 +71,13 @@ const updateProjectMeta = (meta: any) => {
 	}, true);
 };
 
-export { getIntegrationsAPIRequest, removeSlackIntegration, removeGithubIntegration, removeVercelIntegration, updateProjectMeta };
+const getCurrentProjectMeta = async () => {
+	const store = getStore();
+	const projectId = getCurrentSelectedProjct(store.getState() as any);
+	if(!projectId) throw new Error("No project is selected in the store");
+
+	const userInfo  = await axios(getUserInfoAPIRequest());
+	return userInfo.data.projects.find((project: any) => project.id === projectId)?.meta;
+};
+
+export { getIntegrationsAPIRequest, removeSlackIntegration, removeGithubIntegration, removeVercelIntegration, updateProjectMeta, getCurrentProjectMeta };

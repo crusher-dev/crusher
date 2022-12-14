@@ -27,6 +27,7 @@ import ConfirmDialog from "dyson/src/components/sharedComponets/ConfirmModal";
 import { getCurrentProjectConfig, getCurrentProjectConfigPath, writeProjectConfig } from "electron-app/src/_ui/utils/project";
 import { DesktopAppEventsEnum } from "@shared/modules/analytics/constants";
 import { ShepherdTourContext } from "react-shepherd";
+import { getCurrentProjectMeta } from "electron-app/src/api/projects/integrations";
 
 const DeviceItem = ({ label }) => {
 	return (
@@ -90,7 +91,7 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 		return { shouldShow: false, startUrl };
 	}, []);
 
-	const verifyTest = (autoSaveType: "UPDATE" | "SAVE", shouldAutoSave: boolean = false) => {
+	const verifyTest = async (autoSaveType: "UPDATE" | "SAVE", shouldAutoSave: boolean = false) => {
 		localStorage.setItem("app.showShouldOnboardingOverlay", "false");
 		dispatch(setShowShouldOnboardingOverlay(false));
 		const recorderState = getRecorderState(store.getState());
@@ -130,10 +131,20 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 			}
 
 
-			if(tour.isActive()) {
+			let shouldNotVerifyTest = false;
+			const isTourActive = tour.isActive();
+
+			if(isTourActive) {
 				tour.complete();
+				shouldNotVerifyTest = true;
+				console.log("Test should not run");
 			}
-			performVerifyTest(shouldAutoSave, autoSaveType, false).then((res) => {
+
+			const currentProjectMeta = await getCurrentProjectMeta();
+			console.log("Project meta: ", currentProjectMeta);
+			// const getCurrentProjectMeta = getCurrentProjectMetaSelector(store.getState());
+			
+			performVerifyTest(shouldAutoSave, autoSaveType, shouldNotVerifyTest).then((res) => {
 				if (res) {
 					if (res.draftJobId) {
 						window["triggeredTest"] = {
@@ -146,7 +157,11 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 					}
 					sendSnackBarEvent({ type: "test_created", message: null });
 
-					navigate("/");
+					if (!isTourActive && !currentProjectMeta?.isFirstTestCreated) {
+						navigate(`/project-onboarding`);
+					} else {
+						navigate("/");
+					}
 					goFullScreen(false);
 				}
 			});

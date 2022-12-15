@@ -34,14 +34,34 @@ const defaultConfig = {
   ],
 };
 
+const totalSteps = 8;
+
 const createStep = function (step) {
-  const customText = step.text;
+  const whenShow = step.when?.show;
   
   const customElement = document.createElement("div");
-  customElement.innerHTML = "<div></div>";
+  customElement.innerHTML = `<div>${step.text}(<span class="current-step-count"></span>/${totalSteps})</div>`
+
+  step.text = customElement;
+
   return {
     ...defaultConfig,
     ...step,
+    when: {
+      show: function () {
+        if (whenShow) {
+          whenShow.call(this);
+        }
+
+        const currenStepIndex = this.tour.steps.indexOf(this.tour.getCurrentStep());
+        const stepCountEl = document.querySelectorAll(".current-step-count")[currenStepIndex];
+        
+        if(stepCountEl) {
+          document.querySelectorAll(".current-step-count")[currenStepIndex].innerText = currenStepIndex + 1;
+        }
+        return true;
+      }
+    }
   }
 };
 

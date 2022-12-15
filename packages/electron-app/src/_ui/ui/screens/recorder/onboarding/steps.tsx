@@ -40,7 +40,7 @@ const createStep = function (step) {
   const whenShow = step.when?.show;
   
   const customElement = document.createElement("div");
-  customElement.innerHTML = `<div>${step.text}(<span class="current-step-count"></span>/${totalSteps})</div>`
+  customElement.innerHTML = `<div>${step.text}<span style="font-size: 12rem; margin-left: 4rem;">(<span class="current-step-count"></span>/${totalSteps})</span></div>`
 
   step.text = customElement;
 

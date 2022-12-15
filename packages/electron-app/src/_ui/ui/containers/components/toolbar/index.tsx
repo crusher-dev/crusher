@@ -158,7 +158,8 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 					sendSnackBarEvent({ type: "test_created", message: null });
 
 					if (!isTourActive && !currentProjectMeta?.isFirstTestCreated) {
-						navigate(`/project-onboarding`);
+						/* @TODO: Add this workflow integration onboarding */
+						// navigate(`/project-onboarding`);
 					} else {
 						navigate("/");
 					}

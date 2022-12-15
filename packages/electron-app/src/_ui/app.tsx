@@ -104,7 +104,6 @@ const handleUrlAction = (store: Store, addNotification, event: Electron.IpcRende
 		const sessionInfoMeta = getAppSessionMeta(store.getState() as any);
 		const { selectedTests } = action.args;
 
-		console.log("Selected tests are", selectedTests);
 		const currentTest = selectedTests?.length ? selectedTests.find((test) => test.id === action.args.testId) : null;
 		store.dispatch(
 			setSessionInfoMeta({

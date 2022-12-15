@@ -30,7 +30,7 @@ ADD ./patches/playwright-core+1.23.3.patch ./patches/playwright-core+1.23.3.patc
 ADD ./ecosystem.config.sample.js ecosystem.config.js
 ADD ./.env.sample .env
 ADD ./ecosystem ecosystem
-ADD ./db/schema.sql db/schema.sql
+ADD ./packages/crusher-server/db/schema.sql db/schema.sql
 ADD ./setup/dbMigration.js setup/dbMigration.js
 
 RUN npx patch-package

@@ -39,7 +39,7 @@ function waitAndGetConnection() {
 
 waitAndGetConnection().then(async () => {
 	const connection = new Pool(connectionObject);
-	var schema = fs.readFileSync(path.resolve(__dirname, '../db/schema.sql'));
+	var schema = fs.readFileSync(path.resolve(__dirname, '../packages/crusher-server/db/schema.sql'));
 	connection
 		.query(schema.toString())
 		.then(function () {

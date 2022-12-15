@@ -105,28 +105,32 @@ export const PROJECT_INFO = ()=>{
         navigate("/recorder");
         goFullScreen();
 
-        performSteps([
-            {
-                type: "BROWSER_SET_DEVICE",
-                payload: {
-                    meta: {
-                        device: recorderDevices[0].device,
+        const shouldShowOnboarding = localStorage.getItem("app.showShouldOnboardingOverlay") !== "false";
+        if (shouldShowOnboarding) {
+            performSteps([
+                {
+                    type: "BROWSER_SET_DEVICE",
+                    payload: {
+                        meta: {
+                            device: recorderDevices[0].device,
+                        },
                     },
+                    time: Date.now(),
                 },
-                time: Date.now(),
-            },
-            {
-                type: "PAGE_NAVIGATE_URL",
-                payload: {
-                    selectors: [],
-                    meta: {
-                        value: "https://crusher-demo-site.vercel.app/",
+                {
+                    type: "PAGE_NAVIGATE_URL",
+                    payload: {
+                        selectors: [],
+                        meta: {
+                            value: "https://crusher-demo-site.vercel.app/",
+                        },
                     },
+                    status: "COMPLETED",
+                    time: Date.now(),
                 },
-                status: "COMPLETED",
-                time: Date.now(),
-            },
-        ]);
+            ]);
+        }
+        
     }, [isDev, isLowCode]);
 
     const isSubmitDisabled = isDev === null || isLowCode === null;

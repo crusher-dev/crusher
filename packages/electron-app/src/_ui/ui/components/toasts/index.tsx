@@ -65,7 +65,6 @@ const Toasts = ({toasts}) => {
        {toasts.map((toast) => {
         if(toast.type === "step-failed") return ( 
         <FixToast key={toast.id} setOpen={handleClearToastWithId.bind(this, toast.id)} meta={toast.meta} message={toast.message} /> );
-
         return (
          <NormalToast key={toast.id} setOpen={handleClearToastWithId.bind(this, toast.id)} message={toast.message} meta={toast.meta} /> 
         );
@@ -118,7 +117,7 @@ const ToastBox = () => {
     <ToastProvider swipeDirection="right"> 
           <Toasts toasts={toasts}/>
          <ToastViewport />
- </ToastProvider>
+  </ToastProvider>
   );
 };
 

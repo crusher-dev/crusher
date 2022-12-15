@@ -77,7 +77,7 @@ See [Environment Variables](#environment-variables), if you want to know about a
 yarn db:migration
 ```
 
-This will initialize all the tables in the newly created Postgres database from `db/schema.sql`
+This will initialize all the tables in the newly created Postgres database from `packages/crusher-server/db/schema.sql`
 
 4. **Start all the services**
 

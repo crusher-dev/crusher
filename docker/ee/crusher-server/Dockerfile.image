@@ -18,7 +18,7 @@ ADD ./.env.sample .env
 ADD ./ecosystem ecosystem
 ADD ./output/crusher-server/ packages/crusher-server
 ADD ./setup/dbMigration.js setup/dbMigration.js
-ADD ./db/schema.sql db/schema.sql
+ADD ./packages/crusher-server/db/schema.sql db/schema.sql
 
 ENV CRUSHER_ENV production
 

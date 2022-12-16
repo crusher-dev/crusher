@@ -50,8 +50,7 @@ Reference: [Getting Started](https://docs.crusher.dev/getting-started/create-you
 
 
 ## 👨🏽‍💻 Features
-![21221](https://user-images.githubusercontent.com/6849438/208090398-64c3ea25-2021-40ca-ae31-fa86b8539b7a.png)
-
+![21221](https://user-images.githubusercontent.com/6849438/208090790-b0fc8a4d-2dba-4657-a4ad-9f3d5294b684.png)
 
 ### Create test
 - 👨🏽‍💻 **Test using low-code:** Create tests using our customized recorder based on chromium

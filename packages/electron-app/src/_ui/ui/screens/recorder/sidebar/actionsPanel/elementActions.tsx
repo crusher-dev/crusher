@@ -7,6 +7,7 @@ import { getSelectedElement } from "electron-app/src/store/selectors/recorder";
 import { ElementIcon } from "electron-app/src/_ui/constants/icons";
 import { css } from "@emotion/react";
 import { ShepherdTourContext } from "react-shepherd";
+import { OnboardingHelper } from "electron-app/src/_ui/utils/onboardingHelper";
 
 const actionsData = require("./actions.json");
 interface IProps {
@@ -52,24 +53,7 @@ const ElementActions = ({ className, filteredList, defaultExpanded }: IProps) =>
 					if (selectedElement) {
 						ElementsHelper.showAssertModal();
 						if(tour.isActive()){
-							setTimeout(() => {
-								const out = (window as any)._createNewElementAssertionRow();
-								if(out) return;
-								// Try until window._createNewElementAssertionRow() returns true (timeout after 5s)
-								const maxTimeout = 5000;
-								const interval = 100;
-								let timeout = 0;
-								const intervalId = setInterval(() => {
-									if (timeout >= maxTimeout) {
-										clearInterval(intervalId);
-									}
-									if ((window as any)._createNewElementAssertionRow()) {
-										clearInterval(intervalId);
-										tour.next();
-									}
-									timeout += interval;
-								});
-							}, 500);
+							OnboardingHelper.showAssertInfoContent(tour);
 						}
 					} else {
 						window["elementActionsCallback"] = ElementsHelper.showAssertModal;

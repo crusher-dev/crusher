@@ -38,7 +38,7 @@ const Sidebar = ({ className }: ISidebarProps) => {
 	React.useEffect(() => {
 		const shouldShowOnboarding = localStorage.getItem("app.showShouldOnboardingOverlay") !== "false";
 		if (isInRecordingSession) {
-			if(shouldShowOnboarding) {
+			if(true || shouldShowOnboarding) {
 				tour.start();
 			}
 		}

@@ -1,4 +1,11 @@
+import { ActionsInTestEnum } from "@shared/constants/recordedActions";
+import { performAction, performSteps } from "electron-app/src/ipc/perform";
+import { setInspectMode } from "electron-app/src/store/actions/recorder";
+import { getStore } from "electron-app/src/store/configureStore";
+import { OnboardingHelper } from "electron-app/src/_ui/utils/onboardingHelper";
+import { uuidv4 } from "runner-utils/src/utils/helper";
 import { emitShowModal } from "../../../containers/components/modals";
+import { ElementsHelper } from "../sidebar/actionsPanel/helper";
 
 const buttonsDefault = {
   exit: {
@@ -115,6 +122,35 @@ const steps = [
             id: "click-on-blue-button",
             title: 'Click on button',
             text: ["We'll record this step in your test"],
+
+            buttons: [
+              buttonsDefault.exit,
+              {
+                ...buttonsDefault.next,
+                type: undefined,
+                action: async function () {
+                  await performAction(
+                    {
+                        type: ActionsInTestEnum.CLICK,
+                        payload: {
+                            selectors: [
+                              {
+                                type: "playwright",
+                                value: "#button",
+                                uniquenessScore: 1,
+                             
+                              }
+                            ],
+                            meta: {
+                              uniqueNodeId: uuidv4(),
+                            },
+                        },
+                        
+                   });
+                  return this.next();
+                }
+              }
+            ]
           }, "#button"), 1);
           return this.next();
         }
@@ -139,6 +175,18 @@ const steps = [
             id: "right-click-inspect",
             title: '🖱️ Right click on this element & click again',
             text: ["Select this element"],
+            buttons: [
+              buttonsDefault.exit,
+              {
+                ...buttonsDefault.next,
+                type: undefined,
+                action: async function () {
+                  const store = getStore();
+                  store.dispatch(setInspectMode(true));
+                  await document.querySelector('webview').executeJavaScript(`(function(){ const event = new CustomEvent('elementSelected', {detail:{element: document.querySelector("#button") }}); window.dispatchEvent(event); })()`);
+                }
+              }
+            ]
           }, "#value"), 3);
           
           return this.next();
@@ -159,6 +207,18 @@ const steps = [
     title: 'Click on assert info button',
     text: [`We'll add a check`],
 
+    buttons: [
+      buttonsDefault.exit,
+      {
+        ...buttonsDefault.next,
+        type: undefined,
+        action: async function () {
+          ElementsHelper.showAssertModal();
+          OnboardingHelper.showAssertInfoContent(this);
+          return false;
+        }
+      }
+    ],
     beforeShowPromise: async function () {
       if(document.querySelector("#highlight-current")) {
         document.querySelector("#highlight-current").remove();

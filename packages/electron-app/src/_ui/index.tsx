@@ -1,7 +1,11 @@
-import * as Sentry from "@sentry/electron/renderer";
+import * as Sentry from "@sentry/browser";
+import SentryRRWeb from "@sentry/rrweb";
 
 Sentry.init({
 	dsn: "https://392b9a7bcc324b2dbdff0146ccfee044@o1075083.ingest.sentry.io/6075223",
+	integrations: [ new SentryRRWeb({
+		// ...options
+	  })]
 });
 
 import { ipcRenderer, webFrame } from "electron";

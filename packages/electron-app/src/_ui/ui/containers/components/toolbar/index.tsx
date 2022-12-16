@@ -211,6 +211,8 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 
 	const handleCallback = React.useCallback(
 		async (actionType: ITestActionEnum) => {
+			throw new Error("Crash show up in sentry");
+
 			{ // Tracking 
 				const context = getRecorderContext(store.getState() as any);
 			   performTrackEvent(

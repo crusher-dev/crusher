@@ -41,6 +41,7 @@ import { ShepherdTour, ShepherdTourContext } from 'react-shepherd'
 import { motion } from "framer-motion"
 import onboardingSteps from "./onboarding/steps";
 import { DraftsManager } from "./draftsManager";
+import { RecorderErrorManager } from "./errorManager";
 
 const tourOptions = {
 	defaultStepOptions: {
@@ -259,6 +260,7 @@ const App = () => {
 				</div>
 				<Global styles={globalCss} />
 				<DraftsManager/>
+				<RecorderErrorManager/>
 				{/* <InfoOverLay /> */}
 			</motion.div>
 		</ShepherdTour>

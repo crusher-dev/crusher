@@ -205,34 +205,34 @@ const StepsPanel = ({ className }: IProps) => {
 		}
 	}, [recordedSteps.length, showPausedCard]);
 
-	React.useEffect(() => {
-		if (failedSteps.length) {
-			const lastFailedStep = failedSteps[failedSteps.length - 1];
-			actionDescriber.initActionHandlers();
-			const isElementFailure = lastFailedStep.type.startsWith("ELEMENT_") && [StepErrorTypeEnum.ELEMENT_NOT_FOUND, StepErrorTypeEnum.ELEMENT_NOT_STABLE, StepErrorTypeEnum.ELEMENT_NOT_VISIBLE, StepErrorTypeEnum.TIMEOUT].includes(lastFailedStep.errorType);
+	// React.useEffect(() => {
+	// 	if (failedSteps.length) {
+	// 		const lastFailedStep = failedSteps[failedSteps.length - 1];
+	// 		actionDescriber.initActionHandlers();
+	// 		const isElementFailure = lastFailedStep.type.startsWith("ELEMENT_") && [StepErrorTypeEnum.ELEMENT_NOT_FOUND, StepErrorTypeEnum.ELEMENT_NOT_STABLE, StepErrorTypeEnum.ELEMENT_NOT_VISIBLE, StepErrorTypeEnum.TIMEOUT].includes(lastFailedStep.errorType);
 
-			console.log("Last Failed Step", lastFailedStep);
-			showToast({
-				message: getErrorMessage(lastFailedStep),
-				type: "step-failed",
-				isUnique: true,
-				meta: {
-					errorType: lastFailedStep.errorType,
-					stepId: lastFailedStep.index,
-					callback: isElementFailure ? () => {
-						console.log("CLICKED, YES");
-					} : () => {
-						emitShowModal({
-							type: EDIT_MODE_MAP[lastFailedStep.type],
-							stepIndex: lastFailedStep.index,
-						});
-					}
-				},
-			});
-		} else {
-			clearToast("step-failed");
-		}
-	}, [failedSteps.length]);
+	// 		console.log("Last Failed Step", lastFailedStep);
+	// 		showToast({
+	// 			message: getErrorMessage(lastFailedStep),
+	// 			type: "step-failed",
+	// 			isUnique: true,
+	// 			meta: {
+	// 				errorType: lastFailedStep.errorType,
+	// 				stepId: lastFailedStep.index,
+	// 				callback: isElementFailure ? () => {
+	// 					console.log("CLICKED, YES");
+	// 				} : () => {
+	// 					emitShowModal({
+	// 						type: EDIT_MODE_MAP[lastFailedStep.type],
+	// 						stepIndex: lastFailedStep.index,
+	// 					});
+	// 				}
+	// 			},
+	// 		});
+	// 	} else {
+	// 		clearToast("step-failed");
+	// 	}
+	// }, [failedSteps.length]);
 
 	const handlePause = () => {
 		performPauseStepsExecution();

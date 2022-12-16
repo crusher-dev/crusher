@@ -15,6 +15,7 @@ import { uuidv4 } from "runner-utils/src/utils/helper";
 import { StepErrorTypeEnum } from "runner-utils/src/error.types";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import Table from "cli-table";
+import { getSavedSteps } from "../store/selectors/recorder";
 
 const { performance } = require("perf_hooks");
 //@ts-ignore
@@ -318,6 +319,14 @@ class PlaywrightInstance {
 				this.appWindow.getRecorder().markRunningStepFailed(errorType);
 			}
 		}
+
+		const stepIndex = getSavedSteps(this.appWindow.store.getState() as any).length - 1;
+		 this.appWindow.sendMessage("recorder-step-error", {
+			stepIndex,
+			error,
+			starTime: performance.now(),
+			endTime: performance.now()
+		});
 	}
 
 	async runActions(actions: iAction[], shouldNotSave = false): Promise<void> {

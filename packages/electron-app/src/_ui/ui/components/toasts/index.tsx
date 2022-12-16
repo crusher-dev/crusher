@@ -58,7 +58,8 @@ const ToastViewport = StyledViewport;
 
 
 const Toasts = ({toasts}) => {
-  const handleClearToastWithId = (id: string) => {
+  const handleClearToastWithId = (id: string, shouldOpen: boolean) => {
+    if(!shouldOpen)
     clearToastId(id);
   }
 

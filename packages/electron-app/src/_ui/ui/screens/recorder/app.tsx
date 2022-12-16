@@ -40,6 +40,7 @@ import { useSearchParams } from "react-router-dom";
 import { ShepherdTour, ShepherdTourContext } from 'react-shepherd'
 import { motion } from "framer-motion"
 import onboardingSteps from "./onboarding/steps";
+import { DraftsManager } from "./draftsManager";
 
 const tourOptions = {
 	defaultStepOptions: {
@@ -200,27 +201,11 @@ const App = () => {
 	const recorderState = useSelector(getRecorderState);
 
 
-	const handleDraftInterval = async () => {
-		// Auto save
-		const allSteps = getAllSteps(store.getState() as any);
-		const recorderState = getRecorderState(store.getState() as any);
-		const recorderContext = getRecorderContext(store.getState() as any);
-
-		if (allSteps.length && recorderContext.draftId) {
-			console.log("Auto saving now...");
-			await axios(updateDraftTest({ events: allSteps as any }, recorderContext.draftId!));
-			console.log("Auto saved");
-		}
-	};
-
-
 	React.useEffect(() => {
 		document.querySelector("html").style = "";
 	}, []);
 
 	React.useEffect(() => {
-		const draftInterval = setInterval(handleDraftInterval, 10000);
-
 		ipcRenderer.on("webview-initialized", () => {
 			store.dispatch(setIsWebViewInitialized(true));
 		});
@@ -273,6 +258,7 @@ const App = () => {
 					</div>
 				</div>
 				<Global styles={globalCss} />
+				<DraftsManager/>
 				{/* <InfoOverLay /> */}
 			</motion.div>
 		</ShepherdTour>

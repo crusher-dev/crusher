@@ -1,11 +1,11 @@
 import { css } from "@emotion/react";
 import { CloseIcon } from "electron-app/src/_ui/constants/icons";
-import { GreenCheckboxIcon } from "electron-app/src/_ui/constants/old_icons";
+import { GreenCheckboxIcon, LoadingIconV2 } from "electron-app/src/_ui/constants/old_icons";
 import React from "react";
 import { HoverButton } from "../hoverButton";
 import { ActionToast } from "./variants/actionToast";
 
-const NormalToast = ({ meta, setOpen, message, duration = 7000 }) => {
+const LoadingToast = ({ meta, setOpen, message, duration = 7000 }) => {
     const handleOpen = (open) => {
         if(!open) {
             setOpen(open);
@@ -25,7 +25,7 @@ const NormalToast = ({ meta, setOpen, message, duration = 7000 }) => {
 const FixToastMessage = ({ message }) => {
     return (
         <div className={"flex items-center"}>
-            <GreenCheckboxIcon css={correctIconCss} />
+            <LoadingIconV2 css={loadingIconCss}/>
             <span className={"ml-10"}>{message}</span>
         </div>
     );
@@ -49,29 +49,8 @@ const NormalToastActions = ({ setOpen, meta }: any) => {
 const actionsContainerCss = css`
     height: 100%;   
 `;
-const actionCss = css`height: 100%;border-width: 0px 0.5px;
-border-style: solid;
-border-color: rgba(255, 255, 255, 0.05);
-border-radius: 0px;
-:hover {
-  background: rgba(255, 255, 255, 0.01);
-}
+const loadingIconCss = css`
+width: 14rem;
+height: 14rem;
 `;
-const actionTextCss = css`
-  margin-top: 2rem;
-`;
-const editIcoNCss = css`
-  width: 14rem;
-  height: 14rem;
-`;
-const correctIconCss = css`
-  width: 14rem;
-  height: 14rem;
-`;
-
-const correctIconCss = css`
-  width: 14rem;
-  height: 14rem;
-`;
-
-export { NormalToast };
+export { LoadingToast };

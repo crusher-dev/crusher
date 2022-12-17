@@ -343,6 +343,30 @@ class CrusherRunnerActions {
 	}
 }
 
+const getActionErrorHandler = (actionType: ActionsInTestEnum, actionName: string | null = null) => {
+	const actions = [];
+	if (isWebpack()) {
+		// @ts-ignore
+		const actionsRequireContext = require.context("./actions/", true, /\.ts$/);
+
+		actionsRequireContext.keys().forEach((fileName) => {
+			const { name, description, handler } = actionsRequireContext(fileName);
+			actions.push({ name, description, handler });
+		});
+	} else {
+		const actionsDir = fs.readdirSync(path.join(__dirname, "./actions"));
+		for (let actionFilePath of actionsDir) {
+			const { name, description, handler } = require(path.join(__dirname, "./actions", actionFilePath));
+			actions.push({ name, description, handler });
+		}
+	}
+
+	const action = actions.find((action) => action.name === actionType);
+	if (!action) throw new Error("No action found for type " + actionType);
+
+	return action.handler(actionName);
+};
+
 export {
 	CrusherRunnerActions,
 	handlePopup,

@@ -13,6 +13,21 @@ import { iAction } from "@shared/types/action";
 import { getErrorMessage } from "./sidebar/stepsPanel/helper";
 import { emitShowModal } from "../../containers/components/modals";
 import { EDIT_MODE_MAP } from "./sidebar/stepsPanel/stepEditor";
+import { TRecorderState } from "electron-app/src/store/reducers/recorder";
+import { Page } from "playwright";
+
+interface ICrusherRecorderSDK {
+    getStep: (stepIndex: number) => iAction;
+    getAllSteps: () => iAction[];
+    
+    updateStep: (stepIndex: number, step: iAction) => void;
+    setSteps: (steps: iAction[]) => void;
+
+    updateRecorderState: (state: TRecorderState) => void;
+    openModal: (modalType: string, modalProps?: any) => void;
+
+    getPlaywrightPage: () => Page;
+};
 
 const getStep = (stepIndex) => {
     const store = getStore();
@@ -38,7 +53,6 @@ const getLogsBetWeenTimeInterval = (startTime, endTime) => {
 };
 
 export const RecorderErrorManager = () => {
-    
     const store = useStore();
 
     const actionDescriber = React.useMemo(() => {

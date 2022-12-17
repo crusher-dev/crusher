@@ -18,17 +18,17 @@ An alternative to the *"old" testing*, where you:
 -  Choose a library & runner (Jest, Cypress, Playwright, Puppeteer, etc.)
 -  Build your own framework with different tools
 -  Write tests that take hours
--  Maintain test whichs eats up your time
+-  Maintain tests which eats up your time
 <details>
   <summary> 🤦 + more</summary>
 
 * 🔋  Find the right selectors that work.
 * 🚥  Setup CI/CD to run tests
 * 💰 Start paying for every little thing ( or start building your own framework )
-  * Pay for cloud services to run tests on different browser
+  * Pay for cloud services to run tests on different browsers
   * Set up a reporting system to view test results - Cypress cloud
   * Image comparison tool to compare visual changes - Percy
-*  🚨 And don't forget to set up alerts for test failures - Slack/Discord/Emails - plus lot more things like test management, debug, updating breaking tests etc.
+*  🚨 And don't forget to set up alerts for test failures - Slack/Discord/Emails - plus a lot more things like test management, debug, updating breaking tests etc.
 </details>
 
 ![Crusher demo for test creation, running, cli](https://user-images.githubusercontent.com/6849438/204720236-4139dae2-a0e6-4ce6-a9fb-ab6788ec3cc9.gif)
@@ -88,7 +88,7 @@ Testing solves this, but it hasn't evolved. It's too complicated and sometimes h
 
 - **I don't have any prior experience, Can I use Crusher?** Yes, we primarily designed Crusher to make testing easy. If you have used a browser before, you can use Crusher.
 - **Low-code ain't powerful, I believe code is more powerful:-** Fair enough, we believe in both. We're also working on a code-first approach.
-- **Why use this over selenium, cypress, etc?** With any library, you'll have to spend a lot of time setting up the testing framework for your project. With us, you can start testing right away. We're also built on top of playwright, which is a more stable and faster automation library.
+- **Why use this over selenium, cypress, etc?** With any library, you'll have to spend a lot of time setting up the testing framework for your project. With crusher, you can start testing right away. Crusher also built on top of playwright, which is a more stable and faster automation library.
 - **Why a new framework?** Testing has not evolved. It can be quite frustrating to setup and maintain. With Crusher, we're trying to make it easy and fun.
 - **Is Crusher using Electron?** Yes, we forked Electron to create our own chromium-based browser.
 

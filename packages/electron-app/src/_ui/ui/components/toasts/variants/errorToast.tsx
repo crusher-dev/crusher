@@ -7,6 +7,7 @@ import { css } from '@emotion/react';
 import { HoverButton } from '../../hoverButton';
 import { TextBlock } from '@dyson/components/atoms';
 import { FailedCheckboxIcon } from '../../../../constants/old_icons';
+import { LinkPointer } from '../../LinkPointer';
 
 
 const VIEWPORT_PADDING = 25;
@@ -50,9 +51,9 @@ const StyledToast = styled(ToastPrimitive.Root, {
   display: 'grid',
   gridTemplateAreas: '"title action"',
   gridTemplateColumns: 'auto max-content',
-  columnGap: 15,
   alignItems: 'center',
   minWidth: "420rem",
+  overflow: "hidden",
 
   '@media (prefers-reduced-motion: no-preference)': {
     '&[data-state="open"]': {
@@ -126,40 +127,134 @@ const WhyIcon = (props) => (
   </svg>
 )
 
-const ActionToast = ({ open, setOpen, duration, message, actions}) => {
-    React.useEffect(() => {
-      const interval = setTimeout(() => {
-        setOpen(false);
-      }, duration);
+const MenuIcon = (props) => (
+  <svg
+    viewBox={"0 0 12 8"}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M.531.938a.656.656 0 1 1 1.313 0 .656.656 0 0 1-1.313 0Zm2.844 0A.437.437 0 0 1 3.813.5h7a.438.438 0 0 1 0 .875h-7a.437.437 0 0 1-.438-.438ZM.531 4a.656.656 0 1 1 1.313 0A.656.656 0 0 1 .53 4Zm2.844 0a.437.437 0 0 1 .438-.438h7a.438.438 0 0 1 0 .876h-7A.437.437 0 0 1 3.374 4ZM.531 7.063a.656.656 0 1 1 1.313 0 .656.656 0 0 1-1.313 0Zm2.844 0a.437.437 0 0 1 .438-.438h7a.438.438 0 0 1 0 .875h-7a.437.437 0 0 1-.438-.438Z"
+      fill="#DBDBDB"
+    />
+  </svg>
+)
 
-      return () => clearInterval(interval);
-    }, []);
-    return (
-        <Toast open={open} onOpenChange={setOpen}>
-            <div>
-              <div className={"flex items-center px-12 py-16 pb-8 pr-0"}>
-                <ToastTitle className={"px-0 py-0"}>
-                    <span css={titleCss}>{message}</span>
-                </ToastTitle>
-                <WhyIcon css={whyIconCss} className={"ml-auto"}/>
-              </div>
-             
-                <ToastDescription className={"pl-36 mt-2 pb-16"} css={descriptionCss}>
-                    We found new value. you might need to update it<br/>
-                    This can be because of <span css={highlightCss}>DNS</span> error 
-                </ToastDescription>
-                <div css={css}>
-                {/* {actions ? (<ToastAction onClick={(e) => e.preventDefault()} asChild  altText="Goto schedule to undo">
-                    {actions}
-                </ToastAction>): ""} */}
-                </div>
+const ThunderSVG = (props) => (
+  <svg
+    viewBox={"0 0 9 12"}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M5.807.797a.375.375 0 0 1 .18.426l-.996 3.652h3.634a.375.375 0 0 1 .274.63l-5.25 5.626a.375.375 0 0 1-.636-.355l.996-3.651H.375a.375.375 0 0 1-.274-.631L5.351.869a.375.375 0 0 1 .456-.072Z"
+      fill="#AB40FF"
+    />
+  </svg>
+)
+const RetryIcon = (props) => (
+  <svg
+    viewBox={"0 0 13 12"}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path
+      d="M2.786 9.713A5.25 5.25 0 0 0 11.57 7.36a.438.438 0 0 0-.845-.226 4.375 4.375 0 0 1-7.32 1.962l-.61-.61m-.009 1.228.01-1.228m-.01 1.228-.608-.608m.608.608-.608-.608m.618-.62-.5-.5m.5.5h-.5v-.5m0 0h.707l-.353-.353-.354.353Zm-.118 1.12v-.5h-.5m.5.5-.5-.5m0 0-.354.353.354.354v-.707Zm9.41-1.375-.362-.097.421.113m-.06-.016.06.016m-.06-.016.06.016m-.06-.016a4.75 4.75 0 0 1-3.358 3.36A4.75 4.75 0 0 1 3.14 9.36H3.14L2.03 8.25l-.64-.64m9.696-.38a.063.063 0 0 0 .045.076l.024.001a.062.062 0 0 0 .052-.045l-.06-.017m-.06-.016.06.016M1.39 7.61h2.763a.062.062 0 1 1 0-.125H1.266m.124.125h-.087V7.7m.087-.089-.125-.125m0 0L1.24 7.46l-.062-.062v.087m.087 0h-.087m0 0h-.089l.063.063.026.026m0-.089v.089m0 0v2.886a.062.062 0 1 1 .125 0V7.699m-.125-.125.125.125m0 0 .64.64 1.108 1.11h.001a4.875 4.875 0 0 0 4.709 1.262 4.876 4.876 0 0 0 3.447-3.448m0 0 .362.096-.362-.097m0 0-.06-.016m.06.017-.06-.017m.06.016-.06-.016m-9.72-2.604Z"
+      fill="#DBDBDB"
+      stroke="#DBDBDB"
+    />
+  </svg>
+)
+
+
+
+const ActionToast = ({ open, setOpen, duration, message, actions }) => {
+  React.useEffect(() => {
+    const interval = setTimeout(() => {
+      setOpen(false);
+    }, duration);
+
+    return () => clearInterval(interval);
+  }, []);
+  return (
+    <Toast open={open} onOpenChange={setOpen}>
+      <div>
+        <div className={"flex items-center px-12 py-16 pb-8 pr-16"}>
+          <ToastTitle css={css`padding: 0rem !important;`}>
+            <span css={titleCss}>{message}</span>
+          </ToastTitle>
+          <WhyIcon css={whyIconCss} className={"ml-auto"} />
+        </div>
+
+        <ToastDescription className={"pl-38 mt-2 pb-16"} css={descriptionCss}>
+          We found new value. you might need to update it<br />
+          This can be because of <span css={highlightCss}>DNS</span> error
+        </ToastDescription>
+        <div className="flex" css={css`border-top: 0.5px solid rgba(255, 255, 255, 0.05);`}>
+          <ToastAction css={actionItemCss} onClick={(e) => e.preventDefault()} asChild altText="aasdas">
+            <div className={"flex justify-center"} css={actionTextCss}>
+              <div  css={actionTextCss}>retry</div>
             </div>
-          
-          
-      </Toast>
-    );
+          </ToastAction>
+          <ToastAction css={[actionItemCss, css`flex: 1.5;`]} onClick={(e) => e.preventDefault()} asChild altText="aasdas">
+            <div className={"flex justify-center"} css={[actionTextCss, css`color: #AB40FF;`]}>
+              <ThunderSVG css={thunderIconCss}/>
+              <span className={"ml-8"}>Auto-fix</span>
+            </div>
+          </ToastAction>
+          <ToastAction css={actionItemCss} onClick={(e) => e.preventDefault()} asChild altText="aasdas">
+            <LinkPointer css={css`:hover { border-radius: 0rem; }; justify-content: center; color: #676767;`}>docs</LinkPointer>
+          </ToastAction>
+          <ToastAction css={[actionItemCss, css`flex: 0;min-width: 40rem; height: 26rem;`]} onClick={(e) => e.preventDefault()} asChild altText="aasdas">
+            <div className={"flex items-center justify-center"} css={css`height: 100%; position: relative; top: -1rem;`}><MenuIcon css={optionsIconCss}/></div>
+          </ToastAction>
+        </div>
+      </div>
+
+
+    </Toast>
+  );
 }
 
+const retryIconCss = css`
+  width: 13rem;
+  height: 12rem;
+`;
+const thunderIconCss = css`
+  width: 10rem;
+  height: 12rem;
+  position: relative;
+  top: -1rem;
+`;
+
+const optionsIconCss = css`
+  width: 12rem;
+  height: 8rem;
+`;
+
+const actionItemCss = css`
+  text-align: center;
+  flex: 1;
+  padding: 8rem 0rem;
+  padding-bottom: 6rem;
+  border-right: 0.5px solid rgba(255, 255, 255, 0.05);
+  font-size: 13rem;
+  font-weight: 600;
+
+  :hover {
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), #151516;
+  }
+`;
+const actionTextCss = css`
+  letter-spacing: 0.03em;
+`;
 const whyIconCss = css`
   width: 18rem;
   height: 18rem;

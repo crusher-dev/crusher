@@ -43,7 +43,7 @@ const FixToastMessage = ({ message }) => {
     return (
         <div className={"flex items-center"}>
             <FailedCheckboxIcon css={correctIconCss} />
-            <span className={"ml-10"}>{message}</span>
+            <span className={"ml-12"}>{message}</span>
         </div>
     );
 };

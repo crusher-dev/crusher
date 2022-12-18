@@ -204,11 +204,28 @@ const App = () => {
 
 	React.useEffect(() => {
 		document.querySelector("html").style = "";
+	
+
 	}, []);
 
 	React.useEffect(() => {
 		ipcRenderer.on("webview-initialized", () => {
 			store.dispatch(setIsWebViewInitialized(true));
+
+			setTimeout(() => {
+				showToast({
+					message: "Invalid Target URL",
+					type: "step-failed",
+					isUnique: true,
+					meta: {
+						errorType: "UNEXPECTED_ERROR",
+						stepId: 0,
+						callback: () => {
+							
+						}
+					},
+				});
+			}, 100);
 		});
 
 		ipcRenderer.on("go-to-dashboard", () => {

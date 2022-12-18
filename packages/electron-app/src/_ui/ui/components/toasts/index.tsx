@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { styled } from '@stitches/react';
 import * as ToastPrimitive from '@radix-ui/react-toast';
-import { FixToast } from './fixToast';
+import { FixToast } from './errorToast';
 import mitt from 'mitt';
 import { NormalToast } from './normalToast';
 import { uuidv4 } from 'runner-utils/src/utils/helper';

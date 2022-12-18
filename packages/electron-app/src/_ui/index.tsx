@@ -35,7 +35,7 @@ import { ToastBox } from "./ui/components/toasts";
 import { CloudCrusher } from "../lib/cloud";
 import { Store } from "redux";
 import { IDeepLinkAction } from "../types";
-import { triggerLocalBuild } from "./utils/recorder";
+import { triggerLocalBuild, triggerLocalBuildFromDeeplink } from "./utils/recorder";
 import { DesktopAppEventsEnum } from "@shared/modules/analytics/constants";
 import { OnboardingWrapper } from "./ui/screens/onboarding";
 
@@ -54,7 +54,13 @@ function getPersistStore() {
 const handleUrlAction = async (store: Store, event: Electron.IpcRendererEvent, { action }: { action: IDeepLinkAction }) => {
 	console.log("Action recieved", action);
 	switch (action.commandName) {
-		case "run-local-build":
+		case "run-tests-in-local-build": {
+			const { tests } = action.args;
+			const testIds = tests.split(","); 
+			await triggerLocalBuildFromDeeplink(testIds);
+			break;
+		}
+		case "run-local-build":{
 			const { buildId } = action.args;
 			const buildReport = await CloudCrusher.getBuildReportBuildMeta(buildId);
 			store.dispatch(setSelectedProject(buildReport.projectId));
@@ -73,6 +79,7 @@ const handleUrlAction = async (store: Store, event: Electron.IpcRendererEvent, {
 				},
 			);
 			break;
+		}
 	}
 };
 

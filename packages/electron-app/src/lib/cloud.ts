@@ -13,6 +13,13 @@ class CloudCrusher {
 		return axios.get<{ events: iAction[] }>(resolveToBackend(`/tests/${testId}`), authorizationOptions).then((res) => res.data.events);
 	});
 
+	public static getTests: (testId: string[]) => Promise<iAction[]> = createAuthorizedRequestFunc((authorizationOptions, testIds) => {
+		const testIdsStr = testIds.join(",");
+		return axios.get<{ list: {events: iAction[]}[] }>(resolveToBackend(`/tests/?testIds=${testIdsStr}`), authorizationOptions).then((res) => {
+			return res.data?.list;
+		});
+	});
+
 	public static createProject: (projectName: string) => Promise<any> = createAuthorizedRequestFunc((authorizationOptions, projectName) => {
 		return axios
 			.post(

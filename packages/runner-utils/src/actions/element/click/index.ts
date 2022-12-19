@@ -2,8 +2,8 @@ import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { IGlobalManager } from "@crusher-shared/lib/globals/interface";
 import { iAction } from "@crusher-shared/types/action";
 import { Locator } from "playwright";
-import { CrusherSdk } from "@sdk/sdk";
-import { ExportsManager } from "@functions/exports";
+import { CrusherSdk } from "src/sdk/sdk";
+import { ExportsManager } from "src/functions/exports";
 
 async function clickOnElement(
 	element: Locator,

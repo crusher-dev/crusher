@@ -15,13 +15,9 @@
 		"outDir": "dist",
 		"paths": {
 			"@crusher-shared/*": ["../crusher-shared/*"],
-			"@functions/*": ["./src/functions/*"],
-			"@utils/*": ["./src/utils/*"],
-			"@sdk/*": ["./src/sdk/*"],
-			"~/*": ["./src/*"]
 		}
 	},
-	"files": ["./src/test.ts"],
+	"files": ["./src/index.ts"],
 	"typeRoots": ["node_modules/@types"],
 	"include": ["./src/**/*"],
 	"exclude": ["node_modules", "**/*.spec.ts"]

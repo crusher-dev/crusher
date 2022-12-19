@@ -4,11 +4,11 @@ import { iAction } from "@crusher-shared/types/action";
 import { iAssertionRow } from "@crusher-shared/types/assertionRow";
 import template from "@crusher-shared/utils/templateString";
 import { Page } from "playwright";
-import { StepErrorTypeEnum } from "~/error.types";
-import { CommunicationChannel } from "@functions/communicationChannel";
-import { ExportsManager } from "@functions/exports";
-import { CrusherSdk } from "@sdk/sdk";
-import { markTestFail } from "@utils/helper";
+import { StepErrorTypeEnum } from "src/error.types";
+import { CommunicationChannel } from "src/functions/communicationChannel";
+import { ExportsManager } from "src/functions/exports";
+import { CrusherSdk } from "src/sdk/sdk";
+import { markTestFail } from "src/utils/helper";
 
 async function assertSeoRows(
 	page: Page,

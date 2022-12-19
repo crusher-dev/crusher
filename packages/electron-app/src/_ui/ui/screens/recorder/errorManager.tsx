@@ -15,6 +15,7 @@ import { emitShowModal } from "../../containers/components/modals";
 import { EDIT_MODE_MAP } from "./sidebar/stepsPanel/stepEditor";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 import { Page } from "playwright";
+import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 
 interface ICrusherRecorderSDK {
     getStep: (stepIndex: number) => iAction;
@@ -57,6 +58,8 @@ export const RecorderErrorManager = () => {
 
     const actionDescriber = React.useMemo(() => {
 		const actionDescriber = new ActionDescriptor();
+        actionDescriber.initActionHandlers();
+
 		return actionDescriber;
 	}, []);
 
@@ -66,7 +69,6 @@ export const RecorderErrorManager = () => {
             const step: iAction & {errorType: any} = getStep(stepIndex);
             const logs = getLogsBetWeenTimeInterval(starTime, endTime);
 
-			actionDescriber.initActionHandlers();
 			const isElementFailure = step.type.startsWith("ELEMENT_") && [StepErrorTypeEnum.ELEMENT_NOT_FOUND, StepErrorTypeEnum.ELEMENT_NOT_STABLE, StepErrorTypeEnum.ELEMENT_NOT_VISIBLE, StepErrorTypeEnum.TIMEOUT].includes(step.errorType);
 
 			// console.log("Last Failed Step", step);
@@ -95,5 +97,7 @@ export const RecorderErrorManager = () => {
         };
     }, []);
     
-    return null;
+    const Component  = actionDescriber ? actionDescriber.getAction(ActionsInTestEnum.ADD_INPUT)["ui"]["recorder"].default : null;
+    console.log("Component is", Component);
+    return Component ? ( <Component/> ) : null;
 }

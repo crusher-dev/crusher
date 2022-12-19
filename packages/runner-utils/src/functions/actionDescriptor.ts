@@ -1,3 +1,4 @@
+import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { iAction } from "@crusher-shared/types/action";
 import * as fs from "fs";
 import * as path from "path";
@@ -69,7 +70,7 @@ class ActionDescriptor {
 		for (let action of Object.values(actions)) {
 			const { core, ui } = action as any;
 			const { name, description, handler, actionDescriber } = core;
-			this.registerStepHandler(name, description, handler, actionDescriber);
+			this.registerStepHandler(name, description, handler, actionDescriber, ui);
 		}
 	}
 
@@ -77,14 +78,20 @@ class ActionDescriptor {
 		// this.initActionHandlers();
 	}
 
-	registerStepHandler(name, description, handler, actionDescriber) {
+	registerStepHandler(name, description, handler, actionDescriber, ui) {
 		this.actionsMap[name] = {
 			name,
 
 			description,
 			actionDescriber,
 			handler,
+			ui
 		};
+	}
+
+	getAction(actionType: ActionsInTestEnum) {
+		console.log("Action type is", actionType, this.actionsMap);
+		return this.actionsMap[actionType];
 	}
 
 	describeAction(action: iAction) {

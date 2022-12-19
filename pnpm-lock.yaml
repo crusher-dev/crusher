@@ -483,6 +483,7 @@ importers:
       '@radix-ui/react-dialog': ^1.0.0
       '@radix-ui/react-icons': ^1.1.1
       '@radix-ui/react-switch': ^1.0.0
+      '@radix-ui/react-toast': ^1.0.0
       '@radix-ui/react-tooltip': ^1.0.0
       '@stitches/react': ^1.2.8
       '@storybook/addon-actions': ^6.5.10
@@ -527,6 +528,7 @@ importers:
       '@radix-ui/react-dialog': 1.0.0_fdan6bnjkwodef3etrqalnirem
       '@radix-ui/react-icons': 1.1.1_react@17.0.2
       '@radix-ui/react-switch': 1.0.0_sfoxds7t5ydpegc3knd667wn6m
+      '@radix-ui/react-toast': 1.0.0_sfoxds7t5ydpegc3knd667wn6m
       '@radix-ui/react-tooltip': 1.0.0_fdan6bnjkwodef3etrqalnirem
       '@stitches/react': 1.2.8_react@17.0.2
       '@storybook/addon-info': 5.3.21_kpnaldxznq4w6o534bf4fb74au
@@ -13467,7 +13469,7 @@ packages:
       mississippi: 3.0.0
       mkdirp: 0.5.5
       move-concurrently: 1.0.1
-      promise-inflight: 1.0.1
+      promise-inflight: 1.0.1_bluebird@3.7.2
       rimraf: 2.7.1
       ssri: 6.0.2
       unique-filename: 1.1.1
@@ -26521,6 +26523,16 @@ packages:
       bluebird:
         optional: true
 
+  /promise-inflight/1.0.1_bluebird@3.7.2:
+    resolution: {integrity: sha512-6zWPyEOFaQBJYcGMHBKTKJ3u6TBsnMFOIZSa6ce1e/ZrrsOlnHRHbabMjLiBYKp+n44X9eUI6VUPaukCXHuG4g==}
+    peerDependencies:
+      bluebird: '*'
+    peerDependenciesMeta:
+      bluebird:
+        optional: true
+    dependencies:
+      bluebird: 3.7.2
+
   /promise.allsettled/1.0.4:
     resolution: {integrity: sha512-o73CbvQh/OnPFShxHcHxk0baXR2a1m4ozb85ha0H14VEoi/EJJLa9mnPfEWJx9RjA9MLfhdjZ8I6HhWtBa64Ag==}
     engines: {node: '>= 0.4'}
@@ -31031,7 +31043,7 @@ packages:
       serialize-javascript: 6.0.0
       source-map: 0.6.1
       terser: 5.13.1
-      webpack: 5.73.0_webpack-cli@4.10.0
+      webpack: 5.73.0
     dev: true
 
   /terser-webpack-plugin/5.3.1_zjtckeea76d3oit4tw4tcptpni:

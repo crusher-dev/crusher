@@ -6,6 +6,8 @@ import mitt from 'mitt';
 import { NormalToast } from './normalToast';
 import { uuidv4 } from 'runner-utils/src/utils/helper';
 import { LoadingToast } from './loadingToast';
+import { ActionDescriptor } from 'runner-utils/src';
+import { ActionsInTestEnum } from '@shared/constants/recordedActions';
 
 export const toastEmitter = mitt();
 export type ToastType = "step-failed" | "ready-for-edit" | "normal" | "loading";
@@ -116,10 +118,19 @@ const ToastBox = () => {
     };
   }, [toasts]);
 
+  const actionDescriber = React.useMemo(() => {
+		const actionDescriber = new ActionDescriptor();
+        actionDescriber.initActionHandlers();
+
+		return actionDescriber;
+	}, []);
+
+  const Component  = actionDescriber ? actionDescriber.getAction(ActionsInTestEnum.ADD_INPUT)["ui"]["recorder"].default : null;
 
   return (
     <ToastProvider swipeDirection="right"> 
           <Toasts toasts={toasts}/>
+          {Component && <Component />}
          <ToastViewport />
   </ToastProvider>
   );

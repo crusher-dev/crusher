@@ -99,5 +99,5 @@ export const RecorderErrorManager = () => {
     
     const Component  = actionDescriber ? actionDescriber.getAction(ActionsInTestEnum.ADD_INPUT)["ui"]["recorder"].default : null;
     console.log("Component is", Component);
-    return Component ? ( <Component/> ) : null;
+    return  null;
 }

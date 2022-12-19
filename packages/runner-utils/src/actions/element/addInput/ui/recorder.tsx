@@ -1,15 +1,38 @@
-import React from "react";
+import React, {useState} from "react";
 import { css } from "@emotion/react";
+import { BaseDialogToast, BaseDialogTitle, BaseDialogDescription, BaseDialogActions, BaseDialogAction } from "../../../../../../dyson/src/components/sharedComponets/toasts/error";
+import { FailedCheckboxIcon } from "../../../../../../dyson/src/components/icons/FailedCheckboxSVG";
+import { WhyIcon } from "../../../../../../dyson/src/components/icons/WhyIconSVG";
 
 const ErrorDialog = () => {
+
     return (
-        <div css={containerCss}>
-            Something went wrong while performing this action.
-            Time to wrap it up
-        </div>
+        <BaseDialogToast open={true} duration={100000} setOpen={() => {}}>
+            <BaseDialogTitle>
+                <div className="flex items-center flex-1">
+                    <FailedCheckboxIcon width={18} height={18} />
+                    <span className={"ml-12"}>Invalid Target URL</span>
+
+                    <WhyIcon css={whyIconCss} className={"ml-auto"} />
+                </div>
+            </BaseDialogTitle>
+            <BaseDialogDescription className={"pl-42"}>
+                We found new value. you might need to update it<br />
+                This can be because of <span css={highlightCss}>DNS</span> error
+            </BaseDialogDescription>
+            <BaseDialogActions>
+                <BaseDialogAction type="retry">retry</BaseDialogAction>
+                <BaseDialogAction type="auto-fix">Auto-fix</BaseDialogAction>
+                <BaseDialogAction type="link">docs</BaseDialogAction>
+                <BaseDialogAction type="options">:</BaseDialogAction>
+            </BaseDialogActions>
+        </BaseDialogToast>
     )
 };
 
+const highlightCss = css`
+    color: rgba(210, 65, 117, 1);
+`;
 const containerCss = css`
     background: green;
     position: fixed;
@@ -25,6 +48,11 @@ const containerCss = css`
     padding-right: 20rem;
     font-weight: bold;
     font-size: 16rem;
+`;
+
+const whyIconCss = css`
+  width: 18rem;
+  height: 18rem;
 `;
 
 export default ErrorDialog;

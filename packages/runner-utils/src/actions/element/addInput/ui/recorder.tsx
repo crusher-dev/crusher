@@ -4,7 +4,26 @@ import { BaseDialogToast, BaseDialogTitle, BaseDialogDescription, BaseDialogActi
 import { FailedCheckboxIcon } from "../../../../../../dyson/src/components/icons/FailedCheckboxSVG";
 import { WhyIcon } from "../../../../../../dyson/src/components/icons/WhyIconSVG";
 
-const ErrorDialog = () => {
+const ErrorDialog = ({sdk, id, resolveCallback}) => {
+    
+    const handleAutoFix = () => {
+        const step = sdk.getStep(id);
+        sdk.updateStep(id, {
+            ...step,
+            payload: {
+                ...step.payload,
+                meta: {
+                    ...step.payload.meta,
+                    value: "https://www.google.com",
+                }
+            }
+        });
+
+        setTimeout(() => {
+            sdk.retryStep(id);
+            resolveCallback(true);
+        }, 100);
+    }
 
     return (
         <BaseDialogToast open={true} duration={100000} setOpen={() => {}}>
@@ -22,7 +41,7 @@ const ErrorDialog = () => {
             </BaseDialogDescription>
             <BaseDialogActions>
                 <BaseDialogAction type="retry">retry</BaseDialogAction>
-                <BaseDialogAction type="auto-fix">Auto-fix</BaseDialogAction>
+                <BaseDialogAction onClick={handleAutoFix} type="auto-fix">Auto-fix</BaseDialogAction>
                 <BaseDialogAction type="link">docs</BaseDialogAction>
                 <BaseDialogAction type="options">:</BaseDialogAction>
             </BaseDialogActions>

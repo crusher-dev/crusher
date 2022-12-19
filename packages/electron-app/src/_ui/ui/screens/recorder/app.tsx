@@ -220,7 +220,6 @@ const App = () => {
 		ipcRenderer.on("url-action", listener);
 
 		return () => {
-			clearInterval(draftInterval);
 			ipcRenderer.removeListener("url-action", listener);
 			ipcRenderer.removeAllListeners("renderer-ready");
 			ipcRenderer.removeAllListeners("webview-initialized");

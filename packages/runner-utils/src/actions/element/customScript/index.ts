@@ -2,9 +2,9 @@ import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { IGlobalManager } from "@crusher-shared/lib/globals/interface";
 import { iAction } from "@crusher-shared/types/action";
 import { Locator, ElementHandle } from "playwright";
-import { ExportsManager } from "src/functions/exports";
-import { StorageManager } from "src/functions/storage";
-import { markTestFail } from "src/utils/helper";
+import { ExportsManager } from "../../../functions/exports";
+import { StorageManager } from "../../../functions/storage";
+import { markTestFail } from "../../../utils/helper";
 
 const runScriptOnElement = (script: string, elHandle: ElementHandle, exportsManager: ExportsManager): Promise<boolean> => {
 	return new Function(

@@ -2,8 +2,8 @@ import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { IGlobalManager } from "@crusher-shared/lib/globals/interface";
 import { iAction } from "@crusher-shared/types/action";
 import { Locator } from "playwright";
-import { StorageManager } from "src/functions/storage";
-import { generateScreenshotName, uuidv4 } from "src/utils/helper";
+import { StorageManager } from "../../../functions/storage";
+import { generateScreenshotName, uuidv4 } from "../../../utils/helper";
 
 async function takeElementScreenshot(element: Locator, workingSelector: any, action: iAction, globals: IGlobalManager, storageManager: StorageManager) {
 	const screenshotBuffer = await element.screenshot({

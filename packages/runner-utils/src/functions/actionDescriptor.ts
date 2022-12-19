@@ -66,7 +66,7 @@ class ActionDescriptor {
 			
 		}
 
-		for (let action in Object.values(actions)) {
+		for (let action of Object.values(actions)) {
 			const { core, ui } = action as any;
 			const { name, description, handler, actionDescriber } = core;
 			this.registerStepHandler(name, description, handler, actionDescriber);

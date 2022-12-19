@@ -3,8 +3,8 @@ import { iAction } from "@crusher-shared/types/action";
 import { iAssertionRow } from "@crusher-shared/types/assertionRow";
 import template from "@crusher-shared/utils/templateString";
 import { Locator } from "playwright";
-import { StepErrorTypeEnum } from "src/error.types";
-import { markTestFail } from "src/utils/helper";
+import { StepErrorTypeEnum } from "../../../error.types";
+import { markTestFail } from "../../../utils/helper";
 
 async function assertElementAttributes(
 	element: Locator,

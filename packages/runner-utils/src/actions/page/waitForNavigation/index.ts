@@ -1,12 +1,12 @@
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { iAction } from "@crusher-shared/types/action";
 import { Page } from "playwright";
-import { ExportsManager } from "src/functions/exports";
-import { CrusherSdk } from "src/sdk/sdk";
-import { sleep } from "src/functions/sleep";
+import { ExportsManager } from "../../../functions/exports";
+import { CrusherSdk } from "../../../sdk/sdk";
+import { sleep } from "../../../functions/sleep";
 import { IGlobalManager } from "@crusher-shared/lib/globals/interface";
 import template from "@crusher-shared/utils/templateString";
-import { CommunicationChannel } from "src/functions/communicationChannel";
+import { CommunicationChannel } from "../../../functions/communicationChannel";
 
 async function waitForNavigation(
 	page: Page,

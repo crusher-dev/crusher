@@ -2,9 +2,9 @@ import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { iAction } from "@crusher-shared/types/action";
 import { iAssertionRow } from "@crusher-shared/types/assertionRow";
 import template from "@crusher-shared/utils/templateString";
-import { ElementHandle, Locator } from "playwright";
-import { StepErrorTypeEnum } from "../error.types";
-import { markTestFail } from "../utils/helper";
+import { Locator } from "playwright";
+import { StepErrorTypeEnum } from "~/error.types";
+import { markTestFail } from "@utils/helper";
 
 async function assertElementAttributes(
 	element: Locator,

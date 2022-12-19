@@ -14,10 +14,14 @@
 		"strictNullChecks": false,
 		"outDir": "dist",
 		"paths": {
-			"@crusher-shared/*": ["../crusher-shared/*"]
+			"@crusher-shared/*": ["../crusher-shared/*"],
+			"@functions/*": ["./src/functions/*"],
+			"@utils/*": ["./src/utils/*"],
+			"@sdk/*": ["./src/sdk/*"],
+			"~/*": ["./src/*"]
 		}
 	},
-	"files": ["./src/index.ts"],
+	"files": ["./src/test.ts"],
 	"typeRoots": ["node_modules/@types"],
 	"include": ["./src/**/*"],
 	"exclude": ["node_modules", "**/*.spec.ts"]

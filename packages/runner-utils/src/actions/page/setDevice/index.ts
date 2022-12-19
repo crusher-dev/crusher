@@ -1,5 +1,5 @@
 import { iAction } from "@crusher-shared/types/action";
-import { Browser, BrowserContextOptions, Page } from "playwright";
+import { Browser } from "playwright";
 import { iDevice } from "@crusher-shared/types/extension/device";
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { IGlobalManager } from "@crusher-shared/lib/globals/interface";

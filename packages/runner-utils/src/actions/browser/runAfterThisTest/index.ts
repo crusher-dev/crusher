@@ -1,9 +1,7 @@
 import { iAction } from "@crusher-shared/types/action";
-import { Browser, BrowserContextOptions, Page } from "playwright";
-import { iDevice } from "@crusher-shared/types/extension/device";
+import { Browser } from "playwright";
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { IGlobalManager } from "@crusher-shared/lib/globals/interface";
-import { getUserAgentFromName, userAgents } from "@crusher-shared/constants/userAgents";
 
 function transformStorageState(storageState: any) {
 	if (!storageState) return storageState;

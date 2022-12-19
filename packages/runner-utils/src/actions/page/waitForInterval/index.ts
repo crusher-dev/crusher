@@ -3,9 +3,9 @@ import { IGlobalManager } from "@crusher-shared/lib/globals/interface";
 import { iAction } from "@crusher-shared/types/action";
 import template from "@crusher-shared/utils/templateString";
 import { Page } from "playwright";
-import { ExportsManager } from "../functions/exports";
-import { CrusherSdk } from "../sdk/sdk";
-import { CommunicationChannel } from "../functions/communicationChannel";
+import { ExportsManager } from "@functions/exports";
+import { CrusherSdk } from "@sdk/sdk";
+import { CommunicationChannel } from "@functions/communicationChannel";
 
 async function waitForSeconds(
 	page: Page,

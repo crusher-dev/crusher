@@ -1,4 +1,3 @@
-import { ICrusherSDKElement } from "@crusher-shared/types/sdk/element";
 import { ICrusherSdk } from "@crusher-shared/types/sdk/sdk";
 import { CrusherCookieSetPayload } from "@crusher-shared/types/sdk/types";
 import { Page } from "playwright";
@@ -6,10 +5,9 @@ import { ExportsManager } from "../functions/exports";
 import { CrusherElementSdk } from "./element";
 import { StorageManager } from "../functions/storage";
 import { chunkArray, markTestFail } from "../utils/helper";
-import nodeFetch from "node-fetch";
 import { CommunicationChannel } from "../functions/communicationChannel";
 
-const pageScreenshotModule = require("../actions/pageScreenshot");
+const pageScreenshotModule = require("../actions/page/screenshot");
 
 class CrusherSdk implements ICrusherSdk {
 	_page: Page; // Playwright page reference

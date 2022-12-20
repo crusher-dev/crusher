@@ -1,8 +1,7 @@
 import React from "react";
 import { useEffect } from "react";
-import { css } from "@emotion/react";
 import { ipcRenderer } from "electron";
-import { showToast, toastEmitter, ToastProvider, ToastViewport } from "../../components/toasts";
+import { ToastProvider, ToastViewport } from "../../components/toasts";
 import { useStore } from "react-redux";
 import { getStore } from "electron-app/src/store/configureStore";
 import { getAllSteps, getSavedSteps } from "electron-app/src/store/selectors/recorder";
@@ -13,11 +12,12 @@ import { iAction } from "@shared/types/action";
 import { getErrorMessage } from "./sidebar/stepsPanel/helper";
 import { emitShowModal } from "../../containers/components/modals";
 import { EDIT_MODE_MAP } from "./sidebar/stepsPanel/stepEditor";
-import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 import { Page } from "playwright";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
-import { setSteps, updateRecordedStep, updateRecorderState } from "electron-app/src/store/actions/recorder";
+import { updateRecordedStep } from "electron-app/src/store/actions/recorder";
 import { retryStep } from "./sidebar/stepsPanel/failedCard";
+import { TestErrorContext } from "@dyson/components/sharedComponets/toasts";
+import { useState } from "react";
 
 interface ICrusherRecorderSDK {
     getStep: () => iAction;    
@@ -40,7 +40,7 @@ const getLogsBetWeenTimeInterval = (startTime, endTime) => {
     const logs = getLogs(store.getState() as any);
 
     const parentLogs = logs.get("_").filter((log) => {
-        return log.timestamp >= startTime && log.timestamp <= endTime;
+        return log.time >= startTime && log.time <= endTime;
     });
     
     const allLogs = parentLogs.reduce((acc, log) => {
@@ -51,9 +51,15 @@ const getLogsBetWeenTimeInterval = (startTime, endTime) => {
     return allLogs;
 };
 
+interface IError {
+    message: string;
+    actionType: ActionsInTestEnum;
+    id: number;
+    logs: any[];
+}
 export const RecorderErrorManager = () => {
     const store = useStore();
-    const [error, setError] = React.useState(null);
+    const [error, setError] = useState(null);
 
     const actionDescriber = React.useMemo(() => {
 		const actionDescriber = new ActionDescriptor();
@@ -64,30 +70,18 @@ export const RecorderErrorManager = () => {
 
     useEffect(() => {
         const handleStepError = (event, payload) => {
-            const { stepIndex, error, starTime, endTime } = payload;
+            const { stepIndex, error, startTime, endTime } = payload;
             const step: iAction & {errorType: any} = getStep(stepIndex);
-            const logs = getLogsBetWeenTimeInterval(starTime, endTime);
+            const stepLogs = getLogsBetWeenTimeInterval(startTime, endTime);
 
-			const isElementFailure = step.type.startsWith("ELEMENT_") && [StepErrorTypeEnum.ELEMENT_NOT_FOUND, StepErrorTypeEnum.ELEMENT_NOT_STABLE, StepErrorTypeEnum.ELEMENT_NOT_VISIBLE, StepErrorTypeEnum.TIMEOUT].includes(step.errorType);
-
-			// console.log("Last Failed Step", step);
 			setError({
 				message: getErrorMessage(step),
-				type: "step-failed",
+                actionType: step.type,
                 id: stepIndex,
-				isUnique: true,
-				meta: {
-					errorType: step.errorType,
-					stepId: stepIndex,
-					callback: isElementFailure ? () => {
-						console.log("CLICKED, YES");
-					} : () => {
-						emitShowModal({
-							type: EDIT_MODE_MAP[step.type],
-							stepIndex: stepIndex,
-						});
-					}
-				},
+                logs: stepLogs,
+
+                startTime: startTime,
+                endTime: endTime,
 			});
 
         };
@@ -96,12 +90,7 @@ export const RecorderErrorManager = () => {
             ipcRenderer.removeListener("recorder-step-error", handleStepError);
         };
     }, []);
-    
-    const handleResolve = (isResolved: boolean) => {
-        if(isResolved) {
-            setError(null);
-        }
-    };
+
     
     const Component  = actionDescriber && error ? actionDescriber.getAction(ActionsInTestEnum.ADD_INPUT)["ui"]["recorder"].default : null;
 
@@ -139,10 +128,17 @@ export const RecorderErrorManager = () => {
 
     }
 
+        
+    const handleResolveError = (isResolved: boolean) => {
+        setError(null);
+    };
+
     return  (
-        <ToastProvider swipeDirection="right"> 
-            {Component && <Component resolveCallback={handleResolve} id={error.id} sdk={crusherRecorderSDK} />}
-            <ToastViewport  />
-        </ToastProvider>
+        <TestErrorContext.Provider value={{ sdk: crusherRecorderSDK, stepId: error?.id, resolveError: handleResolveError, error: error }}>
+            <ToastProvider swipeDirection="right"> 
+                {Component && <Component />}
+                <ToastViewport  />
+            </ToastProvider>
+        </TestErrorContext.Provider>
     );
 }

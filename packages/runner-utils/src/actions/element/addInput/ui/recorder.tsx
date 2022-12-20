@@ -1,11 +1,44 @@
-import React, {useState} from "react";
+import React, {useState, useContext} from "react";
 import { css } from "@emotion/react";
 import { BaseDialogToast, BaseDialogTitle, BaseDialogDescription, BaseDialogActions, BaseDialogAction } from "../../../../../../dyson/src/components/sharedComponets/toasts/error";
 import { FailedCheckboxIcon } from "../../../../../../dyson/src/components/icons/FailedCheckboxSVG";
 import { WhyIcon } from "../../../../../../dyson/src/components/icons/WhyIconSVG";
+import { TestErrorContext } from "../../../../../../dyson/src/components/sharedComponets/toasts";
 
-const ErrorDialog = ({sdk, id, resolveCallback}) => {
+enum NavigationErrorTypesEnum {
+    NAME_NOT_RESOLVED = "net::ERR_NAME_NOT_RESOLVED",
+    NAME_RESOLUTION_FAILED = "net::ERR_NAME_RESOLUTION_FAILED",
+    SSL_PROTOCOL_ERROR = "net::ERR_SSL_PROTOCOL_ERROR",
+    UNKNOWN_ERROR = "net::ERR_UNKNOW_ERROR",
+};
+
+const ERROR_MESSAGE = {
+    [NavigationErrorTypesEnum.NAME_NOT_RESOLVED]: "We couldn't find the website you were trying to visit. Please check the URL and try again.",
+    [NavigationErrorTypesEnum.NAME_RESOLUTION_FAILED]: "We couldn't find the website you were trying to visit. Please check the URL and try again.",
+    [NavigationErrorTypesEnum.SSL_PROTOCOL_ERROR]: "The website you were trying to visit is not secure. Please check the URL and try again.",
+    [NavigationErrorTypesEnum.UNKNOWN_ERROR]: "We couldn't find the website you were trying to visit. Please check the URL and try again.",
+};
+
+const ErrorDialog = () => {
+    const { sdk, stepId, error, resolveError } = useContext(TestErrorContext);
     
+    const getErrorType = () => {
+        const logs: string = error.logs.map((log) => log.message).join(" ");
+
+        console.log("logs", logs);
+        if (logs.includes(NavigationErrorTypesEnum.NAME_NOT_RESOLVED)) {
+            return NavigationErrorTypesEnum.NAME_NOT_RESOLVED;
+        }
+        if (logs.includes(NavigationErrorTypesEnum.NAME_RESOLUTION_FAILED)) {
+            return NavigationErrorTypesEnum.NAME_RESOLUTION_FAILED;
+        }
+        if (logs.includes(NavigationErrorTypesEnum.SSL_PROTOCOL_ERROR)) {
+            return NavigationErrorTypesEnum.SSL_PROTOCOL_ERROR;
+        }
+
+        return NavigationErrorTypesEnum.UNKNOWN_ERROR;
+    }
+
     const handleAutoFix = async () => {
         const step = await sdk.getStep();
         await sdk.updateStep({
@@ -20,21 +53,23 @@ const ErrorDialog = ({sdk, id, resolveCallback}) => {
         });
 
         sdk.retryStep();
+        resolveError();
     }
+
+    const errorType = getErrorType();
 
     return (
         <BaseDialogToast open={true} duration={100000} setOpen={() => {}}>
             <BaseDialogTitle>
                 <div className="flex items-center flex-1">
                     <FailedCheckboxIcon width={18} height={18} />
-                    <span className={"ml-12"}>Invalid Target URL</span>
+                    <span className={"ml-12"}>{errorType}</span>
 
                     <WhyIcon css={whyIconCss} className={"ml-auto"} />
                 </div>
             </BaseDialogTitle>
             <BaseDialogDescription className={"pl-42"}>
-                We found new value. you might need to update it<br />
-                This can be because of <span css={highlightCss}>DNS</span> error
+               {ERROR_MESSAGE[errorType]}
             </BaseDialogDescription>
             <BaseDialogActions>
                 <BaseDialogAction type="retry">retry</BaseDialogAction>

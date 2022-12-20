@@ -44,7 +44,7 @@ class PlaywrightInstance {
 
 	private isBusy = false;
 
-	lastAction: { action: iAction; id: string };
+	lastAction: { action: iAction; id: string; time: number };
 
 	constructor(appWindow: AppWindow) {
 		this.appWindow = appWindow;
@@ -258,7 +258,7 @@ class PlaywrightInstance {
 		return errorType;
 	};
 
-	private handleFailedStep(failedAction: iAction, result: iActionResult, shouldNotSave: boolean) {
+	private handleFailedStep(failedAction: iAction, result: iActionResult, shouldNotSave: boolean, startTime) {
 		const { meta } = result;
 		const { error, failedReason } = meta;
 		
@@ -324,7 +324,7 @@ class PlaywrightInstance {
 		 this.appWindow.sendMessage("recorder-step-error", {
 			stepIndex,
 			error,
-			starTime: performance.now(),
+			startTime: startTime,
 			endTime: performance.now()
 		});
 	}
@@ -339,7 +339,7 @@ class PlaywrightInstance {
 			const { status } = result;
 			switch (status) {
 				case ActionStatusEnum.STARTED:
-					this.lastAction = { id: uuidv4(), action };
+					this.lastAction = { id: uuidv4(), action, time: performance.now() };
 					this.appWindow.recordLog({
 						id: this.lastAction.id,
 						message: String(action.name || this.actionDescriptor.describeAction(action as any)),
@@ -352,8 +352,9 @@ class PlaywrightInstance {
 					break;
 				case ActionStatusEnum.FAILED:
 				case ActionStatusEnum.STALLED:
+					const startTime = this.lastAction.time;
 					this.lastAction = null;
-					this.handleFailedStep(action, result, shouldNotSave);
+					this.handleFailedStep(action, result, shouldNotSave, startTime);
 					break;
 				case ActionStatusEnum.COMPLETED:
 					this.appWindow.recordLog({

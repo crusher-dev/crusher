@@ -19,6 +19,7 @@ const ERROR_MESSAGE = {
     [NavigationErrorTypesEnum.UNKNOWN_ERROR]: "We couldn't find the website you were trying to visit. Please check the URL and try again.",
 };
 
+
 const ErrorDialog = () => {
     const { sdk, stepId, error, resolveError } = useContext(TestErrorContext);
     

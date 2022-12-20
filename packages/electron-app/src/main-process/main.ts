@@ -31,7 +31,7 @@ function setupElectronApp() {
 
 	app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
 	app.commandLine.appendSwitch("disable-features", "CrossOriginOpenerPolicy");
-	// app.commandLine.appendSwitch("--disable-site-isolation-trials");
+	app.commandLine.appendSwitch("--disable-site-isolation-trials");
 	// app.commandLine.appendSwitch("--disable-web-security");
 	app.commandLine.appendSwitch("--allow-top-navigation");
 	// For replaying actions

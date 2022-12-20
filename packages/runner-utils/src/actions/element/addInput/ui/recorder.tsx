@@ -6,9 +6,9 @@ import { WhyIcon } from "../../../../../../dyson/src/components/icons/WhyIconSVG
 
 const ErrorDialog = ({sdk, id, resolveCallback}) => {
     
-    const handleAutoFix = () => {
-        const step = sdk.getStep(id);
-        sdk.updateStep(id, {
+    const handleAutoFix = async () => {
+        const step = await sdk.getStep();
+        await sdk.updateStep({
             ...step,
             payload: {
                 ...step.payload,
@@ -19,10 +19,7 @@ const ErrorDialog = ({sdk, id, resolveCallback}) => {
             }
         });
 
-        setTimeout(() => {
-            sdk.retryStep(id);
-            resolveCallback(true);
-        }, 100);
+        sdk.retryStep();
     }
 
     return (

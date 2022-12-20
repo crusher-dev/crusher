@@ -5,7 +5,7 @@ import { ipcRenderer } from "electron";
 import { showToast, toastEmitter, ToastProvider, ToastViewport } from "../../components/toasts";
 import { useStore } from "react-redux";
 import { getStore } from "electron-app/src/store/configureStore";
-import { getAllSteps } from "electron-app/src/store/selectors/recorder";
+import { getAllSteps, getSavedSteps } from "electron-app/src/store/selectors/recorder";
 import { getLogs } from "electron-app/src/store/selectors/logger";
 import { ActionDescriptor } from "runner-utils/src";
 import { StepErrorTypeEnum } from "runner-utils/src/error.types";
@@ -20,71 +20,13 @@ import { setSteps, updateRecordedStep, updateRecorderState } from "electron-app/
 import { retryStep } from "./sidebar/stepsPanel/failedCard";
 
 interface ICrusherRecorderSDK {
+    getStep: () => iAction;    
+    updateStep: (step: iAction) => void;
+    retryStep: () => void;
 
-    getStep: (stepIndex: number) => iAction;
-    getAllSteps: () => iAction[];
-    
-    updateStep: (stepIndex: number, step: iAction) => void;
-    setSteps: (steps: iAction[]) => void;
-
-    updateRecorderState: (state: TRecorderState, payload?: any) => void;
     openModal: (modalType: string, modalProps?: any) => void;
-
-    retryStep: (stepIndex: number) => void;
-
     getPlaywrightPage: () => Page;
 };
-
-
-const crusherRecorderSDK: ICrusherRecorderSDK = {
-    getStep: (stepIndex) => {
-        const store = getStore();
-        const steps = getAllSteps(store.getState() as any);
-
-        return steps[stepIndex] as any;
-    },
-    getAllSteps: () => {
-        const store = getStore();
-        const steps = getAllSteps(store.getState() as any);
-
-        return steps as any;
-    },
-    updateStep: (stepIndex, step) => {
-        const store = getStore();
-        store.dispatch(updateRecordedStep(step, stepIndex));
-        return true
-    },
-    setSteps: (steps) => {
-        const store = getStore();
-        
-        store.dispatch(setSteps(steps));
-    },
-
-    updateRecorderState: (state, payload = {}) => {
-        const store = getStore();
-        store.dispatch(updateRecorderState(state, payload));
-    },
-
-    openModal: (modalType, modalProps = {}) => {
-        emitShowModal({
-            type: modalType,
-            ...modalProps,
-        });
-    },
-
-    retryStep: (stepIndex) => {
-        return retryStep(stepIndex);
-    },
-
-    getPlaywrightPage: () => {
-        const store = getStore();
-        const state = store.getState() as any;
-        const { page } = state.recorder;
-
-        return page;
-    }
-
-}
 
 const getStep = (stepIndex) => {
     const store = getStore();
@@ -162,6 +104,41 @@ export const RecorderErrorManager = () => {
     };
     
     const Component  = actionDescriber && error ? actionDescriber.getAction(ActionsInTestEnum.ADD_INPUT)["ui"]["recorder"].default : null;
+
+
+    const crusherRecorderSDK: ICrusherRecorderSDK = {
+        getStep: () => {
+            const steps = getAllSteps(store.getState() as any);
+            return steps[error.id] as any;
+        },
+        updateStep: (step) => {
+            store.dispatch(updateRecordedStep(step, error.id));
+
+            const savedSteps = getSavedSteps(store.getState() as any);
+            console.log("JSON", JSON.stringify(savedSteps), step);
+            // Wait for main process store to be updated
+            
+            return true;
+        },
+
+        openModal: (modalType, modalProps = {}) => {
+            emitShowModal({
+                type: modalType,
+                ...modalProps,
+            });
+        },
+
+        retryStep: () => {
+            return retryStep(error.id);
+        },
+
+        getPlaywrightPage: () => {
+            const state = store.getState() as any;
+            return state.recorder.page;
+        }
+
+    }
+
     return  (
         <ToastProvider swipeDirection="right"> 
             {Component && <Component resolveCallback={handleResolve} id={error.id} sdk={crusherRecorderSDK} />}

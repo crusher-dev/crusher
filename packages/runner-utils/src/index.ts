@@ -32,6 +32,7 @@ const TEST_ACTIONS_LOG = "TEST_ACTIONS_LOG";
 
 type OmitFirstArg<F> = F extends (x: any, ...args: infer P) => infer R ? (...args: P) => R : never;
 export type ActionStatusCallbackFn = (action: iAction, result: iActionResult) => Promise<number | void | boolean>;
+const actionTypes = ["page", "element", "browser", "customCode"];
 
 class CrusherRunnerActions {
 	actionHandlers: { [type: string]: any };
@@ -78,20 +79,68 @@ class CrusherRunnerActions {
 	}
 
 	initActionHandlers() {
-		if (isWebpack()) {
-			// @ts-ignore
-			const actionsRequireContext = require.context("./actions/", true, /\.ts$/);
+		const actions = {};
 
-			actionsRequireContext.keys().forEach((fileName) => {
-				const { name, description, handler } = actionsRequireContext(fileName);
-				this.registerStepHandler(name, description, handler);
+		if (!isWebpack()) {
+
+			actionTypes.forEach((type) => {
+				if(type === "customCode") return;
+				const actionDir = path.join(__dirname, "actions/", type + "");
+				fs.readdirSync(actionDir).forEach((file) => {
+					const out = {};
+					const action = require(path.join(actionDir, file, "index.ts"));
+					const {name : type} = action as any;
+					out["core"] = action;
+					out["ui"] = { recorder: null };
+					const recorderUIPath = path.join(actionDir, file, "ui/recorder.tsx");
+					if(fs.existsSync(recorderUIPath)) {
+						out["ui"]["recorder"] = require(recorderUIPath);
+					}
+			
+					actions[type] = out;
+				});
 			});
-		} else {
-			const actionsDir = fs.readdirSync(path.join(__dirname, "./actions"));
-			for (let actionFilePath of actionsDir) {
-				const { name, description, handler } = require(path.join(__dirname, "./actions", actionFilePath));
-				this.registerStepHandler(name, description, handler);
+			
+			{
+				const out = {};
+				const customCodeAction = require(path.join(__dirname, "actions/customCode/index.ts"));
+				out["core"] = customCodeAction;
+				out["ui"] = { recorder: null };
+			
+				const {name: type} = customCodeAction as any;
+				const customCodeUiPath = path.join(__dirname, "actions/customCode/ui/recorder.tsx");
+				if(fs.existsSync(customCodeUiPath)) {
+					customCodeAction["ui"]["recorder"] = require(customCodeUiPath);
+				}
+				actions[type] = out;
 			}
+			
+			} else {
+				// Use require.context
+				// @ts-ignore
+				const actionDir = require.context("./actions/", true, /index\.ts$/);
+				// @ts-ignore
+				const actionsUIDir = require.context("./actions/", true, /ui\/recorder\.tsx$/);
+				actionDir.keys().forEach((file) => {
+					const out = {};
+					const action = actionDir(file);
+					const {name : type} = action as any;
+					out["core"] = action;
+					out["ui"] = { recorder: null };
+					// console.log("File is", file);
+					const recorderUIPath = file.replace("index.ts", "ui/recorder.tsx");
+					if(actionsUIDir.keys().includes(recorderUIPath)) {
+						out["ui"]["recorder"] = actionsUIDir(recorderUIPath);
+					}
+					actions[type] = out;
+				});
+			
+		}
+
+		for (let action of Object.values(actions)) {
+			const { core, ui } = action as any;
+			const { name, description, handler } = core;
+			this.registerStepHandler(name, description, handler);
 		}
 	}
 
@@ -342,6 +391,30 @@ class CrusherRunnerActions {
 		return this.actionHandlers;
 	}
 }
+
+const getActionErrorHandler = (actionType: ActionsInTestEnum, actionName: string | null = null) => {
+	const actions = [];
+	if (isWebpack()) {
+		// @ts-ignore
+		const actionsRequireContext = require.context("./actions/", true, /\.ts$/);
+
+		actionsRequireContext.keys().forEach((fileName) => {
+			const { name, description, handler } = actionsRequireContext(fileName);
+			actions.push({ name, description, handler });
+		});
+	} else {
+		const actionsDir = fs.readdirSync(path.join(__dirname, "./actions"));
+		for (let actionFilePath of actionsDir) {
+			const { name, description, handler } = require(path.join(__dirname, "./actions", actionFilePath));
+			actions.push({ name, description, handler });
+		}
+	}
+
+	const action = actions.find((action) => action.name === actionType);
+	if (!action) throw new Error("No action found for type " + actionType);
+
+	return action.handler(actionName);
+};
 
 export {
 	CrusherRunnerActions,

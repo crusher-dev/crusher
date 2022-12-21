@@ -220,9 +220,9 @@ const DeviceFrame = () => {
 	const isPageFailedCrash = recorderCrashState && recorderCrashState.type === TRecorderCrashState.PAGE_LOAD_FAILED;
 
 	React.useEffect(() => {
-		if (isPageFailedCrash) {
-			setCrash("PAGE_LOAD_FAILED");
-		}
+		// if (isPageFailedCrash) {
+		// 	setCrash("PAGE_LOAD_FAILED");
+		// }
 	}, [isPageFailedCrash]);
 	// Only when code is shown
 	return (

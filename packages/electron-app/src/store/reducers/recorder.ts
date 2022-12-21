@@ -19,6 +19,7 @@ import {
 	UPDATE_CURRENT_RUNNING_STEP_STATUS,
 	UPDATE_RECORDED_STEP,
 	UPDATE_RECORDER_STATE,
+	SET_STEPS,
 } from "../actions/recorder";
 import { iSelectorInfo } from "@shared/types/selectorInfo";
 import { iAction } from "@shared/types/action";
@@ -191,6 +192,11 @@ const recorderReducer = (state: IRecorderReducer = initialState, action: AnyActi
 						time: action.payload.time,
 					},
 				],
+			};
+		case SET_STEPS:
+			return {
+				...state,
+				savedSteps: action.payload.steps,
 			};
 		case UPDATE_CURRENT_RUNNING_STEP_STATUS: {
 			let savedSteps = state.savedSteps.slice();

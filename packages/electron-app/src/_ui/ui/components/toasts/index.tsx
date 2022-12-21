@@ -53,8 +53,8 @@ const StyledViewport = styled(ToastPrimitive.Viewport, {
 });
 
 // Exports
-const ToastProvider = ToastPrimitive.Provider;
-const ToastViewport = StyledViewport;
+export const ToastProvider = ToastPrimitive.Provider;
+export const ToastViewport = StyledViewport;
 
 
 const Toasts = ({toasts}) => {
@@ -115,7 +115,6 @@ const ToastBox = () => {
       toastEmitter.off("clear-id", handleClearId);
     };
   }, [toasts]);
-
 
   return (
     <ToastProvider swipeDirection="right"> 

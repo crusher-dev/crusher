@@ -1,7 +1,7 @@
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { iAction } from "@crusher-shared/types/action";
 import { Browser, Page } from "playwright";
-import { CrusherRunnerActions } from "../index";
+import { CrusherRunnerActions } from "../../../index";
 
 async function runTemplate(
 	page: Page,

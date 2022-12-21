@@ -14,6 +14,7 @@ export const SET_DEVICE = "SET_DEVICE";
 
 export const UPDATE_SETTINGS = "UPDATE_SETTINGS";
 export const RECORD_STEP = "RECORD_STEP";
+export const SET_STEPS = "SET_STEPS";
 export const UPDATE_CURRENT_RUNNING_STEP_STATUS = "UPDATE_CURRENT_RUNNING_STEP_STATUS";
 export const UPDATE_RECORDED_STEP = "UPDATE_RECORDED_STEP";
 export const RESET_RECORDER_STATE = "RESET_RECORDER_STATE";
@@ -94,6 +95,13 @@ export const updateRecordedStep = (action: iAction, id: number) => {
 	return {
 		type: UPDATE_RECORDED_STEP,
 		payload: { action, id },
+	};
+};
+
+export const setSteps = (steps: iAction[]) => {
+	return {
+		type: SET_STEPS,
+		payload: { steps },
 	};
 };
 

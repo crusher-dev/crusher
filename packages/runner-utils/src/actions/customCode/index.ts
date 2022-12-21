@@ -1,16 +1,15 @@
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { iAction } from "@crusher-shared/types/action";
 import { Page } from "playwright";
-import { ExportsManager } from "../functions/exports";
-import { StorageManager } from "../functions/storage";
-import { CrusherSdk } from "../sdk/sdk";
+import { ExportsManager } from "../../functions/exports";
+import { StorageManager } from "../../functions/storage";
+import { CrusherSdk } from "../../sdk/sdk";
 import { IGlobalManager } from "@crusher-shared/lib/globals/interface";
-import template from "@crusher-shared/utils/templateString";
 import expect from "expect";
-import * as modules from "../utils/modules";
-import { CommunicationChannel } from "../functions/communicationChannel";
+import * as modules from "../../utils/modules";
+import { CommunicationChannel } from "../../functions/communicationChannel";
 import * as util from "@babel/cli/lib/babel/util";
-import { NodeExtraModules } from "../sdk/modules.extra";
+import { NodeExtraModules } from "../../sdk/modules.extra";
 
 async function executeCustomCode(
 	page: Page,

@@ -6,6 +6,7 @@ on:
       - master
       - baseBranch
       - improve-editing
+      - update-ea-structure
   release:
     types: [published]
 

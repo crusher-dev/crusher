@@ -92,7 +92,7 @@ export const RecorderErrorManager = () => {
     }, []);
 
     
-    const Component  = actionDescriber && error ? actionDescriber.getAction(error.actionType)["ui"]["recorder"].default : null;
+    const Component  = actionDescriber && error ? actionDescriber.getAction(error.actionType)["ui"]["recorder"]?.default : null;
 
 
     const crusherRecorderSDK: ICrusherRecorderSDK = {

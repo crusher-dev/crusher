@@ -7,6 +7,22 @@ import { StepErrorTypeEnum } from "@interfaces/error.types";
 import { PageActionParams } from "@interfaces/actions";
 import { ActionsUtils } from "@utils/actions";
 
+async function runSEOAssertionOnPage(params: PageActionParams) {
+	const { currentStep , context} = params.test;
+	const { page } = params.playwright;
+
+	const validationRows = currentStep.payload.meta.validations;
+	const actionResult = await assertSeoRows(page, validationRows, context);
+
+	if (!actionResult.hasPassed) ActionsUtils.markTestFail("Failed assertions on element", { type: StepErrorTypeEnum.ASSERTIONS_FAILED, meta: { logs: actionResult.logs } });
+
+	return {
+		customLogMessage: "Ran seo assertions",
+		meta: {
+			logs: actionResult.logs,
+		},
+	};
+}
 async function assertSeoRows(
 	page: Page,
 	assertions: Array<iAssertionRow>,
@@ -100,23 +116,6 @@ async function assertSeoRows(
 	}
 
 	return { hasPassed, logs };
-}
-
-async function runSEOAssertionOnPage(params: PageActionParams) {
-	const { currentStep , context} = params.test;
-	const { page } = params.playwright;
-
-	const validationRows = currentStep.payload.meta.validations;
-	const actionResult = await assertSeoRows(page, validationRows, context);
-
-	if (!actionResult.hasPassed) ActionsUtils.markTestFail("Failed assertions on element", { type: StepErrorTypeEnum.ASSERTIONS_FAILED, meta: { logs: actionResult.logs } });
-
-	return {
-		customLogMessage: "Ran seo assertions",
-		meta: {
-			logs: actionResult.logs,
-		},
-	};
 }
 
 module.exports = {

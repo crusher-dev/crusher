@@ -1,30 +1,26 @@
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
-import { IGlobalManager } from "@crusher-shared/lib/globals/interface";
 import { iAction } from "@crusher-shared/types/action";
-import { Locator } from "playwright";
-import { ExportsManager } from "../../../functions/exports";
+import { ElementActionParams } from "@interfaces/actions";
 
 async function clickOnElement(
-	element: Locator,
-	workingSelector: any,
-	action: iAction,
-	globals: IGlobalManager,
-	storageManager: StorageManager,
-	exportsManager: ExportsManager,
+	params: ElementActionParams
 ) {
+	const { element } = params.playwright;
+	const { currentStep } = params.test;
+
 	try {
 		let pos = undefined;
 		await element.waitFor({state: "visible"});
 
-		if (action.payload.meta.value?.mousePos) {
-			const posObj = action.payload.meta.value.mousePos;
+		if (currentStep.payload.meta.value?.mousePos) {
+			const posObj = currentStep.payload.meta.value.mousePos;
 			if (posObj.x >= 0 && posObj.y >= 0) {
 				const boundingBox = await element.boundingBox();
 				if(!boundingBox) throw new Error("selector resolved to hidden. Can't get bounding box");
 				pos = { x: boundingBox.width * posObj.x, y: boundingBox.height * posObj.y };
 			}
 		}
-		await element.click({ timeout: action.payload.timeout ? action.payload.timeout * 1000 : undefined, position: pos });
+		await element.click({ timeout: currentStep.payload.timeout ? currentStep.payload.timeout * 1000 : undefined, position: pos });
 	} catch (e) {
 		if (!e.message.includes("selector resolved to hidden")) throw e;
 		console.error("Error while clicking", e);

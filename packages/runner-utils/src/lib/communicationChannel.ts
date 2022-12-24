@@ -1,5 +1,5 @@
-// This class act as communcation channel between the sdk
-// and the runner.
+// This class act as communcation channel between runner-utils
+// and test-runner.
 
 class CommunicationChannel {
 	_listeners: any;

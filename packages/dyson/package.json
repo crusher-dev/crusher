@@ -1,7 +1,6 @@
 {
 	"name": "dyson",
 	"version": "0.1.0",
-	"private": true,
 	"dependencies": {
 		"@emoji-mart/react": "^1.0.1",
 		"@emotion/babel-preset-css-prop": "^11.2.0",

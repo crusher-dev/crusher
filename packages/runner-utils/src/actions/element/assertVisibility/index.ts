@@ -1,8 +1,9 @@
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { iAction } from "@crusher-shared/types/action";
-import { Locator } from "playwright";
+import { ElementActionParams } from "@interfaces/actions";
 
-async function assertElementVisibility(element: Locator, workingSelector: any, action: iAction) {
+async function assertElementVisibility(params: ElementActionParams) {
+	const { element } = params.playwright;
 	await (await element.elementHandle()).waitForElementState("visible");
 }
 

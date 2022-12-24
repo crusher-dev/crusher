@@ -1,12 +1,19 @@
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { iAction } from "@crusher-shared/types/action";
-import { Locator } from "playwright";
-import { scrollElement } from "../../../functions/scroll";
+import { ElementActionParams } from "@interfaces/actions";
+import { ActionsUtils } from "@utils/actions";
 
-async function scrollOnElement(elementHandle: Locator, workingSelector: any, action: iAction) {
-	const scrollDelta = action.payload.meta.value;
+async function scrollOnElement(params: ElementActionParams) {
+	const { element } = params.playwright;
+	const { currentStep } = params.test;
 
-	await scrollElement(scrollDelta, await elementHandle.elementHandle({ timeout: action.payload.timeout ? action.payload.timeout * 1000 : undefined }));
+	const scrollDelta = currentStep.payload.meta.value;
+	await ActionsUtils.scrollElement(
+		scrollDelta,
+		await element.elementHandle({
+			timeout: currentStep.payload.timeout ? currentStep.payload.timeout * 1000 : undefined
+		})
+	);
 }
 
 module.exports = {

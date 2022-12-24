@@ -6,7 +6,6 @@
   "author": "Utkarsh Dixit<utkarsh@crusher.dev>",
   "homepage": "https://crusher.dev",
   "license": "MIT",
-  "private": true,
   "scripts": {
     "assets:dev": "node scripts/start-assets-server.js",
     "start:dev": "NODE_ENV=development webpack --config webpack/webpack.config.ts",

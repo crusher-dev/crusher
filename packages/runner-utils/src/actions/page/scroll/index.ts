@@ -1,12 +1,14 @@
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { iAction } from "@crusher-shared/types/action";
-import { Page } from "playwright";
-import { scrollPage } from "../../../functions/scroll";
+import { ActionsUtils } from '@utils/actions';
+import { PageActionParams } from "@interfaces/actions";
 
-async function scrollOnPage(page: Page, action: iAction) {
-	const scrollDelta = action.payload.meta.value;
-	console.log("Scrolling the page", [scrollDelta]);
-	await scrollPage(scrollDelta, page);
+async function scrollOnPage(params: PageActionParams) {
+	const { currentStep } = params.test;
+	const { page } = params.playwright;
+
+	const scrollDelta = currentStep.payload.meta.value;
+	await ActionsUtils.scrollPage(scrollDelta, page);
 }
 
 module.exports = {

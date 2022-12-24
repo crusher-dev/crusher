@@ -1,14 +1,11 @@
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
-import { IGlobalManager } from "@crusher-shared/lib/globals/interface";
 import { iAction } from "@crusher-shared/types/action";
 import { iAssertionRow } from "@crusher-shared/types/assertionRow";
 import template from "@crusher-shared/utils/templateString";
 import { Page } from "playwright";
-import { StepErrorTypeEnum } from "../../../error.types";
-import { CommunicationChannel } from "../../../functions/communicationChannel";
-import { ExportsManager } from "../../../functions/exports";
-import { CrusherSdk } from "../../../sdk/sdk";
-import { markTestFail } from "../../../utils/helper";
+import { StepErrorTypeEnum } from "@interfaces/error.types";
+import { PageActionParams } from "@interfaces/actions";
+import { ActionsUtils } from "@utils/actions";
 
 async function assertSeoRows(
 	page: Page,
@@ -105,20 +102,14 @@ async function assertSeoRows(
 	return { hasPassed, logs };
 }
 
-async function runSEOAssertionOnPage(
-	page: Page,
-	action: iAction,
-	globals: IGlobalManager,
-	storageManager: StorageManager,
-	exportsManager: ExportsManager,
-	communicationChannel: CommunicationChannel,
-	sdk: CrusherSdk | null,
-	context: any,
-) {
-	const validationRows = action.payload.meta.validations;
+async function runSEOAssertionOnPage(params: PageActionParams) {
+	const { currentStep , context} = params.test;
+	const { page } = params.playwright;
+
+	const validationRows = currentStep.payload.meta.validations;
 	const actionResult = await assertSeoRows(page, validationRows, context);
 
-	if (!actionResult.hasPassed) markTestFail("Failed assertions on element", { type: StepErrorTypeEnum.ASSERTIONS_FAILED, meta: { logs: actionResult.logs } });
+	if (!actionResult.hasPassed) ActionsUtils.markTestFail("Failed assertions on element", { type: StepErrorTypeEnum.ASSERTIONS_FAILED, meta: { logs: actionResult.logs } });
 
 	return {
 		customLogMessage: "Ran seo assertions",

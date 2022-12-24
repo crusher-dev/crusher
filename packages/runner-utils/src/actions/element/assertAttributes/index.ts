@@ -1,10 +1,12 @@
+import { Locator } from "playwright";
+
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { iAction } from "@crusher-shared/types/action";
 import { iAssertionRow } from "@crusher-shared/types/assertionRow";
 import template from "@crusher-shared/utils/templateString";
-import { Locator } from "playwright";
-import { StepErrorTypeEnum } from "../../../error.types";
-import { markTestFail } from "../../../utils/helper";
+import { StepErrorTypeEnum } from "@interfaces/error.types";
+import { ActionsUtils } from "@utils/actions";
+import { ElementActionParams } from "@interfaces/actions";
 
 async function assertElementAttributes(
 	element: Locator,
@@ -89,28 +91,23 @@ async function assertElementAttributes(
 }
 
 async function runAssertionOnElement(
-	element: Locator,
-	workingSelector: any,
-	action: iAction,
-	globals,
-	storageManager,
-	exportManager,
-	communicationChannel,
-	_,
-	context,
+	params: ElementActionParams,
 ) {
-	const validationRows = action.payload.meta.validations;
+	const { test: { currentStep, context } } = params;
+	const { element } = params.playwright;
+	
+	const validationRows = currentStep.payload.meta.validations;
 	try {
 		await (await element.elementHandle()).waitForElementState("visible");
 	} catch (ex) {
-		markTestFail(
-			`Element ${action.payload.meta && action.payload.meta.elementDescription ? action.payload.meta.elementDescription + " " : ""}is not visible`,
+		ActionsUtils.markTestFail(
+			`Element ${currentStep.payload.meta && currentStep.payload.meta.elementDescription ? currentStep.payload.meta.elementDescription + " " : ""}is not visible`,
 			{ type: StepErrorTypeEnum.ELEMENT_NOT_VISIBLE }
 		);
 	}
 	const actionResult = await assertElementAttributes(element, validationRows, context);
 
-	if (!actionResult.hasPassed) markTestFail("Failed assertions on element", { type: StepErrorTypeEnum.ASSERTIONS_FAILED, meta: { logs: actionResult.logs } });
+	if (!actionResult.hasPassed) ActionsUtils.markTestFail("Failed assertions on element", { type: StepErrorTypeEnum.ASSERTIONS_FAILED, meta: { logs: actionResult.logs } });
 
 	return {
 		customLogMessage: "Ran custom assertions on element",

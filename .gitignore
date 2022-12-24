@@ -134,3 +134,6 @@ ecosystem/config/*
 ./.env
 .vercel
 *.rdb
+
+# Turborepo
+.turbo

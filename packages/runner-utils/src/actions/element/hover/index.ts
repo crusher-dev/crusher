@@ -1,9 +1,13 @@
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { iAction } from "@crusher-shared/types/action";
+import { ElementActionParams } from "@interfaces/actions";
 import { Locator } from "playwright";
 
-async function hoverOnElement(element: Locator, workingSelector: any, action: iAction) {
-	await element.hover({ timeout: action.payload.timeout ? action.payload.timeout * 1000 : 5000 });
+async function hoverOnElement(params: ElementActionParams) {
+	const { element } = params.playwright;
+	const { currentStep } = params.test;
+
+	await element.hover({ timeout: currentStep.payload.timeout ? currentStep.payload.timeout * 1000 : 5000 });
 }
 
 module.exports = {

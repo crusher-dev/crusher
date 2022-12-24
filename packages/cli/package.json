@@ -4,7 +4,6 @@
   "author": "Himanshu @himanshu-dixit",
   "repository": "https://github.com/crusher-dev/crusher",
   "main": "./src/bin/index.js",
-  "private": true,
   "license": "MIT",
   "bin": {
     "crusher.dev": "./src/bin/index.js"

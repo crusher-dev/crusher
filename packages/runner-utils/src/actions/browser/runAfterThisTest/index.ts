@@ -1,7 +1,9 @@
-import { iAction } from "@crusher-shared/types/action";
 import { Browser } from "playwright";
+
+import { iAction } from "@crusher-shared/types/action";
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { IGlobalManager } from "@crusher-shared/lib/globals/interface";
+import { BrowserActionParams } from "@interfaces/actions";
 
 function transformStorageState(storageState: any) {
 	if (!storageState) return storageState;
@@ -17,8 +19,12 @@ function transformStorageState(storageState: any) {
 		cookies: cookies,
 	};
 }
-async function setupRunAfterTest(browser: Browser, action: iAction, globals: IGlobalManager) {
-	const storageState = action.payload.meta ? action.payload.meta.storageState : null;
+
+async function setupRunAfterTest(params: BrowserActionParams) {
+	const { test } = params;
+	const { globals } = params.services;
+
+	const storageState = test.currentStep.payload.meta ? test.currentStep.payload.meta.storageState : null;
 	if (!storageState) throw new Error("No storage state specified to start from");
 
 	const currentBrowserContextOptions = globals.get("browserContextOptions");

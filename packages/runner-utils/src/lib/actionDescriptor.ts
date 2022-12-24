@@ -2,7 +2,7 @@ import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { iAction } from "@crusher-shared/types/action";
 import * as fs from "fs";
 import * as path from "path";
-import { isWebpack } from "../utils/helper";
+import { isWebpack } from "@utils/helper";
 const actionTypes = ["page", "element", "browser", "customCode"];
 
 class ActionDescriptor {

@@ -1,15 +1,13 @@
 import { ICrusherSdk } from "@crusher-shared/types/sdk/sdk";
 import { CrusherCookieSetPayload } from "@crusher-shared/types/sdk/types";
 import { Page } from "playwright";
-import { ExportsManager } from "../functions/exports";
+import { ExportsManager } from "@libs/exportManager";
 import { CrusherElementSdk } from "./element";
-import { StorageManager } from "../functions/storage";
-import { chunkArray, markTestFail } from "../utils/helper";
-import { CommunicationChannel } from "../functions/communicationChannel";
+import { StorageManager } from "@libs/storage";
+import { ActionsUtils } from "@utils/actions";
+import { CommunicationChannel } from "@libs/communicationChannel";
 
-const pageScreenshotModule = require("../actions/page/screenshot");
-
-class CrusherSdk implements ICrusherSdk {
+export class CrusherSdk implements ICrusherSdk {
 	_page: Page; // Playwright page reference
 	page: Page;
 	playwright: { page: Page };
@@ -114,10 +112,6 @@ class CrusherSdk implements ICrusherSdk {
 		return true;
 	}
 
-	takePageScreenshot() {
-		return pageScreenshotModule.handler(this._page, null, null, this.storageManager);
-	}
-
 	setExport(key: string, value: any) {
 		return this.exportsManager.set(key, value);
 	}
@@ -146,42 +140,11 @@ class CrusherSdk implements ICrusherSdk {
 		return false;
 	}
 
-	async verifyLinks(links: Array<{ href: string }>): Promise<Array<{ href: string; exists: boolean }>> {
-		const chunkedArr = chunkArray(links, 5);
-		const promises = chunkedArr.map((chunk) => {
-			return Promise.all(
-				chunk.map(async (link) => {
-					let reason = null,
-						exists = null;
-					try {
-						exists = await this.urlExist(link.href);
-					} catch (ex) {
-						exists = false;
-						reason = ex.message;
-					}
-					return { href: link.href, exists, reason };
-				}),
-			);
-		});
-
-		const result = [];
-		for (let promise of promises) {
-			const values = await promise;
-			values.forEach((value: Array<{ href: string; exists: boolean }>) => {
-				result.push(value);
-			});
-		}
-
-		return result;
-	}
-
 	async spawnTests(payload: Array<{ testId: number; groupId: string; context: any }>) {
 		this.communicationChannel.emit("run-parameterized-tests", payload);
 	}
 
 	markTestFail(reason: string, data: any) {
-		markTestFail(reason, data);
+		ActionsUtils.markTestFail(reason, data);
 	}
 }
-
-export { CrusherSdk };

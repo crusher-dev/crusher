@@ -1,9 +1,9 @@
-import React, {useState, useContext} from "react";
+import React, {useContext} from "react";
 import { css } from "@emotion/react";
-import { BaseDialogToast, BaseDialogTitle, BaseDialogDescription, BaseDialogActions, BaseDialogAction } from "../../../../../../dyson/src/components/sharedComponets/toasts/error";
-import { FailedCheckboxIcon } from "../../../../../../dyson/src/components/icons/FailedCheckboxSVG";
-import { WhyIcon } from "../../../../../../dyson/src/components/icons/WhyIconSVG";
-import { TestErrorContext } from "../../../../../../dyson/src/components/sharedComponets/toasts";
+import { BaseDialogToast, BaseDialogTitle, BaseDialogDescription, BaseDialogActions, BaseDialogAction } from "@dyson/components/sharedComponets/toasts/error";
+import { FailedCheckboxIcon } from "@dyson/components/icons/FailedCheckboxSVG";
+import { WhyIcon } from "@dyson/components/icons/WhyIconSVG";
+import { TestErrorContext } from "@dyson/components/sharedComponets/toasts";
 
 enum NavigationErrorTypesEnum {
     NAME_NOT_RESOLVED = "net::ERR_NAME_NOT_RESOLVED",

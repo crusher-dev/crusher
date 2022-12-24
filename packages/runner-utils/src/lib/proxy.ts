@@ -1,5 +1,19 @@
 import { BrowserContext, Page, Route } from "playwright";
 
+export const handleProxyBrowserContext = async (
+	browserContext: BrowserContext,
+	tunnelConfigMap: { [key: string]: { tunnel: string; intercept: { regex: string } & string} }
+) => {
+	return setupProxyMiddleware(browserContext, tunnelConfigMap);
+};
+
+export const handleProxyPage = async (
+	page: Page,
+	tunnelConfigMap: { [key: string]: { tunnel: string; intercept: { regex: string } & string} }
+) => {
+	return setupProxyMiddleware(page, tunnelConfigMap);
+};
+
 const handleProxy = async (context: Page | BrowserContext, tunnelUrl: URL, route: Route) => {
 	try {
 		const urlObj = new URL(route.request().url());
@@ -41,19 +55,3 @@ const setupProxyMiddleware = async (context: Page | BrowserContext, tunnelConfig
 		})
 	}
 };
-
-const handleProxyBrowserContext = async (
-	browserContext: BrowserContext,
-	tunnelConfigMap: { [key: string]: { tunnel: string; intercept: { regex: string } & string} }
-) => {
-	return setupProxyMiddleware(browserContext, tunnelConfigMap);
-};
-
-const handleProxyPage = async (
-	page: Page,
-	tunnelConfigMap: { [key: string]: { tunnel: string; intercept: { regex: string } & string} }
-) => {
-	return setupProxyMiddleware(page, tunnelConfigMap);
-};
-
-export { handleProxyBrowserContext, handleProxyPage };

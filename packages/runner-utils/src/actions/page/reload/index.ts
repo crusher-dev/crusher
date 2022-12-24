@@ -1,10 +1,13 @@
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { iAction } from "@crusher-shared/types/action";
-import { Page } from "playwright";
+import { PageActionParams } from "@interfaces/actions";
 
-async function reloadPage(page: Page, action: iAction) {
+async function reloadPage(params: PageActionParams) {
+	const { page } = params.playwright;
+	const { currentStep } = params.test;
+
 	try {
-		await page.reload({ waitUntil: "networkidle", timeout: action.payload.timeout ? action.payload.timeout * 1000 : undefined });
+		await page.reload({ waitUntil: "networkidle", timeout: currentStep.payload.timeout ? currentStep.payload.timeout * 1000 : undefined });
 		await page.waitForLoadState("load");
 		await page.waitForLoadState("domcontentloaded");
 	} catch (ex) {

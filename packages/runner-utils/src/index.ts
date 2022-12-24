@@ -1,23 +1,25 @@
-import { StorageManagerInterface } from "@crusher-shared/lib/storage/interface";
-import { ActionStatusEnum, IRunnerLogManagerInterface, IRunnerLogStepMeta } from "@crusher-shared/lib/runnerLog/interface";
-import { iAction, iActionResult } from "@crusher-shared/types/action";
-import { Browser, Page } from "playwright";
-import { LogManager } from "./functions/log";
-import { StorageManager } from "./functions/storage";
-import { waitForSelectors } from "./functions/waitForSelectors";
-import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
-import { handlePopup } from "./middlewares/popup";
-import { getBrowserActions, getMainActions, isWebpack, toCrusherSelectorsFormat, uuidv4, validActionTypeRegex } from "./utils/helper";
-import { IGlobalManager } from "@crusher-shared/lib/globals/interface";
 import * as fs from "fs";
 import * as path from "path";
-import { sleep } from "./functions";
-import { CrusherSdk } from "./sdk/sdk";
-import { ExportsManager } from "./functions/exports";
+import { Browser, Page } from "playwright";
+import { CrusherSdk } from "@libs/sdk";
+
+import { IGlobalManager } from "@crusher-shared/lib/globals/interface";
+import { StorageManagerInterface } from "@crusher-shared/lib/storage/interface";
+import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
+import { iAction, iActionResult } from "@crusher-shared/types/action";
+import { ActionStatusEnum, IRunnerLogManagerInterface, IRunnerLogStepMeta } from "@crusher-shared/lib/runnerLog/interface";
 import { IExportsManager } from "@crusher-shared/lib/exports/interface";
-import { CommunicationChannel } from "./functions/communicationChannel";
-import { ActionDescriptor } from "./functions/actionDescriptor";
-import { handleProxyBrowserContext, handleProxyPage } from "./utils/proxy";
+
+import { LogManager } from "@libs/logs";
+import { StorageManager } from "@libs/storage";
+import { ExportsManager } from "@libs/exportManager";
+import { CommunicationChannel } from "@libs/communicationChannel";
+import { ActionDescriptor } from "@libs/actionDescriptor";
+import { handleProxyBrowserContext, handleProxyPage } from "@libs/proxy";
+
+import {  isWebpack, uuidv4 } from "@utils/helper";
+import { ActionsUtils, validActionTypeRegex } from "@utils/actions";
+import { ActionParams } from "./interfaces/actions";
 
 type IActionCategory = "PAGE" | "BROWSER" | "ELEMENT";
 
@@ -213,35 +215,16 @@ class CrusherRunnerActions {
 			const beforeUrl = page ? await page.url() : null;
 
 			try {
+				let playwrightParams = { browser: browser };
 				switch (action.category) {
-					case ActionCategoryEnum.PAGE:
-						stepResult = await wrappedHandler(
-							page,
-							step,
-							this.globals,
-							this.storageManager,
-							this.exportsManager,
-							this.communicationChannel,
-							this.sdk,
-							this.context,
-							browser,
-							this.runActions.bind(this),
-							this.isUsingProxy,
-						);
-						break;
 					case ActionCategoryEnum.BROWSER:
-						stepResult = await wrappedHandler(
-							browser,
-							step,
-							this.globals,
-							this.storageManager,
-							this.exportsManager,
-							this.communicationChannel,
-							this.sdk,
-							this.context,
-						);
+						break;
+					case ActionCategoryEnum.PAGE:
+						playwrightParams["page"] = page;
 						break;
 					case ActionCategoryEnum.ELEMENT:
+						playwrightParams["page"] = page;
+						
 						const crusherSelector = toCrusherSelectorsFormat(step.payload.selectors);
 						let elementLocator = page.locator(crusherSelector.value);
 						let parentFrame = null;
@@ -252,21 +235,28 @@ class CrusherRunnerActions {
 							parentFrame = await parentFrameElement.contentFrame();
 							elementLocator = parentFrame.locator(crusherSelector.value);
 						}
-						stepResult = await wrappedHandler(
-							elementLocator.first(),
-							null,
-							step,
-							this.globals,
-							this.storageManager,
-							this.exportsManager,
-							this.communicationChannel,
-							this.sdk,
-							this.context,
-						);
+
+						playwrightParams["element"] = elementLocator;
 						break;
 					default:
 						throw new Error("Invalid action category handler");
 				}
+
+				stepResult = await wrappedHandler({
+					playwright: playwrightParams,
+					services: {
+						storage: this.storageManager,
+						exports: this.exportsManager,
+						runnerCommunicationChannel: this.communicationChannel,
+						globals: this.globals,
+					},
+					test: {
+						context: this.context,
+						currentStep: step,
+						runActions: this.runActions.bind(this),
+					},
+					sdk: this.sdk,
+				} as ActionParams);
 
 				// if (shouldSleepAfterComplete) {
 				// 	await sleep(500);
@@ -415,6 +405,11 @@ const getActionErrorHandler = (actionType: ActionsInTestEnum, actionName: string
 
 	return action.handler(actionName);
 };
+
+const handlePopup = ActionsUtils.handlePopup;
+const getBrowserActions = ActionsUtils.getBrowserActions;
+const getMainActions = ActionsUtils.getMainActions;
+const toCrusherSelectorsFormat = ActionsUtils.toCrusherSelectorsFormat;
 
 export {
 	CrusherRunnerActions,

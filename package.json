@@ -24,7 +24,9 @@
   },
   "devDependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.0.20",
-    "pm2": "^5.1.2"
+    "install": "^0.13.0",
+    "pm2": "^5.1.2",
+    "turbo": "^1.6.3"
   },
   "dependencies": {
     "@octokit/rest": "^18.0.14",

@@ -1,9 +1,13 @@
+import { Locator } from "playwright";
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
 import { iAction } from "@crusher-shared/types/action";
-import { Locator } from "playwright";
+import { ElementActionParams } from "@interfaces/actions";
 
-export async function focusOnElement(element: Locator, workingSelector: any, action: iAction) {
-	await element.focus({ timeout: action.payload.timeout ? action.payload.timeout * 1000 : undefined });
+export async function focusOnElement(params: ElementActionParams) {
+	const { element } = params.playwright;
+	const { currentStep } = params.test;
+
+	await element.focus({ timeout: currentStep.payload.timeout ? currentStep.payload.timeout * 1000 : undefined });
 }
 
 module.exports = {

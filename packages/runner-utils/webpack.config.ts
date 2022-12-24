@@ -1,12 +1,8 @@
-//webpack.config.js
-const path = require("path");
-const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
-const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
-const tsTransformPaths = require("@zerollup/ts-transform-paths");
+import path from "path";
+import TsconfigPathsPlugin from "tsconfig-paths-webpack-plugin";
 
 module.exports = {
-	mode: "production",
-	devtool: "source-map",
+	mode: "development",
 	target: "node",
 	optimization: {
 		minimize: false,
@@ -30,19 +26,18 @@ module.exports = {
 		rules: [
 			{
 				test: /\.tsx?$/,
-				loader: "ts-loader",
-				options: {
-					transpileOnly: true,
-					getCustomTransformers: (program) => {
-						const transformer = tsTransformPaths(program);
-
-						return {
-							before: [transformer.before], // for updating paths in generated code
-							afterDeclarations: [transformer.afterDeclarations], // for updating paths in declaration files
-						};
-					},
-				},
-			},
-		],
-	},
+				exclude: /(node_modules|bower_components)/,
+				use: {
+					loader: "swc-loader",
+					options: {
+						jsc: {
+							parser: {
+								syntax: "typescript"
+							}
+						}
+					}
+				}
+			}
+		]
+	}
 };

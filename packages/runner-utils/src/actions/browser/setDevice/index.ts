@@ -1,13 +1,15 @@
 import { iAction } from "@crusher-shared/types/action";
-import { Browser } from "playwright";
 import { iDevice } from "@crusher-shared/types/extension/device";
 import { ActionsInTestEnum } from "@crusher-shared/constants/recordedActions";
-import { IGlobalManager } from "@crusher-shared/lib/globals/interface";
 import { getUserAgentFromName, userAgents } from "@crusher-shared/constants/userAgents";
+import { BrowserActionParams } from "@interfaces/actions";
 
-async function setDevice(browser: Browser, action: iAction, globals: IGlobalManager) {
-	const device: { width: number; height: number } = action.payload.meta.device as iDevice;
-	const userAgent = getUserAgentFromName(action.payload.meta.device.userAgent);
+async function setDevice(params: BrowserActionParams) {
+	const { currentStep } = params.test;
+	const { globals }= params.services;
+
+	const device: { width: number; height: number } = currentStep.payload.meta.device as iDevice;
+	const userAgent = getUserAgentFromName(currentStep.payload.meta.device.userAgent);
 
 	const currentBrowserContextOptions = globals.get("browserContextOptions");
 

@@ -6,7 +6,7 @@
 <h2 align="center">Test fast with low-code framework</h2>
 
 <p align="center">
-  <a href="#create-your-first-test" rel="dofollow"><strong>Install Now »</strong></a>
+  <a href="#create-a-test" rel="dofollow"><strong>Install Now »</strong></a>
   <br/><br/>
   <a href="https://discord.gg/dHZkSNXQrg">Join Discord</a>
   ·

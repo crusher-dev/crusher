@@ -9,40 +9,24 @@
 
 </p>
 
-<h2 >Crusher: test app UI with low-code</h3>
-Crusher is a fast way to test app UI, a fast modern alternative to old workflows.
+<h2 >Crusher: automate test fast with low-code</h3>
 
-Testing is clumsy - there are simply lot of tools, patching and repetitive code.
-It's complete testing framework, includes local app, low-code recorder, runner and batteries are built in.
+Crusher is a new fast testing framework, it's opinionated and takes low-code first approach. 
 
+It's a better alternative to old wokrflows which includes h/unreliable libraries (w high learning curve), gluing of lot of tools, repetitive automation script. 
 
-An alternative to the *"old" testing*, where you:
--  Choose a library & runner (Jest, Cypress, Playwright, Puppeteer, etc.)
--  Build your own framework with different tools
--  Write tests that take hours
--  Maintain test whichs eats up your time
-<details>
-  <summary> 🤦 + more</summary>
+Crusher makes testing effortless for new-age builders. It includes a recorder, SDK, Infra + batteries, and extended playwright and chromium.
 
-* 🔋  Find the right selectors that work.
-* 🚥  Setup CI/CD to run tests
-* 💰 Start paying for every little thing ( or start building your own framework )
-  * Pay for cloud services to run tests on different browser
-  * Set up a reporting system to view test results - Cypress cloud
-  * Image comparison tool to compare visual changes - Percy
-*  🚨 And don't forget to set up alerts for test failures - Slack/Discord/Emails - plus lot more things like test management, debug, updating breaking tests etc.
-</details>
+You can create test using low-code and add code. You can literally start testing in 5 mins.
 
-![Crusher demo for test creation, running, cli](https://user-images.githubusercontent.com/6849438/204720236-4139dae2-a0e6-4ce6-a9fb-ab6788ec3cc9.gif)
-
-It's an integrated framework built on top of playwright. Record test using **low-code or code** and it handles the rest.
-
-Our primary focus is stability, speed, and better developer experience. **Crusher is in beta(v0.5)**. Join [Crusher's discord](https://discord.gg/dHZkSNXQrg) and help us make it better 🚀
+**Crusher is in beta(v0.5)**. Join [Crusher's discord](https://discord.gg/dHZkSNXQrg) and help us make it better 🚀
 
 ##  Create your first test
 
-
 Run ```npx crusher.dev``` in your git repo.
+
+![Crusher demo for test creation, running, cli](https://user-images.githubusercontent.com/6849438/204720236-4139dae2-a0e6-4ce6-a9fb-ab6788ec3cc9.gif)
+
 
 or [download binary](https://docs.crusher.dev/getting-started/create-your-first-test#or-install-recorder)
 

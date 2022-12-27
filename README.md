@@ -15,7 +15,7 @@ Crusher is a new fast testing framework, it's opinionated and takes low-code fir
 
 It's a new alternative to old wokrflows which includes h/unreliable libraries (w high learning curve), gluing tools, repetitive script. Sometimes it can take days to create test and managing it can be nightmare.
 
-Crusher makes testing effortless for new-age builders. It includes a recorder, SDK, Infra + batteries, and extended playwright and chromium.
+Crusher makes testing effortless for new-age builders. It's single all-in-tool, with recorder, SDK, Infra + batteries built-in.
 
 
 **Crusher is in beta(v0.5)**. Join [Crusher's discord](https://discord.gg/dHZkSNXQrg) and help us make it better 🚀

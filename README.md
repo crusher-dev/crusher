@@ -36,7 +36,9 @@ Built from group as an **all-in-tool  — with recorder, SDK, Infra + batteries 
 
 ##  Create a test
 
-Run ```npx crusher.dev``` in your git repo.
+1.) **Run npx command** in your git repo.
+
+```npx crusher.dev``` 
 
 ![Crusher demo for test creation, running, cli](https://user-images.githubusercontent.com/6849438/204720236-4139dae2-a0e6-4ce6-a9fb-ab6788ec3cc9.gif)
 

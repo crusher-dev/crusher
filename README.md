@@ -11,15 +11,15 @@
 
 <h1 >Crusher: test fast with low-code</h1>
 
-Crusher is a new *fast testing framework*, it's opinionated and takes *low-code first* approach. Start by creating a test by just browsing your website and adding assertion when needed.
+Crusher is a new **fast testing framework**, it's opinionated and takes **low-code first** approach. Start by creating a test by just browsing your website and adding assertion when needed.
 
 An alternative to slow workflows built and unreliable & slow libraries (w high learning curve), gluing tools, repetitive script.
 
-Crusher is build from group as an *all-in-tool, with recorder, SDK, Infra + batteries built-in*.
+Crusher is build from group as an **all-in-tool, with recorder, SDK, Infra + batteries built-in**.
 
 **Crusher is in beta(v0.5)**. Join [Crusher's discord](https://discord.gg/dHZkSNXQrg) and help us make it better 🚀
 
-##  Create your first test
+##  Create a test
 
 Run ```npx crusher.dev``` in your git repo.
 

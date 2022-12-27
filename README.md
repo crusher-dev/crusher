@@ -2,14 +2,29 @@
 ![Crusher- Low-code testing framework](https://user-images.githubusercontent.com/6849438/204544882-a0ea7aa0-625b-4547-8657-ba1a9e0acc44.png#gh-dark-mode-only)
 ![Crusher- Low-code testing framework](https://user-images.githubusercontent.com/6849438/204549825-4ab1f713-6068-4da4-86b0-58ddf7747f87.png#gh-light-mode-only)
 
-<p>
+
+<h2 align="center">Test fast with low-code framework</h2>
+
+<p align="center">
+  <a href="#create-your-first-test" rel="dofollow"><strong>Install Now »</strong></a>
+  <br/><br/>
+  <a href="https://discord.gg/dHZkSNXQrg">Join Discord</a>
+  ·
+  <a href="https://docs.crusher.dev">Explore docs</a>
+  ·
+  <a href="https://crusher.dev">Website</a>
+</p>
+
+<p align="center">
   <a href="https://discord.com/invite/dHZkSNXQrg" target="_blank"><img src="https://img.shields.io/discord/789815044669177867?&labelColor=black"/></a>
  <a href="https://docs.crusher.dev" target="_blank"><img src="https://img.shields.io/static/v1?label=read&message=docs&color=blueviolet&logo=docs&labelColor=black"/></a>
  <a href="https://www.youtube.com/watch?v=Nc-TlgeKBSE" target="_blank"><img src="https://img.shields.io/static/v1?label=play&message=demo&color=e77335&logo=docs&labelColor=black"/></a>
 
 </p>
 
-<h1 align="center">Crusher: test fast with low-code</h1>
+<hr/>
+
+
 
 Crusher is a new **fast testing framework**, it's opinionated and takes **low-code first** approach. Start by creating a test by just browsing your website and adding assertion when needed.
 

@@ -54,12 +54,15 @@ import { ProxyManager } from "./proxy-manager";
 import { resolveToBackend } from "../utils/url";
 import { getLogs } from "../store/selectors/logger";
 import path from "path";
-import { getEnvironments, shouldOverrideHost } from "../lib/project-config";
+import { getEnvironments, getEnvironmentsFromConfigPath, shouldOverrideHost } from "../lib/project-config";
 import { chalkShared, _log } from "@shared/modules/logger";
 import { DesktopAppEventsEnum } from "@shared/modules/analytics/constants";
 import _ from "lodash";
 import { saveNewDraftTest } from "../api/tests/draft.tests";
 import { generateRandomTestName } from "../utils/renderer";
+import { setAllProjectsMetaData, setProjectMetaData } from "../store/actions/projects";
+import { getCurrentProjectMetadata } from "../store/selectors/projects";
+import { iReduxState } from "../store/reducers";
 
 export class AppWindow {
 	private window: Electron.BrowserWindow;
@@ -81,8 +84,6 @@ export class AppWindow {
 	private shouldMaximizeOnShow = true;
 	private useAdvancedSelectorPicker = false;
 	private proxyManager: ProxyManager;
-
-	private selectedEnvironment: any = "development";
 
 	public getWebContents() {
 		return this.window.webContents;
@@ -300,20 +301,37 @@ export class AppWindow {
 		this.window.webContents.setVisualZoomLevelLimits(1, 3);
 		const projectId = app.commandLine.getSwitchValue("projectId");
 
-		if (app.commandLine.hasSwitch("project-config-file") && projectId) {
-			const configFilePath = app.commandLine.getSwitchValue("project-config-file");
-			this.window.webContents
-				.executeJavaScript("window.localStorage.getItem('projectConfigFile')")
-				.then((projectConfigs) => {
-					const projectConfigsObject = projectConfigs ? JSON.parse(projectConfigs) : {};
-					projectConfigsObject[projectId] = configFilePath;
-					this.window.webContents.executeJavaScript(
-						`window.localStorage.setItem('projectConfigFile', ${JSON.stringify(JSON.stringify(projectConfigsObject))})`,
-					);
-				})
-				.catch((err) => console.error(err));
-			process.argv = process.argv.filter((a) => a.includes("--project-config-file"));
-		}
+		this.window.webContents.executeJavaScript("window.localStorage.getItem('projectConfigs')").then((projectConfigs) => {
+			const projectConfigsObject = projectConfigs ? JSON.parse(projectConfigs) : {};
+			this.store.dispatch(setAllProjectsMetaData(projectConfigsObject));	
+		}).finally(() => {
+			if (app.commandLine.hasSwitch("project-config-file") && projectId) {
+				const configFilePath = app.commandLine.getSwitchValue("project-config-file");
+				this.window.webContents
+					.executeJavaScript("window.localStorage.getItem('projectConfigFile')")
+					.then(async (projectConfigs) => {
+						const environments = await getEnvironmentsFromConfigPath(configFilePath);
+						const environmentsMap = environments?.reduce((acc, env) => {
+							acc[env.name] = env;
+							return acc;
+						}, {}) || {};
+						this.store.dispatch(setProjectMetaData({id: projectId, configPath: configFilePath, selectedEnvironment: "development", environments: environmentsMap}, projectId))
+						
+						const projectConfigsObject = projectConfigs ? JSON.parse(projectConfigs) : {};
+						projectConfigsObject[projectId] = configFilePath;
+
+						this.window.webContents.executeJavaScript(
+							`window.localStorage.setItem('projectConfigFile', ${JSON.stringify(JSON.stringify(projectConfigsObject))})`,
+						);
+						this.window.webContents.executeJavaScript(
+							`window.localStorage.setItem('projectConfigs', ${JSON.stringify(JSON.stringify((this.store.getState() as iReduxState).projects.metadata))})`,
+						);
+	
+					})
+					.catch((err) => console.error(err));
+				process.argv = process.argv.filter((a) => a.includes("--project-config-file"));
+			}
+		});
 		this.handle(projectId).catch((err) => console.error("Can't initialize project config in renderer process", err));
 	}
 
@@ -341,7 +359,9 @@ export class AppWindow {
 	}
 
 	async handleSetEnvironment(event: Electron.IpcMainEvent, data: { environment: any }) {
-		this.selectedEnvironment = data.environment;
+		const currentProjectMetadata = getCurrentProjectMetadata(this.store.getState() as any);
+		currentProjectMetadata.selectedEnvironment = data.environment;
+		this.store.dispatch(setProjectMetaData(currentProjectMetadata, currentProjectMetadata.id));
 	}
 
 	async handle(projectId) {
@@ -1070,9 +1090,11 @@ export class AppWindow {
 	}
 
 	async modifyStepsForEnvironment(steps: any, host: string | null = null) {
-		const currentEnvironment = this.selectedEnvironment;
-		const environments = await getEnvironments(this);
-		const environment = environments?.find((env) => env.name === currentEnvironment);
+		const projectMetadata: any = getCurrentProjectMetadata(this.store.getState() as any) || {};
+
+		const selectedEnvironment = projectMetadata?.selectedEnvironment;
+		const environment = projectMetadata?.environments[selectedEnvironment];
+	
 		if (environment && environment?.variables.CRUSHER_BASE_URL) {
 			const overrideHost = host ? { host } : { host: environment?.variables.CRUSHER_BASE_URL };
 			if (overrideHost) {

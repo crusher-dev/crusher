@@ -3,6 +3,8 @@ import { css } from "@emotion/react";
 import { GreenDotIcon } from "electron-app/src/_ui/constants/old_icons";
 import { HoverCard } from "@dyson/components/atoms/tooltip/Tooltip1";
 import { setEnvironment } from "electron-app/src/ipc/perform";
+import { getCurrentProjectMetadata } from "electron-app/src/store/selectors/projects";
+import { useSelector } from "react-redux";
 
  function HelpContent({ environments, selected, setSelected, ...props }) {
 	return (
@@ -25,15 +27,19 @@ import { setEnvironment } from "electron-app/src/ipc/perform";
 const environments = ["development", "production"];
 
 export const EnvironmentStatus = ({className}) => {
-    const [selected, setSelected] = React.useState(environments[0]);
+    const projectMetaData = useSelector(getCurrentProjectMetadata);
+    const environmentsArr = projectMetaData?.environments ? Object.keys(projectMetaData.environments) : [];
+
+    const [selected, setSelected] = React.useState("development");
 
     const handleChangeEnvironment = (val) => {
         setEnvironment(val);
         setSelected(val);
     }
 
+
     return (
-        <HoverCard content={<HelpContent setSelected={handleChangeEnvironment} environments={environments} selected={selected} />} placement="top" type="hover" padding={8} offset={0}>
+        <HoverCard content={<HelpContent setSelected={handleChangeEnvironment} environments={environmentsArr} selected={selected} />} placement="top" type="hover" padding={8} offset={0}>
             <div className={`flex items-center ${className}`} css={containerCss}>
                 <span>{selected}</span>
                 <GreenDotIcon css={dotCss} className={"ml-8"}/>

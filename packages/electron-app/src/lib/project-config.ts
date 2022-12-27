@@ -33,18 +33,7 @@ export const shouldOverrideHost = async (appWindow: AppWindow) => {
     return null;
 }
 
-export const getEnvironments = async (appWindow: AppWindow) => {
-    const store = getStore();
-    const selectedProject = getCurrentSelectedProjct(store.getState() as any);
-    
-    if(!selectedProject) return null;
-
-    const projectConfigFiles = await appWindow.getWebContents().executeJavaScript("JSON.parse(localStorage.getItem('projectConfigFile') || {})");
-    const projectConfigPath = projectConfigFiles[selectedProject];
-
-    if(!projectConfigPath) return  null;
-
-
+export const getEnvironmentsFromConfigPath = async (projectConfigPath: string) => {
     const projectDirPath = projectConfigPath.split(path.sep).slice(0, -1).join(path.sep);
     
     const envFiles = fs.readdirSync(projectDirPath).filter((file) => file.includes(".env"));
@@ -64,4 +53,19 @@ export const getEnvironments = async (appWindow: AppWindow) => {
     });
 
     return envs;
+}
+
+export const getEnvironments = async (appWindow: AppWindow) => {
+    const store = getStore();
+    const selectedProject = getCurrentSelectedProjct(store.getState() as any);
+    
+    if(!selectedProject) return null;
+
+    const projectConfigFiles = await appWindow.getWebContents().executeJavaScript("JSON.parse(localStorage.getItem('projectConfigFile') || {})");
+    const projectConfigPath = projectConfigFiles[selectedProject];
+
+    if(!projectConfigPath) return  null;
+
+
+    return getEnvironmentsFromConfigPath(projectConfigPath);
 }

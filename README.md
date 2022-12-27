@@ -11,12 +11,11 @@
 
 <h1 >Crusher: test fast with low-code</h1>
 
-Crusher is a new fast testing framework, it's opinionated and takes low-code first approach. 
+Crusher is a new fast testing framework, it's opinionated and takes low-code first approach. Start by creating a test by just browsing.
 
-An alternative to slow wokrflows built with unreliable libraries (w high learning curve), gluing tools, repetitive script.
+An alternative to slow workflows built and unreliable & slow libraries (w high learning curve), gluing tools, repetitive script.
 
-Crusher is build from groupup as an all-in-tool, with recorder, SDK, Infra + batteries built-in.
-
+Crusher is build from group as an all-in-tool, with recorder, SDK, Infra + batteries built-in.
 
 **Crusher is in beta(v0.5)**. Join [Crusher's discord](https://discord.gg/dHZkSNXQrg) and help us make it better 🚀
 

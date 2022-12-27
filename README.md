@@ -9,7 +9,7 @@
 
 </p>
 
-<h1 >Crusher: test fast with low-code</h1>
+<h1 align="center">Crusher: test fast with low-code</h1>
 
 Crusher is a new **fast testing framework**, it's opinionated and takes **low-code first** approach. Start by creating a test by just browsing your website and adding assertion when needed.
 

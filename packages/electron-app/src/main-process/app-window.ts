@@ -54,7 +54,7 @@ import { ProxyManager } from "./proxy-manager";
 import { resolveToBackend } from "../utils/url";
 import { getLogs } from "../store/selectors/logger";
 import path from "path";
-import { shouldOverrideHost } from "../lib/project-config";
+import { getEnvironments, shouldOverrideHost } from "../lib/project-config";
 import { chalkShared, _log } from "@shared/modules/logger";
 import { DesktopAppEventsEnum } from "@shared/modules/analytics/constants";
 import _ from "lodash";
@@ -81,6 +81,8 @@ export class AppWindow {
 	private shouldMaximizeOnShow = true;
 	private useAdvancedSelectorPicker = false;
 	private proxyManager: ProxyManager;
+
+	private selectedEnvironment: any = "development";
 
 	public getWebContents() {
 		return this.window.webContents;
@@ -289,6 +291,7 @@ export class AppWindow {
 		ipcMain.on("get-is-advanced-selector", this.handleGetVarContext.bind(this));
 		ipcMain.handle("turn-on-webview-dev-tools", this.handleTurnOnWebviewDevtools.bind(this));
 		ipcMain.handle("pause-steps", this.handlePauseSteps.bind(this));
+		ipcMain.handle("set-environment", this.handleSetEnvironment.bind(this));
 
 		this.window.on("focus", () => this.window.webContents.send("focus"));
 		this.window.on("blur", () => this.window.webContents.send("blur"));
@@ -335,6 +338,10 @@ export class AppWindow {
 		await Promise.all(Object.values(global["promises"]).map((promise: any) => {
 			return promise();
 		}));
+	}
+
+	async handleSetEnvironment(event: Electron.IpcMainEvent, data: { environment: any }) {
+		this.selectedEnvironment = data.environment;
 	}
 
 	async handle(projectId) {
@@ -1063,20 +1070,26 @@ export class AppWindow {
 	}
 
 	async modifyStepsForEnvironment(steps: any, host: string | null = null) {
-		const overrideHost = host ? { host } : await this.shouldOverrideHost();
-		if (overrideHost) {
-			steps = steps.map((event) => {
-				if (event.type === ActionsInTestEnum.NAVIGATE_URL) {
-					const urlToGo = new URL(event.payload.meta.value);
-					const newHostURL = new URL(overrideHost.host);
-					urlToGo.host = newHostURL.host;
-					urlToGo.port = newHostURL.port;
-					urlToGo.protocol = newHostURL.protocol;
-					event.payload.meta.value = urlToGo.toString();
-				}
-				return event;
-			});
+		const currentEnvironment = this.selectedEnvironment;
+		const environments = await getEnvironments(this);
+		const environment = environments?.find((env) => env.name === currentEnvironment);
+		if (environment && environment?.variables.CRUSHER_BASE_URL) {
+			const overrideHost = host ? { host } : { host: environment?.variables.CRUSHER_BASE_URL };
+			if (overrideHost) {
+				steps = steps.map((event) => {
+					if (event.type === ActionsInTestEnum.NAVIGATE_URL) {
+						const urlToGo = new URL(event.payload.meta.value);
+						const newHostURL = new URL(overrideHost.host);
+						urlToGo.host = newHostURL.host;
+						urlToGo.port = newHostURL.port;
+						urlToGo.protocol = newHostURL.protocol;
+						event.payload.meta.value = urlToGo.toString();
+					}
+					return event;
+				});
+			}
 		}
+	
 
 		return steps;
 	}

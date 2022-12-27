@@ -17,6 +17,7 @@ import { CloudCrusher } from "electron-app/src/lib/cloud";
 import { FailedCheckboxIcon, GreenCheckboxIcon } from "electron-app/src/_ui/constants/old_icons";
 import { Conditional } from "@dyson/components/layouts";
 import { getCurrentProjectConfigPath } from "electron-app/src/_ui/utils/project";
+import { EnvironmentStatus } from './environmentStatus';
 
 interface IProps {
 	className?: string;
@@ -88,6 +89,7 @@ export const StickyFooter = ({ className }: IProps) => {
 				)}
 
 				<div css={contextContainerCss}>
+					<EnvironmentStatus className={"mr-8"}/>
 					<TunnelStatus />
 				</div>
 			</div>

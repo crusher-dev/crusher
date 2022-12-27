@@ -7,9 +7,9 @@ import { shell } from "electron";
 import {  getIsProxyInitializing, getProxyState } from "electron-app/src/store/selectors/app";
 import { getCurrentProjectConfigPath } from "electron-app/src/_ui/utils/project";
 
-import { CloudIcon } from "./tunnelStatus/components/cloudIcon";
-import { LinkPointer } from "../../components/LinkPointer";
-import { getStatus, openConfig } from "./tunnelStatus/utils";
+import { CloudIcon } from "./components/cloudIcon";
+import { LinkPointer } from "../../../components/LinkPointer";
+import { getStatus, openConfig } from "./utils";
 import { Conditional } from "@dyson/components/layouts";
 
 const lineCSS = css`min-width: 1px; height: 16px; background: rgba(255,255,255,0.10)`

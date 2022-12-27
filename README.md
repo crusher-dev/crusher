@@ -14,6 +14,7 @@
 Crusher is a new fast testing framework, it's opinionated and takes low-code first approach. 
 
 An alternative to slow wokrflows built with unreliable libraries (w high learning curve), gluing tools, repetitive script.
+
 Crusher is build from groupup as an all-in-tool, with recorder, SDK, Infra + batteries built-in.
 
 

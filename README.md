@@ -9,15 +9,14 @@
 
 </p>
 
-<h2 >Crusher: automate test fast with low-code</h3>
+<h1 >Crusher: automate test fast with low-code</h1>
 
 Crusher is a new fast testing framework, it's opinionated and takes low-code first approach. 
 
-It's a better alternative to old wokrflows which includes h/unreliable libraries (w high learning curve), gluing of lot of tools, repetitive automation script. 
+It's a new alternative to old wokrflows which includes h/unreliable libraries (w high learning curve), gluing tools, repetitive script. Sometimes it can take days to create test and managing it can be nightmare.
 
 Crusher makes testing effortless for new-age builders. It includes a recorder, SDK, Infra + batteries, and extended playwright and chromium.
 
-You can create test using low-code and add code. You can literally start testing in 5 mins.
 
 **Crusher is in beta(v0.5)**. Join [Crusher's discord](https://discord.gg/dHZkSNXQrg) and help us make it better 🚀
 
@@ -27,6 +26,7 @@ Run ```npx crusher.dev``` in your git repo.
 
 ![Crusher demo for test creation, running, cli](https://user-images.githubusercontent.com/6849438/204720236-4139dae2-a0e6-4ce6-a9fb-ab6788ec3cc9.gif)
 
+You can create test using low-code and add code. You can literally start testing in 5 mins.
 
 or [download binary](https://docs.crusher.dev/getting-started/create-your-first-test#or-install-recorder)
 

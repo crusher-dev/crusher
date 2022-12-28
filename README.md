@@ -30,7 +30,7 @@ Crusher is a new **fast testing framework**, it's opinionated and takes **low-co
 
 An alternative to slow workflows built and unreliable & slow libraries (w high learning curve), gluing tools, repetitive script.
 
-Built from group as an **all-in-tool  — with recorder, SDK, Infra + batteries built-in**.
+Built from group up as an **all-in-tool  — with recorder, SDK, Infra + batteries built-in**.
 
 **Crusher is in beta(v0.5)**. Join [Crusher's discord](https://discord.gg/dHZkSNXQrg) and help us make it better 🚀
 

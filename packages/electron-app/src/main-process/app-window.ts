@@ -293,6 +293,7 @@ export class AppWindow {
 		ipcMain.handle("turn-on-webview-dev-tools", this.handleTurnOnWebviewDevtools.bind(this));
 		ipcMain.handle("pause-steps", this.handlePauseSteps.bind(this));
 		ipcMain.handle("set-environment", this.handleSetEnvironment.bind(this));
+		ipcMain.handle("get-test-context-variables", this.handleGetTextContextVariables.bind(this));
 
 		this.window.on("focus", () => this.window.webContents.send("focus"));
 		this.window.on("blur", () => this.window.webContents.send("blur"));
@@ -362,6 +363,34 @@ export class AppWindow {
 		const currentProjectMetadata = getCurrentProjectMetadata(this.store.getState() as any);
 		currentProjectMetadata.selectedEnvironment = data.environment;
 		this.store.dispatch(setProjectMetaData(currentProjectMetadata, currentProjectMetadata.id));
+	}
+
+
+	getCurrentProjectEnvironmentVariables() {
+		const projectMetadata: any = getCurrentProjectMetadata(this.store.getState() as any) || {};
+
+		const selectedEnvironment = projectMetadata?.selectedEnvironment;
+		const environment = projectMetadata?.environments[selectedEnvironment];
+
+		if(environment?.variables) {
+			const out = {};
+			for(const key in environment.variables) {
+				const value = environment.variables[key];
+				out[key] = value;
+			}
+			return out;
+		}
+
+		return {};
+	}
+
+	async handleGetTextContextVariables(event: Electron.IpcMainEvent, data: { }) {
+		const context = this.webView?.playwrightInstance?.getContext();
+		if(!context || !Object.keys(context).length) {
+			return this.getCurrentProjectEnvironmentVariables();
+		}
+
+		return context;
 	}
 
 	async handle(projectId) {
@@ -701,7 +730,7 @@ export class AppWindow {
 		await this.resetRecorder();
 
 		await this.store.dispatch(setDevice(payload.device.id));
-		await this.store.dispatch(setSiteUrl(template(navigationStep.payload.meta.value, { ctx: {} })));
+		await this.store.dispatch(setSiteUrl(template(navigationStep.payload.meta.value, { ctx: this.webView.playwrightInstance.getContext() || {} })));
 		// Playwright context has issues when set to about:blank
 	}
 
@@ -1116,7 +1145,6 @@ export class AppWindow {
 		return steps;
 	}
 	async handleReplayTestSteps(steps: iAction[] | null = null, host: string | null = null) {
-		steps = await this.modifyStepsForEnvironment(steps, host);
 		this.store.dispatch(updateRecorderState(TRecorderState.PERFORMING_ACTIONS, {}));
 
 		const browserActions = getBrowserActions(steps);
@@ -1288,7 +1316,7 @@ export class AppWindow {
 					break;
 				}
 				case ActionsInTestEnum.NAVIGATE_URL:
-					this.store.dispatch(setSiteUrl(template(action.payload.meta.value, { ctx: {} })));
+					this.store.dispatch(setSiteUrl(template(action.payload.meta.value, { ctx: this.webView.playwrightInstance.getContext() || {} })));
 					await this.webView.playwrightInstance.runActions([action], !!shouldNotSave);
 					break;
 				case ActionsInTestEnum.RUN_AFTER_TEST:

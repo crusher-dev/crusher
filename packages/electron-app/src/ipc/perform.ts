@@ -368,6 +368,10 @@ export const setEnvironment = (environment) => {
 	return ipcRenderer.invoke("set-environment", { environment });
 }
 
+export const getTestContextVariables = () => {
+	return ipcRenderer.invoke("get-test-context-variables", {});
+}
+
 export {
 	continueDraftTest,
 	saveAutoAction,

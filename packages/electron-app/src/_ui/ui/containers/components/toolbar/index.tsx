@@ -5,7 +5,7 @@ import { LoadingIconV2, RedDotIcon, SettingsIcon } from "../../../../constants/o
 import { useDispatch, batch, useSelector, useStore, shallowEqual } from "react-redux";
 import { devices } from "../../../../../devices";
 import { getRecorderContext, getRecorderInfo, getRecorderInfoUrl, getRecorderState, getSavedSteps, getTestName, isTestVerified } from "electron-app/src/store/selectors/recorder";
-import { goFullScreen, performExit, performNavigation, performSteps, performTrackEvent, performVerifyTest, saveTest, updateTest, updateTestName } from "../../../../../ipc/perform";
+import { getTestContextVariables, goFullScreen, performExit, performNavigation, performSteps, performTrackEvent, performVerifyTest, saveTest, updateTest, updateTestName } from "../../../../../ipc/perform";
 import { addHttpToURLIfNotThere, isValidHttpUrl } from "../../../../../utils";
 import { TRecorderState, TRecorderVariant } from "electron-app/src/store/reducers/recorder";
 import { getAppEditingSessionMeta, getCurrentTestInfo, getProxyState, shouldShowOnboardingOverlay } from "electron-app/src/store/selectors/app";
@@ -28,6 +28,7 @@ import { getCurrentProjectConfig, getCurrentProjectConfigPath, writeProjectConfi
 import { DesktopAppEventsEnum } from "@shared/modules/analytics/constants";
 import { ShepherdTourContext } from "react-shepherd";
 import { getCurrentProjectMeta } from "electron-app/src/api/projects/integrations";
+import template from "@shared/utils/templateString";
 
 const DeviceItem = ({ label }) => {
 	return (
@@ -386,14 +387,16 @@ const Toolbar = (props: any) => {
 		}
 	}, [recorderInfoUrl.url]);
 
-	const handleUrlReturn = React.useCallback(() => {
+	const handleUrlReturn = React.useCallback(async () => {
 		const { setCurrentStep } = tourCont;
 
 		const recorderInfo = getRecorderInfo(store.getState());
 		const isOnboardingOn = shouldShowOnboardingOverlay(store.getState());
 
 		if (urlInputRef.current?.value) {
-			const validUrl = addHttpToURLIfNotThere(urlInputRef.current?.value);
+			const initialUrl = urlInputRef.current?.value;
+			const finalUrl = template(urlInputRef.current?.value, { ctx: await getTestContextVariables()});
+			const validUrl = addHttpToURLIfNotThere(finalUrl);
 			if (!isValidHttpUrl(validUrl)) {
 				setUrlInputError({ value: true, message: "Please enter a valid URL" });
 				urlInputRef.current.blur();
@@ -421,7 +424,7 @@ const Toolbar = (props: any) => {
 							payload: {
 								selectors: [],
 								meta: {
-									value: validUrl,
+									value: initialUrl,
 								},
 							},
 							status: "COMPLETED",

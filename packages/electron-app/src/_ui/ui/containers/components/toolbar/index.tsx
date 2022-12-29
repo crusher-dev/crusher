@@ -80,10 +80,14 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 	const store = useStore();
 	const tour = React.useContext(ShepherdTourContext); 
 
-	const handleProxyWarning = React.useCallback(() => {
+	const handleProxyWarning = React.useCallback(async () => {
 		const steps = getSavedSteps(store.getState());
 		const navigationStep = steps.find((step) => step.type === ActionsInTestEnum.NAVIGATE_URL);
-		const startNavigationUrl = navigationStep?.payload?.meta ? navigationStep.payload.meta.value : "";
+		let startNavigationUrl = navigationStep?.payload?.meta ? navigationStep.payload.meta.value : "";
+		if (isTemplateFormat(startNavigationUrl)) {
+			const environmentVariables = await getTestContextVariables();
+			startNavigationUrl = template(startNavigationUrl, { ctx: environmentVariables || {} }); 
+		}
 		const startUrl = new URL(startNavigationUrl);
 		const proxyState = getProxyState(store.getState());
 

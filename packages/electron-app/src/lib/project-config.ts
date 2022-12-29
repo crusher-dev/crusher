@@ -55,6 +55,15 @@ export const getEnvironmentsFromConfigPath = async (projectConfigPath: string) =
     return envs;
 }
 
+export const initEnvironmentConfigIfNotExists = async (projectConfigPath: string, baseUrl: string) => {
+    const projectDirPath = projectConfigPath.split(path.sep).slice(0, -1).join(path.sep);
+    const envFilePath = path.join(projectDirPath, ".env.development");
+
+    if(!fs.existsSync(envFilePath)) {
+        fs.writeFileSync(envFilePath, "CRUSHER_BASE_URL=" + baseUrl);
+    }
+}
+
 export const getEnvironments = async (appWindow: AppWindow) => {
     const store = getStore();
     const selectedProject = getCurrentSelectedProjct(store.getState() as any);

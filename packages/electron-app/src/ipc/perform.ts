@@ -372,6 +372,10 @@ export const getTestContextVariables = () => {
 	return ipcRenderer.invoke("get-test-context-variables", {});
 }
 
+export const initDevelopmentEnvironment = (baseUrl: string) => {
+	return ipcRenderer.invoke("init-development-environment", { baseUrl });
+};
+
 export {
 	continueDraftTest,
 	saveAutoAction,

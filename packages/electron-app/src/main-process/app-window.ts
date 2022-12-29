@@ -54,7 +54,7 @@ import { ProxyManager } from "./proxy-manager";
 import { resolveToBackend } from "../utils/url";
 import { getLogs } from "../store/selectors/logger";
 import path from "path";
-import { getEnvironments, getEnvironmentsFromConfigPath, shouldOverrideHost } from "../lib/project-config";
+import { getEnvironments, getEnvironmentsFromConfigPath, initEnvironmentConfigIfNotExists, shouldOverrideHost } from "../lib/project-config";
 import { chalkShared, _log } from "@shared/modules/logger";
 import { DesktopAppEventsEnum } from "@shared/modules/analytics/constants";
 import _ from "lodash";
@@ -294,6 +294,7 @@ export class AppWindow {
 		ipcMain.handle("pause-steps", this.handlePauseSteps.bind(this));
 		ipcMain.handle("set-environment", this.handleSetEnvironment.bind(this));
 		ipcMain.handle("get-test-context-variables", this.handleGetTextContextVariables.bind(this));
+		ipcMain.handle("init-development-environment", this.handleInitDevelopmentEnvironment.bind(this));
 
 		this.window.on("focus", () => this.window.webContents.send("focus"));
 		this.window.on("blur", () => this.window.webContents.send("blur"));
@@ -391,6 +392,32 @@ export class AppWindow {
 		}
 
 		return context;
+	}
+
+	async handleInitDevelopmentEnvironment(event: Electron.IpcMainEvent, data: { baseUrl }) {
+		const selectedProject = getCurrentSelectedProjct(this.store.getState() as any);
+
+
+		const projectConfigFile = await this.window.webContents.executeJavaScript(`window.localStorage.getItem('projectConfigFile')`)
+		const projectConfigFileJson = JSON.parse(projectConfigFile);
+
+
+		if (projectConfigFileJson[selectedProject]) {
+			const configFilePath = projectConfigFileJson[selectedProject];
+			await initEnvironmentConfigIfNotExists(configFilePath, data.baseUrl);
+
+			const environments = await getEnvironmentsFromConfigPath(configFilePath);
+			const environmentsMap = environments?.reduce((acc, env) => {
+				acc[env.name] = env;
+				return acc;
+			}, {}) || {};
+
+			console.log("environmentsMap", environmentsMap);
+			this.store.dispatch(setProjectMetaData({id: selectedProject, configPath: configFilePath, selectedEnvironment: "development", environments: environmentsMap}, selectedProject))
+			this.window.webContents.executeJavaScript(
+				`window.localStorage.setItem('projectConfigs', ${JSON.stringify(JSON.stringify((this.store.getState() as iReduxState).projects.metadata))})`,
+			);
+		}
 	}
 
 	async handle(projectId) {
@@ -730,7 +757,7 @@ export class AppWindow {
 		await this.resetRecorder();
 
 		await this.store.dispatch(setDevice(payload.device.id));
-		await this.store.dispatch(setSiteUrl(template(navigationStep.payload.meta.value, { ctx: this.webView.playwrightInstance.getContext() || {} })));
+		await this.store.dispatch(setSiteUrl(navigationStep.payload.meta.value));
 		// Playwright context has issues when set to about:blank
 	}
 
@@ -1316,7 +1343,7 @@ export class AppWindow {
 					break;
 				}
 				case ActionsInTestEnum.NAVIGATE_URL:
-					this.store.dispatch(setSiteUrl(template(action.payload.meta.value, { ctx: this.webView.playwrightInstance.getContext() || {} })));
+					this.store.dispatch(setSiteUrl(action.payload.meta.value));
 					await this.webView.playwrightInstance.runActions([action], !!shouldNotSave);
 					break;
 				case ActionsInTestEnum.RUN_AFTER_TEST:

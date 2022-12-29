@@ -5,7 +5,7 @@ import { LoadingIconV2, RedDotIcon, SettingsIcon } from "../../../../constants/o
 import { useDispatch, batch, useSelector, useStore, shallowEqual } from "react-redux";
 import { devices } from "../../../../../devices";
 import { getRecorderContext, getRecorderInfo, getRecorderInfoUrl, getRecorderState, getSavedSteps, getTestName, isTestVerified } from "electron-app/src/store/selectors/recorder";
-import { getTestContextVariables, goFullScreen, performExit, performNavigation, performSteps, performTrackEvent, performVerifyTest, saveTest, updateTest, updateTestName } from "../../../../../ipc/perform";
+import { getTestContextVariables, goFullScreen, initDevelopmentEnvironment, performExit, performNavigation, performSteps, performTrackEvent, performVerifyTest, saveTest, updateTest, updateTestName } from "../../../../../ipc/perform";
 import { addHttpToURLIfNotThere, isValidHttpUrl } from "../../../../../utils";
 import { TRecorderState, TRecorderVariant } from "electron-app/src/store/reducers/recorder";
 import { getAppEditingSessionMeta, getCurrentTestInfo, getProxyState, shouldShowOnboardingOverlay } from "electron-app/src/store/selectors/app";
@@ -22,13 +22,16 @@ import { ButtonDropdown } from "electron-app/src/_ui/ui/components/buttonDropdow
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
 import { generateRandomTestName } from "electron-app/src/utils/renderer";
 import { NormalInput } from "electron-app/src/_ui/ui/components/inputs/normalInput";
-import { setTestName } from "electron-app/src/store/actions/recorder";
+import { setSiteUrl, setTestName } from "electron-app/src/store/actions/recorder";
 import ConfirmDialog from "dyson/src/components/sharedComponets/ConfirmModal";
 import { getCurrentProjectConfig, getCurrentProjectConfigPath, writeProjectConfig } from "electron-app/src/_ui/utils/project";
 import { DesktopAppEventsEnum } from "@shared/modules/analytics/constants";
 import { ShepherdTourContext } from "react-shepherd";
 import { getCurrentProjectMeta } from "electron-app/src/api/projects/integrations";
-import template from "@shared/utils/templateString";
+import template, { isTemplateFormat } from "@shared/utils/templateString";
+import { showToast } from "../../../components/toasts";
+import { getCurrentProjectMetadata } from "electron-app/src/store/selectors/projects";
+import { setProjectMetaData } from "electron-app/src/store/actions/projects";
 
 const DeviceItem = ({ label }) => {
 	return (
@@ -353,6 +356,20 @@ const useTestName = () => {
 
 	return { testName, setTestName: updateTestName };
 };
+
+const parseUrl = async (url: string) => {
+	if(isTemplateFormat(url)) {
+		// Some context varaible is substituted, no need to add http
+		return {url: url, isTemplate: true};
+	}
+
+	const finalUrl = addHttpToURLIfNotThere(url);
+	if(!isValidHttpUrl(finalUrl)) {
+		throw new Error("Invalid URL");
+	}
+	return {url: finalUrl, isTemplate: false};
+};
+
 const Toolbar = (props: any) => {
 	const [url, setUrl] = React.useState("" || null);
 	const [selectedDevice] = React.useState([recorderDevices[0]]);
@@ -380,12 +397,21 @@ const Toolbar = (props: any) => {
 	const store = useStore();
 	const tourCont = useContext(TourContext);
 	const navigate = useNavigate();
+	const projectMetadata = useSelector(getCurrentProjectMetadata);
 
 	React.useEffect(() => {
 		if (recorderInfoUrl.url !== url) {
 			setUrl(recorderInfoUrl.url);
 		}
 	}, [recorderInfoUrl.url]);
+
+	React.useEffect(() => {
+		if(!urlInputRef?.current.value.length){
+			if(projectMetadata?.environments["development"]?.variables["CRUSHER_BASE_URL"]){
+				urlInputRef.current.value = "${ctx.CRUSHER_BASE_URL}";
+			}
+		}
+	}, [projectMetadata]);
 
 	const handleUrlReturn = React.useCallback(async () => {
 		const { setCurrentStep } = tourCont;
@@ -395,61 +421,87 @@ const Toolbar = (props: any) => {
 
 		if (urlInputRef.current?.value) {
 			const initialUrl = urlInputRef.current?.value;
-			const finalUrl = template(urlInputRef.current?.value, { ctx: await getTestContextVariables()});
-			const validUrl = addHttpToURLIfNotThere(finalUrl);
-			if (!isValidHttpUrl(validUrl)) {
+
+			try {
+				let { url: validUrl, isTemplate } = await parseUrl(initialUrl);
+				if(!isTemplate) {
+					urlInputRef.current.value = validUrl;
+				}
+				setUrlInputError({ value: false, message: "" });
+
+				const testContextVariables = await getTestContextVariables();
+				batch(async () => {
+					if (!recorderInfo.url) {
+						// @NOTE: Find better way to make sure initScript is done
+						// webview.
+
+						if(!testContextVariables.CRUSHER_BASE_URL) {
+							// Setting the base url to the current url
+
+							showToast({
+								message: (<span>Setting <b>BASE_URL</b> to  <span css={css`color: #687ef2`}>{validUrl}</span></span>),
+								type: "normal",
+							});
+
+							const url = new URL(validUrl);
+							const baseUrl = url.origin;
+
+							// Replace baseUrl in the url to ${context.CRUSHER_BASE_URL}
+							const urlWithoutBaseUrl = validUrl.replace(baseUrl, "${ctx.CRUSHER_BASE_URL}");
+							validUrl = urlWithoutBaseUrl;
+							
+							await initDevelopmentEnvironment(baseUrl);
+						}
+
+						performSteps([
+							{
+								type: "BROWSER_SET_DEVICE",
+								payload: {
+									meta: {
+										device: selectedDevice[0].device,
+									},
+								},
+								time: Date.now(),
+							},
+							{
+								type: "PAGE_NAVIGATE_URL",
+								payload: {
+									selectors: [],
+									meta: {
+										value: validUrl,
+									},
+								},
+								status: "COMPLETED",
+								time: Date.now(),
+							},
+						]);
+					} else {
+						const recorderState = getRecorderState(store.getState());
+						if (recorderState.type === TRecorderState.RECORDING_ACTIONS) {
+							performNavigation(validUrl);
+						} else {
+							sendSnackBarEvent({ type: "error", message: "A action is in progress. Wait and retry again" });
+	
+						}
+					}
+					// Just in case onboarding overlay info is still visible
+	
+					dispatch(setShowShouldOnboardingOverlay(false));
+	
+					if (isOnboardingOn && tourCont.currentStep === 0) {
+						setTimeout(() => {
+							setCurrentStep(1);
+						}, 50);
+					}
+				});
+
+				
+			} catch(err) {
+				console.error(err);
 				setUrlInputError({ value: true, message: "Please enter a valid URL" });
 				urlInputRef.current.blur();
 				return;
 			}
-			urlInputRef.current.value = validUrl;
-			setUrlInputError({ value: false, message: "" });
-			// setCurrentStep(1);
-			batch(() => {
-				if (!recorderInfo.url) {
-					// @NOTE: Find better way to make sure initScript is done
-					// webview.
-					performSteps([
-						{
-							type: "BROWSER_SET_DEVICE",
-							payload: {
-								meta: {
-									device: selectedDevice[0].device,
-								},
-							},
-							time: Date.now(),
-						},
-						{
-							type: "PAGE_NAVIGATE_URL",
-							payload: {
-								selectors: [],
-								meta: {
-									value: initialUrl,
-								},
-							},
-							status: "COMPLETED",
-							time: Date.now(),
-						},
-					]);
-				} else {
-					const recorderState = getRecorderState(store.getState());
-					if (recorderState.type === TRecorderState.RECORDING_ACTIONS) {
-						performNavigation(validUrl, store);
-					} else {
-						sendSnackBarEvent({ type: "error", message: "A action is in progress. Wait and retry again" });
-
-					}
-				}
-				// Just in case onboarding overlay info is still visible
-
-				dispatch(setShowShouldOnboardingOverlay(false));
-
-				if (isOnboardingOn && tourCont.currentStep === 0) {
-					setTimeout(() => {
-						setCurrentStep(1);
-					}, 50);
-				}
-			});
 		} else {
 			setUrlInputError({ value: true, message: "" });
 			urlInputRef.current.focus();

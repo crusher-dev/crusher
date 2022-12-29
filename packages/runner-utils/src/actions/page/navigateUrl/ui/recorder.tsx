@@ -63,7 +63,10 @@ const ErrorDialog = () => {
                             }
                         }
                     });
-                    sdk.retryStep();
+
+                    setTimeout(() => {
+                        sdk.retryStep();
+                    }, 100);
                     resolveError();
                 }
             }

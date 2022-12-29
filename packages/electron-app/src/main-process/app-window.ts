@@ -54,12 +54,15 @@ import { ProxyManager } from "./proxy-manager";
 import { resolveToBackend } from "../utils/url";
 import { getLogs } from "../store/selectors/logger";
 import path from "path";
-import { shouldOverrideHost } from "../lib/project-config";
+import { getEnvironments, getEnvironmentsFromConfigPath, initEnvironmentConfigIfNotExists, shouldOverrideHost } from "../lib/project-config";
 import { chalkShared, _log } from "@shared/modules/logger";
 import { DesktopAppEventsEnum } from "@shared/modules/analytics/constants";
 import _ from "lodash";
 import { saveNewDraftTest } from "../api/tests/draft.tests";
 import { generateRandomTestName } from "../utils/renderer";
+import { setAllProjectsMetaData, setProjectMetaData } from "../store/actions/projects";
+import { getCurrentProjectMetadata } from "../store/selectors/projects";
+import { iReduxState } from "../store/reducers";
 
 export class AppWindow {
 	private window: Electron.BrowserWindow;
@@ -289,6 +292,9 @@ export class AppWindow {
 		ipcMain.on("get-is-advanced-selector", this.handleGetVarContext.bind(this));
 		ipcMain.handle("turn-on-webview-dev-tools", this.handleTurnOnWebviewDevtools.bind(this));
 		ipcMain.handle("pause-steps", this.handlePauseSteps.bind(this));
+		ipcMain.handle("set-environment", this.handleSetEnvironment.bind(this));
+		ipcMain.handle("get-test-context-variables", this.handleGetTextContextVariables.bind(this));
+		ipcMain.handle("init-development-environment", this.handleInitDevelopmentEnvironment.bind(this));
 
 		this.window.on("focus", () => this.window.webContents.send("focus"));
 		this.window.on("blur", () => this.window.webContents.send("blur"));
@@ -297,20 +303,37 @@ export class AppWindow {
 		this.window.webContents.setVisualZoomLevelLimits(1, 3);
 		const projectId = app.commandLine.getSwitchValue("projectId");
 
-		if (app.commandLine.hasSwitch("project-config-file") && projectId) {
-			const configFilePath = app.commandLine.getSwitchValue("project-config-file");
-			this.window.webContents
-				.executeJavaScript("window.localStorage.getItem('projectConfigFile')")
-				.then((projectConfigs) => {
-					const projectConfigsObject = projectConfigs ? JSON.parse(projectConfigs) : {};
-					projectConfigsObject[projectId] = configFilePath;
-					this.window.webContents.executeJavaScript(
-						`window.localStorage.setItem('projectConfigFile', ${JSON.stringify(JSON.stringify(projectConfigsObject))})`,
-					);
-				})
-				.catch((err) => console.error(err));
-			process.argv = process.argv.filter((a) => a.includes("--project-config-file"));
-		}
+		this.window.webContents.executeJavaScript("window.localStorage.getItem('projectConfigs')").then((projectConfigs) => {
+			const projectConfigsObject = projectConfigs ? JSON.parse(projectConfigs) : {};
+			this.store.dispatch(setAllProjectsMetaData(projectConfigsObject));	
+		}).finally(() => {
+			if (app.commandLine.hasSwitch("project-config-file") && projectId) {
+				const configFilePath = app.commandLine.getSwitchValue("project-config-file");
+				this.window.webContents
+					.executeJavaScript("window.localStorage.getItem('projectConfigFile')")
+					.then(async (projectConfigs) => {
+						const environments = await getEnvironmentsFromConfigPath(configFilePath);
+						const environmentsMap = environments?.reduce((acc, env) => {
+							acc[env.name] = env;
+							return acc;
+						}, {}) || {};
+						this.store.dispatch(setProjectMetaData({id: projectId, configPath: configFilePath, selectedEnvironment: "development", environments: environmentsMap}, projectId))
+						
+						const projectConfigsObject = projectConfigs ? JSON.parse(projectConfigs) : {};
+						projectConfigsObject[projectId] = configFilePath;
+
+						this.window.webContents.executeJavaScript(
+							`window.localStorage.setItem('projectConfigFile', ${JSON.stringify(JSON.stringify(projectConfigsObject))})`,
+						);
+						this.window.webContents.executeJavaScript(
+							`window.localStorage.setItem('projectConfigs', ${JSON.stringify(JSON.stringify((this.store.getState() as iReduxState).projects.metadata))})`,
+						);
+	
+					})
+					.catch((err) => console.error(err));
+				process.argv = process.argv.filter((a) => a.includes("--project-config-file"));
+			}
+		});
 		this.handle(projectId).catch((err) => console.error("Can't initialize project config in renderer process", err));
 	}
 
@@ -335,6 +358,66 @@ export class AppWindow {
 		await Promise.all(Object.values(global["promises"]).map((promise: any) => {
 			return promise();
 		}));
+	}
+
+	async handleSetEnvironment(event: Electron.IpcMainEvent, data: { environment: any }) {
+		const currentProjectMetadata = getCurrentProjectMetadata(this.store.getState() as any);
+		currentProjectMetadata.selectedEnvironment = data.environment;
+		this.store.dispatch(setProjectMetaData(currentProjectMetadata, currentProjectMetadata.id));
+	}
+
+
+	getCurrentProjectEnvironmentVariables() {
+		const projectMetadata: any = getCurrentProjectMetadata(this.store.getState() as any) || {};
+
+		const selectedEnvironment = projectMetadata?.selectedEnvironment;
+		const environment = projectMetadata?.environments[selectedEnvironment];
+
+		if(environment?.variables) {
+			const out = {};
+			for(const key in environment.variables) {
+				const value = environment.variables[key];
+				out[key] = value;
+			}
+			return out;
+		}
+
+		return {};
+	}
+
+	async handleGetTextContextVariables(event: Electron.IpcMainEvent, data: { }) {
+		const context = this.webView?.playwrightInstance?.getContext();
+		if(!context || !Object.keys(context).length) {
+			return this.getCurrentProjectEnvironmentVariables();
+		}
+
+		return context;
+	}
+
+	async handleInitDevelopmentEnvironment(event: Electron.IpcMainEvent, data: { baseUrl }) {
+		const selectedProject = getCurrentSelectedProjct(this.store.getState() as any);
+
+
+		const projectConfigFile = await this.window.webContents.executeJavaScript(`window.localStorage.getItem('projectConfigFile')`)
+		const projectConfigFileJson = JSON.parse(projectConfigFile);
+
+
+		if (projectConfigFileJson[selectedProject]) {
+			const configFilePath = projectConfigFileJson[selectedProject];
+			await initEnvironmentConfigIfNotExists(configFilePath, data.baseUrl);
+
+			const environments = await getEnvironmentsFromConfigPath(configFilePath);
+			const environmentsMap = environments?.reduce((acc, env) => {
+				acc[env.name] = env;
+				return acc;
+			}, {}) || {};
+
+			console.log("environmentsMap", environmentsMap);
+			this.store.dispatch(setProjectMetaData({id: selectedProject, configPath: configFilePath, selectedEnvironment: "development", environments: environmentsMap}, selectedProject))
+			this.window.webContents.executeJavaScript(
+				`window.localStorage.setItem('projectConfigs', ${JSON.stringify(JSON.stringify((this.store.getState() as iReduxState).projects.metadata))})`,
+			);
+		}
 	}
 
 	async handle(projectId) {
@@ -674,7 +757,7 @@ export class AppWindow {
 		await this.resetRecorder();
 
 		await this.store.dispatch(setDevice(payload.device.id));
-		await this.store.dispatch(setSiteUrl(template(navigationStep.payload.meta.value, { ctx: {} })));
+		await this.store.dispatch(setSiteUrl(navigationStep.payload.meta.value));
 		// Playwright context has issues when set to about:blank
 	}
 
@@ -1063,25 +1146,32 @@ export class AppWindow {
 	}
 
 	async modifyStepsForEnvironment(steps: any, host: string | null = null) {
-		const overrideHost = host ? { host } : await this.shouldOverrideHost();
-		if (overrideHost) {
-			steps = steps.map((event) => {
-				if (event.type === ActionsInTestEnum.NAVIGATE_URL) {
-					const urlToGo = new URL(event.payload.meta.value);
-					const newHostURL = new URL(overrideHost.host);
-					urlToGo.host = newHostURL.host;
-					urlToGo.port = newHostURL.port;
-					urlToGo.protocol = newHostURL.protocol;
-					event.payload.meta.value = urlToGo.toString();
-				}
-				return event;
-			});
+		const projectMetadata: any = getCurrentProjectMetadata(this.store.getState() as any) || {};
+
+		const selectedEnvironment = projectMetadata?.selectedEnvironment;
+		const environment = projectMetadata?.environments[selectedEnvironment];
+	
+		if (environment && environment?.variables.CRUSHER_BASE_URL) {
+			const overrideHost = host ? { host } : { host: environment?.variables.CRUSHER_BASE_URL };
+			if (overrideHost) {
+				steps = steps.map((event) => {
+					if (event.type === ActionsInTestEnum.NAVIGATE_URL) {
+						const urlToGo = new URL(event.payload.meta.value);
+						const newHostURL = new URL(overrideHost.host);
+						urlToGo.host = newHostURL.host;
+						urlToGo.port = newHostURL.port;
+						urlToGo.protocol = newHostURL.protocol;
+						event.payload.meta.value = urlToGo.toString();
+					}
+					return event;
+				});
+			}
 		}
+	
 
 		return steps;
 	}
 	async handleReplayTestSteps(steps: iAction[] | null = null, host: string | null = null) {
-		steps = await this.modifyStepsForEnvironment(steps, host);
 		this.store.dispatch(updateRecorderState(TRecorderState.PERFORMING_ACTIONS, {}));
 
 		const browserActions = getBrowserActions(steps);
@@ -1253,7 +1343,7 @@ export class AppWindow {
 					break;
 				}
 				case ActionsInTestEnum.NAVIGATE_URL:
-					this.store.dispatch(setSiteUrl(template(action.payload.meta.value, { ctx: {} })));
+					this.store.dispatch(setSiteUrl(action.payload.meta.value));
 					await this.webView.playwrightInstance.runActions([action], !!shouldNotSave);
 					break;
 				case ActionsInTestEnum.RUN_AFTER_TEST:

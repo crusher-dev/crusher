@@ -42,6 +42,7 @@ interface IAppReducer {
 	proxyIsInitializing: boolean;
 
 	selectedProject: string | null;
+	projectConfigs: any;
 }
 
 const initialState: IAppReducer = {

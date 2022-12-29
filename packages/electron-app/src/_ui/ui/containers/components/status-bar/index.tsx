@@ -21,6 +21,7 @@ import { remote } from "electron";
 import fs from "fs";
 import { showToast } from "../../../components/toasts";
 import path from "path";
+import { EnvironmentStatus } from "../../common/environmentStatus";
 
 interface ITabButtonProps {
 	title: string;
@@ -474,6 +475,8 @@ const StatusBar = () => {
 							</div>
 						</Conditional>
 					</div>
+
+					<EnvironmentStatus className={"ml-auto mr-12"}/>
 
 					<HoverCard content={<HelpContent />} placement="top" type="hover" padding={8} offset={0}>
 						<div

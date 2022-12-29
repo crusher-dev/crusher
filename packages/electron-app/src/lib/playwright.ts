@@ -16,6 +16,8 @@ import { StepErrorTypeEnum } from "runner-utils/src/error.types";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import Table from "cli-table";
 import { getSavedSteps } from "../store/selectors/recorder";
+import { getCurrentProjectMetadata } from "../store/selectors/projects";
+import { getStore } from "../store/configureStore";
 
 const { performance } = require("perf_hooks");
 //@ts-ignore
@@ -193,6 +195,22 @@ class PlaywrightInstance {
 	}
 
 	async connect() {
+		const store = getStore();
+		const projectMetadata: any = getCurrentProjectMetadata(store.getState() as any) || {};
+
+		const selectedEnvironment = projectMetadata?.selectedEnvironment;
+		const environment = projectMetadata?.environments[selectedEnvironment];
+
+		if(environment?.variables) {
+			for(const key in environment.variables) {
+				const value = environment.variables[key];
+				const contextVar = this.getContext();
+				if(contextVar) {
+					contextVar[key] = value;
+				}
+			}
+		}
+
 		const debuggingPortFile = fs.readFileSync(path.join(app.getPath("userData"), "DevToolsActivePort"), "utf8");
 		const [debuggingPort] = debuggingPortFile.split("\n");
 		this.browser = await playwright.chromium.connectOverCDP(`http://localhost:${debuggingPort}/`, { customBrowserName: "electron-webview" });

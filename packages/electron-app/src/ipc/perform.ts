@@ -364,6 +364,18 @@ const continueDraftTest = (draftId: string) => {
 	return ipcRenderer.invoke("continue-draft-test", { draftId });
 };
 
+export const setEnvironment = (environment) => {
+	return ipcRenderer.invoke("set-environment", { environment });
+}
+
+export const getTestContextVariables = () => {
+	return ipcRenderer.invoke("get-test-context-variables", {});
+}
+
+export const initDevelopmentEnvironment = (baseUrl: string) => {
+	return ipcRenderer.invoke("init-development-environment", { baseUrl });
+};
+
 export {
 	continueDraftTest,
 	saveAutoAction,

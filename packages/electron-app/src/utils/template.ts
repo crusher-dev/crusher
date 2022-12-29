@@ -45,9 +45,4 @@ function parse(variable) {
 	};
 }
 
-export function isTemplateFormat(str) {
-	var es6TemplateRegex = /(\\)?\$\{([^\{\}\\]+)\}/g;
-	return es6TemplateRegex.test(str);
-}
-
 export default template;

@@ -109,7 +109,7 @@ async function validate(crusherSdk: CrusherSdk) {
 const onboardingCodeTemplate = `/*
 	Docs: https://docs.crusher.dev/sdk
 */
-async function validate(crusherSdk: CrusherSdk) {
+async function validate(crusherSdk: CrusherSdk, ctx: any) {
 	const { page } = crusherSdk;
 
 	await page.click("div");

@@ -757,6 +757,8 @@ export class AppWindow {
 		await this.resetRecorder();
 
 		await this.store.dispatch(setDevice(payload.device.id));
+
+		console.log("URL is ", navigationStep.payload.meta.value);
 		await this.store.dispatch(setSiteUrl(navigationStep.payload.meta.value));
 		// Playwright context has issues when set to about:blank
 	}

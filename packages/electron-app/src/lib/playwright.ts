@@ -195,21 +195,6 @@ class PlaywrightInstance {
 	}
 
 	async connect() {
-		const store = getStore();
-		const projectMetadata: any = getCurrentProjectMetadata(store.getState() as any) || {};
-
-		const selectedEnvironment = projectMetadata?.selectedEnvironment;
-		const environment = projectMetadata?.environments[selectedEnvironment];
-
-		if(environment?.variables) {
-			for(const key in environment.variables) {
-				const value = environment.variables[key];
-				const contextVar = this.getContext();
-				if(contextVar) {
-					contextVar[key] = value;
-				}
-			}
-		}
 
 		const debuggingPortFile = fs.readFileSync(path.join(app.getPath("userData"), "DevToolsActivePort"), "utf8");
 		const [debuggingPort] = debuggingPortFile.split("\n");
@@ -348,6 +333,24 @@ class PlaywrightInstance {
 	}
 
 	async runActions(actions: iAction[], shouldNotSave = false): Promise<void> {
+		{
+			const store = getStore();
+			const projectMetadata: any = getCurrentProjectMetadata(store.getState() as any) || {};
+	
+			const selectedEnvironment = projectMetadata?.selectedEnvironment;
+			const environment = projectMetadata?.environments[selectedEnvironment];
+	
+			if(environment?.variables) {
+				for(const key in environment.variables) {
+					const value = environment.variables[key];
+					const contextVar = this.getContext();
+					if(contextVar) {
+						contextVar[key] = value;
+					}
+				}
+			}
+		}
+	
 		const actionsArr = getMainActions(actions);
 
 		/* Inputs can get affected if webview looses focus */

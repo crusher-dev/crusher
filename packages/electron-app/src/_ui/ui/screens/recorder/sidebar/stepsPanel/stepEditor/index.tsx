@@ -124,6 +124,10 @@ const InputValueEditor = ({ step, stepId }) => {
 		return null;
 	};
 
+	const handleEdit = () => {
+		setIsStepNameEditing(`nav-` + stepId + "-url");
+
+	}
 	const fieldInfo = getInfo(step);
 	const handleUpdate = (value) => {
 		setIsEditMode(false);
@@ -173,7 +177,7 @@ const InputValueEditor = ({ step, stepId }) => {
 				id={`nav-${stepId}-url`}
 				onChange={handleUpdate.bind(this)}
 			/>
-			<EditPencilIcon onClick={setIsStepNameEditing.bind(this, stepId + "-nav-url")} className={"ml-10"} css={editUrlIconCss} />
+			<EditPencilIcon onClick={handleEdit} className={"ml-10"} css={editUrlIconCss} />
 		</div>
 	);
 };

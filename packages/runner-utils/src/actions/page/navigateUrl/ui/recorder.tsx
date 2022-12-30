@@ -30,6 +30,7 @@ const ErrorDialog = () => {
     
     const step = sdk.getStep();
 
+    if(!step) return null;
     
     const getErrorMessage = () => {
         const logs: string = error.logs.map((log) => log.message).join(" ");

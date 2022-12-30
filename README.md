@@ -26,7 +26,7 @@
 
 
 
-Crusher is a new **fast testing framework**, it's opinionated and takes **low-code first** approach. Create test by browsing your website and adding assertion when needed.
+Crusher is a new **fast testing framework**, it's opinionated and takes **low-code first** approach. Create tests by browsing your website and adding assertion when needed.
 
 An alternative to slow workflows built and unreliable & slow libraries (w high learning curve), gluing tools, repetitive script.
 
@@ -42,7 +42,7 @@ Built from group up as an **all-in-tool  — with recorder, SDK, Infra + batteri
 
 ![Crusher demo for test creation, running, cli](https://user-images.githubusercontent.com/6849438/204720236-4139dae2-a0e6-4ce6-a9fb-ab6788ec3cc9.gif)
 
-You can create test using low-code and add code. You can literally start testing in 5 mins.
+You can create tests using low-code and add code. You can literally start testing in 5 mins.
 
 or [download binary](https://docs.crusher.dev/getting-started/create-your-first-test#or-install-recorder)
 
@@ -58,7 +58,7 @@ Reference: [Getting Started](https://docs.crusher.dev/getting-started/create-you
 - 📇 **Use code files:** Better APIs and more control with playwright APIs
 
 ### Run tests
-- 🔋 **All major browsers supported:** 
+- 🔋 **All major browsers supported:** Chromium, Firefox, Safari, etc.
 - 👨🏽‍💻 **Built for developers:** Use modern javascript to write tests with simple workflow
 - 🔥 **Fast test execution** 
 - ⚡ **Blazing Fast:** Built on top of Playwright, Crusher delivers an amazing performance during execution

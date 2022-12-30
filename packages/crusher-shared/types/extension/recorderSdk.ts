@@ -6,6 +6,8 @@ export interface ICrusherRecorderSDK {
     updateStep: (step: iAction) => void;
     retryStep: () => void;
 
+    openStepEditor: () => void;
+
     openModal: (modalType: string, modalProps?: any) => void;
     getPlaywrightPage: () => Page;
 };

@@ -4,6 +4,8 @@ import { BaseDialogToast, BaseDialogTitle, BaseDialogDescription, BaseDialogActi
 import { FailedCheckboxIcon } from "../../../../../../dyson/src/components/icons/FailedCheckboxSVG";
 import { WhyIcon } from "../../../../../../dyson/src/components/icons/WhyIconSVG";
 import { TestErrorContext } from "../../../../../../dyson/src/components/sharedComponets/toasts";
+import template, { isTemplateFormat } from "@crusher-shared/utils/templateString";
+import { CrusherSdk } from "src/sdk/sdk";
 
 enum NavigationErrorTypesEnum {
     NAME_ERROR = "net::ERR_NAME_",
@@ -24,7 +26,7 @@ const trimUrl = (url: string) => {
     return url;
 }
 const ErrorDialog = () => {
-    const { sdk, stepId, error, resolveError } = useContext(TestErrorContext);
+    const { sdk, stepId, error, resolveError, context } = useContext(TestErrorContext);
     
     const step = sdk.getStep();
 
@@ -32,7 +34,11 @@ const ErrorDialog = () => {
     const getErrorMessage = () => {
         const logs: string = error.logs.map((log) => log.message).join(" ");
         const navigationUrl = step.payload.meta.value;
-        const shortNavigationURL =  trimUrl(navigationUrl);
+        const usesVariable = isTemplateFormat(navigationUrl);
+
+        const resolvedUrl = isTemplateFormat(navigationUrl) && context ? template(navigationUrl, {ctx: context}) : navigationUrl;
+
+        const shortNavigationURL =  trimUrl(resolvedUrl);
 
         if (logs.includes(NavigationErrorTypesEnum.NAME_ERROR) || logs.includes(NavigationErrorTypesEnum.DNS_ERROR)) {
             const errorType = logs.includes(NavigationErrorTypesEnum.NAME_ERROR) ? NavigationErrorTypesEnum.NAME_ERROR : NavigationErrorTypesEnum.DNS_ERROR;
@@ -40,7 +46,11 @@ const ErrorDialog = () => {
             return {
                 type: errorType,
                 heading: "URL not reachable",
-                description: (<div><span css={highlightCss}>{shortNavigationURL}</span> is either unreachable or not valid.<br/> Please check the URL and try again.</div>),
+                description: (<div><span css={highlightCss} title={resolvedUrl}>{shortNavigationURL}</span> is either unreachable or not valid.<br/> Please check the URL and try again.</div>),
+
+                edit: () => {
+                    sdk.openStepEditor();
+                }
             }
         }
         if (logs.includes(NavigationErrorTypesEnum.SSL_ERROR) || logs.includes(NavigationErrorTypesEnum.ERR_CERT)) {
@@ -48,8 +58,8 @@ const ErrorDialog = () => {
             return {
                 type: errorType,
                 heading: "SSL Verification Failed",
-                description: (<div><span css={highlightCss}>{shortNavigationURL}</span> does not support HTTPS.<br/> Please check the URL or try using HTTP.</div>),
-                autoFix: () => {
+                description: (<div><span css={highlightCss} title={resolvedUrl}>{shortNavigationURL}</span> does not support HTTPS.<br/> Please check the URL or try using HTTP.</div>),
+                autoFix: !usesVariable ? () => {
                     const url = new URL(navigationUrl);
                     url.protocol = "http";
                     const step = sdk.getStep();
@@ -68,7 +78,7 @@ const ErrorDialog = () => {
                         sdk.retryStep();
                     }, 100);
                     resolveError();
-                }
+                } : undefined,
             }
         }
 
@@ -95,10 +105,11 @@ const ErrorDialog = () => {
                {errorMessage.description}
             </BaseDialogDescription>
             <BaseDialogActions>
-                <BaseDialogAction type="retry">retry</BaseDialogAction>
-                {errorMessage.autoFix ? <BaseDialogAction onClick={errorMessage.autoFix} type="auto-fix">Auto-fix</BaseDialogAction> : (
-                    <BaseDialogAction>edit</BaseDialogAction>
-                )}
+                {errorMessage.retry ? (<BaseDialogAction type="retry">retry</BaseDialogAction>) : null}
+                {errorMessage.autoFix ? <BaseDialogAction onClick={errorMessage.autoFix} type="auto-fix">Auto-fix</BaseDialogAction> : null }
+                {!errorMessage.autoFix ? (
+                    <BaseDialogAction onClick={sdk.openStepEditor}>edit</BaseDialogAction>
+                ) : null}
                 <BaseDialogAction type="link">docs</BaseDialogAction>
             </BaseDialogActions>
         </BaseDialogToast>

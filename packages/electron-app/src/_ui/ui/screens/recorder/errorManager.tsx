@@ -18,11 +18,16 @@ import { updateRecordedStep } from "electron-app/src/store/actions/recorder";
 import { retryStep } from "./sidebar/stepsPanel/failedCard";
 import { TestErrorContext } from "@dyson/components/sharedComponets/toasts";
 import { useState } from "react";
+import { getTestContextVariables } from "electron-app/src/ipc/perform";
+import { useAtom } from "jotai";
+import { stepHoverAtom } from "electron-app/src/_ui/store/jotai/steps";
 
 interface ICrusherRecorderSDK {
     getStep: () => iAction;    
     updateStep: (step: iAction) => void;
     retryStep: () => void;
+
+    openStepEditor: () => void;
 
     openModal: (modalType: string, modalProps?: any) => void;
     getPlaywrightPage: () => Page;
@@ -60,6 +65,8 @@ interface IError {
 export const RecorderErrorManager = () => {
     const store = useStore();
     const [error, setError] = useState(null);
+    const [context, setContext] = useState({});
+    const [_,setStepHoverId] = useAtom(stepHoverAtom);
 
     const actionDescriber = React.useMemo(() => {
 		const actionDescriber = new ActionDescriptor();
@@ -69,12 +76,15 @@ export const RecorderErrorManager = () => {
 	}, []);
 
     useEffect(() => {
-        const handleStepError = (event, payload) => {
+        const handleStepError = async (event, payload) => {
             const { stepIndex, error, startTime, endTime } = payload;
             const step: iAction & {errorType: any} = getStep(stepIndex);
             const stepLogs = getLogsBetWeenTimeInterval(startTime, endTime);
 
-			setError({
+            const contextVars = await getTestContextVariables();
+			setContext(contextVars);
+
+            setError({
 				message: getErrorMessage(step),
                 actionType: step.type,
                 id: stepIndex,
@@ -110,6 +120,10 @@ export const RecorderErrorManager = () => {
             return true;
         },
 
+        openStepEditor: () => {
+            setStepHoverId(error.id);
+        },
+
         openModal: (modalType, modalProps = {}) => {
             emitShowModal({
                 type: modalType,
@@ -134,7 +148,7 @@ export const RecorderErrorManager = () => {
     };
 
     return  (
-        <TestErrorContext.Provider value={{ sdk: crusherRecorderSDK, stepId: error?.id, resolveError: handleResolveError, error: error }}>
+        <TestErrorContext.Provider value={{ sdk: crusherRecorderSDK, stepId: error?.id, resolveError: handleResolveError, error: error, context: context || {} }}>
             <ToastProvider swipeDirection="right"> 
                 {Component && <Component />}
                 <ToastViewport  />

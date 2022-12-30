@@ -26,7 +26,7 @@
 
 
 
-Crusher is a new **fast testing framework**, it's opinionated and takes **low-code first** approach. Create tests by browsing your website and adding assertion when needed.
+Crusher is a new **fast testing framework**, it's opinionated and takes a **low-code first** approach. Create tests by browsing your website and adding assertion when needed.
 
 An alternative to slow workflows built and unreliable & slow libraries (w high learning curve), gluing tools, repetitive script.
 

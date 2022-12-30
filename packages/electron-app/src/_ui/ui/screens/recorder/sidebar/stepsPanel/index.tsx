@@ -211,7 +211,7 @@ const StepsPanel = ({ className }: IProps) => {
 				actionDescriber.initActionHandlers();
 
 				const hasCustomErrorToasts = [ActionsInTestEnum.NAVIGATE_URL];
-				if(!hasCustomErrorToasts.find(lastFailedStep.type)) {
+				if(!hasCustomErrorToasts.includes(lastFailedStep.type)) {
 					const isElementFailure = lastFailedStep.type.startsWith("ELEMENT_") && [StepErrorTypeEnum.ELEMENT_NOT_FOUND, StepErrorTypeEnum.ELEMENT_NOT_STABLE, StepErrorTypeEnum.ELEMENT_NOT_VISIBLE, StepErrorTypeEnum.TIMEOUT].includes(lastFailedStep.errorType);
 
 					console.log("Last Failed Step", lastFailedStep);

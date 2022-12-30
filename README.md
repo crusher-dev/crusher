@@ -42,7 +42,7 @@ Built from group up as an **all-in-tool  — with recorder, SDK, Infra + batteri
 
 ![Crusher demo for test creation, running, cli](https://user-images.githubusercontent.com/6849438/204720236-4139dae2-a0e6-4ce6-a9fb-ab6788ec3cc9.gif)
 
-You can create tests using low-code or code (with playwright or CrusherSDK). You can literally start testing in 5 mins.
+You can create tests using low-code, code, or both - whichever you prefer. 5 minutes is all you need to start testing
 
 or [download binary](https://docs.crusher.dev/getting-started/create-your-first-test#or-install-recorder)
 

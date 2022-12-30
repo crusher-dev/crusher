@@ -136,8 +136,14 @@ export class AppWindow {
 		this.window.on("close", (e) => {
 			const url = this.window.webContents.getURL();
 			if (url.includes("#/recorder")) {
+				// Cleanup redux state
 				e.preventDefault();
-				this.sendMessage("go-to-dashboard", {});
+
+				this.handleResetAppSession().catch((err) => {
+					console.error("Error while resetting app session", err);
+				}).finally(() => {
+					this.sendMessage("go-to-dashboard", {});
+				});
 				return false;
 			}
 		});

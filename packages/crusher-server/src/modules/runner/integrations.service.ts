@@ -100,7 +100,7 @@ class RunnerIntegrationsService {
 
 
     async sendReportStatusEmails(buildRecord: KeysToCamelCase<IBuildTable>, buildReportStatus: BuildReportStatusEnum): Promise<Array<Promise<boolean>>> {
-        if (buildReportStatus === BuildReportStatusEnum.PASSED) return;
+        if (buildReportStatus === BuildReportStatusEnum.PASSED) return [];
     
         const usersInProject = await this.usersService.getUsersInProject(buildRecord.projectId);
         const emailTemplateFilePathMap = {

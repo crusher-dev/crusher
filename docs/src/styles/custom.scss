@@ -462,7 +462,7 @@ iframe {
 .markdown .tabs-container {
   font-size: 14.5px;
   color: var(--markdown-text-intro-c);
-  line-height: 200% !important;
+  line-height: 220% !important;
 }
 
 .markdown>header+p+p,
@@ -477,8 +477,8 @@ iframe {
 .markdown td,
 .markdown tr {
   font-size: 14.5px;
-  letter-spacing: 0.2px;
-  line-height: 180%;
+  letter-spacing: 0.4px;
+  line-height: 200%;
 }
 
 #__docusaurus .menu__link:not(.menu__link--active:not(.menu__link--sublist)) {

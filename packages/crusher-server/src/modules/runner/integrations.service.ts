@@ -13,6 +13,7 @@ import { getTemplateFileContent } from "@utils/helper";
 import { resolvePathToFrontendURI } from "@utils/uri";
 import { Inject, Service } from "typedi";
 import { WebhookManager } from "../webhook";
+import axios from 'axios';
 
 @Service()
 class RunnerIntegrationsService {

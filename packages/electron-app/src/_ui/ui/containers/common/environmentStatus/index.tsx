@@ -26,7 +26,7 @@ import { useSelector } from "react-redux";
 
 const environments = ["development", "production"];
 
-export const EnvironmentStatus = ({className}) => {
+export const EnvironmentStatus = ({className, ...props}) => {
     const projectMetaData = useSelector(getCurrentProjectMetadata);
     const environmentsArr = projectMetaData?.environments ? Object.keys(projectMetaData.environments) : [];
 
@@ -38,9 +38,13 @@ export const EnvironmentStatus = ({className}) => {
     }
 
 
+    const stopPropagation = (e) => {
+        e.stopPropagation();
+    };
+
     return (
-        <HoverCard content={<HelpContent setSelected={handleChangeEnvironment} environments={environmentsArr} selected={selected} />} placement="top" type="hover" padding={8} offset={0}>
-            <div className={`flex items-center ${className}`} css={containerCss}>
+        <HoverCard  content={<HelpContent onClick={stopPropagation} setSelected={handleChangeEnvironment} environments={environmentsArr} selected={selected} />} placement="top" type="hover" padding={8} offset={0}>
+            <div onClick={stopPropagation}  className={`flex items-center ${className}`} css={containerCss} {...props}>
                 <span>{selected}</span>
                 <GreenDotIcon css={dotCss} className={"ml-8"}/>
             </div>

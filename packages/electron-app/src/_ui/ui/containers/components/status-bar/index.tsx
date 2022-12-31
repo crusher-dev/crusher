@@ -22,17 +22,18 @@ import fs from "fs";
 import { showToast } from "../../../components/toasts";
 import path from "path";
 import { EnvironmentStatus } from "../../common/environmentStatus";
+import { getCurrentProjectMetadata } from "electron-app/src/store/selectors/projects";
+import { getTestContextVariables } from "electron-app/src/ipc/perform";
 
 interface ITabButtonProps {
 	title: string;
 	selected: boolean;
-	count?: number;
+	text?: string;
 	className?: string;
 	callback?: any;
 }
 const TabButton = (props: ITabButtonProps) => {
-	const { className, selected, callback, count } = props;
-	if (count === 0) return null;
+	const { className, selected, callback, text } = props;
 	return (
 		<div
 			className={className || ""}
@@ -47,9 +48,9 @@ const TabButton = (props: ITabButtonProps) => {
 			]}
 		>
 			<div>
-				<Conditional showIf={count != null}>
+				<Conditional showIf={text != null}>
 					<span className="ml-4" css={logsCountStyle}>
-						{count}
+						{text}
 					</span>
 				</Conditional>
 			</div>
@@ -108,12 +109,19 @@ const StatusBar = () => {
 	const [clicked, setClicked] = useAtom(statusBarMaximiseAtom);
 	const [selectedTab, setSelectedTab] = React.useState(TabsEnum.LOGS);
 	const logs: ILoggerReducer["logs"] = useSelector(getLogs);
+	
+	const [context, setContext] = React.useState({});
 
 	React.useEffect(() => {
 		if (clicked && window["resizeCustomCode"]) {
 			setTimeout(() => window["resizeCustomCode"](), 150);
 		}
+
+		getTestContextVariables().then((res) => {
+			setContext(res);
+		});
 	}, [clicked]);
+
 	React.useEffect(() => {
 		modalEmitter.on("show-modal", ({ type, stepIndex }: { type: any; stepIndex?: number }) => {
 			if (type === "CUSTOM_CODE") {
@@ -292,6 +300,7 @@ const StatusBar = () => {
 			e.preventDefault();
 			e.stopPropagation();
 			setClicked(!clicked);
+			handleTabSelection(TabsEnum.LOGS);
 		},
 		[clicked],
 	);
@@ -331,6 +340,8 @@ const StatusBar = () => {
 			})
 		});
 	}, [logs]);
+
+	const stopPropagation = (e) => { e.stopPropagation(); };
 
 	return (
 		<div
@@ -419,16 +430,17 @@ const StatusBar = () => {
 						className={"flex items-center"}
 					>
 						{lastLogMessage ? <UpDownSizeIcon css={updownSizeIconCss} className={"updownSize-icon mr-7"} /> : ""}
-						<TabButton
+						{logs && logs.get("_").length ? (<TabButton
 							selected={selectedTab === TabsEnum.LOGS}
 							title="Logs"
-							count={logs && logs.get("_").length}
+							text={logs && logs.get("_").length}
 							callback={() => {
 								window["openLogTime"] = performance.now();
 								setClicked(true);
 								handleTabSelection(TabsEnum.LOGS);
 							}}
-						/>
+						/>) : ""}
+						
 
 						{lastLogMessage ? (
 							<div css={logTextStyle} className={"ml-10 mt-2"}>
@@ -447,6 +459,7 @@ const StatusBar = () => {
 									margin-right: 8rem;
 								`}
 							>
+										
 								<HoverButton onClick={handleExportLogs} title={"export logs"}>
 									<ExportIcon css={css`width: 14rem; height: 14rem;`} />
 								</HoverButton>
@@ -476,14 +489,25 @@ const StatusBar = () => {
 						</Conditional>
 					</div>
 
+			
 					<EnvironmentStatus className={"ml-auto mr-12"}/>
-
-					<HoverCard content={<HelpContent />} placement="top" type="hover" padding={8} offset={0}>
-						<div
-							onClick={(e) => {
+					<TabButton
+							title="Context"
+							className={"mr-12"}
+							text={"Context"}
+							css={css`span { color: #fff; padding: 4rem 8rem;  } :hover { opacity: 0.8; }`}
+							callback={(e) => {
 								e.preventDefault();
 								e.stopPropagation();
+								if(!clicked) {
+									setClicked(true);
+								}
+								handleTabSelection(TabsEnum.CONTEXT);
 							}}
+						/>
+					<HoverCard content={<HelpContent onClick={stopPropagation}  />} placement="top" type="hover" padding={8} offset={0}>
+						<div
+							onClick={stopPropagation}
 							css={docsButtonCss}
 						>
 							<DocsIcon css={docsIconCss} />
@@ -528,6 +552,11 @@ const StatusBar = () => {
 								flex-direction: column;
 							`}
 						>
+							<div className={"px-16 mt-8"} onClick={() => {
+								setSelectedTab(TabsEnum.LOGS);
+							}} css={css`font-size: 14rem;  
+    text-decoration-line: underline;
+    color: rgba(94, 94, 94, 0.87); :hover { opacity: 0.8 }`}>Logs</div>
 							<div
 								css={css`
 									color: #fff;
@@ -563,7 +592,7 @@ const StatusBar = () => {
 											BASE_BACKGROUND_COLOR: "linear-gradient(0deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.02)), #0F1010",
 										},
 									}}
-									data={SAMPLE_CONTEXT}
+									data={context}
 								/>
 							</div>
 						</div>

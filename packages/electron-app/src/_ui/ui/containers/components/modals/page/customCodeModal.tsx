@@ -97,7 +97,7 @@ function DropwdownContent({ setShowActionMenu, callback, selectedTemplate }) {
 const initialCodeTemplate = `/*
 	Docs: https://docs.crusher.dev/sdk 
 */
-async function validate(crusherSdk: CrusherSdk) {
+async function validate(crusherSdk: CrusherSdk, ctx: any) {
 	const { page } = crusherSdk;
 
     // await page.goto("https://news.ycombinator.com/login?goto=news");

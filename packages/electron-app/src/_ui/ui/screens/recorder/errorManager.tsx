@@ -21,6 +21,7 @@ import { useState } from "react";
 import { getTestContextVariables } from "electron-app/src/ipc/perform";
 import { useAtom } from "jotai";
 import { stepHoverAtom } from "electron-app/src/_ui/store/jotai/steps";
+import { useSelector } from "react-redux";
 
 interface ICrusherRecorderSDK {
     getStep: () => iAction;    
@@ -67,6 +68,8 @@ export const RecorderErrorManager = () => {
     const [error, setError] = useState(null);
     const [context, setContext] = useState({});
     const [_,setStepHoverId] = useAtom(stepHoverAtom);
+	const recordedSteps = useSelector(getSavedSteps);
+	const failedSteps = recordedSteps.map((a, index) => ({ ...a, index })).filter((step) => step.status === "FAILED");
 
     const actionDescriber = React.useMemo(() => {
 		const actionDescriber = new ActionDescriptor();
@@ -75,6 +78,12 @@ export const RecorderErrorManager = () => {
 		return actionDescriber;
 	}, []);
 
+    React.useEffect(() => {
+		if (!failedSteps.length) {
+            setStepHoverId(null);
+            setError(null);
+        }
+    });
     useEffect(() => {
         const handleStepError = async (event, payload) => {
             const { stepIndex, error, startTime, endTime } = payload;

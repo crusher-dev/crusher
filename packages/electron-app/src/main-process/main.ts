@@ -150,7 +150,7 @@ function createWindow() {
 			accountInfo: globalAppConfig?.userInfo ? globalAppConfig.userInfo : null,
 		},
 	};
-	// initialReduxState.app.shouldShowOnboardingOverlay = localStorage.getItem("app.showShouldOnboardingOverlay") === "false" ? false : true;
+	// initialState.app.shouldShowOnboardingOverlay = localStorage.getItem("app.showShouldOnboardingOverlay") === "false" ? false : true;
 
 	const store = configureStore(initialState, "main");
 

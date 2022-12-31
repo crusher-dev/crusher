@@ -55,6 +55,7 @@ const createStep = function (step) {
     ...defaultConfig,
     ...step,
     when: {
+      ...step.when,
       show: function () {
         if (whenShow) {
           whenShow.call(this);
@@ -95,7 +96,30 @@ const createStepForWebviewElement = async function (step, targetSelector) {
 
   return createStep({
     attachTo: { element: '#highlight-current', on: 'bottom' },
-    ...step
+    ...step,
+    when: {
+      ...step.when,
+      complete() {
+        document.querySelector("#highlight-current")?.remove();
+        if (step.when?.complete) {
+          return step.when.complete.call(this);
+        }
+      },
+      hide() {
+        document.querySelector("#highlight-current")?.remove();
+
+        if (step.when?.hide) {
+          return step.when.hide.call(this);
+        }
+      },
+      cancel() {
+        document.querySelector("#highlight-current")?.remove();
+
+        if (step.when?.cancel) {
+          return step.when.cancel.call(this);
+        }
+      },
+    }
   });
 };
 
@@ -113,11 +137,6 @@ const steps = [
         ...buttonsDefault.next,
         type: undefined,
         action: async function () {
-          console.log("Add step payload", await createStepForWebviewElement.call(this, {
-            id: "click-on-blue-button",
-            title: 'Click on button',
-            text: ["We'll record this step in your test"],
-          }, "#button"));
           this.addStep(await createStepForWebviewElement.call(this, {
             id: "click-on-blue-button",
             title: 'Click on button',

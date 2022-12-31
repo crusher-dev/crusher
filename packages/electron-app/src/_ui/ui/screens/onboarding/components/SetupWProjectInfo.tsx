@@ -101,7 +101,7 @@ export const PROJECT_INFO = ()=>{
         }
         mutate({
             ...userInfo
-        }, false);
+        }, true);
         navigate("/recorder");
         goFullScreen();
 

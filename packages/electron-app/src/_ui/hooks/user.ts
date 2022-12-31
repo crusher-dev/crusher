@@ -21,6 +21,7 @@ export function useUser() {
 			return navigate("/login");
 		}
 	}, [userInfo]);
+
 	const projects = React.useMemo(() => {
 		if (userInfo?.projects) {
 			return userInfo.projects;

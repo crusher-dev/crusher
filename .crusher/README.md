@@ -4,9 +4,9 @@
 
 **Commands** [docs](https://docs.crusher.dev)
 
-`npx crusher-cli` - Opens crusher
+`npx crusher.dev` - Opens crusher
 
-`npx crusher-cli run` - Run all your test
+`npx crusher.dev run` - Run all your test
  
 
 **Checklist**

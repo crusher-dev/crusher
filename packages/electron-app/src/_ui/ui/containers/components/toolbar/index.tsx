@@ -100,7 +100,6 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 	}, []);
 
 	const verifyTest = async (autoSaveType: "UPDATE" | "SAVE", shouldAutoSave: boolean = false) => {
-		localStorage.setItem("app.showShouldOnboardingOverlay", "false");
 		dispatch(setShowShouldOnboardingOverlay(false));
 		const recorderState = getRecorderState(store.getState());
 		if (isOpen) {
@@ -139,19 +138,13 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 			}
 
 
-			let shouldNotVerifyTest = false;
-			const isTourActive = tour.isActive();
-
-			if(isTourActive) {
-				tour.complete();
-				shouldNotVerifyTest = true;
-				console.log("Test should not run");
-			}
+			let shouldNotVerifyTest = true; // @TODO: Remove this if we want to verify test
 
 			const currentProjectMeta = await getCurrentProjectMeta();
 			console.log("Project meta: ", currentProjectMeta);
 			// const getCurrentProjectMeta = getCurrentProjectMetaSelector(store.getState());
-			
+			const isTourActive = tour.isActive();
+
 			performVerifyTest(shouldAutoSave, autoSaveType, shouldNotVerifyTest).then((res) => {
 				if (res) {
 					if (res.draftJobId) {
@@ -167,7 +160,7 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 
 					if (!isTourActive && !currentProjectMeta?.isFirstTestCreated) {
 						/* @TODO: Add this workflow integration onboarding */
-						// navigate(`/project-onboarding`);
+						navigate(`/project-onboarding`);
 					} else {
 						navigate("/");
 					}
@@ -229,6 +222,14 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 				   }
 			   );
 		   }
+
+		   const isTourActive = tour.isActive();
+
+		   if(isTourActive) {
+			   tour.complete();
+		   }
+
+		   localStorage.setItem("app.showShouldOnboardingOverlay", "false");
 
 			switch (actionType) {
 				case ITestActionEnum.UPDATE:

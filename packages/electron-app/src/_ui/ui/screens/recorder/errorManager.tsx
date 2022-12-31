@@ -80,7 +80,6 @@ export const RecorderErrorManager = () => {
 
     React.useEffect(() => {
 		if (!failedSteps.length) {
-            setStepHoverId(null);
             setError(null);
         }
     });

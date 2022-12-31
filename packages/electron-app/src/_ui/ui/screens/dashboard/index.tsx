@@ -202,7 +202,6 @@ const DashboardScreen = () => {
 			const selectedProject = projects.find((p) => p.id == selectedProjectId);
 			// console.log("Selected project", selectedProject);
 			if(!selectedProject.meta.ONBOARDING_COMPLETED){
-				alert("Navigating to onboarding");
 				return navigate("/project-onboarding");
 			}
 		}

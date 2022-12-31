@@ -237,7 +237,7 @@ class TestRunnerQueue {
 			}
 			// @TODO: Add integrations here (Notify slack, etc.)
 			await this.runnerIntegrationsService.handleIntegrations(buildRecord, buildReportRecord, buildReportStatus);
-			// await Promise.all(await sendReportStatusEmails(buildRecord, buildReportStatus));
+			await Promise.all(await this.runnerIntegrationsService.sendReportStatusEmails(buildRecord, buildReportStatus));
 			return { buildReportStatus };
 		}
 

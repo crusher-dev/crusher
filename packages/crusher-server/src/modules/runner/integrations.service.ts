@@ -117,7 +117,8 @@ class RunnerIntegrationsService {
                 typeof __non_webpack_require__ !== "undefined" ? "/email/templates/failedJob.ejs" : "/../../email/templates/failedJob.ejs",
         };
         
-        const emailTemplate = await getTemplateFileContent(__dirname + emailTemplateFilePathMap[buildReportStatus], {
+        const baseDir =  typeof __non_webpack_require__ !== "undefined" ? process.cwd() : __dirname;
+        const emailTemplate = await getTemplateFileContent(baseDir + emailTemplateFilePathMap[buildReportStatus], {
             buildId: buildRecord.id,
             branchName: buildRecord.branchName,
             buildReviewUrl: resolvePathToFrontendURI(`/app/build/${buildRecord.id}`),

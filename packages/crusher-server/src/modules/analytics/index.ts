@@ -9,9 +9,17 @@ const teamsService = Container.get(TeamsService);
 
 class AnalyticsManager {
     static async identifyUser(projectId, teamId){ 
-        const customEmail = `gp-${projectId}`
+        let customEmail = `gp-${projectId}`
 
         const team = await teamsService.getTeam(teamId);
+
+        let teamEmail = team.teamEmail;
+        const isBotUser = teamEmail.includes("testing-") && teamEmail.includes("crusher.dev");
+        if (isBotUser) {
+            teamEmail = "bot@crusher.dev";
+            teamId = "9999999999999";
+            customEmail = "gp-bot";
+        }
         await Analytics.identifyUser({
             userId: customEmail,
             email: team.teamEmail,

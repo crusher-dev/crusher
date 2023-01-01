@@ -2,7 +2,7 @@ import React from "react";
 import { css } from "@emotion/react";
 import { FailedStepIcon } from "electron-app/src/_ui/constants/icons";
 import { NormalButton } from "electron-app/src/_ui/ui/components/buttons/NormalButton";
-import { continueRemainingSteps } from "electron-app/src/_ui/commands/perform";
+import { continueRemainingSteps } from "electron-app/src/ipc/perform";
 import { deleteRecordedSteps } from "electron-app/src/store/actions/recorder";
 import { getSavedSteps } from "electron-app/src/store/selectors/recorder";
 import { ActionStatusEnum } from "@shared/types/action";

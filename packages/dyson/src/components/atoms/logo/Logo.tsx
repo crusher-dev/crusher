@@ -6,7 +6,7 @@ export interface LogoProps {
 	showOnlyIcon?: boolean;
 	isMonochrome?: boolean;
 	height?: number | string;
-	className: string;
+	className?: string;
 	/**
 	 * Emotion CSS style if any
 	 */
@@ -32,7 +32,7 @@ export const Logo: React.FC<LogoProps> = ({ showOnlyIcon=false, isMonochrome, wi
 		width={showOnlyIcon ? (width) : (113)}
 		height={height}
 		fill="none"
-		viewBox="0 0 113 23"
+		viewBox={showOnlyIcon ?"0 0 23 23" :  "0 0 113 23"}
 		xmlns="http://www.w3.org/2000/svg"
 		{...props}
 	  >

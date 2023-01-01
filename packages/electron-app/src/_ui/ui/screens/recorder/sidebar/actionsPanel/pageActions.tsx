@@ -1,5 +1,5 @@
 import React from "react";
-import { performTakePageScreenshot } from "electron-app/src/_ui/commands/perform";
+import { performTakePageScreenshot } from "electron-app/src/ipc/perform";
 import { emitShowModal } from "electron-app/src/_ui/ui/containers/components/modals";
 import { ActionsList } from "./actionsList";
 import { getItemsFromActionsData } from "./helper";

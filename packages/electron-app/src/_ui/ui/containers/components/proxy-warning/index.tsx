@@ -4,7 +4,7 @@ import { ConnectivityWarningIcon, LoadingIconV2, PlayV2Icon } from "../../../../
 import { Link } from "electron-app/src/_ui/ui/components/Link";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { shell } from "electron";
-import { performRunDraftTest, turnOnProxy } from "../../../../commands/perform";
+import { performRunDraftTest, turnOnProxy } from "../../../../../ipc/perform";
 import { getCurrentSelectedProjct, getProxyState } from "electron-app/src/store/selectors/app";
 import { useSelector, useStore } from "react-redux";
 

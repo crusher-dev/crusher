@@ -5,9 +5,10 @@ import { FixToast } from './fixToast';
 import mitt from 'mitt';
 import { NormalToast } from './normalToast';
 import { uuidv4 } from 'runner-utils/src/utils/helper';
+import { LoadingToast } from './loadingToast';
 
 export const toastEmitter = mitt();
-export type ToastType = "step-failed" | "ready-for-edit" | "normal";
+export type ToastType = "step-failed" | "ready-for-edit" | "normal" | "loading";
 
 export type ToastEvent = {
   id?: string;
@@ -15,6 +16,7 @@ export type ToastEvent = {
 	type: ToastType;
   isUnique?: boolean;
 	meta?: any;
+  duration?: number;
 };
 
 export const showToast = (event: ToastEvent) => {
@@ -51,12 +53,13 @@ const StyledViewport = styled(ToastPrimitive.Viewport, {
 });
 
 // Exports
-const ToastProvider = ToastPrimitive.Provider;
-const ToastViewport = StyledViewport;
+export const ToastProvider = ToastPrimitive.Provider;
+export const ToastViewport = StyledViewport;
 
 
 const Toasts = ({toasts}) => {
-  const handleClearToastWithId = (id: string) => {
+  const handleClearToastWithId = (id: string, shouldOpen: boolean) => {
+    if(!shouldOpen)
     clearToastId(id);
   }
 
@@ -65,11 +68,11 @@ const Toasts = ({toasts}) => {
        {toasts.map((toast) => {
         if(toast.type === "step-failed") return ( 
         <FixToast key={toast.id} setOpen={handleClearToastWithId.bind(this, toast.id)} meta={toast.meta} message={toast.message} /> );
-
+        if(toast.type === "loading") return (<LoadingToast duration={toast.duration || 7000} key={toast.id} setOpen={handleClearToastWithId.bind(this, toast.id)} message={toast.message} meta={toast.meta} />         );
         return (
-         <NormalToast key={toast.id} setOpen={handleClearToastWithId.bind(this, toast.id)} message={toast.message} meta={toast.meta} /> 
+         <NormalToast duration={toast.duration || 7000} key={toast.id} setOpen={handleClearToastWithId.bind(this, toast.id)} message={toast.message} meta={toast.meta} /> 
         );
-      })};
+      })}
     </>
   )
 }
@@ -113,12 +116,11 @@ const ToastBox = () => {
     };
   }, [toasts]);
 
-
   return (
     <ToastProvider swipeDirection="right"> 
           <Toasts toasts={toasts}/>
          <ToastViewport />
- </ToastProvider>
+  </ToastProvider>
   );
 };
 

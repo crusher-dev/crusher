@@ -1,17 +1,33 @@
-import useSWR from "swr";
+import React from "react";
+import useRequest from "../../_ui/utils/useRequest";
+import { getUserInfoAPIRequest } from "../../api/user/user.requests";
+import { useNavigate } from "react-router-dom";
+import { getUserAccountInfo } from "electron-app/src/store/selectors/app";
+import { useStore } from "react-redux";
 
-import userFetcher from "../libs/api-user";
+export function useUser() {
+	const { data: userInfo, error, mutate } = useRequest(getUserInfoAPIRequest);
+	const navigate = useNavigate();
+	const store = useStore();
 
-export default function useUser() {
-	const { data, mutate, error } = useSWR("api_user", userFetcher);
+	React.useEffect(() => {
+		if (userInfo && !userInfo.isUserLoggedIn) {
+			const userInfoRedux = getUserAccountInfo(store.getState());
+			console.log("User info redux", userInfoRedux);
+			if (userInfoRedux?.token) {
+				// Invalid crdentials error. Logout
+				return navigate("/invalid_creds_error");
+			}
+			return navigate("/login");
+		}
+	}, [userInfo]);
 
-	const loading = !data && !error;
-	const loggedOut = error && error.status === 403;
+	const projects = React.useMemo(() => {
+		if (userInfo?.projects) {
+			return userInfo.projects;
+		}
+		return null;
+	}, [userInfo]);
 
-	return {
-		loading,
-		loggedOut,
-		user: data,
-		mutate,
-	};
+	return { userInfo, projects, error: error, mutate };
 }

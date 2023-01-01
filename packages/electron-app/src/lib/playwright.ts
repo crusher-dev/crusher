@@ -15,6 +15,9 @@ import { uuidv4 } from "runner-utils/src/utils/helper";
 import { StepErrorTypeEnum } from "runner-utils/src/error.types";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import Table from "cli-table";
+import { getSavedSteps } from "../store/selectors/recorder";
+import { getCurrentProjectMetadata } from "../store/selectors/projects";
+import { getStore } from "../store/configureStore";
 
 const { performance } = require("perf_hooks");
 //@ts-ignore
@@ -43,7 +46,7 @@ class PlaywrightInstance {
 
 	private isBusy = false;
 
-	lastAction: { action: iAction; id: string };
+	lastAction: { action: iAction; id: string; time: number };
 
 	constructor(appWindow: AppWindow) {
 		this.appWindow = appWindow;
@@ -192,6 +195,7 @@ class PlaywrightInstance {
 	}
 
 	async connect() {
+
 		const debuggingPortFile = fs.readFileSync(path.join(app.getPath("userData"), "DevToolsActivePort"), "utf8");
 		const [debuggingPort] = debuggingPortFile.split("\n");
 		this.browser = await playwright.chromium.connectOverCDP(`http://localhost:${debuggingPort}/`, { customBrowserName: "electron-webview" });
@@ -257,7 +261,7 @@ class PlaywrightInstance {
 		return errorType;
 	};
 
-	private handleFailedStep(failedAction: iAction, result: iActionResult, shouldNotSave: boolean) {
+	private handleFailedStep(failedAction: iAction, result: iActionResult, shouldNotSave: boolean, startTime) {
 		const { meta } = result;
 		const { error, failedReason } = meta;
 		
@@ -318,9 +322,35 @@ class PlaywrightInstance {
 				this.appWindow.getRecorder().markRunningStepFailed(errorType);
 			}
 		}
+
+		const stepIndex = getSavedSteps(this.appWindow.store.getState() as any).length - 1;
+		 this.appWindow.sendMessage("recorder-step-error", {
+			stepIndex,
+			error,
+			startTime: startTime,
+			endTime: performance.now()
+		});
 	}
 
 	async runActions(actions: iAction[], shouldNotSave = false): Promise<void> {
+		{
+			const store = getStore();
+			const projectMetadata: any = getCurrentProjectMetadata(store.getState() as any) || {};
+	
+			const selectedEnvironment = projectMetadata?.selectedEnvironment;
+			const environment = projectMetadata?.environments[selectedEnvironment];
+	
+			if(environment?.variables) {
+				for(const key in environment.variables) {
+					const value = environment.variables[key];
+					const contextVar = this.getContext();
+					if(contextVar) {
+						contextVar[key] = value;
+					}
+				}
+			}
+		}
+	
 		const actionsArr = getMainActions(actions);
 
 		/* Inputs can get affected if webview looses focus */
@@ -330,7 +360,7 @@ class PlaywrightInstance {
 			const { status } = result;
 			switch (status) {
 				case ActionStatusEnum.STARTED:
-					this.lastAction = { id: uuidv4(), action };
+					this.lastAction = { id: uuidv4(), action, time: performance.now() };
 					this.appWindow.recordLog({
 						id: this.lastAction.id,
 						message: String(action.name || this.actionDescriptor.describeAction(action as any)),
@@ -343,8 +373,9 @@ class PlaywrightInstance {
 					break;
 				case ActionStatusEnum.FAILED:
 				case ActionStatusEnum.STALLED:
+					const startTime = this.lastAction.time;
 					this.lastAction = null;
-					this.handleFailedStep(action, result, shouldNotSave);
+					this.handleFailedStep(action, result, shouldNotSave, startTime);
 					break;
 				case ActionStatusEnum.COMPLETED:
 					this.appWindow.recordLog({

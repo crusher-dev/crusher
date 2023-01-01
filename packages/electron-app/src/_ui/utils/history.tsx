@@ -2,7 +2,7 @@ import { DesktopAppEventsEnum } from "@shared/modules/analytics/constants";
 import { createHashHistory } from "history";
 import React from "react";
 import { HashRouterProps, Router } from "react-router-dom";
-import { performTrackEvent } from "../commands/perform";
+import { performTrackEvent } from "../../ipc/perform";
 import { clearAllToasts } from "../ui/components/toasts";
 const historyInstance = createHashHistory();
 

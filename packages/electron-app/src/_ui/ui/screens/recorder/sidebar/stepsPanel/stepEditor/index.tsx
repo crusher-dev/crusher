@@ -17,6 +17,7 @@ import { editInputAtom, isStepHoverAtom } from "electron-app/src/_ui/store/jotai
 import { SelectorEditorCard } from "./selectorEditor";
 import { addHttpToURLIfNotThere } from "electron-app/src/utils";
 import _ from "lodash";
+import { isTemplateFormat } from "@shared/utils/templateString";
 
 const limitString = (string, offset = null) => {
 	if (!string) return string;
@@ -107,7 +108,7 @@ const InputValueEditor = ({ step, stepId }) => {
 		}
 		if ([ActionsInTestEnum.NAVIGATE_URL, ActionsInTestEnum.WAIT_FOR_NAVIGATION].includes(step.type)) {
 			const updateNavigationUrlValue = (value: string) => {
-				const finalValue = step.type === ActionsInTestEnum.NAVIGATE_URL ? addHttpToURLIfNotThere(value) : value;
+				const finalValue = step.type === ActionsInTestEnum.NAVIGATE_URL ? isTemplateFormat(value) ? value : addHttpToURLIfNotThere(value) : value;
 				if (step.payload.meta.value !== finalValue) {
 					step.payload.meta.value = finalValue;
 					dispatch(updateRecordedStep(step, stepId));
@@ -123,6 +124,10 @@ const InputValueEditor = ({ step, stepId }) => {
 		return null;
 	};
 
+	const handleEdit = () => {
+		setIsStepNameEditing(`nav-` + stepId + "-url");
+
+	}
 	const fieldInfo = getInfo(step);
 	const handleUpdate = (value) => {
 		setIsEditMode(false);
@@ -172,7 +177,7 @@ const InputValueEditor = ({ step, stepId }) => {
 				id={`nav-${stepId}-url`}
 				onChange={handleUpdate.bind(this)}
 			/>
-			<EditPencilIcon onClick={setIsStepNameEditing.bind(this, stepId + "-nav-url")} className={"ml-10"} css={editUrlIconCss} />
+			<EditPencilIcon onClick={handleEdit} className={"ml-10"} css={editUrlIconCss} />
 		</div>
 	);
 };
@@ -372,6 +377,9 @@ const StepOverlayEditor = ({ stepId }) => {
 		return "edit";
 	});
 
+	const handleGoBack = () => {
+		setShowAdvanced({ show: false, containerHeight: null });
+	};
 	return (
 		<div
 			onContextMenu={(e) => e.preventDefault()}
@@ -381,7 +389,7 @@ const StepOverlayEditor = ({ stepId }) => {
 		>
 			{showAdvanced.show ? (
 				<>
-					<SelectorEditorCard stepId={stepId} />
+					<SelectorEditorCard goBack={handleGoBack} stepId={stepId} />
 				</>
 			) : (
 				<>

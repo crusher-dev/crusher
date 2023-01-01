@@ -161,7 +161,7 @@ function getScreenshotActionsResult(actionsResult: Array<IActionResultItemWithIn
 function getTemplateFileContent(templatePath: string, valuesToInject: any): Promise<string> {
 	return new Promise((resolve, reject) => {
 		ejs.renderFile(templatePath, valuesToInject, function (err, str) {
-			if (err) return reject("Can't load the template");
+			if (err) return reject("Can't load the template at " + templatePath);
 			resolve(str);
 		});
 	});

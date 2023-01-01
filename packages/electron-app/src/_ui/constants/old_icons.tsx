@@ -112,7 +112,6 @@ const CrossIcon = (props) => (
 		height={12}
 		fill="none"
 		xmlns="http://www.w3.org/2000/svg"
-		viewBox={"0 0 12 12"}
 		css={css`
 			fill: #ffffff1a;
 			path {
@@ -352,6 +351,12 @@ const RedDotIcon = (props) => (
 	</svg>
 );
 
+const GreenDotIcon = (props) => (
+	<svg viewBox={"0 0 6 6"} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+		<rect x={0.851} y={0.5} width={5} height={5} rx={2.5} fill="#83EA5E" />
+	</svg>
+);
+
 const PlayIconV3 = (props) => (
 	<svg viewBox={"0 0 6 8"} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 		<path d="M.667 7.726V.263c0-.21.289-.358.489-.19l4.71 3.647c.178.127.178.4 0 .527l-4.71 3.69c-.2.147-.49.02-.49-.211Z" fill="#708AEC" />
@@ -430,11 +435,11 @@ export {
 	LogoV2,
 	DroppdownIconV2,
 	RedDotIcon,
-	ActionHeadingIcon,
 	PlayIconV3,
 	GreenCheckboxIcon,
 	FailedCheckboxIcon,
 	PointerArrowIcon,
 	AddIconV3,
-	ForwardIcon
+	ForwardIcon,
+	GreenDotIcon
 };

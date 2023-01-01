@@ -131,7 +131,6 @@ function createWindow() {
 	const _store = configureStore(undefined, "main", true);
 	const settings = SettingsManager.getSavedSettings();
 
-	// initialReduxState.app.shouldShowOnboardingOverlay = localStorage.getItem("app.showShouldOnboardingOverlay") === "false" ? false : true;
 
 	if (!settings.backendEndPoint) {
 		settings.backendEndPoint = process.env.BACKEND_URL;
@@ -151,6 +150,8 @@ function createWindow() {
 			accountInfo: globalAppConfig?.userInfo ? globalAppConfig.userInfo : null,
 		},
 	};
+	// initialState.app.shouldShowOnboardingOverlay = localStorage.getItem("app.showShouldOnboardingOverlay") === "false" ? false : true;
+
 	const store = configureStore(initialState, "main");
 
 	const window = new AppWindow(store);

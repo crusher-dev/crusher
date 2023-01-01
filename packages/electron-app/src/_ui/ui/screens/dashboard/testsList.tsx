@@ -3,7 +3,7 @@ import { css } from "@emotion/react";
 import { GarbageIcon, LoadingIconV2, PlayIcon } from "electron-app/src/_ui/constants/old_icons";
 import { BasketBallIcon, EditIcon } from "../../../constants/icons";
 import { useNavigate } from "react-router-dom";
-import { goFullScreen, performReplayTestUrlAction } from "electron-app/src/_ui/commands/perform";
+import { goFullScreen, performReplayTestUrlAction } from "electron-app/src/ipc/perform";
 import { triggerLocalBuild } from "../../../utils/recorder";
 import { CloudCrusher } from "electron-app/src/lib/cloud";
 import { ContextMenuTypeEnum, ListBox } from "../../components/selectableList";
@@ -280,7 +280,7 @@ const MULTI_SELECTED_MENU = [
 	{ id: "delete-all", label: "Delete all", shortcut: <div>Delete</div> },
 ];
 
-const TestList = ({ tests, deleteTest }) => {
+const TestList = ({ tests, deleteTest, listHeading }: any) => {
 	const [, setTestEditName] = useAtom(editInputAtom);
 	const navigate = useNavigate();
 	const store = useStore();
@@ -396,7 +396,7 @@ const TestList = ({ tests, deleteTest }) => {
 		[ContextMenuTypeEnum.SINGLE]: { callback: handleRightCallback, menuItems: SELECTED_TESTS_MENU },
 		[ContextMenuTypeEnum.MULTI]: { callback: handleRightCallback, menuItems: MULTI_SELECTED_MENU },
 	};
-	return <ListBox contextMenu={contextMenu} selectedHeaderActions={SelectedTestActions} items={items} />;
+	return <ListBox listHeading={listHeading} contextMenu={contextMenu} selectedHeaderActions={SelectedTestActions} items={items} />;
 };
 
 export { TestList };

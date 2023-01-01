@@ -1,6 +1,6 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { EllipseIcon, ResetIcon } from "electron-app/src/_ui/constants/icons";
+import { ResetIcon } from "electron-app/src/_ui/constants/icons";
 import { useLocalBuild } from "electron-app/src/_ui/hooks/tests";
 import { getCurrentTestInfo, getRemainingSteps } from "electron-app/src/store/selectors/app";
 import { useSelector } from "react-redux";

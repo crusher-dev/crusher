@@ -8,7 +8,7 @@ import { linkOpen, resolveToBackend } from "electron-app/src/utils/url";
 import { useStore } from "react-redux";
 import { getCurrentSelectedProjct, getUserAccountInfo } from "electron-app/src/store/selectors/app";
 import { resolveToFrontend } from "electron-app/src/utils/url";
-import { getIntegrationsAPIRequest, removeGithubIntegration, removeSlackIntegration, removeVercelIntegration } from "electron-app/src/_ui/api/projects/integrations";
+import { getIntegrationsAPIRequest, removeGithubIntegration, removeSlackIntegration, removeVercelIntegration } from "electron-app/src/api/projects/integrations";
 import useRequest from "electron-app/src/_ui/utils/useRequest";
 import axios from "axios";
 import { Link } from "../../components/Link";

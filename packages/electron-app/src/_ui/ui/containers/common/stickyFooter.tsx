@@ -17,6 +17,7 @@ import { CloudCrusher } from "electron-app/src/lib/cloud";
 import { FailedCheckboxIcon, GreenCheckboxIcon } from "electron-app/src/_ui/constants/old_icons";
 import { Conditional } from "@dyson/components/layouts";
 import { getCurrentProjectConfigPath } from "electron-app/src/_ui/utils/project";
+import { EnvironmentStatus } from './environmentStatus';
 
 interface IProps {
 	className?: string;
@@ -88,6 +89,7 @@ export const StickyFooter = ({ className }: IProps) => {
 				)}
 
 				<div css={contextContainerCss}>
+					<EnvironmentStatus className={"mr-8"}/>
 					<TunnelStatus />
 				</div>
 			</div>
@@ -201,21 +203,23 @@ export function HelpContent({ ...props }) {
 	return (
 		<div className=" pt-3 pb-6" {...props}>
 			<a onClick={linkOpen.bind(this, "https://docs.crusher.dev")} target="_blank">
-				<TextBlock fontSize={13.4} color={"#8F8F8F"} css={linkCSS}>
-					Documentation <ExternalIcon className="ml-3" />
-				</TextBlock>
+				<div css={linkCSS}>
+					<DocsIcon  css={css`zoom:.85; margin-left: -.5px;`}/>
+					<TextBlock className="mt-2 mr-2 ml-8" color="#8F8F8F" fontSize={13}>Docs</TextBlock>
+					 <ExternalIcon className="ml-3" />
+				</div>
 			</a>
 			<a onClick={linkOpen.bind(this, "https://github.com/crusher-dev/crusher")} target="_blank">
-				<TextBlock fontSize={13.4} color={"#8F8F8F"} className={"mt-1"} css={linkCSS}>
-					<GithubSVG height={11} width={11} className={"mr-6"} /> <span className="mt-2">Github</span>
+				<div  className={"mt-1"} css={linkCSS}>
+					<GithubSVG height={11} width={11} className={"mr-8"} /> <TextBlock className="mt-2" color="#8F8F8F" fontSize={13}>Github</TextBlock>
 					<ExternalIcon className="ml-4" />
-				</TextBlock>
+				</div>
 			</a>
 			<a onClick={linkOpen.bind(this, "https://discord.com/invite/dHZkSNXQrg")} target="_blank">
-				<TextBlock fontSize={13.4} color={"#8F8F8F"} className={"mt-1"} css={linkCSS}>
-					<DiscordSVG height={12} width={13} className={"mr-6"} css={discordIcons} /> <span className="mt-1">Discord</span>
+				<div  className={"mt-1"} css={linkCSS}>
+					<DiscordSVG height={12} width={13} className={"mr-8"} css={discordIcons} /> <TextBlock className="mt-1" color="#8F8F8F" fontSize={13}>Discord</TextBlock>
 					<ExternalIcon className="ml-3" />
-				</TextBlock>
+				</div>
 			</a>
 		</div>
 	);
@@ -235,11 +239,8 @@ const linkCSS = css`
 	}
 	color: #d1d5db;
 	:hover {
-		background: rgba(43, 43, 43, 0.4);
+		background: rgba(43, 43, 43, 0.5);
 		color: #bc66ff;
-		path {
-			fill: #bc66ff;
-		}
 	}
 	height: 28rem;
 	width: 148rem;

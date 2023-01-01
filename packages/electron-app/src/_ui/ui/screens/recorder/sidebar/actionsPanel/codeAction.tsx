@@ -3,6 +3,7 @@ import { emitShowModal } from "electron-app/src/_ui/ui/containers/components/mod
 import { ActionsList } from "./actionsList";
 import { CodeIcon } from "electron-app/src/_ui/constants/icons";
 import { css } from "@emotion/react";
+import { ShepherdTourContext } from "react-shepherd";
 
 const actionsData = require("./actions.json");
 interface IProps {
@@ -11,15 +12,21 @@ interface IProps {
 }
 
 const CodeAction = ({ className, filteredList }: IProps) => {
+	const tour = React.useContext(ShepherdTourContext);
 	const handleCallback = React.useCallback(() => {
 		emitShowModal({ type: "CUSTOM_CODE" });
+		if(tour.getCurrentStep()?.id === "add-custom-code") {
+			setTimeout(() => {
+				tour.next();
+			}, 150);
+		}
 	}, []);
 
 	const isCodePresent = filteredList ? filteredList["CODE"] : actionsData["CODE"];
 	if (!isCodePresent) return null;
 
 	return (
-		<ActionsList onClick={handleCallback} className={String(className)} title={"code"} icon={<CodeIcon css={codeIconCss} />} callback={handleCallback} />
+		<ActionsList id="custom-code-action" onClick={handleCallback} className={String(className)} title={"code"} icon={<CodeIcon css={codeIconCss} />} callback={handleCallback} />
 	);
 };
 

@@ -10,9 +10,13 @@ body {
 	padding: 0;
 	margin: 0;
 	font-size: 1px;
-	color: #eee;
 	-webkit-font-smoothing: antialiased;
 	text-rendering: optimizeLegibility;
+	color: rgb(169 169 169);
+}
+
+body{
+	font-size: 13rem;
 }
 
 a {
@@ -63,4 +67,8 @@ img {
 .custom-scroll::-webkit-scrollbar-thumb:hover {
 	background-color: #272b31;
 	border-radius: 100px;
+}
+
+*{
+	transition: color .1s ease-in;
 }

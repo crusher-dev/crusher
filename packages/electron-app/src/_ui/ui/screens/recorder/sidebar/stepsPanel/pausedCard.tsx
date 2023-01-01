@@ -1,7 +1,7 @@
 import React from "react";
 import { css } from "@emotion/react";
 import { NormalButton } from "electron-app/src/_ui/ui/components/buttons/NormalButton";
-import { continueRemainingSteps } from "electron-app/src/_ui/commands/perform";
+import { continueRemainingSteps } from "electron-app/src/ipc/perform";
 
 const PausedStepCard = () => {
 	const handleContinue = () => {

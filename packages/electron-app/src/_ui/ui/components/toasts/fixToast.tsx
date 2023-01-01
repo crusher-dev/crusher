@@ -24,6 +24,7 @@ const checkIfElementFailure = (stepId, errorType) => {
 
 const FixToast = ({ message, setOpen, meta }) => {
     const handleOpen = (open) => {
+        alert("Open " + open); 
         setOpen(open);
     }
 
@@ -31,7 +32,7 @@ const FixToast = ({ message, setOpen, meta }) => {
         <ActionToast
             duration={1000 * 60 * 60 * 60}
             open={true}
-            setOpen={setOpen}
+            setOpen={() => {}}
             actions={<FixToastActions meta={meta} setOpen={setOpen} />}
             message={<FixToastMessage message={message} />}
         />

@@ -211,6 +211,7 @@ const AssertionFormTable = (props: iAssertionFormTableProps) => {
 
 	return (
 		<div
+			id="assertion-rows"
 			style={containerStyle}
 			css={css`
 				&::-webkit-scrollbar {

@@ -7,6 +7,7 @@ import { APP_DIRECTORY } from '../constants';
 import { createDirIfNotExist } from '../utils/utils';
 import { BlankMessage, Message } from './cliMessages';
 
+
 export function findCrusherProjectConfig(_start = null) {
 	let start: any = _start || process.cwd();
 	if (typeof start === 'string') {

@@ -8,7 +8,6 @@ import { CommandBox } from "./CommandBox";
 export const UseCrusher = ({ children, color }) => (
   <div className="useCrusher_in_project">
 
-
     <div 
     className={`flex justify-between ${commandHeading}`}id="command-heading">
         <div className={css`font-weight: 700; font-size: 16;`}>Install & use crusher</div>
@@ -22,7 +21,6 @@ export const UseCrusher = ({ children, color }) => (
         </React.Fragment>
       )}
     />
-
 
   </div>
 );
@@ -149,6 +147,8 @@ const commandHeading = css`
     font-size: 15px;
     font-weight: 500;
     margin-top: 32px;
+
+
 `
 
 

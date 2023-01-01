@@ -1,4 +1,3 @@
-import { EditPencilIcon } from "electron-app/src/_ui/constants/icons";
 import React, { useEffect } from "react";
 import { css } from "@emotion/react";
 import { getAllSteps, getSavedSteps, getStepInfo } from "electron-app/src/store/selectors/recorder";
@@ -12,7 +11,6 @@ import { Button } from "@dyson/components/atoms";
 import { EditableInput } from "electron-app/src/_ui/ui/components/inputs/editableInput";
 import { useAtom } from "jotai";
 import { editInputAtom, isStepHoverAtom } from "electron-app/src/_ui/store/jotai/testsPage";
-
 import _ from "lodash";
 
 import { StepEditorCustomCode } from "electron-app/src/_ui/ui/containers/components/modals/page/stepEditorModal";
@@ -121,7 +119,6 @@ const wrapboxCSS = css`
 	}
 `
 
-
 const selectorExtraCss = css`
 	font-size: 12rem;
 `;
@@ -131,7 +128,6 @@ const mainSelectorCss = css`
 
 const StepName = ({ stepId }) => {
 	const [isStepNameEditing, setIsStepNameEditing] = useAtom(editInputAtom);
-
 	const stepInfo = useSelector(getStepInfo(stepId));
 	const steps = useSelector(getAllSteps);
 	const step = steps[stepId];
@@ -151,7 +147,6 @@ const StepName = ({ stepId }) => {
 	};
 
 	const handleOnChange = (value) => {
-		// console.log("INptu is", e.target.value);
 		setTitle(value);
 		updateStepName(value);
 	};
@@ -252,7 +247,7 @@ export const EDIT_MODE_MAP = {
 	[ActionsInTestEnum.CUSTOM_ELEMENT_SCRIPT]: "SHOW_CUSTOM_SCRIPT_MODAL",
 };
 
-const StepOverlayEditor = ({ stepId }) => {
+const StepSidebarBox = ({ stepId }) => {
 	
 	const containerRef = React.useRef(null);
 	const [, setStepHovered] = useAtom(isStepHoverAtom)
@@ -273,7 +268,6 @@ const StepOverlayEditor = ({ stepId }) => {
 			stepIndex: stepId,
 		});
 	};
-
 
 	useEffect(() => {
 		setStepHovered(true)
@@ -382,4 +376,4 @@ const containerCss = css`
 	width: 412rem;
 `;
 
-export { StepOverlayEditor as StepEditor };
+export { StepSidebarBox as StepEditor };

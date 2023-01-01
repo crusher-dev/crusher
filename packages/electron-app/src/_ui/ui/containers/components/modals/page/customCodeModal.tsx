@@ -2,7 +2,6 @@ import { Input } from "@dyson/components/atoms";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { Conditional } from "@dyson/components/layouts";
 import { Dropdown } from "@dyson/components/molecules/Dropdown";
-import { SelectBox } from "@dyson/components/molecules/Select/Select";
 import { css, Global } from "@emotion/react";
 import Editor, { loader, Monaco } from "@monaco-editor/react";
 import { iAction } from "@shared/types/action";
@@ -11,7 +10,6 @@ import { updateRecordedStep, updateRecorderState } from "electron-app/src/store/
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 import { getRecorderState } from "electron-app/src/store/selectors/recorder";
 import {
-	deleteCodeTemplate,
 	getCodeTemplates,
 	performCustomCode,
 	performUndockCode,
@@ -29,7 +27,6 @@ import { useStore } from "react-redux";
 import { sendSnackBarEvent } from "../../toast";
 import { ModalTopBar } from "../topBar";
 import { newTheme } from "./monaco.theme";
-import Tour from "@reactour/tour";
 import { ShepherdTourContext } from "react-shepherd";
 
 function ensureFirstBackSlash(str) {
@@ -54,9 +51,6 @@ interface iElementCustomScriptModalContent {
 	stepAction?: iAction;
 }
 
-const DropdownOption = ({ label }) => {
-	return <div css={{ padding: "7rem 8rem", width: "100%", cursor: "default" }}>{label}</div>;
-};
 
 function DropwdownContent({ setShowActionMenu, callback, selectedTemplate }) {
 	const handleDeteach = () => {

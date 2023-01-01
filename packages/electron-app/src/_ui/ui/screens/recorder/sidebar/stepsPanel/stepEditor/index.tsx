@@ -5,20 +5,19 @@ import { getAllSteps, getSavedSteps, getStepInfo } from "electron-app/src/store/
 import { useSelector, useDispatch } from "react-redux";
 import { TextHighlighter, TextHighlighterText, transformStringSelectorsToArray } from "../helper";
 import { deleteRecordedSteps, updateRecordedStep } from "electron-app/src/store/actions/recorder";
-import { FieldSelectorPicker } from "electron-app/src/_ui/ui/containers/components/sidebar/stepEditor/fields";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { emitShowModal } from "electron-app/src/_ui/ui/containers/components/modals";
 import { Button } from "@dyson/components/atoms";
-import { iSelectorInfo } from "@shared/types/selectorInfo";
-import { sendSnackBarEvent } from "electron-app/src/_ui/ui/containers/components/toast";
+
 import { EditableInput } from "electron-app/src/_ui/ui/components/inputs/editableInput";
 import { useAtom } from "jotai";
 import { editInputAtom, isStepHoverAtom } from "electron-app/src/_ui/store/jotai/testsPage";
-import { SelectorEditorCard } from "./selectorEditor";
-import { addHttpToURLIfNotThere } from "electron-app/src/utils";
+
 import _ from "lodash";
-import { isTemplateFormat } from "@shared/utils/templateString";
+
 import { StepEditorCustomCode } from "electron-app/src/_ui/ui/containers/components/modals/page/stepEditorModal";
+
+import { PlayIconV3 } from "electron-app/src/_ui/constants/old_icons";
 
 const limitString = (string, offset = null) => {
 	if (!string) return string;
@@ -29,7 +28,7 @@ const limitString = (string, offset = null) => {
 	return string;
 };
 
-const SelectorInfo = ({ stepId, setShowAdvanced }) => {
+const SelectorBox = ({ stepId }) => {
 	const stepInfo = useSelector(getStepInfo(stepId));
 	const selectors = stepInfo.step?.payload?.selectors;
 
@@ -47,26 +46,81 @@ const SelectorInfo = ({ stepId, setShowAdvanced }) => {
 				} more`;
 		}
 	}, [selectors]);
-	return (
-		<div css={selectorInfoContainerCss}>
-			<StepEditorCustomCode/>
-			<div className={"flex items-center"}>
+
+	return(
+		<Accordion 
+		topBar={(
+			<React.Fragment>
+				<div className={"flex items-center px-12 pt-12"} >
 				<div>
 					<span>main selector:</span>
-					<span onDoubleClick={setShowAdvanced.bind(this, true)} css={mainSelectorCss} className={"font-medium"}>
+					<span css={mainSelectorCss} className={"font-medium"}>
 						{limitString(stepInfo.description)}
 					</span>
 				</div>
-
-				<EditPencilIcon onClick={setShowAdvanced.bind(this, true)} className={"ml-10"} css={pencilIconCss} />
-				<FieldSelectorPicker stepId={stepId} className={"ml-10"} />
+				<PlayIconV3 css={playIconCss}/>
 			</div>
-			<div css={selectorExtraCss} className={"mt-7"}>
+			<div css={selectorExtraCss} className={"mt-7 px-12 pb-12"}>
 				{description}
 			</div>
-		</div>
-	);
+			</React.Fragment>
+		)} children={
+			<div className="">
+				<StepEditorCustomCode/>
+			</div>
+		}/>
+
+	)
+
 };
+
+const playIconCss = css`
+	width: 6rem;
+	height: 8rem;
+	margin-left: auto;
+	margin-right: 5rem;
+	margin-top: 3rem;
+	path {
+		fill: #797979;
+	}
+	:hover {
+		opacity: 0.8;
+	}
+`;
+
+export const Accordion = ({children,topBar})=>{
+	const [hover,setHover] = React.useState(false);
+
+	return (
+		<div className="w-full">
+			<div css={[wrapboxCSS]} onClick={setHover.bind(this,!hover)}>
+				{topBar}
+			</div>
+			{hover &&
+			<div css={childContainer}>
+				{children}
+			</div>
+			}
+		</div>
+	)
+}
+
+const childContainer = css`
+	border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+	padding: 0px;
+	width: 100%;
+`
+
+const wrapboxCSS = css`
+	border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+	border-top: 1px solid rgba(255, 255, 255, 0.08);
+	padding: 0px;
+	width: 100%;
+	:hover{
+		background: rgba(255, 255, 255, 0.02);
+	}
+`
+
 
 const selectorExtraCss = css`
 	font-size: 12rem;
@@ -74,115 +128,6 @@ const selectorExtraCss = css`
 const mainSelectorCss = css`
 	color: rgba(255, 255, 255, 0.89);
 `;
-const selectorInfoContainerCss = css`
-	font-size: 13rem;
-
-	color: rgba(255, 255, 255, 0.54);
-`;
-
-const pencilIconCss = css`
-	width: 10.5rem;
-	height: 10.5rem;
-	margin-top: -2rem;
-	:hover {
-		opacity: 0.8;
-	}
-`;
-
-const InputValueEditor = ({ step, stepId }) => {
-	const [, setIsEditMode] = React.useState(false);
-	const dispatch = useDispatch();
-	const [isStepNameEditing, setIsStepNameEditing] = useAtom(editInputAtom);
-
-	const getInfo = (step) => {
-		if (step.type === ActionsInTestEnum.ADD_INPUT) {
-			const updateInputValue = (value: string) => {
-				if (step.payload.meta.value.value !== value) {
-					step.payload.meta.value.value = value;
-					dispatch(updateRecordedStep(step, stepId));
-					sendSnackBarEvent({ type: "success", message: "Value updated" });
-					return { value: finalValue };
-				}
-			};
-
-			const inputValue = step.payload.meta?.value?.value || "";
-			return { label: "Value:", value: inputValue, placeholder: "Enter value", updateCallback: updateInputValue };
-		}
-		if ([ActionsInTestEnum.NAVIGATE_URL, ActionsInTestEnum.WAIT_FOR_NAVIGATION].includes(step.type)) {
-			const updateNavigationUrlValue = (value: string) => {
-				const finalValue = step.type === ActionsInTestEnum.NAVIGATE_URL ? isTemplateFormat(value) ? value : addHttpToURLIfNotThere(value) : value;
-				if (step.payload.meta.value !== finalValue) {
-					step.payload.meta.value = finalValue;
-					dispatch(updateRecordedStep(step, stepId));
-					sendSnackBarEvent({ type: "success", message: "Navigation value updated" });
-					return { value: finalValue };
-				}
-			};
-
-			const navigationUrlValue = step.payload.meta?.value || "";
-			return { label: "URL:", value: navigationUrlValue, placeholder: "Enter url", updateCallback: updateNavigationUrlValue };
-		}
-
-		return null;
-	};
-
-	const handleEdit = () => {
-		setIsStepNameEditing(`nav-` + stepId + "-url");
-
-	}
-	const fieldInfo = getInfo(step);
-	const handleUpdate = (value) => {
-		setIsEditMode(false);
-		return fieldInfo.updateCallback(value);
-	};
-	if (!fieldInfo) return null;
-
-
-	return (
-		<div className={"flex items-center mt-20"}>
-			<div
-				css={[
-					labelCss
-				]}
-				className={"mr-7" + (isStepNameEditing === stepId + "-nav-url" ? "mt-2" : "")}
-			>
-				{fieldInfo.label}
-			</div>
-			<EditableInput
-				inputCss={css`
-					input {
-						width: 180rem;
-						min-width: 180rem !important;
-						font-family: "Gilroy" !important;
-						font-style: normal !important;
-						font-weight: 400 !important;
-						font-size: 13rem !important;
-						height: 24rem !important;
-
-						background: rgba(177, 79, 254, 0.04) !important;
-						border: 0.5px solid #b14ffe !important;
-						border-radius: 8rem !important;
-
-						color: rgba(215, 223, 225, 0.93) !important;
-					}
-				`}
-
-				labelCss={css`
-					font-family: "Gilroy" !important;
-					font-style: normal !important;
-					font-weight: 400 !important;
-					font-size: 13rem !important;
-					border: 0.5px solid transparent !important;
-					padding: 4rem 0rem !important;
-				`}
-				defaultValue={fieldInfo.value}
-				id={`nav-${stepId}-url`}
-				onChange={handleUpdate.bind(this)}
-			/>
-			<EditPencilIcon onClick={handleEdit} className={"ml-10"} css={editUrlIconCss} />
-		</div>
-	);
-};
 
 const StepName = ({ stepId }) => {
 	const [isStepNameEditing, setIsStepNameEditing] = useAtom(editInputAtom);
@@ -219,7 +164,7 @@ const StepName = ({ stepId }) => {
 
 	return (
 		<>
-			<div css={stepNameCss} className={"flex items-center"}>
+			<div css={stepNameCss} className={"flex items-center px-12"}>
 				<div css={css``}>
 					<EditableInput
 						inputCss={css`
@@ -247,7 +192,7 @@ const StepName = ({ stepId }) => {
 						onChange={handleOnChange.bind(this)}
 					/>
 				</div>
-				<EditPencilIcon onClick={setIsStepNameEditing.bind(this, stepId + "-stepName")} className={"ml-10"} css={pencilIconCss} />
+				
 
 			</div>
 			{showStepDescriptionHelper ? (
@@ -255,8 +200,9 @@ const StepName = ({ stepId }) => {
 					css={css`
 						font-size: 12rem;
 						margin-top: 8rem;
+						letter-spacing: .6px;
 					`}
-					className="ml-2"
+					className="ml-2 px-12"
 				>
 					{TextHighlighter({ text: stepInfo.actionDescription }, true)}
 				</div>
@@ -266,51 +212,26 @@ const StepName = ({ stepId }) => {
 	);
 };
 
-const StepMetaInfo = ({ stepId, setShowAdvanced }) => {
+const StepMetaInfo = ({ stepId }) => {
 	const steps = useSelector(getAllSteps);
 
 	const hasSelectors = steps[stepId].type.startsWith("ELEMENT");
-	const showFieldInput = [ActionsInTestEnum.NAVIGATE_URL, ActionsInTestEnum.WAIT_FOR_NAVIGATION, ActionsInTestEnum.ADD_INPUT].includes(steps[stepId].type);
 
 	return (
-		<div css={stepMetaInfoContainerCss} className={"px-20 py-12"}>
+		<div css={stepMetaInfoContainerCss} className={"py-12"}>
 			<StepName stepId={stepId} />
-
-
-			{showFieldInput ? <InputValueEditor stepId={stepId} step={steps[stepId]} /> : ""}
 
 			{hasSelectors ? (
 				<div className={"flex mt-35"}>
-					<SelectorInfo setShowAdvanced={setShowAdvanced} stepId={stepId} />
-					{/* <div css={uniqueCss} className={"ml-auto"}>
-                       <span css={css`color: rgba(148, 111, 255, 0.99);`}>90%</span> unique
-                   </div> */}
+					<SelectorBox  stepId={stepId} />
 				</div>
 			) : (
 				""
 			)}
 
-			{/* <div css={metaInfoFooterCss} className={`flex ${hasSelectors || showFieldInput ? "mt-52" : "mt-30"}`}> */}
-			{/* <div>took 1.9 sec</div> */}
-			{/* <div className={"ml-auto"}>view logs</div> */}
-			{/* </div> */}
 		</div>
 	);
 };
-
-const editUrlIconCss = css`
-	width: 11rem;
-	height: 11rem;
-	margin-top: -2rem;
-	:hover {
-		opacity: 0.8;
-	}
-`;
-
-const labelCss = css`
-	font-size: 13rem;
-	color: rgba(215, 223, 225, 0.6);
-`;
 
 const stepNameCss = css`
 	font-weight: 500;
@@ -332,7 +253,7 @@ export const EDIT_MODE_MAP = {
 };
 
 const StepOverlayEditor = ({ stepId }) => {
-	const [showAdvanced, setShowAdvanced] = React.useState({ show: false, containerHeight: null });
+	
 	const containerRef = React.useRef(null);
 	const [, setStepHovered] = useAtom(isStepHoverAtom)
 
@@ -353,10 +274,6 @@ const StepOverlayEditor = ({ stepId }) => {
 		});
 	};
 
-	const handleShowAdvanced = (shouldShow) => {
-		if (shouldShow) setShowAdvanced({ show: true, containerHeight: containerRef.current.clientHeight });
-		else setShowAdvanced({ show: false, containerHeight: null });
-	};
 
 	useEffect(() => {
 		setStepHovered(true)
@@ -379,9 +296,7 @@ const StepOverlayEditor = ({ stepId }) => {
 		return "edit";
 	});
 
-	const handleGoBack = () => {
-		setShowAdvanced({ show: false, containerHeight: null });
-	};
+
 	return (
 		<div
 			onContextMenu={(e) => e.preventDefault()}
@@ -389,14 +304,9 @@ const StepOverlayEditor = ({ stepId }) => {
 			style={{ height: "100vh" }}
 			ref={containerRef}
 		>
-			{showAdvanced.show ? (
-				<>
-					<SelectorEditorCard goBack={handleGoBack} stepId={stepId} />
-				</>
-			) : (
-				<>
-					<StepMetaInfo setShowAdvanced={handleShowAdvanced} stepId={stepId} />
-					<div className={"px-20 py-24"}>
+
+					<StepMetaInfo stepId={stepId} />
+					<div className={"py-24"}>
 						{false && showPreview ? (
 							<div className="flex">
 								<div css={elementImageCss}></div>
@@ -417,14 +327,13 @@ const StepOverlayEditor = ({ stepId }) => {
 						) : (
 							""
 						)}
-						<div className={"mt-28 flex justify-end"}>
+						<div className={"mt-28 flex justify-end px-12"}>
 							<div onClick={handleDelete} css={deleteCss}>
 								delete
 							</div>
 						</div>
 					</div>
-				</>
-			)}
+	
 		</div>
 	);
 };

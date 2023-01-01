@@ -40,7 +40,7 @@ const SelectorEditorCard = ({ stepId, goBack }) => {
 		});
 		return 	getReadbleSelectors(filteredSelectors).map((selector, index) => {
 			return (
-				<input type="text" defaultValue={selector} css={[selectorItemCss, index % 2 == 0 ? undefined : css`background: transparent;`]} key={index} className={"flex px-20 py-12"}/>
+				<input type="text" defaultValue={selector} css={[selectorItemCss, index % 2 == 0 ? undefined : css`background: transparent;`]} key={index} className={"flex  py-12"}/>
 			);
 		})
 	}, [step, showAll]);

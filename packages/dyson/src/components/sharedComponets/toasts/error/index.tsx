@@ -134,7 +134,7 @@ const BaseDialogAction = ({ type, children, className, ...props }) => {
 
     if(type === "auto-fix") {
         return (
-            <div className={`flex justify-center ${className}`} css={[actionCss, css`flex: 1.5;`]} {...props}>
+            <div className={`flex justify-center ${className}`} css={actionCss} {...props}>
                     <ThunderSVG css={thunderIconCss}/>
                     <span className={"ml-8"}>Auto-fix</span>
             </div>

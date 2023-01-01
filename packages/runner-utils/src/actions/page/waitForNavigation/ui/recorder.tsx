@@ -7,14 +7,9 @@ import { TestErrorContext } from "../../../../../../dyson/src/components/sharedC
 import template, { isTemplateFormat } from "@crusher-shared/utils/templateString";
 import { CrusherSdk } from "src/sdk/sdk";
 
-enum NavigationErrorTypesEnum {
-    NAME_ERROR = "net::ERR_NAME_",
-    DNS_ERROR = "net::ERR_DNS_",
-
-    SSL_ERROR = "net::ERR_SSL_",
-    ERR_CERT = "net::ERR_CERT_",
-
-    UNKNOWN_ERROR = "net::ERR_UNKNOW_ERROR",
+const WaitErrorTypesEnum = {
+    TIMEOUT_EXCEEDED: new RegExp(/Timeout (\d+)ms exceeded/im),
+    ACTION_SKIP: new RegExp(/page\.waitForURL: Action skipped/im),
 };
 
 
@@ -25,7 +20,17 @@ const trimUrl = (url: string) => {
     }
     return url;
 }
-const ErrorDialog = () => {
+
+const hasQueryParams = (url: string) => {
+    const urlWithoutQueryParams = url.split("?")[0];
+    return urlWithoutQueryParams !== url;
+};
+
+const removeQueryParams = (url: string) => {
+    return url.split("?")[0];
+};
+
+const WaitForNavigationErrorDialog = () => {
     const { sdk, stepId, error, resolveError, context } = useContext(TestErrorContext);
     
     const step = sdk.getStep();
@@ -41,36 +46,23 @@ const ErrorDialog = () => {
 
         const shortNavigationURL =  trimUrl(resolvedUrl);
 
-        if (logs.includes(NavigationErrorTypesEnum.NAME_ERROR) || logs.includes(NavigationErrorTypesEnum.DNS_ERROR)) {
-            const errorType = logs.includes(NavigationErrorTypesEnum.NAME_ERROR) ? NavigationErrorTypesEnum.NAME_ERROR : NavigationErrorTypesEnum.DNS_ERROR;
+        const expectedError = WaitErrorTypesEnum["TIMEOUT_EXCEEDED"].test(logs) || WaitErrorTypesEnum["ACTION_SKIP"].test(logs);
 
+        if(expectedError && hasQueryParams(navigationUrl)) {
+            // Query params might be dynamic
             return {
-                type: errorType,
-                heading: "URL not reachable",
-                description: (<div><span css={highlightCss} title={resolvedUrl}>{shortNavigationURL}</span> is either unreachable or not valid.<br/> Please check the URL and try again.</div>),
-
-                edit: () => {
-                    sdk.openStepEditor();
-                }
-            }
-        }
-        if (logs.includes(NavigationErrorTypesEnum.SSL_ERROR) || logs.includes(NavigationErrorTypesEnum.ERR_CERT)) {
-            const errorType = logs.includes(NavigationErrorTypesEnum.SSL_ERROR) ? NavigationErrorTypesEnum.SSL_ERROR : NavigationErrorTypesEnum.ERR_CERT;
-            return {
-                type: errorType,
-                heading: "SSL Verification Failed",
-                description: (<div><span css={highlightCss} title={resolvedUrl}>{shortNavigationURL}</span> does not support HTTPS.<br/> Please check the URL or try using HTTP.</div>),
-                autoFix: !usesVariable ? () => {
-                    const url = new URL(navigationUrl);
-                    url.protocol = "http";
-                    const step = sdk.getStep();
+                type: "TIMEOUT_EXCEEDED",
+                heading: "Navigation timed out",
+                description: (<div>Possible causes:- Dynamic query params. Adding blob pattern<br/> might fix it</div>),
+                retry: true,
+                autoFix: () => {
                     sdk.updateStep({
                         ...step,
                         payload: {
                             ...step.payload,
                             meta: {
                                 ...step.payload.meta,
-                                value: url.toString(),
+                                value: removeQueryParams(navigationUrl) + "*",
                             }
                         }
                     });
@@ -79,13 +71,28 @@ const ErrorDialog = () => {
                         sdk.retryStep();
                     }, 100);
                     resolveError();
-                } : undefined,
+                }
+            };
+        }
+        if(WaitErrorTypesEnum["TIMEOUT_EXCEEDED"].test(logs)) {
+            return {
+                type: "TIMEOUT_EXCEEDED",
+                heading: "Navigation timed out",
+                description: (<div>Navigation to <span>{shortNavigationURL}</span> timed out after <span>{step.payload.meta.timeout}</span> ms. Please check the URL and try again.</div>),
+            }
+        } 
+
+        if(WaitErrorTypesEnum["ACTION_SKIP"].test(logs)) {
+            return {
+                type: "ACTION_SKIP",
+                heading: "Navigation skipped",
+                description: (<div>Navigation to <span>{shortNavigationURL}</span> was skipped manually.</div>),
             }
         }
 
         return {
-            type: NavigationErrorTypesEnum.UNKNOWN_ERROR,
-            heading: "URL not reachable",
+            type: "UNKNOWN_ERROR",
+            heading: "Unexpected error while waiting",
             description: (<div><span>{shortNavigationURL}</span> is not reachable. Please check the URL and try again.</div>),
         }
     }
@@ -106,8 +113,8 @@ const ErrorDialog = () => {
                {errorMessage.description}
             </BaseDialogDescription>
             <BaseDialogActions>
-                {errorMessage.retry ? (<BaseDialogAction type="retry">retry</BaseDialogAction>) : null}
-                {errorMessage.autoFix ? <BaseDialogAction onClick={errorMessage.autoFix} css={css`flex: 1`} type="auto-fix">Auto-fix</BaseDialogAction> : null }
+                {errorMessage.retry ? (<BaseDialogAction onClick={sdk.retryStep} type="retry">retry</BaseDialogAction>) : null}
+                {errorMessage.autoFix ? <BaseDialogAction  onClick={errorMessage.autoFix} type="auto-fix">Auto-fix</BaseDialogAction> : null }
                 {!errorMessage.autoFix ? (
                     <BaseDialogAction onClick={sdk.openStepEditor}>edit</BaseDialogAction>
                 ) : null}
@@ -142,4 +149,4 @@ const whyIconCss = css`
   height: 18rem;
 `;
 
-export default ErrorDialog;
+export default WaitForNavigationErrorDialog;

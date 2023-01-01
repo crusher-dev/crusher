@@ -1,4 +1,4 @@
-
+import React from "react";
 import CodeMirror from '@uiw/react-codemirror';
 
 import { tags as t } from '@lezer/highlight';
@@ -61,51 +61,62 @@ export const okaidiaInit = (options?: CreateThemeOptions) => {
 
 const extensions = [javascript()];
 
-const StepEditorCustomCode = ({code, onChange = ()=>{}}) => {
+const StepEditorCustomCode = React.memo(({ code, onChange = () => { } }) => {
+  const [show, setShow] = React.useState(false);
 
-	console.log(extensions,"Sd")
-	return (
-		
-		<div style={{marginLeft: -22}}>
-		 <CodeMirror
-			value={ `input[data-ved="0ahUKEwi-8v2Q2qb8AhVmTmwGHe3QBvQQ39UDCAU"]
-input[jsaction="paste:puy29d;"]
-input[maxlength="2048"]
-input[name="q"]
-input[type="text"]
-input[aria-autocomplete="both"]
-input[aria-haspopup="false"]
-input[autocapitalize="off"]
-input[autocomplete="off"]
-input[autocorrect="off"]
-input[autofocus=""]
-input[role="combobox"]
-input[spellcheck="false"]
-input[title="Search"]
-input[value=""]
-input[aria-label="Search"]
-.a4bIc > .gLFyf
-.SDkEP .gLFyf
-.RNNXgb .gLFyf
-//BODY/DIV[1]/DIV[3]/FORM[1]/DIV[1]/DIV[1]/DIV[1]/DIV[1]/DIV[2]/INPUT[1]	
-			`}
-			height="200px"
-			theme={okaidiaInit({
-				settings: {
-				  caret: '#62BDFF',
-				  fontFamily: 'monospace',
-				  fontSize: 12
-				}
-			  })}
-			
+  const theme = React.useMemo(() => {
+    return okaidiaInit({
+      settings: {
+        caret: '#62BDFF',
+        fontFamily: 'monospace',
+        fontSize: 12
+      }
+    });
+  }, []);
+  
+  React.useEffect(() => {
+    setTimeout(() => {
+      setShow(true);
+    });
 
-			//   extensions={extensions}
-			basicSetup={{foldGutter: false}}
-			width="400px"
-    	/>
-		</div>
-	);
-};
+    setShow(false);
+  }, []);
+  return (
+
+    <div style={{ marginLeft: -22 }}>
+           {show ? <CodeMirror
+              value={`input[data-ved="0ahUKEwi-8v2Q2qb8AhVmTmwGHe3QBvQQ39UDCAU"]
+      input[jsaction="paste:puy29d;"]
+      input[maxlength="2048"]
+      input[name="q"]
+      input[type="text"]
+      input[aria-autocomplete="both"]
+      input[aria-haspopup="false"]
+      input[autocapitalize="off"]
+      input[autocomplete="off"]
+      input[autocorrect="off"]
+      input[autofocus=""]
+      input[role="combobox"]
+      input[spellcheck="false"]
+      input[title="Search"]
+      input[value=""]
+      input[aria-label="Search"]
+      .a4bIc > .gLFyf
+      .SDkEP .gLFyf
+      .RNNXgb .gLFyf
+      //BODY/DIV[1]/DIV[3]/FORM[1]/DIV[1]/DIV[1]/DIV[1]/DIV[1]/DIV[2]/INPUT[1]	
+            `}
+              height="200px"
+              theme={theme}
+
+
+              //   extensions={extensions}
+              basicSetup={{ foldGutter: false }}
+              width="400px"
+            /> : ""}
+    </div>
+  );
+});
 
 
 

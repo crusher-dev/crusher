@@ -37,12 +37,6 @@ const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, 
 	const stepInfo = useSelector(getStepInfo(stepId), shallowEqual);
 	const { isFailed, isRunning, isCompleted } = stepInfo
 
-	React.useEffect(() => {
-		if (!editInputId && stepHoverId) {
-			setStepHoverId(null);
-		}
-	}, [editInputId === `${stepId}-stepName`]);
-
 	const handleHoverCallback = React.useCallback((shouldShow: boolean) => {
 		if (shouldShow) {
 			setStepHoverId(stepId);

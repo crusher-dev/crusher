@@ -156,7 +156,7 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 						// sendSnackBarEvent({type: "proxy-config-modified", message: "Proxy config modified", meta: {}});
 						window["showProxyWarning"] = { testId: res.id, startUrl: proxyWarning.startUrl };
 					}
-					sendSnackBarEvent({ type: "test_created", message: null });
+					// sendSnackBarEvent({ type: "test_created", message: null });
 
 					if (!isTourActive && !currentProjectMeta?.isFirstTestCreated) {
 						/* @TODO: Add this workflow integration onboarding */
@@ -189,7 +189,7 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 					window["showProxyWarning"] = { testId: res.id, startUrl: proxyWarning.startUrl };
 				}
 
-				sendSnackBarEvent({ type: "test_created", message: null });
+				// sendSnackBarEvent({ type: "test_created", message: null });
 				navigate("/");
 				goFullScreen(false);
 			})

@@ -323,7 +323,7 @@ export class AppWindow {
 							acc[env.name] = env;
 							return acc;
 						}, {}) || {};
-						this.store.dispatch(setProjectMetaData({id: projectId, configPath: configFilePath, selectedEnvironment: "development", environments: environmentsMap}, projectId))
+						this.store.dispatch(setProjectMetaData({id: projectId, configPath: configFilePath, selectedEnvironment: "dev", environments: environmentsMap}, projectId))
 						
 						const projectConfigsObject = projectConfigs ? JSON.parse(projectConfigs) : {};
 						projectConfigsObject[projectId] = configFilePath;
@@ -419,7 +419,7 @@ export class AppWindow {
 			}, {}) || {};
 
 			console.log("environmentsMap", environmentsMap);
-			this.store.dispatch(setProjectMetaData({id: selectedProject, configPath: configFilePath, selectedEnvironment: "development", environments: environmentsMap}, selectedProject))
+			this.store.dispatch(setProjectMetaData({id: selectedProject, configPath: configFilePath, selectedEnvironment: "dev", environments: environmentsMap}, selectedProject))
 			this.window.webContents.executeJavaScript(
 				`window.localStorage.setItem('projectConfigs', ${JSON.stringify(JSON.stringify((this.store.getState() as iReduxState).projects.metadata))})`,
 			);

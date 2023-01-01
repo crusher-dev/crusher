@@ -412,7 +412,7 @@ const Toolbar = (props: any) => {
 
 	React.useEffect(() => {
 		if(!urlInputRef?.current.value.length){
-			if(projectMetadata?.environments["development"]?.variables["CRUSHER_BASE_URL"]){
+			if(projectMetadata?.environments["dev"]?.variables["CRUSHER_BASE_URL"]){
 				urlInputRef.current.value = "${ctx.CRUSHER_BASE_URL}";
 			}
 		}

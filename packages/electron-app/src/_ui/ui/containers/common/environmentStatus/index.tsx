@@ -24,13 +24,12 @@ import { useSelector } from "react-redux";
 	);
 }
 
-const environments = ["development", "production"];
 
 export const EnvironmentStatus = ({className, ...props}) => {
     const projectMetaData = useSelector(getCurrentProjectMetadata);
     const environmentsArr = projectMetaData?.environments ? Object.keys(projectMetaData.environments) : [];
 
-    const [selected, setSelected] = React.useState("development");
+    const [selected, setSelected] = React.useState("dev");
 
     const handleChangeEnvironment = (val) => {
         setEnvironment(val);

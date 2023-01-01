@@ -147,7 +147,7 @@ const getTestGroupArr = (testGroups?: string) => {
 }
 
 
-const runTests = async (host: string | undefined, proxyUrlsMap: { [name: string] : {tunnel: string; intercept: any} } = {}, browsers: Array<"CHROME" | "FIREFOX" | "SAFARI"> = ["CHROME"], testIds?: string, testGroups?: string, projectId?: any, ctx?: any = {}) => {
+const runTests = async (host: string | undefined, proxyUrlsMap: { [name: string] : {tunnel: string; intercept: any} } = {}, browsers: Array<"CHROME" | "FIREFOX" | "SAFARI"> = ["CHROME"], testIds?: string, testGroups?: string, projectId?: any, ctx: any = {}) => {
   const userInfo = getUserInfo();
   let _projectId = null;
 
@@ -174,7 +174,7 @@ const runTests = async (host: string | undefined, proxyUrlsMap: { [name: string]
         host: host,
         proxyUrlsMap: proxyUrlsMap,
         browsers: browsers,
-        context: context,
+        context: finalContext,
         testIds: testIds,
         testGroups: testGroups,
       },

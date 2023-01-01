@@ -57,7 +57,7 @@ export const getEnvironmentsFromConfigPath = async (projectConfigPath: string) =
 
 export const initEnvironmentConfigIfNotExists = async (projectConfigPath: string, baseUrl: string) => {
     const projectDirPath = projectConfigPath.split(path.sep).slice(0, -1).join(path.sep);
-    const envFilePath = path.join(projectDirPath, ".env.development");
+    const envFilePath = path.join(projectDirPath, ".env.dev");
 
     if(!fs.existsSync(envFilePath)) {
         fs.writeFileSync(envFilePath, "CRUSHER_BASE_URL=" + baseUrl);

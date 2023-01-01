@@ -98,22 +98,22 @@ const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, 
 			wrapperCss={css`
 			z-index: 123123123 !important;
 			box-shadow: none;
-			background: #0F0F0F;
+			background: #070707;
 		`}
 			css={css`
 			padding: 0rem !important;
 			margin-left: -4rem;
 		`}
 			tooltipCSS={css`
-			border-radius: 12px;
+			border-radius: 0px;
 			overflow: hidden !important;
-			background: #0F0F0F;
-			border: 1px solid #1C1C1C;
+			background: #070707;
+			border: 1px solid #1E1E1E;
 		`}
 			content={isHovered ? <StepEditor stepId={stepId} /> : null}
 			placement="right"
 			type="hover"
-			padding={8}
+			padding={2}
 			offset={0}
 		>
 			{content}

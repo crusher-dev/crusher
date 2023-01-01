@@ -136,7 +136,7 @@ const stepMetaInfoContainerCss = css`
 	font-weight: 400;
 	font-size: 12rem;
 
-	background: #0F0F0F;
+	background: #070707;
 	border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 `;
 

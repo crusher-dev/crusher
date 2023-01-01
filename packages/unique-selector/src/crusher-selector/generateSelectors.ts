@@ -88,7 +88,9 @@ export function getSelectors(
 
 	const selectors = generateSelectors(target, timeout, selectorCache, mode);
 
-	const selectorList = [];
+	let selectorList = [];
+
+	// basic iter
 	let index = 0;
 	for (const selector of selectors) {
 		// take the first one
@@ -99,5 +101,14 @@ export function getSelectors(
 		index++;
 	}
 
-	return selectorList;
+	let newSelectorList:any[] = []
+	let i = 0;
+	selectorCache.forEach((item)=>{
+		if(i===0) {i++; return};
+		newSelectorList = [...newSelectorList,...item.splice(0,5)]
+		i++;
+	})
+
+
+	return newSelectorList.splice(0,5);
 }

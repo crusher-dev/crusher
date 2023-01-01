@@ -19,20 +19,8 @@ export const getPnC = (htmlNode: HTMLElement, target: HTMLElement): SelectorData
 	const seed4Selectors = generateNDepthSelector(htmlNode, target, 4);
 	newTime = Date.now();
 	time = newTime;
-	const seed5Selectors = generateNDepthSelector(htmlNode, target, 5);
-	console.log(newTime - time);
-	// time = newTime;
-	// const seed6Selectors = generateNDepthSelector(htmlNode, target, 6);
-	// console.log(newTime - time);
-	// time = newTime;
-	// const seed7Selectors = generateNDepthSelector(htmlNode, target, 7);
-	// console.log(newTime - time);
-	// time = newTime;
-	// const seed8Selectors = generateNDepthSelector(htmlNode, target, 8);
-	// console.log(newTime - time);
-	// time = newTime;
 
-	const result = [...seed2Selectors, ...seed3Selectors, ...seed4Selectors];
+	const result = [...seed2Selectors, ...seed3Selectors,...seed4Selectors];
 
 	return _.uniqBy(result, "value");
 };
@@ -47,7 +35,7 @@ const generateNDepthSelector = (htmlNode: HTMLElement, target: HTMLElement, seed
 			seedMinLength: seed,
 			optimizedMinLength: optimizationLevel,
 			threshold: 500,
-			maxNumberOfTries: 100,
+			maxNumberOfTries: 500,
 		};
 
 		const querySelector = finder(htmlNode, configuration);

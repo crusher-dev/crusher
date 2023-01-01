@@ -63,10 +63,10 @@ class UniqueSelector {
 			const geAttributesSelector = getAttribute(element, this._configuration.root);
 			const classSelectors = getPnC(element, this._configuration.root);
 			selectors.push(...idSelector, ...getDataAttributesSelector, ...geAttributesSelector, ...classSelectors);
+	
 		}
 
 		const playwrightSelectors = getSelectors(element, 1000, selectorMode, this.selectorCache, useAdvancedSelector);
-
 		if (playwrightSelectors && playwrightSelectors[0].length) {
 			selectors.push(
 				...playwrightSelectors.map((selector) => {

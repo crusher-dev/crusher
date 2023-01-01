@@ -384,7 +384,7 @@ const StepOverlayEditor = ({ stepId }) => {
 		<div
 			onContextMenu={(e) => e.preventDefault()}
 			css={containerCss}
-			style={{ height: "auto" }}
+			style={{ height: "100vh" }}
 			ref={containerRef}
 		>
 			{showAdvanced.show ? (

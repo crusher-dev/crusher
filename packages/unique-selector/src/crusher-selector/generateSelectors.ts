@@ -82,7 +82,7 @@ export function getSelectors(
 	if (!target) return [];
 	let offsetLimit = 10;
 	if (useAdvancedSelector) {
-		timeout = 5000;
+		timeout = 1000;
 		offsetLimit = 200;
 	}
 
@@ -101,14 +101,27 @@ export function getSelectors(
 		index++;
 	}
 
-	let newSelectorList:any[] = []
-	let i = 0;
-	selectorCache.forEach((item)=>{
-		if(i===0) {i++; return};
-		newSelectorList = [...newSelectorList,...item.splice(0,5)]
-		i++;
-	})
+	let finalSelectorList: any[] = getRelevantSelectors(selectorCache);
 
-
-	return newSelectorList.splice(0,5);
+	return finalSelectorList.filter((value)=> value).splice(0,5).map(({selector})=>{
+		return selector;
+	});
 }
+
+function getRelevantSelectors(selectorCache: Map<HTMLElement, RankedSelector[]>) {
+	let newSelectorList: any[] = [];
+	let i = 0;
+	selectorCache.forEach((item) => {
+		if (i === 0) { i++; return; };
+
+		for (const selector of item) {
+			const { penalty } = selector;
+			if (penalty < 150) {
+				newSelectorList.push(selector);
+			}
+		}
+		i++;
+	});
+	return newSelectorList;
+}
+

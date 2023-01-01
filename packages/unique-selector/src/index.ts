@@ -65,9 +65,9 @@ class UniqueSelector {
 			selectors.push(...idSelector, ...getDataAttributesSelector, ...geAttributesSelector, ...classSelectors);
 	
 		}
-
 		const playwrightSelectors = getSelectors(element, 1000, selectorMode, this.selectorCache, useAdvancedSelector);
-		if (playwrightSelectors && playwrightSelectors[0].length) {
+
+		if (playwrightSelectors && playwrightSelectors.length) {
 			selectors.push(
 				...playwrightSelectors.map((selector) => {
 					const uniquenessScore = this.getUniquenessScore(selector, element);
@@ -79,12 +79,8 @@ class UniqueSelector {
 					};
 				}),
 			);
-			selectors = selectors.filter((a) => {
-				return a.uniquenessScore === 1;
-			});
-		}
 
-		selectors.sort((a, b) => Number(b.uniquenessScore) - Number(a.uniquenessScore));
+		}
 
 		// @ts-ignore
 		return {

@@ -2,7 +2,7 @@ lockfileVersion: 5.4
 
 patchedDependencies:
   playwright-core@1.23.3:
-    hash: vj6pgcce5ah725asmajn7kzhb4
+    hash: t2iq7a3s6jkea7g7fktll2qxqq
     path: patches/playwright-core@1.23.3.patch
   bullmq@1.67.1:
     hash: 2g7m7gsxokrxytjfiquzyitsq4

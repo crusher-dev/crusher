@@ -92,9 +92,7 @@ const ArrowRightIcon = (props) => (
 );
 
 const cssHighlight = css`
-		// color: #498ed6e3;
-		// color: #99e66ae3;
-		color: #349dd8;
+		color: #6eafd4;
 `
 
 const normalMessage = css`

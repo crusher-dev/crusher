@@ -15,6 +15,10 @@ import _ from "lodash";
 
 import { StepEditorCustomCode } from "electron-app/src/_ui/ui/containers/components/modals/page/stepEditorModal";
 import { PlayIconV3 } from "electron-app/src/_ui/constants/old_icons";
+import { EditPencilIcon } from "electron-app/src/_ui/constants/icons";
+import { isTemplateFormat } from "@shared/utils/templateString";
+import { sendSnackBarEvent } from "electron-app/src/_ui/ui/containers/components/toast";
+import { addHttpToURLIfNotThere } from "electron-app/src/utils";
 
 const limitString = (string, offset = null) => {
 	if (!string) return string;
@@ -70,6 +74,113 @@ const SelectorBox = ({ stepId }) => {
 	)
 
 };
+
+
+
+const InputValueEditor = ({ step, stepId }) => {
+	const [, setIsEditMode] = React.useState(false);
+	const dispatch = useDispatch();
+	const [isStepNameEditing, setIsStepNameEditing] = useAtom(editInputAtom);
+
+	const getInfo = (step) => {
+		if (step.type === ActionsInTestEnum.ADD_INPUT) {
+			const updateInputValue = (value: string) => {
+				if (step.payload.meta.value.value !== value) {
+					step.payload.meta.value.value = value;
+					dispatch(updateRecordedStep(step, stepId));
+					sendSnackBarEvent({ type: "success", message: "Value updated" });
+					return { value: value };
+				}
+			};
+
+			const inputValue = step.payload.meta?.value?.value || "";
+			return { label: "Value:", value: inputValue, placeholder: "Enter value", updateCallback: updateInputValue };
+		}
+		if ([ActionsInTestEnum.NAVIGATE_URL, ActionsInTestEnum.WAIT_FOR_NAVIGATION].includes(step.type)) {
+			const updateNavigationUrlValue = (value: string) => {
+				const finalValue = step.type === ActionsInTestEnum.NAVIGATE_URL ? (isTemplateFormat(value) ? value : addHttpToURLIfNotThere(value)) : value;
+				if (step.payload.meta.value !== finalValue) {
+					step.payload.meta.value = finalValue;
+					dispatch(updateRecordedStep(step, stepId));
+					sendSnackBarEvent({ type: "success", message: "Navigation value updated" });
+					return { value: finalValue };
+				}
+			};
+
+			const navigationUrlValue = step.payload.meta?.value || "";
+			return { label: "URL:", value: navigationUrlValue, placeholder: "Enter url", updateCallback: updateNavigationUrlValue };
+		}
+
+		return null;
+	};
+
+	const fieldInfo = getInfo(step);
+	const handleUpdate = (value) => {
+		setIsEditMode(false);
+		return fieldInfo.updateCallback(value);
+	};
+	if (!fieldInfo) return null;
+
+
+	return (
+		<div className={"flex items-center mt-20"}>
+			<div
+				css={[
+					labelCss
+				]}
+				className={"mr-7" + (isStepNameEditing === stepId + "-nav-url" ? "mt-2" : "")}
+			>
+				{fieldInfo.label}
+			</div>
+			<EditableInput
+				inputCss={css`
+					input {
+						width: 180rem;
+						min-width: 180rem !important;
+						font-family: "Gilroy" !important;
+						font-style: normal !important;
+						font-weight: 400 !important;
+						font-size: 13rem !important;
+						height: 24rem !important;
+						background: rgba(177, 79, 254, 0.04) !important;
+						border: 0.5px solid #b14ffe !important;
+						border-radius: 8rem !important;
+						color: rgba(215, 223, 225, 0.93) !important;
+					}
+				`}
+
+				labelCss={css`
+					font-family: "Gilroy" !important;
+					font-style: normal !important;
+					font-weight: 400 !important;
+					font-size: 13rem !important;
+					border: 0.5px solid transparent !important;
+					padding: 4rem 0rem !important;
+				`}
+				defaultValue={fieldInfo.value}
+				id={`nav-${stepId}-url`}
+				onChange={handleUpdate.bind(this)}
+			/>
+			<EditPencilIcon onClick={setIsStepNameEditing.bind(this, stepId + "-nav-url")} className={"ml-10"} css={editUrlIconCss} />
+		</div>
+	);
+};
+
+const labelCss = css`
+	font-size: 13rem;
+	color: rgba(215, 223, 225, 0.6);
+`;
+
+const editUrlIconCss = css`
+	width: 11rem;
+	height: 11rem;
+	margin-top: -2rem;
+	:hover {
+		opacity: 0.8;
+	}
+`;
+
+
 
 const playIconCss = css`
 	width: 6rem;
@@ -201,9 +312,10 @@ const StepName = ({ stepId }) => {
 
 const StepMetaInfo = ({ stepId }) => {
 	const steps = useSelector(getAllSteps);
+	const step = steps[stepId];
 
-	const hasSelectors = steps[stepId].type.startsWith("ELEMENT");
-
+	const hasSelectors = step.type.startsWith("ELEMENT");
+	const isInputValueType = [ActionsInTestEnum.ADD_INPUT, ActionsInTestEnum.NAVIGATE_URL, ActionsInTestEnum.WAIT_FOR_NAVIGATION].includes(step.type);
 	return (
 		<div css={stepMetaInfoContainerCss} className={"py-12"}>
 			<StepName stepId={stepId} />
@@ -215,6 +327,12 @@ const StepMetaInfo = ({ stepId }) => {
 			) : (
 				""
 			)}
+			{isInputValueType ? (
+				<div className={"flex mt-35 px-12"}>
+					<InputValueEditor step={steps[stepId]} stepId={stepId}/>
+				</div>
+			) : ""}
+
 
 		</div>
 	);

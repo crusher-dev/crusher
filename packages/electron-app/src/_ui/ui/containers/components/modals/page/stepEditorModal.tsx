@@ -1,15 +1,24 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import CodeMirror from '@uiw/react-codemirror';
 
 import { tags as t } from '@lezer/highlight';
 import { createTheme, CreateThemeOptions } from '@uiw/codemirror-themes';
-import { useStore, useSelector } from "react-redux";
+import { useStore, useSelector, useDispatch } from "react-redux";
 
 import { javascript } from '@codemirror/lang-javascript';
 import { getAllSteps } from "electron-app/src/store/selectors/recorder";
 import { iSelectorInfo } from "@shared/types/selectorInfo";
 import { transformStringSelectorsToArray } from "electron-app/src/_ui/ui/screens/recorder/sidebar/stepsPanel/helper";
 import { updateRecordedStep } from "electron-app/src/store/actions/recorder";
+import { EditPencilIcon } from "electron-app/src/_ui/constants/icons";
+import { EditableInput } from "electron-app/src/_ui/ui/components/inputs/editableInput";
+import { css } from "@emotion/react";
+import { sendSnackBarEvent } from "../../toast";
+import { ActionsInTestEnum } from "@shared/constants/recordedActions";
+import { addHttpToURLIfNotThere } from "@shared/utils/url";
+import { useAtom } from "jotai";
+import { editInputAtom } from "electron-app/src/_ui/store/jotai/testsPage";
+import { isTemplateFormat } from "@shared/utils/templateString";
 
 export const okaidiaInit = (options?: CreateThemeOptions) => {
   const { theme = 'dark', settings = {}, styles = [] } = options || {};
@@ -157,8 +166,6 @@ const StepEditorCustomCode = React.memo(({ code, stepId, onChange = () => { } })
     </div>
   );
 });
-
-
 
 
 export { StepEditorCustomCode };

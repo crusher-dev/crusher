@@ -48,7 +48,7 @@ const TextHighlighter = ({ text }, shouldStyle = false) => {
 		if (a.type === "highlight") {
 			return (
 				<span className="highlight-box" style={{ color: shouldStyle ? `rgba(121, 207, 255, 1)` : "auto" }} title={a.value}>
-					{a.value.length > 15 ? `${a.value.substring(0, 15)}...` : a.value}
+					{a.value.length > 30 ? `${a.value.substring(0, 30)}...` : a.value}
 				</span>
 			);
 		} else {

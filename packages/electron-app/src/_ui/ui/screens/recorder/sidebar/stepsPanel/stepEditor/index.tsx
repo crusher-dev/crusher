@@ -84,7 +84,7 @@ const InputValueEditor = ({ step, stepId }) => {
 
 	const getInfo = (step) => {
 		if (step.type === ActionsInTestEnum.ADD_INPUT) {
-			const updateInputValue = (value: string) => {
+			const updateInputValue = (value: string, finalUpdate: boolean) => {
 				if (step.payload.meta.value.value !== value) {
 					step.payload.meta.value.value = value;
 					dispatch(updateRecordedStep(step, stepId));
@@ -97,8 +97,8 @@ const InputValueEditor = ({ step, stepId }) => {
 			return { label: "Value:", value: inputValue, placeholder: "Enter value", updateCallback: updateInputValue };
 		}
 		if ([ActionsInTestEnum.NAVIGATE_URL, ActionsInTestEnum.WAIT_FOR_NAVIGATION].includes(step.type)) {
-			const updateNavigationUrlValue = (value: string) => {
-				const finalValue = step.type === ActionsInTestEnum.NAVIGATE_URL ? (isTemplateFormat(value) ? value : addHttpToURLIfNotThere(value)) : value;
+			const updateNavigationUrlValue = (value: string, finalUpdate: boolean) => {
+				const finalValue = finalUpdate && step.type === ActionsInTestEnum.NAVIGATE_URL ? (isTemplateFormat(value) ? value : addHttpToURLIfNotThere(value)) : value;
 				if (step.payload.meta.value !== finalValue) {
 					step.payload.meta.value = finalValue;
 					dispatch(updateRecordedStep(step, stepId));
@@ -115,15 +115,15 @@ const InputValueEditor = ({ step, stepId }) => {
 	};
 
 	const fieldInfo = getInfo(step);
-	const handleUpdate = (value) => {
+	const handleUpdate = (e) => {
 		setIsEditMode(false);
-		return fieldInfo.updateCallback(value);
+		return fieldInfo.updateCallback(e.target.value, false);
 	};
 	if (!fieldInfo) return null;
 
 
 	return (
-		<div className={"flex items-center mt-20"}>
+		<div className={"flex flex-1 items-center mt-20"}>
 			<div
 				css={[
 					labelCss
@@ -132,36 +132,33 @@ const InputValueEditor = ({ step, stepId }) => {
 			>
 				{fieldInfo.label}
 			</div>
-			<EditableInput
-				inputCss={css`
-					input {
-						width: 180rem;
-						min-width: 180rem !important;
-						font-family: "Gilroy" !important;
-						font-style: normal !important;
-						font-weight: 400 !important;
-						font-size: 13rem !important;
-						height: 24rem !important;
-						background: rgba(177, 79, 254, 0.04) !important;
-						border: 0.5px solid #b14ffe !important;
-						border-radius: 8rem !important;
-						color: rgba(215, 223, 225, 0.93) !important;
-					}
-				`}
+			<div className={"ml-auto"}>
+			<input
+				css={css`
+					width: 240rem;
 
-				labelCss={css`
 					font-family: "Gilroy" !important;
 					font-style: normal !important;
-					font-weight: 400 !important;
+					font-weight: 500 !important;
 					font-size: 13rem !important;
-					border: 0.5px solid transparent !important;
-					padding: 4rem 0rem !important;
+					padding: 6rem !important;
+					background: rgba(217, 217, 217, 0.02);
+					border: 0.5px solid #161616;
+					color: #fff !important;
+					border-radius: 8rem !important;
 				`}
-				defaultValue={fieldInfo.value}
+				value={fieldInfo.value}
 				id={`nav-${stepId}-url`}
 				onChange={handleUpdate.bind(this)}
-			/>
-			<EditPencilIcon onClick={setIsStepNameEditing.bind(this, stepId + "-nav-url")} className={"ml-10"} css={editUrlIconCss} />
+				onKeyDown={(e) => {	
+					if (e.key === "Enter") {
+						fieldInfo.updateCallback(e.target.value, true);
+					}
+				}}
+				onBlur={(e) => {
+					fieldInfo.updateCallback(e.target.value, true);
+				}}
+			/></div>
 		</div>
 	);
 };
@@ -289,7 +286,13 @@ const StepName = ({ stepId }) => {
 						labelCss={css`
 						font-size: 14rem !important;
 						border: 0.5px solid transparent !important;
-						padding: 4rem 0rem !important;
+						padding: 4rem !important;
+						margin-left: -4rem !important;
+
+						:hover {
+							border: 0.5px solid rgba(255, 255, 255, 0.08) !important;
+							border-radius: 8rem !important;
+						}
 					`}
 						labelComponent={<LabelComponent />}
 						defaultValue={TextHighlighterText({ text: title }).join(" ")}

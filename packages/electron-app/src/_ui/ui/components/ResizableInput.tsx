@@ -41,7 +41,7 @@ const ResizableInput = React.forwardRef(
 
 		if (!isEditing) {
 			return (
-				<div title="edit name" ref={inputRef} css={[labelCSS, labelCss]} onDoubleClick={setTestEditName.bind(this, id)}>
+				<div title="edit name" ref={inputRef} css={[labelCSS, labelCss]} onClick={setTestEditName.bind(this, id)}>
 					{labelComponent || value}
 				</div>
 			);

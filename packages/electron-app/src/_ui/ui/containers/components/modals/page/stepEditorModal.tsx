@@ -3,8 +3,13 @@ import CodeMirror from '@uiw/react-codemirror';
 
 import { tags as t } from '@lezer/highlight';
 import { createTheme, CreateThemeOptions } from '@uiw/codemirror-themes';
+import { useStore, useSelector } from "react-redux";
 
 import { javascript } from '@codemirror/lang-javascript';
+import { getAllSteps } from "electron-app/src/store/selectors/recorder";
+import { iSelectorInfo } from "@shared/types/selectorInfo";
+import { transformStringSelectorsToArray } from "electron-app/src/_ui/ui/screens/recorder/sidebar/stepsPanel/helper";
+import { updateRecordedStep } from "electron-app/src/store/actions/recorder";
 
 export const okaidiaInit = (options?: CreateThemeOptions) => {
   const { theme = 'dark', settings = {}, styles = [] } = options || {};
@@ -59,10 +64,26 @@ export const okaidiaInit = (options?: CreateThemeOptions) => {
   });
 };
 
-const extensions = [javascript()];
-
-const StepEditorCustomCode = React.memo(({ code, onChange = () => { } }) => {
+const StepEditorCustomCode = React.memo(({ code, stepId, onChange = () => { } }) => {
   const [show, setShow] = React.useState(false);
+  const steps = useSelector(getAllSteps);
+	const step = steps[stepId];
+  const store = useStore();
+
+	const getReadbleSelectors = (selectors: iSelectorInfo[] | null) => {
+		if (!selectors) return [];
+
+		return selectors
+			.map((selector) => {
+				return selector.value;
+			});
+	};
+
+
+	const selectorsContent = React.useMemo(() => {
+		let filteredSelectors = step.payload.selectors;
+		return 	getReadbleSelectors(filteredSelectors).join("\n");
+	}, [step]);
 
   const theme = React.useMemo(() => {
     return okaidiaInit({
@@ -81,39 +102,58 @@ const StepEditorCustomCode = React.memo(({ code, onChange = () => { } }) => {
 
     setShow(false);
   }, []);
+
+  const handleOnChange = (val, viewUpdate) => {
+    const selectors = transformStringSelectorsToArray(val);
+    
+    store.dispatch(updateRecordedStep({
+      ...step,
+      payload: {
+        ...step.payload,
+        selectors
+      }
+    }, stepId));
+  };
+
   return (
 
-    <div style={{ marginLeft: -02 }}>
+    <div style={{ marginLeft: -2 }}>
            {show ? <CodeMirror
-              value={`input[data-ved="0ahUKEwi-8v2Q2qb8AhVmTmwGHe3QBvQQ39UDCAU"]
-      input[jsaction="paste:puy29d;"]
-      input[maxlength="2048"]
-      input[name="q"]
-      input[type="text"]
-      input[aria-autocomplete="both"]
-      input[aria-haspopup="false"]
-      input[autocapitalize="off"]
-      input[autocomplete="off"]
-      input[autocorrect="off"]
-      input[autofocus=""]
-      input[role="combobox"]
-      input[spellcheck="false"]
-      input[title="Search"]
-      input[value=""]
-      input[aria-label="Search"]
-      .a4bIc > .gLFyf
-      .SDkEP .gLFyf
-      .RNNXgb .gLFyf
-      //BODY/DIV[1]/DIV[3]/FORM[1]/DIV[1]/DIV[1]/DIV[1]/DIV[1]/DIV[2]/INPUT[1]	
-            `}
+              value={selectorsContent}
               height="200px"
               theme={theme}
-
+              onChange={handleOnChange}
 
               //   extensions={extensions}
               basicSetup={{ foldGutter: false }}
               width="400px"
+              className={"custom-scroll"}
             /> : ""}
+
+            <style>
+              {`
+                	.cm-scroller::-webkit-scrollbar {
+                    width: 10rem;
+                    height: 10rem;
+                  }
+                  .cm-scroller::-webkit-scrollbar-track {
+                    background-color: #0a0b0e;
+                    box-shadow: none;
+                  }
+                  .cm-scroller::-webkit-scrollbar-thumb {
+                    background-color: #1b1f23;
+                    border-radius: 12rem;
+                  }
+                
+                  .cm-scroller::-webkit-scrollbar-thumb:hover {
+                    background-color: #272b31;
+                    border-radius: 100rem;
+                  }
+                  .cm-scroller::-webkit-scrollbar-corner {
+                    display: none;
+                  }
+              `}
+            </style>
     </div>
   );
 });

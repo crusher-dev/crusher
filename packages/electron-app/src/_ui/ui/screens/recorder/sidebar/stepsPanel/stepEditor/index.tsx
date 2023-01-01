@@ -64,7 +64,7 @@ const SelectorBox = ({ stepId }) => {
 			</React.Fragment>
 		)} children={
 			<div className="">
-				<StepEditorCustomCode/>
+				<StepEditorCustomCode stepId={stepId}/>
 			</div>
 		}/>
 

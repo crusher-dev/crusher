@@ -18,6 +18,7 @@ import { SelectorEditorCard } from "./selectorEditor";
 import { addHttpToURLIfNotThere } from "electron-app/src/utils";
 import _ from "lodash";
 import { isTemplateFormat } from "@shared/utils/templateString";
+import { StepEditorCustomCode } from "electron-app/src/_ui/ui/containers/components/modals/page/stepEditorModal";
 
 const limitString = (string, offset = null) => {
 	if (!string) return string;
@@ -48,6 +49,7 @@ const SelectorInfo = ({ stepId, setShowAdvanced }) => {
 	}, [selectors]);
 	return (
 		<div css={selectorInfoContainerCss}>
+			<StepEditorCustomCode/>
 			<div className={"flex items-center"}>
 				<div>
 					<span>main selector:</span>

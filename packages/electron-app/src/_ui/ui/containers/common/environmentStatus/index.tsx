@@ -46,7 +46,7 @@ export const EnvironmentStatus = ({className, ...props}) => {
         <HoverCard  content={<HelpContent onClick={stopPropagation} setSelected={handleChangeEnvironment} environments={environmentsArr} selected={selected} />} placement="top" type="hover" padding={8} offset={0}>
             <div onClick={stopPropagation}  className={`flex items-center ${className}`} css={containerCss} {...props}>
                
-               <EarthIcon/> <span className="ml-4">{selected}</span>
+               <EarthIcon/> <span className="ml-4 tracking-wide">{selected}</span>
             </div>
         </HoverCard>
  
@@ -55,7 +55,7 @@ export const EnvironmentStatus = ({className, ...props}) => {
 
 const containerCss = css`
     position: relative;
-    top: 2rem;
+    top: 1rem;
 `;
 
 const dotCss = css`

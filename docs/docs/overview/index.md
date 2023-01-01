@@ -9,35 +9,22 @@ hide_table_of_contents: false
 import DocsCard from '@components/global/DocsCard';
 import DocsCards from '@components/global/DocsCards';
 import CrusherFeatures from '@components/page/index';
-import { UseCrusher } from '../__components/list.tsx';
+import { UseCrusher, FurtherDocs } from '../__components/list.tsx';
 import { AccordionDemo } from '@components/global/FAQ/faq.tsx';
 import css from '@emotion/react';
-<head>
-  <title>Crusher Docs</title>
-  <meta name="description" content="Crusher.dev" />
-  <link rel="canonical" href="https://docs.crusher.dev/" />
-  <link rel="alternate" href="https://docs.crusher.dev/" hreflang="x-default" />
-  <link rel="alternate" href="https://docs.crusher.dev/" hreflang="en" />
-  <meta property="og:url" content="https://docs.crusher.dev/" />
-</head>;
 
-Crusher is <span className="highlight_cyan">all in one testing framework</span>. It includes everything w.r.t to better e2e testing experience, like test recorder(local app), test runner and web app for you.
+Crusher is a new fast testing framework, it's opinionated and takes low-code approach. You can create test by browsing website, adding assertion when needed. <br/>
+
+It's better alternative to workflows built and unreliable & slow libraries (w high learning curve), gluing tools and repetitive script.
+
+<UseCrusher />
+<br />
+<br />
+
+Crusher is focusing on being fast, robust and making testing fun.
+
+And it's built as an all-in-tool — with recorder, Infra + batteries built-in. You can effortlessly test with <span className="highlight_cyan">low-code</span> or write test in <span className="highlight_cyan">native JS code</span> <span className="highlight_red">\*</span>.
 
 <br />
 
-We're owning e2e testing toolchain, building framework for:-
-
-- <span className="highlight_cyan"> Delightful effortless</span> test experience{' '}
-- Making testing <span className="highlight_cyan">robust</span> and collborative
-
-<p style={{ marginTop: 32 }}>
-  Crusher is built on top of playwright, an open source library by Microsoft.
-  <br /> Start by recording <span className="highlight_green">low-code</span> test or write in <span className="highlight_green">
-    native JS code
-  </span>
-  <span className="highlight_red">*</span>.
-</p>
-
-<UseCrusher />
-
-<span className="highlight_red">*</span> = Feature coming soon
+<FurtherDocs />

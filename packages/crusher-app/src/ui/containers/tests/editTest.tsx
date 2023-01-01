@@ -130,7 +130,7 @@ export const EditTestModal = ({ name, folderId, id, onClose }) => {
 				size={"medium"}
 			/>
 
-			<div className={"flex mt-24 "}>
+			{/* <div className={"flex mt-24 "}>
 				<div className={"w-full mr-32"}>
 					<TextBlock
 						css={css`
@@ -143,7 +143,7 @@ export const EditTestModal = ({ name, folderId, id, onClose }) => {
 						Folder
 					</TextBlock>
 
-					<SelectBox
+				<SelectBox
 						selected={selectedFolder}
 						css={css`
 							width: 50%;
@@ -156,9 +156,9 @@ export const EditTestModal = ({ name, folderId, id, onClose }) => {
 						callback={(e) => {
 							setSelectedFolder(e);
 						}}
-					/>
+					/> 
 				</div>
-			</div>
+			</div> */}
 			<div className={"flex justify-end mt-20"}>
 				<Button
 					disabled={!isFormChanged || processing}

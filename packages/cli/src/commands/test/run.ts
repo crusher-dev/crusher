@@ -9,6 +9,7 @@ import { BROWSERS_MAP } from "../../constants";
 import { ChildProcess, exec, execSync, spawn } from "child_process";
 import { BlankMessage, Message } from "../../utils/cliMessages";
 import chalk from "chalk";
+import { getEnvironments } from "../../utils/environments";
 
 export default class CommandBase {
   program: Command;
@@ -22,6 +23,7 @@ export default class CommandBase {
     );
     this.program
       .option("-t, --token <string>", "Crusher user token")
+      .option("-e, --env <string>", "Environment to run test on. Default <development>")
       .option("-projectid, --projectid <string>", "Crusher project ID")
       .option("-b, --browsers <string>", "Browsers to run test on")
       .option("-host, --host <string>", "Browsers to run test on")
@@ -90,7 +92,7 @@ export default class CommandBase {
     const disableProjectConfig = flags["disable-project-config"];
 
     const projectConfig = !disableProjectConfig ? getProjectConfig() : null;
-    const { testId, testGroup, browser, token, host, preRun } = flags;
+    const { testId, testGroup, browser, token, host, preRun, env } = flags;
 
     let preScriptProcess: ChildProcess | null = null;
 
@@ -123,7 +125,10 @@ export default class CommandBase {
 
 
     try {
-      await runTests(host, proxyUrls, _browsers, testId, testGroup, flags.projectid || null);
+      const environments = getEnvironments();
+      const selectedEnvironment = environments.find((item) => item.name === env || "development");
+
+      await runTests(host, proxyUrls, _browsers, testId, testGroup, flags.projectid || null, selectedEnvironment?.variables || {});
     } catch (err) {
       console.error("Error is", err);
     } finally {

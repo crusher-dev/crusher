@@ -110,12 +110,6 @@ const TestItem = ({ test, isItemSelected, isEditingName, setIsEditingName }) => 
 				setIsEditing={setIsEditingName}
 				testName={test.testName}
 			/>
-			<Conditional showIf={!test.firstRunCompleted}>
-				<div css={loadingContainerCss} title={"verifying..."}>
-					<span className="pt-1 ml-10">verifying</span>
-					<LoadingIconV2 css={loadingIconCss} />
-				</div>
-			</Conditional>
 
 			<div className={"action-buttons"} css={listItemActionsStyle}>
 				<div onClick={handleEdit} css={editContainerCss} title="edit this test">

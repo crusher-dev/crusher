@@ -163,7 +163,7 @@ const performVerifyTest = (shouldAlsoSave = true, autoSaveType: "UPDATE" | "SAVE
 			showToast({
 				type: "ready-for-edit",
 				isUnique: true,
-				message: "All steps completed, you can edit now",
+				message: "All steps completed, you can edit the test",
 			});
 
 		return res;

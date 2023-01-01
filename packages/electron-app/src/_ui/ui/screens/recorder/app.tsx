@@ -109,7 +109,7 @@ const handleCompletion = async (store: Store, action: IDeepLinkAction, addNotifi
 			showToast({
 				type: "ready-for-edit",
 				isUnique: true,
-				message: "All steps completed, you can edit now",
+				message: "All steps completed, you can edit the test",
 			});
 		}
 	}

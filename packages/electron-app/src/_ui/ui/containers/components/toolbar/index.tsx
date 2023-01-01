@@ -687,9 +687,9 @@ const Toolbar = (props: any) => {
 										: undefined,
 								]}
 							/>
-							<span className={"ml-6 recorder-status"} css={recorderStatusTextCss}>
+							<span className={"ml-6 pt-2 recorder-status"} css={recorderStatusTextCss}>
 								{ recorderContext.variant === TRecorderVariant.LOCAL_BUILD ? "replaying" : (
-									[TRecorderState.RECORDING_ACTIONS].includes(recorderState.type) ? "recording" : "waiting"
+									[TRecorderState.RECORDING_ACTIONS].includes(recorderState.type) ? "rec" : "wait"
 								) }
 							</span>
 						</div>

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { css } from "@emotion/react";
-import { getAllSteps, getSavedSteps, getStepInfo } from "electron-app/src/store/selectors/recorder";
+import { getAllSteps, getStepInfo } from "electron-app/src/store/selectors/recorder";
 import { useSelector, useDispatch } from "react-redux";
 import { TextHighlighter, TextHighlighterText, transformStringSelectorsToArray } from "../helper";
 import { deleteRecordedSteps, updateRecordedStep } from "electron-app/src/store/actions/recorder";
@@ -14,7 +14,6 @@ import { editInputAtom, isStepHoverAtom } from "electron-app/src/_ui/store/jotai
 import _ from "lodash";
 
 import { StepEditorCustomCode } from "electron-app/src/_ui/ui/containers/components/modals/page/stepEditorModal";
-
 import { PlayIconV3 } from "electron-app/src/_ui/constants/old_icons";
 
 const limitString = (string, offset = null) => {
@@ -86,8 +85,8 @@ const playIconCss = css`
 	}
 `;
 
-export const Accordion = ({children,topBar})=>{
-	const [hover,setHover] = React.useState(false);
+export const Accordion = ({children,topBar,show=false})=>{
+	const [hover,setHover] = React.useState(show);
 
 	return (
 		<div className="w-full">

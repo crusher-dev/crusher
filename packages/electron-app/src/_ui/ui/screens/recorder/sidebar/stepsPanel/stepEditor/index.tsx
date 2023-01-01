@@ -320,7 +320,7 @@ const StepMetaInfo = ({ stepId }) => {
 	const hasSelectors = step.type.startsWith("ELEMENT");
 	const isInputValueType = [ActionsInTestEnum.ADD_INPUT, ActionsInTestEnum.NAVIGATE_URL, ActionsInTestEnum.WAIT_FOR_NAVIGATION].includes(step.type);
 	return (
-		<div css={stepMetaInfoContainerCss} className={"py-12"}>
+		<div css={[stepMetaInfoContainerCss, hasSelectors ? css`border-bottom: none` : null]} className={"py-12"}>
 			<StepName stepId={stepId} />
 
 			{hasSelectors ? (

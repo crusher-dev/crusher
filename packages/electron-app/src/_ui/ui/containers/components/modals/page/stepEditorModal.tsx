@@ -83,7 +83,7 @@ const StepEditorCustomCode = React.memo(({ code, onChange = () => { } }) => {
   }, []);
   return (
 
-    <div style={{ marginLeft: -22 }}>
+    <div style={{ marginLeft: -02 }}>
            {show ? <CodeMirror
               value={`input[data-ved="0ahUKEwi-8v2Q2qb8AhVmTmwGHe3QBvQQ39UDCAU"]
       input[jsaction="paste:puy29d;"]

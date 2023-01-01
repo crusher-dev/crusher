@@ -91,7 +91,7 @@ const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, 
 		<HoverCard
 			supportPadding={<div css={css`position: absolute; background: transparent; width: 20rem; height: 100%; z-index: 999; margin-left: -24rem;`}></div>}
 			disabled={disabled || (statusType === "failed" && !stepHoverId) || (stepHoverId && stepHoverId !== stepId)}
-			autoHide={false}
+			autoHide={true}
 			state={stepHoverId === stepId}
 			callback={handleHoverCallback}
 			wrapperCss={css`

@@ -1,6 +1,6 @@
 import { Configuration, UserConfiguration, DefaultConfiguration } from "./interfaces/config";
 import { UniqueSelectorResult } from "./interfaces/result";
-import { getIDSelectors } from "./selectors/id";
+import { getIDSelectors, getTextBasedSelector } from "./selectors/id";
 import { getDataAttribute } from "./selectors/dataAttribute";
 import { getAttribute } from "./selectors/attribute";
 import { getPnC } from "./selectors/pnc";
@@ -58,11 +58,12 @@ class UniqueSelector {
 		let selectors: any[] = [];
 
 		if (selectorMode === SelectorsModeEnum.NORMAL) {
+			const textSelector = getTextBasedSelector(element, this._configuration.root);
 			const idSelector = getIDSelectors(element, this._configuration.root);
 			const getDataAttributesSelector = getDataAttribute(element, this._configuration.root);
 			const geAttributesSelector = getAttribute(element, this._configuration.root);
 			const classSelectors = getPnC(element, this._configuration.root);
-			selectors.push(...idSelector, ...getDataAttributesSelector, ...geAttributesSelector, ...classSelectors);
+			selectors.push(...textSelector,...idSelector, ...getDataAttributesSelector, ...geAttributesSelector, ...classSelectors);
 	
 		}
 		const playwrightSelectors = getSelectors(element, 1000, selectorMode, this.selectorCache, useAdvancedSelector);

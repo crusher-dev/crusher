@@ -23,3 +23,21 @@ export const getIDSelectors = (htmlNode: HTMLElement, target: HTMLElement): Sele
 		},
 	];
 };
+
+
+export const getTextBasedSelector = (htmlNode: HTMLElement, target: HTMLElement): SelectorData[] => {
+	const elementText = htmlNode.innerText;
+	const hasLargeChild = Array.from(htmlNode.childNodes).length>3;
+	if (!elementText && hasLargeChild ) return [];
+
+	const querySelector = `text="${elementText}"`;
+	const uniquenessScore = getUniqueScore(querySelector, target);
+
+	return [
+		{
+			type: SELECTOR_TYPE.TEXT,
+			value: querySelector,
+			uniquenessScore,
+		},
+	];
+};

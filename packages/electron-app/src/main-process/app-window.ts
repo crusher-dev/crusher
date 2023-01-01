@@ -524,7 +524,10 @@ export class AppWindow {
 	}
 
 	private async handleCloudRunTests(event: Electron.IpcMainEvent, payload: { testIds: string[] | undefined }) {
-		return CloudCrusher.runTests(payload.testIds, this.proxyManager._results);
+		const contextVariables = this.getCurrentProjectEnvironmentVariables();
+
+
+		return CloudCrusher.runTests(payload.testIds, this.proxyManager._results, contextVariables);
 	}
 
 	private handleGetAdvancedSelector(event: Electron.IpcMainEvent) {

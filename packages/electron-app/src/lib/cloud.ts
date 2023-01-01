@@ -54,8 +54,8 @@ class CloudCrusher {
 			.then((res) => res.data);
 	});
 
-	public static runTests: (testIds: string[], proxyConfig: any | null) => Promise<any> = createAuthorizedRequestFunc(
-		(authorizationOptions, testIds, proxyConfig) => {
+	public static runTests: (testIds: string[], proxyConfig: any | null, context: any) => Promise<any> = createAuthorizedRequestFunc(
+		(authorizationOptions, testIds, proxyConfig, context: any = {}) => {
 			const store = getStore();
 			const selectedProject = getCurrentSelectedProjct(store.getState() as any);
 			if (!selectedProject) throw new Error("No project selected!");
@@ -66,6 +66,7 @@ class CloudCrusher {
 					{
 						testIds: Array.isArray(testIds) ? testIds.join(",") : testIds,
 						proxyUrlsMap: getProxyFromTunnelData(proxyConfig),
+						context: context,
 					},
 					authorizationOptions,
 				)

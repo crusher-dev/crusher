@@ -1,6 +1,6 @@
 import React from "react";
 import { css } from "@emotion/react";
-import { GreenDotIcon } from "electron-app/src/_ui/constants/old_icons";
+import { EarthIcon, GreenDotIcon } from "electron-app/src/_ui/constants/old_icons";
 import { HoverCard } from "@dyson/components/atoms/tooltip/Tooltip1";
 import { setEnvironment } from "electron-app/src/ipc/perform";
 import { getCurrentProjectMetadata } from "electron-app/src/store/selectors/projects";
@@ -45,8 +45,8 @@ export const EnvironmentStatus = ({className, ...props}) => {
     return (
         <HoverCard  content={<HelpContent onClick={stopPropagation} setSelected={handleChangeEnvironment} environments={environmentsArr} selected={selected} />} placement="top" type="hover" padding={8} offset={0}>
             <div onClick={stopPropagation}  className={`flex items-center ${className}`} css={containerCss} {...props}>
-                <span>{selected}</span>
-                <GreenDotIcon css={dotCss} className={"ml-8"}/>
+               
+               <EarthIcon/> <span className="ml-4">{selected}</span>
             </div>
         </HoverCard>
  

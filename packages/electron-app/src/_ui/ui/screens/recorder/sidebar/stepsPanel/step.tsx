@@ -22,7 +22,6 @@ interface IProps {
 	onClick?: any;
 	onContextMenu?: any;
 	isLast: boolean;
-
 	shouldOpenEditor?: boolean;
 	step?: any;
 }
@@ -92,7 +91,7 @@ const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, 
 		<HoverCard
 			supportPadding={<div css={css`position: absolute; background: transparent; width: 20rem; height: 100%; z-index: 999; margin-left: -24rem;`}></div>}
 			disabled={disabled || (statusType === "failed" && !stepHoverId) || (stepHoverId && stepHoverId !== stepId)}
-			autoHide={false}
+			autoHide={true}
 			state={stepHoverId === stepId}
 			callback={handleHoverCallback}
 			wrapperCss={css`
@@ -102,7 +101,7 @@ const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, 
 		`}
 			css={css`
 			padding: 0rem !important;
-			margin-left: -4rem;
+			margin-left: -2rem;
 		`}
 			tooltipCSS={css`
 			border-radius: 0px;
@@ -166,8 +165,6 @@ const stepTextCss = css`
 	word-break: break-all;
 `;
 const stepNameCss = css`
-	font-family: Gilroy !important;
-	font-style: normal !important;
 	font-weight: 500 !important;
 	font-size: 12.4rem !important;
 	line-height: 13rem !important;
@@ -182,8 +179,6 @@ const runningTextNameCss = css`
 	color: #a056ff !important;
 `;
 const stepDescriptionCss = css`
-	font-family: Gilroy !important;
-	font-style: normal !important;
 	font-weight: 400;
 	font-size: 10rem !important;
 	line-height: 10rem !important;

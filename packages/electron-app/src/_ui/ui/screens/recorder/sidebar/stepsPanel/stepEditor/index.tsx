@@ -159,8 +159,8 @@ const StepName = ({ stepId }) => {
 
 	return (
 		<>
-			<div css={stepNameCss} className={"flex items-center px-12"}>
-				<div css={css``}>
+			<div className={"flex items-center px-12 text-15 font-500"}>
+	
 					<EditableInput
 						inputCss={css`
 						input {
@@ -186,19 +186,12 @@ const StepName = ({ stepId }) => {
 						id={stepId + "-stepName"}
 						onChange={handleOnChange.bind(this)}
 					/>
-				</div>
+
 				
 
 			</div>
 			{showStepDescriptionHelper ? (
-				<div
-					css={css`
-						font-size: 12rem;
-						margin-top: 8rem;
-						letter-spacing: .6px;
-					`}
-					className="ml-2 px-12"
-				>
+				<div className="ml-2 mt-8 text-12 px-12 tracking-wide">
 					{TextHighlighter({ text: stepInfo.actionDescription }, true)}
 				</div>
 			) : ""}
@@ -228,10 +221,7 @@ const StepMetaInfo = ({ stepId }) => {
 	);
 };
 
-const stepNameCss = css`
-	font-weight: 500;
-	font-size: 15rem;
-`;
+
 const stepMetaInfoContainerCss = css`
 	background: #070707;
 	border-bottom: 1px solid rgba(255, 255, 255, 0.08);
@@ -351,7 +341,6 @@ const deleteCss = css`
 	}
 `;
 const actionsListCss = css`
-	font-family: "Gilroy";
 
 	font-weight: 400;
 	font-size: 12rem;

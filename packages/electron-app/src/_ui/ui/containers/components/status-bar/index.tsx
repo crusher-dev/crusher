@@ -378,7 +378,6 @@ const StatusBar = () => {
 						isOpen={currentModal.type === "CUSTOM_CODE"}
 						handleClose={closeModal}
 					/>
-					{/* <div css={css`height: 100%; width: 100%; background :red;`}></div> */}
 				</div>
 			) : (
 				""
@@ -422,12 +421,7 @@ const StatusBar = () => {
 					onClick={lastLogMessage ? handleToggle : undefined}
 				>
 					<div
-						css={[
-							css`
-								width: 100%;
-							`,
-						]}
-						className={"flex items-center"}
+						className={"flex items-center w-full"}
 					>
 						{lastLogMessage ? <UpDownSizeIcon css={updownSizeIconCss} className={"updownSize-icon mr-7"} /> : ""}
 						{logs && logs.get("_").length ? (<TabButton
@@ -492,9 +486,9 @@ const StatusBar = () => {
 			
 					<EnvironmentStatus className={"ml-auto mr-12"}/>
 					<TabButton
-							title="Context"
+							title="ctx"
 							className={"mr-12"}
-							text={"Context"}
+							text={"ctx"}
 							css={css`span { color: #fff; padding: 4rem 8rem;  } :hover { opacity: 0.8; }`}
 							callback={(e) => {
 								e.preventDefault();
@@ -575,18 +569,8 @@ const StatusBar = () => {
 									theme={{
 										...chromeDark,
 										...{
-											// OBJECT_VALUE_NUMBER_COLOR: "#47ad43",
 											OBJECT_VALUE_STRING_COLOR: "rgb(227, 110, 236)",
 											OBJECT_NAME_COLOR: "white",
-											// OBJECT_VALUE_BOOLEAN_COLOR: "#f5be18",
-											// OBJECT_VALUE_NULL_STYLE: {
-											// 	background: "#303030",
-											// 	color: "#f5be18",
-											// 	textTransform: "uppercase",
-											// 	fontWeight: "bold",
-											// 	padding: "0.5rem 2rem",
-											// },
-											// ARROW_COLOR: '#499ffa',
 											TREENODE_FONT_SIZE: "13.25rem",
 											TREENODE_LINE_HEIGHT: "18rem",
 											BASE_BACKGROUND_COLOR: "linear-gradient(0deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.02)), #0F1010",

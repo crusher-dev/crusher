@@ -7,9 +7,10 @@ import { turnOnElementSelectorInspectMode } from "electron-app/src/ipc/perform";
 import { AddRoundedIcon, BackIconV3 } from "electron-app/src/_ui/constants/icons";
 import React from "react";
 import { useSelector } from "react-redux";
+import { HoverButton } from "electron-app/src/_ui/ui/components/hoverButton";
 
-const SelectorEditorCard = ({ stepId }) => {
-	const [showAll, setShowAll] = React.useState(false);
+const SelectorEditorCard = ({ stepId, goBack }) => {
+	const [showAll, setShowAll] = React.useState(true);
 	const steps = useSelector(getAllSteps);
 	const step = steps[stepId];
 
@@ -53,14 +54,14 @@ const SelectorEditorCard = ({ stepId }) => {
 	return (
 		<div className={"py-16 flex-column"} style={{height: showAll ? `600rem` : selectorsComponent?.length ? `${selectorsComponent * 60}rem`  : "400rem", display: "flex", flexDirection: "column"}} css={[stepMetaInfoContainerCss]}>
 			<div className={" px-20 flex items-center"}>
-				<BackIconV3 css={backIconCss} />
+			 <HoverButton onClick={goBack}><BackIconV3 css={backIconCss} /></HoverButton>
 				<div className={"ml-6"} css={titleCss}>element selectors</div>
 				<div css={addButtonCss} className={"ml-auto flex items-center"}>
 					<AddRoundedIcon css={addIconCss}/>
 					<div className={"ml-8"}>selector</div>
 				</div>
 			</div>
-			<div className={"flex-column mt-12 custom-scroll"} style={{overflowY: "overlay", overflowX: "hidden", flex: 1}}>
+			<div className={"flex-column mt-12 custom-scroll"} style={{overflowY: "scroll", overflowX: "hidden", flex: 1}}>
 				<div css={selectorListCss} >
 					{selectorsComponent}
 				</div>

@@ -90,7 +90,6 @@ class ActionDescriptor {
 	}
 
 	getAction(actionType: ActionsInTestEnum) {
-		console.log("Action type is", actionType, this.actionsMap);
 		return this.actionsMap[actionType];
 	}
 

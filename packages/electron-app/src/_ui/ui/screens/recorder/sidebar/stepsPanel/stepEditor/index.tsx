@@ -377,6 +377,9 @@ const StepOverlayEditor = ({ stepId }) => {
 		return "edit";
 	});
 
+	const handleGoBack = () => {
+		setShowAdvanced({ show: false, containerHeight: null });
+	};
 	return (
 		<div
 			onContextMenu={(e) => e.preventDefault()}
@@ -386,7 +389,7 @@ const StepOverlayEditor = ({ stepId }) => {
 		>
 			{showAdvanced.show ? (
 				<>
-					<SelectorEditorCard stepId={stepId} />
+					<SelectorEditorCard goBack={handleGoBack} stepId={stepId} />
 				</>
 			) : (
 				<>

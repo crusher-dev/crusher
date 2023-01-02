@@ -79,7 +79,8 @@ export class UserController {
 
 	@Get("/users/actions/auth.github")
 	async authenticateWithGithub(@Res() res: any, @QueryParams() params: any) {
-		const { inviteCode, inviteType, sessionInviteCode, lK } = params;
+		const { inviteCode, inviteType, lK } = params;
+		let sessionInviteCode = params?.sessionInviteCode;
 		const url = new URL("https://github.com/login/oauth/authorize");
 		url.searchParams.append("client_id", OCTOKIT_CONFIG.clientId);
 		let payload: any = {};
@@ -90,7 +91,9 @@ export class UserController {
 		if(lK) {
 			payload.lK = lK;
 		}
-		if(!sessionInviteCode) { throw new Error("sessionInviteCode is requered to signup"); }
+		if(!sessionInviteCode) {
+			sessionInviteCode = "CRU-TEST";
+		}
 		else {
 			payload.sessionInviteCode = sessionInviteCode;
 		}

@@ -10,7 +10,7 @@ export const UseCrusher = ({ children, color }) => (
 
     <div 
     className={`flex justify-between ${commandHeading}`}id="command-heading">
-        <div className={css`font-weight: 700; font-size: 16;`}>Install & use crusher</div>
+        <div className={css`font-weight: 700; font-size: 16;`}>Install crusher</div>
         <a className="demo-video" href="https://www.youtube.com/watch?v=Nc-TlgeKBSE">play demo</a>
      </div>
 

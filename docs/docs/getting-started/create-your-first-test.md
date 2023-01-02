@@ -76,7 +76,6 @@ Using CLI - Once you have created your first test, you can run it with CLI direc
   }
 />
 
-Using integration
+##### Using integration
 
-<a href="/setting-up/github">Github checks</a>
-or <a href="/integrations/with-vercel">Vercel</a> integration to run tests
+<a href="/setting-up/github">Github checks</a> or <a href="/integrations/with-vercel">Vercel</a> integration to run tests

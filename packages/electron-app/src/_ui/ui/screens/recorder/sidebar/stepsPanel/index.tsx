@@ -9,7 +9,7 @@ import { useSelectableList } from "electron-app/src/_ui/hooks/list";
 import { OnOutsideClick } from "@dyson/components/layouts/onOutsideClick/onOutsideClick";
 import { RightClickMenu } from "@dyson/components/molecules/RightClick/RightClick";
 import { deleteRecordedSteps } from "electron-app/src/store/actions/recorder";
-import { performJumpTo, performPauseStepsExecution, performTrackEvent, performVerifyTest, turnOnElementSelectorInspectMode } from "electron-app/src/_ui/commands/perform";
+import { performJumpTo, performPauseStepsExecution, performTrackEvent, performVerifyTest, turnOnElementSelectorInspectMode } from "electron-app/src/ipc/perform";
 import { useAtom } from "jotai";
 import { stepHoverAtom } from "electron-app/src/_ui/store/jotai/steps";
 import { editInputAtom } from "electron-app/src/_ui/store/jotai/testsPage";
@@ -207,28 +207,32 @@ const StepsPanel = ({ className }: IProps) => {
 
 	React.useEffect(() => {
 		if (failedSteps.length) {
-			const lastFailedStep = failedSteps[failedSteps.length - 1];
-			actionDescriber.initActionHandlers();
-			const isElementFailure = lastFailedStep.type.startsWith("ELEMENT_") && [StepErrorTypeEnum.ELEMENT_NOT_FOUND, StepErrorTypeEnum.ELEMENT_NOT_STABLE, StepErrorTypeEnum.ELEMENT_NOT_VISIBLE, StepErrorTypeEnum.TIMEOUT].includes(lastFailedStep.errorType);
+				const lastFailedStep = failedSteps[failedSteps.length - 1];
+				actionDescriber.initActionHandlers();
 
-			console.log("Last Failed Step", lastFailedStep);
-			showToast({
-				message: getErrorMessage(lastFailedStep),
-				type: "step-failed",
-				isUnique: true,
-				meta: {
-					errorType: lastFailedStep.errorType,
-					stepId: lastFailedStep.index,
-					callback: isElementFailure ? () => {
-						console.log("CLICKED, YES");
-					} : () => {
-						emitShowModal({
-							type: EDIT_MODE_MAP[lastFailedStep.type],
-							stepIndex: lastFailedStep.index,
-						});
-					}
-				},
-			});
+				const hasCustomErrorToasts = [ActionsInTestEnum.NAVIGATE_URL];
+				if(!hasCustomErrorToasts.includes(lastFailedStep.type)) {
+					const isElementFailure = lastFailedStep.type.startsWith("ELEMENT_") && [StepErrorTypeEnum.ELEMENT_NOT_FOUND, StepErrorTypeEnum.ELEMENT_NOT_STABLE, StepErrorTypeEnum.ELEMENT_NOT_VISIBLE, StepErrorTypeEnum.TIMEOUT].includes(lastFailedStep.errorType);
+
+					console.log("Last Failed Step", lastFailedStep);
+					showToast({
+						message: getErrorMessage(lastFailedStep),
+						type: "step-failed",
+						isUnique: true,
+						meta: {
+							errorType: lastFailedStep.errorType,
+							stepId: lastFailedStep.index,
+							callback: isElementFailure ? () => {
+								console.log("CLICKED, YES");
+							} : () => {
+								emitShowModal({
+									type: EDIT_MODE_MAP[lastFailedStep.type],
+									stepIndex: lastFailedStep.index,
+								});
+							}
+						},
+					});
+				}
 		} else {
 			clearToast("step-failed");
 		}

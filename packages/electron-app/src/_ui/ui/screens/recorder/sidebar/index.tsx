@@ -10,16 +10,23 @@ import { TemplatesModal } from "electron-app/src/_ui/ui/containers/components/si
 import { useLocalBuild } from "electron-app/src/_ui/hooks/tests";
 import { ReplaySidebarHeader } from "./replay/header";
 import { Conditional } from "@dyson/components/layouts";
+import { ShepherdTourContext } from "react-shepherd";
+import { useContext } from "react";
+import { shouldShowOnboardingOverlay } from "electron-app/src/store/selectors/app";
+import { useStore}  from "react-redux";
 
 interface ISidebarProps {
 	className?: string;
 }
 
-const Sidebar = ({ className }: ISidebarProps) => {
+const Sidebar = ({ className }: ISidebarProps) => {	
 	const { currentBuild } = useLocalBuild();
 	const isInRecordingSession = useSelector(getIsInRecordingSession);
 	const isCustomCodeOn = useSelector(getIsCustomCodeOn);
 
+	const tour = useContext(ShepherdTourContext);
+	const store = useStore();
+	
 	const topPanel = React.useMemo(() => {
 		if (currentBuild) {
 			return <ReplaySidebarHeader />;
@@ -28,9 +35,17 @@ const Sidebar = ({ className }: ISidebarProps) => {
 		}
 	}, [currentBuild]);
 
+	React.useEffect(() => {
+		const shouldShowOnboarding = localStorage.getItem("app.showShouldOnboardingOverlay") !== "false";
+		if (isInRecordingSession) {
+			if(shouldShowOnboarding) {
+				tour.start();
+			}
+		}
+	}, [isInRecordingSession]);
 	return (
 		<ResizeWrapper track={"Resizable"}>
-			<div id="Resizable" css={containerCss} className={String(className)}>
+			<div id="Resizable" css={containerCss} className={`recorder-sidebar ${String(className)}`}>
 
 				<Conditional showIf={isInRecordingSession}>
 					<>

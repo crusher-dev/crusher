@@ -3,7 +3,7 @@ import { css } from "@emotion/react";
 import { Text } from "@dyson/components/atoms/text/Text";
 import { useSelector } from "react-redux";
 import { isInspectModeOn as _isInspectModeOn } from "electron-app/src/store/selectors/recorder";
-import { turnOffElementSelectorInspectMode, turnOffInspectMode } from "electron-app/src/_ui/commands/perform";
+import { turnOffElementSelectorInspectMode, turnOffInspectMode } from "electron-app/src/ipc/perform";
 
 const InspectModeBanner = () => {
 	const isInspectModeOn = useSelector(_isInspectModeOn);

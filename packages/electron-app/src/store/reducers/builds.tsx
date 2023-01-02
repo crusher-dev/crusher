@@ -1,4 +1,5 @@
 import { AnyAction } from "redux";
+import { RESET_APP_SESSION } from "../actions/app";
 import {
 	CLEAR_CURRENT_LOCAL_BUILD,
 	TRIGGER_LOCAL_BUILD,
@@ -70,6 +71,8 @@ const buildsReducer = (state: IBuildsReducer = initialState, action: AnyAction) 
 			return { ...state, notifications: state.notifications.filter((n) => n.id !== action.payload) };
 		case CLEAR_BUILD_NOTIFICATIONS:
 			return { ...state, notifications: [] };
+		case RESET_APP_SESSION:
+			return { ...state, currentBuild: null };
 		default:
 			return state;
 	}

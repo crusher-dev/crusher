@@ -66,17 +66,6 @@ const EditIcon = (props) => (
 	</svg>
 );
 
-const ConsoleIconV3 = (props) => (
-	<svg viewBox={"0 0 18 16"} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-		<path
-			fillRule="evenodd"
-			clipRule="evenodd"
-			d="M2.5 4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-9a2 2 0 0 1-2-2V4Zm2.647.647a.5.5 0 0 1 .706 0l1.5 1.5a.5.5 0 0 1 0 .706l-1.5 1.5a.5.5 0 0 1-.706-.706L6.293 6.5 5.147 5.353a.5.5 0 0 1 0-.706ZM8 7.5a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1H8Z"
-			fill="#FAFAFA"
-		/>
-	</svg>
-);
-
 const BasketBallIcon = React.forwardRef((props, ref) => (
 	<svg viewBox={"0 0 18 18"} fill="none" xmlns="http://www.w3.org/2000/svg" ref={ref} {...props}>
 		<path d="M15.75 9a6.75 6.75 0 1 1-13.5 0 6.75 6.75 0 0 1 13.5 0Z" stroke="#303030" strokeWidth={1.5} />
@@ -174,11 +163,6 @@ const AddedIcon = (props) => (
 			d="M6.5 0a6 6 0 1 0 0 12 6 6 0 0 0 0-12Zm.462 4.154a.462.462 0 0 0-.924 0v1.384H4.654a.462.462 0 0 0 0 .924h1.384v1.384a.462.462 0 0 0 .924 0V6.462h1.384a.462.462 0 0 0 0-.924H6.962V4.154Z"
 			fill="#C852FF"
 		/>
-	</svg>
-);
-const EllipseIcon = (props) => (
-	<svg viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-		<circle cx={5} cy={5} r={4.5} stroke="#fff" />
 	</svg>
 );
 
@@ -341,30 +325,6 @@ const TickIcon = (props) => (
 )
 
 
-const CorrectCircleIcon = (props) => (
-	<svg
-		viewBox={"0 0 14 14"}
-		fill="none"
-		xmlns="http://www.w3.org/2000/svg"
-		{...props}
-	>
-		<path
-			fillRule="evenodd"
-			clipRule="evenodd"
-			d="M0 7a7 7 0 1 1 14 0A7 7 0 0 1 0 7Zm9.595-1.895a.7.7 0 0 1 0 .99L7.017 8.673a1.014 1.014 0 0 1-1.434 0L4.405 7.495a.7.7 0 0 1 .99-.99l.905.905 2.305-2.305a.7.7 0 0 1 .99 0Z"
-			fill="#9EF25B"
-		/>
-		<path
-			fillRule="evenodd"
-			clipRule="evenodd"
-			d="M0 7a7 7 0 1 1 14 0A7 7 0 0 1 0 7Zm9.595-1.895a.7.7 0 0 1 0 .99L7.017 8.673a1.014 1.014 0 0 1-1.434 0L4.405 7.495a.7.7 0 0 1 .99-.99l.905.905 2.305-2.305a.7.7 0 0 1 .99 0Z"
-			fill="#9EF25B"
-		/>
-	</svg>
-)
-
-
-
 const EditIconV4 = (props) => (
 	<svg
 		viewBox={"0 0 14 14"}
@@ -422,17 +382,82 @@ const AddRoundedIcon = (props) => (
 			</clipPath>
 		</defs>
 	</svg>
-)
+);
+
+const ClipboardIcon = (props) => (
+	<svg
+      viewBox="0 0 17 18"
+	  width={17}
+	  height={18}
+	  fill="none"
+	  xmlns="http://www.w3.org/2000/svg"
+	  {...props}
+	>
+	  <path
+		fillRule="evenodd"
+		clipRule="evenodd"
+		d="M5.314 4.75h5.049a2.39 2.39 0 0 1 2.387 2.39v6.641a2.125 2.125 0 0 0 2.125-2.125v-6.83c0-1.066-.797-1.99-1.887-2.082a34.64 34.64 0 0 0-.477-.035 2.125 2.125 0 0 0-1.886-1.147H9.563A2.125 2.125 0 0 0 7.676 2.71c-.16.01-.318.022-.476.035-1.064.09-1.85.973-1.886 2.006Zm4.249-2.125A1.062 1.062 0 0 0 8.5 3.688h3.188a1.062 1.062 0 0 0-1.063-1.063H9.563Z"
+		fill="#CC6544"
+	  />
+	  <path
+		fillRule="evenodd"
+		clipRule="evenodd"
+		d="M2.125 7.14c0-.733.595-1.327 1.328-1.327h6.906c.734 0 1.329.595 1.329 1.328v7.968c0 .733-.596 1.329-1.329 1.329H3.453a1.328 1.328 0 0 1-1.328-1.329V7.141ZM4.25 9a.531.531 0 0 1 .531-.531h.006A.531.531 0 0 1 5.318 9v.006a.531.531 0 0 1-.531.53H4.78a.531.531 0 0 1-.531-.53V9Zm1.594 0a.531.531 0 0 1 .531-.531h2.656a.531.531 0 1 1 0 1.062H6.375A.531.531 0 0 1 5.844 9ZM4.25 11.125a.531.531 0 0 1 .531-.531h.006a.531.531 0 0 1 .531.531v.006a.531.531 0 0 1-.531.53H4.78a.531.531 0 0 1-.531-.53v-.006Zm1.594 0a.531.531 0 0 1 .531-.531h2.656a.531.531 0 1 1 0 1.062H6.375a.53.53 0 0 1-.531-.531ZM4.25 13.25a.531.531 0 0 1 .531-.531h.006a.531.531 0 0 1 .531.531v.006a.531.531 0 0 1-.531.53H4.78a.531.531 0 0 1-.531-.53v-.006Zm1.594 0a.531.531 0 0 1 .531-.531h2.656a.531.531 0 1 1 0 1.062H6.375a.531.531 0 0 1-.531-.531Z"
+		fill="#CC6544"
+	  />
+	</svg>
+  )
+  
+
+ function NextIcon(props) {
+	return (
+	  <svg
+		width={10}
+		height={10}
+		fill="none"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	  >
+		<path
+		  d="M5.333 1.583h0a.413.413 0 000 .583h0l2.421 2.421H1.25a.413.413 0 000 .825h6.504l-2.42 2.42a.412.412 0 10.584.583l3.124-3.124h0a.412.412 0 000-.583h0L5.917 1.583h0a.412.412 0 00-.583 0z"
+		  fill="#fff"
+		  stroke="#fff"
+		  strokeWidth={0.7}
+		/>
+	  </svg>
+	);
+  }
+
+
+  function RerunIcon(props) {
+	return (
+	  <svg
+		width={24}
+		height={24}
+		viewBox="0 0 24 24"
+		fill="none"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	  >
+		<path
+		  fillRule="evenodd"
+		  clipRule="evenodd"
+		  d="M4.755 10.059a7.5 7.5 0 0112.548-3.364l1.903 1.903h-3.183a.75.75 0 100 1.5h4.992a.75.75 0 00.75-.75V4.356a.75.75 0 10-1.5 0v3.18l-1.9-1.9A9 9 0 003.305 9.67a.75.75 0 001.45.388zm15.408 3.352a.75.75 0 00-.92.53 7.5 7.5 0 01-12.547 3.364l-1.902-1.903h3.183a.75.75 0 000-1.5H2.984a.75.75 0 00-.75.75v4.992a.75.75 0 001.5 0v-3.18l1.9 1.9a9.001 9.001 0 0015.059-4.035.75.75 0 00-.53-.918z"
+		  fill="#000"
+		/>
+	  </svg>
+	);
+  }
 
 export {
+	ClipboardIcon,
+	RerunIcon,
 	BackIconV3,
-	DisabledCloudIcon,
-	CloudIcon,
+	NextIcon,
 	NotepadIcon,
 	ConsoleIcon,
 	PointerIcon,
 	EditIcon,
-	ConsoleIconV3,
 	BasketBallIcon,
 	ResetIcon,
 	PageIcon,
@@ -443,7 +468,6 @@ export {
 	EditPencilIcon,
 	ReselectPointerIcon,
 	AddedIcon,
-	EllipseIcon,
 	FailedStepIcon,
 	OptionsIcon,
 	InfoIcon,
@@ -452,7 +476,6 @@ export {
 	UpDownSizeIcon,
 	GithubIcon,
 	TickIcon,
-	CorrectCircleIcon,
 	EditIconV4,
 	ExportIcon,
 	VercelIcon,

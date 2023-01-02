@@ -1,7 +1,7 @@
 import React from "react";
 import { css } from "@emotion/react";
 import { InspectElementIcon } from "../../../../../constants/old_icons";
-import { turnOnElementSelectorInspectMode } from "electron-app/src/_ui/commands/perform";
+import { turnOnElementSelectorInspectMode } from "electron-app/src/ipc/perform";
 import { iSelectorInfo } from "@shared/types/selectorInfo";
 
 type IFieldSelectorPickerProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {

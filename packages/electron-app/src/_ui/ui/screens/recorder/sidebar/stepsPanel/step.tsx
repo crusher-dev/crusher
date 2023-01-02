@@ -22,7 +22,6 @@ interface IProps {
 	onClick?: any;
 	onContextMenu?: any;
 	isLast: boolean;
-
 	shouldOpenEditor?: boolean;
 	step?: any;
 }
@@ -37,12 +36,6 @@ const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, 
 	const [editInputId] = useAtom(editInputAtom);
 	const stepInfo = useSelector(getStepInfo(stepId), shallowEqual);
 	const { isFailed, isRunning, isCompleted } = stepInfo
-
-	React.useEffect(() => {
-		if (!editInputId && stepHoverId) {
-			setStepHoverId(null);
-		}
-	}, [editInputId === `${stepId}-stepName`]);
 
 	const handleHoverCallback = React.useCallback((shouldShow: boolean) => {
 		if (shouldShow) {
@@ -67,7 +60,7 @@ const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, 
 	}, [isRunning, isFailed, isCompleted]);
 
 	const title = React.useMemo(() => TextHighlighter({ text: stepInfo.name }), [stepInfo.name]);
-	const timeout = React.useMemo(() => (statusType === "running" ? <StepTimeout timeout={30} /> : null), [statusType === "running"]);
+	const timeout = React.useMemo(() => (statusType === "running" ? <StepTimeout timeout={10} /> : null), [statusType === "running"]);
 	const content = React.useMemo(() => (
 		<div className={"step-list-item"} onContextMenu={onContextMenu} onClick={onClick} css={[containerCss(statusType === "failed" || disabled), isActive ? activeItemCss : undefined]}>
 			<div className={"card"} css={contentCss}>
@@ -98,22 +91,22 @@ const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, 
 			wrapperCss={css`
 			z-index: 123123123 !important;
 			box-shadow: none;
-			background: #0F0F0F;
+			background: #070707;
 		`}
 			css={css`
 			padding: 0rem !important;
-			margin-left: -4rem;
+			margin-left: -2rem;
 		`}
 			tooltipCSS={css`
-			border-radius: 12px;
+			border-radius: 0px;
 			overflow: hidden !important;
-			background: #0F0F0F;
-			border: 1px solid #1C1C1C;
+			background: #070707;
+			border: 1px solid #1E1E1E;
 		`}
 			content={isHovered ? <StepEditor stepId={stepId} /> : null}
 			placement="right"
 			type="hover"
-			padding={8}
+			padding={2}
 			offset={0}
 		>
 			{content}
@@ -166,8 +159,6 @@ const stepTextCss = css`
 	word-break: break-all;
 `;
 const stepNameCss = css`
-	font-family: Gilroy !important;
-	font-style: normal !important;
 	font-weight: 500 !important;
 	font-size: 12.4rem !important;
 	line-height: 13rem !important;
@@ -182,8 +173,6 @@ const runningTextNameCss = css`
 	color: #a056ff !important;
 `;
 const stepDescriptionCss = css`
-	font-family: Gilroy !important;
-	font-style: normal !important;
 	font-weight: 400;
 	font-size: 10rem !important;
 	line-height: 10rem !important;

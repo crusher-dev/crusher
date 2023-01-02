@@ -5,7 +5,7 @@ import React from "react";
 import { HoverButton } from "../hoverButton";
 import { ActionToast } from "./variants/actionToast";
 
-const NormalToast = ({ meta, setOpen, message }) => {
+const NormalToast = ({ meta, setOpen, message, duration = 7000 }) => {
     const handleOpen = (open) => {
         if(!open) {
             setOpen(open);
@@ -13,7 +13,7 @@ const NormalToast = ({ meta, setOpen, message }) => {
     }
     return (
         <ActionToast
-            duration={7000}
+            duration={duration}
             open={true}
             setOpen={setOpen}
             message={<FixToastMessage message={message} />}

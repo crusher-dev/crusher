@@ -1,8 +1,8 @@
 import * as Sentry from "@sentry/electron/renderer";
 
-Sentry.init({ 
-	dsn: "https://392b9a7bcc324b2dbdff0146ccfee044@o1075083.ingest.sentry.io/6075223"
- });
+Sentry.init({
+	dsn: "https://392b9a7bcc324b2dbdff0146ccfee044@o1075083.ingest.sentry.io/6075223",
+});
 
 import { ipcRenderer, webFrame } from "electron";
 import { getInitialStateRenderer } from "electron-redux";
@@ -15,7 +15,7 @@ import { Provider } from "react-redux";
 import { Route, Routes } from "react-router-dom";
 import { Global } from "@emotion/react";
 import { css } from "@emotion/react";
-import { App } from "./app";
+import { App } from "./ui/screens/recorder/app";
 import "../../static/assets/styles/tailwind.css";
 import { LoginScreen } from "./ui/screens/auth/login";
 import { DashboardScreen } from "./ui/screens/dashboard";
@@ -29,14 +29,15 @@ import { SWRConfig } from "swr";
 import { NetworkErrorContainer } from "./ui/containers/errors/networkError";
 import { UnAuthorizedErrorContainer } from "./ui/containers/errors/unauthorizedError";
 import { InvalidCredsErrorContainer } from "./ui/containers/errors/invalidCreds";
-import { performGoToUrl, performTestDeepLink, performTrackEvent } from "./commands/perform";
+import { performGoToUrl, performTestDeepLink, performTrackEvent } from "../ipc/perform";
 import { Provider as JotaiProvider } from "jotai";
 import { ToastBox } from "./ui/components/toasts";
 import { CloudCrusher } from "../lib/cloud";
 import { Store } from "redux";
 import { IDeepLinkAction } from "../types";
-import { triggerLocalBuild } from "./utils/recorder";
+import { triggerLocalBuild, triggerLocalBuildFromDeeplink } from "./utils/recorder";
 import { DesktopAppEventsEnum } from "@shared/modules/analytics/constants";
+import { OnboardingWrapper } from "./ui/screens/onboarding";
 
 webFrame.setVisualZoomLevelLimits(1, 3);
 
@@ -50,25 +51,37 @@ function getPersistStore() {
 	return store;
 }
 
-
 const handleUrlAction = async (store: Store, event: Electron.IpcRendererEvent, { action }: { action: IDeepLinkAction }) => {
 	console.log("Action recieved", action);
 	switch (action.commandName) {
-		case "run-local-build":
+		case "run-tests-in-local-build": {
+			const { tests } = action.args;
+			const testIds = tests.split(","); 
+			await triggerLocalBuildFromDeeplink(testIds);
+			break;
+		}
+		case "run-local-build":{
 			const { buildId } = action.args;
 			const buildReport = await CloudCrusher.getBuildReportBuildMeta(buildId);
 			store.dispatch(setSelectedProject(buildReport.projectId));
 			const testIds = buildReport.tests.map((test) => test.id);
-	
+
 			performTrackEvent(DesktopAppEventsEnum.DEEPLINK_RUN_LOCAL_BUILD, {
-				buildId: buildId
+				buildId: buildId,
 			});
-			triggerLocalBuild(testIds, buildReport.tests.map((test) => ({...test, testName: test.name})), buildReport.host, "deeplink", {
-				buildId: buildId
-			});
+			triggerLocalBuild(
+				testIds,
+				buildReport.tests.map((test) => ({ ...test, testName: test.name })),
+				buildReport.host,
+				"deeplink",
+				{
+					buildId: buildId,
+				},
+			);
 			break;
+		}
 	}
-}
+};
 
 const store = getPersistStore();
 
@@ -89,7 +102,6 @@ function InsideRouter() {
 		} else {
 			performGoToUrl("/network_error");
 		}
-
 	}, []);
 
 	React.useEffect(() => {
@@ -97,20 +109,24 @@ function InsideRouter() {
 		const listener = handleUrlAction.bind(null, store);
 		ipcRenderer.on("url-action", listener);
 		window.triggerLocalBuild = listener.bind(null, null, { action: { commandName: "run-local-build", args: { buildId: "29372" } } });
+
 		return () => {
 			ipcRenderer.removeListener("url-action", listener);
-		}
+		};
 	}, []);
 
 	return (
 		<JotaiProvider>
 			<SWRConfig value={{ onError: handleErrorCallback.bind(this) }}>
 				<ToastSnackbar />
-				<ToastBox/>
+				<ToastBox />
 				<Global styles={globalStyle} />
 				<Routes>
 					<Route path="/login" element={<LoginScreen />} />
 					<Route path="/onboarding" element={<AuthOnboardingScreen />} />
+					{/* Revert this after commit */}
+					<Route path="/dashboard" element={<DashboardScreen />} />
+					<Route path="/project-onboarding" element={<OnboardingWrapper />} />
 					<Route path="/" element={<DashboardScreen />} />
 					<Route path="/select-project" element={<ProjectsListScreen />} />
 					<Route path="/code-editor" element={<UnDockCodeScreen />} />

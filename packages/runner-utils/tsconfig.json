@@ -14,7 +14,7 @@
 		"strictNullChecks": false,
 		"outDir": "dist",
 		"paths": {
-			"@crusher-shared/*": ["../crusher-shared/*"]
+			"@crusher-shared/*": ["../crusher-shared/*"],
 		}
 	},
 	"files": ["./src/index.ts"],

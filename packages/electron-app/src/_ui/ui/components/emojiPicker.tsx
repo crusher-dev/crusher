@@ -25,11 +25,6 @@ const EmojiPicker = ({ onEmojiSelected, children }) => {
 				onEmojiSelect={handleEmojiSelect}
 				previewPosition={"none"}
 				searchPosition={"true"}
-				// skinTonePosition={'none'}
-				// perLine={8}
-				// emojiSize={16}
-				// emojiButtonSize={30}
-				// noCountryFlags={true}
 				skinTonePosition={"none"}
 				perLine={11}
 				emojiSize={22}

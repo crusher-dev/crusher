@@ -64,6 +64,47 @@ index d4cf947f8187e7658ef8679365f0237c8b792a0d..414b5b0f98d23194b1dad47cc899c7d0
  
      this._channel.on('pageError', ({
        error
+diff --git a/lib/client/waiter.js b/lib/client/waiter.js
+index c748dfcaa0775f4ffca8f12fd50165340c128020..caaa1e3b3825fe5fd97e0d2898f2fe33f86e8b72 100644
+--- a/lib/client/waiter.js
++++ b/lib/client/waiter.js
+@@ -55,6 +55,7 @@ class Waiter {
+         }
+       });
+     }, true).catch(() => {})];
++
+   }
+ 
+   static createForEvent(channelOwner, event) {
+@@ -141,19 +142,28 @@ exports.Waiter = Waiter;
+ 
+ function waitForEvent(emitter, event, predicate) {
+   let listener;
++  const uniqueId = "wait_event_" + Date.now();
++
+   const promise = new Promise((resolve, reject) => {
+     listener = async eventArg => {
+       try {
+         if (predicate && !(await predicate(eventArg))) return;
+         emitter.removeListener(event, listener);
++
++        if(global["promises"][uniqueId]) delete global["promises"][uniqueId];
+         resolve(eventArg);
+       } catch (e) {
+         emitter.removeListener(event, listener);
++        if(global["promises"][uniqueId]) delete global["promises"][uniqueId];
+         reject(e);
++      } finally {
+       }
+     };
+ 
+     emitter.addListener(event, listener);
++    global["promises"][uniqueId] = () => {
++      reject(new Error("Action skipped"));
++    };
+   });
+ 
+   const dispose = () => emitter.removeListener(event, listener);
 diff --git a/lib/common/debugLogger.js b/lib/common/debugLogger.js
 index f9b3525ff2049a948b69c78ddd7462ca77122a89..9b7c97690704ae71fa84239b7f83a1fda16ae9ba 100644
 --- a/lib/common/debugLogger.js
@@ -82,7 +123,7 @@ index f9b3525ff2049a948b69c78ddd7462ca77122a89..9b7c97690704ae71fa84239b7f83a1fd
    }
  
 diff --git a/lib/common/timeoutSettings.js b/lib/common/timeoutSettings.js
-index 353f73fdf89d1b97158e4a64b6a2d7e4068d7b1e..7b43e0cb2dad8326809b729efa57f20278ab49d8 100644
+index 353f73fdf89d1b97158e4a64b6a2d7e4068d7b1e..7738a9a7ee2e30dbda5649b13987e0a232a05fea 100644
 --- a/lib/common/timeoutSettings.js
 +++ b/lib/common/timeoutSettings.js
 @@ -43,25 +43,25 @@ class TimeoutSettings {

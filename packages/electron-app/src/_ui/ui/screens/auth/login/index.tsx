@@ -7,7 +7,7 @@ import { LoadingIconV2 } from "electron-app/src/_ui/constants/old_icons";
 
 import { loginUserToCloud } from "../../../../utils/login";
 
-import { focusOnWindow, performGoToUrl } from "electron-app/src/_ui/commands/perform";
+import { focusOnWindow, performGoToUrl } from "electron-app/src/ipc/perform";
 import { shell } from "electron";
 import { resolveToFrontend } from "electron-app/src/utils/url";
 import { useStore } from "react-redux";

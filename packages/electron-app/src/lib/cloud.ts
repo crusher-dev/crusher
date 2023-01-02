@@ -3,6 +3,7 @@ import { iAction } from "@shared/types/action";
 import axios from "axios";
 import { shell } from "electron";
 import { getBrowserActions, getMainActions } from "runner-utils/src/utils/helper";
+import { deleteDraftTest } from "../api/tests/draft.tests";
 import { getStore } from "../store/configureStore";
 import { getCurrentSelectedProjct } from "../store/selectors/app";
 import { createAuthorizedRequestFunc, resolveToBackend, resolveToFrontend } from "../utils/url";
@@ -10,6 +11,13 @@ import { createAuthorizedRequestFunc, resolveToBackend, resolveToFrontend } from
 class CloudCrusher {
 	public static getTest: (testId: string) => Promise<iAction[]> = createAuthorizedRequestFunc((authorizationOptions, testId) => {
 		return axios.get<{ events: iAction[] }>(resolveToBackend(`/tests/${testId}`), authorizationOptions).then((res) => res.data.events);
+	});
+
+	public static getTests: (testId: string[]) => Promise<iAction[]> = createAuthorizedRequestFunc((authorizationOptions, testIds) => {
+		const testIdsStr = testIds.join(",");
+		return axios.get<{ list: {events: iAction[]}[] }>(resolveToBackend(`/tests/?testIds=${testIdsStr}`), authorizationOptions).then((res) => {
+			return res.data?.list;
+		});
 	});
 
 	public static createProject: (projectName: string) => Promise<any> = createAuthorizedRequestFunc((authorizationOptions, projectName) => {
@@ -46,8 +54,8 @@ class CloudCrusher {
 			.then((res) => res.data);
 	});
 
-	public static runTests: (testIds: string[], proxyConfig: any | null) => Promise<any> = createAuthorizedRequestFunc(
-		(authorizationOptions, testIds, proxyConfig) => {
+	public static runTests: (testIds: string[], proxyConfig: any | null, context: any) => Promise<any> = createAuthorizedRequestFunc(
+		(authorizationOptions, testIds, proxyConfig, context: any = {}) => {
 			const store = getStore();
 			const selectedProject = getCurrentSelectedProjct(store.getState() as any);
 			if (!selectedProject) throw new Error("No project selected!");
@@ -58,6 +66,7 @@ class CloudCrusher {
 					{
 						testIds: Array.isArray(testIds) ? testIds.join(",") : testIds,
 						proxyUrlsMap: getProxyFromTunnelData(proxyConfig),
+						context: context,
 					},
 					authorizationOptions,
 				)
@@ -112,6 +121,18 @@ class CloudCrusher {
 
 	public static deleteTest: (testId: string) => Promise<any> = createAuthorizedRequestFunc((authorizationOptions, testId) => {
 		return axios.post(resolveToBackend(`/tests/${testId}/actions/delete`), {}, authorizationOptions).then((res) => res.data);
+	});
+
+	public static deleteTests: (testIds: string[]) => Promise<any> = createAuthorizedRequestFunc((authorizationOptions, testIds) => {
+		return Promise.all(testIds.map((testId) => axios.post(resolveToBackend(`/tests/${testId}/actions/delete`), {}, authorizationOptions)));
+	});
+
+	public static deleteDraftTest: (draftTestId: string) => Promise<any> = createAuthorizedRequestFunc((authorizationOptions, draftTestId) => {
+		return axios(deleteDraftTest(draftTestId)).then((res) => res.data);
+	});
+
+	public static deleteDraftTests: (draftTestIds: string[]) => Promise<any> = createAuthorizedRequestFunc((authorizationOptions, draftTestIds) => {
+		return Promise.all(draftTestIds.map((draftTestId) => axios(deleteDraftTest(draftTestId))));
 	});
 
 	public static saveTest: (testPayload: { events: iAction[]; name: string }, shouldAutorun: boolean) => Promise<any> = createAuthorizedRequestFunc(

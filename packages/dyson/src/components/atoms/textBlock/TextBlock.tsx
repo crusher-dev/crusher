@@ -18,18 +18,18 @@ const TextDefaultProps = {
 
 const getLetterSpacing = (fontSize) => {
 	if (fontSize <= 12) {
-		return { letterSpacing: `.5px` };
+		return { letterSpacing: `.6px` };
 	}
 
 	if (fontSize <= 13) {
-		return { letterSpacing: `.35px` };
+		return { letterSpacing: `.5px` };
 	}
 
 	if (fontSize <= 14) {
-		return { letterSpacing: `.25px` };
+		return { letterSpacing: `.4px` };
 	}
 	if (fontSize <= 15) {
-		return { letterSpacing: `.2px` };
+		return { letterSpacing: `.3px` };
 	}
 
 	if (fontSize <= 16) {

@@ -35,6 +35,7 @@ import * as swaggerUi from "swagger-ui-express";
 import { validationMetadatasToSchemas } from "class-validator-jsonschema";
 import { DiscordWebhookManager } from "@modules/webhook/sources/discord";
 import { TWebHookMessage, WebhookManager } from "@modules/webhook";
+import { DraftTestsController } from "@modules/resources/draftsTests/controller";
 
 const chalk = require("chalk");
 
@@ -60,6 +61,7 @@ const controllersArr: any = [
 	VercelIntegrationsController,
 	CLIController,
 	ProxyController,
+	DraftTestsController
 ];
 // @TODO: Look into this
 // if (getEdition() === EDITION_TYPE.EE) {

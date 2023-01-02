@@ -19,11 +19,10 @@
     "analyzer": "webpack-cli --profile --json > compilation-stats.json",
     "test": "jest"
   },
-  "dependencies": {},
+  "dependencies": {
+    "dotenv": "^10.0.0"
+  },
   "devDependencies": {
-    "ora": "^5.0.0",
-    "string-width": "4.2.2",
-    "yargs": "^17.5.1",
     "@babel/plugin-transform-modules-commonjs": "^7.16.8",
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-typescript": "^7.16.7",
@@ -58,9 +57,11 @@
     "localtunnel": "^2.0.2",
     "nock": "^13.2.4",
     "open": "^8.4.0",
+    "ora": "^5.0.0",
     "prettier": "^2.4.1",
     "replace-json-property": "^1.4.1",
     "semver": "^7.3.7",
+    "string-width": "4.2.2",
     "strip-ansi": "^7.0.1",
     "ts-jest": "^27.0.5",
     "ts-loader": "^9.2.3",
@@ -69,7 +70,8 @@
     "webpack": "5.73.0",
     "webpack-bundle-analyzer": "^4.6.1",
     "webpack-bundle-size-analyzer": "^3.1.0",
-    "webpack-cli": "^4.10.0"
+    "webpack-cli": "^4.10.0",
+    "yargs": "^17.5.1"
   },
   "keywords": [
     "automation",

@@ -4,7 +4,7 @@ import { css } from "@emotion/react";
 import { ActionStatusEnum } from "@shared/types/action";
 import { deleteRecordedSteps, updateRecorderCrashState } from "electron-app/src/store/actions/recorder";
 import { getSavedSteps } from "electron-app/src/store/selectors/recorder";
-import { continueRemainingSteps } from "electron-app/src/_ui/commands/perform";
+import { continueRemainingSteps } from "electron-app/src/ipc/perform";
 import { FailedStepIcon } from "electron-app/src/_ui/constants/icons";
 import { crashAtom } from "electron-app/src/_ui/store/jotai/crashAtom";
 import { stepHoverAtom } from "electron-app/src/_ui/store/jotai/steps";

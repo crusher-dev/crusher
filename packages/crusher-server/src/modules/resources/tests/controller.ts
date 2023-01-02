@@ -60,15 +60,13 @@ export class TestController {
 	@Get("/tests/")
 	async getUserTestsList(
 		@CurrentUser({ required: true }) user,
-		@QueryParams() params: { search?: string; status?: BuildReportStatusEnum; page?: any },
+		@QueryParams() params: { search?: string; status?: BuildReportStatusEnum; page?: any; testIds?: string; },
 	): Promise<IProjectTestsListResponse> {
 		if (!params.page) params.page = 0;
 
 		if (params.page) params.page = parseInt(params.page!);
-
 		const testsListData = await this.testService.getTests(true, { ...params, userId: user.user_id });
 
-		console.log(testsListData);
 		const testsList = await Promise.all(
 			testsListData.list.map(async (testData) => {
 				const videoUrl = testData.featuredVideoUrl ? testData.featuredVideoUrl : null;
@@ -176,6 +174,12 @@ export class TestController {
 		},
 		@Param("project_id") projectId: number,
 	) {
+		if(!body.context){
+			body.context = {};
+		}
+		if(body.host) {
+			body.context["CRUSHER_BASE_URL"] = body.host; // override or add BASE_URL
+		}
 		if(body.host && body.host.includes("vercel.app")) {
 			await new Promise(async (resolve, reject) => {
 				try {

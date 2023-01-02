@@ -6,7 +6,7 @@ import uniqueId from "lodash/uniqueId";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { getSelectedElement } from "electron-app/src/store/selectors/recorder";
-import { enableJavascriptInDebugger, recordHoverDependencies, registerActionAsSavedStep } from "electron-app/src/_ui/commands/perform";
+import { enableJavascriptInDebugger, recordHoverDependencies, registerActionAsSavedStep } from "electron-app/src/ipc/perform";
 import { setSelectedElement, updateRecordedStep } from "electron-app/src/store/actions/recorder";
 import { Modal } from "@dyson/components/molecules/Modal";
 import { ModalTopBar } from "../topBar";
@@ -17,6 +17,7 @@ import { useTour } from "@reactour/tour";
 import { iAction } from "@shared/types/action";
 import { sendSnackBarEvent } from "../../toast";
 import { retryStep } from "electron-app/src/_ui/ui/screens/recorder/sidebar/stepsPanel/failedCard";
+import { ShepherdTourContext } from "react-shepherd";
 
 interface iAssertElementModalProps {
 	stepIndex?: number;
@@ -45,7 +46,7 @@ const getValidationFields = (elementInfo: any): iField[] => {
 };
 
 const getElementFieldValue = (fieldInfo: iField) => {
-	if(!fieldInfo) return null;
+	if (!fieldInfo) return null;
 	return fieldInfo.value;
 };
 
@@ -59,12 +60,13 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 	const [validationRows, setValidationRows] = useState([] as iAssertionRow[]);
 	const validationFields = getValidationFields(elementInfo!);
 	const validationOperations = [ASSERTION_OPERATION_TYPE.MATCHES, ASSERTION_OPERATION_TYPE.CONTAINS, ASSERTION_OPERATION_TYPE.REGEX];
+	const tour = React.useContext(ShepherdTourContext);
 
 	React.useEffect(() => {
 		if (isOpen && !props.stepAction) {
 			setValidationRows([]);
 			ipcRenderer
-				.invoke("get-element-assert-info", {elementInfo: selectedElement})
+				.invoke("get-element-assert-info", { elementInfo: selectedElement })
 				.then((res) => {
 					console.log("Element info is", res);
 					setElementInfo(res);
@@ -96,30 +98,32 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 			// setValidationRows(props.stepAction.payload.meta.validations);
 
 			ipcRenderer
-			.invoke("get-element-assert-info", {elementInfo: {
-				selectors: props.stepAction.payload.selectors,
-				uniqueId: -1
-			}, useSelectors: true})
-			.then((res) => {
-				let validationRows = JSON.parse(JSON.stringify(props.stepAction.payload.meta.validations));
+				.invoke("get-element-assert-info", {
+					elementInfo: {
+						selectors: props.stepAction.payload.selectors,
+						uniqueId: -1
+					}, useSelectors: true
+				})
+				.then((res) => {
+					let validationRows = JSON.parse(JSON.stringify(props.stepAction.payload.meta.validations));
 
-				if(res) {
-					setElementInfo(res);
-					const fields = getValidationFields(res);
-					for (const validation of validationRows) {
-						validation.field = fields.find((field) => field.name === validation.field.name)!;
+					if (res) {
+						setElementInfo(res);
+						const fields = getValidationFields(res);
+						for (const validation of validationRows) {
+							validation.field = fields.find((field) => field.name === validation.field.name)!;
+						}
+					} else {
+						setElementInfo(elementInfoFromActions);
 					}
-				} else {
-					setElementInfo(elementInfoFromActions);
-				}
-			
-				setValidationRows(validationRows);
 
-			})
-			.catch((err) => {
-				setElementInfo(elementInfoFromActions);
-				setValidationRows(props.stepAction.payload.meta.validations);
-			});
+					setValidationRows(validationRows);
+
+				})
+				.catch((err) => {
+					setElementInfo(elementInfoFromActions);
+					setValidationRows(props.stepAction.payload.meta.validations);
+				});
 
 			// setElementInfo(elementInfoFromActions);
 		}
@@ -158,6 +162,12 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 
 	const createNewElementAssertionRow = () => {
 		addValidationRow(validationFields[0], validationOperations[0], getElementFieldValue(validationFields[0]));
+	};
+
+	(window as any)._createNewElementAssertionRow = () => {
+		if(!elementInfo) return;
+		createNewElementAssertionRow();
+		return true;
 	};
 
 	const generateDefaultChecksForPage = () => {
@@ -241,32 +251,42 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 	};
 
 	const handleCloseWrapper = (isAfterSave = false) => {
-		if (isOnboardingOpen) {
-			if (isAfterSave) {
-				setCurrentStep(5);
-			} else {
-				// Timeout so that it can find the element to highlight,
-				// (which will be mounted after closing current modal)
-				setTimeout(() => {
-					setCurrentStep(3);
-				}, 50);
-			}
-		}
 		if (handleClose) {
 			handleClose();
 		}
 	};
 
+	const handleOutSideClick = () => {
+		if (!tour.isActive()) {
+			handleCloseWrapper();
+		}
+	}
+
 	React.useEffect(() => {
-		if(!isOpen) {
+		if (!isOpen) {
 			setValidationRows([]);
 			setElementInfo(null);
 		}
 	}, [isOpen]);
+
+	React.useEffect(() => {
+		const handleWindowMessage = (event) => {
+			const type = event.data?.type;
+			if (type === "save-assertions") {
+				saveElementValidationAction().finally(() => {
+					handleCloseWrapper();
+				});
+			}
+		};
+		window.addEventListener("message", handleWindowMessage);
+		return () => {
+			window.removeEventListener("message", handleWindowMessage);
+		}
+	}, [selectedElement, validationFields, elementInfo]);
 	if (!isOpen) return null;
 
 	return (
-		<Modal id="current-modal" modalStyle={modalStyle} onOutsideClick={handleCloseWrapper}>
+		<Modal id="current-modal" modalStyle={modalStyle} onOutsideClick={handleOutSideClick}>
 			<ModalTopBar title={"Assert element"} desc={"These are run over the selected element"} closeModal={handleCloseWrapper} />
 			<div
 				className={"assert-rows"}
@@ -291,7 +311,7 @@ const AssertElementModal = (props: iAssertElementModalProps) => {
 					`}
 				>
 					<div style={formButtonStyle}>
-						<Text css={linkStyle} onClick={createNewElementAssertionRow}>
+						<Text id={"assert-element-add-check"} css={linkStyle} onClick={createNewElementAssertionRow}>
 							Add a check
 						</Text>
 						<Text

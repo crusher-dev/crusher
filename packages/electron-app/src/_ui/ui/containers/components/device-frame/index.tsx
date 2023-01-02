@@ -21,9 +21,9 @@ import {
 	turnOffInspectMode,
 	turnOnInspectMode,
 	turnOnWebviewDevTools,
-} from "../../../../commands/perform";
+} from "../../../../../ipc/perform";
 import { setSelectedElement, updateRecordedStep, updateRecorderCrashState } from "electron-app/src/store/actions/recorder";
-import { saveAutoAction } from "../../../../commands/saveActions";
+import { saveAutoAction } from "electron-app/src/ipc/perform";
 import { TRecorderMessagesType } from "../../../../../lib/recorder/host-proxy";
 import { TRecorderCrashState, TRecorderState } from "electron-app/src/store/reducers/recorder";
 import { StopIcon } from "../../../../constants/old_icons";
@@ -36,6 +36,8 @@ import { useAtom } from "jotai";
 import { crashAtom } from "electron-app/src/_ui/store/jotai/crashAtom";
 import { remote } from "electron";
 import { clearToast } from "../../../components/toasts";
+import { ShepherdTourContext } from "react-shepherd";
+import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 
 const CrashScreen = () => {
 	const store = useStore();
@@ -124,6 +126,8 @@ const DeviceFrame = () => {
 	const store = useStore();
 	const [, setCrash] = useAtom(crashAtom);
 
+	const tour = React.useContext(ShepherdTourContext);
+
 	const getPreloadScriptPath = () => {
 		return `file://` + remote.app.getAppPath() + "/webview-preload.js";
 	};
@@ -134,6 +138,9 @@ const DeviceFrame = () => {
 				const recorderState = getRecorderState(store.getState());
 				const { channel, args } = event;
 				if (channel === "recorder-message" && args[0].type === TRecorderMessagesType["Commands.turnOnElementMode"]) {
+					if(tour.getCurrentStep()?.id === "right-click-inspect") {
+						setTimeout(() => tour.next(), 100);
+					}
 					const isInspectMode = isInspectModeOn(store.getState() as any);
 					const isInspectElementSelectorMode = isInspectElementSelectorModeOn(store.getState() as any);
 					const selectedElement = getSelectedElement(store.getState() as any);
@@ -168,6 +175,16 @@ const DeviceFrame = () => {
 					const { type, payload } = args[0];
 					switch (type) {
 						case TRecorderMessagesType["Commands.recordAction"]:
+							if(tour.getCurrentStep()?.id === "click-on-blue-button") {
+								if(payload.action.type === ActionsInTestEnum.CLICK) {
+									tour.next();
+									document.querySelector("#highlight-current")?.remove();
+									setTimeout(() => {
+										saveAutoAction(payload.action, store);
+									}, 250);
+									break;
+								}
+							}
 							saveAutoAction(payload.action, store);
 							break;
 						case TRecorderMessagesType["Commands.turnOnInspectMode"]:
@@ -203,9 +220,9 @@ const DeviceFrame = () => {
 	const isPageFailedCrash = recorderCrashState && recorderCrashState.type === TRecorderCrashState.PAGE_LOAD_FAILED;
 
 	React.useEffect(() => {
-		if (isPageFailedCrash) {
-			setCrash("PAGE_LOAD_FAILED");
-		}
+		// if (isPageFailedCrash) {
+		// 	setCrash("PAGE_LOAD_FAILED");
+		// }
 	}, [isPageFailedCrash]);
 	// Only when code is shown
 	return (

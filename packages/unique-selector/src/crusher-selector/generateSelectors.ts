@@ -82,13 +82,15 @@ export function getSelectors(
 	if (!target) return [];
 	let offsetLimit = 10;
 	if (useAdvancedSelector) {
-		timeout = 5000;
+		timeout = 1000;
 		offsetLimit = 200;
 	}
 
 	const selectors = generateSelectors(target, timeout, selectorCache, mode);
 
-	const selectorList = [];
+	let selectorList = [];
+
+	// basic iter
 	let index = 0;
 	for (const selector of selectors) {
 		// take the first one
@@ -99,5 +101,24 @@ export function getSelectors(
 		index++;
 	}
 
-	return selectorList;
+
+	return selectorList.filter((value)=> value).splice(0,5);
 }
+
+function getRelevantSelectors(selectorCache: Map<HTMLElement, RankedSelector[]>) {
+	let newSelectorList: any[] = [];
+	let i = 0;
+	selectorCache.forEach((item) => {
+		if (i === 0) { i++; return; };
+
+		for (const selector of item) {
+			const { penalty } = selector;
+			if (penalty < 150) {
+				newSelectorList.push(selector);
+			}
+		}
+		i++;
+	});
+	return newSelectorList;
+}
+

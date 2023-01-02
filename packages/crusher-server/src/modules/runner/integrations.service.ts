@@ -13,6 +13,7 @@ import { getTemplateFileContent } from "@utils/helper";
 import { resolvePathToFrontendURI } from "@utils/uri";
 import { Inject, Service } from "typedi";
 import { WebhookManager } from "../webhook";
+import axios from 'axios';
 
 @Service()
 class RunnerIntegrationsService {
@@ -100,32 +101,21 @@ class RunnerIntegrationsService {
 
 
     async sendReportStatusEmails(buildRecord: KeysToCamelCase<IBuildTable>, buildReportStatus: BuildReportStatusEnum): Promise<Array<Promise<boolean>>> {
-        if (buildReportStatus === BuildReportStatusEnum.PASSED) return;
-    
+        if (buildReportStatus === BuildReportStatusEnum.PASSED) return [];
         const usersInProject = await this.usersService.getUsersInProject(buildRecord.projectId);
-        const emailTemplateFilePathMap = {
-            [BuildReportStatusEnum.PASSED]:
-            //@ts-ignore
-                typeof __non_webpack_require__ !== "undefined" ? "/email/templates/passedJob.ejs" : "/../../email/templates/passedJob.ejs",
-            [BuildReportStatusEnum.MANUAL_REVIEW_REQUIRED]:
-            //@ts-ignore
-                typeof __non_webpack_require__ !== "undefined"
-                    ? "/email/templates/manualReviewRequiredJob.ejs"
-                    : "/../../email/templates/manualReviewRequiredJob.ejs",
-            [BuildReportStatusEnum.FAILED]:
-            //@ts-ignore
-                typeof __non_webpack_require__ !== "undefined" ? "/email/templates/failedJob.ejs" : "/../../email/templates/failedJob.ejs",
-        };
         
-        const emailTemplate = await getTemplateFileContent(__dirname + emailTemplateFilePathMap[buildReportStatus], {
-            buildId: buildRecord.id,
-            branchName: buildRecord.branchName,
-            buildReviewUrl: resolvePathToFrontendURI(`/app/build/${buildRecord.id}`),
-        });
-    
         return usersInProject.map((user) => {
-            return this.emailManager.sendEmail(user.email, `Build ${buildRecord.id} ${buildReportStatus}`, emailTemplate);
-        });
+            return axios.get("https://meta-api.crusher.dev/api/dev/email/send_build_status", {
+                method: "GET",
+                params: {
+                    status: buildReportStatus,
+                    email: user.email,
+                    name: user.name,
+                    build_id: buildRecord.id,
+                    send: true
+                }
+            });
+	});
     }
     
 }

@@ -1,11 +1,13 @@
 import React from "react";
-import { turnOnInspectMode } from "electron-app/src/_ui/commands/perform";
+import { turnOnInspectMode } from "electron-app/src/ipc/perform";
 import { ActionsList } from "./actionsList";
 import { ElementsHelper, getItemsFromActionsData } from "./helper";
 import { useSelector } from "react-redux";
 import { getSelectedElement } from "electron-app/src/store/selectors/recorder";
 import { ElementIcon } from "electron-app/src/_ui/constants/icons";
 import { css } from "@emotion/react";
+import { ShepherdTourContext } from "react-shepherd";
+import { OnboardingHelper } from "electron-app/src/_ui/utils/onboardingHelper";
 
 const actionsData = require("./actions.json");
 interface IProps {
@@ -16,6 +18,7 @@ interface IProps {
 
 const ElementActions = ({ className, filteredList, defaultExpanded }: IProps) => {
 	const selectedElement = useSelector(getSelectedElement);
+	const tour = React.useContext(ShepherdTourContext);
 
 	const handleCallback = React.useCallback(
 		(id) => {
@@ -49,6 +52,9 @@ const ElementActions = ({ className, filteredList, defaultExpanded }: IProps) =>
 				case "SHOW_ASSERT_MODAL":
 					if (selectedElement) {
 						ElementsHelper.showAssertModal();
+						if(tour.isActive()){
+							OnboardingHelper.showAssertInfoContent(tour);
+						}
 					} else {
 						window["elementActionsCallback"] = ElementsHelper.showAssertModal;
 					}
@@ -79,6 +85,7 @@ const ElementActions = ({ className, filteredList, defaultExpanded }: IProps) =>
 
 	return (
 		<ActionsList
+			id={"element_action"}
 			className={String(className)}
 			title={"element"}
 			description={"checks over element"}

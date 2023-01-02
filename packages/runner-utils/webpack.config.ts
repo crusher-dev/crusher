@@ -32,6 +32,7 @@ module.exports = {
 				test: /\.tsx?$/,
 				loader: "ts-loader",
 				options: {
+					transpileOnly: true,
 					getCustomTransformers: (program) => {
 						const transformer = tsTransformPaths(program);
 

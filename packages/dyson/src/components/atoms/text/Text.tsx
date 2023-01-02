@@ -5,7 +5,7 @@ export type TextProps = {
 	/**
 	 * Emotion CSS style if any
 	 */
-	fontSize?: number;
+	fontSize: number;
 	leading?: string;
 	weight?: number;
 	letterSpacing?: boolean;
@@ -20,20 +20,20 @@ const TextDefaultProps = {
 	color: "#fff",
 };
 
-const getLetterSpacing = (fontSize) => {
+const getLetterSpacing = (fontSize: number) => {
 	if (fontSize < 12) {
-		return { letterSpacing: `.4px` };
+		return { letterSpacing: `.5px` };
 	}
 
 	if (fontSize < 13) {
-		return { letterSpacing: `.35px` };
+		return { letterSpacing: `.4px` };
 	}
 
 	if (fontSize < 14) {
-		return { letterSpacing: `.3px` };
+		return { letterSpacing: `.35px` };
 	}
 	if (fontSize <= 15) {
-		return { letterSpacing: `.25px` };
+		return { letterSpacing: `.3px` };
 	}
 
 	return { letterSpacing: `0` };
@@ -41,15 +41,16 @@ const getLetterSpacing = (fontSize) => {
 /**
  * Crusher Text component.
  */
-export const Text: React.FC<TextProps> = (props: TextProps) => {
+export const Text: React.FC<TextProps> = React.forwardRef((props: TextProps,ref) => {
 	const { children, fontSize, weight, className, color, letterSpacing = true, ...otherProps } = props;
 	return (
 		<span
 			className={`font-gilroy font-${weight} ${className}`}
+			ref={ref}
 			css={css`
 				font-size: ${fontSize}rem;
 				color: ${color};
-				${otherProps.onClick && `cursor:default`}
+				${otherProps.onClick && `cursor:default;`}
 				letter-spacing: ${!!letterSpacing ? getLetterSpacing(fontSize).letterSpacing : "0"}
 			`}
 			{...otherProps}
@@ -57,6 +58,6 @@ export const Text: React.FC<TextProps> = (props: TextProps) => {
 			{children}
 		</span>
 	);
-};
+});
 
 Text.defaultProps = TextDefaultProps;

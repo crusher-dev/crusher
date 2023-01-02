@@ -3,7 +3,7 @@ module.exports = {
     {
       type: 'category',
       label: '🦖 Overview',
-      collapsed: false,
+      collapsed: true,
       items: [
         'overview/index',
         'overview/features',
@@ -13,7 +13,7 @@ module.exports = {
     {
       type: 'category',
       label: '🚀 Getting Started',
-      collapsed: true,
+      collapsed: false,
       items: [
         'getting-started/create-your-first-test',
         'getting-started/what-is-crusher',

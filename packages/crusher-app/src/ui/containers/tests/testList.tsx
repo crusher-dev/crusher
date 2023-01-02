@@ -110,7 +110,8 @@ function TestSearchableList() {
 				await mutate(getTestListAPI(project.id), { ...data, list: filteredProjects }, false);
 				break;
 			case "run":
-				window.location.href = `crusher://replay-test?testId=${selectedList[0]}`;
+				const testIds = selectedList.join(",");
+				window.location.href = `crusher://run-tests-in-local-build?tests=${testIds}`;
 				setShowRunTestPrompt(true);
 				break;
 			case "edit":
@@ -132,7 +133,8 @@ function TestSearchableList() {
 				<TestListContext.Provider value={{
 					type: "web",
 					runTest: (selectedList) => {
-						window.location.href = `crusher://replay-test?testId=${selectedList[0]}`;
+						const testIds = selectedList.join(",");
+						window.location.href = `crusher://run-tests-in-local-build?tests=${testIds}`;
 						setShowRunTestPrompt(true);
 					},
 					currentRenameInput,

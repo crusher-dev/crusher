@@ -18,6 +18,8 @@ import { CamelizeResponse } from "@modules/decorators/camelizeResponse";
 import { DBManager } from "@modules/db";
 import { GithubService } from "@modules/thirdParty/github/service";
 import { BuildReportStatusEnum } from "@modules/resources/buildReports/interface";
+import { isTemplateFormat } from "@crusher-shared/utils/templateString";
+
 @Service()
 class TestsRunner {
 	@Inject()
@@ -26,12 +28,15 @@ class TestsRunner {
 	private dbManager: DBManager;
 	@Inject()
 	private buildTestInstanceService: BuildTestInstancesService;
-	@Inject()
 	private buildReportService: BuildReportService;
 	@Inject()
 	private queueManager: QueueManager;
 	@Inject()
 	private githubService: GithubService;
+
+	constructor() {
+		this.buildReportService = Container.get(BuildReportService);
+	}
 
 	// @Caution: Make sure to prevent race condition here
 	async addTestRequestToQueue(payload: any, parent: any) {
@@ -75,12 +80,18 @@ class TestsRunner {
 
 		return events.map((event) => {
 			if (event.type === ActionsInTestEnum.NAVIGATE_URL) {
-				const urlToGo = new URL(event.payload.meta.value);
-				const newHostURL = new URL(newHost);
-				urlToGo.host = newHostURL.host;
-				urlToGo.port = newHostURL.port;
-				urlToGo.protocol = newHostURL.protocol;
-				event.payload.meta.value = urlToGo.toString();
+				const value = event.payload.meta.value;
+
+				if(!isTemplateFormat(value)) {
+					// @TODO: Add support for host replacement with
+					// environment variables
+					const urlToGo = new URL(value);
+					const newHostURL = new URL(newHost);
+					urlToGo.host = newHostURL.host;
+					urlToGo.port = newHostURL.port;
+					urlToGo.protocol = newHostURL.protocol;
+					event.payload.meta.value = urlToGo.toString();
+				}
 			}
 			return event;
 		});

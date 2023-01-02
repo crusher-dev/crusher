@@ -50,7 +50,7 @@ export default function Signup_email({ loginWithEmailHandler }) {
 	const [name, setName] = useState({ value: "", error: "" });
 	const [sessionInviteCode, setSessionInviteCode] = useAtom(inviteCodeUserKeyAtom);
 
-	const [discordInviteCode, setDiscordInviteCode] = React.useState({ value: "", error: "" });
+	const [discordInviteCode, setDiscordInviteCode] = React.useState({ value: "CRU-TEST", error: "" });
 
 	React.useEffect(() => {
 		if (sessionInviteCode) {
@@ -165,6 +165,7 @@ export default function Signup_email({ loginWithEmailHandler }) {
 							onBlur={verifyInfo.bind(this, false)}
 						/>
 						<FormInput
+							hidde={true}
 							type={"text"}
 							data={discordInviteCode}
 							onReturn={signupUser.bind(this)}

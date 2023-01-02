@@ -115,6 +115,32 @@ export function getElementDescription(node: Node): string | null {
 		return null;
 	}
 	const htmlElement = node as HTMLElement;
+	// if a link
+	if (htmlElement.tagName.toLowerCase() === "a") {
+		if(htmlElement.innerText) {
+			return `a[text="${htmlElement.innerText}"]`;
+		}
+		return `a[href="${htmlElement.getAttribute("href")}"]`;
+	}
+	// button
+	if (htmlElement.tagName.toLowerCase() === "button") {
+		return `button[text="${htmlElement.innerText}"]`;
+	}
+	// input
+	if (htmlElement.tagName.toLowerCase() === "input") {
+		// title
+		if (htmlElement.getAttribute("title")) {
+			return `input[title="${htmlElement.getAttribute("title")}"]`;
+		}
+		// if placeholder
+		if (htmlElement.getAttribute("placeholder")) {
+			return `input[placeholder="${htmlElement.getAttribute("placeholder")}"]`;
+		}
+		// if value
+		if (htmlElement.getAttribute("value")) {
+			return `input[value="${htmlElement.getAttribute("value")}"]`;
+		}
+	}
 	const tagNameNormalized = getElementTagNameLowerCase(htmlElement);
 	const idStep = htmlElement.id ? `#${htmlElement.id}` : null;
 	if (idStep) {

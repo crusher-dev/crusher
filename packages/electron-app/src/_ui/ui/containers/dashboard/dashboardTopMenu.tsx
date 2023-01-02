@@ -4,7 +4,7 @@ import { LogoV2 } from "../../../constants/old_icons";
 import { shell } from "electron";
 import { DropdownIconSVG } from "@dyson/assets/icons";
 import { useNavigate } from "react-router-dom";
-import { performExit } from "../../../commands/perform";
+import { performExit } from "../../../../ipc/perform";
 
 import { useStore } from "react-redux";
 import { getCurrentSelectedProjct } from "electron-app/src/store/selectors/app";

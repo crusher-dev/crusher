@@ -112,7 +112,6 @@ const CrossIcon = (props) => (
 		height={12}
 		fill="none"
 		xmlns="http://www.w3.org/2000/svg"
-		viewBox={"0 0 12 12"}
 		css={css`
 			fill: #ffffff1a;
 			path {
@@ -352,6 +351,12 @@ const RedDotIcon = (props) => (
 	</svg>
 );
 
+const GreenDotIcon = (props) => (
+	<svg viewBox={"0 0 6 6"} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+		<rect x={0.851} y={0.5} width={5} height={5} rx={2.5} fill="#83EA5E" />
+	</svg>
+);
+
 const PlayIconV3 = (props) => (
 	<svg viewBox={"0 0 6 8"} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 		<path d="M.667 7.726V.263c0-.21.289-.358.489-.19l4.71 3.647c.178.127.178.4 0 .527l-4.71 3.69c-.2.147-.49.02-.49-.211Z" fill="#708AEC" />
@@ -407,6 +412,30 @@ export function GarbageIcon(props) {
 	);
 }
 
+function EarthIcon(props) {
+	return (
+	  <svg
+		width={18}
+		height={18}
+		fill="none"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	  >
+		<path
+		  d="M11.812 6.188a.563.563 0 01.563.562c0 .84-.37 1.595-.953 2.109a.562.562 0 11-.744-.843 1.683 1.683 0 00.572-1.266.562.562 0 01.562-.563z"
+		  fill="#565656"
+		/>
+		<path
+		  fillRule="evenodd"
+		  clipRule="evenodd"
+		  d="M9 1.688a7.312 7.312 0 100 14.624A7.312 7.312 0 009 1.687zM3.431 11.7a6.187 6.187 0 007.011 3.319 1.475 1.475 0 00-1.38-.957.738.738 0 01-.727-.616l-.055-.328a.844.844 0 01.6-.95l.742-.211a1.19 1.19 0 00.737-.613l.027-.054a1.089 1.089 0 011.746-.283l.243.243h.471a1.686 1.686 0 011.487.89 6.188 6.188 0 00-4.758-9.3.838.838 0 00.291.506l.801.668a.845.845 0 01.162 1.117l-.382.575a1.687 1.687 0 01-.871.664l-.107.037a.83.83 0 00-.428 1.247.831.831 0 01-.32 1.204l-1.971.986.317.794a.717.717 0 01-1.239.696l-.509-.68a.844.844 0 00-1.43.13l-.458.916z"
+		  fill="#565656"
+		/>
+	  </svg>
+	);
+  }
+  
+
 export {
 	CrossIcon,
 	DeleteIcon,
@@ -430,11 +459,12 @@ export {
 	LogoV2,
 	DroppdownIconV2,
 	RedDotIcon,
-	ActionHeadingIcon,
 	PlayIconV3,
+	EarthIcon,
 	GreenCheckboxIcon,
 	FailedCheckboxIcon,
 	PointerArrowIcon,
 	AddIconV3,
-	ForwardIcon
+	ForwardIcon,
+	GreenDotIcon
 };

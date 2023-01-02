@@ -174,6 +174,12 @@ export class TestController {
 		},
 		@Param("project_id") projectId: number,
 	) {
+		if(!body.context){
+			body.context = {};
+		}
+		if(body.host) {
+			body.context["CRUSHER_BASE_URL"] = body.host; // override or add BASE_URL
+		}
 		if(body.host && body.host.includes("vercel.app")) {
 			await new Promise(async (resolve, reject) => {
 				try {

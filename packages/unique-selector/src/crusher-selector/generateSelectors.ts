@@ -101,11 +101,8 @@ export function getSelectors(
 		index++;
 	}
 
-	let finalSelectorList: any[] = getRelevantSelectors(selectorCache);
 
-	return finalSelectorList.filter((value)=> value).splice(0,5).map(({selector})=>{
-		return selector;
-	});
+	return selectorList.filter((value)=> value).splice(0,5);
 }
 
 function getRelevantSelectors(selectorCache: Map<HTMLElement, RankedSelector[]>) {

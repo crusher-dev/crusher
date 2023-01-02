@@ -143,6 +143,10 @@ class PlaywrightInstance {
 		});
 
 		const page = pages[webViewPage];
+
+		page.setDefaultTimeout(10000);
+		page.setDefaultTimeout(10000);
+
 		return page;
 	}
 

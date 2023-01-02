@@ -62,8 +62,8 @@ class Parser {
 			isTracingOn: this.isTracingOn,
 			tracePath: this.tracePath,
 			defaultBrowserContextOptions: {
-				defaultNavigationTimeout: 30000,
-				defaultTimeout: 15000,
+				defaultNavigationTimeout: 10000,
+				defaultTimeout: 10000,
 				recordVideo: this.shouldRecordVideo ? { dir: this.videoSavePath } : undefined,
 				recordHar: this.recordHarPath ? { path: this.recordHarPath } : undefined,
 			},

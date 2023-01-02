@@ -21,7 +21,7 @@ async function waitForNavigation(
 	if (action.payload.meta?.value) {
 		let url = template(action.payload.meta?.value, { ctx: context || {} });
 
-		await page.waitForURL(url, { timeout: action.payload.meta?.timeout || 30000 });
+		await page.waitForURL(url, { timeout: action.payload.meta?.timeout });
 	} else {
 		await sleep(2000);
 	}

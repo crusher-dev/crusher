@@ -60,7 +60,7 @@ const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, 
 	}, [isRunning, isFailed, isCompleted]);
 
 	const title = React.useMemo(() => TextHighlighter({ text: stepInfo.name }), [stepInfo.name]);
-	const timeout = React.useMemo(() => (statusType === "running" ? <StepTimeout timeout={30} /> : null), [statusType === "running"]);
+	const timeout = React.useMemo(() => (statusType === "running" ? <StepTimeout timeout={10} /> : null), [statusType === "running"]);
 	const content = React.useMemo(() => (
 		<div className={"step-list-item"} onContextMenu={onContextMenu} onClick={onClick} css={[containerCss(statusType === "failed" || disabled), isActive ? activeItemCss : undefined]}>
 			<div className={"card"} css={contentCss}>

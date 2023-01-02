@@ -89,15 +89,16 @@ const CommandInput = styled.div`
 .top_box{
     border: 1px solid #1e1f1f;
     border-radius: 12px 12px 0 0;
-  
-      background: #030303;
+     background: #030303;
 
     overflow: hidden;
     
     border-bottom: 0;
 
     .tab{
+
       padding: 8px 12px 6px 0;
+
       padding-left: 20px;
       background: #030303;
     }

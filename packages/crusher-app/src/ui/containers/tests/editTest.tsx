@@ -130,7 +130,6 @@ export const EditTestModal = ({ name, folderId, id, onClose }) => {
 				size={"medium"}
 			/>
 
-
 			<div className={"flex justify-end mt-20"}>
 				<Button
 					disabled={!isFormChanged || processing}

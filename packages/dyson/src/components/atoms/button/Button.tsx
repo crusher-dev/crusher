@@ -183,7 +183,7 @@ export const Button: React.FC<ButtonProps> = React.forwardRef(
 					props.CSS,
 				]}
 				ref={ref}
-				disabled={disabled}
+				// disabled={disabled}
 				{...props}
 			>
 				{children}

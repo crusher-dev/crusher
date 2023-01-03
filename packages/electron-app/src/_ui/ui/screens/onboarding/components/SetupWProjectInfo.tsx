@@ -17,6 +17,7 @@ import { useUser } from "electron-app/src/_ui/hooks/user";
 import { useStore } from "react-redux";
 import { getCurrentSelectedProjct } from "electron-app/src/store/selectors/app";
 import { devices } from "electron-app/src/devices";
+import { showToast } from "../../../components/toasts";
 
 export const isDevAtom = atom(null)
 export const isLowCodePref = atom(null)
@@ -42,14 +43,7 @@ const TestingPreference = ()=>{
     )
 }
 
-const DirSelector = ()=>{
-    
-    return (
-        <div className="flex pointer" css={css`gap: 8px; :hover{text-decoration: underline;}`}>
-            <TextBlock color="#B6B6B7">crusher</TextBlock>
-        </div>
-    )
-}
+
 
 const formItems = [
     {
@@ -75,15 +69,21 @@ const recorderDevices = devices
 
 export const PROJECT_INFO = ()=>{
     const { userInfo, mutate } = useUser();
-
-    const [_, setOnboarding] = useAtom(ONBOARDING_STAGE_ATOM);
-    const [isDev, setIsDev] = useAtom(isDevAtom)
-    const [isLowCode, setIsLowCode] = useAtom(isLowCodePref)
+    const [_] = useAtom(ONBOARDING_STAGE_ATOM);
+    const [isDev] = useAtom(isDevAtom)
+    const [isLowCode] = useAtom(isLowCodePref)
 
     const navigate = useNavigate()
     const store = useStore();
+    const isSubmitDisabled = isDev === null || isLowCode === null;
 
     const handleCreateTest = React.useCallback(async () => {
+
+        if(isSubmitDisabled){
+            alert("Please select all the fields")
+            return;
+        }
+        
         await axios(updateProjectMeta({
             isDev,
             isLowCode,
@@ -133,36 +133,34 @@ export const PROJECT_INFO = ()=>{
         
     }, [isDev, isLowCode]);
 
-    const isSubmitDisabled = isDev === null || isLowCode === null;
+  
 
 
     return (
         <div>
          <HeaderBlock title="setup project" desc={"you'll be able to create test after this"}/>
-    <motion.div 
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1  }}
-    css={box} className="mt-32 py-32 px-40 mb-44">
-            {
-                formItems.map(({heading,formComponent,desc}, index)=>{
-                    return ( <div>
-                        <div className="flex justify-between items-start">
-                            <div>  
-                                <Heading fontSize={15} showLineHeight={false} color="#CBCBCB" weight={600}>{heading}</Heading>
-                                <TextBlock fontSize={12} showLineHeight={false} color="#6D6D6D" className="mt-12">{desc}</TextBlock>
-                            </div>
-                            <div>
-                                {formComponent}
-                            </div>
-                        </div>
-                        {index !== formItems.length - 1 ? <hr className="mt-24 mb-24" css={ruleCSS}/> : null}
-                    </div>)
-                })
-            }
-
-            
-    </motion.div>
-    <CTABar isDisabled={isSubmitDisabled} onClick={handleCreateTest.bind(this)} btnText="setup project"/>
+            <motion.div 
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1  }}
+            css={box} className="mt-32 py-32 px-40 mb-44">
+                    {
+                        formItems.map(({heading,formComponent,desc}, index)=>{
+                            return ( <div>
+                                <div className="flex justify-between items-start">
+                                    <div>  
+                                        <Heading fontSize={15} showLineHeight={false} color="#CBCBCB" weight={600}>{heading}</Heading>
+                                        <TextBlock fontSize={12} showLineHeight={false} color="#6D6D6D" className="mt-12">{desc}</TextBlock>
+                                    </div>
+                                    <div>
+                                        {formComponent}
+                                    </div>
+                                </div>
+                                {index !== formItems.length - 1 ? <hr className="mt-24 mb-24" css={ruleCSS}/> : null}
+                            </div>)
+                        })
+                    }
+            </motion.div>
+        <CTABar isDisabled={isSubmitDisabled} onClick={handleCreateTest.bind(this)} btnText="setup project"/>
     </div>)
 
 }

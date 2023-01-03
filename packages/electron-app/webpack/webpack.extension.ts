@@ -79,7 +79,17 @@ let finalConfig: any = {
 					plugins: [["@babel/plugin-transform-react-jsx", { pragma: "h" }], "@emotion/babel-plugin"],
 				},
 			},
-			{ test: /\.ts(x)?$/, loader: "ts-loader", options: { transpileOnly: true } },
+			{
+				test: /\.ts(x)?$/,
+				loader: "swc-loader",
+				options: {
+					jsc: {
+						parser: {
+							syntax: "typescript",
+						},
+					},
+				},
+			},
 			{ test: /\.pug$/, use: "pug-loader" },
 			{
 				test: /\.css$/i,

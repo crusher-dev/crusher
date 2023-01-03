@@ -29,12 +29,13 @@ const commonConfig = {
 				test: /\.tsx?$/,
 				use: [
 					{
-						loader: "babel-loader",
-					},
-					{
-						loader: "ts-loader",
+						loader: "swc-loader",
 						options: {
-							transpileOnly: true,
+							jsc: {
+								parser: {
+									syntax: "typescript",
+								},
+							},
 						},
 					},
 				],
@@ -69,7 +70,7 @@ const commonConfig = {
 };
 
 let injectedEnv: any = {};
-if(process.env.SEGMENT_API_KEY) {
+if (process.env.SEGMENT_API_KEY) {
 	injectedEnv["SEGMENT_API_KEY"] = process.env.SEGMENT_API_KEY;
 }
 

@@ -342,7 +342,7 @@ class PlaywrightInstance {
 			const projectMetadata: any = getCurrentProjectMetadata(store.getState() as any) || {};
 	
 			const selectedEnvironment = projectMetadata?.selectedEnvironment;
-			const environment = projectMetadata?.environments[selectedEnvironment];
+			const environment = selectedEnvironment && projectMetadata?.environments ?  projectMetadata?.environments[selectedEnvironment] : null;
 	
 			if(environment?.variables) {
 				for(const key in environment.variables) {
@@ -360,6 +360,7 @@ class PlaywrightInstance {
 		/* Inputs can get affected if webview looses focus */
 		await this.appWindow.focusWebView();
 
+		console.log("BASIC");
 		await this.runnerManager.runActions(actionsArr, this.browser, this.page, (action: iAction, result: iActionResult) => {
 			const { status } = result;
 			switch (status) {

@@ -4,7 +4,7 @@ export class OnboardingHelper {
             const out = (window as any)._createNewElementAssertionRow();
             if(out) return;
                 // Try until window._createNewElementAssertionRow() returns true (timeout after 5s)
-            const maxTimeout = 5000;
+            const maxTimeout = 10000;
             const interval = 100;
             let timeout = 0;
             const intervalId = setInterval(() => {

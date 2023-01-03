@@ -24,10 +24,7 @@ interface ISidebarProps {
 const Sidebar = ({ className }: ISidebarProps) => {	
 	const { currentBuild } = useLocalBuild();
 	const isInRecordingSession = useSelector(getIsInRecordingSession);
-	const isCustomCodeOn = useSelector(getIsCustomCodeOn);
-
 	const tour = useContext(ShepherdTourContext);
-	const store = useStore();
 	
 	const topPanel = React.useMemo(() => {
 		if (currentBuild) {

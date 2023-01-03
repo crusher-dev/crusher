@@ -156,8 +156,6 @@ const StatusBar = () => {
 				}
 				setCurrentModal({ type, stepIndex });
 				setClicked(true);
-			} else {
-				setCurrentModal(null);
 			}
 		};
 

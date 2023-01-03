@@ -20,7 +20,7 @@ const InfoOverLay = () => {
 		if (isOpen) {
 			setIsOpen(false);
 		}
-		localStorage.setItem("app.showShouldOnboardingOverlay", "false");
+		// localStorage.setItem("app.showShouldOnboardingOverlay", "false");
 		dispatch(setShowShouldOnboardingOverlay(false));
 	};
 

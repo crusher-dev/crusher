@@ -229,8 +229,6 @@ const SaveVerifyButton = ({ isTestVerificationComplete }) => {
 			   tour.complete();
 		   }
 
-		   localStorage.setItem("app.showShouldOnboardingOverlay", "false");
-
 			switch (actionType) {
 				case ITestActionEnum.UPDATE:
 					await updateTest().then(() => {

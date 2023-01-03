@@ -49,8 +49,16 @@ const devices: iDevice[] = [
 	},
 ];
 
+const recorderDevices = devices
+	.filter((device) => device.visible)
+	.map((device) => ({
+		device: device,
+		value: device.id,
+		label: device.name,
+	}));
+
 function getDeviceFromId(id: TDeviceEnum | string) {
 	return devices.find((device) => device.id === id);
 }
 
-export { TDeviceEnum, iDevice, devices, getDeviceFromId };
+export { TDeviceEnum, iDevice, devices, getDeviceFromId, recorderDevices };

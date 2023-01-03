@@ -128,9 +128,9 @@ const steps = [
     id: "intro",
     attachTo: { element: ".recorder-sidebar", on: "right" },
 
-    title: 'Click on button',
-    text: ["We'll record this step in your test"],
-  
+    title: 'Welcome to the Recorder',
+    text: ["On the left side is the actions panel - here you can select the actions you want to record."],
+    canClickTarget: false,
     buttons: [
       buttonsDefault.exit,
       {

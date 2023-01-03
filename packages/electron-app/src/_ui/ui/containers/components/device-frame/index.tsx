@@ -2,6 +2,7 @@ import React, { memo } from "react";
 import { css } from "@emotion/react";
 import {
 	getInspectElementSelectorMeta,
+	getIsInRecordingSession,
 	getIsStatusBarVisible,
 	getRecorderCrashState,
 	getRecorderInfo,
@@ -17,6 +18,7 @@ import { IpcMessageEvent, shell } from "electron";
 import {
 	disableJavascriptInDebugger,
 	performQuitAndRestore,
+	performSteps,
 	turnOffElementSelectorInspectMode,
 	turnOffInspectMode,
 	turnOnInspectMode,
@@ -39,6 +41,8 @@ import { clearToast } from "../../../components/toasts";
 import { ShepherdTourContext } from "react-shepherd";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { LinkPointer } from "../../../components/LinkPointer";
+import { debounce } from "lodash";
+import { recorderDevices } from "electron-app/src/devices";
 
 const CrashScreen = () => {
 	const store = useStore();
@@ -225,27 +229,50 @@ const DeviceFrame = () => {
 		// 	setCrash("PAGE_LOAD_FAILED");
 		// }
 	}, [isPageFailedCrash]);
+
+	const startOnboarding = React.useCallback(debounce(() => {
+		performSteps([
+			{
+				type: "BROWSER_SET_DEVICE",
+				payload: {
+					meta: {
+						device: recorderDevices[0].device,
+					},
+				},
+				time: Date.now(),
+			},
+			{
+				type: "PAGE_NAVIGATE_URL",
+				payload: {
+					selectors: [],
+					meta: {
+						value: "https://crusher-demo-site.vercel.app/",
+					},
+				},
+				status: "COMPLETED",
+				time: Date.now(),
+			},
+		]).finally(() => {
+			const isInRecordingSession = getIsInRecordingSession(store.getState() as any);
+			if (isInRecordingSession) {
+				tour.start();
+			}
+		});
+	
+	}, 100), []);
 	// Only when code is shown
 	return (
 		<div css={[topContainerStyle]}>
 			<RightClickMenu menuItems={menuItemsComponent}>
 				<div
-					css={[
-						containerStyle(isStatusBarVisible),
-						!recorderInfo.device
-							? css`
-									background: #070708;
-							  `
-							: undefined,
-					]}
-				>
+					css={[containerStyle(isStatusBarVisible)]}>
 					
 					{ !recorderInfo.device ? (
 					<div className="flex flex-col items-center" css={css`margin-left: 80px; color: #d2d2d2;`}>
 						<div className="text-14 font-500 tracking-wide">
 							New to crusher?
 						</div>
-						<LinkPointer className="text-14 font-500 tracking-wide mt-12 underline">
+						<LinkPointer onClick={startOnboarding} className="text-14 font-500 tracking-wide mt-12 underline">
 							Start 2-min onboarding
 						</LinkPointer>
 						<LinkPointer

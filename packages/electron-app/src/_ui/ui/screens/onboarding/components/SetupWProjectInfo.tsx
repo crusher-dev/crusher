@@ -105,9 +105,7 @@ export const PROJECT_INFO = ()=>{
         navigate("/recorder");
         goFullScreen();
 
-        const shouldShowOnboarding = localStorage.getItem("app.showShouldOnboardingOverlay") !== "false";
-        if (shouldShowOnboarding) {
-            performSteps([
+        performSteps([
                 {
                     type: "BROWSER_SET_DEVICE",
                     payload: {
@@ -128,8 +126,12 @@ export const PROJECT_INFO = ()=>{
                     status: "COMPLETED",
                     time: Date.now(),
                 },
-            ]);
-        }
+        ]).finally(() => {
+			const isInRecordingSession = getIsInRecordingSession(store.getState() as any);
+			if (isInRecordingSession) {
+				tour.start();
+			}
+		});
         
     }, [isDev, isLowCode]);
 

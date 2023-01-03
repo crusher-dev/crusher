@@ -35,14 +35,6 @@ const Sidebar = ({ className }: ISidebarProps) => {
 		}
 	}, [currentBuild]);
 
-	React.useEffect(() => {
-		const shouldShowOnboarding = localStorage.getItem("app.showShouldOnboardingOverlay") !== "false";
-		if (isInRecordingSession) {
-			if(shouldShowOnboarding) {
-				tour.start();
-			}
-		}
-	}, [isInRecordingSession]);
 	return (
 		<ResizeWrapper track={"Resizable"}>
 			<div id="Resizable" css={containerCss} className={`recorder-sidebar ${String(className)}`}>

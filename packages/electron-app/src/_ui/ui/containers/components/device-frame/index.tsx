@@ -240,6 +240,7 @@ const DeviceFrame = () => {
 					]}
 				>
 					
+					{ !recorderInfo.device ? (
 					<div className="flex flex-col items-center" css={css`margin-left: 80px; color: #d2d2d2;`}>
 						<div className="text-14 font-500 tracking-wide">
 							New to crusher?
@@ -254,7 +255,7 @@ const DeviceFrame = () => {
 						className="text-14 font-500 tracking-wide mt-12 underline">
 							or read docs
 						</LinkPointer>
-					</div>
+					</div>) : null }
 					{recorderInfo.device && (
 						<div
 							style={{

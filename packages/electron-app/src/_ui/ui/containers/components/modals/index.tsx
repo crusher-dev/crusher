@@ -6,6 +6,7 @@ import { WaitModal } from "./page/waitModal";
 import mitt from "mitt";
 import { useStore } from "react-redux";
 import { getSavedSteps } from "electron-app/src/store/selectors/recorder";
+import { atom, useAtom } from "jotai";
 
 export const modalEmitter = mitt();
 
@@ -13,16 +14,20 @@ const emitShowModal = (event: { type: any; stepIndex?: any }) => {
 	modalEmitter.emit("show-modal", event);
 };
 
+export const modalAtom = atom({ type: null, stepIndex: null })
+
 const ModalManager = () => {
-	const [currentModal, setCurrentModal] = React.useState({ type: null, stepIndex: null });
+	const [currentModal, setCurrentModal] = useAtom(modalAtom);
 	const store = useStore();
 
 	React.useEffect(() => {
-		modalEmitter.on("show-modal", ({ type, stepIndex }: { type: any; stepIndex?: number }) => {
+		const listener = ({ type, stepIndex }: { type: any; stepIndex?: number }) => {
 			setCurrentModal({ type, stepIndex });
-		});
+		};
+		
+		modalEmitter.on("show-modal", listener);
 		return () => {
-			modalEmitter.off("show-modal");
+			modalEmitter.off("show-modal", listener);
 		};
 	}, []);
 

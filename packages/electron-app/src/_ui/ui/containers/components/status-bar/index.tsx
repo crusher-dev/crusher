@@ -7,7 +7,7 @@ import { getLogs } from "electron-app/src/store/selectors/logger";
 import { MiniCrossIcon } from "../../../../constants/old_icons";
 import { ObjectInspector, chromeDark } from "react-inspector";
 import { CustomCodeModal } from "../modals/page/customCodeModal";
-import { modalEmitter } from "../modals";
+import { modalAtom, modalEmitter } from "../modals";
 import { getRecorderState, getSavedSteps } from "electron-app/src/store/selectors/recorder";
 import { updateRecorderState } from "electron-app/src/store/actions/recorder";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
@@ -100,7 +100,6 @@ const normalMessage = css`
 `
 
 
-const modalAtom = atom({ type: null, stepIndex: null })
 export const useCustomModelData= ()=>{
 	const store = useStore();
 	const [currentModal, setCurrentModal] = useAtom(modalAtom);
@@ -118,7 +117,7 @@ export const useCustomModelData= ()=>{
 	}, [currentModal]);
 
 
-	return {currentModal, setCurrentModal,stepAction,closeModal}
+	return {currentModal, setCurrentModal, stepAction, closeModal}
 }
 
 const StatusBar = () => {
@@ -147,7 +146,7 @@ const StatusBar = () => {
 	}, [clicked]);
 
 	React.useEffect(() => {
-		modalEmitter.on("show-modal", ({ type, stepIndex }: { type: any; stepIndex?: number }) => {
+		const handleShowModal = ({ type, stepIndex }: { type: any; stepIndex?: number }) => {
 			if (type === "CUSTOM_CODE") {
 				const recorderState = getRecorderState(store.getState());
 				if (recorderState.payload && !(recorderState.payload as any).previousState) {
@@ -160,7 +159,12 @@ const StatusBar = () => {
 			} else {
 				setCurrentModal(null);
 			}
-		});
+		};
+
+		modalEmitter.on("show-modal", handleShowModal);
+		return () => {
+			modalEmitter.off("show-modal", handleShowModal);
+		}
 	}, []);
 
 

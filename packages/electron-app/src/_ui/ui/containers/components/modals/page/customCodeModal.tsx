@@ -334,18 +334,6 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 					padding-bottom: 20rem;
 					border-bottom: 0.25px solid rgb(255, 255, 255, 0.08);
 				`}
-				actions={
-					<UnDockIcon
-						onClick={handleUnDock}
-						css={css`
-							width: 14rem;
-							height: 14rem;
-							:hover {
-								opacity: 0.8;
-							}
-						`}
-					/>
-				}
 				title={
 					<>
 						<span>Code block</span>

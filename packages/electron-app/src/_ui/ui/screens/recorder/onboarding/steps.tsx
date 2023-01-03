@@ -214,9 +214,11 @@ const steps = [
     ],
 
     beforeShowPromise: async function () {
+      try {
       if(document.querySelector("#highlight-current")) {
         document.querySelector("#highlight-current").remove();
       }
+    } catch(e){}
     }
   }),
   createStep({
@@ -239,9 +241,11 @@ const steps = [
       }
     ],
     beforeShowPromise: async function () {
-      if(document.querySelector("#highlight-current")) {
-        document.querySelector("#highlight-current").remove();
-      }
+      try {
+        if(document.querySelector("#highlight-current")) {
+          document.querySelector("#highlight-current").remove();
+        }
+      } catch(e){}
     }
   }),
   createStep({
@@ -259,10 +263,14 @@ const steps = [
         action: function () {
           const event = new CustomEvent('save-assertions', { detail: { assertions: [] } });
           window.postMessage({ type: 'save-assertions', assertions: [] });
-          emitShowModal({ type: "CUSTOM_CODE" });
-          setTimeout(() => {
-            this.next();
-          }, 1000);
+
+          setTimeout(()=>{
+            emitShowModal({ type: "CUSTOM_CODE" });
+            setTimeout(() => {
+              this.next();
+            }, 1000);
+          }, 100);
+
         }
       }
     ],
@@ -290,7 +298,6 @@ const steps = [
         type: undefined,
         action: function() {
           document.querySelector('#save-code-button').click();
-          this.complete();
         }
       }
     ],

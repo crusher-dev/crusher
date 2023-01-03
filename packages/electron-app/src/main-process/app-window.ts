@@ -377,7 +377,7 @@ export class AppWindow {
 		const projectMetadata: any = getCurrentProjectMetadata(this.store.getState() as any) || {};
 
 		const selectedEnvironment = projectMetadata?.selectedEnvironment;
-		const environment = projectMetadata?.environments[selectedEnvironment];
+		const environment = selectedEnvironment && projectMetadata?.environments ? projectMetadata?.environments[selectedEnvironment] : null;
 
 		if(environment?.variables) {
 			const out = {};

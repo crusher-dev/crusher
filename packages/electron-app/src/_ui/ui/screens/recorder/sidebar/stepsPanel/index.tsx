@@ -1,7 +1,7 @@
 import React from "react";
 import { css } from "@emotion/react";
 import { Text } from "@dyson/components/atoms/text/Text";
-import { ConsoleIcon, ForwardIcon, StopIcon } from "electron-app/src/_ui/constants/old_icons";
+import { ConsoleIcon, ForwardIcon, StopIcon, TestStepsIcon } from "electron-app/src/_ui/constants/old_icons";
 import { useSelector, useStore } from "react-redux";
 import { getIsStatusBarVisible, getRecorderContext, getRecorderState, getSavedSteps } from "electron-app/src/store/selectors/recorder";
 import { Step } from "./step";
@@ -245,12 +245,15 @@ const StepsPanel = ({ className }: IProps) => {
 	return (
 		<div css={containerCss} className={String(className)}>
 			<div css={headerCss} title={""} className="flex items-center">
-				<Text css={sectionHeadingCss} className="mt-3">{recordedSteps.length} steps</Text>
+				<Text fontSize={13} css={sectionHeadingCss} className="flex items-center mt-3">
+					<TestStepsIcon className={"mr-8"}/>
+					<span className="mt-2">{recordedSteps.length} steps</span>
+					</Text>
 				<div css={sectionActionsCss}>
-					<HoverButton title={"skip this step"} onClick={handlePause}>
+					<HoverButton title={"Go to next step"} onClick={handlePause}>
 						<ForwardIcon css={forwrdIconCss} />
 					</HoverButton>
-					<HoverButton title={"reload test"} onClick={handleResetTest}>
+					<HoverButton title={"rerun test"} onClick={handleResetTest}>
 						<ResetIcon css={resetIconCss} />
 					</HoverButton>
 					<HoverButton title={"open logs"} onClick={toggleStatusBar} className={"ml-2"}>

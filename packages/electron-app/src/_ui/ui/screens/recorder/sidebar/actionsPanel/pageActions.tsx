@@ -62,8 +62,8 @@ const PageActions = ({ className, defaultExpanded, filteredList }: IProps) => {
 		<ActionsList
 			defaultExpanded={defaultExpanded}
 			className={String(className)}
-			title={"page"}
-			description={"action on page"}
+			title={"On page"}
+			description={"action for page"}
 			items={getItemsFromActionsData(items)}
 			icon={<PageIcon css={pageIconCss} />}
 			callback={handleCallback}

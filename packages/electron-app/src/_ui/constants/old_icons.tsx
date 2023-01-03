@@ -434,6 +434,32 @@ function EarthIcon(props) {
 	  </svg>
 	);
   }
+
+  function TestStepsIcon(props) {
+	return (
+		<svg
+		  width={16}
+		  height={16}
+		  fill="none"
+		  xmlns="http://www.w3.org/2000/svg"
+		  {...props}
+		>
+		  <path
+			fillRule="evenodd"
+			clipRule="evenodd"
+			d="M5.001 4h4.752A2.25 2.25 0 0112 6.25v6.25a2 2 0 002-2V4.072c0-1.003-.75-1.874-1.776-1.96l-.449-.033A2 2 0 0010 1H9a2 2 0 00-1.776 1.079c-.15.01-.3.021-.448.033C5.774 2.197 5.036 3.028 5 4zM9 2a1 1 0 00-1 1h3a1 1 0 00-1-1H9z"
+			fill="#828282"
+		  />
+		  <path
+			fillRule="evenodd"
+			clipRule="evenodd"
+			d="M2 6.25C2 5.56 2.56 5 3.25 5h6.5c.69 0 1.25.56 1.25 1.25v7.5c0 .69-.56 1.25-1.25 1.25h-6.5A1.25 1.25 0 012 13.75v-7.5zM4 8a.5.5 0 01.5-.5h.005a.5.5 0 01.5.5v.005a.5.5 0 01-.5.5H4.5a.5.5 0 01-.5-.5V8zm1.5 0a.5.5 0 01.5-.5h2.5a.5.5 0 110 1H6a.5.5 0 01-.5-.5zM4 10a.5.5 0 01.5-.5h.005a.5.5 0 01.5.5v.005a.5.5 0 01-.5.5H4.5a.5.5 0 01-.5-.5V10zm1.5 0a.5.5 0 01.5-.5h2.5a.5.5 0 110 1H6a.5.5 0 01-.5-.5zM4 12a.5.5 0 01.5-.5h.005a.5.5 0 01.5.5v.005a.5.5 0 01-.5.5H4.5a.5.5 0 01-.5-.5V12zm1.5 0a.5.5 0 01.5-.5h2.5a.5.5 0 010 1H6a.5.5 0 01-.5-.5z"
+			fill="#828282"
+		  />
+		</svg>
+	  );
+  }
+  
   
 
 export {
@@ -465,6 +491,7 @@ export {
 	FailedCheckboxIcon,
 	PointerArrowIcon,
 	AddIconV3,
+	TestStepsIcon,
 	ForwardIcon,
 	GreenDotIcon
 };

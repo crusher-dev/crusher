@@ -9,6 +9,11 @@ import { getAppSettings } from "electron-app/src/store/selectors/app";
 import { useStore } from "react-redux";
 import { StepRecordedToast } from "electron-app/src/_ui/ui/screens/recorder/sidebar/stepsPanel/stepRecordedToast";
 import { ProxyConfigModifedToast } from "../../../screens/projectList/proxyConfigModifiedToast";
+import { Conditional } from "@dyson/components/layouts";
+import { FailedCheckboxIcon, GreenCheckboxIcon } from "electron-app/src/_ui/constants/old_icons";
+import { Link } from "../../../components/Link";
+import { ExternalIcon } from "../../common/stickyFooter";
+import { LinkPointer } from "../../../components/LinkPointer";
 
 export const snackBarEmitter = mitt();
 
@@ -31,20 +36,27 @@ const TestReportToast = ({ meta }) => {
 	}, []);
 
 	return (
-		<div css={reportToastContainerStyle}>
+		<div css={reportToastContainerStyle} onClick={handleViewReport}>
 			<div css={reportToastSectionContainerStyle}>
 				<div
-					css={css`
-						font-weight: bold;
-					`}
+					className="flex items-center"
 				>
+						<Conditional showIf={meta.buildReportStatus === "PASSED"}>
+								<GreenCheckboxIcon className={"ml-6"} css={greenCheckboxCss} />
+							</Conditional>
+							<Conditional showIf={meta.buildReportStatus=== "FAILED"}>
+								<FailedCheckboxIcon className={"ml-6"} css={greenCheckboxCss} />
+							</Conditional>
+					<span className="ml-6">
 					Tests{" "}
 					<span
 						css={css`
 							text-transform: lowercase;
 						`}
+					
 					>
 						{meta.buildReportStatus}
+					</span>
 					</span>
 				</div>
 				<div>{meta.totalCount} test</div>
@@ -57,19 +69,12 @@ const TestReportToast = ({ meta }) => {
 						border-top-width: 1px;
 						border-top-style: solid;
 					`,
-				]}
-				onClick={handleViewReport}
+				]}	
 			>
-				<div
-					css={css`
-						:hover {
-							opacity: 0.8;
-							cursor: default;
-						}
-					`}
-				>
-					View report
-				</div>
+				<LinkPointer>
+				View report
+				</LinkPointer>
+				
 			</div>
 		</div>
 	);
@@ -109,6 +114,12 @@ const TestCreatedToast = () => {
 		</div>
 	);
 };
+
+const greenCheckboxCss = css`
+	width: 14px;
+	height: 14px;
+	margin-left: -4px;
+`;
 
 const reportToastContainerStyle = css`
 	color: #fff;

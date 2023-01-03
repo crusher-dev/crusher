@@ -10,24 +10,16 @@ import { COMPLETE_INTEGRATION } from "./components/CompleteIntegration"
 import { WelcomMessageBlock } from "./components/WelcomeMessageBlock"
 import { useEffect } from "react";
 
-export const ONBOARDING_STAGE_ATOM = atom(0)
+export const ONBOARDING_STAGE_ATOM = atom(1)
     
 export const OnboardingWrapper = ()=>{
     const [onboardingStage] = useAtom(ONBOARDING_STAGE_ATOM);
+
     return (
         <CompactAppLayout showHeader={false} css={css`background: #0C0C0C;`}>
             <div css={wrappeCSS} className="flex flex-col justify-between">
-                <Conditional showIf={onboardingStage===0}>  
-                    <WelcomMessageBlock/>
-                </Conditional>
-                <Conditional showIf={onboardingStage===1}>  
-                <PROJECT_INFO/>
-                </Conditional>
-
-                <Conditional showIf={onboardingStage===3}>  
-                <COMPLETE_INTEGRATION/>
-                </Conditional>
-
+                {onboardingStage === 1 ? (<PROJECT_INFO/>) : null}
+                {onboardingStage === 3 ? (<COMPLETE_INTEGRATION/>) : null}
                 <OnboardingFooter/>
             </div>
         </CompactAppLayout>

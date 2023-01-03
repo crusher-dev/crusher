@@ -64,10 +64,6 @@ const editIcoNCss = css`
   width: 14rem;
   height: 14rem;
 `;
-const correctIconCss = css`
-  width: 14rem;
-  height: 14rem;
-`;
 
 const correctIconCss = css`
   width: 14rem;

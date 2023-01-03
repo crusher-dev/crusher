@@ -381,7 +381,7 @@ export {
 	saveAutoAction,
 	recordHoverDependencies,
 	performAction,
-	performSetDevice,
+	// performSetDevice,
 	saveSetDeviceIfNotThere,
 	performNavigation,
 	performTakePageScreenshot,

@@ -196,7 +196,7 @@ const linkCss = css`
 
 	color: rgba(255, 255, 255, 0.43);
 `;
-export { StickyFooter };
+
 
 //  🔴🔴 Do not edit, this is copy of DashboardBase help section
 export function HelpContent({ ...props }) {

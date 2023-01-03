@@ -334,18 +334,6 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 					padding-bottom: 20rem;
 					border-bottom: 0.25px solid rgb(255, 255, 255, 0.08);
 				`}
-				actions={
-					<UnDockIcon
-						onClick={handleUnDock}
-						css={css`
-							width: 14rem;
-							height: 14rem;
-							:hover {
-								opacity: 0.8;
-							}
-						`}
-					/>
-				}
 				title={
 					<>
 						<span>Code block</span>
@@ -367,7 +355,8 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 			<div
 				css={css`
 					height: auto;
-					padding: 12rem 34rem;
+					padding: 12rem 0rem;
+					margin-left: -16rem;
 					background: #080808;
 					padding-left: 4rem;
 					border-bottom-left-radius: 12px;
@@ -544,7 +533,7 @@ const inputStyle = css`
 const bottomBarStyle = css`
 	display: flex;
 	align-items: center;
-	padding: 12rem 28rem;
+	padding:  0 16rem 12rem 24rem;
 	background: #080808;
 `;
 const saveButtonStyle = css`

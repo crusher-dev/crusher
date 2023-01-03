@@ -7,14 +7,14 @@ import { getLogs } from "electron-app/src/store/selectors/logger";
 import { MiniCrossIcon } from "../../../../constants/old_icons";
 import { ObjectInspector, chromeDark } from "react-inspector";
 import { CustomCodeModal } from "../modals/page/customCodeModal";
-import { modalEmitter } from "../modals";
+import { modalAtom, modalEmitter } from "../modals";
 import { getRecorderState, getSavedSteps } from "electron-app/src/store/selectors/recorder";
 import { updateRecorderState } from "electron-app/src/store/actions/recorder";
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 import { HoverCard } from "@dyson/components/atoms/tooltip/Tooltip1";
 import { DocsIcon, ExportIcon, UpDownSizeIcon } from "electron-app/src/_ui/constants/icons";
 import { ExternalIcon, HelpContent } from "electron-app/src/_ui/ui/containers/common/stickyFooter";
-import { useAtom } from "jotai";
+import { atom, useAtom } from "jotai";
 import { statusBarMaximiseAtom } from "electron-app/src/_ui/store/jotai/statusBar";
 import { HoverButton } from "../../../components/hoverButton";
 import { remote } from "electron";
@@ -100,8 +100,33 @@ const normalMessage = css`
 `
 
 
+export const useCustomModelData= ()=>{
+	const store = useStore();
+	const [currentModal, setCurrentModal] = useAtom(modalAtom);
+	const closeModal = () => {
+		setCurrentModal({ type: null, stepIndex: null });
+		window["openLogTime"] = performance.now();
+	};
+
+	const stepAction = React.useMemo(() => {
+		if (currentModal && typeof currentModal.stepIndex !== "undefined") {
+			const savedSteps = getSavedSteps(store.getState() as any);
+			return savedSteps[currentModal.stepIndex];
+		}
+		return null;
+	}, [currentModal]);
+
+
+	return {currentModal, setCurrentModal, stepAction, closeModal}
+}
+
 const StatusBar = () => {
-	const [currentModal, setCurrentModal] = React.useState({ type: null, stepIndex: null });
+	const {
+		currentModal, 
+		setCurrentModal,
+		stepAction,
+		closeModal
+	} = useCustomModelData();
 	const store = useStore();
 
 	const [clicked, setClicked] = useAtom(statusBarMaximiseAtom);
@@ -121,7 +146,7 @@ const StatusBar = () => {
 	}, [clicked]);
 
 	React.useEffect(() => {
-		modalEmitter.on("show-modal", ({ type, stepIndex }: { type: any; stepIndex?: number }) => {
+		const handleShowModal = ({ type, stepIndex }: { type: any; stepIndex?: number }) => {
 			if (type === "CUSTOM_CODE") {
 				const recorderState = getRecorderState(store.getState());
 				if (recorderState.payload && !(recorderState.payload as any).previousState) {
@@ -131,16 +156,15 @@ const StatusBar = () => {
 				}
 				setCurrentModal({ type, stepIndex });
 				setClicked(true);
-			} else {
-				setCurrentModal(null);
 			}
-		});
+		};
+
+		modalEmitter.on("show-modal", handleShowModal);
+		return () => {
+			modalEmitter.off("show-modal", handleShowModal);
+		}
 	}, []);
 
-	const closeModal = () => {
-		setCurrentModal({ type: null, stepIndex: null });
-		window["openLogTime"] = performance.now();
-	};
 
 	React.useEffect(() => {
 		if (logs && logs.get("_").length > 0) {
@@ -258,13 +282,7 @@ const StatusBar = () => {
 	};
 
 	const lastLogMessage = logs && logs.get("_").length ? logs.get("_")[logs.get("_").length - 1] : null;
-	const stepAction = React.useMemo(() => {
-		if (currentModal && typeof currentModal.stepIndex !== "undefined") {
-			const savedSteps = getSavedSteps(store.getState() as any);
-			return savedSteps[currentModal.stepIndex];
-		}
-		return null;
-	}, [currentModal]);
+	
 
 	const getFormattedMessage = (logMessage) => {
 		const upperCase = (str) => str.charAt(0).toUpperCase() + str.slice(1);
@@ -358,28 +376,7 @@ const StatusBar = () => {
 					: undefined,
 			]}
 		>
-			{currentModal && currentModal.type === "CUSTOM_CODE" ? (
-				<div
-					css={css`
-						flex: 1;
-						height: 100%;
-						width: 100%;
-						display: flex;
-						flex-direction: column;
-						overflow: hidden;
-						z-index: 23424234;
-					`}
-				>
-					<CustomCodeModal
-						stepAction={stepAction as any}
-						stepIndex={currentModal.stepIndex}
-						isOpen={currentModal.type === "CUSTOM_CODE"}
-						handleClose={closeModal}
-					/>
-				</div>
-			) : (
-				""
-			)}
+
 			<div
 				id={`logsTab`}
 				className={String(clicked ? "expandBar" : "")}

@@ -182,6 +182,7 @@ const DashboardScreen = () => {
 
 	const [selectedProject, setSelectedProject] = React.useState(null);
 	const [showProxyWarning, setShowProxyWarning] = React.useState({ show: false, testId: null, startUrl: null });
+	const [onboardingCheckDone, setOnboardingCheckDone] = React.useState(null);
 
 	const navigate = useNavigate();
 	const store = useStore();
@@ -200,24 +201,31 @@ const DashboardScreen = () => {
 
 		if(projects) {
 			const selectedProject = projects.find((p) => p.id == selectedProjectId);
+			if(!selectedProject) {
+				// Do nothing, we will be redirected to unauthorized error page
+				// after /tests API is rejected
+				return null;
+			}
 			// console.log("Selected project", selectedProject);
 			if(!selectedProject.meta.ONBOARDING_COMPLETED){
 				return navigate("/project-onboarding");
 			}
-		}
+			setOnboardingCheckDone(true);
 
-		const proxyState = getProxyState(store.getState());
-		if (window["showProxyWarning"] && !Object.keys(proxyState).length) {
-			setShowProxyWarning({ show: true, testId: window["showProxyWarning"].testId, startUrl: window["showProxyWarning"].startUrl });
-			window["showProxyWarning"] = false;
-		}
 
-		turnOnProxyServers();
-		// @TODO: Cache this API
-		if (selectedProjectId && userInfo && userInfo.projects) {
-			const project = userInfo.projects.find((p) => p.id == selectedProjectId);
-			if (project) {
-				setSelectedProject(project);
+			const proxyState = getProxyState(store.getState());
+			if (window["showProxyWarning"] && !Object.keys(proxyState).length) {
+				setShowProxyWarning({ show: true, testId: window["showProxyWarning"].testId, startUrl: window["showProxyWarning"].startUrl });
+				window["showProxyWarning"] = false;
+			}
+
+			turnOnProxyServers();
+			// @TODO: Cache this API
+			if (selectedProjectId && userInfo && userInfo.projects) {
+				const project = userInfo.projects.find((p) => p.id == selectedProjectId);
+				if (project) {
+					setSelectedProject(project);
+				}
 			}
 		}
 	}, [projects]);
@@ -226,7 +234,7 @@ const DashboardScreen = () => {
 
 
 	const isLoading = React.useMemo(() => !tests, [tests]);
-	const hasNotLoaded = isLoading || !animationComplete;
+	const hasNotLoaded = isLoading || !animationComplete || !onboardingCheckDone;
 	
 	const getMainContent = () => {
 		return (

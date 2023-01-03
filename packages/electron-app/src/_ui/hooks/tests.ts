@@ -120,7 +120,9 @@ const useProjectTests = () => {
 		});
 	};
 
-	const filterTests = (tests: any[]) => {
+	const filterTests = (tests: any[] | null) => {
+		if(!tests) return null;
+
 		return tests.filter((test) => {
 			return !deletedTests.includes(test.id);
 		});
@@ -144,8 +146,8 @@ const useProjectTests = () => {
 
 
 	return { 
-		tests: filterTests(tests?.list || []),
-		draftTests: filterDraftTests(draftTests) || [],
+		tests: filterTests(tests?.list),
+		draftTests: filterDraftTests(draftTests),
 		deleteTests,
 		deleteDraftTests,
 	};

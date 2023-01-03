@@ -230,15 +230,7 @@ const DeviceFrame = () => {
 		<div css={[topContainerStyle]}>
 			<RightClickMenu menuItems={menuItemsComponent}>
 				<div
-					css={[
-						containerStyle(isStatusBarVisible),
-						!recorderInfo.device
-							? css`
-									background: #070708;
-							  `
-							: undefined,
-					]}
-				>
+					css={[containerStyle(isStatusBarVisible)]}>
 					
 					{ !recorderInfo.device ? (
 					<div className="flex flex-col items-center" css={css`margin-left: 80px; color: #d2d2d2;`}>

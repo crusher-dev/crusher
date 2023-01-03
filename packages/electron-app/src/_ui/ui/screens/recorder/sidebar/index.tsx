@@ -14,6 +14,8 @@ import { ShepherdTourContext } from "react-shepherd";
 import { useContext } from "react";
 import { shouldShowOnboardingOverlay } from "electron-app/src/store/selectors/app";
 import { useStore}  from "react-redux";
+import { CustomCodeModal } from "../../../containers/components/modals/page/customCodeModal";
+import { useCustomModelData } from "../../../containers/components/status-bar";
 
 interface ISidebarProps {
 	className?: string;
@@ -43,10 +45,32 @@ const Sidebar = ({ className }: ISidebarProps) => {
 			}
 		}
 	}, [isInRecordingSession]);
+
+	const {
+		currentModal, 
+		setCurrentModal,
+		stepAction,
+		closeModal
+	} = useCustomModelData();
+
+	if(currentModal && currentModal.type === "CUSTOM_CODE"){
+		return (
+			<ResizeWrapper track={"Resizable"}>
+			<div id="Resizable" css={containerCss} className={`recorder-sidebar ${String(className)}`}>
+				<CustomCodeModal
+					stepAction={stepAction as any}
+					stepIndex={currentModal.stepIndex}
+					isOpen={currentModal.type === "CUSTOM_CODE"}
+					handleClose={closeModal}
+				/>
+			</div>
+		</ResizeWrapper>
+		)
+	}
+
 	return (
 		<ResizeWrapper track={"Resizable"}>
 			<div id="Resizable" css={containerCss} className={`recorder-sidebar ${String(className)}`}>
-
 				<Conditional showIf={isInRecordingSession}>
 					<>
 						{topPanel}

@@ -33,14 +33,29 @@ const commonConfig = {
 				exclude: /node_modules/,
 				use: [
 					{
-						loader: require.resolve("ts-loader"),
+						loader: "swc-loader",
 						options: {
-							getCustomTransformers: () => ({
-								before: [isDevelopment && ReactRefreshTypeScript()].filter(Boolean),
-							}),
-							transpileOnly: isDevelopment,
+							jsc: {
+								parser: {
+									syntax: "typescript",
+								},
+								transform: {
+									react: {
+										development: isDevelopment,
+									},
+								},
+							},
 						},
 					},
+					// {
+					// 	loader: require.resolve("ts-loader"),
+					// 	options: {
+					// 		getCustomTransformers: () => ({
+					// 			before: [isDevelopment && ReactRefreshTypeScript()].filter(Boolean),
+					// 		}),
+					// 		transpileOnly: isDevelopment,
+					// 	},
+					// },
 				],
 			},
 			{

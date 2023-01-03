@@ -14,7 +14,7 @@ import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 import { HoverCard } from "@dyson/components/atoms/tooltip/Tooltip1";
 import { DocsIcon, ExportIcon, UpDownSizeIcon } from "electron-app/src/_ui/constants/icons";
 import { ExternalIcon, HelpContent } from "electron-app/src/_ui/ui/containers/common/stickyFooter";
-import { useAtom } from "jotai";
+import { atom, useAtom } from "jotai";
 import { statusBarMaximiseAtom } from "electron-app/src/_ui/store/jotai/statusBar";
 import { HoverButton } from "../../../components/hoverButton";
 import { remote } from "electron";
@@ -100,9 +100,10 @@ const normalMessage = css`
 `
 
 
+const modalAtom = atom({ type: null, stepIndex: null })
 export const useCustomModelData= ()=>{
 	const store = useStore();
-	const [currentModal, setCurrentModal] = React.useState({ type: null, stepIndex: null });
+	const [currentModal, setCurrentModal] = useAtom(modalAtom);
 	const closeModal = () => {
 		setCurrentModal({ type: null, stepIndex: null });
 		window["openLogTime"] = performance.now();

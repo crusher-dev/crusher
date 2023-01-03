@@ -367,7 +367,8 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 			<div
 				css={css`
 					height: auto;
-					padding: 12rem 34rem;
+					padding: 12rem 0rem;
+					margin-left: -16rem;
 					background: #080808;
 					padding-left: 4rem;
 					border-bottom-left-radius: 12px;
@@ -544,7 +545,7 @@ const inputStyle = css`
 const bottomBarStyle = css`
 	display: flex;
 	align-items: center;
-	padding: 12rem 28rem;
+	padding:  0 16rem 12rem 24rem;
 	background: #080808;
 `;
 const saveButtonStyle = css`

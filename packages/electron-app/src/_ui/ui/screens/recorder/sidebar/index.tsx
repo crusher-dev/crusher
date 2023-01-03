@@ -33,7 +33,7 @@ const Sidebar = ({ className }: ISidebarProps) => {
 		if (currentBuild) {
 			return <ReplaySidebarHeader />;
 		} else {
-			return !isCustomCodeOn ? <ActionsPanel /> : <CustomCodeBanner />;
+			return  <ActionsPanel />;
 		}
 	}, [currentBuild]);
 
@@ -53,10 +53,17 @@ const Sidebar = ({ className }: ISidebarProps) => {
 		closeModal
 	} = useCustomModelData();
 
+
+	
 	if(currentModal && currentModal.type === "CUSTOM_CODE"){
 		return (
-			<ResizeWrapper track={"Resizable"}>
+			<ResizeWrapper 
+			width={550}
+			minWidth={400}
+			maxWidth={600}
+			track={"Resizable"}>
 			<div id="Resizable" css={containerCss} className={`recorder-sidebar ${String(className)}`}>
+
 				<CustomCodeModal
 					stepAction={stepAction as any}
 					stepIndex={currentModal.stepIndex}
@@ -100,7 +107,8 @@ const containerCss = css`
 export { Sidebar };
 
 
-const ResizeWrapper = ({ children, track }) => {
+const ResizeWrapper = ({ children, track,
+width=320, minWidth=280, maxWidth= 400 }) => {
 	const [mouseOver, setMouseOver] = React.useState(false);
 	const [isDragging, setIsDragging] = React.useState(false);
 	const [initialMousePosition, setInitialMousePosition] = React.useState(false);
@@ -111,11 +119,11 @@ const ResizeWrapper = ({ children, track }) => {
 
 		// laster subtract initial mouse position
 		let newWidth = e.clientX;
-		if (newWidth < 280) {
-			newWidth = 280
+		if (newWidth < minWidth) {
+			newWidth = minWidth
 		}
-		if (newWidth > 400) {
-			newWidth = 400
+		if (newWidth > maxWidth) {
+			newWidth = maxWidth
 		}
 		resizable.style.width = `${newWidth}px`;
 	}, [])
@@ -144,7 +152,7 @@ const ResizeWrapper = ({ children, track }) => {
 	}
 
 	return (
-		<div css={wrapperCSS}>
+		<div css={wrapperCSS(width)}>
 			{children}
 			<div id='Draggable'
 				css={[hoverCSS(mouseOver)]}
@@ -166,7 +174,7 @@ const ResizeWrapper = ({ children, track }) => {
 }
 
 
-const wrapperCSS = css`
+const wrapperCSS = (width) =>css`
 display: flex;
 align-items: center;
 -webkit-touch-callout: none;
@@ -178,7 +186,7 @@ user-select: none;
 
 #Resizable{
     height: 100%;
-    width: 320px;
+    width: ${width}px;
 }
 #Draggable{
     background: #09090a;

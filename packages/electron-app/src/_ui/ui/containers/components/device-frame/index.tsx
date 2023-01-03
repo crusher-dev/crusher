@@ -13,7 +13,7 @@ import {
 } from "electron-app/src/store/selectors/recorder";
 import { useSelector, useStore } from "react-redux";
 import { Conditional } from "@dyson/components/layouts";
-import { IpcMessageEvent } from "electron";
+import { IpcMessageEvent, shell } from "electron";
 import {
 	disableJavascriptInDebugger,
 	performQuitAndRestore,
@@ -38,6 +38,7 @@ import { remote } from "electron";
 import { clearToast } from "../../../components/toasts";
 import { ShepherdTourContext } from "react-shepherd";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
+import { LinkPointer } from "../../../components/LinkPointer";
 
 const CrashScreen = () => {
 	const store = useStore();
@@ -238,6 +239,22 @@ const DeviceFrame = () => {
 							: undefined,
 					]}
 				>
+					
+					<div className="flex flex-col items-center" css={css`margin-left: 80px; color: #d2d2d2;`}>
+						<div className="text-14 font-500 tracking-wide">
+							New to crusher?
+						</div>
+						<LinkPointer className="text-14 font-500 tracking-wide mt-12 underline">
+							Start 2-min onboarding
+						</LinkPointer>
+						<LinkPointer
+						onClick={()=>{
+							shell.openExternal("https://docs.crusher.dev")
+						}}
+						className="text-14 font-500 tracking-wide mt-12 underline">
+							or read docs
+						</LinkPointer>
+					</div>
 					{recorderInfo.device && (
 						<div
 							style={{

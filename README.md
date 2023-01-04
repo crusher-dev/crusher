@@ -50,6 +50,17 @@ or [download binary](https://docs.crusher.dev/getting-started/create-your-first-
 
 Reference: [Getting Started](https://docs.crusher.dev/getting-started/create-your-first-test#using-cli) | [What is Crusher](https://docs.crusher.dev/getting-started/what-is-crusher) 
 
+## Status
+
+- [x] Alpha: Anyone can sign up over at [app.crusher.com](https://app.supabase.com). Product is in experimental phase.
+- [x] Public Alpha: Stable enough for most use cases.
+- [x] Beta: Stable enough for most non-enterprise use-cases. 
+- [ ] Public: Production-ready
+
+We are currently in Public Beta. Watch "releases" of this repo to get notified of major updates.
+
+<kbd><img src="https://raw.githubusercontent.com/supabase/supabase/d5f7f413ab356dc1a92075cb3cee4e40a957d5b1/web/static/watch-repo.gif" alt="Watch this repo"/></kbd>
+
 
 ## 👨🏽‍💻 Features
 <img width="934" alt="1" src="https://user-images.githubusercontent.com/6849438/209677880-6f40cf0d-c23f-42dc-8761-a521d305140d.png">

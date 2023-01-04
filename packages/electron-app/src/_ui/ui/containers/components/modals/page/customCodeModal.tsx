@@ -2,6 +2,7 @@ import { Input } from "@dyson/components/atoms";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { Conditional } from "@dyson/components/layouts";
 import { Dropdown } from "@dyson/components/molecules/Dropdown";
+import { DropdownMenuBox } from "@dyson/components/molecules/DropdownMenu/DropdownMenu";
 import { css, Global } from "@emotion/react";
 import Editor, { loader, Monaco } from "@monaco-editor/react";
 import { iAction } from "@shared/types/action";
@@ -318,6 +319,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 		shell.openExternal("https://docs.crusher.dev");
 	}, []);
 
+	
 	return (
 		<div
 			id="current-modal"
@@ -435,7 +437,11 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 						gap: 20rem;
 						align-items: center;
 					`}
-				></div>
+				>
+					<DropdownMenuBox menuItems={menuItems}>
+						<div className=" ml-8 py-10 tracking-wide font-500">Quick snipets</div>
+					</DropdownMenuBox>
+				</div>
 				<div
 					css={css`
 						display: flex;
@@ -504,11 +510,52 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 							/>
 						</div>
 					</Dropdown>
+
+
 				</div>
 			</div>
 		</div>
 	);
 };
+
+const menuItems =  [
+	{
+	  type: "heading",
+	  value: "Code snippets"
+	},
+	{
+	  type: "separator",
+	  value: "sd"
+	},
+	{
+	  value:"Page", rightItem: true, disabled: true, 
+	  subItems: [
+		{value:"Open Url", rightItem: false, disabled: false},
+		{value:"Wait For seconds", rightItem: false, disabled: false}
+	  ], 
+	  onClick: ()=>{}, 
+	  type: "value"
+	},
+	{
+		type: "separator",
+		value: "sd"
+	  },
+	{
+		value:"Element", rightItem: true, disabled: true, 
+		subItems: [
+		  {value:"Click", rightItem: false, disabled: false,
+		  subItems: [
+			{value:"Click", rightItem: false, disabled: false},
+			{value:"Hover", rightItem: false, disabled: false}
+		  ], 
+		},
+		  {value:"Hover", rightItem: false, disabled: false}
+		], 
+		onClick: ()=>{}, 
+		type: "value"
+	  }
+  ]
+
 
 const UnDockIcon = (props) => (
 	<svg viewBox={"0 0 16 16"} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>

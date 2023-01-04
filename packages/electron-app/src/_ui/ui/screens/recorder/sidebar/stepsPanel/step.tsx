@@ -93,6 +93,7 @@ const Step = ({ className, isActive, disabled, onContextMenu, shouldOpenEditor, 
 			box-shadow: none;
 			background: #070707;
 		`}
+			id={stepId}
 			css={css`
 			padding: 0rem !important;
 			margin-left: -2rem;

@@ -55,6 +55,7 @@ export const TooltipBox = ({ children, className = "tooltip-box", el = "div" }) 
  */
 export const HoverCard: React.FC<TooltipWrapperProps> = (
     {
+        id,
         children, state, supportPadding, onStateChange, autoHide = "true", timer = 0, placement, type, content, padding = 0, className, disableStateManagement = false, disabled = false, ...props }) => {
 
 
@@ -68,10 +69,11 @@ export const HoverCard: React.FC<TooltipWrapperProps> = (
 
 
     const { tooltipCSS, wrapperCSS, callback } = props;
-    const eventListener = () => {
+    const eventListener = useCallback(() => {
         if (type === "hover") {
             return {
                 onMouseOver: () => {
+                    
                     !disableStateManagement && setShow(true!);
                     !!callback && callback(true);
                 },
@@ -79,6 +81,7 @@ export const HoverCard: React.FC<TooltipWrapperProps> = (
                     const isElement = e.relatedTarget instanceof Element;
                     const movedToToolip = (isElement && refs.floating?.current?.contains(e.relatedTarget)) || refs.floating.current === e.relatedTarget;
                     if (movedToToolip) return;
+                    
                     if (autoHide) {
                         !disableStateManagement && setShow(false);
                         !!callback && callback(false);
@@ -93,7 +96,7 @@ export const HoverCard: React.FC<TooltipWrapperProps> = (
                 !!callback && callback(true);
             },
         };
-    };
+    },[])
 
     const ClonedElement = useCallback(() => {
         return React.cloneElement(children, {
@@ -108,7 +111,6 @@ export const HoverCard: React.FC<TooltipWrapperProps> = (
     }, [state]);
 
     useEffect(() => {
-        // callback && callback(show);
         update();
         if (type !== "click" || autoHide === false) return;
         const handleClick = (e: any) => {

@@ -7,7 +7,7 @@ import {
 } from "@radix-ui/react-icons";
 import * as ContextMenuPrimitive from "@radix-ui/react-context-menu";
 
-const contentStyles = {
+export const contentStyles = {
   minWidth: 220,
   backgroundColor: "#0D0E0E",
   borderRadius: 12,
@@ -42,7 +42,7 @@ function SubContent(props) {
   );
 }
 
-const itemStyles = {
+export const itemStyles = {
   all: "unset",
   fontSize: 13,
   lineHeight: 1,
@@ -67,7 +67,7 @@ const itemStyles = {
     color: violet.violet1
   },
   "&[data-state=open]": {
-    backgroundColor: "#8735D9",
+    backgroundColor: "#a82be2",
     color: violet.violet1
   }
 };
@@ -94,7 +94,7 @@ const StyledLabel = styled(ContextMenuPrimitive.Label, {
   color: mauve.mauve11
 });
 
-const StyledSeparator = styled(ContextMenuPrimitive.Separator, {
+export const StyledSeparator = styled(ContextMenuPrimitive.Separator, {
   height: 1,
   backgroundColor: "#2B2B2B",
   margin: 5
@@ -114,6 +114,7 @@ const RightSlot = styled("div", {
   marginLeft: "auto",
   paddingLeft: 20,
   color: mauve.mauve11,
+  transition: 0,
   "[data-highlighted] > &": { color: "white" },
   "[data-disabled] &": { color: mauve.mauve8 }
 });

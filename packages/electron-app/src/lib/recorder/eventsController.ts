@@ -129,7 +129,7 @@ export default class EventsController {
 				? uniqueElementId ? window["crusherCacheSelectors"][uniqueElementId.value] : null
 				: null;
 
-		if (shouldGenerateNewSelectors && selectors) {
+		if (uniqueElementId && shouldGenerateNewSelectors && selectors) {
 			if (!window["crusherCacheSelectors"]) window["crusherCacheSelectors"] = {};
 			window["crusherCacheSelectors"][uniqueElementId.value] = selectors;
 		}

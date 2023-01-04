@@ -3,7 +3,9 @@
 ![Crusher- Low-code testing framework](https://user-images.githubusercontent.com/6849438/204549825-4ab1f713-6068-4da4-86b0-58ddf7747f87.png#gh-light-mode-only)
 
 
-<h2 align="center">Test fast with low-code framework</h2>
+<h2 align="center">Fast all-in-one testing you'll ever need</h2>
+
+![Crusher demo for test creation, running, cli](https://user-images.githubusercontent.com/6849438/204720236-4139dae2-a0e6-4ce6-a9fb-ab6788ec3cc9.gif)
 
 <p align="center">
   <a href="#create-a-test" rel="dofollow"><strong>Install Now »</strong></a>
@@ -40,7 +42,7 @@ Built from group up as an **all-in-tool  — with recorder, SDK, Infra + batteri
 
 ```npx crusher.dev``` 
 
-![Crusher demo for test creation, running, cli](https://user-images.githubusercontent.com/6849438/204720236-4139dae2-a0e6-4ce6-a9fb-ab6788ec3cc9.gif)
+
 
 You can create tests using low-code, code, or both - whichever you prefer. 5 minutes is all you need to start testing
 

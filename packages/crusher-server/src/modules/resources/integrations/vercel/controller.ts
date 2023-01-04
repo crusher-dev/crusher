@@ -136,7 +136,9 @@ class VercelIntegrationsController {
             const build = await this.testService.runTestsInProject(
                 vercelIntegrationRecord.projectId,
                 vercelIntegrationMeta.userId,
-                { host: "https://" + deploymentUrl, context: null },
+                { host: "https://" + deploymentUrl, context: {
+                    CRUSHER_BASE_URL: "https://" + deploymentUrl,
+                }},
                 meta,
                 null,
                 [BrowserEnum.CHROME],

@@ -36,6 +36,10 @@ Built from group up as an **all-in-tool  — with recorder, SDK, Infra + batteri
 
 **Crusher is in beta(v0.5)**. Join [Crusher's discord](https://discord.gg/dHZkSNXQrg) and help us make it better 🚀
 
+
+> Star 🌟 & watch 👀 the repository in order to get updates about **v1.0.0** stable release - it's finally happening (2023🎅) .
+
+
 ##  Create a test
 
 1.) **Run npx command** in your git repo.

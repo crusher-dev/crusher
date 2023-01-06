@@ -34,15 +34,6 @@ const Sidebar = ({ className }: ISidebarProps) => {
 		}
 	}, [currentBuild]);
 
-	React.useEffect(() => {
-		const shouldShowOnboarding = localStorage.getItem("app.showShouldOnboardingOverlay") !== "false";
-		if (isInRecordingSession) {
-			if(shouldShowOnboarding) {
-				tour.start();
-			}
-		}
-	}, [isInRecordingSession]);
-
 	const {
 		currentModal, 
 		setCurrentModal,

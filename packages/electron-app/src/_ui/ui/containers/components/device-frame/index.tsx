@@ -37,7 +37,7 @@ import { CrashErrorDialog } from "../../../screens/recorder/crashErrorDialog";
 import { useAtom } from "jotai";
 import { crashAtom } from "electron-app/src/_ui/store/jotai/crashAtom";
 import { remote } from "electron";
-import { clearToast } from "../../../components/toasts";
+import { clearToast, showToast } from "../../../components/toasts";
 import { ShepherdTourContext } from "react-shepherd";
 import { ActionsInTestEnum } from "@shared/constants/recordedActions";
 import { LinkPointer } from "../../../components/LinkPointer";
@@ -260,7 +260,15 @@ const DeviceFrame = () => {
 		});
 	
 	}, 100), []);
-	// Only when code is shown
+
+	const handleReadDocs = () => {
+		shell.openExternal("https://docs.crusher.dev");
+		showToast({
+			type: "normal",
+			message: "Opened docs in your default browser",
+		});
+	};
+	
 	return (
 		<div css={[topContainerStyle]}>
 			<RightClickMenu menuItems={menuItemsComponent}>
@@ -276,9 +284,7 @@ const DeviceFrame = () => {
 							Start 2-min onboarding
 						</LinkPointer>
 						<LinkPointer
-						onClick={()=>{
-							shell.openExternal("https://docs.crusher.dev")
-						}}
+						onClick={handleReadDocs}
 						className="text-14 font-500 tracking-wide mt-12 underline">
 							or read docs
 						</LinkPointer>

@@ -360,7 +360,6 @@ class PlaywrightInstance {
 		/* Inputs can get affected if webview looses focus */
 		await this.appWindow.focusWebView();
 
-		console.log("BASIC");
 		await this.runnerManager.runActions(actionsArr, this.browser, this.page, (action: iAction, result: iActionResult) => {
 			const { status } = result;
 			switch (status) {

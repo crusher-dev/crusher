@@ -259,7 +259,7 @@ const DeviceFrame = () => {
 			}
 		});
 	
-	}, 100), []);
+	}, 500), []);
 
 	const handleReadDocs = () => {
 		shell.openExternal("https://docs.crusher.dev");
@@ -268,7 +268,7 @@ const DeviceFrame = () => {
 			message: "Opened docs in your default browser",
 		});
 	};
-	
+
 	return (
 		<div css={[topContainerStyle]}>
 			<RightClickMenu menuItems={menuItemsComponent}>

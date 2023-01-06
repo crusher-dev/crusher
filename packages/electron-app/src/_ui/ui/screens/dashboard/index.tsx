@@ -78,6 +78,10 @@ const useDashboardHeader = () => {
 	const navigate = useNavigate();
 
 	const handleRunCallback = (id) => {
+		if(!tests.length) {
+			alert("No tests are available to run. Click on '+New Test' to create a new test.");
+			return;
+		}
 		if (id === "RUN_CLOUD") {
 			performRunTests(null).then((buildRes) => {
 				addNotification({ id: buildRes.buildId });

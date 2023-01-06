@@ -2,6 +2,7 @@ import React, { memo } from "react";
 import { css } from "@emotion/react";
 import {
 	getInspectElementSelectorMeta,
+	getIsCustomCodeOn,
 	getIsInRecordingSession,
 	getIsStatusBarVisible,
 	getRecorderCrashState,
@@ -269,6 +270,16 @@ const DeviceFrame = () => {
 		});
 	};
 
+	const handleDeviceOverlayClick = () => {
+		const isCustomCodeOn = getIsCustomCodeOn(store.getState());
+		if(isCustomCodeOn) {
+			sendSnackBarEvent({ type: "error", message: "Please turn off custom code to interact" });
+			return;
+		}
+
+		sendSnackBarEvent({ type: "error", message: "An action is already in progress. Interaction is disabled" });
+	};
+
 	return (
 		<div css={[topContainerStyle]}>
 			<RightClickMenu menuItems={menuItemsComponent}>
@@ -319,8 +330,8 @@ const DeviceFrame = () => {
 							</Conditional>
 							<CrashErrorDialog />
 
-							<Conditional showIf={[TRecorderState.PERFORMING_ACTIONS, TRecorderState.PERFORMING_RECORDER_ACTIONS].includes(recorderState.type)}>
-								<div css={deviceOverlayStyle}></div>
+							<Conditional showIf={[TRecorderState.PERFORMING_ACTIONS, TRecorderState.PERFORMING_RECORDER_ACTIONS, TRecorderState.CUSTOM_CODE_ON].includes(recorderState.type)}>
+								<div css={deviceOverlayStyle} onClick={handleDeviceOverlayClick}></div>
 							</Conditional>
 						</div>
 					)}

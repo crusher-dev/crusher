@@ -57,10 +57,13 @@ const success = css`
 `;
 const error = css`
 	background: #EA3E5D;
-	border: 1px solid #fc5d84	;
-	color: #0C0C0C;
+	border: 1px solid #fc5d84;
+	color: #D1D5DB;
 
+	svg {
+		margin-left: 8rem;
+	}
 	path {
-		fill: #0C0C0C;
+		fill: #D1D5DB;
 	}
 `;

@@ -369,11 +369,6 @@ const StatusBar = () => {
 					display: flex;
 					flex-direction: column;
 				`,
-				currentModal && currentModal.type === "CUSTOM_CODE"
-					? css`
-							height: 100%;
-					  `
-					: undefined,
 			]}
 		>
 

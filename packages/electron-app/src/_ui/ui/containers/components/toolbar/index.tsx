@@ -4,7 +4,7 @@ import { Conditional } from "@dyson/components/layouts";
 import { LoadingIconV2, RedDotIcon, SettingsIcon } from "../../../../constants/old_icons";
 import { useDispatch, batch, useSelector, useStore, shallowEqual } from "react-redux";
 import { devices } from "../../../../../devices";
-import { getRecorderContext, getRecorderInfo, getRecorderInfoUrl, getRecorderState, getSavedSteps, getTestName, isTestVerified } from "electron-app/src/store/selectors/recorder";
+import { getIsCustomCodeOn, getRecorderContext, getRecorderInfo, getRecorderInfoUrl, getRecorderState, getSavedSteps, getTestName, isTestVerified } from "electron-app/src/store/selectors/recorder";
 import { getTestContextVariables, goFullScreen, initDevelopmentEnvironment, performExit, performNavigation, performSteps, performTrackEvent, performVerifyTest, saveTest, updateTest, updateTestName } from "../../../../../ipc/perform";
 import { addHttpToURLIfNotThere, isValidHttpUrl } from "../../../../../utils";
 import { TRecorderState, TRecorderVariant } from "electron-app/src/store/reducers/recorder";
@@ -483,6 +483,11 @@ const Toolbar = (props: any) => {
 						if (recorderState.type === TRecorderState.RECORDING_ACTIONS) {
 							performNavigation(validUrl);
 						} else {
+							const isCustomCodeOn = getIsCustomCodeOn(store.getState());
+							if(isCustomCodeOn) {
+								sendSnackBarEvent({ type: "error", message: "You can't change the URL while custom code is on." });
+								return;
+							}
 							sendSnackBarEvent({ type: "error", message: "A action is in progress. Wait and retry again" });
 	
 						}

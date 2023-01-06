@@ -104,34 +104,6 @@ export const PROJECT_INFO = ()=>{
         }, true);
         navigate("/recorder");
         goFullScreen();
-
-        performSteps([
-                {
-                    type: "BROWSER_SET_DEVICE",
-                    payload: {
-                        meta: {
-                            device: recorderDevices[0].device,
-                        },
-                    },
-                    time: Date.now(),
-                },
-                {
-                    type: "PAGE_NAVIGATE_URL",
-                    payload: {
-                        selectors: [],
-                        meta: {
-                            value: "https://crusher-demo-site.vercel.app/",
-                        },
-                    },
-                    status: "COMPLETED",
-                    time: Date.now(),
-                },
-        ]).finally(() => {
-			const isInRecordingSession = getIsInRecordingSession(store.getState() as any);
-			if (isInRecordingSession) {
-				tour.start();
-			}
-		});
         
     }, [isDev, isLowCode]);
 

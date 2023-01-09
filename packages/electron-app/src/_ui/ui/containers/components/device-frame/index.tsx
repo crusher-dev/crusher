@@ -285,7 +285,8 @@ const DeviceFrame = () => {
 		<div css={[topContainerStyle]}>
 			<RightClickMenu menuItems={menuItemsComponent}>
 				<div
-					css={[containerStyle(isStatusBarVisible)]}>
+					css={[containerStyle(isStatusBarVisible)]} 							id="webview_container"
+					>
 					
 					{ !recorderInfo.device ? (
 					<div className="flex flex-col items-center" css={css`margin-left: 80px; color: #d2d2d2;`}>
@@ -367,6 +368,7 @@ const webviewStyle = css`
 	height: 100%;
 	background: #fff;
 	opacity: 0.8;
+	visibility: hidden;
 `;
 const topContainerStyle = css`
 	position: relative;

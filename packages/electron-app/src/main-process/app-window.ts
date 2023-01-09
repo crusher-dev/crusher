@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, session, shell } from "electron";
+import { app, BrowserWindow, ipcMain, session, shell, BrowserView } from "electron";
 import windowStateKeeper from "electron-window-state";
 import { APP_NAME } from "../../config/about";
 import { getAppIconPath, getAppURl, getSelectedProjectTests, getUserAccountProjects, getUserInfoFromToken, parseDeepLinkUrlAction } from "../utils";
@@ -314,7 +314,7 @@ export class AppWindow {
 
 		this.window.webContents.executeJavaScript("window.localStorage.getItem('projectConfigs')").then((projectConfigs) => {
 			const projectConfigsObject = projectConfigs ? JSON.parse(projectConfigs) : {};
-			this.store.dispatch(setAllProjectsMetaData(projectConfigsObject));	
+			this.store.dispatch(setAllProjectsMetaData(projectConfigsObject));
 		}).finally(() => {
 			if (app.commandLine.hasSwitch("project-config-file") && projectId) {
 				const configFilePath = app.commandLine.getSwitchValue("project-config-file");
@@ -326,8 +326,8 @@ export class AppWindow {
 							acc[env.name] = env;
 							return acc;
 						}, {}) || {};
-						this.store.dispatch(setProjectMetaData({id: projectId, configPath: configFilePath, selectedEnvironment: "dev", environments: environmentsMap}, projectId))
-						
+						this.store.dispatch(setProjectMetaData({ id: projectId, configPath: configFilePath, selectedEnvironment: "dev", environments: environmentsMap }, projectId))
+
 						const projectConfigsObject = projectConfigs ? JSON.parse(projectConfigs) : {};
 						projectConfigsObject[projectId] = configFilePath;
 
@@ -337,7 +337,7 @@ export class AppWindow {
 						this.window.webContents.executeJavaScript(
 							`window.localStorage.setItem('projectConfigs', ${JSON.stringify(JSON.stringify((this.store.getState() as iReduxState).projects.metadata))})`,
 						);
-	
+
 					})
 					.catch((err) => console.error(err));
 				process.argv = process.argv.filter((a) => a.includes("--project-config-file"));
@@ -382,9 +382,9 @@ export class AppWindow {
 		const selectedEnvironment = projectMetadata?.selectedEnvironment;
 		const environment = selectedEnvironment && projectMetadata?.environments ? projectMetadata?.environments[selectedEnvironment] : null;
 
-		if(environment?.variables) {
+		if (environment?.variables) {
 			const out = {};
-			for(const key in environment.variables) {
+			for (const key in environment.variables) {
 				const value = environment.variables[key];
 				out[key] = value;
 			}
@@ -394,27 +394,27 @@ export class AppWindow {
 		return {};
 	}
 
-	async handleGetTextContextVariables(event: Electron.IpcMainEvent, data: { }) {
+	async handleGetTextContextVariables(event: Electron.IpcMainEvent, data: {}) {
 		const context = this.webView?.playwrightInstance?.getContext();
-		if(!context || !Object.keys(context).length) {
+		if (!context || !Object.keys(context).length) {
 			return this.getCurrentProjectEnvironmentVariables();
 		}
 
 		return context;
 	}
 
-	handleGetAppPath(event: Electron.IpcMainEvent, data: { }) {
+	handleGetAppPath(event: Electron.IpcMainEvent, data: {}) {
 		event.returnValue = app.getAppPath();
 	}
 
-	handleGetUserDataDir(event: Electron.IpcMainEvent, data: { }) {
+	handleGetUserDataDir(event: Electron.IpcMainEvent, data: {}) {
 		event.returnValue = app.getPath("userData");
 	}
 
-	handleGetAppVersion(event: Electron.IpcMainEvent, data: { }) {
+	handleGetAppVersion(event: Electron.IpcMainEvent, data: {}) {
 		event.returnValue = app.getVersion();
 	}
-	
+
 	async handleInitDevelopmentEnvironment(event: Electron.IpcMainEvent, data: { baseUrl }) {
 		const selectedProject = getCurrentSelectedProjct(this.store.getState() as any);
 
@@ -434,7 +434,7 @@ export class AppWindow {
 			}, {}) || {};
 
 			console.log("environmentsMap", environmentsMap);
-			this.store.dispatch(setProjectMetaData({id: selectedProject, configPath: configFilePath, selectedEnvironment: "dev", environments: environmentsMap}, selectedProject))
+			this.store.dispatch(setProjectMetaData({ id: selectedProject, configPath: configFilePath, selectedEnvironment: "dev", environments: environmentsMap }, selectedProject))
 			this.window.webContents.executeJavaScript(
 				`window.localStorage.setItem('projectConfigs', ${JSON.stringify(JSON.stringify((this.store.getState() as iReduxState).projects.metadata))})`,
 			);
@@ -459,10 +459,10 @@ export class AppWindow {
 			}));
 
 			const testName = generateRandomTestName();
-			axios(saveNewDraftTest({name: testName, events: []})).then((res) => {
-				const {draftId} = res.data;
+			axios(saveNewDraftTest({ name: testName, events: [] })).then((res) => {
+				const { draftId } = res.data;
 				const recorderContext = getRecorderContext(this.store.getState() as any);
-				if(recorderContext && recorderContext.variant === TRecorderVariant.CREATE_TEST) {
+				if (recorderContext && recorderContext.variant === TRecorderVariant.CREATE_TEST) {
 					this.store.dispatch(setRecorderContext({
 						...recorderContext,
 						testName,
@@ -978,8 +978,8 @@ export class AppWindow {
 		this.store.dispatch(updateRecorderState(TRecorderState.PERFORMING_ACTIONS, {}));
 
 		this.recordStepWrapper({
-				type: ActionsInTestEnum.RELOAD_PAGE,
-				payload: {},
+			type: ActionsInTestEnum.RELOAD_PAGE,
+			payload: {},
 		});
 
 		this.webView.webContents.reload();
@@ -1176,7 +1176,7 @@ export class AppWindow {
 
 		const selectedEnvironment = projectMetadata?.selectedEnvironment;
 		const environment = projectMetadata?.environments[selectedEnvironment];
-	
+
 		if (environment && environment?.variables.CRUSHER_BASE_URL) {
 			const overrideHost = host ? { host } : { host: environment?.variables.CRUSHER_BASE_URL };
 			if (overrideHost) {
@@ -1193,7 +1193,7 @@ export class AppWindow {
 				});
 			}
 		}
-	
+
 
 		return steps;
 	}
@@ -1495,6 +1495,26 @@ export class AppWindow {
 			this.store.dispatch(setSessionInfoMeta({}));
 			this.handleResetStorage();
 		});
+
+		const resizeView = async (view) => {
+			const webviewElement =  JSON.parse(await this.window.webContents.executeJavaScript("JSON.stringify(document.querySelector('webview').getBoundingClientRect());"));
+
+			const bound = this.window.getBounds();
+			view.setBounds({ x: parseInt(webviewElement.x), y: parseInt(webviewElement.y), width: parseInt(webviewElement.width), height: parseInt(webviewElement.height) });
+		}
+
+
+		const view = new BrowserView();
+		view.setAutoResize({ width: true, height: true });
+		await this.window.addBrowserView(view);
+
+		try {
+			await resizeView(view);
+
+			view.webContents.loadURL("https://crusher.dev");
+		} catch (er) { console.error("HEre", er); }
+
+
 		this.webView.webContents.on("dom-ready", () => {
 			if (!this.webView.webContents.debugger.isAttached()) {
 				this.webView.initialize();

@@ -8,6 +8,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
+    "dev": "electron ../../output/crusher-electron-app --no-sandbox",
     "assets:dev": "node scripts/start-assets-server.js",
     "start:dev": "NODE_ENV=development webpack --config webpack/webpack.config.ts",
     "start:base": "NODE_ENV=development webpack --config webpack/webpack.base.ts",
@@ -64,7 +65,7 @@
     "debug": "^4.3.3",
     "dotenv": "^10.0.0",
     "ejs": "^3.1.6",
-    "electron": "^12.0.2",
+    "electron": "^21.3.3",
     "electron-builder": "^23.3.1",
     "electron-debug": "^3.2.0",
     "electron-devtools-installer": "^3.2.0",

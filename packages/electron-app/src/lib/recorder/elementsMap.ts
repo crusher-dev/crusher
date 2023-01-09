@@ -11,7 +11,7 @@ class ElementsIdMap {
 		this.map.set(node, id);
 
 		if (node instanceof HTMLElement) {
-			window["crusherSdk.saveElementHandle"]({ element: node, uniqueElementId: id });
+			window["crusherSdk.saveElementHandle"](node);
 		}
 		return { value: id, isNew: true };
 	}

@@ -10,6 +10,7 @@ import { updateRecordedStep, updateRecorderState } from "electron-app/src/store/
 import { TRecorderState } from "electron-app/src/store/reducers/recorder";
 import { getRecorderState } from "electron-app/src/store/selectors/recorder";
 import {
+	getAppPath,
 	getCodeTemplates,
 	performCustomCode,
 	performUndockCode,
@@ -40,7 +41,7 @@ function uriFromPath(_path) {
 
 loader.config({
 	paths: {
-		vs: uriFromPath(path.join(remote.app.getAppPath(), "static/monaco-editor/min/vs")),
+		vs: uriFromPath(path.join(getAppPath(), "static/monaco-editor/min/vs")),
 	},
 });
 
@@ -266,7 +267,7 @@ const CustomCodeModal = (props: iElementCustomScriptModalContent) => {
 		});
 
 		const libUri = "ts:filename/sdk.d.ts";
-		let types = fs.readFileSync(path.resolve(remote.app.getAppPath(), "static/types.txt"), "utf8");
+		let types = fs.readFileSync(path.resolve(getAppPath(), "static/types.txt"), "utf8");
 		const ctx = ipcRenderer.sendSync("get-var-context");
 		types += `\n declare const ctx: { ${Object.keys(ctx)
 			.map((a) => {

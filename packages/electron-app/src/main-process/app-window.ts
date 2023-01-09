@@ -301,6 +301,9 @@ export class AppWindow {
 		ipcMain.handle("set-environment", this.handleSetEnvironment.bind(this));
 		ipcMain.handle("get-test-context-variables", this.handleGetTextContextVariables.bind(this));
 		ipcMain.handle("init-development-environment", this.handleInitDevelopmentEnvironment.bind(this));
+		ipcMain.on("get-app-path", this.handleGetAppPath.bind(this));
+		ipcMain.on("get-user-data-dir", this.handleGetUserDataDir.bind(this));
+		ipcMain.on("get-app-version", this.handleGetAppVersion.bind(this));
 
 		this.window.on("focus", () => this.window.webContents.send("focus"));
 		this.window.on("blur", () => this.window.webContents.send("blur"));
@@ -400,6 +403,18 @@ export class AppWindow {
 		return context;
 	}
 
+	handleGetAppPath(event: Electron.IpcMainEvent, data: { }) {
+		event.returnValue = app.getAppPath();
+	}
+
+	handleGetUserDataDir(event: Electron.IpcMainEvent, data: { }) {
+		event.returnValue = app.getPath("userData");
+	}
+
+	handleGetAppVersion(event: Electron.IpcMainEvent, data: { }) {
+		event.returnValue = app.getVersion();
+	}
+	
 	async handleInitDevelopmentEnvironment(event: Electron.IpcMainEvent, data: { baseUrl }) {
 		const selectedProject = getCurrentSelectedProjct(this.store.getState() as any);
 

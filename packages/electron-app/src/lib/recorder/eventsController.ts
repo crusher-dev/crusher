@@ -119,7 +119,7 @@ export default class EventsController {
 		if (!(window as any).recorder.canRecordEvents()) return false;
 		const capturedTarget =
 			_capturedTarget instanceof SVGElement && _capturedTarget.tagName.toLocaleLowerCase() !== "svg" ? _capturedTarget.ownerSVGElement : _capturedTarget;
-		const uniqueElementId = capturedTarget && ![document.body, document].includes(capturedTarget) ? ElementsIdMap.getUniqueId(capturedTarget) : null;
+		const uniqueElementId = null;
 
 		const shouldGenerateNewSelectors = !(window["crusherCacheSelectors"] && window["crusherCacheSelectors"][uniqueElementId?.value]);
 

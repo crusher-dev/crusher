@@ -376,6 +376,18 @@ export const initDevelopmentEnvironment = (baseUrl: string) => {
 	return ipcRenderer.invoke("init-development-environment", { baseUrl });
 };
 
+export const getAppPath = () => {
+	return ipcRenderer.sendSync("get-app-path", {});
+}
+
+export const getUserDataDir = () => {
+	return ipcRenderer.sendSync("get-user-data-dir", {});
+}
+
+export const getAppVersion = () => {
+	return ipcRenderer.sendSync("get-app-version", {});
+};
+
 export {
 	continueDraftTest,
 	saveAutoAction,

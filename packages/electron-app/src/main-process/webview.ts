@@ -77,6 +77,7 @@ export class WebView {
 	}
 
 	public async turnOnInspectMode() {
+		console.log("Turning on inspect mode");
 		await this.webContents.debugger.sendCommand("Overlay.setInspectMode", {
 			mode: "searchForNode",
 			highlightConfig: highlighterStyle,
@@ -95,7 +96,7 @@ export class WebView {
 			await this.webContents.debugger.sendCommand("Debugger.resume");
 		} catch (ex) {
 			console.info("Error resuming execution", ex);
-			if(throwError) throw ex;
+			if (throwError) throw ex;
 		}
 	}
 
@@ -104,7 +105,7 @@ export class WebView {
 			await this.webContents.debugger.sendCommand("Debugger.pause");
 		} catch (ex) {
 			console.info("Error pausing execution", ex);
-			if(throwError) throw ex;
+			if (throwError) throw ex;
 		}
 	}
 

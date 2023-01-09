@@ -1,9 +1,10 @@
 import { app } from "electron";
 import fs from "fs";
 import path from "path";
+import { getUserDataDir } from "../ipc/perform";
 
 class SettingsManager {
-	static appPath = path.resolve(app ? app.getPath("userData") : eval("require")("electron/renderer").remote.app.getPath("userData"), "crusher-settings.json");
+	static appPath = path.resolve(app ? app.getPath("userData") : getUserDataDir(), "crusher-settings.json");
 
 	static initSettingsConfig() {
 		if (!fs.existsSync(this.appPath)) {

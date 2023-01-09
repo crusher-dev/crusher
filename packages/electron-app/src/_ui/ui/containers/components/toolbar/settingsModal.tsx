@@ -5,7 +5,7 @@ import { css } from "@emotion/react";
 import { Input } from "@dyson/components/atoms/input/Input";
 import { Button } from "@dyson/components/atoms/button/Button";
 import { useDispatch, useSelector } from "react-redux";
-import { focusOnWindow, saveAndGetUserInfo } from "electron-app/src/ipc/perform";
+import { focusOnWindow, getAppVersion, saveAndGetUserInfo } from "electron-app/src/ipc/perform";
 import Switch from "@dyson/components/atoms/toggle/switch";
 import { getAppSettings, getUserAccountInfo } from "electron-app/src/store/selectors/app";
 import { setSettngs } from "electron-app/src/store/actions/app";
@@ -41,7 +41,7 @@ color: #6CB7FC !important;
 const Info = <div className="flex items-center mt-28">
 	<TextBlock color="#909090">
 		<span>Crusher version:</span>
-		<span className="ml-4" css={[linkCSS]}>~v{require('electron').remote.app.getVersion()}</span>
+		<span className="ml-4" css={[linkCSS]}>~v{getAppVersion()}</span>
 	</TextBlock>
 
 	<TextBlock color="#909090" className="ml-48">

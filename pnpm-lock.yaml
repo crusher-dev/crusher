@@ -13,6 +13,9 @@ patchedDependencies:
   '@reactour/tour@2.7.1':
     hash: mcwkmtep3csmg7ppdzmd4xxddu
     path: patches/@reactour__tour@2.7.1.patch
+  electron-redux@1.5.4:
+    hash: w4tqg5l6mqmofvuohv42rtdnuq
+    path: patches/electron-redux@1.5.4.patch
 
 importers:
 
@@ -636,7 +639,7 @@ importers:
       debug: ^4.3.3
       dotenv: ^10.0.0
       ejs: ^3.1.6
-      electron: ^12.0.2
+      electron: ^21.3.3
       electron-builder: ^23.3.1
       electron-debug: ^3.2.0
       electron-devtools-installer: ^3.2.0
@@ -777,7 +780,7 @@ importers:
       debug: 4.3.3
       dotenv: 10.0.0
       ejs: 3.1.6
-      electron: 12.0.11
+      electron: 21.3.3
       electron-builder: 23.3.2
       electron-debug: 3.2.0
       electron-devtools-installer: 3.2.0
@@ -838,7 +841,7 @@ importers:
       ts-node: 9.1.1_typescript@4.3.5
       typescript: 4.3.5
       unique-selector: link:../unique-selector
-      update-electron-app: 2.0.1_electron@12.0.11
+      update-electron-app: 2.0.1_electron@21.3.3
       url: 0.11.0
       url-parse: 1.5.1
       uuid: 8.3.2
@@ -4066,8 +4069,8 @@ packages:
     engines: {node: ^10 || ^12.20.0 || ^14.13.0 || >=15.0.0, npm: '>=7.0.0'}
     dev: true
 
-  /@electron/get/1.12.4:
-    resolution: {integrity: sha512-6nr9DbJPUR9Xujw6zD3y+rS95TyItEVM0NVjt1EehY2vUWfIgPiIPVHxCvaTS0xr2B+DRxovYVKbuOWqC35kjg==}
+  /@electron/get/1.14.1:
+    resolution: {integrity: sha512-BrZYyL/6m0ZXz/lDxy/nlVhQz+WF+iPS6qXolEU8atw7h6v1aYkjwJZ63m+bJMBTxDE66X+r2tPS4a/8C82sZw==}
     engines: {node: '>=8.6'}
     dependencies:
       debug: 4.3.4
@@ -4078,7 +4081,7 @@ packages:
       semver: 6.3.0
       sumchecker: 3.0.1
     optionalDependencies:
-      global-agent: 2.2.0
+      global-agent: 3.0.0
       global-tunnel-ng: 2.7.1
     transitivePeerDependencies:
       - supports-color
@@ -10862,6 +10865,14 @@ packages:
       '@types/yargs-parser': 20.2.0
     dev: true
 
+  /@types/yauzl/2.10.0:
+    resolution: {integrity: sha512-Cn6WYCm0tXv8p6k+A8PvbDG763EDpBoTzHdA+Q/MF6H3sapGjCm9NzoaJncJS9tUKSuCoDs9XHxYYsQDgxR6kw==}
+    requiresBuild: true
+    dependencies:
+      '@types/node': 17.0.38
+    dev: false
+    optional: true
+
   /@typescript-eslint/eslint-plugin/4.28.2_kay7762f363rc7tbyhmouhxt74:
     resolution: {integrity: sha512-PGqpLLzHSxq956rzNGasO3GsAPf2lY9lDUBXhS++SKonglUmJypaUtcKzRtUte8CV7nruwnDxtLUKpVxs0wQBw==}
     engines: {node: ^10.12.0 || >=12.0.0}
@@ -13610,7 +13621,7 @@ packages:
       mississippi: 3.0.0
       mkdirp: 0.5.5
       move-concurrently: 1.0.1
-      promise-inflight: 1.0.1_bluebird@3.7.2
+      promise-inflight: 1.0.1
       rimraf: 2.7.1
       ssri: 6.0.2
       unique-filename: 1.1.1
@@ -16456,15 +16467,15 @@ packages:
       mkdirp: 0.5.5
     dev: false
 
-  /electron/12.0.11:
-    resolution: {integrity: sha512-6gPjcce3QCeAWZ8UVAqVy6os+86D5BcxgkIzlROxX89u+du/i7WpZXF5F1vgv419rspds9OHejP3JrJnoUGh6w==}
-    engines: {node: '>= 8.6'}
+  /electron/21.3.3:
+    resolution: {integrity: sha512-2a9l8mUQlzXH/9WZrGYDJTyJOliLKbmEuCrQ8bfX1McAQOmI6PDQxfHV4qFUtyCDUp5SHrq5nuvg0c1pIkDBhg==}
+    engines: {node: '>= 10.17.0'}
     hasBin: true
     requiresBuild: true
     dependencies:
-      '@electron/get': 1.12.4
-      '@types/node': 14.17.5
-      extract-zip: 1.7.0
+      '@electron/get': 1.14.1
+      '@types/node': 16.11.45
+      extract-zip: 2.0.1
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -17553,14 +17564,16 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /extract-zip/1.7.0:
-    resolution: {integrity: sha512-xoh5G1W/PB0/27lXgMQyIhP5DSY/LhoCsOyZgb+6iMmRtCwVBo55uKaMoEYrDCKQhWvqEip5ZPKAc6eFNyf/MA==}
+  /extract-zip/2.0.1:
+    resolution: {integrity: sha512-GDhU9ntwuKyGXdZBUgTIe+vXnWj0fppUEtMDL0+idd5Sta8TGpHssn/eusA9mrPr9qNDym6SxAYZjNvCn/9RBg==}
+    engines: {node: '>= 10.17.0'}
     hasBin: true
     dependencies:
-      concat-stream: 1.6.2
-      debug: 2.6.9
-      mkdirp: 0.5.5
+      debug: 4.3.4
+      get-stream: 5.2.0
       yauzl: 2.10.0
+    optionalDependencies:
+      '@types/yauzl': 2.10.0
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -18097,6 +18110,17 @@ packages:
     peerDependenciesMeta:
       debug:
         optional: true
+
+  /follow-redirects/1.14.7_debug@4.3.4:
+    resolution: {integrity: sha512-+hbxoLbFMbRKDwohX8GkTataGqO6Jb7jGwpAlwgy2bIz25XtRm7KEzJM76R1WiNT5SwZkX4Y75SwBolkpmE7iQ==}
+    engines: {node: '>=4.0'}
+    peerDependencies:
+      debug: '*'
+    peerDependenciesMeta:
+      debug:
+        optional: true
+    dependencies:
+      debug: 4.3.4_supports-color@6.1.0
 
   /follow-redirects/1.15.1:
     resolution: {integrity: sha512-yLAMQs+k0b2m7cVxpS1VKJVvoz7SS9Td1zss3XRwXj+ZDH00RJgnuLx7E44wx02kQLrdM3aOOy+FpzS7+8OizA==}
@@ -18699,13 +18723,12 @@ packages:
       once: 1.4.0
       path-is-absolute: 1.0.1
 
-  /global-agent/2.2.0:
-    resolution: {integrity: sha512-+20KpaW6DDLqhG7JDiJpD1JvNvb8ts+TNl7BPOYcURqCrXqnN1Vf+XVOrkKJAFPqfX+oEhsdzOj1hLWkBTdNJg==}
+  /global-agent/3.0.0:
+    resolution: {integrity: sha512-PT6XReJ+D07JvGoxQMkT6qji/jVNfX/h364XHZOWeRzy64sSFr+xJ5OX7LI3b4MPQzdL4H8Y8M0xzPpsVMwA8Q==}
     engines: {node: '>=10.0'}
     requiresBuild: true
     dependencies:
       boolean: 3.1.2
-      core-js: 3.15.2
       es6-error: 4.1.1
       matcher: 3.0.0
       roarr: 2.15.4
@@ -19502,7 +19525,7 @@ packages:
     engines: {node: '>=8.0.0'}
     dependencies:
       eventemitter3: 4.0.7
-      follow-redirects: 1.14.7
+      follow-redirects: 1.14.7_debug@4.3.4
       requires-port: 1.0.0
     transitivePeerDependencies:
       - debug
@@ -26668,16 +26691,6 @@ packages:
       bluebird:
         optional: true
 
-  /promise-inflight/1.0.1_bluebird@3.7.2:
-    resolution: {integrity: sha512-6zWPyEOFaQBJYcGMHBKTKJ3u6TBsnMFOIZSa6ce1e/ZrrsOlnHRHbabMjLiBYKp+n44X9eUI6VUPaukCXHuG4g==}
-    peerDependencies:
-      bluebird: '*'
-    peerDependenciesMeta:
-      bluebird:
-        optional: true
-    dependencies:
-      bluebird: 3.7.2
-
   /promise.allsettled/1.0.4:
     resolution: {integrity: sha512-o73CbvQh/OnPFShxHcHxk0baXR2a1m4ozb85ha0H14VEoi/EJJLa9mnPfEWJx9RjA9MLfhdjZ8I6HhWtBa64Ag==}
     engines: {node: '>= 0.4'}
@@ -32210,12 +32223,12 @@ packages:
       registry-url: 3.1.0
     dev: false
 
-  /update-electron-app/2.0.1_electron@12.0.11:
+  /update-electron-app/2.0.1_electron@21.3.3:
     resolution: {integrity: sha512-e4xEner89UZZaBGYJbYlMdL1uUrC0VjOsTAL2N4opPjzFtn+j7mdsJJsnyXZzUVeLY+8tuCX4XEsUM98oBHmZg==}
     peerDependencies:
       electron: '>= 6.0.0'
     dependencies:
-      electron: 12.0.11
+      electron: 21.3.3
       electron-is-dev: 0.3.0
       github-url-to-object: 4.0.6
       is-url: 1.2.4

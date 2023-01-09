@@ -18,6 +18,7 @@ import { Conditional } from "@dyson/components/layouts";
 import { IpcMessageEvent, shell } from "electron";
 import {
 	disableJavascriptInDebugger,
+	getAppPath,
 	performQuitAndRestore,
 	performSteps,
 	turnOffElementSelectorInspectMode,
@@ -135,7 +136,7 @@ const DeviceFrame = () => {
 	const tour = React.useContext(ShepherdTourContext);
 
 	const getPreloadScriptPath = () => {
-		return `file://` + remote.app.getAppPath() + "/webview-preload.js";
+		return `file://` + getAppPath() + "/webview-preload.js";
 	};
 
 	React.useEffect(() => {

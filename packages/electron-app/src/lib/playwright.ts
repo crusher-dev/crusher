@@ -175,27 +175,28 @@ class PlaywrightInstance {
 		await element.hover();
 	}
 
-	private async handleSaveElementHandle(source, args: JSHandle) {
-		const properties = await args.getProperties();
-		const uniqueElementId = await properties.get("uniqueElementId").jsonValue();
-		const elementHandle = await properties.get("element").asElement();
+	private async handleSaveElementHandle(source, element: any) {
+		console.log("Getting", element);
+		// const properties = await args.getProperties();
+		// const uniqueElementId = await properties.get("uniqueElementId").jsonValue();
+		// const elementHandle = await properties.get("element").asElement();
 
-		const ownerFrame = await elementHandle.ownerFrame();
-		const parentFrame = await ownerFrame.parentFrame();
-		let parentFrameSelectors = null;
-		if (parentFrame && !(await ownerFrame.isDetached())) {
-			const ownerFrameElement = await ownerFrame.frameElement();
-			parentFrameSelectors = await parentFrame.evaluate(
-				(element) => {
-					return (window as any).getSelectors(element[0]);
-				},
-				[ownerFrameElement],
-			);
-		}
-		if (elementHandle) {
-			this.elementsMap.set(uniqueElementId, { handle: elementHandle, parentFrameSelectors });
-			this.appWindow.reinstateElementSteps(uniqueElementId, this.elementsMap.get(uniqueElementId));
-		}
+		// const ownerFrame = await elementHandle.ownerFrame();
+		// const parentFrame = await ownerFrame.parentFrame();
+		// let parentFrameSelectors = null;
+		// if (parentFrame && !(await ownerFrame.isDetached())) {
+		// 	const ownerFrameElement = await ownerFrame.frameElement();
+		// 	parentFrameSelectors = await parentFrame.evaluate(
+		// 		(element) => {
+		// 			return (window as any).getSelectors(element[0]);
+		// 		},
+		// 		[ownerFrameElement],
+		// 	);
+		// }
+		// if (elementHandle) {
+		// 	this.elementsMap.set(uniqueElementId, { handle: elementHandle, parentFrameSelectors });
+		// 	this.appWindow.reinstateElementSteps(uniqueElementId, this.elementsMap.get(uniqueElementId));
+		// }
 	}
 
 	async connect() {

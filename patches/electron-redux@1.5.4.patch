@@ -1,0 +1,49 @@
+diff --git a/dist/__mocks__/electron.js b/dist/__mocks__/electron.js
+index 6a09be79536ab6c9026aab16898ff996275843e2..8021257aa8ef87fab9641bc8c9e7544dd7258397 100644
+--- a/dist/__mocks__/electron.js
++++ b/dist/__mocks__/electron.js
+@@ -23,7 +23,3 @@ var ipcRenderer = {
+   send: jest.fn()
+ };
+ exports.ipcRenderer = ipcRenderer;
+\ No newline at end of file
+-var remote = {
+-  getGlobal: jest.fn()
+-};
+-exports.remote = remote;
+\ No newline at end of file
+diff --git a/dist/helpers/getInitialStateRenderer.js b/dist/helpers/getInitialStateRenderer.js
+index 9add93c17e6df6a2515d931fe463637af8e56aab..92f16e488e13b3dc3665eead59a86b9967afe149 100644
+--- a/dist/helpers/getInitialStateRenderer.js
++++ b/dist/helpers/getInitialStateRenderer.js
+@@ -8,11 +8,11 @@ exports["default"] = getInitialStateRenderer;
+ var _electron = require("electron");
+ 
+ function getInitialStateRenderer() {
+-  var getReduxState = _electron.remote.getGlobal('getReduxState');
++  const reduxState = _electron.ipcRenderer.sendSync('get-redux-state');
+ 
+-  if (!getReduxState) {
++  if (!reduxState) {
+     throw new Error('Could not find reduxState global in main process, did you forget to call replayActionMain?');
+   }
+ 
+-  return JSON.parse(getReduxState());
++  return JSON.parse(reduxState);
+ }
+\ No newline at end of file
+diff --git a/dist/helpers/replayActionMain.js b/dist/helpers/replayActionMain.js
+index 28ce12b8688d6e2d3dceb8ca79b7668ce8b242fb..e10ea1e4985621742055685e9b433bd2b27a6701 100644
+--- a/dist/helpers/replayActionMain.js
++++ b/dist/helpers/replayActionMain.js
+@@ -19,6 +19,10 @@ function replayActionMain(store) {
+     return JSON.stringify(store.getState());
+   };
+ 
++  _electron.ipcMain.on('get-redux-state', (event) => {
++    event.returnValue = JSON.stringify(store.getState());
++  });
++
+   _electron.ipcMain.on('redux-action', function (event, payload) {
+     store.dispatch(payload);
+   });

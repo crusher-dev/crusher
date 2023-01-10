@@ -106,7 +106,7 @@ Testing solves this, but it hasn't evolved. It's too complicated and sometimes h
 
 - Setup crusher locally [Docs](https://docs.crusher.dev/development/setting-up-development-env)
 - Found a bug? [File an issue](https://github.com/crusherdev/crusher/issues/new/choose)
-- Wanna help. We love pull requests, too!
+- Wanna help? We love pull requests, too!
 
 ### License
 This repo is entirely MIT licensed, except the **/src_ee directory (if applicable)**.

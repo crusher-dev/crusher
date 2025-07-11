@@ -124,7 +124,7 @@
     "ts-loader": "^8.0.14",
     "ts-node": "^9.1.1",
     "typescript": "^4.1.3",
-    "unique-selector": "1.0.0",
+    "unique-selector": "workspace:*",
     "update-electron-app": "^2.0.1",
     "url": "^0.11.0",
     "url-parse": "^1.4.7",

@@ -23,6 +23,8 @@
 		"http": "^0.0.1-security",
 		"immer": "^9.0.5",
 		"jotai": "^1.8.3",
+		"jotai-devtools": "^0.12.0",
+		"jotai-immer": "^0.4.1",
 		"lodash": "^4.17.21",
 		"mitt": "^3.0.0",
 		"network-viewer": "^1.1.14",

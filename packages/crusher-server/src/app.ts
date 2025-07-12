@@ -36,6 +36,7 @@ import { validationMetadatasToSchemas } from "class-validator-jsonschema";
 import { DiscordWebhookManager } from "@modules/webhook/sources/discord";
 import { TWebHookMessage, WebhookManager } from "@modules/webhook";
 import { DraftTestsController } from "@modules/resources/draftsTests/controller";
+import { AppController } from "./server/controllers/app";
 
 const chalk = require("chalk");
 
@@ -47,6 +48,7 @@ expressApp.use(bodyParser({ limit: "50mb" }));
 expressApp.use(bodyParser.urlencoded({ extended: false }));
 
 const controllersArr: any = [
+	AppController,
 	UserController,
 	TestController,
 	BuildsController,

@@ -5,12 +5,11 @@ import { response } from "express";
 import { resolvePathToFrontendURI } from "@utils/uri";
 
 @Service()
-@JsonController("/")
+@JsonController("")
 export class AppController {
 	@Get("/server/redirectToFrontend")
-	async getElectronAppReleaseInfo(@Req() req: any, @Res() res: any, @QueryParams() params: { endpoint: string; }): Promise<any> {
-                if(!params.endpoint) throw new BadRequestError("No endpoint passed");
-                response.redirect(resolvePathToFrontendURI(params.endpoint));
-                return response;
+	async getElectronAppReleaseInfo(@Req() req: any, @Res() res: any, @QueryParams() params: { url: string; }): Promise<any> {
+                if(!params.url) throw new BadRequestError("No endpoint passed");
+                return res.redirect(resolvePathToFrontendURI(params.url));
 	}
 }

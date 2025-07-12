@@ -148,7 +148,7 @@ export const resolveBackendServerUrl = (endpoint): string => {
 
 export const resolveFrontendServerUrl = (endpoint): string => {
   const appConfig = getAppConfig();
-  return appConfig && appConfig.endpoint ? url.resolve(appConfig.endpoint, `/server/redirectToFrontend?url=${endpoint}`) : url.resolve(FRONTEND_SERVER_URL, endpoint);
+  return appConfig && appConfig.endpoint ? url.resolve(appConfig.endpoint, `/server/redirectToFrontend?endpoint=${endpoint}`) : url.resolve(FRONTEND_SERVER_URL, endpoint);
 };
 
 export const resolvePathToAppDirectory = (relativePath): string => {

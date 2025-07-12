@@ -7,7 +7,7 @@
   ],
   "description": "Mono repository for crusher.dev",
   "scripts": {
-    "crusher": "npx crusher-cli",
+    "crusher": "npx crusher-cli@2.0.53",
     "crusher:run": "npx crusher-cli test:run",
     "setup:oss": "node setup/index.js -m open-source",
     "setup:ee": "node setup/index.js -m enterprise",

@@ -30,7 +30,7 @@ const ReportSection = dynamic(() => import("./container/testList"));
 function BuildInfoTop() {
 	const { data } = useReportData();
 	const title = data.name || `#${data?.id}`;
-
+	console.log(data);
 	const { status } = data;
 
 
